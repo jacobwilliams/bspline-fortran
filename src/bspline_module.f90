@@ -10,11 +10,11 @@
 !    Multidimensional (2D-6D) B-Spline interpolation of data on a regular grid.
 !
 !  NOTES
-!	This module is based on the bspline and spline routines from [1].
-!	The original Fortran 77 routines were converted to free-form source.
-!	Some of them are relatively unchanged from the originals, but some have
-!	been extensively refactored.  In addition, new routines for 
-!	4d, 5d, and 6d interpolation were also created.
+!    This module is based on the bspline and spline routines from [1].
+!    The original Fortran 77 routines were converted to free-form source.
+!    Some of them are relatively unchanged from the originals, but some have
+!    been extensively refactored.  In addition, new routines for 
+!    4d, 5d, and 6d interpolation were also created.
 !
 !  SEE ALSO
 !    [1] DBSPLIN and DTENSBS from the NIST Core Math Library (CMLIB)
@@ -23,7 +23,7 @@
 !
 !*****************************************************************************************
 
-    use,intrinsic :: iso_fortran_env,	only: wp => real64
+    use,intrinsic :: iso_fortran_env,    only: wp => real64
     
     implicit none
     
@@ -605,9 +605,9 @@
 !***routines called  dintrv,xerror
 !***end prologue  dbvalu
 
-	real(wp),dimension(:),intent(in) :: t
-	real(wp),dimension(n),intent(in) :: a
-	real(wp),dimension(:) :: work
+    real(wp),dimension(:),intent(in) :: t
+    real(wp),dimension(n),intent(in) :: a
+    real(wp),dimension(:) :: work
 
       integer i,ideriv,iderp1,ihi,ihmkmj,ilo,imk,imkpj, inbv, ipj,&
        ip1, ip1mj, j, jj, j1, j2, k, kmider, kmj, km1, kpk, mflag, n
@@ -825,7 +825,7 @@
 !****f* bspline_module/db2ink
 !
 !  NAME
-!	db2ink
+!    db2ink
 !
 !  DESCRIPTION
 !
@@ -936,76 +936,76 @@
 !                     10 == ty not non-decreasing
 !
 !  SEE ALSO
-!	carl de boor, a practical guide to splines,
-!		springer-verlag, new york, 1978.
-!	carl de boor, efficient computer manipulation of tensor
-!		products, acm transactions on mathematical software,
-!		vol. 5 (1979), pp. 173-182.
+!    carl de boor, a practical guide to splines,
+!        springer-verlag, new york, 1978.
+!    carl de boor, efficient computer manipulation of tensor
+!        products, acm transactions on mathematical software,
+!        vol. 5 (1979), pp. 173-182.
 !
 !  AUTHOR
-!	boisvert, ronald, nbs
-!		scientific computing division
-!		national bureau of standards
-!		washington, dc 20234
+!    boisvert, ronald, nbs
+!        scientific computing division
+!        national bureau of standards
+!        washington, dc 20234
 !
 !  HISTORY
-!	date written   25 may 1982
+!    date written   25 may 1982
 !   000330  modified array declarations.  (jec)
-!	Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
+!    Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
 !
 !  SOURCE
 
-	subroutine db2ink(x,nx,y,ny,fcn,kx,ky,tx,ty,bcoef,iflag)
+    subroutine db2ink(x,nx,y,ny,fcn,kx,ky,tx,ty,bcoef,iflag)
 
-	integer,intent(in) 						:: nx, ny
-	integer,intent(in) 						:: kx, ky
-	real(wp),dimension(nx),intent(in) 		:: x
-	real(wp),dimension(ny),intent(in) 		:: y
-	real(wp),dimension(nx,ny),intent(in) 	:: fcn
-	real(wp),dimension(:),intent(inout) 	:: tx, ty
-	real(wp),dimension(nx,ny),intent(out) 	:: bcoef
-	integer,intent(inout) 					:: iflag
+    integer,intent(in)                      :: nx, ny
+    integer,intent(in)                      :: kx, ky
+    real(wp),dimension(nx),intent(in)       :: x
+    real(wp),dimension(ny),intent(in)       :: y
+    real(wp),dimension(nx,ny),intent(in)    :: fcn
+    real(wp),dimension(:),intent(inout)     :: tx, ty
+    real(wp),dimension(nx,ny),intent(out)   :: bcoef
+    integer,intent(inout)                   :: iflag
 
-	real(wp),dimension(nx*ny) :: temp
-	real(wp),dimension(max(2*kx*(nx+1),2*ky*(ny+1))) :: work
-	logical :: status_ok
+    real(wp),dimension(nx*ny) :: temp
+    real(wp),dimension(max(2*kx*(nx+1),2*ky*(ny+1))) :: work
+    logical :: status_ok
   
-	!check validity of inputs
-	
-	call check_inputs('db2ink',&
-						iflag,&
-						nx=nx,ny=ny,&
-						kx=kx,ky=ky,&
-						x=x,y=y,&
-						tx=tx,ty=ty,&
-						status_ok=status_ok)
-						
-	if (status_ok) then
+    !check validity of inputs
+    
+    call check_inputs('db2ink',&
+                        iflag,&
+                        nx=nx,ny=ny,&
+                        kx=kx,ky=ky,&
+                        x=x,y=y,&
+                        tx=tx,ty=ty,&
+                        status_ok=status_ok)
+                        
+    if (status_ok) then
 
-		!choose knots
+        !choose knots
 
-		if (iflag == 0) then
-			call dbknot(x,nx,kx,tx)
-			call dbknot(y,ny,ky,ty)
-		end if
+        if (iflag == 0) then
+            call dbknot(x,nx,kx,tx)
+            call dbknot(y,ny,ky,ty)
+        end if
 
-		!construct b-spline coefficients
+        !construct b-spline coefficients
 
-		call dbtpcf(x,nx,fcn, nx,ny,tx,kx,temp, work)
-		call dbtpcf(y,ny,temp,ny,nx,ty,ky,bcoef,work)
+        call dbtpcf(x,nx,fcn, nx,ny,tx,kx,temp, work)
+        call dbtpcf(y,ny,temp,ny,nx,ty,ky,bcoef,work)
 
-		iflag = 1
-	
-	end if
+        iflag = 1
+    
+    end if
 
-	end subroutine db2ink
+    end subroutine db2ink
 !*****************************************************************************************
      
 !*****************************************************************************************
 !****f* bspline_module/db2val
 !
 !  NAME
-!	db2val
+!    db2val
 !
 !  DESCRIPTION
 !
@@ -1069,64 +1069,64 @@
 !           the b-spline coefficients computed by db2ink.
 !
 !  SEE ALSO
-!	carl de boor, a practical guide to splines,
-!		springer-verlag, new york, 1978.
+!    carl de boor, a practical guide to splines,
+!        springer-verlag, new york, 1978.
 !
 !  AUTHOR
-!	boisvert, ronald, nbs
-!		scientific computing division
-!		national bureau of standards
-!		washington, dc 20234
+!    boisvert, ronald, nbs
+!        scientific computing division
+!        national bureau of standards
+!        washington, dc 20234
 !
 !  HISTORY
-!	date written   25 may 1982
+!    date written   25 may 1982
 !   000330  modified array declarations.  (jec)
-!	Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
+!    Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
 !
 !  SOURCE
 
-	real(wp) function db2val(xval,yval,idx,idy,tx,ty,nx,ny,kx,ky,bcoef)
+    real(wp) function db2val(xval,yval,idx,idy,tx,ty,nx,ny,kx,ky,bcoef)
 
-	integer,intent(in) 						:: idx, idy
-	integer,intent(in) 						:: nx, ny
-	integer,intent(in) 						:: kx, ky
-	real(wp),intent(in) 					:: xval, yval
-	real(wp),dimension(:),intent(in) 		:: tx, ty
-	real(wp),dimension(nx,ny),intent(in)	:: bcoef
+    integer,intent(in)                   :: idx, idy
+    integer,intent(in)                   :: nx, ny
+    integer,intent(in)                   :: kx, ky
+    real(wp),intent(in)                  :: xval, yval
+    real(wp),dimension(:),intent(in)     :: tx, ty
+    real(wp),dimension(nx,ny),intent(in) :: bcoef
 
-	integer :: inbv, k, lefty, mflag, kcol
-	real(wp),dimension(ky) 			 :: temp
-	real(wp),dimension(3*max(kx,ky)) :: work
+    integer :: inbv, k, lefty, mflag, kcol
+    real(wp),dimension(ky) :: temp
+    real(wp),dimension(3*max(kx,ky)) :: work
 
-	integer,save :: iloy = 1
-	integer,save :: inbvx = 1
-	
-	db2val = 0.0_wp
+    integer,save :: iloy = 1
+    integer,save :: inbvx = 1
+    
+    db2val = 0.0_wp
 
-	if (xval<tx(1) .or. xval>tx(nx+kx)) return
-	if (yval<ty(1) .or. yval>ty(ny+ky)) return
+    if (xval<tx(1) .or. xval>tx(nx+kx)) return
+    if (yval<ty(1) .or. yval>ty(ny+ky)) return
 
-	call dintrv(ty,ny+ky,yval,iloy,lefty,mflag); if (mflag /= 0) return
-	
-	inbv = 1
+    call dintrv(ty,ny+ky,yval,iloy,lefty,mflag); if (mflag /= 0) return
+    
+    inbv = 1
 
-	kcol = lefty - ky
-	do k=1,ky
-		kcol = kcol + 1
-		temp(k) = dbvalu(tx,bcoef(:,kcol),nx,kx,idx,xval,inbvx,work)
-	end do
-	
-	kcol = lefty - ky + 1
-	db2val = dbvalu(ty(kcol:),temp,ky,ky,idy,yval,inbv,work)
+    kcol = lefty - ky
+    do k=1,ky
+        kcol = kcol + 1
+        temp(k) = dbvalu(tx,bcoef(:,kcol),nx,kx,idx,xval,inbvx,work)
+    end do
+    
+    kcol = lefty - ky + 1
+    db2val = dbvalu(ty(kcol:),temp,ky,ky,idy,yval,inbv,work)
          
-	end function db2val
+    end function db2val
 !*****************************************************************************************
       
 !*****************************************************************************************
 !****f* bspline_module/db3ink
 !
 !  NAME
-!	db3ink
+!    db3ink
 !
 !  DESCRIPTION
 !
@@ -1260,82 +1260,82 @@
 !                     14 == ty not non-decreasing
 !
 !  SEE ALSO
-!	carl de boor, a practical guide to splines,
-!		springer-verlag, new york, 1978.
-!	carl de boor, efficient computer manipulation of tensor
-!		products, acm transactions on mathematical software,
-!		vol. 5 (1979), pp. 173-182.
+!    carl de boor, a practical guide to splines,
+!        springer-verlag, new york, 1978.
+!    carl de boor, efficient computer manipulation of tensor
+!        products, acm transactions on mathematical software,
+!        vol. 5 (1979), pp. 173-182.
 !
 !  AUTHOR
-!	boisvert, ronald, nbs
-!		scientific computing division
-!		national bureau of standards
-!		washington, dc 20234
+!    boisvert, ronald, nbs
+!        scientific computing division
+!        national bureau of standards
+!        washington, dc 20234
 !
 !  HISTORY
-!	date written   25 may 1982
+!    date written   25 may 1982
 !   000330  modified array declarations.  (jec)
-!	Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
+!    Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
 !
 !  SOURCE
 
-	subroutine db3ink(x,nx,y,ny,z,nz,fcn,kx,ky,kz,tx,ty,tz,bcoef,iflag)
+    subroutine db3ink(x,nx,y,ny,z,nz,fcn,kx,ky,kz,tx,ty,tz,bcoef,iflag)
 
-	integer,intent(in) 							:: nx, ny, nz
-	integer,intent(in) 							:: kx, ky, kz
-	real(wp),dimension(nx),intent(in) 			:: x
-	real(wp),dimension(ny),intent(in) 			:: y
-	real(wp),dimension(nz),intent(in) 			:: z      
-	real(wp),dimension(nx,ny,nz),intent(in) 	:: fcn
-	real(wp),dimension(:),intent(inout) 		:: tx,ty,tz
-	real(wp),dimension(nx,ny,nz),intent(out) 	:: bcoef
-	integer,intent(inout) 						:: iflag
+    integer,intent(in)                       :: nx, ny, nz
+    integer,intent(in)                       :: kx, ky, kz
+    real(wp),dimension(nx),intent(in)        :: x
+    real(wp),dimension(ny),intent(in)        :: y
+    real(wp),dimension(nz),intent(in)        :: z      
+    real(wp),dimension(nx,ny,nz),intent(in)  :: fcn
+    real(wp),dimension(:),intent(inout)      :: tx,ty,tz
+    real(wp),dimension(nx,ny,nz),intent(out) :: bcoef
+    integer,intent(inout)                    :: iflag
 
-	real(wp),dimension(nx*ny*nz) :: temp
-	real(wp),dimension(max(2*kx*(nx+1),2*ky*(ny+1),2*kz*(nz+1))) :: work
-	logical :: status_ok
+    real(wp),dimension(nx*ny*nz) :: temp
+    real(wp),dimension(max(2*kx*(nx+1),2*ky*(ny+1),2*kz*(nz+1))) :: work
+    logical :: status_ok
       
-	! check validity of input
+    ! check validity of input
 
-	call check_inputs('db3ink',&
-						iflag,&
-						nx=nx,ny=ny,nz=nz,&
-						kx=kx,ky=ky,kz=kz,&
-						x=x,y=y,z=z,&
-						tx=tx,ty=ty,tz=tz,&
-						status_ok=status_ok)
-						
-	if (status_ok) then
+    call check_inputs('db3ink',&
+                        iflag,&
+                        nx=nx,ny=ny,nz=nz,&
+                        kx=kx,ky=ky,kz=kz,&
+                        x=x,y=y,z=z,&
+                        tx=tx,ty=ty,tz=tz,&
+                        status_ok=status_ok)
+                        
+    if (status_ok) then
 
-		! choose knots
+        ! choose knots
 
-		if (iflag == 0) then
-			call dbknot(x,nx,kx,tx)
-			call dbknot(y,ny,ky,ty)
-			call dbknot(z,nz,kz,tz)
-		end if
-	
-		! copy fcn to work in packed for dbtpcf
-		temp(1:nx*ny*nz) = reshape( fcn, [nx*ny*nz] )
+        if (iflag == 0) then
+            call dbknot(x,nx,kx,tx)
+            call dbknot(y,ny,ky,ty)
+            call dbknot(z,nz,kz,tz)
+        end if
+    
+        ! copy fcn to work in packed for dbtpcf
+        temp(1:nx*ny*nz) = reshape( fcn, [nx*ny*nz] )
 
-		! construct b-spline coefficients
-		
-		call dbtpcf(x,nx,temp, nx,ny*nz,tx,kx,bcoef,work)
-		call dbtpcf(y,ny,bcoef,ny,nx*nz,ty,ky,temp, work)
-		call dbtpcf(z,nz,temp, nz,nx*ny,tz,kz,bcoef,work)
-	
-		iflag = 1
-	
-	end if
+        ! construct b-spline coefficients
+        
+        call dbtpcf(x,nx,temp, nx,ny*nz,tx,kx,bcoef,work)
+        call dbtpcf(y,ny,bcoef,ny,nx*nz,ty,ky,temp, work)
+        call dbtpcf(z,nz,temp, nz,nx*ny,tz,kz,bcoef,work)
+    
+        iflag = 1
+    
+    end if
 
-	end subroutine db3ink
+    end subroutine db3ink
 !*****************************************************************************************
 
 !*****************************************************************************************
 !****f* bspline_module/db3val
 !
 !  NAME
-!	db3val
+!    db3val
 !
 !  DESCRIPTION
 !
@@ -1420,1007 +1420,1007 @@
 !           the b-spline coefficients computed by db3ink.
 !
 !  SEE ALSO
-!	carl de boor, a practical guide to splines,
-!		springer-verlag, new york, 1978.
+!    carl de boor, a practical guide to splines,
+!        springer-verlag, new york, 1978.
 !
 !  AUTHOR
-!	boisvert, ronald, nbs
-!		scientific computing division
-!		national bureau of standards
-!		washington, dc 20234
+!    boisvert, ronald, nbs
+!        scientific computing division
+!        national bureau of standards
+!        washington, dc 20234
 !
 !  HISTORY
-!	date written   25 may 1982
+!    date written   25 may 1982
 !   000330  modified array declarations.  (jec)
-!	Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
+!    Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
 !
 !  SOURCE
 
-	real(wp) function db3val(xval,yval,zval,idx,idy,idz,&
-									 tx,ty,tz,&
-									 nx,ny,nz,kx,ky,kz,bcoef)
+    real(wp) function db3val(xval,yval,zval,idx,idy,idz,&
+                                     tx,ty,tz,&
+                                     nx,ny,nz,kx,ky,kz,bcoef)
 
-	integer,intent(in) 						:: idx, idy, idz
-	integer,intent(in) 						:: nx, ny, nz
-	integer,intent(in) 						:: kx, ky, kz
-	real(wp),intent(in) 					:: xval, yval, zval
-	real(wp),dimension(:),intent(in) 		:: tx,ty,tz
-	real(wp),dimension(nx,ny,nz),intent(in) :: bcoef
+    integer,intent(in)                      :: idx, idy, idz
+    integer,intent(in)                      :: nx, ny, nz
+    integer,intent(in)                      :: kx, ky, kz
+    real(wp),intent(in)                     :: xval, yval, zval
+    real(wp),dimension(:),intent(in)        :: tx,ty,tz
+    real(wp),dimension(nx,ny,nz),intent(in) :: bcoef
 
-	real(wp),dimension(ky,kz) 			:: temp1
-	real(wp),dimension(kz) 				:: temp2
-	real(wp),dimension(3*max(kx,ky,kz))	:: work
+    real(wp),dimension(ky,kz)              :: temp1
+    real(wp),dimension(kz)                 :: temp2
+    real(wp),dimension(3*max(kx,ky,kz))    :: work
 
-	integer :: inbv1, inbv2, lefty, leftz, mflag,&
-				kcoly, kcolz, izm1, j, k
+    integer :: inbv1, inbv2, lefty, leftz, mflag,&
+                kcoly, kcolz, izm1, j, k
 
-	integer,save :: iloy  = 1
-	integer,save :: iloz  = 1
-	integer,save :: inbvx = 1
-	
-	db3val = 0.0_wp
+    integer,save :: iloy  = 1
+    integer,save :: iloz  = 1
+    integer,save :: inbvx = 1
+    
+    db3val = 0.0_wp
 
-	if (xval<tx(1) .or. xval>tx(nx+kx)) return
-	if (yval<ty(1) .or. yval>ty(ny+ky)) return
-	if (zval<tz(1) .or. zval>tz(nz+kz)) return
+    if (xval<tx(1) .or. xval>tx(nx+kx)) return
+    if (yval<ty(1) .or. yval>ty(ny+ky)) return
+    if (zval<tz(1) .or. zval>tz(nz+kz)) return
 
-	call dintrv(ty,ny+ky,yval,iloy,lefty,mflag); if (mflag /= 0) return
-	call dintrv(tz,nz+kz,zval,iloz,leftz,mflag); if (mflag /= 0) return
+    call dintrv(ty,ny+ky,yval,iloy,lefty,mflag); if (mflag /= 0) return
+    call dintrv(tz,nz+kz,zval,iloz,leftz,mflag); if (mflag /= 0) return
 
-	inbv1 = 1
-	inbv2 = 1
+    inbv1 = 1
+    inbv2 = 1
 
-	kcolz = leftz - kz
-	do k=1,kz
-		kcolz = kcolz + 1
-		kcoly = lefty - ky
-		do j=1,ky
-			kcoly = kcoly + 1
-			temp1(j,k) = dbvalu(tx,bcoef(:,kcoly,kcolz),nx,kx,idx,xval,inbvx,work)
-		end do
-	end do
+    kcolz = leftz - kz
+    do k=1,kz
+        kcolz = kcolz + 1
+        kcoly = lefty - ky
+        do j=1,ky
+            kcoly = kcoly + 1
+            temp1(j,k) = dbvalu(tx,bcoef(:,kcoly,kcolz),nx,kx,idx,xval,inbvx,work)
+        end do
+    end do
 
-	kcoly = lefty - ky + 1
-	do k=1,kz
-		temp2(k) = dbvalu(ty(kcoly:),temp1(:,k),ky,ky,idy,yval,inbv1,work)
-	end do
+    kcoly = lefty - ky + 1
+    do k=1,kz
+        temp2(k) = dbvalu(ty(kcoly:),temp1(:,k),ky,ky,idy,yval,inbv1,work)
+    end do
 
-	kcolz = leftz - kz + 1
-	db3val = dbvalu(tz(kcolz:),temp2,kz,kz,idz,zval,inbv2,work)
+    kcolz = leftz - kz + 1
+    db3val = dbvalu(tz(kcolz:),temp2,kz,kz,idz,zval,inbv2,work)
 
-	end function db3val
+    end function db3val
 !*****************************************************************************************
 
 !*****************************************************************************************
 !****f* bspline_module/db4ink
 !
 !  NAME
-!	db4ink
+!    db4ink
 !
 !  DESCRIPTION
-!	db4ink determines the parameters of a function that interpolates
-!	the four-dimensional gridded data (x(i),y(j),z(k),q(l),fcn(i,j,k,l)) for
-!	i=1,..,nx, j=1,..,ny, k=1,..,nz, and l=1,..,nq. the interpolating function and
-!	its derivatives may subsequently be evaluated by the function db4val.
+!    db4ink determines the parameters of a function that interpolates
+!    the four-dimensional gridded data (x(i),y(j),z(k),q(l),fcn(i,j,k,l)) for
+!    i=1,..,nx, j=1,..,ny, k=1,..,nz, and l=1,..,nq. the interpolating function and
+!    its derivatives may subsequently be evaluated by the function db4val.
 !
-!	See db3ink header for more details.
+!    See db3ink header for more details.
 !
 !  AUTHOR
-!	Jacob Williams, 2/24/2015
+!    Jacob Williams, 2/24/2015
 !
 !  SOURCE
 
     subroutine db4ink(x,nx,y,ny,z,nz,q,nq,&
-    					fcn,&
-    					kx,ky,kz,kq,&
-    					tx,ty,tz,tq,&
-    					bcoef,iflag)
+                        fcn,&
+                        kx,ky,kz,kq,&
+                        tx,ty,tz,tq,&
+                        bcoef,iflag)
 
-	integer,intent(in) 							:: nx, ny, nz, nq
-	integer,intent(in) 							:: kx, ky, kz, kq
-	integer,intent(inout) 						:: iflag
-	real(wp),dimension(nx),intent(in) 			:: x
-	real(wp),dimension(ny),intent(in) 			:: y
-	real(wp),dimension(nz),intent(in) 			:: z
-	real(wp),dimension(nq),intent(in) 			:: q
-	real(wp),dimension(nx,ny,nz,nq),intent(in) 	:: fcn
-	real(wp),dimension(:),intent(inout) 		:: tx,ty,tz,tq
+    integer,intent(in)                          :: nx, ny, nz, nq
+    integer,intent(in)                          :: kx, ky, kz, kq
+    integer,intent(inout)                       :: iflag
+    real(wp),dimension(nx),intent(in)           :: x
+    real(wp),dimension(ny),intent(in)           :: y
+    real(wp),dimension(nz),intent(in)           :: z
+    real(wp),dimension(nq),intent(in)           :: q
+    real(wp),dimension(nx,ny,nz,nq),intent(in)  :: fcn
+    real(wp),dimension(:),intent(inout)         :: tx,ty,tz,tq
     real(wp),dimension(nx,ny,nz,nq),intent(out) :: bcoef
            
-	real(wp),dimension(nx*ny*nz*nq) :: temp
-	real(wp),dimension(max(2*kx*(nx+1),2*ky*(ny+1),2*kz*(nz+1),2*kq*(nq+1))) :: work
-	logical :: status_ok
+    real(wp),dimension(nx*ny*nz*nq) :: temp
+    real(wp),dimension(max(2*kx*(nx+1),2*ky*(ny+1),2*kz*(nz+1),2*kq*(nq+1))) :: work
+    logical :: status_ok
       
-	! check validity of input
-	
-	call check_inputs('db4ink',&
-						iflag,&
-						nx=nx,ny=ny,nz=nz,nq=nq,&
-						kx=kx,ky=ky,kz=kz,kq=kq,&
-						x=x,y=y,z=z,q=q,&
-						tx=tx,ty=ty,tz=tz,tq=tq,&
-						status_ok=status_ok)
-						
-	if (status_ok) then
-	
-		! choose knots
+    ! check validity of input
+    
+    call check_inputs('db4ink',&
+                        iflag,&
+                        nx=nx,ny=ny,nz=nz,nq=nq,&
+                        kx=kx,ky=ky,kz=kz,kq=kq,&
+                        x=x,y=y,z=z,q=q,&
+                        tx=tx,ty=ty,tz=tz,tq=tq,&
+                        status_ok=status_ok)
+                        
+    if (status_ok) then
+    
+        ! choose knots
 
-		if (iflag == 0) then
-			call dbknot(x,nx,kx,tx)
-			call dbknot(y,ny,ky,ty)
-			call dbknot(z,nz,kz,tz)
-			call dbknot(q,nq,kq,tq)
-		end if
+        if (iflag == 0) then
+            call dbknot(x,nx,kx,tx)
+            call dbknot(y,ny,ky,ty)
+            call dbknot(z,nz,kz,tz)
+            call dbknot(q,nq,kq,tq)
+        end if
 
-		! construct b-spline coefficients
+        ! construct b-spline coefficients
 
-		call dbtpcf(x,nx,fcn,  nx,ny*nz*nq,tx,kx,temp, work)
-		call dbtpcf(y,ny,temp, ny,nx*nz*nq,ty,ky,bcoef,work)
-		call dbtpcf(z,nz,bcoef,nz,nx*ny*nq,tz,kz,temp, work)
-		call dbtpcf(q,nq,temp, nq,nx*ny*nz,tq,kq,bcoef,work)
-	  
-		iflag = 1
- 	
- 	end if
+        call dbtpcf(x,nx,fcn,  nx,ny*nz*nq,tx,kx,temp, work)
+        call dbtpcf(y,ny,temp, ny,nx*nz*nq,ty,ky,bcoef,work)
+        call dbtpcf(z,nz,bcoef,nz,nx*ny*nq,tz,kz,temp, work)
+        call dbtpcf(q,nq,temp, nq,nx*ny*nz,tq,kq,bcoef,work)
+      
+        iflag = 1
+     
+     end if
 
-	end subroutine db4ink
+    end subroutine db4ink
 !*****************************************************************************************
 
 !*****************************************************************************************
 !****f* bspline_module/db4val
 !
 !  NAME
-!	db4val
+!    db4val
 !
 !  DESCRIPTION
-!	db4val evaluates the tensor product piecewise polynomial
-!	interpolant constructed by the routine db4ink or one of its
-!	derivatives at the point (xval,yval,zval,qval). to evaluate the
-!	interpolant itself, set idx=idy=idz=idq=0, to evaluate the first
-!	partial with respect to x, set idx=1,idy=idz=idq=0, and so on.
+!    db4val evaluates the tensor product piecewise polynomial
+!    interpolant constructed by the routine db4ink or one of its
+!    derivatives at the point (xval,yval,zval,qval). to evaluate the
+!    interpolant itself, set idx=idy=idz=idq=0, to evaluate the first
+!    partial with respect to x, set idx=1,idy=idz=idq=0, and so on.
 !
-!	See db3val header for more information.
+!    See db3val header for more information.
 !
 !  AUTHOR
-!	Jacob Williams, 2/24/2025
+!    Jacob Williams, 2/24/2025
 !
 !  SOURCE
 
-	real(wp) function db4val(xval,yval,zval,qval,&
-								idx,idy,idz,idq,&
-								tx,ty,tz,tq,&
-								nx,ny,nz,nq,&
-								kx,ky,kz,kq,&
-								bcoef)
+    real(wp) function db4val(xval,yval,zval,qval,&
+                                idx,idy,idz,idq,&
+                                tx,ty,tz,tq,&
+                                nx,ny,nz,nq,&
+                                kx,ky,kz,kq,&
+                                bcoef)
 
-	integer,intent(in) 							:: idx, idy, idz, idq
-	integer,intent(in) 							:: nx, ny, nz, nq
-	integer,intent(in) 							:: kx, ky, kz, kq
-	real(wp),intent(in) 						:: xval, yval, zval, qval
-	real(wp),dimension(:),intent(in) 			:: tx,ty,tz,tq
-	real(wp),dimension(nx,ny,nz,nq),intent(in) 	:: bcoef
-	
-	real(wp),dimension(ky,kz,kq) 			:: temp1
-	real(wp),dimension(kz,kq)    			:: temp2
-	real(wp),dimension(kq)       			:: temp3
-	real(wp),dimension(3*max(kx,ky,kz,kq)) 	:: work
-	integer :: inbv1, inbv2, inbv3, lefty, leftz, leftq, mflag,&
-				kcoly, kcolz, kcolq, i, j, k, q
+    integer,intent(in)                          :: idx, idy, idz, idq
+    integer,intent(in)                          :: nx, ny, nz, nq
+    integer,intent(in)                          :: kx, ky, kz, kq
+    real(wp),intent(in)                         :: xval, yval, zval, qval
+    real(wp),dimension(:),intent(in)            :: tx,ty,tz,tq
+    real(wp),dimension(nx,ny,nz,nq),intent(in)  :: bcoef
+    
+    real(wp),dimension(ky,kz,kq)             :: temp1
+    real(wp),dimension(kz,kq)                :: temp2
+    real(wp),dimension(kq)                   :: temp3
+    real(wp),dimension(3*max(kx,ky,kz,kq))   :: work
+    integer :: inbv1, inbv2, inbv3, lefty, leftz, leftq, mflag,&
+                kcoly, kcolz, kcolq, i, j, k, q
 
-	integer,save :: iloy  = 1
-	integer,save :: iloz  = 1
-	integer,save :: iloq  = 1
-	integer,save :: inbvx = 1
-	
-	db4val = 0.0_wp
+    integer,save :: iloy  = 1
+    integer,save :: iloz  = 1
+    integer,save :: iloq  = 1
+    integer,save :: inbvx = 1
+    
+    db4val = 0.0_wp
 
-	if (xval<tx(1) .or. xval>tx(nx+kx) ) return
-	if (yval<ty(1) .or. yval>ty(ny+ky) ) return
-	if (zval<tz(1) .or. zval>tz(nz+kz) ) return
-	if (qval<tq(1) .or. qval>tq(nq+kq) ) return
+    if (xval<tx(1) .or. xval>tx(nx+kx) ) return
+    if (yval<ty(1) .or. yval>ty(ny+ky) ) return
+    if (zval<tz(1) .or. zval>tz(nz+kz) ) return
+    if (qval<tq(1) .or. qval>tq(nq+kq) ) return
 
-	call dintrv(ty,ny+ky,yval,iloy,lefty,mflag); if (mflag /= 0) return
-	call dintrv(tz,nz+kz,zval,iloz,leftz,mflag); if (mflag /= 0) return
-	call dintrv(tq,nq+kq,qval,iloq,leftq,mflag); if (mflag /= 0) return
+    call dintrv(ty,ny+ky,yval,iloy,lefty,mflag); if (mflag /= 0) return
+    call dintrv(tz,nz+kz,zval,iloz,leftz,mflag); if (mflag /= 0) return
+    call dintrv(tq,nq+kq,qval,iloq,leftq,mflag); if (mflag /= 0) return
 
-	inbv1 = 1
-	inbv2 = 1
-	inbv3 = 1
+    inbv1 = 1
+    inbv2 = 1
+    inbv3 = 1
 
-	! x -> y, z, q
-	kcolq = leftq - kq
-	do q=1,kq
-		kcolq = kcolq + 1
-		kcolz = leftz - kz
-		do k=1,kz
-			kcolz = kcolz + 1
-			kcoly = lefty - ky
-			do j=1,ky
-				kcoly = kcoly + 1
-				temp1(j,k,q) = dbvalu(tx,bcoef(:,kcoly,kcolz,kcolq),&
-										nx,kx,idx,xval,inbvx,work)
-			end do
-		end do
-	end do
+    ! x -> y, z, q
+    kcolq = leftq - kq
+    do q=1,kq
+        kcolq = kcolq + 1
+        kcolz = leftz - kz
+        do k=1,kz
+            kcolz = kcolz + 1
+            kcoly = lefty - ky
+            do j=1,ky
+                kcoly = kcoly + 1
+                temp1(j,k,q) = dbvalu(tx,bcoef(:,kcoly,kcolz,kcolq),&
+                                        nx,kx,idx,xval,inbvx,work)
+            end do
+        end do
+    end do
 
-	! y -> z, q
-	kcoly = lefty - ky + 1
-	do q=1,kq
-		do k=1,kz
-			temp2(k,q) = dbvalu(ty(kcoly:),temp1(:,k,q),ky,ky,idy,yval,inbv1,work)    
-		end do
-	end do
+    ! y -> z, q
+    kcoly = lefty - ky + 1
+    do q=1,kq
+        do k=1,kz
+            temp2(k,q) = dbvalu(ty(kcoly:),temp1(:,k,q),ky,ky,idy,yval,inbv1,work)    
+        end do
+    end do
 
-	! z -> q
-	kcolz = leftz - kz + 1
-	do q=1,kq
-		temp3(q) = dbvalu(tz(kcolz:),temp2(:,q),kz,kz,idz,zval,inbv2,work)    
-	end do
+    ! z -> q
+    kcolz = leftz - kz + 1
+    do q=1,kq
+        temp3(q) = dbvalu(tz(kcolz:),temp2(:,q),kz,kz,idz,zval,inbv2,work)    
+    end do
 
-	! q
-	kcolq = leftq - kq + 1
-	db4val = dbvalu(tq(kcolq:),temp3,kq,kq,idq,qval,inbv3,work) 
+    ! q
+    kcolq = leftq - kq + 1
+    db4val = dbvalu(tq(kcolq:),temp3,kq,kq,idq,qval,inbv3,work) 
 
-	end function db4val
+    end function db4val
 !*****************************************************************************************
 
 !*****************************************************************************************
 !****f* bspline_module/db5ink
 !
 !  NAME
-!	db5ink
+!    db5ink
 !
 !  DESCRIPTION
-!	db5ink determines the parameters of a function that interpolates
-!	the five-dimensional gridded data (x(i),y(j),z(k),q(l),r(m),fcn(i,j,k,l,m)) for
-!	i=1,..,nx, j=1,..,ny, k=1,..,nz, l=1,..,nq, and m=1,..,nr. 
-!	the interpolating function and its derivatives may subsequently be evaluated 
-!	by the function db5val.
+!    db5ink determines the parameters of a function that interpolates
+!    the five-dimensional gridded data (x(i),y(j),z(k),q(l),r(m),fcn(i,j,k,l,m)) for
+!    i=1,..,nx, j=1,..,ny, k=1,..,nz, l=1,..,nq, and m=1,..,nr. 
+!    the interpolating function and its derivatives may subsequently be evaluated 
+!    by the function db5val.
 !
-!	See db3ink header for more details.
+!    See db3ink header for more details.
 !
 !  AUTHOR
-!	Jacob Williams, 2/24/2015
+!    Jacob Williams, 2/24/2015
 !
 !  SOURCE
 
     subroutine db5ink(x,nx,y,ny,z,nz,q,nq,r,nr,&
-    					fcn,&
-    					kx,ky,kz,kq,kr,&
-    					tx,ty,tz,tq,tr,&
-    					bcoef,iflag)
+                        fcn,&
+                        kx,ky,kz,kq,kr,&
+                        tx,ty,tz,tq,tr,&
+                        bcoef,iflag)
 
-	integer,intent(in) 								:: nx, ny, nz, nq, nr
-	integer,intent(in) 								:: kx, ky, kz, kq, kr
-	integer,intent(inout) 							:: iflag
-	real(wp),dimension(nx),intent(in) 				:: x
-	real(wp),dimension(ny),intent(in) 				:: y
-	real(wp),dimension(nz),intent(in) 				:: z
-	real(wp),dimension(nq),intent(in) 				:: q
-	real(wp),dimension(nr),intent(in) 				:: r
-	real(wp),dimension(nx,ny,nz,nq,nr),intent(in) 	:: fcn
-	real(wp),dimension(:),intent(inout) 			:: tx,ty,tz,tq,tr
-    real(wp),dimension(nx,ny,nz,nq,nr),intent(out) 	:: bcoef
+    integer,intent(in)                              :: nx, ny, nz, nq, nr
+    integer,intent(in)                              :: kx, ky, kz, kq, kr
+    integer,intent(inout)                           :: iflag
+    real(wp),dimension(nx),intent(in)               :: x
+    real(wp),dimension(ny),intent(in)               :: y
+    real(wp),dimension(nz),intent(in)               :: z
+    real(wp),dimension(nq),intent(in)               :: q
+    real(wp),dimension(nr),intent(in)               :: r
+    real(wp),dimension(nx,ny,nz,nq,nr),intent(in)   :: fcn
+    real(wp),dimension(:),intent(inout)             :: tx,ty,tz,tq,tr
+    real(wp),dimension(nx,ny,nz,nq,nr),intent(out)  :: bcoef
            
-	real(wp),dimension(nx*ny*nz*nq*nr) :: temp
-	real(wp),dimension(max(	2*kx*(nx+1),&
-							2*ky*(ny+1),&
-							2*kz*(nz+1),&
-							2*kq*(nq+1),&
-							2*kr*(nr+1) )) :: work
-	logical :: status_ok
+    real(wp),dimension(nx*ny*nz*nq*nr) :: temp
+    real(wp),dimension(max( 2*kx*(nx+1),&
+                            2*ky*(ny+1),&
+                            2*kz*(nz+1),&
+                            2*kq*(nq+1),&
+                            2*kr*(nr+1) )) :: work
+    logical :: status_ok
       
-	!  check validity of input
-	
-	call check_inputs('db5ink',&
-						iflag,&
-						nx=nx,ny=ny,nz=nz,nq=nq,nr=nr,&
-						kx=kx,ky=ky,kz=kz,kq=kq,kr=kr,&
-						x=x,y=y,z=z,q=q,r=r,&
-						tx=tx,ty=ty,tz=tz,tq=tq,tr=tr,&
-						status_ok=status_ok)
-						
-	if (status_ok) then
-	
-		!  choose knots
+    !  check validity of input
+    
+    call check_inputs('db5ink',&
+                        iflag,&
+                        nx=nx,ny=ny,nz=nz,nq=nq,nr=nr,&
+                        kx=kx,ky=ky,kz=kz,kq=kq,kr=kr,&
+                        x=x,y=y,z=z,q=q,r=r,&
+                        tx=tx,ty=ty,tz=tz,tq=tq,tr=tr,&
+                        status_ok=status_ok)
+                        
+    if (status_ok) then
+    
+        !  choose knots
 
-		if (iflag == 0) then
-			call dbknot(x,nx,kx,tx)
-			call dbknot(y,ny,ky,ty)
-			call dbknot(z,nz,kz,tz)
-			call dbknot(q,nq,kq,tq)
-			call dbknot(r,nr,kr,tr)
-		end if
+        if (iflag == 0) then
+            call dbknot(x,nx,kx,tx)
+            call dbknot(y,ny,ky,ty)
+            call dbknot(z,nz,kz,tz)
+            call dbknot(q,nq,kq,tq)
+            call dbknot(r,nr,kr,tr)
+        end if
 
-		! copy fcn to work in packed for dbtpcf
-	
-		temp(1:nx*ny*nz*nq*nr) = reshape( fcn, [nx*ny*nz*nq*nr] )
+        ! copy fcn to work in packed for dbtpcf
+    
+        temp(1:nx*ny*nz*nq*nr) = reshape( fcn, [nx*ny*nz*nq*nr] )
 
-		!  construct b-spline coefficients
-	
-		call dbtpcf(x,nx,temp,  nx,ny*nz*nq*nr,tx,kx,bcoef, work)
-		call dbtpcf(y,ny,bcoef, ny,nx*nz*nq*nr,ty,ky,temp,	work)
-		call dbtpcf(z,nz,temp,  nz,nx*ny*nq*nr,tz,kz,bcoef, work)
-		call dbtpcf(q,nq,bcoef, nq,nx*ny*nz*nr,tq,kq,temp,	work)
-		call dbtpcf(r,nr,temp,  nr,nx*ny*nz*nq,tr,kr,bcoef,	work)
-	  
-		iflag = 1
- 	
- 	end if
+        !  construct b-spline coefficients
+    
+        call dbtpcf(x,nx,temp,  nx,ny*nz*nq*nr,tx,kx,bcoef, work)
+        call dbtpcf(y,ny,bcoef, ny,nx*nz*nq*nr,ty,ky,temp,  work)
+        call dbtpcf(z,nz,temp,  nz,nx*ny*nq*nr,tz,kz,bcoef, work)
+        call dbtpcf(q,nq,bcoef, nq,nx*ny*nz*nr,tq,kq,temp,  work)
+        call dbtpcf(r,nr,temp,  nr,nx*ny*nz*nq,tr,kr,bcoef, work)
+      
+        iflag = 1
+     
+     end if
 
-	end subroutine db5ink
+    end subroutine db5ink
 !*****************************************************************************************
 
 !*****************************************************************************************
 !****f* bspline_module/db5val
 !
 !  NAME
-!	db5val
+!    db5val
 !
 !  DESCRIPTION
-!	db5val evaluates the tensor product piecewise polynomial
-!	interpolant constructed by the routine db5ink or one of its
-!	derivatives at the point (xval,yval,zval,qval,rval). to evaluate the
-!	interpolant itself, set idx=idy=idz=idq=idr=0, to evaluate the first
-!	partial with respect to x, set idx=1,idy=idz=idq=idr=0, and so on.
+!    db5val evaluates the tensor product piecewise polynomial
+!    interpolant constructed by the routine db5ink or one of its
+!    derivatives at the point (xval,yval,zval,qval,rval). to evaluate the
+!    interpolant itself, set idx=idy=idz=idq=idr=0, to evaluate the first
+!    partial with respect to x, set idx=1,idy=idz=idq=idr=0, and so on.
 !
-!	See db3val header for more information.
+!    See db3val header for more information.
 !
 !  AUTHOR
-!	Jacob Williams, 2/24/2025
+!    Jacob Williams, 2/24/2025
 !
 !  SOURCE
 
-	real(wp) function db5val(xval,yval,zval,qval,rval,&
-								idx,idy,idz,idq,idr,&
-								tx,ty,tz,tq,tr,&
-								nx,ny,nz,nq,nr,&
-								kx,ky,kz,kq,kr,&
-								bcoef)
+    real(wp) function db5val(xval,yval,zval,qval,rval,&
+                                idx,idy,idz,idq,idr,&
+                                tx,ty,tz,tq,tr,&
+                                nx,ny,nz,nq,nr,&
+                                kx,ky,kz,kq,kr,&
+                                bcoef)
 
-	integer,intent(in) 								:: idx, idy, idz, idq, idr
-	integer,intent(in) 								:: nx, ny, nz, nq, nr
-	integer,intent(in) 								:: kx, ky, kz, kq, kr
-	real(wp),intent(in) 							:: xval, yval, zval, qval, rval
-	real(wp),dimension(:),intent(in) 				:: tx,ty,tz,tq,tr
-	real(wp),dimension(nx,ny,nz,nq,nr),intent(in) 	:: bcoef
-	
-	real(wp),dimension(ky,kz,kq,kr) 			:: temp1
-	real(wp),dimension(kz,kq,kr) 				:: temp2
-	real(wp),dimension(kq,kr)    				:: temp3
-	real(wp),dimension(kr)       				:: temp4
-	real(wp),dimension(3*max(kx,ky,kz,kq,kr)) 	:: work
-	integer :: inbv1, inbv2, inbv3, inbv4,&
-				lefty, leftz, leftq, leftr, mflag,&
-				kcoly, kcolz, kcolq, kcolr, i, j, k, q, r
+    integer,intent(in)                            :: idx, idy, idz, idq, idr
+    integer,intent(in)                            :: nx, ny, nz, nq, nr
+    integer,intent(in)                            :: kx, ky, kz, kq, kr
+    real(wp),intent(in)                           :: xval, yval, zval, qval, rval
+    real(wp),dimension(:),intent(in)              :: tx,ty,tz,tq,tr
+    real(wp),dimension(nx,ny,nz,nq,nr),intent(in) :: bcoef
+    
+    real(wp),dimension(ky,kz,kq,kr)           :: temp1
+    real(wp),dimension(kz,kq,kr)              :: temp2
+    real(wp),dimension(kq,kr)                 :: temp3
+    real(wp),dimension(kr)                    :: temp4
+    real(wp),dimension(3*max(kx,ky,kz,kq,kr)) :: work
+    integer :: inbv1, inbv2, inbv3, inbv4,&
+                lefty, leftz, leftq, leftr, mflag,&
+                kcoly, kcolz, kcolq, kcolr, i, j, k, q, r
 
-	integer,save :: iloy  = 1
-	integer,save :: iloz  = 1
-	integer,save :: iloq  = 1
-	integer,save :: ilor  = 1
-	integer,save :: inbvx = 1
-	
-	db5val = 0.0_wp
-		
-	if ( xval<tx(1) .or. xval>tx(nx+kx) ) return
-	if ( yval<ty(1) .or. yval>ty(ny+ky) ) return
-	if ( zval<tz(1) .or. zval>tz(nz+kz) ) return
-	if ( qval<tq(1) .or. qval>tq(nq+kq) ) return
-	if ( rval<tr(1) .or. rval>tr(nr+kr) ) return
-	
-	call dintrv(ty,ny+ky,yval,iloy,lefty,mflag); if (mflag /= 0) return
-	call dintrv(tz,nz+kz,zval,iloz,leftz,mflag); if (mflag /= 0) return
-	call dintrv(tq,nq+kq,qval,iloq,leftq,mflag); if (mflag /= 0) return
-	call dintrv(tr,nr+kr,rval,ilor,leftr,mflag); if (mflag /= 0) return
-		
-	inbv1 = 1
-	inbv2 = 1
-	inbv3 = 1
-	inbv4 = 1
+    integer,save :: iloy  = 1
+    integer,save :: iloz  = 1
+    integer,save :: iloq  = 1
+    integer,save :: ilor  = 1
+    integer,save :: inbvx = 1
+    
+    db5val = 0.0_wp
+        
+    if ( xval<tx(1) .or. xval>tx(nx+kx) ) return
+    if ( yval<ty(1) .or. yval>ty(ny+ky) ) return
+    if ( zval<tz(1) .or. zval>tz(nz+kz) ) return
+    if ( qval<tq(1) .or. qval>tq(nq+kq) ) return
+    if ( rval<tr(1) .or. rval>tr(nr+kr) ) return
+    
+    call dintrv(ty,ny+ky,yval,iloy,lefty,mflag); if (mflag /= 0) return
+    call dintrv(tz,nz+kz,zval,iloz,leftz,mflag); if (mflag /= 0) return
+    call dintrv(tq,nq+kq,qval,iloq,leftq,mflag); if (mflag /= 0) return
+    call dintrv(tr,nr+kr,rval,ilor,leftr,mflag); if (mflag /= 0) return
+        
+    inbv1 = 1
+    inbv2 = 1
+    inbv3 = 1
+    inbv4 = 1
 
-	! x -> y, z, q, r
-	kcolr = leftr - kr
-	do r=1,kr
-		kcolr = kcolr + 1
-		kcolq = leftq - kq
-		do q=1,kq
-			kcolq = kcolq + 1
-			kcolz = leftz - kz
-			do k=1,kz
-				kcolz = kcolz + 1
-				kcoly = lefty - ky
-				do j=1,ky
-					kcoly = kcoly + 1
-					temp1(j,k,q,r) = dbvalu(tx,bcoef(:,kcoly,kcolz,kcolq,kcolr),&
-											nx,kx,idx,xval,inbvx,work)
-				end do
-			end do
-		end do	
-	end do
-	
-	! y -> z, q, r
-	kcoly = lefty - ky + 1
-	do r=1,kr
-		do q=1,kq
-			do k=1,kz
-				temp2(k,q,r) = dbvalu(ty(kcoly:),temp1(:,k,q,r),ky,ky,idy,yval,inbv1,work)    
-			end do
-		end do
-	end do
-	
-	! z -> q, r
-	kcolz = leftz - kz + 1	
-	do r=1,kr
-		do q=1,kq
-			temp3(q,r) = dbvalu(tz(kcolz:),temp2(:,q,r),kz,kz,idz,zval,inbv2,work)    
-		end do	
-	end do
-	
-	! q -> r
-	kcolq = leftq - kq + 1
-	do r=1,kr
-		temp4(r) = dbvalu(tq(kcolq:),temp3(:,r),kq,kq,idq,qval,inbv3,work)    
-	end do
-	
-	! r
-	kcolr = leftr - kr + 1
-	db5val = dbvalu(tr(kcolr:),temp4,kr,kr,idr,rval,inbv4,work) 
-	
-	end function db5val
+    ! x -> y, z, q, r
+    kcolr = leftr - kr
+    do r=1,kr
+        kcolr = kcolr + 1
+        kcolq = leftq - kq
+        do q=1,kq
+            kcolq = kcolq + 1
+            kcolz = leftz - kz
+            do k=1,kz
+                kcolz = kcolz + 1
+                kcoly = lefty - ky
+                do j=1,ky
+                    kcoly = kcoly + 1
+                    temp1(j,k,q,r) = dbvalu(tx,bcoef(:,kcoly,kcolz,kcolq,kcolr),&
+                                            nx,kx,idx,xval,inbvx,work)
+                end do
+            end do
+        end do    
+    end do
+    
+    ! y -> z, q, r
+    kcoly = lefty - ky + 1
+    do r=1,kr
+        do q=1,kq
+            do k=1,kz
+                temp2(k,q,r) = dbvalu(ty(kcoly:),temp1(:,k,q,r),ky,ky,idy,yval,inbv1,work)    
+            end do
+        end do
+    end do
+    
+    ! z -> q, r
+    kcolz = leftz - kz + 1    
+    do r=1,kr
+        do q=1,kq
+            temp3(q,r) = dbvalu(tz(kcolz:),temp2(:,q,r),kz,kz,idz,zval,inbv2,work)    
+        end do    
+    end do
+    
+    ! q -> r
+    kcolq = leftq - kq + 1
+    do r=1,kr
+        temp4(r) = dbvalu(tq(kcolq:),temp3(:,r),kq,kq,idq,qval,inbv3,work)    
+    end do
+    
+    ! r
+    kcolr = leftr - kr + 1
+    db5val = dbvalu(tr(kcolr:),temp4,kr,kr,idr,rval,inbv4,work) 
+    
+    end function db5val
 !*****************************************************************************************
 
 !*****************************************************************************************
 !****f* bspline_module/db6ink
 !
 !  NAME
-!	db6ink
+!    db6ink
 !
 !  DESCRIPTION
-!	db6ink determines the parameters of a function that interpolates
-!	the six-dimensional gridded data (x(i),y(j),z(k),q(l),r(m),s(n),fcn(i,j,k,l,m,n)) for
-!	i=1,..,nx, j=1,..,ny, k=1,..,nz, l=1,..,nq, m=1,..,nr, n=1,..,ns. 
-!	the interpolating function and its derivatives may subsequently be evaluated 
-!	by the function db6val.
+!    db6ink determines the parameters of a function that interpolates
+!    the six-dimensional gridded data (x(i),y(j),z(k),q(l),r(m),s(n),fcn(i,j,k,l,m,n)) for
+!    i=1,..,nx, j=1,..,ny, k=1,..,nz, l=1,..,nq, m=1,..,nr, n=1,..,ns. 
+!    the interpolating function and its derivatives may subsequently be evaluated 
+!    by the function db6val.
 !
-!	See db3ink header for more details.
+!    See db3ink header for more details.
 !
 !  AUTHOR
-!	Jacob Williams, 2/24/2015
+!    Jacob Williams, 2/24/2015
 !
 !  SOURCE
 
     subroutine db6ink(x,nx,y,ny,z,nz,q,nq,r,nr,s,ns,&
-    					fcn,&
-    					kx,ky,kz,kq,kr,ks,&
-    					tx,ty,tz,tq,tr,ts,&
-    					bcoef,iflag)
+                        fcn,&
+                        kx,ky,kz,kq,kr,ks,&
+                        tx,ty,tz,tq,tr,ts,&
+                        bcoef,iflag)
 
-	integer,intent(in) 									:: nx,ny,nz,nq,nr,ns
-	integer,intent(in) 									:: kx,ky,kz,kq,kr,ks
-	integer,intent(inout) 								:: iflag
-	real(wp),dimension(nx),intent(in) 					:: x
-	real(wp),dimension(ny),intent(in) 					:: y
-	real(wp),dimension(nz),intent(in) 					:: z
-	real(wp),dimension(nq),intent(in) 					:: q
-	real(wp),dimension(nr),intent(in) 					:: r
-	real(wp),dimension(ns),intent(in) 					:: s
-	real(wp),dimension(nx,ny,nz,nq,nr,ns),intent(in)	:: fcn
-	real(wp),dimension(:),intent(inout) 				:: tx,ty,tz,tq,tr,ts
-    real(wp),dimension(nx,ny,nz,nq,nr,ns),intent(out)	:: bcoef
+    integer,intent(in)                                :: nx,ny,nz,nq,nr,ns
+    integer,intent(in)                                :: kx,ky,kz,kq,kr,ks
+    integer,intent(inout)                             :: iflag
+    real(wp),dimension(nx),intent(in)                 :: x
+    real(wp),dimension(ny),intent(in)                 :: y
+    real(wp),dimension(nz),intent(in)                 :: z
+    real(wp),dimension(nq),intent(in)                 :: q
+    real(wp),dimension(nr),intent(in)                 :: r
+    real(wp),dimension(ns),intent(in)                 :: s
+    real(wp),dimension(nx,ny,nz,nq,nr,ns),intent(in)  :: fcn
+    real(wp),dimension(:),intent(inout)               :: tx,ty,tz,tq,tr,ts
+    real(wp),dimension(nx,ny,nz,nq,nr,ns),intent(out) :: bcoef
            
-	real(wp),dimension(nx*ny*nz*nq*nr*ns) :: temp
-	real(wp),dimension(max(	2*kx*(nx+1),&
-							2*ky*(ny+1),&
-							2*kz*(nz+1),&
-							2*kq*(nq+1),&
-							2*kr*(nr+1),&
-							2*ks*(ns+1))) :: work
-	logical :: status_ok
+    real(wp),dimension(nx*ny*nz*nq*nr*ns) :: temp
+    real(wp),dimension(max( 2*kx*(nx+1),&
+                            2*ky*(ny+1),&
+                            2*kz*(nz+1),&
+                            2*kq*(nq+1),&
+                            2*kr*(nr+1),&
+                            2*ks*(ns+1))) :: work
+    logical :: status_ok
       
-	! check validity of input
-	
-	call check_inputs('db6ink',&
-						iflag,&
-						nx=nx,ny=ny,nz=nz,nq=nq,nr=nr,ns=ns,&
-						kx=kx,ky=ky,kz=kz,kq=kq,kr=kr,ks=ks,&
-						x=x,y=y,z=z,q=q,r=r,s=s,&
-						tx=tx,ty=ty,tz=tz,tq=tq,tr=tr,ts=ts,&
-						status_ok=status_ok)
-						
-	if (status_ok) then
-	
-		! choose knots
+    ! check validity of input
+    
+    call check_inputs('db6ink',&
+                        iflag,&
+                        nx=nx,ny=ny,nz=nz,nq=nq,nr=nr,ns=ns,&
+                        kx=kx,ky=ky,kz=kz,kq=kq,kr=kr,ks=ks,&
+                        x=x,y=y,z=z,q=q,r=r,s=s,&
+                        tx=tx,ty=ty,tz=tz,tq=tq,tr=tr,ts=ts,&
+                        status_ok=status_ok)
+                        
+    if (status_ok) then
+    
+        ! choose knots
 
-		if (iflag == 0) then
-			call dbknot(x,nx,kx,tx)
-			call dbknot(y,ny,ky,ty)
-			call dbknot(z,nz,kz,tz)
-			call dbknot(q,nq,kq,tq)
-			call dbknot(r,nr,kr,tr)
-			call dbknot(s,ns,ks,ts)
-		end if
+        if (iflag == 0) then
+            call dbknot(x,nx,kx,tx)
+            call dbknot(y,ny,ky,ty)
+            call dbknot(z,nz,kz,tz)
+            call dbknot(q,nq,kq,tq)
+            call dbknot(r,nr,kr,tr)
+            call dbknot(s,ns,ks,ts)
+        end if
 
-		! construct b-spline coefficients
-	
-		call dbtpcf(x,nx,fcn,  nx,ny*nz*nq*nr*ns,tx,kx,temp, work)
-		call dbtpcf(y,ny,temp, ny,nx*nz*nq*nr*ns,ty,ky,bcoef,work)
-		call dbtpcf(z,nz,bcoef,nz,nx*ny*nq*nr*ns,tz,kz,temp, work)
-		call dbtpcf(q,nq,temp, nq,nx*ny*nz*nr*ns,tq,kq,bcoef,work)
-		call dbtpcf(r,nr,bcoef,nr,nx*ny*nz*nq*ns,tr,kr,temp, work)
-		call dbtpcf(s,ns,temp, ns,nx*ny*nz*nq*nr,ts,ks,bcoef,work)
-	  
-		iflag = 1
- 	
- 	end if
+        ! construct b-spline coefficients
+    
+        call dbtpcf(x,nx,fcn,  nx,ny*nz*nq*nr*ns,tx,kx,temp, work)
+        call dbtpcf(y,ny,temp, ny,nx*nz*nq*nr*ns,ty,ky,bcoef,work)
+        call dbtpcf(z,nz,bcoef,nz,nx*ny*nq*nr*ns,tz,kz,temp, work)
+        call dbtpcf(q,nq,temp, nq,nx*ny*nz*nr*ns,tq,kq,bcoef,work)
+        call dbtpcf(r,nr,bcoef,nr,nx*ny*nz*nq*ns,tr,kr,temp, work)
+        call dbtpcf(s,ns,temp, ns,nx*ny*nz*nq*nr,ts,ks,bcoef,work)
+      
+        iflag = 1
+     
+     end if
 
-	end subroutine db6ink
+    end subroutine db6ink
 !*****************************************************************************************
 
 !*****************************************************************************************
 !****f* bspline_module/db6val
 !
 !  NAME
-!	db6val
+!    db6val
 !
 !  DESCRIPTION
-!	db6val evaluates the tensor product piecewise polynomial
-!	interpolant constructed by the routine db6ink or one of its
-!	derivatives at the point (xval,yval,zval,qval,rval,sval). to evaluate the
-!	interpolant itself, set idx=idy=idz=idq=idr=ids=0, to evaluate the first
-!	partial with respect to x, set idx=1,idy=idz=idq=idr=ids=0, and so on.
+!    db6val evaluates the tensor product piecewise polynomial
+!    interpolant constructed by the routine db6ink or one of its
+!    derivatives at the point (xval,yval,zval,qval,rval,sval). to evaluate the
+!    interpolant itself, set idx=idy=idz=idq=idr=ids=0, to evaluate the first
+!    partial with respect to x, set idx=1,idy=idz=idq=idr=ids=0, and so on.
 !
-!	See db3val header for more information.
+!    See db3val header for more information.
 !
 !  AUTHOR
-!	Jacob Williams, 2/24/2025
+!    Jacob Williams, 2/24/2025
 !
 !  SOURCE
 
-	real(wp) function db6val(xval,yval,zval,qval,rval,sval,&
-								idx,idy,idz,idq,idr,ids,&
-								tx,ty,tz,tq,tr,ts,&
-								nx,ny,nz,nq,nr,ns,&
-								kx,ky,kz,kq,kr,ks,&
-								bcoef)
+    real(wp) function db6val(xval,yval,zval,qval,rval,sval,&
+                                idx,idy,idz,idq,idr,ids,&
+                                tx,ty,tz,tq,tr,ts,&
+                                nx,ny,nz,nq,nr,ns,&
+                                kx,ky,kz,kq,kr,ks,&
+                                bcoef)
 
-	integer,intent(in) 								 :: idx,idy,idz,idq,idr,ids
-	integer,intent(in) 								 :: nx,ny,nz,nq,nr,ns
-	integer,intent(in) 								 :: kx,ky,kz,kq,kr,ks
-	real(wp),intent(in) 							 :: xval,yval,zval,qval,rval,sval
-	real(wp),dimension(:),intent(in) 				 :: tx,ty,tz,tq,tr,ts
-	real(wp),dimension(nx,ny,nz,nq,nr,ns),intent(in) :: bcoef
-	
-	real(wp),dimension(ky,kz,kq,kr,ks) 			 :: temp1
-	real(wp),dimension(kz,kq,kr,ks) 			 :: temp2
-	real(wp),dimension(kq,kr,ks) 				 :: temp3
-	real(wp),dimension(kr,ks)    				 :: temp4
-	real(wp),dimension(ks)       				 :: temp5
-	real(wp),dimension(3*max(kx,ky,kz,kq,kr,ks)) :: work
-	
-	integer :: inbv1,inbv2,inbv3,inbv4,inbv5,&
-				lefty,leftz,leftq,leftr,lefts,&
-				mflag,&
-				kcoly,kcolz,kcolq,kcolr,kcols,&
-				i,j,k,q,r,s
+    integer,intent(in)                               :: idx,idy,idz,idq,idr,ids
+    integer,intent(in)                               :: nx,ny,nz,nq,nr,ns
+    integer,intent(in)                               :: kx,ky,kz,kq,kr,ks
+    real(wp),intent(in)                              :: xval,yval,zval,qval,rval,sval
+    real(wp),dimension(:),intent(in)                 :: tx,ty,tz,tq,tr,ts
+    real(wp),dimension(nx,ny,nz,nq,nr,ns),intent(in) :: bcoef
+    
+    real(wp),dimension(ky,kz,kq,kr,ks)            :: temp1
+    real(wp),dimension(kz,kq,kr,ks)               :: temp2
+    real(wp),dimension(kq,kr,ks)                  :: temp3
+    real(wp),dimension(kr,ks)                     :: temp4
+    real(wp),dimension(ks)                        :: temp5
+    real(wp),dimension(3*max(kx,ky,kz,kq,kr,ks))  :: work
+    
+    integer :: inbv1,inbv2,inbv3,inbv4,inbv5,&
+                lefty,leftz,leftq,leftr,lefts,&
+                mflag,&
+                kcoly,kcolz,kcolq,kcolr,kcols,&
+                i,j,k,q,r,s
 
-	integer,save :: iloy  = 1
-	integer,save :: iloz  = 1
-	integer,save :: iloq  = 1
-	integer,save :: ilor  = 1
-	integer,save :: ilos  = 1
-	integer,save :: inbvx = 1
-	
-	db6val = 0.0_wp
+    integer,save :: iloy  = 1
+    integer,save :: iloz  = 1
+    integer,save :: iloq  = 1
+    integer,save :: ilor  = 1
+    integer,save :: ilos  = 1
+    integer,save :: inbvx = 1
+    
+    db6val = 0.0_wp
 
-	if (xval<tx(1) .or. xval>tx(nx+kx) ) return
-	if (yval<ty(1) .or. yval>ty(ny+ky) ) return
-	if (zval<tz(1) .or. zval>tz(nz+kz) ) return
-	if (qval<tq(1) .or. qval>tq(nq+kq) ) return
-	if (rval<tr(1) .or. rval>tr(nr+kr) ) return
-	if (sval<ts(1) .or. sval>ts(ns+ks) ) return
+    if (xval<tx(1) .or. xval>tx(nx+kx) ) return
+    if (yval<ty(1) .or. yval>ty(ny+ky) ) return
+    if (zval<tz(1) .or. zval>tz(nz+kz) ) return
+    if (qval<tq(1) .or. qval>tq(nq+kq) ) return
+    if (rval<tr(1) .or. rval>tr(nr+kr) ) return
+    if (sval<ts(1) .or. sval>ts(ns+ks) ) return
 
-	call dintrv(ty,ny+ky,yval,iloy,lefty,mflag); if (mflag /= 0) return
-	call dintrv(tz,nz+kz,zval,iloz,leftz,mflag); if (mflag /= 0) return
-	call dintrv(tq,nq+kq,qval,iloq,leftq,mflag); if (mflag /= 0) return
-	call dintrv(tr,nr+kr,rval,ilor,leftr,mflag); if (mflag /= 0) return
-	call dintrv(ts,ns+ks,sval,ilos,lefts,mflag); if (mflag /= 0) return
+    call dintrv(ty,ny+ky,yval,iloy,lefty,mflag); if (mflag /= 0) return
+    call dintrv(tz,nz+kz,zval,iloz,leftz,mflag); if (mflag /= 0) return
+    call dintrv(tq,nq+kq,qval,iloq,leftq,mflag); if (mflag /= 0) return
+    call dintrv(tr,nr+kr,rval,ilor,leftr,mflag); if (mflag /= 0) return
+    call dintrv(ts,ns+ks,sval,ilos,lefts,mflag); if (mflag /= 0) return
 
-	inbv1 = 1
-	inbv2 = 1
-	inbv3 = 1
-	inbv4 = 1
-	inbv5 = 1
+    inbv1 = 1
+    inbv2 = 1
+    inbv3 = 1
+    inbv4 = 1
+    inbv5 = 1
 
-	! x -> y, z, q, r, s	
-	kcols = lefts - ks
-	do s=1,ks
-		kcols = kcols + 1
-		kcolr = leftr - kr
-		do r=1,kr
-			kcolr = kcolr + 1
-			kcolq = leftq - kq
-			do q=1,kq
-				kcolq = kcolq + 1
-				kcolz = leftz - kz
-				do k=1,kz
-					kcolz = kcolz + 1
-					kcoly = lefty - ky
-					do j=1,ky
-						kcoly = kcoly + 1
-						temp1(j,k,q,r,s) = dbvalu(tx,bcoef(:,kcoly,kcolz,kcolq,kcolr,kcols),&
-													nx,kx,idx,xval,inbvx,work)
-					end do
-				end do
-			end do	
-		end do
-	end do
-	
-	! y -> z, q, r, s
-	kcoly = lefty - ky + 1
-	do s=1,ks
-		do r=1,kr
-			do q=1,kq
-				do k=1,kz
-					temp2(k,q,r,s) = dbvalu(ty(kcoly:),temp1(:,k,q,r,s),ky,ky,idy,yval,inbv1,work)    
-				end do
-			end do
-		end do
-	end do
-	
-	! z -> q, r, s
-	kcolz = leftz - kz + 1	
-	do s=1,ks
-		do r=1,kr
-			do q=1,kq
-				temp3(q,r,s) = dbvalu(tz(kcolz:),temp2(:,q,r,s),kz,kz,idz,zval,inbv2,work)    
-			end do	
-		end do
-	end do
-	
-	! q -> r, s
-	kcolq = leftq - kq + 1
-	do s=1,ks
-		do r=1,kr
-			temp4(r,s) = dbvalu(tq(kcolq:),temp3(:,r,s),kq,kq,idq,qval,inbv3,work)    
-		end do
-	end do
-	
-	! r -> s
-	kcolr = leftr - kr + 1
-	do s=1,ks
-		temp5(s) = dbvalu(tr(kcolr:),temp4(:,s),kr,kr,idr,rval,inbv4,work)    
-	end do
-		
-	! s
-	kcols = lefts - ks + 1
-	db6val = dbvalu(ts(kcols:),temp5,ks,ks,ids,sval,inbv5,work) 
+    ! x -> y, z, q, r, s    
+    kcols = lefts - ks
+    do s=1,ks
+        kcols = kcols + 1
+        kcolr = leftr - kr
+        do r=1,kr
+            kcolr = kcolr + 1
+            kcolq = leftq - kq
+            do q=1,kq
+                kcolq = kcolq + 1
+                kcolz = leftz - kz
+                do k=1,kz
+                    kcolz = kcolz + 1
+                    kcoly = lefty - ky
+                    do j=1,ky
+                        kcoly = kcoly + 1
+                        temp1(j,k,q,r,s) = dbvalu(tx,bcoef(:,kcoly,kcolz,kcolq,kcolr,kcols),&
+                                                    nx,kx,idx,xval,inbvx,work)
+                    end do
+                end do
+            end do    
+        end do
+    end do
+    
+    ! y -> z, q, r, s
+    kcoly = lefty - ky + 1
+    do s=1,ks
+        do r=1,kr
+            do q=1,kq
+                do k=1,kz
+                    temp2(k,q,r,s) = dbvalu(ty(kcoly:),temp1(:,k,q,r,s),ky,ky,idy,yval,inbv1,work)    
+                end do
+            end do
+        end do
+    end do
+    
+    ! z -> q, r, s
+    kcolz = leftz - kz + 1    
+    do s=1,ks
+        do r=1,kr
+            do q=1,kq
+                temp3(q,r,s) = dbvalu(tz(kcolz:),temp2(:,q,r,s),kz,kz,idz,zval,inbv2,work)    
+            end do    
+        end do
+    end do
+    
+    ! q -> r, s
+    kcolq = leftq - kq + 1
+    do s=1,ks
+        do r=1,kr
+            temp4(r,s) = dbvalu(tq(kcolq:),temp3(:,r,s),kq,kq,idq,qval,inbv3,work)    
+        end do
+    end do
+    
+    ! r -> s
+    kcolr = leftr - kr + 1
+    do s=1,ks
+        temp5(s) = dbvalu(tr(kcolr:),temp4(:,s),kr,kr,idr,rval,inbv4,work)    
+    end do
+        
+    ! s
+    kcols = lefts - ks + 1
+    db6val = dbvalu(ts(kcols:),temp5,ks,ks,ids,sval,inbv5,work) 
 
-	end function db6val
+    end function db6val
 !*****************************************************************************************
 
 !*****************************************************************************************
 !****if* bspline_module/check_inputs
 !
 !  NAME
-!	check_inputs
+!    check_inputs
 !
 !  DESCRIPTION
-!	Check the validity of the inputs to the "ink" routines.
-!	Prints warning message if there is an error, 
-!		and also sets iflag and status_ok.
+!    Check the validity of the inputs to the "ink" routines.
+!    Prints warning message if there is an error, 
+!        and also sets iflag and status_ok.
 !
-!	Supports up to 6D: x,y,z,q,r,s
+!    Supports up to 6D: x,y,z,q,r,s
 !
 !  NOTES
-!	The code is new, but the logic is based on the original
-!	logic in the CMLIB routines db2ink and db3ink.
+!    The code is new, but the logic is based on the original
+!    logic in the CMLIB routines db2ink and db3ink.
 !
 !  AUTHOR
-!	Jacob Williams, 2/24/2015
+!    Jacob Williams, 2/24/2015
 !
 !  SOURCE
 
-	subroutine check_inputs(routine,&
-							iflag,&
-							nx,ny,nz,nq,nr,ns,&
-							kx,ky,kz,kq,kr,ks,&
-							x,y,z,q,r,s,&
-							tx,ty,tz,tq,tr,ts,&
-							status_ok)
-	
-	implicit none
-	
-	character(len=*),intent(in) 				:: routine
-	integer,intent(inout) 						:: iflag
-	integer,intent(in),optional 				:: nx,ny,nz,nq,nr,ns
-	integer,intent(in),optional 				:: kx,ky,kz,kq,kr,ks
-	real(wp),dimension(:),intent(in),optional 	:: x,y,z,q,r,s
-	real(wp),dimension(:),intent(in),optional 	:: tx,ty,tz,tq,tr,ts
-	logical,intent(out) 						:: status_ok
-	
-	logical :: error
-	
-	status_ok = .false.
-	
-	if ((iflag < 0) .or. (iflag > 1)) then
-	
-      	write(*,*) trim(routine)//' - iflag is out of range: ',iflag
-      	iflag = 2
-      	
-	else
-	
-		call check('x',nx,kx,x,tx,[3,4,5,6],    error); if (error) return
-		call check('y',ny,ky,y,ty,[7,8,9,10],   error); if (error) return
-		call check('z',nz,kz,z,tz,[11,12,13,14],error); if (error) return
-		call check('q',nq,kq,q,tq,[15,16,17,18],error); if (error) return
-		call check('r',nr,kr,r,tr,[19,20,21,22],error); if (error) return
-		call check('s',ns,ks,s,ts,[23,24,25,26],error); if (error) return
+    subroutine check_inputs(routine,&
+                            iflag,&
+                            nx,ny,nz,nq,nr,ns,&
+                            kx,ky,kz,kq,kr,ks,&
+                            x,y,z,q,r,s,&
+                            tx,ty,tz,tq,tr,ts,&
+                            status_ok)
+    
+    implicit none
+    
+    character(len=*),intent(in)                :: routine
+    integer,intent(inout)                      :: iflag
+    integer,intent(in),optional                :: nx,ny,nz,nq,nr,ns
+    integer,intent(in),optional                :: kx,ky,kz,kq,kr,ks
+    real(wp),dimension(:),intent(in),optional  :: x,y,z,q,r,s
+    real(wp),dimension(:),intent(in),optional  :: tx,ty,tz,tq,tr,ts
+    logical,intent(out)                        :: status_ok
+    
+    logical :: error
+    
+    status_ok = .false.
+    
+    if ((iflag < 0) .or. (iflag > 1)) then
+    
+          write(*,*) trim(routine)//' - iflag is out of range: ',iflag
+          iflag = 2
+          
+    else
+    
+        call check('x',nx,kx,x,tx,[3,4,5,6],    error); if (error) return
+        call check('y',ny,ky,y,ty,[7,8,9,10],   error); if (error) return
+        call check('z',nz,kz,z,tz,[11,12,13,14],error); if (error) return
+        call check('q',nq,kq,q,tq,[15,16,17,18],error); if (error) return
+        call check('r',nr,kr,r,tr,[19,20,21,22],error); if (error) return
+        call check('s',ns,ks,s,ts,[23,24,25,26],error); if (error) return
 
-		status_ok = .true.
-	
-	end if
-	      
-	contains
-	
-		subroutine check(s,n,k,x,t,ierrs,error)  !check t,x,n,k for validity
-		
-		implicit none
-		
-		character(len=1),intent(in),optional 		:: s		!coordinate string: 'x','y','z','q','r','s'
-		integer,intent(in),optional 				:: n		!size of x
-		integer,intent(in),optional 				:: k		!order
-		real(wp),dimension(:),intent(in),optional 	:: x		!abcissae vector
-		real(wp),dimension(:),intent(in),optional 	:: t		!knot vector size(n+k)
-		integer,dimension(4),intent(in) 			:: ierrs	!int error codes for n,k,x,t checks
-		logical,intent(out)							:: error	!true if there was an error
-		
-		if (present(n)) then
-			call check_n('n'//s,n,ierrs(1),error); if (error) return
-			if (present(k)) then
-				call check_k('k'//s,k,n,ierrs(2),error); if (error) return
-			end if
-			if (present(x)) then
-				call check_x(s,n,x,ierrs(3),error); if (error) return
-			end if
-			if (iflag /= 0) then
-				if (present(k) .and. present(t)) then
-					call check_t('t'//s,n,k,t,ierrs(4),error); if (error) return
-				end if
-			end if
-		end if
-		
-		end subroutine check
-		
-		subroutine check_n(s,n,ierr,error)
-		
-		implicit none
-		
-		integer,intent(in) 			:: n
-		character(len=*),intent(in) :: s
-		integer,intent(in) 			:: ierr
-		logical,intent(out)			:: error
-		
-		if (n < 3) then
-			write(*,*) trim(routine)//' - '//trim(s)//' is out of range: ',n
-			iflag = ierr
-			error = .true.
-		else
-			error = .false.
-		end if		
-      	
-      	end subroutine check_n
+        status_ok = .true.
+    
+    end if
+          
+    contains
+    
+        subroutine check(s,n,k,x,t,ierrs,error)  !check t,x,n,k for validity
+        
+        implicit none
+        
+        character(len=1),intent(in),optional       :: s        !coordinate string: 'x','y','z','q','r','s'
+        integer,intent(in),optional                :: n        !size of x
+        integer,intent(in),optional                :: k        !order
+        real(wp),dimension(:),intent(in),optional  :: x        !abcissae vector
+        real(wp),dimension(:),intent(in),optional  :: t        !knot vector size(n+k)
+        integer,dimension(4),intent(in)            :: ierrs    !int error codes for n,k,x,t checks
+        logical,intent(out)                        :: error    !true if there was an error
+        
+        if (present(n)) then
+            call check_n('n'//s,n,ierrs(1),error); if (error) return
+            if (present(k)) then
+                call check_k('k'//s,k,n,ierrs(2),error); if (error) return
+            end if
+            if (present(x)) then
+                call check_x(s,n,x,ierrs(3),error); if (error) return
+            end if
+            if (iflag /= 0) then
+                if (present(k) .and. present(t)) then
+                    call check_t('t'//s,n,k,t,ierrs(4),error); if (error) return
+                end if
+            end if
+        end if
+        
+        end subroutine check
+        
+        subroutine check_n(s,n,ierr,error)
+        
+        implicit none
+        
+        integer,intent(in)          :: n
+        character(len=*),intent(in) :: s
+        integer,intent(in)          :: ierr
+        logical,intent(out)         :: error
+        
+        if (n < 3) then
+            write(*,*) trim(routine)//' - '//trim(s)//' is out of range: ',n
+            iflag = ierr
+            error = .true.
+        else
+            error = .false.
+        end if        
+          
+          end subroutine check_n
 
-		subroutine check_k(s,k,n,ierr,error)
-		
-		implicit none
-		
-		character(len=*),intent(in) :: s
-		integer,intent(in) 			:: k
-		integer,intent(in) 			:: n
-		integer,intent(in) 			:: ierr
-		logical,intent(out)			:: error
-		
-		if ((k < 2) .or. (k >= n)) then     		 
-      		write(*,*) trim(routine)//' - '//trim(s)//' is out of range: ',k
-      		iflag = ierr
-      		error = .true.
-      	else
-      		error = .false.
-		end if
-		      	
-      	end subroutine check_k
-      	
-      	subroutine check_x(s,n,x,ierr,error)
-      	
-		implicit none
-		
-		character(len=*),intent(in) 		:: s
-		integer,intent(in) 					:: n
-		real(wp),dimension(:),intent(in) 	:: x
-		integer,intent(in) 					:: ierr
-		logical,intent(out)					:: error
-		
-		integer :: i
-		
-		error = .true.
-		do i=2,n
-			if (x(i) <= x(i-1)) then
-      			iflag = ierr
-				write(*,*) trim(routine)//' - '//trim(s)//&
-							' array must be strictly increasing'
-				return
-			end if 
-		end do      	
-      	error = .false.
-		      	
-      	end subroutine check_x
-      	
-      	subroutine check_t(s,n,k,t,ierr,error)
-      	
-		implicit none
-		
-		character(len=*),intent(in) 		:: s
-		integer,intent(in) 					:: n
-		integer,intent(in) 					:: k
-		real(wp),dimension(:),intent(in) 	:: t
-		integer,intent(in) 					:: ierr
-		logical,intent(out)					:: error
-		
-		integer :: i
-		
-		error = .true.
-		do i=2,n + k
-			if (t(i) < t(i-1))  then
-      			iflag = ierr
-				write(*,*) trim(routine)//' - '//trim(s)//&
-							' array must be non-decreasing'
-				return
-			end if 
-		end do      	
-      	error = .false.
-		      	
-      	end subroutine check_t
-      	
-	end subroutine check_inputs
+        subroutine check_k(s,k,n,ierr,error)
+        
+        implicit none
+        
+        character(len=*),intent(in) :: s
+        integer,intent(in)          :: k
+        integer,intent(in)          :: n
+        integer,intent(in)          :: ierr
+        logical,intent(out)         :: error
+        
+        if ((k < 2) .or. (k >= n)) then              
+              write(*,*) trim(routine)//' - '//trim(s)//' is out of range: ',k
+              iflag = ierr
+              error = .true.
+          else
+              error = .false.
+        end if
+                  
+          end subroutine check_k
+          
+          subroutine check_x(s,n,x,ierr,error)
+          
+        implicit none
+        
+        character(len=*),intent(in)       :: s
+        integer,intent(in)                :: n
+        real(wp),dimension(:),intent(in)  :: x
+        integer,intent(in)                :: ierr
+        logical,intent(out)               :: error
+        
+        integer :: i
+        
+        error = .true.
+        do i=2,n
+            if (x(i) <= x(i-1)) then
+                  iflag = ierr
+                write(*,*) trim(routine)//' - '//trim(s)//&
+                            ' array must be strictly increasing'
+                return
+            end if 
+        end do          
+          error = .false.
+                  
+          end subroutine check_x
+          
+          subroutine check_t(s,n,k,t,ierr,error)
+          
+        implicit none
+        
+        character(len=*),intent(in)       :: s
+        integer,intent(in)                :: n
+        integer,intent(in)                :: k
+        real(wp),dimension(:),intent(in)  :: t
+        integer,intent(in)                :: ierr
+        logical,intent(out)               :: error
+        
+        integer :: i
+        
+        error = .true.
+        do i=2,n + k
+            if (t(i) < t(i-1))  then
+                  iflag = ierr
+                write(*,*) trim(routine)//' - '//trim(s)//&
+                            ' array must be non-decreasing'
+                return
+            end if 
+        end do          
+          error = .false.
+                  
+          end subroutine check_t
+          
+    end subroutine check_inputs
 !*****************************************************************************************
 
 !*****************************************************************************************
 !****if* bspline_module/dbknot
 !
 !  NAME
-!	dbknot
+!    dbknot
 !
 !  DESCRIPTION
-!	dbknot chooses a knot sequence for interpolation of order k at the
-!	data points x(i), i=1,..,n.  the n+k knots are placed in the array
-!	t.  k knots are placed at each endpoint and not-a-knot end
-!	conditions are used.  the remaining knots are placed at data points
-!	if n is even and between data points if n is odd.  the rightmost
-!	knot is shifted slightly to the right to insure proper interpolation
-!	at x(n) (see page 350 of the reference).
-!	
+!    dbknot chooses a knot sequence for interpolation of order k at the
+!    data points x(i), i=1,..,n.  the n+k knots are placed in the array
+!    t.  k knots are placed at each endpoint and not-a-knot end
+!    conditions are used.  the remaining knots are placed at data points
+!    if n is even and between data points if n is odd.  the rightmost
+!    knot is shifted slightly to the right to insure proper interpolation
+!    at x(n) (see page 350 of the reference).
+!    
 !  SOURCE
 
-	subroutine dbknot(x,n,k,t)
+    subroutine dbknot(x,n,k,t)
 
-	implicit none
-	
-	integer,intent(in) 					:: n
-	integer,intent(in) 					:: k
-	real(wp),dimension(n),intent(in) 	:: x
-	real(wp),dimension(:),intent(out) 	:: t
+    implicit none
+    
+    integer,intent(in)                 :: n
+    integer,intent(in)                 :: k
+    real(wp),dimension(n),intent(in)   :: x
+    real(wp),dimension(:),intent(out)  :: t
 
-	integer  :: i, j, ipj, npj, ip1, jstrt
-	real(wp) :: rnot
+    integer  :: i, j, ipj, npj, ip1, jstrt
+    real(wp) :: rnot
 
-	!put k knots at each endpoint
-	!(shift right endpoints slightly -- see pg 350 of reference)
-	rnot = x(n) + 0.1_wp*( x(n)-x(n-1) )
-	do j=1,k
-		t(j)   = x(1)
-		npj    = n + j
-		t(npj) = rnot
-	end do
+    !put k knots at each endpoint
+    !(shift right endpoints slightly -- see pg 350 of reference)
+    rnot = x(n) + 0.1_wp*( x(n)-x(n-1) )
+    do j=1,k
+        t(j)   = x(1)
+        npj    = n + j
+        t(npj) = rnot
+    end do
 
-	!distribute remaining knots
+    !distribute remaining knots
 
-	if (mod(k,2) == 1)  then
+    if (mod(k,2) == 1)  then
 
-		!case of odd k --  knots between data points
-		
-		i = (k-1)/2 - k
-		ip1 = i + 1
-		jstrt = k + 1
-		do j=jstrt,n
-			ipj = i + j
-			t(j) = 0.5_wp*( x(ipj) + x(ipj+1) )
-		end do
+        !case of odd k --  knots between data points
+        
+        i = (k-1)/2 - k
+        ip1 = i + 1
+        jstrt = k + 1
+        do j=jstrt,n
+            ipj = i + j
+            t(j) = 0.5_wp*( x(ipj) + x(ipj+1) )
+        end do
 
-	else
+    else
 
-		!case of even k --  knots at data points
+        !case of even k --  knots at data points
 
-		i = (k/2) - k
-		jstrt = k+1
-		do j=jstrt,n
-			ipj = i + j
-			t(j) = x(ipj)
-		end do
+        i = (k/2) - k
+        jstrt = k+1
+        do j=jstrt,n
+            ipj = i + j
+            t(j) = x(ipj)
+        end do
 
-	end if
+    end if
 
-	end subroutine dbknot
+    end subroutine dbknot
 !*****************************************************************************************
       
 !*****************************************************************************************
 !****if* bspline_module/dbtpcf
 !
 !  NAME
-!	dbtpcf
+!    dbtpcf
 !
 !  DESCRIPTION
-!	dbtpcf computes b-spline interpolation coefficients for nf sets
-!	of data stored in the columns of the array fcn. the b-spline
-!	coefficients are stored in the rows of bcoef however.
-!	each interpolation is based on the n abcissa stored in the
-!	array x, and the n+k knots stored in the array t. the order
-!	of each interpolation is k. the work array must be of length
-!	at least 2*k*(n+1).
+!    dbtpcf computes b-spline interpolation coefficients for nf sets
+!    of data stored in the columns of the array fcn. the b-spline
+!    coefficients are stored in the rows of bcoef however.
+!    each interpolation is based on the n abcissa stored in the
+!    array x, and the n+k knots stored in the array t. the order
+!    of each interpolation is k. the work array must be of length
+!    at least 2*k*(n+1).
 !
 !  SOURCE
 
-	subroutine dbtpcf(x,n,fcn,ldf,nf,t,k,bcoef,work)
+    subroutine dbtpcf(x,n,fcn,ldf,nf,t,k,bcoef,work)
 
-	integer  :: n, nf, ldf, k
-	real(wp) :: x(n), fcn(ldf,nf), t(*), bcoef(nf,n), work(*)
+    integer  :: n, nf, ldf, k
+    real(wp) :: x(n), fcn(ldf,nf), t(*), bcoef(nf,n), work(*)
 
-	integer :: i, j, m1, m2, iq, iw
+    integer :: i, j, m1, m2, iq, iw
 
-	! check for null input
+    ! check for null input
 
-	if (nf > 0)  then
+    if (nf > 0)  then
 
-		! partition work array
-		m1 = k - 1
-		m2 = m1 + k
-		iq = 1 + n
-		iw = iq + m2*n+1
+        ! partition work array
+        m1 = k - 1
+        m2 = m1 + k
+        iq = 1 + n
+        iw = iq + m2*n+1
 
-		! compute b-spline coefficients
+        ! compute b-spline coefficients
 
-		! first data set
+        ! first data set
 
-		call dbintk(x,fcn,t,n,k,work,work(iq),work(iw))
-		do i=1,n
-			bcoef(1,i) = work(i)
-		end do
+        call dbintk(x,fcn,t,n,k,work,work(iq),work(iw))
+        do i=1,n
+            bcoef(1,i) = work(i)
+        end do
 
-		!  all remaining data sets by back-substitution
+        !  all remaining data sets by back-substitution
 
-		if (nf == 1)  return
-		do j=2,nf
-			do i=1,n
-				work(i) = fcn(i,j)
-			end do
-			call dbnslv(work(iq),m2,n,m1,m1,work)
-			do i=1,n
-				bcoef(j,i) = work(i)
-			end do
-		end do
-	
-	end if
+        if (nf == 1)  return
+        do j=2,nf
+            do i=1,n
+                work(i) = fcn(i,j)
+            end do
+            call dbnslv(work(iq),m2,n,m1,m1,work)
+            do i=1,n
+                bcoef(j,i) = work(i)
+            end do
+        end do
+    
+    end if
 
-	end subroutine dbtpcf
+    end subroutine dbtpcf
 !*****************************************************************************************
 
 !*****************************************************************************************
 !****if* bspline_module/d1mach
 !
 !  NAME
-!	d1mach
+!    d1mach
 !
 !  DESCRIPTION
-!	Just a replacement for the CMLIB machine constants routine.
+!    Just a replacement for the CMLIB machine constants routine.
 !
 !  SOURCE
 
@@ -2428,8 +2428,8 @@
     
     implicit none
     
-    real(wp) 			:: d
-    integer,intent(in) 	:: i
+    real(wp)           :: d
+    integer,intent(in) :: i
     
     real(wp),parameter :: x = 1.0_wp
     real(wp),parameter :: b = radix(x)
@@ -2454,10 +2454,10 @@
 !****if* bspline_module/xerror
 !
 !  NAME
-!	xerror
+!    xerror
 !
 !  DESCRIPTION
-!	Just a replacement for the CMLIB XERROR routine.
+!    Just a replacement for the CMLIB XERROR routine.
 !
 !  SOURCE
 
@@ -2477,188 +2477,188 @@
 !****if* bspline_module/bspline_test
 !
 !  NAME
-!	bspline_test
+!    bspline_test
 !
 !  DESCRIPTION
-!	Units test for 2d-6d tensor product b-spline interpolation.
+!    Units test for 2d-6d tensor product b-spline interpolation.
 !
 !  SOURCE
 
-	subroutine bspline_test()
+    subroutine bspline_test()
 
-	implicit none
-	
-	integer,parameter :: nx = 6	!number of points
-	integer,parameter :: ny = 6
-	integer,parameter :: nz = 6
-	integer,parameter :: nq = 6
-	integer,parameter :: nr = 6
-	integer,parameter :: ns = 6
-	
-	integer,parameter :: kx = 4	!order
-	integer,parameter :: ky = 4
-	integer,parameter :: kz = 4
-	integer,parameter :: kq = 4
-	integer,parameter :: kr = 4
-	integer,parameter :: ks = 4
-			
-	real(wp) :: x(nx),y(ny),z(nz),q(nq),r(nr),s(ns)
-	real(wp) :: tx(nx+kx),ty(ny+ky),tz(nz+kz),tq(nq+kq),tr(nr+kr),ts(ns+ks)	
-	real(wp) :: fcn_2d(nx,ny)
-	real(wp) :: fcn_3d(nx,ny,nz)
-	real(wp) :: fcn_4d(nx,ny,nz,nq)
-	real(wp) :: fcn_5d(nx,ny,nz,nq,nr)
-	real(wp) :: fcn_6d(nx,ny,nz,nq,nr,ns)
-		
-	real(wp) :: tol
-	real(wp),dimension(6) :: val,tru,err,errmax
-	logical  :: fail
-	integer  :: i,j,k,l,m,n,idx,idy,idz,idq,idr,ids,iflag
-	
-	fail = .false.
-	tol = 500.0_wp*d1mach(4)
-	idx = 0
-	idy = 0
-	idz = 0
-	idq = 0
-	idr = 0
-	ids = 0
+    implicit none
+    
+    integer,parameter :: nx = 6    !number of points
+    integer,parameter :: ny = 6
+    integer,parameter :: nz = 6
+    integer,parameter :: nq = 6
+    integer,parameter :: nr = 6
+    integer,parameter :: ns = 6
+    
+    integer,parameter :: kx = 4    !order
+    integer,parameter :: ky = 4
+    integer,parameter :: kz = 4
+    integer,parameter :: kq = 4
+    integer,parameter :: kr = 4
+    integer,parameter :: ks = 4
+            
+    real(wp) :: x(nx),y(ny),z(nz),q(nq),r(nr),s(ns)
+    real(wp) :: tx(nx+kx),ty(ny+ky),tz(nz+kz),tq(nq+kq),tr(nr+kr),ts(ns+ks)    
+    real(wp) :: fcn_2d(nx,ny)
+    real(wp) :: fcn_3d(nx,ny,nz)
+    real(wp) :: fcn_4d(nx,ny,nz,nq)
+    real(wp) :: fcn_5d(nx,ny,nz,nq,nr)
+    real(wp) :: fcn_6d(nx,ny,nz,nq,nr,ns)
+        
+    real(wp) :: tol
+    real(wp),dimension(6) :: val,tru,err,errmax
+    logical  :: fail
+    integer  :: i,j,k,l,m,n,idx,idy,idz,idq,idr,ids,iflag
+    
+    fail = .false.
+    tol = 500.0_wp*d1mach(4)
+    idx = 0
+    idy = 0
+    idz = 0
+    idq = 0
+    idr = 0
+    ids = 0
 
-	 do i=1,nx
-		x(i) = dble(i-1)/dble(nx-1)
-	 end do
-	 do j=1,ny
-		y(j) = dble(j-1)/dble(ny-1)
-	 end do
-	 do k=1,nz
-		z(k) = dble(k-1)/dble(nz-1)
-	 end do
-	 do l=1,nq
-		q(l) = dble(l-1)/dble(nq-1)
-	 end do
-	 do m=1,nr
-		r(m) = dble(m-1)/dble(nr-1)
-	 end do
-	 do n=1,ns
-		s(n) = dble(n-1)/dble(ns-1)
-	 end do
-	 do i=1,nx
-		do j=1,ny
-		   				fcn_2d(i,j) = f2(x(i),y(j))
-		   do k=1,nz
-			  			fcn_3d(i,j,k) = f3(x(i),y(j),z(k))
-			  do l=1,nq
-						fcn_4d(i,j,k,l) = f4(x(i),y(j),z(k),q(l))
-				 do m=1,nr
-						fcn_5d(i,j,k,l,m) = f5(x(i),y(j),z(k),q(l),r(m))
-					 do n=1,ns
-						fcn_6d(i,j,k,l,m,n) = f6(x(i),y(j),z(k),q(l),r(m),s(n))
-					 end do
-				 end do
-			  end do
-		   end do
-		end do
-	 end do
+     do i=1,nx
+        x(i) = dble(i-1)/dble(nx-1)
+     end do
+     do j=1,ny
+        y(j) = dble(j-1)/dble(ny-1)
+     end do
+     do k=1,nz
+        z(k) = dble(k-1)/dble(nz-1)
+     end do
+     do l=1,nq
+        q(l) = dble(l-1)/dble(nq-1)
+     end do
+     do m=1,nr
+        r(m) = dble(m-1)/dble(nr-1)
+     end do
+     do n=1,ns
+        s(n) = dble(n-1)/dble(ns-1)
+     end do
+     do i=1,nx
+        do j=1,ny
+                        fcn_2d(i,j) = f2(x(i),y(j))
+           do k=1,nz
+                        fcn_3d(i,j,k) = f3(x(i),y(j),z(k))
+              do l=1,nq
+                        fcn_4d(i,j,k,l) = f4(x(i),y(j),z(k),q(l))
+                 do m=1,nr
+                        fcn_5d(i,j,k,l,m) = f5(x(i),y(j),z(k),q(l),r(m))
+                     do n=1,ns
+                        fcn_6d(i,j,k,l,m,n) = f6(x(i),y(j),z(k),q(l),r(m),s(n))
+                     end do
+                 end do
+              end do
+           end do
+        end do
+     end do
 
-	! interpolate
-	
-	 iflag = 0
-	 call db2ink(x,nx,y,ny,fcn_2d,kx,ky,tx,ty,fcn_2d,iflag)
-	 iflag = 0
-	 call db3ink(x,nx,y,ny,z,nz,fcn_3d,kx,ky,kz,tx,ty,tz,fcn_3d,iflag)
-	 iflag = 0
-	 call db4ink(x,nx,y,ny,z,nz,q,nq,fcn_4d,kx,ky,kz,kq,tx,ty,tz,tq,fcn_4d,iflag)
-	 iflag = 0
-	 call db5ink(x,nx,y,ny,z,nz,q,nq,r,nr,fcn_5d,kx,ky,kz,kq,kr,tx,ty,tz,tq,tr,fcn_5d,iflag)
-	 iflag = 0
-	 call db6ink(x,nx,y,ny,z,nz,q,nq,r,nr,s,ns,fcn_6d,kx,ky,kz,kq,kr,ks,tx,ty,tz,tq,tr,ts,fcn_6d,iflag)
+    ! interpolate
+    
+     iflag = 0
+     call db2ink(x,nx,y,ny,fcn_2d,kx,ky,tx,ty,fcn_2d,iflag)
+     iflag = 0
+     call db3ink(x,nx,y,ny,z,nz,fcn_3d,kx,ky,kz,tx,ty,tz,fcn_3d,iflag)
+     iflag = 0
+     call db4ink(x,nx,y,ny,z,nz,q,nq,fcn_4d,kx,ky,kz,kq,tx,ty,tz,tq,fcn_4d,iflag)
+     iflag = 0
+     call db5ink(x,nx,y,ny,z,nz,q,nq,r,nr,fcn_5d,kx,ky,kz,kq,kr,tx,ty,tz,tq,tr,fcn_5d,iflag)
+     iflag = 0
+     call db6ink(x,nx,y,ny,z,nz,q,nq,r,nr,s,ns,fcn_6d,kx,ky,kz,kq,kr,ks,tx,ty,tz,tq,tr,ts,fcn_6d,iflag)
 
-	! compute max error at interpolation points
+    ! compute max error at interpolation points
 
-	 errmax = 0.0_wp
-	 do i=1,nx
-		do j=1,ny
-						val(2)    = db2val(x(i),y(j),idx,idy,&
-											tx,ty,nx,ny,kx,ky,fcn_2d)
-						tru(2)    = f2(x(i),y(j))
-						err(2)    = abs(tru(2)-val(2))
-						errmax(2) = max(err(2),errmax(2))
-		   do k=1,nz
-						val(3)    = db3val(x(i),y(j),z(k),idx,idy,idz,&
-											tx,ty,tz,nx,ny,nz,kx,ky,kz,fcn_3d)
-						tru(3)    = f3(x(i),y(j),z(k))
-						err(3)    = abs(tru(3)-val(3))
-						errmax(3) = max(err(3),errmax(3))
-			  do l=1,nq
-						val(4)    = db4val(x(i),y(j),z(k),q(l),idx,idy,idz,idq,&
-											tx,ty,tz,tq,nx,ny,nz,nq,kx,ky,kz,kq,fcn_4d)
-						tru(4)    = f4(x(i),y(j),z(k),q(l))
-						err(4)    = abs(tru(4)-val(4))
-						errmax(4) = max(err(4),errmax(4))
-				do m=1,nr
-						val(5)    = db5val(x(i),y(j),z(k),q(l),r(m),idx,idy,idz,idq,idr,&
-											tx,ty,tz,tq,tr,nx,ny,nz,nq,nr,kx,ky,kz,kq,kr,fcn_5d)
-						tru(5)    = f5(x(i),y(j),z(k),q(l),r(m))
-						err(5)    = abs(tru(5)-val(5))
-						errmax(5) = max(err(5),errmax(5))
-					do n=1,ns
-						val(6)    = db6val(x(i),y(j),z(k),q(l),r(m),s(n),idx,idy,idz,idq,idr,ids,&
-											tx,ty,tz,tq,tr,ts,nx,ny,nz,nq,nr,ns,kx,ky,kz,kq,kr,ks,fcn_6d)
-						tru(6)    = f6(x(i),y(j),z(k),q(l),r(m),s(n))
-						err(6)    = abs(tru(6)-val(6))
-						errmax(6) = max(err(6),errmax(6))
-					end do
-				end do
-			  end do
-		   end do
-		end do
-	 end do
+     errmax = 0.0_wp
+     do i=1,nx
+        do j=1,ny
+                        val(2)    = db2val(x(i),y(j),idx,idy,&
+                                            tx,ty,nx,ny,kx,ky,fcn_2d)
+                        tru(2)    = f2(x(i),y(j))
+                        err(2)    = abs(tru(2)-val(2))
+                        errmax(2) = max(err(2),errmax(2))
+           do k=1,nz
+                        val(3)    = db3val(x(i),y(j),z(k),idx,idy,idz,&
+                                            tx,ty,tz,nx,ny,nz,kx,ky,kz,fcn_3d)
+                        tru(3)    = f3(x(i),y(j),z(k))
+                        err(3)    = abs(tru(3)-val(3))
+                        errmax(3) = max(err(3),errmax(3))
+              do l=1,nq
+                        val(4)    = db4val(x(i),y(j),z(k),q(l),idx,idy,idz,idq,&
+                                            tx,ty,tz,tq,nx,ny,nz,nq,kx,ky,kz,kq,fcn_4d)
+                        tru(4)    = f4(x(i),y(j),z(k),q(l))
+                        err(4)    = abs(tru(4)-val(4))
+                        errmax(4) = max(err(4),errmax(4))
+                do m=1,nr
+                        val(5)    = db5val(x(i),y(j),z(k),q(l),r(m),idx,idy,idz,idq,idr,&
+                                            tx,ty,tz,tq,tr,nx,ny,nz,nq,nr,kx,ky,kz,kq,kr,fcn_5d)
+                        tru(5)    = f5(x(i),y(j),z(k),q(l),r(m))
+                        err(5)    = abs(tru(5)-val(5))
+                        errmax(5) = max(err(5),errmax(5))
+                    do n=1,ns
+                        val(6)    = db6val(x(i),y(j),z(k),q(l),r(m),s(n),idx,idy,idz,idq,idr,ids,&
+                                            tx,ty,tz,tq,tr,ts,nx,ny,nz,nq,nr,ns,kx,ky,kz,kq,kr,ks,fcn_6d)
+                        tru(6)    = f6(x(i),y(j),z(k),q(l),r(m),s(n))
+                        err(6)    = abs(tru(6)-val(6))
+                        errmax(6) = max(err(6),errmax(6))
+                    end do
+                end do
+              end do
+           end do
+        end do
+     end do
 
-	! check max error against tolerance
-	do i=2,6
-		write(*,*) i,'D: max error:', errmax(i)
-		if (errmax(i) >= tol) then
-			write(*,*)  ' ** test failed ** '
-		else
-			write(*,*)  ' ** test passed ** '
-		end if
-		write(*,*) ''
-	end do
+    ! check max error against tolerance
+    do i=2,6
+        write(*,*) i,'D: max error:', errmax(i)
+        if (errmax(i) >= tol) then
+            write(*,*)  ' ** test failed ** '
+        else
+            write(*,*)  ' ** test passed ** '
+        end if
+        write(*,*) ''
+    end do
  
-	contains
+    contains
       
-		real(wp) function f2(x,y)
-		real(wp) x,y,piov2
-		piov2 = 2.0_wp * atan(1.0_wp)
-		f2 = 0.5_wp * (y*exp(-x) + sin(piov2*y) )
-		return
-		end function f2
-	
-		real(wp) function f3 (x,y,z)
-		real(wp) x,y,z,piov2
-		piov2 = 2.0_wp*atan(1.0_wp)
-		f3 = 0.5_wp*( y*exp(-x) + z*sin(piov2*y) )
-		end function f3	
-	
-		real(wp) function f4 (x,y,z,q)
-		real(wp) x,y,z,q,piov2
-		piov2 = 2.0_wp*atan(1.0_wp)
-		f4 = 0.5_wp*( y*exp(-x) + z*sin(piov2*y) + q )
-		end function f4	
-	
-		real(wp) function f5 (x,y,z,q,r)
-		real(wp) x,y,z,q,r,piov2
-		piov2 = 2.0_wp*atan(1.0_wp)
-		f5 = 0.5_wp*( y*exp(-x) + z*sin(piov2*y) + q*r )
-		end function f5
+        real(wp) function f2(x,y)
+        real(wp) x,y,piov2
+        piov2 = 2.0_wp * atan(1.0_wp)
+        f2 = 0.5_wp * (y*exp(-x) + sin(piov2*y) )
+        return
+        end function f2
+    
+        real(wp) function f3 (x,y,z)
+        real(wp) x,y,z,piov2
+        piov2 = 2.0_wp*atan(1.0_wp)
+        f3 = 0.5_wp*( y*exp(-x) + z*sin(piov2*y) )
+        end function f3    
+    
+        real(wp) function f4 (x,y,z,q)
+        real(wp) x,y,z,q,piov2
+        piov2 = 2.0_wp*atan(1.0_wp)
+        f4 = 0.5_wp*( y*exp(-x) + z*sin(piov2*y) + q )
+        end function f4    
+    
+        real(wp) function f5 (x,y,z,q,r)
+        real(wp) x,y,z,q,r,piov2
+        piov2 = 2.0_wp*atan(1.0_wp)
+        f5 = 0.5_wp*( y*exp(-x) + z*sin(piov2*y) + q*r )
+        end function f5
       
-		real(wp) function f6 (x,y,z,q,r,s)
-		real(wp) x,y,z,q,r,s,piov2
-		piov2 = 2.0_wp*atan(1.0_wp)
-		f6 = 0.5_wp*( y*exp(-x) + z*sin(piov2*y) + q*r + 2.0_wp*s )
-		end function f6
-		      
-	end subroutine bspline_test
+        real(wp) function f6 (x,y,z,q,r,s)
+        real(wp) x,y,z,q,r,s,piov2
+        piov2 = 2.0_wp*atan(1.0_wp)
+        f6 = 0.5_wp*( y*exp(-x) + z*sin(piov2*y) + q*r + 2.0_wp*s )
+        end function f6
+              
+    end subroutine bspline_test
 !*****************************************************************************************
 
 !*****************************************************************************************
