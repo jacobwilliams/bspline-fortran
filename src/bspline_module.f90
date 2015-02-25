@@ -1,13 +1,13 @@
 !*****************************************************************************************
     module bspline_module
 !*****************************************************************************************
-!****h* bspline/bspline_module
+!****h* BSPLINE/bspline_module
 !
 !  NAME
 !    bspline_module
 !
 !  DESCRIPTION
-!    Multidimensional B-Spline interpolation of data on a regular grid.
+!    Multidimensional (2D-6D) B-Spline interpolation of data on a regular grid.
 !
 !  NOTES
 !	This module is based on the bspline and spline routines from [1].
