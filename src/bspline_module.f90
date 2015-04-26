@@ -17,9 +17,16 @@
 !    4d, 5d, and 6d interpolation were also created.
 !
 !  SEE ALSO
-!    [1] DBSPLIN and DTENSBS from the NIST Core Math Library (CMLIB)
-!        http://www.nist.gov/itl/math/mcsd-software.cfm
-!        Original code is public domain.
+!    * 1) DBSPLIN and DTENSBS from the NIST Core Math Library (CMLIB)
+!       http://www.nist.gov/itl/math/mcsd-software.cfm
+!       Original code is public domain.
+!    * 2) carl de boor, "a practical guide to splines",
+!        springer-verlag, new york, 1978.
+!    * 3) carl de boor, "efficient computer manipulation of tensor
+!        products", acm transactions on mathematical software,
+!        vol. 5 (1979), pp. 173-182.
+!    * 4) d.e. amos, "computation with splines and b-splines",
+!        sand78-1968, sandia laboratories, march, 1979.
 !
 !*****************************************************************************************
 
@@ -97,53 +104,38 @@
 !
 !  INPUTS
 !
-!   x       real(wp) 1d array (size nx)
+!    * x : real(wp) 1d array (size nx) :
 !           array of x abcissae. must be strictly increasing.
-!
-!   nx      integer scalar (>= 3)
+!    * nx : integer scalar (>= 3)
 !           number of x abcissae.
-!
-!   y       real(wp) 1d array (size ny)
+!    * y : real(wp) 1d array (size ny)
 !           array of y abcissae. must be strictly increasing.
-!
-!   ny      integer scalar (>= 3)
+!    * ny : integer scalar (>= 3)
 !           number of y abcissae.
-!
-!   fcn     real(wp) 2d array (size nx by ny)
+!    * fcn : real(wp) 2d array (size nx by ny)
 !           array of function values to interpolate. fcn(i,j) should
 !           contain the function value at the point (x(i),y(j))
-!
-!   kx      integer scalar (>= 2, < nx)
+!    * kx : integer scalar (>= 2, < nx)
 !           the order of spline pieces in x.
 !           (order = polynomial degree + 1)
-!
-!   ky      integer scalar (>= 2, < ny)
+!    * ky : integer scalar (>= 2, < ny)
 !           the order of spline pieces in y.
 !           (order = polynomial degree + 1)
 !
 !  INPUTS/OUTPUTS
 !
-!   tx      real(wp) 1d array (size nx+kx)
+!    * tx : real(wp) 1d array (size nx+kx)
 !           the knots in the x direction for the spline interpolant.
 !           if iflag=0 these are chosen by db2ink.
 !           if iflag=1 these are specified by the user.
-!                      (must be non-decreasing.)
-!
-!   ty      real(wp) 1d array (size ny+ky)
+!           (must be non-decreasing.)
+!    * ty : real(wp) 1d array (size ny+ky)
 !           the knots in the y direction for the spline interpolant.
 !           if iflag=0 these are chosen by db2ink.
 !           if iflag=1 these are specified by the user.
-!                      (must be non-decreasing.)
+!           (must be non-decreasing.)
+!    * iflag : integer scalar.
 !
-!  OUTPUTS
-!
-!   bcoef   real(wp) 2d array (size nx by ny)
-!           array of coefficients of the b-spline interpolant.
-!           this may be the same array as fcn.
-!
-!  MISCELLANEOUS
-!
-!   iflag   integer scalar.
 !           on input:  0 == knot sequence chosen by db2ink
 !                      1 == knot sequence chosen by user.
 !           on output: 1 == successful execution
@@ -157,34 +149,36 @@
 !                      9 == y not strictly increasing
 !                     10 == ty not non-decreasing
 !
-!  SEE ALSO
-!    carl de boor, a practical guide to splines,
-!        springer-verlag, new york, 1978.
-!    carl de boor, efficient computer manipulation of tensor
-!        products, acm transactions on mathematical software,
-!        vol. 5 (1979), pp. 173-182.
+!  OUTPUTS
+!
+!    * bcoef : real(wp) 2d array (size nx by ny)
+!           array of coefficients of the b-spline interpolant.
+!           this may be the same array as fcn.
 !
 !  AUTHOR
-!    boisvert, ronald, nbs
+!    * boisvert, ronald, nbs
 !        scientific computing division
 !        national bureau of standards
 !        washington, dc 20234
 !
 !  HISTORY
-!    date written   25 may 1982
-!    000330  modified array declarations.  (jec)
-!    Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
+!    * date written 25 may 1982
+!    * 000330 modified array declarations.  (jec)
+!    * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
 !
 !  SOURCE
 
     subroutine db2ink(x,nx,y,ny,fcn,kx,ky,tx,ty,bcoef,iflag)
 
-    integer,intent(in)                      :: nx, ny
-    integer,intent(in)                      :: kx, ky
-    real(wp),dimension(nx),intent(in)       :: x
-    real(wp),dimension(ny),intent(in)       :: y
-    real(wp),dimension(nx,ny),intent(in)    :: fcn
-    real(wp),dimension(:),intent(inout)     :: tx, ty
+    integer,intent(in)                      :: nx  
+    integer,intent(in)                      :: ny  
+    integer,intent(in)                      :: kx  
+    integer,intent(in)                      :: ky  
+    real(wp),dimension(nx),intent(in)       :: x   
+    real(wp),dimension(ny),intent(in)       :: y   
+    real(wp),dimension(nx,ny),intent(in)    :: fcn 
+    real(wp),dimension(:),intent(inout)     :: tx
+    real(wp),dimension(:),intent(inout)     :: ty
     real(wp),dimension(nx,ny),intent(out)   :: bcoef
     integer,intent(inout)                   :: iflag
 
@@ -289,10 +283,6 @@
 !
 !   bcoef   real(wp) 2d array (size nx by ny)
 !           the b-spline coefficients computed by db2ink.
-!
-!  SEE ALSO
-!    carl de boor, a practical guide to splines,
-!        springer-verlag, new york, 1978.
 !
 !  AUTHOR
 !    boisvert, ronald, nbs
@@ -481,13 +471,6 @@
 !                     13 == z not strictly increasing
 !                     14 == ty not non-decreasing
 !
-!  SEE ALSO
-!    carl de boor, a practical guide to splines,
-!        springer-verlag, new york, 1978.
-!    carl de boor, efficient computer manipulation of tensor
-!        products, acm transactions on mathematical software,
-!        vol. 5 (1979), pp. 173-182.
-!
 !  AUTHOR
 !    boisvert, ronald, nbs
 !        scientific computing division
@@ -640,10 +623,6 @@
 !
 !   bcoef   real(wp) 2d array (size nx by ny by nz)
 !           the b-spline coefficients computed by db3ink.
-!
-!  SEE ALSO
-!    carl de boor, a practical guide to splines,
-!        springer-verlag, new york, 1978.
 !
 !  AUTHOR
 !    boisvert, ronald, nbs
@@ -1788,7 +1767,13 @@
 !
 !     ***obtain factorization of  a  , stored again in  q.
       call dbnfac(q, k+km1, n, km1, km1, iflag)
-      go to (60, 90), iflag
+
+      !go to (60, 90), iflag   !JW removed obsolescent Computed GOTO
+      select case (iflag)
+      case(1); goto 60  !success
+      case(2); goto 90  !failure
+      end select
+
 !     *** solve  a*bcoef = y  by backsubstitution
    60 do 70 i=1,n
         bcoef(i) = y(i)
@@ -1798,14 +1783,12 @@
 !
 !
    80 continue
-      call xerror( ' dbintk,  some abscissa was not in the support of th&
-      e corresponding basis function and the system is singular.',109,2,&
-      1)
+      call xerror( ' dbintk,  some abscissa was not in the support of the'//&
+                   ' corresponding basis function and the system is singular.',109,2,1)
       return
    90 continue
-      call xerror( ' dbintk,  the system of solver detects a singular sy&
-      stem although the theoretical conditions for a solution were satis&
-      fied.',123,8,1)
+      call xerror( ' dbintk,  the system of solver detects a singular system'//&
+                   ' although the theoretical conditions for a solution were satisfied.',123,8,1)
       return
   100 continue
       call xerror( ' dbintk,  k does not satisfy k>=1', 35, 2, 1)
@@ -1892,7 +1875,13 @@
       middle = nbandu + 1
 !                         w(middle,.) contains the main diagonal of  a .
       nrowm1 = nrow - 1
-      if (nrowm1) 120, 110, 10
+
+      !if (nrowm1) 120, 110, 10    !JW removed obsolescent arithmetic IF statement
+      if (nrowm1 < 0) then;      goto 120
+      elseif (nrowm1 == 0) then; goto 110
+      else;                      goto 10
+      end if
+
    10 if (nbandl>0) go to 30
 !                a is upper triangular. check that diagonal is nonzero .
       do 20 i=1,nrowm1
@@ -2093,7 +2082,13 @@
       if(jhigh>k .or. jhigh<1) go to 100
       if(index<1 .or. index>2) go to 105
       if(x<t(ileft) .or. x>t(ileft+1)) go to 110
-      go to (10, 20), index
+
+      !go to (10, 20), index    !JW removed obsolescent Computed GOTO
+      select case (index)
+      case(1); goto 10
+      case(2); goto 20
+      end select
+
    10 iwork = 1
       vnikx(1) = 1.0_wp
       if (iwork>=jhigh) go to 40
@@ -2121,15 +2116,13 @@
       call xerror( ' dbspvn,  k does not satisfy k>=1', 35, 2, 1)
       return
   100 continue
-      call xerror( ' dbspvn,  jhigh does not satisfy 1<=jhigh<=k',&
-       48, 2, 1)
+      call xerror( ' dbspvn,  jhigh does not satisfy 1<=jhigh<=k',48, 2, 1)
       return
   105 continue
       call xerror( ' dbspvn,  index is not 1 or 2',29,2,1)
       return
   110 continue
-      call xerror( ' dbspvn,  x does not satisfy t(ileft)<=x<=t(ilef&
-      t+1)', 56, 2, 1)
+      call xerror( ' dbspvn,  x does not satisfy t(ileft)<=x<=t(ileft+1)', 56, 2, 1)
       return
       end subroutine dbspvn
       
@@ -2199,12 +2192,13 @@
 !***routines called  dintrv,xerror
 !***end prologue  dbvalu
 
+    integer,intent(in) :: n
     real(wp),dimension(:),intent(in) :: t
     real(wp),dimension(n),intent(in) :: a
     real(wp),dimension(:) :: work
 
       integer i,ideriv,iderp1,ihi,ihmkmj,ilo,imk,imkpj, inbv, ipj,&
-       ip1, ip1mj, j, jj, j1, j2, k, kmider, kmj, km1, kpk, mflag, n
+       ip1, ip1mj, j, jj, j1, j2, k, kmider, kmj, km1, kpk, mflag
       !real(wp) a, fkmj, t, work, x
       real(wp) fkmj,x 
      ! dimension t(*), a(n), work(*)
@@ -2282,20 +2276,16 @@
       call xerror( ' dbvalu,  k does not satisfy k>=1',35,2,1)
       return
   110 continue
-      call xerror( ' dbvalu,  ideriv does not satisfy 0<=ideriv<k',&
-       50, 2, 1)
+      call xerror( ' dbvalu,  ideriv does not satisfy 0<=ideriv<k',50, 2, 1)
       return
   120 continue
-      call xerror( ' dbvalu,  x is n0t greater than or equal to t(k)',&
-       48, 2, 1)
+      call xerror( ' dbvalu,  x is n0t greater than or equal to t(k)',48, 2, 1)
       return
   130 continue
-      call xerror( ' dbvalu,  x is not less than or equal to t(n+1)',&
-       47, 2, 1)
+      call xerror( ' dbvalu,  x is not less than or equal to t(n+1)',47, 2, 1)
       return
   140 continue
-      call xerror( ' dbvalu,  a left limiting value cann0t be obtained a&
-      t t(k)',    58, 2, 1)
+      call xerror( ' dbvalu,  a left limiting value cann0t be obtained at t(k)', 58, 2, 1)
       return
       end function dbvalu
       
