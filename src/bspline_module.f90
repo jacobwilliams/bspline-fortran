@@ -1635,7 +1635,6 @@
     end subroutine dbtpcf
 !*****************************************************************************************
 
-      subroutine dbintk(x,y,t,n,k,bcoef,q,work)
 !***begin prologue  dbintk
 !***date written   800901   (yymmdd)
 !***revision date  820801   (yymmdd)
@@ -1717,39 +1716,38 @@
 !     error conditions
 !         improper input is a fatal error
 !         singular system of equations is a fatal error
+!
 !***references  c. de boor, *a practical guide to splines*, applied
 !                 mathematics series 27, springer, 1979.
 !               d.e. amos, *computation with splines and b-splines*,
 !                 sand78-1968,sandia laboratories,march,1979.
-!***routines called  dbnfac,dbnslv,dbspvn,xerror
-!***end prologue  dbintk
-!
-!
-      integer iflag, iwork, k, n, i, ilp1mx, j, jj, km1, kpkm2, left,&
-       lenq, np1
+
+      subroutine dbintk(x,y,t,n,k,bcoef,q,work)
+
+      integer iflag, iwork, k, n, i, ilp1mx, j, jj, km1, kpkm2, left,lenq, np1
       real(wp) bcoef(n), y(n), q(*), t(*), x(n), xi, work(*)
 !     dimension q(2*k-1,n), t(n+k)
-!***first executable statement  dbintk
-      if(k<1) go to 100
-      if(n<k) go to 105
+
+      if (k<1) go to 100
+      if (n<k) go to 105
       jj = n - 1
-      if(jj==0) go to 6
-      do 5 i=1,jj
-      if(x(i)>=x(i+1)) go to 110
-    5 continue
-    6 continue
+      if (jj/=0) then
+        do i=1,jj
+          if (x(i)>=x(i+1)) go to 110
+        end do
+      end if
       np1 = n + 1
       km1 = k - 1
       kpkm2 = 2*km1
       left = k
-!                zero out all entries of q
+      ! zero out all entries of q
       lenq = n*(k+km1)
-      do 10 i=1,lenq
+      do i=1,lenq
         q(i) = 0.0d0
-   10 continue
-!
-!  ***   loop over i to construct the  n  interpolation equations
-      do 50 i=1,n
+      end do
+
+      !  ***   loop over i to construct the  n  interpolation equations
+      do i=1,n
         xi = x(i)
         ilp1mx = min(i+k,np1)
 !        *** find  left  in the closed interval (i,i+k-1) such that
@@ -1780,23 +1778,22 @@
 !                   =  i-left+1 + (left -k)*(2*k-1) + (2*k-2)*j
 !        of  q .
         jj = i - left + 1 + (left-k)*(k+km1)
-        do 40 j=1,k
+        do j=1,k
           jj = jj + kpkm2
           q(jj) = bcoef(j)
-   40   continue
-   50 continue
-!
-!     ***obtain factorization of  a  , stored again in  q.
+        end do
+      end do
+
+      !***obtain factorization of  a  , stored again in  q.
       call dbnfac(q, k+km1, n, km1, km1, iflag)
       go to (60, 90), iflag
-!     *** solve  a*bcoef = y  by backsubstitution
-   60 do 70 i=1,n
+
+      !*** solve  a*bcoef = y  by backsubstitution
+   60 do i=1,n
         bcoef(i) = y(i)
-   70 continue
+      end do
       call dbnslv(q, k+km1, n, km1, km1, bcoef)
       return
-!
-!
    80 continue
       call xerror( ' dbintk,  some abscissa was not in the support of th&
       e corresponding basis function and the system is singular.',109,2,&
@@ -1807,15 +1804,19 @@
       stem although the theoretical conditions for a solution were satis&
       fied.',123,8,1)
       return
+
   100 continue
       call xerror( ' dbintk,  k does not satisfy k>=1', 35, 2, 1)
       return
+
   105 continue
       call xerror( ' dbintk,  n does not satisfy n>=k', 35, 2, 1)
       return
+
   110 continue
       call xerror( ' dbintk,  x(i) does not satisfy x(i)<x(i+1) for some i', 57, 2, 1)
       return
+
       end subroutine dbintk
 
       subroutine dbnfac(w,nroww,nrow,nbandl,nbandu,iflag)
@@ -2089,10 +2090,10 @@
 !     content of j, deltam, deltap is expected unchanged between calls.
 !     work(i) = deltap(i), work(k+i) = deltam(i), i = 1,k
 !***first executable statement  dbspvn
-      if(k<1) go to 90
-      if(jhigh>k .or. jhigh<1) go to 100
-      if(index<1 .or. index>2) go to 105
-      if(x<t(ileft) .or. x>t(ileft+1)) go to 110
+      if (k<1) go to 90
+      if (jhigh>k .or. jhigh<1) go to 100
+      if (index<1 .or. index>2) go to 105
+      if (x<t(ileft) .or. x>t(ileft+1)) go to 110
       go to (10, 20), index
    10 iwork = 1
       vnikx(1) = 1.0_wp
@@ -2211,9 +2212,9 @@
       
 !***first executable statement  dbvalu
       dbvalu = 0.0d0
-      if(k<1) go to 102
-      if(n<k) go to 101
-      if(ideriv<0 .or. ideriv>=k) go to 110
+      if (k<1) go to 102
+      if (n<k) go to 101
+      if (ideriv<0 .or. ideriv>=k) go to 110
       kmider = k - ideriv
 !
 ! *** find *i* in (k,n) such that t(i) <= x < t(i+1)
