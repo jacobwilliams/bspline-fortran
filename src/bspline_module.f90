@@ -2127,7 +2127,7 @@
       return
       end subroutine dbspvn
       
-      real(wp) function dbvalu(t,a,n,k,ideriv,x,inbv,work)
+!*****************************************************************************************
 !***begin prologue  dbvalu
 !***date written   800901   (yymmdd)
 !***revision date  820801   (yymmdd)
@@ -2193,102 +2193,123 @@
 !***routines called  dintrv,xerror
 !***end prologue  dbvalu
 
-    integer,intent(in) :: n
+    real(wp) function dbvalu(t,a,n,k,ideriv,x,inbv,work)
+
+    implicit none
+
+    integer,intent(in)               :: n
     real(wp),dimension(:),intent(in) :: t
     real(wp),dimension(n),intent(in) :: a
-    real(wp),dimension(:) :: work
+    integer,intent(in)               :: k
+    integer,intent(in)               :: ideriv
+    real(wp),intent(in)              :: x
+    integer,intent(inout)            :: inbv
+    real(wp),dimension(:)            :: work
 
-      integer i,ideriv,iderp1,ihi,ihmkmj,ilo,imk,imkpj, inbv, ipj,&
-       ip1, ip1mj, j, jj, j1, j2, k, kmider, kmj, km1, kpk, mflag
-      !real(wp) a, fkmj, t, work, x
-      real(wp) fkmj,x 
-     ! dimension t(*), a(n), work(*)
-      
-!***first executable statement  dbvalu
-      dbvalu = 0.0d0
-      if (k<1) go to 102
-      if (n<k) go to 101
-      if (ideriv<0 .or. ideriv>=k) go to 110
-      kmider = k - ideriv
-!
-! *** find *i* in (k,n) such that t(i) <= x < t(i+1)
-!     (or, <= t(i+1) if t(i) < t(i+1) = t(n+1)).
-      km1 = k - 1
-      call dintrv(t, n+1, x, inbv, i, mflag)
-      if (x<t(k)) go to 120
-      if (mflag==0) go to 20
-      if (x>t(i)) go to 130
-   10 if (i==k) go to 140
-      i = i - 1
-      if (x==t(i)) go to 10
-!
-! *** difference the coefficients *ideriv* times
-!     work(i) = aj(i), work(k+i) = dp(i), work(k+k+i) = dm(i), i=1.k
-!
-   20 imk = i - k
-      do 30 j=1,k
+    integer :: i,iderp1,ihi,ihmkmj,ilo,imk,imkpj,ipj,&
+               ip1,ip1mj,j,jj,j1,j2,kmider,kmj,km1,kpk,mflag
+    real(wp) :: fkmj
+
+    dbvalu = 0.0_wp
+
+    if (k<1) then
+        call xerror( ' dbvalu,  k does not satisfy k>=1' )
+        return
+    end if
+
+    if (n<k) then
+        call xerror( ' dbvalu,  n does not satisfy n>=k' )
+        return
+    end if
+
+    if (ideriv<0 .or. ideriv>=k) then
+        call xerror( ' dbvalu,  ideriv does not satisfy 0<=ideriv<k' )
+        return
+    end if
+
+    kmider = k - ideriv
+
+    ! *** find *i* in (k,n) such that t(i) <= x < t(i+1)
+    !     (or, <= t(i+1) if t(i) < t(i+1) = t(n+1)).
+
+    km1 = k - 1
+    call dintrv(t, n+1, x, inbv, i, mflag)
+    if (x<t(k)) then
+        call xerror( ' dbvalu,  x is not greater than or equal to t(k)' )
+        return
+    end if
+
+    if (mflag/=0) then
+
+        if (x>t(i)) then
+            call xerror( ' dbvalu,  x is not less than or equal to t(n+1)' )
+            return
+        end if
+
+        do
+            if (i==k) then
+                call xerror( ' dbvalu,  a left limiting value cannot be obtained at t(k)' )
+                return
+            end if
+            i = i - 1
+            if (x/=t(i)) exit
+        end do
+
+    end if
+
+    ! *** difference the coefficients *ideriv* times
+    !     work(i) = aj(i), work(k+i) = dp(i), work(k+k+i) = dm(i), i=1.k
+
+    imk = i - k
+    do j=1,k
         imkpj = imk + j
         work(j) = a(imkpj)
-   30 continue
-      if (ideriv==0) go to 60
-      do 50 j=1,ideriv
-        kmj = k - j
-        fkmj = dble(float(kmj))
-        do 40 jj=1,kmj
-          ihi = i + jj
-          ihmkmj = ihi - kmj
-          work(jj) = (work(jj+1)-work(jj))/(t(ihi)-t(ihmkmj))*fkmj
-   40   continue
-   50 continue
-!
-! *** compute value at *x* in (t(i),(t(i+1)) of ideriv-th derivative,
-!     given its relevant b-spline coeff. in aj(1),...,aj(k-ideriv).
-   60 if (ideriv==km1) go to 100
-      ip1 = i + 1
-      kpk = k + k
-      j1 = k + 1
-      j2 = kpk + 1
-      do 70 j=1,kmider
-        ipj = i + j
-        work(j1) = t(ipj) - x
-        ip1mj = ip1 - j
-        work(j2) = x - t(ip1mj)
-        j1 = j1 + 1
-        j2 = j2 + 1
-   70 continue
-      iderp1 = ideriv + 1
-      do 90 j=iderp1,km1
-        kmj = k - j
-        ilo = kmj
-        do 80 jj=1,kmj
-          work(jj) = (work(jj+1)*work(kpk+ilo)+work(jj)&
-                    *work(k+jj))/(work(kpk+ilo)+work(k+jj))
-          ilo = ilo - 1
-   80   continue
-   90 continue
-  100 dbvalu = work(1)
-      return
-!
-!
-  101 continue
-      call xerror( ' dbvalu,  n does not satisfy n>=k',35,2,1)
-      return
-  102 continue
-      call xerror( ' dbvalu,  k does not satisfy k>=1',35,2,1)
-      return
-  110 continue
-      call xerror( ' dbvalu,  ideriv does not satisfy 0<=ideriv<k',50, 2, 1)
-      return
-  120 continue
-      call xerror( ' dbvalu,  x is n0t greater than or equal to t(k)',48, 2, 1)
-      return
-  130 continue
-      call xerror( ' dbvalu,  x is not less than or equal to t(n+1)',47, 2, 1)
-      return
-  140 continue
-      call xerror( ' dbvalu,  a left limiting value cann0t be obtained at t(k)', 58, 2, 1)
-      return
-      end function dbvalu
+    end do
+
+    if (ideriv/=0) then
+        do j=1,ideriv
+            kmj = k - j
+            fkmj = real(kmj,wp)
+            do jj=1,kmj
+                ihi = i + jj
+                ihmkmj = ihi - kmj
+                work(jj) = (work(jj+1)-work(jj))/(t(ihi)-t(ihmkmj))*fkmj
+            end do
+        end do
+    end if
+
+    ! *** compute value at *x* in (t(i),(t(i+1)) of ideriv-th derivative,
+    !     given its relevant b-spline coeff. in aj(1),...,aj(k-ideriv).
+
+    if (ideriv/=km1) then
+        ip1 = i + 1
+        kpk = k + k
+        j1 = k + 1
+        j2 = kpk + 1
+        do j=1,kmider
+            ipj = i + j
+            work(j1) = t(ipj) - x
+            ip1mj = ip1 - j
+            work(j2) = x - t(ip1mj)
+            j1 = j1 + 1
+            j2 = j2 + 1
+        end do
+        iderp1 = ideriv + 1
+        do j=iderp1,km1
+            kmj = k - j
+            ilo = kmj
+            do jj=1,kmj
+                work(jj) = (work(jj+1)*work(kpk+ilo)+work(jj)&
+                *work(k+jj))/(work(kpk+ilo)+work(k+jj))
+                ilo = ilo - 1
+            end do
+        end do
+    end if
+
+    dbvalu = work(1)
+
+    end function dbvalu
+!*****************************************************************************************
       
       subroutine dintrv(xt,lxt,x,ilo,ileft,mflag)
 !***begin prologue  dintrv
