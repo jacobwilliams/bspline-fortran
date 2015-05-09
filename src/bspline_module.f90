@@ -838,14 +838,14 @@
 
 !*****************************************************************************************
 !# Evaluates the tensor product piecewise polynomial
-!# interpolant constructed by the routine **db5ink** or one of its
-!# derivatives at the point (xval,yval,zval,qval,rval).
+!# interpolant constructed by the routine **db5ink** or one of its
+!# derivatives at the point (xval,yval,zval,qval,rval).
 !#
 !# To evaluate the
-!# interpolant itself, set idx=idy=idz=idq=idr=0, to evaluate the first
-!# partial with respect to x, set idx=1,idy=idz=idq=idr=0, and so on.
-!# 
-!# See db3val header for more information.
+!# interpolant itself, set idx=idy=idz=idq=idr=0, to evaluate the first
+!# partial with respect to x, set idx=1,idy=idz=idq=idr=0, and so on.
+!# 
+!# See db3val header for more information.
 !#
 !# History
 !#---------
@@ -867,9 +867,9 @@
     integer,intent(in)                            :: idr    !! r derivative of piecewise polynomial to evaluate.
     integer,intent(in)                            :: nx     !! the number of interpolation points in x. (same as in last call to db5ink)
     integer,intent(in)                            :: ny     !! the number of interpolation points in y. (same as in last call to db5ink) 
-    integer,intent(in)                            :: nz     !! the number of interpolation points in z. (same as in last call to db5ink)
-    integer,intent(in)                            :: nq     !! the number of interpolation points in q. (same as in last call to db5ink)
-    integer,intent(in)                            :: nr     !! the number of interpolation points in r. (same as in last call to db5ink)
+    integer,intent(in)                            :: nz     !! the number of interpolation points in z. (same as in last call to db5ink)
+    integer,intent(in)                            :: nq     !! the number of interpolation points in q. (same as in last call to db5ink)
+    integer,intent(in)                            :: nr     !! the number of interpolation points in r. (same as in last call to db5ink)
     integer,intent(in)                            :: kx     !! order of polynomial pieces in x. (same as in last call to db5ink)
     integer,intent(in)                            :: ky     !! order of polynomial pieces in y. (same as in last call to db5ink)
     integer,intent(in)                            :: kz     !! order of polynomial pieces in z. (same as in last call to db5ink)
@@ -1134,10 +1134,10 @@
     integer,intent(in)                               :: ids    !! s derivative of piecewise polynomial to evaluate.
     integer,intent(in)                               :: nx     !! the number of interpolation points in x. (same as in last call to db6ink)
     integer,intent(in)                               :: ny     !! the number of interpolation points in y. (same as in last call to db6ink) 
-    integer,intent(in)                               :: nz     !! the number of interpolation points in z. (same as in last call to db6ink)
-    integer,intent(in)                               :: nq     !! the number of interpolation points in q. (same as in last call to db6ink)
-    integer,intent(in)                               :: nr     !! the number of interpolation points in r. (same as in last call to db6ink)
-    integer,intent(in)                               :: ns     !! the number of interpolation points in s. (same as in last call to db6ink)
+    integer,intent(in)                               :: nz     !! the number of interpolation points in z. (same as in last call to db6ink)
+    integer,intent(in)                               :: nq     !! the number of interpolation points in q. (same as in last call to db6ink)
+    integer,intent(in)                               :: nr     !! the number of interpolation points in r. (same as in last call to db6ink)
+    integer,intent(in)                               :: ns     !! the number of interpolation points in s. (same as in last call to db6ink)
     integer,intent(in)                               :: kx     !! order of polynomial pieces in x. (same as in last call to db6ink)
     integer,intent(in)                               :: ky     !! order of polynomial pieces in y. (same as in last call to db6ink)
     integer,intent(in)                               :: kz     !! order of polynomial pieces in z. (same as in last call to db6ink)
@@ -1328,12 +1328,12 @@
         
         implicit none
         
-        character(len=1),intent(in),optional       :: s        !! coordinate string: 'x','y','z','q','r','s'
-        integer,intent(in),optional                :: n        !! size of x
-        integer,intent(in),optional                :: k        !! order
-        real(wp),dimension(:),intent(in),optional  :: x        !! abcissae vector
-        real(wp),dimension(:),intent(in),optional  :: t        !! knot vector size(n+k)
-        integer,dimension(4),intent(in)            :: ierrs    !! int error codes for n,k,x,t checks
+        character(len=1),intent(in),optional       :: s        !! coordinate string: 'x','y','z','q','r','s'
+        integer,intent(in),optional                :: n        !! size of x
+        integer,intent(in),optional                :: k        !! order
+        real(wp),dimension(:),intent(in),optional  :: x        !! abcissae vector
+        real(wp),dimension(:),intent(in),optional  :: t        !! knot vector size(n+k)
+        integer,dimension(4),intent(in)            :: ierrs    !! int error codes for n,k,x,t checks
         logical,intent(out)                        :: error    !! true if there was an error
         
         if (present(n)) then
