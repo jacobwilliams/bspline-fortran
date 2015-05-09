@@ -3,7 +3,7 @@
 #
 #  Simple build script for bspline-fortran.
 #
-#  Requires: FoBiS.py and ROBODoc
+#  Requires: FoBiS and Ford
 #
 
 PROJECTNAME='bspline-fortran'   # project name for robodoc
@@ -17,22 +17,33 @@ LIBDIR='./lib/'                 # build directory for library
 
 #compiler flags:
 
-FCOMPILER='gnu' #Set default compiler to gfortran
+FCOMPILER='gnu' #Set compiler to gfortran
 FCOMPILERFLAGS='-c -O2 -std=f2008'
 
-#build the library:
+#build using FoBiS:
 
-FoBiS.py build -compiler ${FCOMPILER} -cflags "${FCOMPILERFLAGS}" -dbld ${LIBDIR} -s ${SRCDIR} -dmod ./ -dobj ./ -t ${MODCODE} -o ${LIBOUT} -mklib static -colors
+if hash FoBiS.py 2>/dev/null; then
 
-# build the test program:
+	echo "Building library..."
+	
+	FoBiS.py build -compiler ${FCOMPILER} -cflags "${FCOMPILERFLAGS}" -dbld ${LIBDIR} -s ${SRCDIR} -dmod ./ -dobj ./ -t ${MODCODE} -o ${LIBOUT} -mklib static -colors
+	
+	echo "Building test program..."
+	
+	FoBiS.py build -compiler ${FCOMPILER} -cflags "${FCOMPILERFLAGS}" -dbld ${BINDIR} -s ${TESTSRCDIR} -dmod ./ -dobj ./ -colors -libs ${LIBDIR}${LIBOUT} --include ${LIBDIR}
 
-FoBiS.py build -compiler ${FCOMPILER} -cflags "${FCOMPILERFLAGS}" -dbld ${BINDIR} -s ${TESTSRCDIR} -dmod ./ -dobj ./ -colors -libs ${LIBDIR}${LIBOUT} --include ${LIBDIR}
+else
+	echo "FoBiS.py not found! Cannot build library. FoBiS can be obtained from: https://github.com/szaghi/FoBiS"
+fi
 
 # build the documentation:
 
-if hash robodoc 2>/dev/null; then
+if hash ford 2>/dev/null; then
+
 	echo "Building documentation..."
-	robodoc --rc ./robodoc.rc --src ${SRCDIR} --doc ${DOCDIR} --documenttitle ${PROJECTNAME}
+
+    ford ./bspline-fortran.md
+
 else
-	echo "ROBODoc not found! Cannot build documentation. ROBODoc can be obtained from: http://www.xs4all.nl/~rfsber/Robo/"
+	echo "Ford not found! Cannot build documentation. Ford can be obtained from: https://github.com/cmacmackin/ford"
 fi
