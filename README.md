@@ -6,7 +6,7 @@ Multidimensional B-Spline Interpolation of Data on a Regular Grid
 Brief description
 ---------------
 
-The library provides subroutines for 2D-6D interpolation using b-splines. The code is written in modern Fortran.
+The library provides subroutines for 2D-6D interpolation using b-splines. The code is written in modern Fortran (i.e., Fortran 2003+).
 
 The core routines are:
 
@@ -34,12 +34,12 @@ function db6val(xval,yval,zval,qval,rval,sval,idx,idy,idz,idq,idr,ids,tx,ty,tz,t
 ```
 The ```ink``` routines compute the interpolant coefficients, and the ```val``` routines evalute the interpolant at the specified value of each coordinate.  Eventually, object-oriented wrappers will be created for these routines for ease of use.  The 2D and 3D routines are extensively refactored versions of the original routines from the [NIST Core Math Library](http://www.nist.gov/itl/math/mcsd-software.cfm).  The others are new, and are simply extensions of the same algorithm into higher dimensions.
 
+Documentation
+--------
+
+The API documentation can be found [here](http://jacobwilliams.github.io/bspline-fortran/). This was generated using [FORD](https://github.com/cmacmackin/ford).
+
 License
 --------
 
 The bspline-fortran source code and related files and documentation are distributed under a permissive free software [license](https://github.com/jacobwilliams/bspline-fortran/blob/master/LICENSE) (BSD-style).
-
-See also
----------------
-
-* This code includes the public domain DBSPLIN and DTENSBS code from the [NIST Core Math Library](http://www.nist.gov/itl/math/mcsd-software.cfm) (CMLIB)

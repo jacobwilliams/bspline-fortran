@@ -6,7 +6,6 @@
 #  Requires: FoBiS and Ford
 #
 
-PROJECTNAME='bspline-fortran'   # project name for robodoc
 MODCODE='bspline_module.f90'    # module file name
 LIBOUT='libbspline.a'           # name of library
 DOCDIR='./doc/'                 # build directory for documentation
