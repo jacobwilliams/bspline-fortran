@@ -25,6 +25,9 @@
 !#        Vol. 5 (1979), p. 173-182.
 !# 4. D.E. Amos, "Computation with Splines and B-Splines",
 !#        SAND78-1968, Sandia Laboratories, March, 1979.
+!# 5. C. de Boor, "Package for Calculating with B-Splines",
+!#        SIAM Journal on Numerical Analysis, Volume 14, No. 3,
+!#        June 1977, p. 441-472.
 
     module bspline_module
 
@@ -1559,194 +1562,169 @@
     end subroutine dbtpcf
 !*****************************************************************************************
 
-!***begin prologue  dbintk
-!***date written   800901   (yymmdd)
-!***revision date  820801   (yymmdd)
-!***revision history  (yymmdd)
-!   000330  modified array declarations.  (jec)
+!*****************************************************************************************
 !
-!***category no.  e1a
-!***keywords  b-spline,data fitting,real(wp),interpolation,
-!             spline
-!***author  amos, d. e., (snla)
-!***purpose  produces the b-spline coefficients, bcoef, of the
-!            b-spline of order k with knots t(i), i=1,...,n+k, which
-!            takes on the value y(i) at x(i), i=1,...,n.
-!***description
-!
-!     written by carl de boor and modified by d. e. amos
-!
-!     references
-!
-!         a practical guide to splines by c. de boor, applied
-!         mathematics series 27, springer, 1979.
-!
-!     abstract    **** a real(wp) routine ****
-!
-!         dbintk is the splint routine of the reference.
-!
-!         dbintk produces the b-spline coefficients, bcoef, of the
-!         b-spline of order k with knots t(i), i=1,...,n+k, which
-!         takes on the value y(i) at x(i), i=1,...,n.  the spline or
-!         any of its derivatives can be evaluated by calls to dbvalu.
-!
-!         the i-th equation of the linear system a*bcoef = b for the
-!         coefficients of the interpolant enforces interpolation at
-!         x(i), i=1,...,n.  hence, b(i) = y(i), for all i, and a is
-!         a band matrix with 2k-1 bands if a is invertible.  the matrix
-!         a is generated row by row and stored, diagonal by diagonal,
-!         in the rows of q, with the main diagonal going into row k.
-!         the banded system is then solved by a call to dbnfac (which
-!         constructs the triangular factorization for a and stores it
-!         again in q), followed by a call to dbnslv (which then
-!         obtains the solution bcoef by substitution).  dbnfac does no
-!         pivoting, since the total positivity of the matrix a makes
-!         this unnecessary.  the linear system to be solved is
-!         (theoretically) invertible if and only if
-!                 t(i) < x(i) < t(i+k),        for all i.
-!         equality is permitted on the left for i=1 and on the right
-!         for i=n when k knots are used at x(1) or x(n).  otherwise,
-!         violation of this condition is certain to lead to an error.
-!
-!         dbintk calls dbspvn, dbnfac, dbnslv, xerror
-!
-!     description of arguments
-!
-!         input       x,y,t are real(wp)
-!           x       - vector of length n containing data point abscissa
-!                     in strictly increasing order.
-!           y       - corresponding vector of length n containing data
-!                     point ordinates.
-!           t       - knot vector of length n+k
-!                     since t(1),..,t(k) <= x(1) and t(n+1),..,t(n+k)
-!                     >= x(n), this leaves only n-k knots (not nec-
-!                     essarily x(i) values) interior to (x(1),x(n))
-!           n       - number of data points, n >= k
-!           k       - order of the spline, k >= 1
-!
-!         output      bcoef,q,work are real(wp)
-!           bcoef   - a vector of length n containing the b-spline
-!                     coefficients
-!           q       - a work vector of length (2*k-1)*n, containing
-!                     the triangular factorization of the coefficient
-!                     matrix of the linear system being solved.  the
-!                     coefficients for the interpolant of an
-!                     additional data set (x(i),yy(i)), i=1,...,n
-!                     with the same abscissa can be obtained by loading
-!                     yy into bcoef and then executing
-!                         call dbnslv(q,2k-1,n,k-1,k-1,bcoef)
-!           work    - work vector of length 2*k
-!
-!     error conditions
-!         improper input is a fatal error
-!         singular system of equations is a fatal error
-!
-!***references  c. de boor, *a practical guide to splines*, applied
-!                 mathematics series 27, springer, 1979.
-!               d.e. amos, *computation with splines and b-splines*,
-!                 sand78-1968,sandia laboratories,march,1979.
+!# dbintk produces the b-spline coefficients, bcoef, of the
+!# b-spline of order k with knots t(i), i=1,...,n+k, which
+!# takes on the value y(i) at x(i), i=1,...,n.  the spline or
+!# any of its derivatives can be evaluated by calls to dbvalu.
+!# 
+!# the i-th equation of the linear system a*bcoef = b for the
+!# coefficients of the interpolant enforces interpolation at
+!# x(i), i=1,...,n.  hence, b(i) = y(i), for all i, and a is
+!# a band matrix with 2k-1 bands if a is invertible.  the matrix
+!# a is generated row by row and stored, diagonal by diagonal,
+!# in the rows of q, with the main diagonal going into row k.
+!# the banded system is then solved by a call to dbnfac (which
+!# constructs the triangular factorization for a and stores it
+!# again in q), followed by a call to dbnslv (which then
+!# obtains the solution bcoef by substitution).  dbnfac does no
+!# pivoting, since the total positivity of the matrix a makes
+!# this unnecessary.  the linear system to be solved is
+!# (theoretically) invertible if and only if
+!#         t(i) < x(i) < t(i+k),        for all i.
+!# equality is permitted on the left for i=1 and on the right
+!# for i=n when k knots are used at x(1) or x(n).  otherwise,
+!# violation of this condition is certain to lead to an error.
+!# 
+!# Error conditions
+!#---------
+!# improper input is a fatal error
+!# singular system of equations is a fatal error
+!#
+!# History
+!#---------
+!# * splint written by carl de boor [5]
+!# * dbintk author: amos, d. e., (snla) : date written 800901
+!# * revision date 820801
+!# * 000330 modified array declarations. (jec)
+!# * Jacob Williams, 5/10/2015 : converted to free-form Fortran.
 
-      subroutine dbintk(x,y,t,n,k,bcoef,q,work)
+    subroutine dbintk(x,y,t,n,k,bcoef,q,work)
 
-      integer iflag, iwork, k, n, i, ilp1mx, j, jj, km1, kpkm2, left,lenq, np1
-      real(wp) bcoef(n), y(n), q(*), t(*), x(n), xi, work(*)
-!     dimension q(2*k-1,n), t(n+k)
+    real(wp),dimension(n),intent(in)  :: x      !!vector of length n containing data point abscissa
+                                                !! in strictly increasing order.
+    real(wp),dimension(n),intent(in)  :: y      !!corresponding vector of length n containing data
+                                                !! point ordinates.
+    real(wp),dimension(*),intent(in)  :: t      !!knot vector of length n+k
+                                                !! since t(1),..,t(k) <= x(1) and t(n+1),..,t(n+k)
+                                                !! >= x(n), this leaves only n-k knots (not
+                                                !! necessarily x(i) values) interior to (x(1),x(n))
+    integer,intent(in)                :: n      !!number of data points, n >= k
+    integer,intent(in)                :: k      !!order of the spline, k >= 1
+    real(wp),dimension(n),intent(out) :: bcoef  !!a vector of length n containing the b-spline coefficients
+    real(wp),dimension(*),intent(out) :: q      !!a work vector of length (2*k-1)*n, containing
+                                                !! the triangular factorization of the coefficient
+                                                !! matrix of the linear system being solved.  the
+                                                !! coefficients for the interpolant of an
+                                                !! additional data set (x(i),yy(i)), i=1,...,n
+                                                !! with the same abscissa can be obtained by loading
+                                                !! yy into bcoef and then executing
+                                                !! call dbnslv(q,2k-1,n,k-1,k-1,bcoef)
+    real(wp),dimension(*),intent(out) :: work   !!work vector of length 2*k
 
-      if (k<1) go to 100
-      if (n<k) go to 105
-      jj = n - 1
-      if (jj/=0) then
+    integer :: iflag, iwork, i, ilp1mx, j, jj, km1, kpkm2, left,lenq, np1
+    real(wp) :: xi
+
+    if (k<1) then
+        call xerror( ' dbintk,  k does not satisfy k>=1', 35, 2, 1)
+        return
+    end if
+
+    if (n<k) then
+        call xerror( ' dbintk,  n does not satisfy n>=k', 35, 2, 1)
+        return
+    end if
+
+    jj = n - 1
+    if (jj/=0) then
         do i=1,jj
-          if (x(i)>=x(i+1)) go to 110
+            if (x(i)>=x(i+1)) then
+                call xerror( ' dbintk,  x(i) does not satisfy x(i)<x(i+1) for some i', 57, 2, 1)
+                return
+            end if
         end do
-      end if
-      np1 = n + 1
-      km1 = k - 1
-      kpkm2 = 2*km1
-      left = k
-      ! zero out all entries of q
-      lenq = n*(k+km1)
-      do i=1,lenq
-        q(i) = 0.0d0
-      end do
+    end if
 
-      !  ***   loop over i to construct the  n  interpolation equations
-      do i=1,n
+    np1 = n + 1
+    km1 = k - 1
+    kpkm2 = 2*km1
+    left = k
+    ! zero out all entries of q
+    lenq = n*(k+km1)
+    do i=1,lenq
+        q(i) = 0.0_wp
+    end do
+
+    ! loop over i to construct the n interpolation equations
+    do i=1,n
+
         xi = x(i)
         ilp1mx = min(i+k,np1)
-!        *** find  left  in the closed interval (i,i+k-1) such that
-!                t(left) <= x(i) < t(left+1)
-!        matrix is singular if this is not possible
+        ! *** find  left  in the closed interval (i,i+k-1) such that
+        !         t(left) <= x(i) < t(left+1)
+        ! matrix is singular if this is not possible
         left = max(left,i)
-        if (xi<t(left)) go to 80
-   20   if (xi<t(left+1)) go to 30
-        left = left + 1
-        if (left<ilp1mx) go to 20
+        if (xi<t(left)) then
+            call xerror( ' dbintk,  some abscissa was not in the support of the'//&
+                         ' corresponding basis function and the system is singular.',109,2,1)
+            return
+        end if
+        do
+            if (xi<t(left+1)) go to 30
+            left = left + 1
+            if (left>=ilp1mx) exit
+        end do
         left = left - 1
-        if (xi>t(left+1)) go to 80
-!        *** the i-th equation enforces interpolation at xi, hence
-!        a(i,j) = b(j,k,t)(xi), all j. only the  k  entries with  j =
-!        left-k+1,...,left actually might be nonzero. these  k  numbers
-!        are returned, in  bcoef (used for temp.storage here), by the
-!        following
-   30   call dbspvn(t, k, k, 1, xi, left, bcoef, work, iwork)
-!        we therefore want  bcoef(j) = b(left-k+j)(xi) to go into
-!        a(i,left-k+j), i.e., into  q(i-(left+j)+2*k,(left+j)-k) since
-!        a(i+j,j)  is to go into  q(i+k,j), all i,j,  if we consider  q
-!        as a two-dim. array , with  2*k-1  rows (see comments in
-!        dbnfac). in the present program, we treat  q  as an equivalent
-!        one-dimensional array (because of fortran restrictions on
-!        dimension statements) . we therefore want  bcoef(j) to go into
-!        entry
-!            i -(left+j) + 2*k + ((left+j) - k-1)*(2*k-1)
-!                   =  i-left+1 + (left -k)*(2*k-1) + (2*k-2)*j
-!        of  q .
+        if (xi>t(left+1)) then
+            call xerror( ' dbintk,  some abscissa was not in the support of the'//&
+                         ' corresponding basis function and the system is singular.',109,2,1)
+            return
+        end if
+
+        ! *** the i-th equation enforces interpolation at xi, hence
+        ! a(i,j) = b(j,k,t)(xi), all j. only the  k  entries with  j =
+        ! left-k+1,...,left actually might be nonzero. these  k  numbers
+        ! are returned, in  bcoef (used for temp.storage here), by the
+        ! following
+ 30     call dbspvn(t, k, k, 1, xi, left, bcoef, work, iwork)
+
+        ! we therefore want  bcoef(j) = b(left-k+j)(xi) to go into
+        ! a(i,left-k+j), i.e., into  q(i-(left+j)+2*k,(left+j)-k) since
+        ! a(i+j,j)  is to go into  q(i+k,j), all i,j,  if we consider  q
+        ! as a two-dim. array , with  2*k-1  rows (see comments in
+        ! dbnfac). in the present program, we treat  q  as an equivalent
+        ! one-dimensional array (because of fortran restrictions on
+        ! dimension statements) . we therefore want  bcoef(j) to go into
+        ! entry
+        !     i -(left+j) + 2*k + ((left+j) - k-1)*(2*k-1)
+        !            = i-left+1 + (left -k)*(2*k-1) + (2*k-2)*j
+        ! of q.
         jj = i - left + 1 + (left-k)*(k+km1)
         do j=1,k
-          jj = jj + kpkm2
-          q(jj) = bcoef(j)
+            jj = jj + kpkm2
+            q(jj) = bcoef(j)
         end do
-      end do
 
-      !***obtain factorization of  a  , stored again in  q.
-      call dbnfac(q, k+km1, n, km1, km1, iflag)
+    end do
 
-      !go to (60, 90), iflag   !JW removed obsolescent Computed GOTO
-      select case (iflag)
-      case(1); goto 60  !success
-      case(2); goto 90  !failure
-      end select
+    ! obtain factorization of a, stored again in q.
+    call dbnfac(q, k+km1, n, km1, km1, iflag)
 
-!     *** solve  a*bcoef = y  by backsubstitution
-   60 do i=1,n
-        bcoef(i) = y(i)
-      end do
-      call dbnslv(q, k+km1, n, km1, km1, bcoef)
-      return
-   80 continue
-      call xerror( ' dbintk,  some abscissa was not in the support of the'//&
-                   ' corresponding basis function and the system is singular.',109,2,1)
-      return
-   90 continue
-      call xerror( ' dbintk,  the system of solver detects a singular system'//&
-                   ' although the theoretical conditions for a solution were satisfied.',123,8,1)
-      return
+    if (iflag==1) then !success
+        ! *** solve  a*bcoef = y  by backsubstitution
+        do i=1,n
+            bcoef(i) = y(i)
+        end do
+        call dbnslv(q, k+km1, n, km1, km1, bcoef)
+    else  !failure
+        call xerror( ' dbintk,  the system of solver detects a singular system'//&
+                     ' although the theoretical conditions for a solution were satisfied.',123,8,1)
+    end if
 
-  100 continue
-      call xerror( ' dbintk,  k does not satisfy k>=1', 35, 2, 1)
-      return
+    end subroutine dbintk
+!*****************************************************************************************
 
-  105 continue
-      call xerror( ' dbintk,  n does not satisfy n>=k', 35, 2, 1)
-      return
-
-  110 continue
-      call xerror( ' dbintk,  x(i) does not satisfy x(i)<x(i+1) for some i', 57, 2, 1)
-      return
-
-      end subroutine dbintk
-
-      subroutine dbnfac(w,nroww,nrow,nbandl,nbandu,iflag)
 !***begin prologue  dbnfac
 !***refer to  dbint4,dbintk
 !
@@ -1810,12 +1788,13 @@
 !     the routine should not be used for an arbitrary banded matrix.
 !***routines called  (none)
 !***end prologue  dbnfac
-!
+
+      subroutine dbnfac(w,nroww,nrow,nbandl,nbandu,iflag)
+
       integer iflag, nbandl, nbandu, nrow, nroww, i, ipk, j, jmax, k,&
        kmax, middle, midmk, nrowm1
       real(wp) w(nroww,nrow), factor, pivot
-!
-!***first executable statement  dbnfac
+
       iflag = 1
       middle = nbandu + 1
 !                         w(middle,.) contains the main diagonal of  a .
@@ -1829,58 +1808,56 @@
 
    10 if (nbandl>0) go to 30
 !                a is upper triangular. check that diagonal is nonzero .
-      do 20 i=1,nrowm1
-        if (w(middle,i)==0.0d0) go to 120
-   20 continue
+      do i=1,nrowm1
+        if (w(middle,i)==0.0_wp) go to 120
+      end do
       go to 110
    30 if (nbandu>0) go to 60
 !              a is lower triangular. check that diagonal is nonzero and
 !                 divide each column by its diagonal .
-      do 50 i=1,nrowm1
+      do i=1,nrowm1
         pivot = w(middle,i)
-        if (pivot==0.0d0) go to 120
+        if (pivot==0.0_wp) go to 120
         jmax = min(nbandl,nrow-i)
-        do 40 j=1,jmax
+        do j=1,jmax
           w(middle+j,i) = w(middle+j,i)/pivot
-   40   continue
-   50 continue
+        end do
+      end do
       return
 !
 !        a  is not just a triangular matrix. construct lu factorization
-   60 do 100 i=1,nrowm1
+   60 do i=1,nrowm1
 !                                  w(middle,i)  is pivot for i-th step .
         pivot = w(middle,i)
-        if (pivot==0.0d0) go to 120
+        if (pivot==0.0_wp) go to 120
 !                 jmax  is the number of (nonzero) entries in column  i
 !                     below the diagonal .
         jmax = min(nbandl,nrow-i)
 !              divide each entry in column  i  below diagonal by pivot .
-        do 70 j=1,jmax
+        do j=1,jmax
           w(middle+j,i) = w(middle+j,i)/pivot
-   70   continue
+        end do
 !                 kmax  is the number of (nonzero) entries in row  i  to
 !                     the right of the diagonal .
         kmax = min(nbandu,nrow-i)
 !                  subtract  a(i,i+k)*(i-th column) from (i+k)-th column
 !                  (below row  i ) .
-        do 90 k=1,kmax
+        do k=1,kmax
           ipk = i + k
           midmk = middle - k
           factor = w(midmk,ipk)
-          do 80 j=1,jmax
+          do j=1,jmax
             w(midmk+j,ipk) = w(midmk+j,ipk) - w(middle+j,i)*factor
-   80     continue
-   90   continue
-  100 continue
+          end do
+        end do
+      end do
 !                                       check the last diagonal entry .
-  110 if (w(middle,nrow)/=0.0d0) return
+  110 if (w(middle,nrow)/=0.0_wp) return
   120 iflag = 2
-      return
+
       end subroutine dbnfac
       
-      subroutine dbnslv(w,nroww,nrow,nbandl,nbandu,b)
-!***begin prologue  dbnslv
-!***refer to  dbint4,dbintk
+!*****************************************************************************************
 !
 !  dbnslv is the banslv routine from
 !        * a practical guide to splines *  by c. de boor
@@ -1905,251 +1882,205 @@
 !  l(u*x) = b  is solved for  y = u*x, and  y  stored in  b . then the
 !  upper triangular system  u*x = y  is solved for  x  . the calcul-
 !  ations are so arranged that the innermost loops stay within columns.
-!***routines called  (none)
-!***end prologue  dbnslv
-!
-      integer nbandl, nbandu, nrow, nroww, i, j, jmax, middle, nrowm1
-      real(wp) w(nroww,nrow), b(nrow)
-!***first executable statement  dbnslv
-      middle = nbandu + 1
-      if (nrow==1) go to 80
-      nrowm1 = nrow - 1
-      if (nbandl==0) go to 30
-!                                 forward pass
-!            for i=1,2,...,nrow-1, subtract  right side(i)*(i-th column
-!            of  l )  from right side  (below i-th row) .
-      do 20 i=1,nrowm1
-        jmax = min(nbandl,nrow-i)
-        do 10 j=1,jmax
-          b(i+j) = b(i+j) - b(i)*w(middle+j,i)
-   10   continue
-   20 continue
-!                                 backward pass
-!            for i=nrow,nrow-1,...,1, divide right side(i) by i-th diag-
-!            onal entry of  u, then subtract  right side(i)*(i-th column
-!            of  u)  from right side  (above i-th row).
-   30 if (nbandu>0) go to 50
-!                                a  is lower triangular .
-      do 40 i=1,nrow
-        b(i) = b(i)/w(1,i)
-   40 continue
-      return
-   50 i = nrow
-   60 b(i) = b(i)/w(middle,i)
-      jmax = min(nbandu,i-1)
-      do 70 j=1,jmax
-        b(i-j) = b(i-j) - b(i)*w(middle-j,i)
-   70 continue
-      i = i - 1
-      if (i>1) go to 60
-   80 b(1) = b(1)/w(middle,1)
-      return
-      end subroutine dbnslv
 
-      subroutine dbspvn(t,jhigh,k,index,x,ileft,vnikx,work,iwork)
-!***begin prologue  dbspvn
-!***date written   800901   (yymmdd)
-!***revision date  820801   (yymmdd)
-!***revision history  (yymmdd)
-!   000330  modified array declarations.  (jec)
-!
-!***category no.  e3,k6
-!***keywords  b-spline,data fitting,real(wp),interpolation,
-!             spline
-!***author  amos, d. e., (snla)
-!***purpose  calculates the value of all (possibly) nonzero basis
-!            functions at x.
-!***description
-!
-!     written by carl de boor and modified by d. e. amos
-!
-!     reference
-!         siam j. numerical analysis, 14, no. 3, june, 1977, pp.441-472.
-!
-!     abstract    **** a real(wp) routine ****
-!         dbspvn is the bsplvn routine of the reference.
-!
-!         dbspvn calculates the value of all (possibly) nonzero basis
-!         functions at x of order max(jhigh,(j+1)*(index-1)), where t(k)
-!         <= x <= t(n+1) and j=iwork is set inside the routine on
-!         the first call when index=1.  ileft is such that t(ileft) <=
-!         x < t(ileft+1).  a call to dintrv(t,n+1,x,ilo,ileft,mflag)
-!         produces the proper ileft.  dbspvn calculates using the basic
-!         algorithm needed in dbspvd.  if only basis functions are
-!         desired, setting jhigh=k and index=1 can be faster than
-!         calling dbspvd, but extra coding is required for derivatives
-!         (index=2) and dbspvd is set up for this purpose.
-!
-!         left limiting values are set up as described in dbspvd.
-!
-!     description of arguments
-!
-!         input      t,x are real(wp)
-!          t       - knot vector of length n+k, where
-!                    n = number of b-spline basis functions
-!                    n = sum of knot multiplicities-k
-!          jhigh   - order of b-spline, 1 <= jhigh <= k
-!          k       - highest possible order
-!          index   - index = 1 gives basis functions of order jhigh
-!                          = 2 denotes previous entry with work, iwork
-!                              values saved for subsequent calls to
-!                              dbspvn.
-!          x       - argument of basis functions,
-!                    t(k) <= x <= t(n+1)
-!          ileft   - largest integer such that
-!                    t(ileft) <= x <  t(ileft+1)
-!
-!         output     vnikx, work are real(wp)
-!          vnikx   - vector of length k for spline values.
-!          work    - a work vector of length 2*k
-!          iwork   - a work parameter.  both work and iwork contain
-!                    information necessary to continue for index = 2.
-!                    when index = 1 exclusively, these are scratch
-!                    variables and can be used for other purposes.
-!
-!     error conditions
-!         improper input is a fatal error.
-!***references  c. de boor, *package for calculating with b-splines*,
-!                 siam journal on numerical analysis, volume 14, no. 3,
-!                 june 1977, pp. 441-472.
-!***routines called  xerror
-!***end prologue  dbspvn
-!
-!
-      integer ileft, imjp1, index, ipj, iwork, jhigh, jp1, jp1ml, k, l
-      real(wp) t, vm, vmprev, vnikx, work, x
-!     dimension t(ileft+jhigh)
-      dimension t(*), vnikx(k), work(*)
-!     content of j, deltam, deltap is expected unchanged between calls.
-!     work(i) = deltap(i), work(k+i) = deltam(i), i = 1,k
-!***first executable statement  dbspvn
+    subroutine dbnslv(w,nroww,nrow,nbandl,nbandu,b)
 
-      if(k<1) go to 90
-      if(jhigh>k .or. jhigh<1) go to 100
-      if(index<1 .or. index>2) go to 105
-      if(x<t(ileft) .or. x>t(ileft+1)) go to 110
+    integer nbandl, nbandu, nrow, nroww, i, j, jmax, middle, nrowm1
+    real(wp) w(nroww,nrow), b(nrow)
 
-      !go to (10, 20), index    !JW removed obsolescent Computed GOTO
-      select case (index)
-      case(1); goto 10
-      case(2); goto 20
-      end select
+    middle = nbandu + 1
+    if (nrow/=1) then
 
-   10 iwork = 1
-      vnikx(1) = 1.0_wp
-      if (iwork>=jhigh) go to 40
-!
-   20 ipj = ileft + iwork
-      work(iwork) = t(ipj) - x
-      imjp1 = ileft - iwork + 1
-      work(k+iwork) = x - t(imjp1)
-      vmprev = 0.0d0
-      jp1 = iwork + 1
-      do 30 l=1,iwork
-        jp1ml = jp1 - l
-        vm = vnikx(l)/(work(l)+work(k+jp1ml))
-        vnikx(l) = vm*work(l) + vmprev
-        vmprev = vm*work(k+jp1ml)
-   30 continue
-      vnikx(jp1) = vmprev
-      iwork = jp1
-      if (iwork<jhigh) go to 20
-!
-   40 return
-!
-!
-   90 continue
-      call xerror( ' dbspvn,  k does not satisfy k>=1', 35, 2, 1)
-      return
-  100 continue
-      call xerror( ' dbspvn,  jhigh does not satisfy 1<=jhigh<=k',48, 2, 1)
-      return
-  105 continue
-      call xerror( ' dbspvn,  index is not 1 or 2',29,2,1)
-      return
-  110 continue
-      call xerror( ' dbspvn,  x does not satisfy t(ileft)<=x<=t(ileft+1)', 56, 2, 1)
-      return
-      end subroutine dbspvn
-      
+        nrowm1 = nrow - 1
+        if (nbandl/=0) then
+
+            ! forward pass
+            ! for i=1,2,...,nrow-1, subtract right side(i)*(i-th column of l) 
+            !                       from right side (below i-th row).
+            do i=1,nrowm1
+                jmax = min(nbandl,nrow-i)
+                do j=1,jmax
+                    b(i+j) = b(i+j) - b(i)*w(middle+j,i)
+                end do
+            end do
+
+        end if
+
+        ! backward pass
+        ! for i=nrow,nrow-1,...,1, divide right side(i) by i-th diagonal
+        !                          entry of u, then subtract right side(i)*(i-th column
+        !                          of u) from right side (above i-th row).
+        if (nbandu<=0) then
+            ! a is lower triangular.
+            do i=1,nrow
+                b(i) = b(i)/w(1,i)
+            end do
+            return
+        end if
+
+        i = nrow
+        do
+            b(i) = b(i)/w(middle,i)
+            jmax = min(nbandu,i-1)
+            do j=1,jmax
+                b(i-j) = b(i-j) - b(i)*w(middle-j,i)
+            end do
+            i = i - 1
+            if (i<=1) exit
+        end do
+
+    end if
+
+    b(1) = b(1)/w(middle,1)
+
+    end subroutine dbnslv
 !*****************************************************************************************
-!***begin prologue  dbvalu
-!***date written   800901   (yymmdd)
-!***revision date  820801   (yymmdd)
-!***revision history  (yymmdd)
-!   000330  modified array declarations.  (jec)
-!
-!***category no.  e3,k6
-!***keywords  b-spline,data fitting,real(wp),interpolation,
-!             spline
-!***author  amos, d. e., (snla)
-!***purpose  evaluates the b-representation of a b-spline at x for the
-!            function value or any of its derivatives.
-!***description
-!
-!     written by carl de boor and modified by d. e. amos
-!
-!     reference
-!         siam j. numerical analysis, 14, no. 3, june, 1977, pp.441-472.
-!
-!     abstract   **** a real(wp) routine ****
-!         dbvalu is the bvalue function of the reference.
-!
-!         dbvalu evaluates the b-representation (t,a,n,k) of a b-spline
-!         at x for the function value on ideriv=0 or any of its
-!         derivatives on ideriv=1,2,...,k-1.  right limiting values
-!         (right derivatives) are returned except at the right end
-!         point x=t(n+1) where left limiting values are computed.  the
-!         spline is defined on t(k) <= x <= t(n+1).  dbvalu returns
-!         a fatal error message when x is outside of this interval.
-!
-!         to compute left derivatives or left limiting values at a
-!         knot t(i), replace n by i-1 and set x=t(i), i=k+1,n+1.
-!
-!         dbvalu calls dintrv
-!
-!     description of arguments
-!
-!         input      t,a,x are real(wp)
-!          t       - knot vector of length n+k
-!          a       - b-spline coefficient vector of length n
-!          n       - number of b-spline coefficients
-!                    n = sum of knot multiplicities-k
-!          k       - order of the b-spline, k >= 1
-!          ideriv  - order of the derivative, 0 <= ideriv <= k-1
-!                    ideriv = 0 returns the b-spline value
-!          x       - argument, t(k) <= x <= t(n+1)
-!          inbv    - an initialization parameter which must be set
-!                    to 1 the first time dbvalu is called.
-!
-!         output     work,dbvalu are real(wp)
-!          inbv    - inbv contains information for efficient process-
-!                    ing after the initial call and inbv must not
-!                    be changed by the user.  distinct splines require
-!                    distinct inbv parameters.
-!          work    - work vector of length 3*k.
-!          dbvalu  - value of the ideriv-th derivative at x
-!
-!     error conditions
-!         an improper input is a fatal error
-!***references  c. de boor, *package for calculating with b-splines*,
-!                 siam journal on numerical analysis, volume 14, no. 3,
-!                 june 1977, pp. 441-472.
-!***routines called  dintrv,xerror
-!***end prologue  dbvalu
 
-    real(wp) function dbvalu(t,a,n,k,ideriv,x,inbv,work)
+!*****************************************************************************************
+!
+!# Calculates the value of all (possibly) nonzero basis
+!# functions at x of order max(jhigh,(j+1)*(index-1)), where t(k)
+!# <= x <= t(n+1) and j=iwork is set inside the routine on
+!# the first call when index=1.  ileft is such that t(ileft) <=
+!# x < t(ileft+1).  a call to dintrv(t,n+1,x,ilo,ileft,mflag)
+!# produces the proper ileft.  dbspvn calculates using the basic
+!# algorithm needed in dbspvd.  if only basis functions are
+!# desired, setting jhigh=k and index=1 can be faster than
+!# calling dbspvd, but extra coding is required for derivatives
+!# (index=2) and dbspvd is set up for this purpose.
+!# 
+!# left limiting values are set up as described in dbspvd.
+!#
+!# Error Conditions
+!#---------
+!# improper input is a fatal error.
+!#
+!# History
+!#---------
+!# * bsplvn written by carl de boor [5]
+!# * dbspvn author: amos, d. e., (snla) : date written 800901
+!# * revision date 820801
+!# * 000330 modified array declarations.  (jec)
+!# * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
+
+    subroutine dbspvn(t,jhigh,k,index,x,ileft,vnikx,work,iwork)
 
     implicit none
 
-    integer,intent(in)               :: n
-    real(wp),dimension(:),intent(in) :: t
-    real(wp),dimension(n),intent(in) :: a
-    integer,intent(in)               :: k
-    integer,intent(in)               :: ideriv
-    real(wp),intent(in)              :: x
-    integer,intent(inout)            :: inbv
-    real(wp),dimension(:)            :: work
+    real(wp),intent(in)  :: t(*)     !!knot vector of length n+k, where
+                                     !! n = number of b-spline basis functions
+                                     !! n = sum of knot multiplicities-k
+                                     !!    dimension t(ileft+jhigh)
+    integer,intent(in)   :: jhigh    !!order of b-spline, 1 <= jhigh <= k
+    integer,intent(in)   :: k        !!highest possible order
+    integer,intent(in)   :: index    !!index = 1 gives basis functions of order jhigh
+                                     !!      = 2 denotes previous entry with work, iwork
+                                     !!          values saved for subsequent calls to
+                                     !!          dbspvn.
+    real(wp),intent(in)  :: x        !!argument of basis functions, t(k) <= x <= t(n+1)
+    integer,intent(in)   :: ileft    !!largest integer such that t(ileft) <= x < t(ileft+1)
+    real(wp),intent(out) :: vnikx(k) !!vector of length k for spline values.
+    real(wp),intent(out) :: work(*)  !!a work vector of length 2*k
+    integer,intent(out)  :: iwork    !!a work parameter.  both work and iwork contain
+                                     !! information necessary to continue for index = 2.
+                                     !! when index = 1 exclusively, these are scratch
+                                     !! variables and can be used for other purposes.
+
+    integer :: imjp1, ipj, jp1, jp1ml, l
+    real(wp) :: vm, vmprev
+
+    ! content of j, deltam, deltap is expected unchanged between calls.
+    ! work(i) = deltap(i), 
+    ! work(k+i) = deltam(i), i = 1,k
+
+    if (k<1) then
+        call xerror( ' dbspvn,  k does not satisfy k>=1', 35, 2, 1)
+        return
+    end if
+    if (jhigh>k .or. jhigh<1) then
+        call xerror( ' dbspvn,  jhigh does not satisfy 1<=jhigh<=k', 48, 2, 1)
+        return
+    end if
+    if (index<1 .or. index>2) then
+        call xerror( ' dbspvn,  index is not 1 or 2',29,2,1)
+        return
+    end if
+    if (x<t(ileft) .or. x>t(ileft+1)) then
+        call xerror( ' dbspvn,  x does not satisfy t(ileft)<=x<=t(ileft+1)', 56, 2, 1)
+        return
+    end if
+
+    if (index==1) then
+        iwork = 1
+        vnikx(1) = 1.0_wp
+        if (iwork>=jhigh) return
+    end if
+
+    do
+        ipj = ileft + iwork
+        work(iwork) = t(ipj) - x
+        imjp1 = ileft - iwork + 1
+        work(k+iwork) = x - t(imjp1)
+        vmprev = 0.0_wp
+        jp1 = iwork + 1
+        do l=1,iwork
+            jp1ml = jp1 - l
+            vm = vnikx(l)/(work(l)+work(k+jp1ml))
+            vnikx(l) = vm*work(l) + vmprev
+            vmprev = vm*work(k+jp1ml)
+        end do
+        vnikx(jp1) = vmprev
+        iwork = jp1
+        if (iwork>=jhigh) exit
+    end do
+
+    end subroutine dbspvn
+!*****************************************************************************************
+      
+!*****************************************************************************************
+!
+!# Evaluates the b-representation (t,a,n,k) of a b-spline
+!# at x for the function value on ideriv=0 or any of its
+!# derivatives on ideriv=1,2,...,k-1.  right limiting values
+!# (right derivatives) are returned except at the right end
+!# point x=t(n+1) where left limiting values are computed.  the
+!# spline is defined on t(k) <= x <= t(n+1).  dbvalu returns
+!# a fatal error message when x is outside of this interval.
+!# 
+!# to compute left derivatives or left limiting values at a
+!# knot t(i), replace n by i-1 and set x=t(i), i=k+1,n+1.
+!#
+!# Error Conditions
+!#---------
+!# improper input is a fatal error.
+!#
+!# History
+!#---------
+!# * bvalue written by carl de boor [5]
+!# * dbvalu author: amos, d. e., (snla) : date written 800901
+!# * revision date 820801
+!# * 000330 modified array declarations.  (jec)
+!# * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
+
+    real(wp) function dbvalu(t,a,n,k,ideriv,x,inbv,work)  !!value of the ideriv-th derivative at x
+
+    implicit none
+
+    integer,intent(in)               :: n       !!number of b-spline coefficients.
+                                                !!  (sum of knot multiplicities-k)
+    real(wp),dimension(:),intent(in) :: t       !!knot vector of length n+k
+    real(wp),dimension(n),intent(in) :: a       !!b-spline coefficient vector of length n 
+    integer,intent(in)               :: k       !!order of the b-spline, k >= 1
+    integer,intent(in)               :: ideriv  !!order of the derivative, 0 <= ideriv <= k-1.
+                                                !!  ideriv = 0 returns the b-spline value
+    real(wp),intent(in)              :: x       !!argument, t(k) <= x <= t(n+1)
+    integer,intent(inout)            :: inbv    !!an initialization parameter which must be set
+                                                !!  to 1 the first time dbvalu is called.
+                                                !!  inbv contains information for efficient process-
+                                                !!  ing after the initial call and inbv must not
+                                                !!  be changed by the user.  distinct splines require
+                                                !!  distinct inbv parameters.
+    real(wp),dimension(:)            :: work    !!work vector of length 3*k
 
     integer :: i,iderp1,ihi,ihmkmj,ilo,imk,imkpj,ipj,&
                ip1,ip1mj,j,jj,j1,j2,kmider,kmj,km1,kpk,mflag
@@ -2244,8 +2175,8 @@
             kmj = k - j
             ilo = kmj
             do jj=1,kmj
-                work(jj) = (work(jj+1)*work(kpk+ilo)+work(jj)&
-                *work(k+jj))/(work(kpk+ilo)+work(k+jj))
+                work(jj) = (work(jj+1)*work(kpk+ilo)+work(jj)*&
+                            work(k+jj))/(work(kpk+ilo)+work(k+jj))
                 ilo = ilo - 1
             end do
         end do
@@ -2256,7 +2187,7 @@
     end function dbvalu
 !*****************************************************************************************
       
-      subroutine dintrv(xt,lxt,x,ilo,ileft,mflag)
+!*****************************************************************************************
 !***begin prologue  dintrv
 !***date written   800901   (yymmdd)
 !***revision date  820801   (yymmdd)
@@ -2314,21 +2245,23 @@
 !***routines called  (none)
 !***end prologue  dintrv
 !
-!
+
+      subroutine dintrv(xt,lxt,x,ilo,ileft,mflag)
+
       integer ihi, ileft, ilo, istep, lxt, mflag, middle
       real(wp) x, xt
       dimension xt(lxt)
-!***first executable statement  dintrv
+
       ihi = ilo + 1
       if (ihi<lxt) go to 10
       if (x>=xt(lxt)) go to 110
       if (lxt<=1) go to 90
       ilo = lxt - 1
       ihi = lxt
-!
+
    10 if (x>=xt(ihi)) go to 40
       if (x>=xt(ilo)) go to 100
-!
+
 ! *** now x < xt(ihi) . find lower bound
       istep = 1
    20 ihi = ilo
@@ -2337,9 +2270,11 @@
       if (x>=xt(ilo)) go to 70
       istep = istep*2
       go to 20
+
    30 ilo = 1
       if (x<xt(1)) go to 90
       go to 70
+
 ! *** now x >= xt(ilo) . find upper bound
    40 istep = 1
    50 ilo = ihi
@@ -2348,9 +2283,10 @@
       if (x<xt(ihi)) go to 70
       istep = istep*2
       go to 50
+
    60 if (x>=xt(lxt)) go to 110
       ihi = lxt
-!
+
 ! *** now xt(ilo) <= x < xt(ihi) . narrow the interval
    70 middle = (ilo+ihi)/2
       if (middle==ilo) go to 100
@@ -2358,32 +2294,38 @@
       if (x<xt(middle)) go to 80
       ilo = middle
       go to 70
+
    80 ihi = middle
       go to 70
+
 ! *** set output and return
    90 mflag = -1
       ileft = 1
       return
+
   100 mflag = 0
       ileft = ilo
       return
+
   110 mflag = 1
       ileft = lxt
-      return
+
       end subroutine dintrv      
+!*****************************************************************************************
     
 !*****************************************************************************************
+!# Just a replacement for the CMLIB XERROR routine.
 
     subroutine xerror(messg,nmessg,nerr,level)
 
-!! Just a replacement for the CMLIB XERROR routine.
+    use iso_fortran_env, only: error_unit
 
     implicit none
 
     character(len=*),intent(in) :: messg
     integer,intent(in),optional :: nmessg,nerr,level
     
-    write(*,'(A)') trim(messg)
+    write(error_unit,'(A)') trim(messg)
 
     end subroutine xerror
 !*****************************************************************************************
