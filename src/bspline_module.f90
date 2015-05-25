@@ -1602,6 +1602,9 @@
 
     subroutine dbintk(x,y,t,n,k,bcoef,q,work)
 
+    implicit none
+
+    integer,intent(in)                :: n      !!number of data points, n >= k
     real(wp),dimension(n),intent(in)  :: x      !!vector of length n containing data point abscissa
                                                 !! in strictly increasing order.
     real(wp),dimension(n),intent(in)  :: y      !!corresponding vector of length n containing data
@@ -1610,7 +1613,6 @@
                                                 !! since t(1),..,t(k) <= x(1) and t(n+1),..,t(n+k)
                                                 !! >= x(n), this leaves only n-k knots (not
                                                 !! necessarily x(i) values) interior to (x(1),x(n))
-    integer,intent(in)                :: n      !!number of data points, n >= k
     integer,intent(in)                :: k      !!order of the spline, k >= 1
     real(wp),dimension(n),intent(out) :: bcoef  !!a vector of length n containing the b-spline coefficients
     real(wp),dimension(*),intent(out) :: q      !!a work vector of length (2*k-1)*n, containing
