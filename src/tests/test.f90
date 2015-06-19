@@ -106,32 +106,32 @@
      errmax = 0.0_wp
      do i=1,nx
         do j=1,ny
-                        val(2)    = db2val(x(i),y(j),idx,idy,&
-                                            tx,ty,nx,ny,kx,ky,fcn_2d)
+                        call db2val(x(i),y(j),idx,idy,&
+                                            tx,ty,nx,ny,kx,ky,fcn_2d,val(2),iflag)
                         tru(2)    = f2(x(i),y(j))
                         err(2)    = abs(tru(2)-val(2))
                         errmax(2) = max(err(2),errmax(2))
            do k=1,nz
-                        val(3)    = db3val(x(i),y(j),z(k),idx,idy,idz,&
-                                            tx,ty,tz,nx,ny,nz,kx,ky,kz,fcn_3d)
+                        call db3val(x(i),y(j),z(k),idx,idy,idz,&
+                                            tx,ty,tz,nx,ny,nz,kx,ky,kz,fcn_3d,val(3),iflag)
                         tru(3)    = f3(x(i),y(j),z(k))
                         err(3)    = abs(tru(3)-val(3))
                         errmax(3) = max(err(3),errmax(3))
               do l=1,nq
-                        val(4)    = db4val(x(i),y(j),z(k),q(l),idx,idy,idz,idq,&
-                                            tx,ty,tz,tq,nx,ny,nz,nq,kx,ky,kz,kq,fcn_4d)
+                        call db4val(x(i),y(j),z(k),q(l),idx,idy,idz,idq,&
+                                            tx,ty,tz,tq,nx,ny,nz,nq,kx,ky,kz,kq,fcn_4d,val(4),iflag)
                         tru(4)    = f4(x(i),y(j),z(k),q(l))
                         err(4)    = abs(tru(4)-val(4))
                         errmax(4) = max(err(4),errmax(4))
                 do m=1,nr
-                        val(5)    = db5val(x(i),y(j),z(k),q(l),r(m),idx,idy,idz,idq,idr,&
-                                            tx,ty,tz,tq,tr,nx,ny,nz,nq,nr,kx,ky,kz,kq,kr,fcn_5d)
+                        call db5val(x(i),y(j),z(k),q(l),r(m),idx,idy,idz,idq,idr,&
+                                            tx,ty,tz,tq,tr,nx,ny,nz,nq,nr,kx,ky,kz,kq,kr,fcn_5d,val(5),iflag)
                         tru(5)    = f5(x(i),y(j),z(k),q(l),r(m))
                         err(5)    = abs(tru(5)-val(5))
                         errmax(5) = max(err(5),errmax(5))
                     do n=1,ns
-                        val(6)    = db6val(x(i),y(j),z(k),q(l),r(m),s(n),idx,idy,idz,idq,idr,ids,&
-                                            tx,ty,tz,tq,tr,ts,nx,ny,nz,nq,nr,ns,kx,ky,kz,kq,kr,ks,fcn_6d)
+                        call db6val(x(i),y(j),z(k),q(l),r(m),s(n),idx,idy,idz,idq,idr,ids,&
+                                            tx,ty,tz,tq,tr,ts,nx,ny,nz,nq,nr,ns,kx,ky,kz,kq,kr,ks,fcn_6d,val(6),iflag)
                         tru(6)    = f6(x(i),y(j),z(k),q(l),r(m),s(n))
                         err(6)    = abs(tru(6)-val(6))
                         errmax(6) = max(err(6),errmax(6))
