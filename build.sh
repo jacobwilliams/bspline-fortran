@@ -32,7 +32,7 @@ if hash FoBiS.py 2>/dev/null; then
 	FoBiS.py build -compiler ${FCOMPILER} -cflags "${FCOMPILERFLAGS}" -dbld ${BINDIR} -s ${TESTSRCDIR} -dmod ./ -dobj ./ -colors -libs ${LIBDIR}${LIBOUT} --include ${LIBDIR}
 
 else
-	echo "FoBiS.py not found! Cannot build library. FoBiS can be obtained from: https://github.com/szaghi/FoBiS"
+	echo "FoBiS.py not found! Cannot build library. Install using: sudo pip install FoBiS.py"
 fi
 
 # build the documentation:
@@ -40,9 +40,9 @@ fi
 if hash ford 2>/dev/null; then
 
 	echo "Building documentation..."
-
+	
     ford ./bspline-fortran.md
-
+    
 else
-	echo "Ford not found! Cannot build documentation. Ford can be obtained from: https://github.com/cmacmackin/ford"
+	echo "Ford not found! Cannot build documentation. Install using: sudo pip install ford"
 fi
