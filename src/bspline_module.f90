@@ -1,12 +1,12 @@
 !> author: Jacob Williams
 !  license: BSD
 ! 
-! Description
-!---------
+!# Description
+!
 !  Multidimensional (2D-6D) B-Spline interpolation of data on a regular grid.
 ! 
-! Notes
-!---------
+!# Notes
+!
 !  This module is based on the bspline and spline routines from [1].
 !  The original Fortran 77 routines were converted to free-form source.
 !  Some of them are relatively unchanged from the originals, but some have
@@ -14,8 +14,8 @@
 !  4d, 5d, and 6d interpolation were also created (these are simply 
 !  extensions of the same algorithm into higher dimensions).
 ! 
-! References
-!---------
+!# References
+!
 !  1. DBSPLIN and DTENSBS from the
 !     [NIST Core Math Library](http://www.nist.gov/itl/math/mcsd-software.cfm).
 !     Original code is public domain.
@@ -96,8 +96,8 @@
 !  ky, tx, ty, and bcoef. These quantities should not be altered until
 !  after the last call of the evaluation routine [[db2val]].
 ! 
-! History
-!---------
+!# History
+!
 !  * Boisvert, Ronald, NBS : 25 may 1982 : Author of original routine.
 !  * JEC : 000330 modified array declarations.
 !  * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
@@ -200,8 +200,8 @@
 !  The input quantities tx, ty, nx, ny, kx, ky, and bcoef should be
 !  unchanged since the last call of [[db2ink]].
 !
-! History
-!---------
+!# History
+!
 !  * Boisvert, Ronald, NBS : 25 may 1982 : Author of original routine.
 !  * JEC : 000330 modified array declarations.
 !  * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
@@ -303,8 +303,8 @@
 !  kx, ky, kz, tx, ty, tz, and bcoef. these quantities should not be
 !  altered until after the last call of the evaluation routine [[db3val]].
 ! 
-! History
-!---------
+!# History
+!
 !  * Boisvert, Ronald, NBS : 25 may 1982 : Author of original routine.
 !  * JEC : 000330 modified array declarations.
 !  * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
@@ -426,8 +426,8 @@
 !  The input quantities tx, ty, tz, nx, ny, nz, kx, ky, kz, and bcoef
 !  should remain unchanged since the last call of [[db3ink]].
 !
-! History
-!---------
+!# History
+!
 !  * Boisvert, Ronald, NBS : 25 may 1982 : Author of original routine.
 !  * JEC : 000330 modified array declarations.
 !  * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
@@ -514,8 +514,8 @@
 !  
 !  See [[db3ink]] header for more details.
 ! 
-! History
-!---------
+!# History
+!
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
     subroutine db4ink(x,nx,y,ny,z,nz,q,nq,&
@@ -625,8 +625,8 @@
 ! 
 !  See [[db3val]] header for more information.
 ! 
-! History
-!---------
+!# History
+!
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
     subroutine db4val(xval,yval,zval,qval,&
@@ -737,8 +737,8 @@
 ! 
 !  See [[db3ink]] header for more details.
 ! 
-! History
-!---------
+!# History
+!
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
     subroutine db5ink(x,nx,y,ny,z,nz,q,nq,r,nr,&
@@ -864,8 +864,8 @@
 !  
 !  See [[db3val]] header for more information.
 ! 
-! History
-!---------
+!# History
+!
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
     subroutine db5val(xval,yval,zval,qval,rval,&
@@ -1001,8 +1001,8 @@
 !  
 !  See [[db3ink]] header for more details.
 ! 
-! History
-!---------
+!# History
+!
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
     subroutine db6ink(x,nx,y,ny,z,nz,q,nq,r,nr,s,ns,&
@@ -1134,8 +1134,8 @@
 !  
 !  See [[db3val]] header for more information.
 ! 
-! History
-!---------
+!# History
+!
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
     subroutine db6val(xval,yval,zval,qval,rval,sval,&
@@ -1298,13 +1298,13 @@
 ! 
 !  Supports up to 6D: x,y,z,q,r,s
 ! 
-! Notes
-!---------
+!# Notes
+!
 !  The code is new, but the logic is based on the original
 !  logic in the CMLIB routines db2ink and db3ink.
 ! 
-! History
-!---------
+!# History
+!
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
     subroutine check_inputs(routine,&
@@ -1480,8 +1480,8 @@
 !  knot is shifted slightly to the right to insure proper interpolation
 !  at x(n) (see page 350 of the reference).
 !
-! History
-!---------
+!# History
+!
 !  * Jacob Williams, 2/24/2015 : Refactored this routine.
 
     subroutine dbknot(x,n,k,t)
@@ -1544,8 +1544,8 @@
 !  of each interpolation is k. the work array must be of length
 !  at least 2*k*(n+1).
 !
-! History
-!---------
+!# History
+!
 !  * Jacob Williams, 2/24/2015 : Refactored this routine.
 
     subroutine dbtpcf(x,n,fcn,ldf,nf,t,k,bcoef,work)
@@ -1616,13 +1616,13 @@
 !  for i=n when k knots are used at x(1) or x(n).  otherwise,
 !  violation of this condition is certain to lead to an error.
 !  
-! Error conditions
-!---------
-!  * improper input is a fatal error
-!  * singular system of equations is a fatal error
+!# Error conditions
+!
+!  * improper input
+!  * singular system of equations
 ! 
-! History
-!---------
+!# History
+!
 !  * splint written by carl de boor [5]
 !  * dbintk author: amos, d. e., (snla) : date written 800901
 !  * revision date 820801
@@ -1767,8 +1767,7 @@
 !  positive matrices which occur in spline calculations.
 !  the routine should not be used for an arbitrary banded matrix.
 !
-! Work array
-!---------
+! # Work array
 !
 ! **Input**
 !
@@ -1810,85 +1809,99 @@
 !        that  a  does not have an lu-factorization. this implies that
 !        a  is singular in case it is totally positive .
 ! 
-! History
-!---------
+!# History
+!
 !  * banfac written by carl de boor [5]
 !  * dbnfac from CMLIB [1]
 !  * Jacob Williams, 5/10/2015 : converted to free-form Fortran.
 
-      subroutine dbnfac(w,nroww,nrow,nbandl,nbandu,iflag)
-      
-      integer,intent(in) :: nroww   !! row dimension of the work array w. must be >= nbandl + 1 + nbandu.
-      integer,intent(in) :: nrow    !! matrix order
-      integer,intent(in) :: nbandl  !! number of bands of a below the main diagonal
-      integer,intent(in) :: nbandu  !! number of bands of a above the main diagonal
-      integer,intent(out) :: iflag  !! indicating success(=1) or failure (=2)
-      real(wp),dimension(nroww,nrow),intent(inout) :: w  !! work array. See header for details.
+    subroutine dbnfac(w,nroww,nrow,nbandl,nbandu,iflag)
 
-      integer :: i, ipk, j, jmax, k, kmax, middle, midmk, nrowm1
-      real(wp) :: factor, pivot
+    integer,intent(in) :: nroww   !! row dimension of the work array w. must be >= nbandl + 1 + nbandu.
+    integer,intent(in) :: nrow    !! matrix order
+    integer,intent(in) :: nbandl  !! number of bands of a below the main diagonal
+    integer,intent(in) :: nbandu  !! number of bands of a above the main diagonal
+    integer,intent(out) :: iflag  !! indicating success(=1) or failure (=2)
+    real(wp),dimension(nroww,nrow),intent(inout) :: w  !! work array. See header for details.
 
-      iflag = 1
-      middle = nbandu + 1
-!                         w(middle,.) contains the main diagonal of  a .
-      nrowm1 = nrow - 1
+    integer :: i, ipk, j, jmax, k, kmax, middle, midmk, nrowm1
+    real(wp) :: factor, pivot
 
-      !if (nrowm1) 120, 110, 10    !JW removed obsolescent arithmetic IF statement
-      if (nrowm1 < 0) then;      goto 120
-      elseif (nrowm1 == 0) then; goto 110
-      else;                      goto 10
-      end if
+    iflag = 1
+    middle = nbandu + 1   ! w(middle,.) contains the main diagonal of a.
+    nrowm1 = nrow - 1
 
-   10 if (nbandl>0) go to 30
-!                a is upper triangular. check that diagonal is nonzero .
-      do i=1,nrowm1
-        if (w(middle,i)==0.0_wp) go to 120
-      end do
-      go to 110
-   30 if (nbandu>0) go to 60
-!              a is lower triangular. check that diagonal is nonzero and
-!                 divide each column by its diagonal .
-      do i=1,nrowm1
-        pivot = w(middle,i)
-        if (pivot==0.0_wp) go to 120
-        jmax = min(nbandl,nrow-i)
-        do j=1,jmax
-          w(middle+j,i) = w(middle+j,i)/pivot
+    if (nrowm1 < 0) then
+        iflag = 2
+        return
+    elseif (nrowm1 == 0) then
+        if (w(middle,nrow)==0.0_wp) iflag = 2
+        return
+    end if
+
+    if (nbandl<=0) then
+        ! a is upper triangular. check that diagonal is nonzero .
+        do i=1,nrowm1
+            if (w(middle,i)==0.0_wp) then
+                iflag = 2
+                return
+            end if
         end do
-      end do
-      return
-!
-!        a  is not just a triangular matrix. construct lu factorization
-   60 do i=1,nrowm1
-!                                  w(middle,i)  is pivot for i-th step .
-        pivot = w(middle,i)
-        if (pivot==0.0_wp) go to 120
-!                 jmax  is the number of (nonzero) entries in column  i
-!                     below the diagonal .
-        jmax = min(nbandl,nrow-i)
-!              divide each entry in column  i  below diagonal by pivot .
-        do j=1,jmax
-          w(middle+j,i) = w(middle+j,i)/pivot
+        if (w(middle,nrow)==0.0_wp) iflag = 2
+        return
+    end if
+
+    if (nbandu<=0) then
+        ! a is lower triangular. check that diagonal is nonzero and
+        ! divide each column by its diagonal.
+        do i=1,nrowm1
+            pivot = w(middle,i)
+            if (pivot==0.0_wp) then
+                iflag = 2
+                return
+            end if
+            jmax = min(nbandl,nrow-i)
+            do j=1,jmax
+                w(middle+j,i) = w(middle+j,i)/pivot
+            end do
         end do
-!                 kmax  is the number of (nonzero) entries in row  i  to
-!                     the right of the diagonal .
+        return
+    end if
+
+    ! a is not just a triangular matrix. construct lu factorization
+    do i=1,nrowm1
+        ! w(middle,i)  is pivot for i-th step .
+        pivot = w(middle,i)
+        if (pivot==0.0_wp) then
+            iflag = 2
+            return
+        end if
+        ! jmax is the number of (nonzero) entries in column i
+        ! below the diagonal.
+        jmax = min(nbandl,nrow-i)
+        ! divide each entry in column i below diagonal by pivot.
+        do j=1,jmax
+            w(middle+j,i) = w(middle+j,i)/pivot
+        end do
+        ! kmax is the number of (nonzero) entries in row i to
+        ! the right of the diagonal.
         kmax = min(nbandu,nrow-i)
-!                  subtract  a(i,i+k)*(i-th column) from (i+k)-th column
-!                  (below row  i ) .
+        ! subtract a(i,i+k)*(i-th column) from (i+k)-th column
+        ! (below row i).
         do k=1,kmax
-          ipk = i + k
-          midmk = middle - k
-          factor = w(midmk,ipk)
-          do j=1,jmax
-            w(midmk+j,ipk) = w(midmk+j,ipk) - w(middle+j,i)*factor
-          end do
+            ipk = i + k
+            midmk = middle - k
+            factor = w(midmk,ipk)
+            do j=1,jmax
+                w(midmk+j,ipk) = w(midmk+j,ipk) - w(middle+j,i)*factor
+            end do
         end do
-      end do
-!                                       check the last diagonal entry .
-  110 if (w(middle,nrow)/=0.0_wp) return
-  120 iflag = 2
+    end do
 
-      end subroutine dbnfac
+    ! check the last diagonal entry.
+    if (w(middle,nrow)==0.0_wp) iflag = 2
+
+    end subroutine dbnfac
       
 !*****************************************************************************************
 !> Companion routine to [[dbnfac]]. it returns the solution x of the
@@ -1900,8 +1913,8 @@
 !  upper triangular system \(u*x = y \) is solved for x. the calculations 
 !  are so arranged that the innermost loops stay within columns.
 ! 
-! History
-!---------
+!# History
+!
 !  * banslv written by carl de boor [5]
 !  * dbnslv from SLATEC library [1]
 !  * Jacob Williams, 5/10/2015 : converted to free-form Fortran.
@@ -1980,12 +1993,12 @@
 !  
 !  left limiting values are set up as described in dbspvd.
 ! 
-! Error Conditions
-!---------
-!  * improper input is a fatal error.
+!#Error Conditions
+!
+!  * improper input
 ! 
-! History
-!---------
+!# History
+!
 !  * bsplvn written by carl de boor [5]
 !  * dbspvn author: amos, d. e., (snla) : date written 800901
 !  * revision date 820801
@@ -2078,12 +2091,12 @@
 !  to compute left derivatives or left limiting values at a
 !  knot t(i), replace n by i-1 and set x=t(i), i=k+1,n+1.
 ! 
-! Error Conditions
-!---------
-!  * improper input is a fatal error.
+!#Error Conditions
+!
+!  * improper input
 ! 
-! History
-!---------
+!# History
+!
 !  * bvalue written by carl de boor [5]
 !  * dbvalu author: amos, d. e., (snla) : date written 800901
 !  * revision date 820801
@@ -2133,8 +2146,8 @@
 
     kmider = k - ideriv
 
-    ! *** find *i* in (k,n) such that t(i) <= x < t(i+1)
-    !     (or, <= t(i+1) if t(i) < t(i+1) = t(n+1)).
+    ! find *i* in (k,n) such that t(i) <= x < t(i+1)
+    ! (or, <= t(i+1) if t(i) < t(i+1) = t(n+1)).
 
     km1 = k - 1
     call dintrv(t, n+1, x, inbv, i, mflag)
@@ -2161,8 +2174,8 @@
 
     end if
 
-    ! *** difference the coefficients *ideriv* times
-    !     work(i) = aj(i), work(k+i) = dp(i), work(k+k+i) = dm(i), i=1.k
+    ! difference the coefficients *ideriv* times
+    ! work(i) = aj(i), work(k+i) = dp(i), work(k+k+i) = dm(i), i=1.k
 
     imk = i - k
     do j=1,k
@@ -2182,8 +2195,8 @@
         end do
     end if
 
-    ! *** compute value at *x* in (t(i),(t(i+1)) of ideriv-th derivative,
-    !     given its relevant b-spline coeff. in aj(1),...,aj(k-ideriv).
+    ! compute value at *x* in (t(i),(t(i+1)) of ideriv-th derivative,
+    ! given its relevant b-spline coeff. in aj(1),...,aj(k-ideriv).
 
     if (ideriv/=km1) then
         ip1 = i + 1
@@ -2230,8 +2243,8 @@
 !  that is, when multiplicities are present in the break point
 !  to the left of x, the largest index is taken for ileft.
 ! 
-! History
-!---------
+!# History
+!
 !  * interv written by carl de boor [5]
 !  * dintrv author: amos, d. e., (snla) : date written 800901
 !  * revision date 820801
