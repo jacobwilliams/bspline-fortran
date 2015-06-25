@@ -9,7 +9,7 @@
 MODCODE='bspline_module.f90'    # module file name
 LIBOUT='libbspline.a'           # name of library
 DOCDIR='./doc/'                 # build directory for documentation
-SRCDIR='./src/lib/'             # library source directory
+SRCDIR='./src/'                 # library source directory
 TESTSRCDIR='./src/tests/'       # unit test source directory
 BINDIR='./bin/'                 # build directory for unit tests
 LIBDIR='./lib/'                 # build directory for library

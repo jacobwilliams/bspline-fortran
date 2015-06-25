@@ -18,6 +18,7 @@ before_script:
 
 script:
   - ./bin/test
+  - ./bin/test_oo
 
 after_success:
   - git config --global user.name "TRAVIS-CI-for-$(git --no-pager show -s --format='%cn' $TRAVIS_COMMIT)"
