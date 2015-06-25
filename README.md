@@ -38,6 +38,16 @@ subroutine db6val(xval,yval,zval,qval,rval,sval,idx,idy,idz,idq,idr,ids,tx,ty,tz
 
 The ```ink``` routines compute the interpolant coefficients, and the ```val``` routines evalute the interpolant at the specified value of each coordinate.  Eventually, object-oriented wrappers will be created for these routines for ease of use.  The 2D and 3D routines are extensively refactored versions of the original routines from the [NIST Core Math Library](http://www.nist.gov/itl/math/mcsd-software.cfm).  The others are new, and are simply extensions of the same algorithm into higher dimensions.
 
+In addition to the main subroutines, an object-oriented wrapper is also provided. For example:
+
+```Fortran
+type(bspline_3d) :: s3
+call s3%initialize(x,y,z,fcn,kx,ky,kz,iflag)
+call s3%evaluate(xval,yval,zval,idx,idy,idz,f,iflag)
+call s3%destroy()
+```
+See the examples for more details.
+
 # Compiling
 
 A simple bash script ```build.sh``` is provided for building bspline-fortran with gfortran using [FoBiS](https://github.com/szaghi/FoBiS). It also builds the API documentation using [FORD](https://github.com/cmacmackin/ford).
