@@ -7,7 +7,6 @@ author: Jacob Williams
 github: https://github.com/jacobwilliams
 predocmark_alt: >
 docmark_alt: <
-exclude: test.f90
 display: public
 display: protected
 display: none

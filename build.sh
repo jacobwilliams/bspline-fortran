@@ -9,7 +9,7 @@
 MODCODE='bspline_module.f90'    # module file name
 LIBOUT='libbspline.a'           # name of library
 DOCDIR='./doc/'                 # build directory for documentation
-SRCDIR='./src/'                 # library source directory
+SRCDIR='./src/lib/'             # library source directory
 TESTSRCDIR='./src/tests/'       # unit test source directory
 BINDIR='./bin/'                 # build directory for unit tests
 LIBDIR='./lib/'                 # build directory for library
@@ -27,7 +27,7 @@ if hash FoBiS.py 2>/dev/null; then
 	
 	FoBiS.py build -compiler ${FCOMPILER} -cflags "${FCOMPILERFLAGS}" -dbld ${LIBDIR} -s ${SRCDIR} -dmod ./ -dobj ./ -t ${MODCODE} -o ${LIBOUT} -mklib static -colors
 	
-	echo "Building test program..."
+	echo "Building test programs..."
 	
 	FoBiS.py build -compiler ${FCOMPILER} -cflags "${FCOMPILERFLAGS}" -dbld ${BINDIR} -s ${TESTSRCDIR} -dmod ./ -dobj ./ -colors -libs ${LIBDIR}${LIBOUT} --include ${LIBDIR}
 
@@ -42,7 +42,7 @@ if hash ford 2>/dev/null; then
 	echo "Building documentation..."
 	
     ford ./bspline-fortran.md
-    
+        
 else
 	echo "Ford not found! Cannot build documentation. Install using: sudo pip install ford"
 fi
