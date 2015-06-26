@@ -341,7 +341,7 @@
     nx = size(x)
     ny = size(y)
     nz = size(z)
-    nq = size(z)
+    nq = size(q)
         
     me%nx = nx
     me%ny = ny
