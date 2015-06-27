@@ -21,9 +21,23 @@
     
     implicit none
     
-    private
-    
-    type,public :: bspline_2d
+    private        
+
+    type,public,abstract :: bspline_class
+        !! base class for the b-spline types
+    contains
+        procedure(destroy_func),deferred :: destroy  !! destructor
+    end type bspline_class
+
+    abstract interface
+        subroutine destroy_func(me)  !! interface for bspline destructor routines
+        import :: bspline_class
+        implicit none
+        class(bspline_class),intent(out) :: me
+        end subroutine destroy_func
+    end interface
+
+    type,extends(bspline_class),public :: bspline_2d
         !! Class for 2d b-spline interpolation.
         private
         integer :: nx  = 0
@@ -39,7 +53,7 @@
         procedure,public :: destroy => destroy_2d
     end type bspline_2d
 
-    type,public :: bspline_3d
+    type,extends(bspline_class),public :: bspline_3d
         !! Class for 3d b-spline interpolation.
         private
         integer :: nx  = 0
@@ -58,7 +72,7 @@
         procedure,public :: destroy => destroy_3d
     end type bspline_3d
 
-    type,public :: bspline_4d
+    type,extends(bspline_class),public :: bspline_4d
         !! Class for 4d b-spline interpolation.
         private
         integer :: nx  = 0
@@ -81,7 +95,7 @@
         procedure,public :: destroy => destroy_4d
     end type bspline_4d
 
-    type,public :: bspline_5d
+    type,extends(bspline_class),public :: bspline_5d
         !! Class for 5d b-spline interpolation.
         private
         integer :: nx  = 0
@@ -106,7 +120,7 @@
         procedure,public :: destroy => destroy_5d
     end type bspline_5d
 
-    type,public :: bspline_6d
+    type,extends(bspline_class),public :: bspline_6d
         !! Class for 6d b-spline interpolation.
         private
         integer :: nx  = 0
