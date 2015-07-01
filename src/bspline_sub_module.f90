@@ -1773,7 +1773,7 @@
 !  positive matrices which occur in spline calculations.
 !  the routine should not be used for an arbitrary banded matrix.
 !
-! # Work array
+!# Work array
 !
 ! **Input**
 !

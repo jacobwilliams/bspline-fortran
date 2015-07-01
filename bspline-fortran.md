@@ -10,7 +10,6 @@ predocmark: <
 docmark_alt:
 docmark: !
 display: public
-display: private
 display: protected
 display: none
 source: true
