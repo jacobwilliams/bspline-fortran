@@ -6,8 +6,11 @@ summary: BSPLINE-FORTRAN -- Multidimensional B-Spline Interpolation of Data on a
 author: Jacob Williams
 github: https://github.com/jacobwilliams
 predocmark_alt: >
-docmark_alt: <
+predocmark: <
+docmark_alt:
+docmark: !
 display: public
+display: private
 display: protected
 display: none
 source: true
