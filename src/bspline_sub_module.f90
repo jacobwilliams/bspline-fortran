@@ -212,30 +212,35 @@
 !  * JEC : 000330 modified array declarations.
 !  * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
 
-    subroutine db2val(xval,yval,idx,idy,tx,ty,nx,ny,kx,ky,bcoef,f,iflag)
+    subroutine db2val(xval,yval,idx,idy,tx,ty,nx,ny,kx,ky,bcoef,f,iflag,inbvx_in,iloy_in)
 
     implicit none
 
-    integer,intent(in)                   :: idx   !! x derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                   :: idy   !! y derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                   :: nx    !! the number of interpolation points in x. (same as in last call to db2ink)
-    integer,intent(in)                   :: ny    !! the number of interpolation points in y. (same as in last call to db2ink)
-    integer,intent(in)                   :: kx    !! order of polynomial pieces in x. (same as in last call to db2ink)
-    integer,intent(in)                   :: ky    !! order of polynomial pieces in y. (same as in last call to db2ink)
-    real(wp),intent(in)                  :: xval  !! x coordinate of evaluation point.
-    real(wp),intent(in)                  :: yval  !! y coordinate of evaluation point.
-    real(wp),dimension(nx+kx),intent(in) :: tx    !! sequence of knots defining the piecewise polynomial in the x direction. (same as in last call to db2ink)
-    real(wp),dimension(ny+ky),intent(in) :: ty    !! sequence of knots defining the piecewise polynomial in the y direction. (same as in last call to db2ink)
-    real(wp),dimension(nx,ny),intent(in) :: bcoef !! the b-spline coefficients computed by db2ink.
-    real(wp),intent(out)                 :: f     !! interpolated value
-    integer,intent(out)                  :: iflag !! status flag: 0 : no errors, /=0 : error
+    integer,intent(in)                   :: idx      !! x derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                   :: idy      !! y derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                   :: nx       !! the number of interpolation points in x. (same as in last call to db2ink)
+    integer,intent(in)                   :: ny       !! the number of interpolation points in y. (same as in last call to db2ink)
+    integer,intent(in)                   :: kx       !! order of polynomial pieces in x. (same as in last call to db2ink)
+    integer,intent(in)                   :: ky       !! order of polynomial pieces in y. (same as in last call to db2ink)
+    real(wp),intent(in)                  :: xval     !! x coordinate of evaluation point.
+    real(wp),intent(in)                  :: yval     !! y coordinate of evaluation point.
+    real(wp),dimension(nx+kx),intent(in) :: tx       !! sequence of knots defining the piecewise polynomial in the x direction. (same as in last call to db2ink)
+    real(wp),dimension(ny+ky),intent(in) :: ty       !! sequence of knots defining the piecewise polynomial in the y direction. (same as in last call to db2ink)
+    real(wp),dimension(nx,ny),intent(in) :: bcoef    !! the b-spline coefficients computed by db2ink.
+    real(wp),intent(out)                 :: f        !! interpolated value
+    integer,intent(out)                  :: iflag    !! status flag: 0 : no errors, /=0 : error
+    integer,intent(in),optional          :: inbvx_in !! inbvx initialization parameter from class
+    integer,intent(in),optional          :: iloy_in  !! iloy initialization parameter from class
 
     integer :: inbv, k, lefty, mflag, kcol
     real(wp),dimension(ky) :: temp
     real(wp),dimension(3*max(kx,ky)) :: work
 
-    integer,save :: iloy = 1
     integer,save :: inbvx = 1
+    integer,save :: iloy  = 1
+    
+    if (present(inbvx_in)) inbvx = inbvx_in
+    if (present(iloy_in))  iloy  = iloy_in
     
     f = 0.0_wp
     iflag = 1
@@ -440,28 +445,32 @@
 
     subroutine db3val(xval,yval,zval,idx,idy,idz,&
                                      tx,ty,tz,&
-                                     nx,ny,nz,kx,ky,kz,bcoef,f,iflag)
+                                     nx,ny,nz,kx,ky,kz,bcoef,f,iflag,&
+                                     inbvx_in,iloy_in,iloz_in)
 
     implicit none
 
-    integer,intent(in)                      :: idx    !! x derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                      :: idy    !! y derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                      :: idz    !! z derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                      :: nx     !! the number of interpolation points in x. (same as in last call to db3ink)
-    integer,intent(in)                      :: ny     !! the number of interpolation points in y. (same as in last call to db3ink) 
-    integer,intent(in)                      :: nz     !! the number of interpolation points in z. (same as in last call to db3ink)
-    integer,intent(in)                      :: kx     !! order of polynomial pieces in x. (same as in last call to db3ink)
-    integer,intent(in)                      :: ky     !! order of polynomial pieces in y. (same as in last call to db3ink)
-    integer,intent(in)                      :: kz     !! order of polynomial pieces in z. (same as in last call to db3ink)
-    real(wp),intent(in)                     :: xval   !! x coordinate of evaluation point.
-    real(wp),intent(in)                     :: yval   !! y coordinate of evaluation point.
-    real(wp),intent(in)                     :: zval   !! z coordinate of evaluation point.
-    real(wp),dimension(nx+kx),intent(in)    :: tx     !! sequence of knots defining the piecewise polynomial in the x direction. (same as in last call to db3ink)
-    real(wp),dimension(ny+ky),intent(in)    :: ty     !! sequence of knots defining the piecewise polynomial in the y direction. (same as in last call to db3ink) 
-    real(wp),dimension(nz+kz),intent(in)    :: tz     !! sequence of knots defining the piecewise polynomial in the z direction. (same as in last call to db3ink) 
-    real(wp),dimension(nx,ny,nz),intent(in) :: bcoef  !! the b-spline coefficients computed by db3ink.
-    real(wp),intent(out)                    :: f      !! interpolated value
-    integer,intent(out)                     :: iflag  !! status flag: 0 : no errors, /=0 : error
+    integer,intent(in)                      :: idx      !! x derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                      :: idy      !! y derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                      :: idz      !! z derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                      :: nx       !! the number of interpolation points in x. (same as in last call to db3ink)
+    integer,intent(in)                      :: ny       !! the number of interpolation points in y. (same as in last call to db3ink) 
+    integer,intent(in)                      :: nz       !! the number of interpolation points in z. (same as in last call to db3ink)
+    integer,intent(in)                      :: kx       !! order of polynomial pieces in x. (same as in last call to db3ink)
+    integer,intent(in)                      :: ky       !! order of polynomial pieces in y. (same as in last call to db3ink)
+    integer,intent(in)                      :: kz       !! order of polynomial pieces in z. (same as in last call to db3ink)
+    real(wp),intent(in)                     :: xval     !! x coordinate of evaluation point.
+    real(wp),intent(in)                     :: yval     !! y coordinate of evaluation point.
+    real(wp),intent(in)                     :: zval     !! z coordinate of evaluation point.
+    real(wp),dimension(nx+kx),intent(in)    :: tx       !! sequence of knots defining the piecewise polynomial in the x direction. (same as in last call to db3ink)
+    real(wp),dimension(ny+ky),intent(in)    :: ty       !! sequence of knots defining the piecewise polynomial in the y direction. (same as in last call to db3ink) 
+    real(wp),dimension(nz+kz),intent(in)    :: tz       !! sequence of knots defining the piecewise polynomial in the z direction. (same as in last call to db3ink) 
+    real(wp),dimension(nx,ny,nz),intent(in) :: bcoef    !! the b-spline coefficients computed by db3ink.
+    real(wp),intent(out)                    :: f        !! interpolated value
+    integer,intent(out)                     :: iflag    !! status flag: 0 : no errors, /=0 : error
+    integer,intent(in),optional             :: inbvx_in !! inbvx initialization parameter from class
+    integer,intent(in),optional             :: iloy_in  !! iloy initialization parameter from class
+    integer,intent(in),optional             :: iloz_in  !! iloz initialization parameter from class
 
     real(wp),dimension(ky,kz)              :: temp1
     real(wp),dimension(kz)                 :: temp2
@@ -470,9 +479,13 @@
     integer :: inbv1, inbv2, lefty, leftz, mflag,&
                 kcoly, kcolz, izm1, j, k
 
+    integer,save :: inbvx = 1
     integer,save :: iloy  = 1
     integer,save :: iloz  = 1
-    integer,save :: inbvx = 1
+
+    if (present(inbvx_in)) inbvx = inbvx_in
+    if (present(iloy_in))  iloy  = iloy_in
+    if (present(iloz_in))  iloz  = iloz_in
     
     f = 0.0_wp
     iflag = 1
@@ -640,33 +653,38 @@
                                 tx,ty,tz,tq,&
                                 nx,ny,nz,nq,&
                                 kx,ky,kz,kq,&
-                                bcoef,f,iflag)
+                                bcoef,f,iflag,&
+                                inbvx_in,iloy_in,iloz_in,iloq_in)
 
     implicit none
 
-    integer,intent(in)                         :: idx    !! x derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                         :: idy    !! y derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                         :: idz    !! z derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                         :: idq    !! q derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                         :: nx     !! the number of interpolation points in x. (same as in last call to db4ink)
-    integer,intent(in)                         :: ny     !! the number of interpolation points in y. (same as in last call to db4ink) 
-    integer,intent(in)                         :: nz     !! the number of interpolation points in z. (same as in last call to db4ink)
-    integer,intent(in)                         :: nq     !! the number of interpolation points in q. (same as in last call to db4ink)
-    integer,intent(in)                         :: kx     !! order of polynomial pieces in x. (same as in last call to db4ink)
-    integer,intent(in)                         :: ky     !! order of polynomial pieces in y. (same as in last call to db4ink)
-    integer,intent(in)                         :: kz     !! order of polynomial pieces in z. (same as in last call to db4ink)
-    integer,intent(in)                         :: kq     !! order of polynomial pieces in q. (same as in last call to db4ink)
-    real(wp),intent(in)                        :: xval   !! x coordinate of evaluation point.
-    real(wp),intent(in)                        :: yval   !! y coordinate of evaluation point.
-    real(wp),intent(in)                        :: zval   !! z coordinate of evaluation point.
-    real(wp),intent(in)                        :: qval   !! q coordinate of evaluation point.
-    real(wp),dimension(nx+kx),intent(in)       :: tx     !! sequence of knots defining the piecewise polynomial in the x direction. (same as in last call to db4ink)
-    real(wp),dimension(ny+ky),intent(in)       :: ty     !! sequence of knots defining the piecewise polynomial in the y direction. (same as in last call to db4ink) 
-    real(wp),dimension(nz+kz),intent(in)       :: tz     !! sequence of knots defining the piecewise polynomial in the z direction. (same as in last call to db4ink) 
-    real(wp),dimension(nq+kq),intent(in)       :: tq     !! sequence of knots defining the piecewise polynomial in the q direction. (same as in last call to db4ink) 
-    real(wp),dimension(nx,ny,nz,nq),intent(in) :: bcoef  !! the b-spline coefficients computed by db4ink.
-    real(wp),intent(out)                       :: f      !! interpolated value
-    integer,intent(out)                        :: iflag  !! status flag: 0 : no errors, /=0 : error
+    integer,intent(in)                         :: idx      !! x derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                         :: idy      !! y derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                         :: idz      !! z derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                         :: idq      !! q derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                         :: nx       !! the number of interpolation points in x. (same as in last call to db4ink)
+    integer,intent(in)                         :: ny       !! the number of interpolation points in y. (same as in last call to db4ink) 
+    integer,intent(in)                         :: nz       !! the number of interpolation points in z. (same as in last call to db4ink)
+    integer,intent(in)                         :: nq       !! the number of interpolation points in q. (same as in last call to db4ink)
+    integer,intent(in)                         :: kx       !! order of polynomial pieces in x. (same as in last call to db4ink)
+    integer,intent(in)                         :: ky       !! order of polynomial pieces in y. (same as in last call to db4ink)
+    integer,intent(in)                         :: kz       !! order of polynomial pieces in z. (same as in last call to db4ink)
+    integer,intent(in)                         :: kq       !! order of polynomial pieces in q. (same as in last call to db4ink)
+    real(wp),intent(in)                        :: xval     !! x coordinate of evaluation point.
+    real(wp),intent(in)                        :: yval     !! y coordinate of evaluation point.
+    real(wp),intent(in)                        :: zval     !! z coordinate of evaluation point.
+    real(wp),intent(in)                        :: qval     !! q coordinate of evaluation point.
+    real(wp),dimension(nx+kx),intent(in)       :: tx       !! sequence of knots defining the piecewise polynomial in the x direction. (same as in last call to db4ink)
+    real(wp),dimension(ny+ky),intent(in)       :: ty       !! sequence of knots defining the piecewise polynomial in the y direction. (same as in last call to db4ink) 
+    real(wp),dimension(nz+kz),intent(in)       :: tz       !! sequence of knots defining the piecewise polynomial in the z direction. (same as in last call to db4ink) 
+    real(wp),dimension(nq+kq),intent(in)       :: tq       !! sequence of knots defining the piecewise polynomial in the q direction. (same as in last call to db4ink) 
+    real(wp),dimension(nx,ny,nz,nq),intent(in) :: bcoef    !! the b-spline coefficients computed by db4ink.
+    real(wp),intent(out)                       :: f        !! interpolated value
+    integer,intent(out)                        :: iflag    !! status flag: 0 : no errors, /=0 : error
+    integer,intent(in),optional                :: inbvx_in !! inbvx initialization parameter from class
+    integer,intent(in),optional                :: iloy_in  !! iloy initialization parameter from class
+    integer,intent(in),optional                :: iloz_in  !! iloz initialization parameter from class
+    integer,intent(in),optional                :: iloq_in  !! iloq initialization parameter from class
     
     real(wp),dimension(ky,kz,kq)             :: temp1
     real(wp),dimension(kz,kq)                :: temp2
@@ -675,10 +693,15 @@
     integer :: inbv1, inbv2, inbv3, lefty, leftz, leftq, mflag,&
                 kcoly, kcolz, kcolq, i, j, k, q
 
+    integer,save :: inbvx = 1
     integer,save :: iloy  = 1
     integer,save :: iloz  = 1
     integer,save :: iloq  = 1
-    integer,save :: inbvx = 1
+
+    if (present(inbvx_in)) inbvx = inbvx_in
+    if (present(iloy_in))  iloy  = iloy_in
+    if (present(iloz_in))  iloz  = iloz_in
+    if (present(iloq_in))  iloq  = iloq_in
     
     f = 0.0_wp
     iflag = 1
@@ -879,38 +902,44 @@
                                 tx,ty,tz,tq,tr,&
                                 nx,ny,nz,nq,nr,&
                                 kx,ky,kz,kq,kr,&
-                                bcoef,f,iflag)
+                                bcoef,f,iflag,&
+                                inbvx_in,iloy_in,iloz_in,iloq_in,ilor_in)
 
     implicit none
 
-    integer,intent(in)                            :: idx    !! x derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                            :: idy    !! y derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                            :: idz    !! z derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                            :: idq    !! q derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                            :: idr    !! r derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                            :: nx     !! the number of interpolation points in x. (same as in last call to db5ink)
-    integer,intent(in)                            :: ny     !! the number of interpolation points in y. (same as in last call to db5ink) 
-    integer,intent(in)                            :: nz     !! the number of interpolation points in z. (same as in last call to db5ink)
-    integer,intent(in)                            :: nq     !! the number of interpolation points in q. (same as in last call to db5ink)
-    integer,intent(in)                            :: nr     !! the number of interpolation points in r. (same as in last call to db5ink)
-    integer,intent(in)                            :: kx     !! order of polynomial pieces in x. (same as in last call to db5ink)
-    integer,intent(in)                            :: ky     !! order of polynomial pieces in y. (same as in last call to db5ink)
-    integer,intent(in)                            :: kz     !! order of polynomial pieces in z. (same as in last call to db5ink)
-    integer,intent(in)                            :: kq     !! order of polynomial pieces in q. (same as in last call to db5ink)
-    integer,intent(in)                            :: kr     !! order of polynomial pieces in r. (same as in last call to db5ink)
-    real(wp),intent(in)                           :: xval   !! x coordinate of evaluation point.
-    real(wp),intent(in)                           :: yval   !! y coordinate of evaluation point.
-    real(wp),intent(in)                           :: zval   !! z coordinate of evaluation point.
-    real(wp),intent(in)                           :: qval   !! q coordinate of evaluation point.
-    real(wp),intent(in)                           :: rval   !! r coordinate of evaluation point.
-    real(wp),dimension(nx+kx),intent(in)          :: tx     !! sequence of knots defining the piecewise polynomial in the x direction. (same as in last call to db5ink)
-    real(wp),dimension(ny+ky),intent(in)          :: ty     !! sequence of knots defining the piecewise polynomial in the y direction. (same as in last call to db5ink) 
-    real(wp),dimension(nz+kz),intent(in)          :: tz     !! sequence of knots defining the piecewise polynomial in the z direction. (same as in last call to db5ink) 
-    real(wp),dimension(nq+kq),intent(in)          :: tq     !! sequence of knots defining the piecewise polynomial in the q direction. (same as in last call to db5ink) 
-    real(wp),dimension(nr+kr),intent(in)          :: tr     !! sequence of knots defining the piecewise polynomial in the r direction. (same as in last call to db5ink) 
-    real(wp),dimension(nx,ny,nz,nq,nr),intent(in) :: bcoef  !! the b-spline coefficients computed by db5ink.
-    real(wp),intent(out)                          :: f      !! interpolated value
-    integer,intent(out)                           :: iflag  !! status flag: 0 : no errors, /=0 : error
+    integer,intent(in)                            :: idx      !! x derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                            :: idy      !! y derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                            :: idz      !! z derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                            :: idq      !! q derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                            :: idr      !! r derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                            :: nx       !! the number of interpolation points in x. (same as in last call to db5ink)
+    integer,intent(in)                            :: ny       !! the number of interpolation points in y. (same as in last call to db5ink) 
+    integer,intent(in)                            :: nz       !! the number of interpolation points in z. (same as in last call to db5ink)
+    integer,intent(in)                            :: nq       !! the number of interpolation points in q. (same as in last call to db5ink)
+    integer,intent(in)                            :: nr       !! the number of interpolation points in r. (same as in last call to db5ink)
+    integer,intent(in)                            :: kx       !! order of polynomial pieces in x. (same as in last call to db5ink)
+    integer,intent(in)                            :: ky       !! order of polynomial pieces in y. (same as in last call to db5ink)
+    integer,intent(in)                            :: kz       !! order of polynomial pieces in z. (same as in last call to db5ink)
+    integer,intent(in)                            :: kq       !! order of polynomial pieces in q. (same as in last call to db5ink)
+    integer,intent(in)                            :: kr       !! order of polynomial pieces in r. (same as in last call to db5ink)
+    real(wp),intent(in)                           :: xval     !! x coordinate of evaluation point.
+    real(wp),intent(in)                           :: yval     !! y coordinate of evaluation point.
+    real(wp),intent(in)                           :: zval     !! z coordinate of evaluation point.
+    real(wp),intent(in)                           :: qval     !! q coordinate of evaluation point.
+    real(wp),intent(in)                           :: rval     !! r coordinate of evaluation point.
+    real(wp),dimension(nx+kx),intent(in)          :: tx       !! sequence of knots defining the piecewise polynomial in the x direction. (same as in last call to db5ink)
+    real(wp),dimension(ny+ky),intent(in)          :: ty       !! sequence of knots defining the piecewise polynomial in the y direction. (same as in last call to db5ink) 
+    real(wp),dimension(nz+kz),intent(in)          :: tz       !! sequence of knots defining the piecewise polynomial in the z direction. (same as in last call to db5ink) 
+    real(wp),dimension(nq+kq),intent(in)          :: tq       !! sequence of knots defining the piecewise polynomial in the q direction. (same as in last call to db5ink) 
+    real(wp),dimension(nr+kr),intent(in)          :: tr       !! sequence of knots defining the piecewise polynomial in the r direction. (same as in last call to db5ink) 
+    real(wp),dimension(nx,ny,nz,nq,nr),intent(in) :: bcoef    !! the b-spline coefficients computed by db5ink.
+    real(wp),intent(out)                          :: f        !! interpolated value
+    integer,intent(out)                           :: iflag    !! status flag: 0 : no errors, /=0 : error
+    integer,intent(in),optional                   :: inbvx_in !! inbvx initialization parameter from class
+    integer,intent(in),optional                   :: iloy_in  !! iloy initialization parameter from class
+    integer,intent(in),optional                   :: iloz_in  !! iloz initialization parameter from class
+    integer,intent(in),optional                   :: iloq_in  !! iloq initialization parameter from class
+    integer,intent(in),optional                   :: ilor_in  !! ilor initialization parameter from class
     
     real(wp),dimension(ky,kz,kq,kr)           :: temp1
     real(wp),dimension(kz,kq,kr)              :: temp2
@@ -921,11 +950,17 @@
                 lefty, leftz, leftq, leftr, mflag,&
                 kcoly, kcolz, kcolq, kcolr, i, j, k, q, r
 
+    integer,save :: inbvx = 1
     integer,save :: iloy  = 1
     integer,save :: iloz  = 1
     integer,save :: iloq  = 1
     integer,save :: ilor  = 1
-    integer,save :: inbvx = 1
+
+    if (present(inbvx_in)) inbvx = inbvx_in
+    if (present(iloy_in))  iloy  = iloy_in
+    if (present(iloz_in))  iloz  = iloz_in
+    if (present(iloq_in))  iloq  = iloq_in
+    if (present(ilor_in))  ilor  = ilor_in
     
     f = 0.0_wp
     iflag = 1
@@ -1149,43 +1184,50 @@
                                 tx,ty,tz,tq,tr,ts,&
                                 nx,ny,nz,nq,nr,ns,&
                                 kx,ky,kz,kq,kr,ks,&
-                                bcoef,f,iflag)
+                                bcoef,f,iflag,&
+                                inbvx_in,iloy_in,iloz_in,iloq_in,ilor_in,ilos_in)
 
     implicit none
 
-    integer,intent(in)                               :: idx    !! x derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                               :: idy    !! y derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                               :: idz    !! z derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                               :: idq    !! q derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                               :: idr    !! r derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                               :: ids    !! s derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                               :: nx     !! the number of interpolation points in x. (same as in last call to db6ink)
-    integer,intent(in)                               :: ny     !! the number of interpolation points in y. (same as in last call to db6ink) 
-    integer,intent(in)                               :: nz     !! the number of interpolation points in z. (same as in last call to db6ink)
-    integer,intent(in)                               :: nq     !! the number of interpolation points in q. (same as in last call to db6ink)
-    integer,intent(in)                               :: nr     !! the number of interpolation points in r. (same as in last call to db6ink)
-    integer,intent(in)                               :: ns     !! the number of interpolation points in s. (same as in last call to db6ink)
-    integer,intent(in)                               :: kx     !! order of polynomial pieces in x. (same as in last call to db6ink)
-    integer,intent(in)                               :: ky     !! order of polynomial pieces in y. (same as in last call to db6ink)
-    integer,intent(in)                               :: kz     !! order of polynomial pieces in z. (same as in last call to db6ink)
-    integer,intent(in)                               :: kq     !! order of polynomial pieces in q. (same as in last call to db6ink)
-    integer,intent(in)                               :: kr     !! order of polynomial pieces in r. (same as in last call to db6ink)
-    integer,intent(in)                               :: ks     !! order of polynomial pieces in s. (same as in last call to db6ink)
-    real(wp),intent(in)                              :: xval   !! x coordinate of evaluation point.
-    real(wp),intent(in)                              :: yval   !! y coordinate of evaluation point.
-    real(wp),intent(in)                              :: zval   !! z coordinate of evaluation point.
-    real(wp),intent(in)                              :: qval   !! q coordinate of evaluation point.
-    real(wp),intent(in)                              :: rval   !! r coordinate of evaluation point.
-    real(wp),intent(in)                              :: sval   !! s coordinate of evaluation point.
-    real(wp),dimension(nx+kx),intent(in)             :: tx     !! sequence of knots defining the piecewise polynomial in the x direction. (same as in last call to db6ink)
-    real(wp),dimension(ny+ky),intent(in)             :: ty     !! sequence of knots defining the piecewise polynomial in the y direction. (same as in last call to db6ink) 
-    real(wp),dimension(nz+kz),intent(in)             :: tz     !! sequence of knots defining the piecewise polynomial in the z direction. (same as in last call to db6ink) 
-    real(wp),dimension(nq+kq),intent(in)             :: tq     !! sequence of knots defining the piecewise polynomial in the q direction. (same as in last call to db6ink) 
-    real(wp),dimension(nr+kr),intent(in)             :: tr     !! sequence of knots defining the piecewise polynomial in the r direction. (same as in last call to db6ink) 
-    real(wp),dimension(ns+ks),intent(in)             :: ts     !! sequence of knots defining the piecewise polynomial in the s direction. (same as in last call to db6ink) 
-    real(wp),dimension(nx,ny,nz,nq,nr,ns),intent(in) :: bcoef  !! the b-spline coefficients computed by db6ink.
-    real(wp),intent(out)                             :: f      !! interpolated value
-    integer,intent(out)                              :: iflag  !! status flag: 0 : no errors, /=0 : error
+    integer,intent(in)                               :: idx      !! x derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                               :: idy      !! y derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                               :: idz      !! z derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                               :: idq      !! q derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                               :: idr      !! r derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                               :: ids      !! s derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                               :: nx       !! the number of interpolation points in x. (same as in last call to db6ink)
+    integer,intent(in)                               :: ny       !! the number of interpolation points in y. (same as in last call to db6ink) 
+    integer,intent(in)                               :: nz       !! the number of interpolation points in z. (same as in last call to db6ink)
+    integer,intent(in)                               :: nq       !! the number of interpolation points in q. (same as in last call to db6ink)
+    integer,intent(in)                               :: nr       !! the number of interpolation points in r. (same as in last call to db6ink)
+    integer,intent(in)                               :: ns       !! the number of interpolation points in s. (same as in last call to db6ink)
+    integer,intent(in)                               :: kx       !! order of polynomial pieces in x. (same as in last call to db6ink)
+    integer,intent(in)                               :: ky       !! order of polynomial pieces in y. (same as in last call to db6ink)
+    integer,intent(in)                               :: kz       !! order of polynomial pieces in z. (same as in last call to db6ink)
+    integer,intent(in)                               :: kq       !! order of polynomial pieces in q. (same as in last call to db6ink)
+    integer,intent(in)                               :: kr       !! order of polynomial pieces in r. (same as in last call to db6ink)
+    integer,intent(in)                               :: ks       !! order of polynomial pieces in s. (same as in last call to db6ink)
+    real(wp),intent(in)                              :: xval     !! x coordinate of evaluation point.
+    real(wp),intent(in)                              :: yval     !! y coordinate of evaluation point.
+    real(wp),intent(in)                              :: zval     !! z coordinate of evaluation point.
+    real(wp),intent(in)                              :: qval     !! q coordinate of evaluation point.
+    real(wp),intent(in)                              :: rval     !! r coordinate of evaluation point.
+    real(wp),intent(in)                              :: sval     !! s coordinate of evaluation point.
+    real(wp),dimension(nx+kx),intent(in)             :: tx       !! sequence of knots defining the piecewise polynomial in the x direction. (same as in last call to db6ink)
+    real(wp),dimension(ny+ky),intent(in)             :: ty       !! sequence of knots defining the piecewise polynomial in the y direction. (same as in last call to db6ink) 
+    real(wp),dimension(nz+kz),intent(in)             :: tz       !! sequence of knots defining the piecewise polynomial in the z direction. (same as in last call to db6ink) 
+    real(wp),dimension(nq+kq),intent(in)             :: tq       !! sequence of knots defining the piecewise polynomial in the q direction. (same as in last call to db6ink) 
+    real(wp),dimension(nr+kr),intent(in)             :: tr       !! sequence of knots defining the piecewise polynomial in the r direction. (same as in last call to db6ink) 
+    real(wp),dimension(ns+ks),intent(in)             :: ts       !! sequence of knots defining the piecewise polynomial in the s direction. (same as in last call to db6ink) 
+    real(wp),dimension(nx,ny,nz,nq,nr,ns),intent(in) :: bcoef    !! the b-spline coefficients computed by db6ink.
+    real(wp),intent(out)                             :: f        !! interpolated value
+    integer,intent(out)                              :: iflag    !! status flag: 0 : no errors, /=0 : error
+    integer,intent(in),optional                      :: inbvx_in !! inbvx initialization parameter from class
+    integer,intent(in),optional                      :: iloy_in  !! iloy initialization parameter from class
+    integer,intent(in),optional                      :: iloz_in  !! iloz initialization parameter from class
+    integer,intent(in),optional                      :: iloq_in  !! iloq initialization parameter from class
+    integer,intent(in),optional                      :: ilor_in  !! ilor initialization parameter from class
+    integer,intent(in),optional                      :: ilos_in  !! ilos initialization parameter from class
    
     real(wp),dimension(ky,kz,kq,kr,ks)            :: temp1
     real(wp),dimension(kz,kq,kr,ks)               :: temp2
@@ -1200,12 +1242,19 @@
                 kcoly,kcolz,kcolq,kcolr,kcols,&
                 i,j,k,q,r,s
 
+    integer,save :: inbvx = 1
     integer,save :: iloy  = 1
     integer,save :: iloz  = 1
     integer,save :: iloq  = 1
     integer,save :: ilor  = 1
     integer,save :: ilos  = 1
-    integer,save :: inbvx = 1
+
+    if (present(inbvx_in)) inbvx = inbvx_in
+    if (present(iloy_in))  iloy  = iloy_in
+    if (present(iloz_in))  iloz  = iloz_in
+    if (present(iloq_in))  iloq  = iloq_in
+    if (present(ilor_in))  ilor  = ilor_in
+    if (present(ilos_in))  ilos  = ilos_in
     
     f = 0.0_wp
     iflag = 1

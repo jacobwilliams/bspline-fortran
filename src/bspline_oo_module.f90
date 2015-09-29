@@ -25,6 +25,7 @@
 
     type,public,abstract :: bspline_class
         !! base class for the b-spline types
+        integer :: inbvx = 1
     contains
         procedure(destroy_func),deferred :: destroy  !! destructor
     end type bspline_class
@@ -47,6 +48,7 @@
         real(wp),dimension(:,:),allocatable :: bcoef
         real(wp),dimension(:),allocatable :: tx    
         real(wp),dimension(:),allocatable :: ty
+        integer :: iloy = 1
         contains
         procedure,public :: initialize => initialize_2d
         procedure,public :: evaluate => evaluate_2d
@@ -66,6 +68,8 @@
         real(wp),dimension(:),allocatable :: tx    
         real(wp),dimension(:),allocatable :: ty
         real(wp),dimension(:),allocatable :: tz
+        integer :: iloy = 1
+        integer :: iloz = 1
         contains
         procedure,public :: initialize => initialize_3d
         procedure,public :: evaluate => evaluate_3d
@@ -89,6 +93,9 @@
         real(wp),dimension(:),allocatable :: ty
         real(wp),dimension(:),allocatable :: tz
         real(wp),dimension(:),allocatable :: tq
+        integer :: iloy  = 1
+        integer :: iloz  = 1
+        integer :: iloq  = 1
         contains
         procedure,public :: initialize => initialize_4d
         procedure,public :: evaluate => evaluate_4d
@@ -114,6 +121,10 @@
         real(wp),dimension(:),allocatable :: tz
         real(wp),dimension(:),allocatable :: tq
         real(wp),dimension(:),allocatable :: tr
+        integer :: iloy  = 1
+        integer :: iloz  = 1
+        integer :: iloq  = 1
+        integer :: ilor  = 1
         contains
         procedure,public :: initialize => initialize_5d
         procedure,public :: evaluate => evaluate_5d
@@ -142,6 +153,11 @@
         real(wp),dimension(:),allocatable :: tq
         real(wp),dimension(:),allocatable :: tr
         real(wp),dimension(:),allocatable :: ts
+        integer :: iloy  = 1
+        integer :: iloz  = 1
+        integer :: iloq  = 1
+        integer :: ilor  = 1
+        integer :: ilos  = 1
         contains
         procedure,public :: initialize => initialize_6d
         procedure,public :: evaluate => evaluate_6d
@@ -220,7 +236,8 @@
     real(wp),intent(out)        :: f
     integer,intent(out)         :: iflag
     
-    call db2val(xval,yval,idx,idy,me%tx,me%ty,me%nx,me%ny,me%kx,me%ky,me%bcoef,f,iflag)
+    call db2val(xval,yval,idx,idy,me%tx,me%ty,me%nx,me%ny,me%kx,me%ky,me%bcoef,f,iflag,&
+                me%inbvx,me%iloy)
     
     end subroutine evaluate_2d
 !*****************************************************************************************
@@ -311,7 +328,8 @@
                 me%tx,me%ty,me%tz,&
                 me%nx,me%ny,me%nz,&
                 me%kx,me%ky,me%kz,&
-                me%bcoef,f,iflag)
+                me%bcoef,f,iflag,&
+                me%inbvx,me%iloy,me%iloz)
     
     end subroutine evaluate_3d
 !*****************************************************************************************
@@ -410,7 +428,8 @@
                 me%tx,me%ty,me%tz,me%tq,&
                 me%nx,me%ny,me%nz,me%nq,&
                 me%kx,me%ky,me%kz,me%kq,&
-                me%bcoef,f,iflag)
+                me%bcoef,f,iflag,&
+                me%inbvx,me%iloy,me%iloz,me%iloq)
     
     end subroutine evaluate_4d
 !*****************************************************************************************
@@ -517,7 +536,8 @@
                 me%tx,me%ty,me%tz,me%tq,me%tr,&
                 me%nx,me%ny,me%nz,me%nq,me%nr,&
                 me%kx,me%ky,me%kz,me%kq,me%kr,&
-                me%bcoef,f,iflag)
+                me%bcoef,f,iflag,&
+                me%inbvx,me%iloy,me%iloz,me%iloq,me%ilor)
     
     end subroutine evaluate_5d
 !*****************************************************************************************
@@ -632,7 +652,8 @@
                 me%tx,me%ty,me%tz,me%tq,me%tr,me%ts,&
                 me%nx,me%ny,me%nz,me%nq,me%nr,me%ns,&
                 me%kx,me%ky,me%kz,me%kq,me%kr,me%ks,&
-                me%bcoef,f,iflag)
+                me%bcoef,f,iflag,&
+                me%inbvx,me%iloy,me%iloz,me%iloq,me%ilor,me%ilos)
     
     end subroutine evaluate_6d
 !*****************************************************************************************
