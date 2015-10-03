@@ -143,32 +143,36 @@
  
     contains
       
-        real(wp) function f2(x,y)
+        real(wp) function f2(x,y) !! 2d test function
+        implicit none
         real(wp) x,y,piov2
         piov2 = 2.0_wp * atan(1.0_wp)
         f2 = 0.5_wp * (y*exp(-x) + sin(piov2*y) )
-        return
         end function f2
     
-        real(wp) function f3 (x,y,z)
+        real(wp) function f3 (x,y,z) !! 3d test function
+        implicit none
         real(wp) x,y,z,piov2
         piov2 = 2.0_wp*atan(1.0_wp)
         f3 = 0.5_wp*( y*exp(-x) + z*sin(piov2*y) )
         end function f3    
     
-        real(wp) function f4 (x,y,z,q)
+        real(wp) function f4 (x,y,z,q) !! 4d test function
+        implicit none
         real(wp) x,y,z,q,piov2
         piov2 = 2.0_wp*atan(1.0_wp)
         f4 = 0.5_wp*( y*exp(-x) + z*sin(piov2*y) + q )
         end function f4    
     
-        real(wp) function f5 (x,y,z,q,r)
+        real(wp) function f5 (x,y,z,q,r) !! 5d test function
+        implicit none
         real(wp) x,y,z,q,r,piov2
         piov2 = 2.0_wp*atan(1.0_wp)
         f5 = 0.5_wp*( y*exp(-x) + z*sin(piov2*y) + q*r )
         end function f5
       
-        real(wp) function f6 (x,y,z,q,r,s)
+        real(wp) function f6 (x,y,z,q,r,s) !! 6d test function
+        implicit none
         real(wp) x,y,z,q,r,s,piov2
         piov2 = 2.0_wp*atan(1.0_wp)
         f6 = 0.5_wp*( y*exp(-x) + z*sin(piov2*y) + q*r + 2.0_wp*s )
