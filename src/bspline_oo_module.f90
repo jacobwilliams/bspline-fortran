@@ -1,14 +1,13 @@
 !*****************************************************************************************
-!
 !> author: Jacob Williams
 !  license: BSD
 ! 
 !# Description
 !
 !  Object-oriented style wrappers to [[bspline_sub_module]].
-!  This module provides classes ([[bspline_2d]], [[bspline_3d]], 
-!  [[bspline_4d]], [[bspline_5d]], and [[bspline_6d]]) which can
-!  be used instead of the main subroutine interface.
+!  This module provides classes ([[bspline_1d]], [[bspline_2d]],
+!  [[bspline_3d]], [[bspline_4d]], [[bspline_5d]], and [[bspline_6d]]) 
+!  which can be used instead of the main subroutine interface.
 !
 !# History
 !
@@ -38,6 +37,19 @@
         end subroutine destroy_func
     end interface
 
+    type,extends(bspline_class),public :: bspline_1d
+        !! Class for 1d b-spline interpolation.
+        private
+        integer :: nx  = 0
+        integer :: kx  = 0
+        real(wp),dimension(:),allocatable :: bcoef
+        real(wp),dimension(:),allocatable :: tx    
+        contains
+        procedure,public :: initialize => initialize_1d
+        procedure,public :: evaluate => evaluate_1d
+        procedure,public :: destroy => destroy_1d
+    end type bspline_1d
+    
     type,extends(bspline_class),public :: bspline_2d
         !! Class for 2d b-spline interpolation.
         private
@@ -166,7 +178,72 @@
 
     contains
 !*****************************************************************************************
+
+!*****************************************************************************************
+!> Destructor for [[bspline_1d]] type.
+
+    subroutine destroy_1d(me)
     
+    implicit none
+    
+    class(bspline_1d),intent(out) :: me
+    
+    end subroutine destroy_1d
+!*****************************************************************************************
+    
+!*****************************************************************************************
+!> Initialize a [[bspline_1d]] type.  This is a wrapper for [[db1ink]].
+
+    subroutine initialize_1d(me,x,fcn,kx,iflag)
+
+    implicit none
+    
+    class(bspline_1d),intent(inout)         :: me
+    real(wp),dimension(:),intent(in)        :: x
+    real(wp),dimension(:),intent(in)        :: fcn
+    integer,intent(in)                      :: kx
+    integer,intent(out)                     :: iflag
+    
+    integer :: iknot
+    integer :: nx
+    
+    call me%destroy()
+    
+    nx = size(x)
+        
+    me%nx = nx
+    me%kx = kx
+    
+    allocate(me%tx(nx+kx))
+    allocate(me%bcoef(nx))
+    
+    iknot = 0         !knot sequence chosen by db2ink
+    
+    call db1ink(x,nx,fcn,kx,me%tx,me%bcoef,iknot)
+    
+    iflag = iknot     !status flag
+    
+    end subroutine initialize_1d
+!*****************************************************************************************
+    
+!*****************************************************************************************
+!> Evaluate a [[bspline_1d]] interpolate.  This is a wrapper for [[db1val]].
+
+    subroutine evaluate_1d(me,xval,idx,f,iflag)
+    
+    implicit none
+    
+    class(bspline_1d),intent(in) :: me
+    real(wp),intent(in)          :: xval
+    integer,intent(in)           :: idx
+    real(wp),intent(out)         :: f
+    integer,intent(out)          :: iflag
+    
+    call db1val(xval,idx,me%tx,me%nx,me%kx,me%bcoef,f,iflag,me%inbvx)
+    
+    end subroutine evaluate_1d
+!*****************************************************************************************
+
 !*****************************************************************************************
 !> Destructor for [[bspline_2d]] type.
 

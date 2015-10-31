@@ -9,11 +9,15 @@ Multidimensional B-Spline Interpolation of Data on a Regular Grid
 
 # Brief description
 
-The library provides subroutines for 2D-6D interpolation using b-splines. The code is written in modern Fortran (i.e., Fortran 2003+).
+The library provides subroutines for 1D-6D interpolation using b-splines. The code is written in modern Fortran (i.e., Fortran 2003+).
 
 The core routines are:
 
 ```Fortran
+
+!f(x)
+subroutine db1ink(x,nx,fcn,kx,tx,bcoef,iflag)
+subroutine db1val(xval,idx,tx,nx,kx,bcoef,f,iflag)
 
 !f(x,y)
 subroutine db2ink(x,nx,y,ny,fcn,kx,ky,tx,ty,bcoef,iflag)

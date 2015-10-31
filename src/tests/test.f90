@@ -25,6 +25,7 @@
             
     real(wp) :: x(nx),y(ny),z(nz),q(nq),r(nr),s(ns)
     real(wp) :: tx(nx+kx),ty(ny+ky),tz(nz+kz),tq(nq+kq),tr(nr+kr),ts(ns+ks)    
+    real(wp) :: fcn_1d(nx)
     real(wp) :: fcn_2d(nx,ny)
     real(wp) :: fcn_3d(nx,ny,nz)
     real(wp) :: fcn_4d(nx,ny,nz,nq)
@@ -64,6 +65,7 @@
         s(n) = dble(n-1)/dble(ns-1)
      end do
      do i=1,nx
+                        fcn_1d(i) = f1(x(i))
         do j=1,ny
                         fcn_2d(i,j) = f2(x(i),y(j))
            do k=1,nz
@@ -84,6 +86,8 @@
     ! interpolate
     
      iflag = 0
+     call db1ink(x,nx,fcn_1d,kx,tx,fcn_1d,iflag)
+     iflag = 0
      call db2ink(x,nx,y,ny,fcn_2d,kx,ky,tx,ty,fcn_2d,iflag)
      iflag = 0
      call db3ink(x,nx,y,ny,z,nz,fcn_3d,kx,ky,kz,tx,ty,tz,fcn_3d,iflag)
@@ -98,6 +102,11 @@
 
      errmax = 0.0_wp
      do i=1,nx
+                        call db1val(x(i),idx,&
+                                            tx,nx,kx,fcn_1d,val(1),iflag)
+                        tru(1)    = f1(x(i))
+                        err(1)    = abs(tru(1)-val(1))
+                        errmax(1) = max(err(1),errmax(1))
         do j=1,ny
                         call db2val(x(i),y(j),idx,idy,&
                                             tx,ty,nx,ny,kx,ky,fcn_2d,val(2),iflag)
@@ -136,7 +145,7 @@
      end do
 
     ! check max error against tolerance
-    do i=2,6
+    do i=1,6
         write(*,*) i,'D: max error:', errmax(i)
         if (errmax(i) >= tol) then
             write(*,*)  ' ** test failed ** '
@@ -147,6 +156,12 @@
     end do
  
     contains
+    
+        real(wp) function f1(x) !! 1d test function
+        implicit none
+        real(wp) :: x
+        f1 = 0.5_wp * (x*exp(-x) + sin(x) )
+        end function f1
       
         real(wp) function f2(x,y) !! 2d test function
         implicit none

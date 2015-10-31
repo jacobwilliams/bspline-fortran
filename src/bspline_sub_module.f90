@@ -5,7 +5,7 @@
 ! 
 !# Description
 !
-!  Multidimensional (2D-6D) B-Spline interpolation of data on a regular grid.
+!  Multidimensional (1D-6D) B-Spline interpolation of data on a regular grid.
 !  Basic subroutine interface.
 ! 
 !# Notes
@@ -14,7 +14,7 @@
 !  The original Fortran 77 routines were converted to free-form source.
 !  Some of them are relatively unchanged from the originals, but some have
 !  been extensively refactored. In addition, new routines for 
-!  4d, 5d, and 6d interpolation were also created (these are simply 
+!  1d, 4d, 5d, and 6d interpolation were also created (these are simply 
 !  extensions of the same algorithm into higher dimensions).
 !
 !# See also
@@ -48,6 +48,7 @@
     integer,parameter :: wp = real64  !! Real precision
 
     !main routines:
+    public :: db1ink, db1val
     public :: db2ink, db2val
     public :: db3ink, db3val
     public :: db4ink, db4val
@@ -56,6 +57,134 @@
     
     contains
     
+!*****************************************************************************************
+
+!*****************************************************************************************
+!> Determines the parameters of a function that interpolates
+!  the one-dimensional gridded data
+!  $$ [x(i),\mathrm{fcn}(i)] ~\mathrm{for}~ i=1,..,n_x $$
+!  The interpolating function and its derivatives may
+!  subsequently be evaluated by the function [[db1val]].
+! 
+!# History
+!
+!  * Jacob Williams, 10/30/2015 : Created 1D routine.
+
+    subroutine db1ink(x,nx,fcn,kx,tx,bcoef,iflag)
+
+    implicit none
+
+    integer,intent(in)                      :: nx     !! Number of x abcissae
+    integer,intent(in)                      :: kx     !! The order of spline pieces in x (>= 2, < nx). (order = polynomial degree + 1)
+    real(wp),dimension(nx),intent(in)       :: x      !! Array of x abcissae. Must be strictly increasing.
+    real(wp),dimension(nx),intent(in)       :: fcn    !! Array of function values to interpolate. fcn(i) should
+                                                      !!    contain the function value at the point x(i)
+    real(wp),dimension(nx+kx),intent(inout) :: tx     !! The knots in the x direction for the spline interpolant.
+                                                      !!    If iflag=0 these are chosen by db1ink.
+                                                      !!    If iflag=1 these are specified by the user.
+                                                      !!    Must be non-decreasing.
+    real(wp),dimension(nx),intent(out)      :: bcoef  !! Array of coefficients of the b-spline interpolant.
+    integer,intent(inout)                   :: iflag  !! **on input:**  0 = knot sequence chosen by db1ink.
+                                                      !!                1 = knot sequence chosen by user.
+                                                      !! **on output:** 1 = successful execution.
+                                                      !!                2 = iflag out of range.
+                                                      !!                3 = nx out of range.
+                                                      !!                4 = kx out of range.
+                                                      !!                5 = x not strictly increasing.
+                                                      !!                6 = tx not non-decreasing.
+
+
+    real(wp),dimension(nx) :: temp
+    real(wp),dimension(2*kx*(nx+1)) :: work
+    logical :: status_ok
+  
+    !check validity of inputs
+    
+    call check_inputs('db1ink',&
+                        iflag,&
+                        nx=nx,&
+                        kx=kx,&
+                        x=x,&
+                        tx=tx,&
+                        status_ok=status_ok)
+                        
+    if (status_ok) then
+
+        !choose knots
+        
+        if (iflag == 0) then
+            call dbknot(x,nx,kx,tx)
+        end if
+
+        !construct b-spline coefficients
+        
+        call dbtpcf(x,nx,fcn,nx,1,tx,kx,bcoef,work)
+
+        iflag = 1
+    
+    end if
+
+    end subroutine db1ink
+!*****************************************************************************************
+
+!*****************************************************************************************
+!> Evaluates the tensor product piecewise polynomial
+!  interpolant constructed by the routine [[db1ink]] or one of its
+!  derivatives at the point xval. 
+!
+!  To evaluate the interpolant itself, set idx=0, 
+!  to evaluate the first partial with respect to x, set idx=1, and so on.
+!
+!  db1val returns 0.0 if (xval,yval) is out of range. that is, if
+!```fortran
+!   xval < tx(1) .or. xval > tx(nx+kx) 
+!```
+!  if the knots tx were chosen by [[db1ink]], then this is equivalent to:
+!```fortran
+!   xval < x(1) .or. xval > x(nx)+epsx
+!```
+!  where
+!```fortran 
+!   epsx = 0.1*(x(nx)-x(nx-1))
+!```
+!
+!  The input quantities tx, nx, kx, and bcoef should be
+!  unchanged since the last call of [[db1ink]].
+!
+!# History
+!
+!  * Jacob Williams, 10/30/2015 : Created 1D routine.
+
+    subroutine db1val(xval,idx,tx,nx,kx,bcoef,f,iflag,inbvx_in)
+
+    implicit none
+
+    integer,intent(in)                   :: idx      !! x derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                   :: nx       !! the number of interpolation points in x. (same as in last call to db1ink)
+    integer,intent(in)                   :: kx       !! order of polynomial pieces in x. (same as in last call to db1ink)
+    real(wp),intent(in)                  :: xval     !! x coordinate of evaluation point.
+    real(wp),dimension(nx+kx),intent(in) :: tx       !! sequence of knots defining the piecewise polynomial in the x direction. (same as in last call to db1ink)
+    real(wp),dimension(nx),intent(in)    :: bcoef    !! the b-spline coefficients computed by db1ink.
+    real(wp),intent(out)                 :: f        !! interpolated value
+    integer,intent(out)                  :: iflag    !! status flag: 0 : no errors, /=0 : error
+    integer,intent(in),optional          :: inbvx_in !! inbvx initialization parameter from class
+
+    real(wp),dimension(3*kx) :: work
+
+    integer,save :: inbvx = 1
+    
+    if (present(inbvx_in)) inbvx = inbvx_in
+    
+    f = 0.0_wp
+    iflag = 1
+
+    if (xval<tx(1) .or. xval>tx(nx+kx)) return
+        
+    iflag = 0
+ 
+    f = dbvalu(tx,bcoef,nx,kx,idx,xval,inbvx,work)
+        
+    end subroutine db1val
 !*****************************************************************************************
 
 !*****************************************************************************************
