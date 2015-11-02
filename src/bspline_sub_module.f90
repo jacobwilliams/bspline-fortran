@@ -167,7 +167,7 @@
     real(wp),dimension(nx),intent(in)    :: bcoef    !! the b-spline coefficients computed by db1ink.
     real(wp),intent(out)                 :: f        !! interpolated value
     integer,intent(out)                  :: iflag    !! status flag: 0 : no errors, /=0 : error
-    integer,intent(in),optional          :: inbvx_in !! inbvx initialization parameter from class
+    integer,intent(in),optional          :: inbvx_in !! inbvx initialization parameter from class (used by object-oriented interface)
 
     real(wp),dimension(3*kx) :: work
 
@@ -358,8 +358,8 @@
     real(wp),dimension(nx,ny),intent(in) :: bcoef    !! the b-spline coefficients computed by db2ink.
     real(wp),intent(out)                 :: f        !! interpolated value
     integer,intent(out)                  :: iflag    !! status flag: 0 : no errors, /=0 : error
-    integer,intent(in),optional          :: inbvx_in !! inbvx initialization parameter from class
-    integer,intent(in),optional          :: iloy_in  !! iloy initialization parameter from class
+    integer,intent(in),optional          :: inbvx_in !! inbvx initialization parameter from class (used by object-oriented interface)
+    integer,intent(in),optional          :: iloy_in  !! iloy initialization parameter from class (used by object-oriented interface)
 
     integer :: inbv, k, lefty, mflag, kcol
     real(wp),dimension(ky) :: temp
@@ -597,9 +597,9 @@
     real(wp),dimension(nx,ny,nz),intent(in) :: bcoef    !! the b-spline coefficients computed by db3ink.
     real(wp),intent(out)                    :: f        !! interpolated value
     integer,intent(out)                     :: iflag    !! status flag: 0 : no errors, /=0 : error
-    integer,intent(in),optional             :: inbvx_in !! inbvx initialization parameter from class
-    integer,intent(in),optional             :: iloy_in  !! iloy initialization parameter from class
-    integer,intent(in),optional             :: iloz_in  !! iloz initialization parameter from class
+    integer,intent(in),optional             :: inbvx_in !! inbvx initialization parameter from class (used by object-oriented interface)
+    integer,intent(in),optional             :: iloy_in  !! iloy initialization parameter from class (used by object-oriented interface)
+    integer,intent(in),optional             :: iloz_in  !! iloz initialization parameter from class (used by object-oriented interface)
 
     real(wp),dimension(ky,kz)              :: temp1
     real(wp),dimension(kz)                 :: temp2
@@ -810,10 +810,10 @@
     real(wp),dimension(nx,ny,nz,nq),intent(in) :: bcoef    !! the b-spline coefficients computed by db4ink.
     real(wp),intent(out)                       :: f        !! interpolated value
     integer,intent(out)                        :: iflag    !! status flag: 0 : no errors, /=0 : error
-    integer,intent(in),optional                :: inbvx_in !! inbvx initialization parameter from class
-    integer,intent(in),optional                :: iloy_in  !! iloy initialization parameter from class
-    integer,intent(in),optional                :: iloz_in  !! iloz initialization parameter from class
-    integer,intent(in),optional                :: iloq_in  !! iloq initialization parameter from class
+    integer,intent(in),optional                :: inbvx_in !! inbvx initialization parameter from class (used by object-oriented interface)
+    integer,intent(in),optional                :: iloy_in  !! iloy initialization parameter from class (used by object-oriented interface)
+    integer,intent(in),optional                :: iloz_in  !! iloz initialization parameter from class (used by object-oriented interface)
+    integer,intent(in),optional                :: iloq_in  !! iloq initialization parameter from class (used by object-oriented interface)
     
     real(wp),dimension(ky,kz,kq)             :: temp1
     real(wp),dimension(kz,kq)                :: temp2
@@ -1064,11 +1064,11 @@
     real(wp),dimension(nx,ny,nz,nq,nr),intent(in) :: bcoef    !! the b-spline coefficients computed by db5ink.
     real(wp),intent(out)                          :: f        !! interpolated value
     integer,intent(out)                           :: iflag    !! status flag: 0 : no errors, /=0 : error
-    integer,intent(in),optional                   :: inbvx_in !! inbvx initialization parameter from class
-    integer,intent(in),optional                   :: iloy_in  !! iloy initialization parameter from class
-    integer,intent(in),optional                   :: iloz_in  !! iloz initialization parameter from class
-    integer,intent(in),optional                   :: iloq_in  !! iloq initialization parameter from class
-    integer,intent(in),optional                   :: ilor_in  !! ilor initialization parameter from class
+    integer,intent(in),optional                   :: inbvx_in !! inbvx initialization parameter from class (used by object-oriented interface)
+    integer,intent(in),optional                   :: iloy_in  !! iloy initialization parameter from class (used by object-oriented interface)
+    integer,intent(in),optional                   :: iloz_in  !! iloz initialization parameter from class (used by object-oriented interface)
+    integer,intent(in),optional                   :: iloq_in  !! iloq initialization parameter from class (used by object-oriented interface)
+    integer,intent(in),optional                   :: ilor_in  !! ilor initialization parameter from class (used by object-oriented interface)
     
     real(wp),dimension(ky,kz,kq,kr)           :: temp1
     real(wp),dimension(kz,kq,kr)              :: temp2
@@ -1351,12 +1351,12 @@
     real(wp),dimension(nx,ny,nz,nq,nr,ns),intent(in) :: bcoef    !! the b-spline coefficients computed by db6ink.
     real(wp),intent(out)                             :: f        !! interpolated value
     integer,intent(out)                              :: iflag    !! status flag: 0 : no errors, /=0 : error
-    integer,intent(in),optional                      :: inbvx_in !! inbvx initialization parameter from class
-    integer,intent(in),optional                      :: iloy_in  !! iloy initialization parameter from class
-    integer,intent(in),optional                      :: iloz_in  !! iloz initialization parameter from class
-    integer,intent(in),optional                      :: iloq_in  !! iloq initialization parameter from class
-    integer,intent(in),optional                      :: ilor_in  !! ilor initialization parameter from class
-    integer,intent(in),optional                      :: ilos_in  !! ilos initialization parameter from class
+    integer,intent(in),optional                      :: inbvx_in !! inbvx initialization parameter from class (used by object-oriented interface)
+    integer,intent(in),optional                      :: iloy_in  !! iloy initialization parameter from class (used by object-oriented interface)
+    integer,intent(in),optional                      :: iloz_in  !! iloz initialization parameter from class (used by object-oriented interface)
+    integer,intent(in),optional                      :: iloq_in  !! iloq initialization parameter from class (used by object-oriented interface)
+    integer,intent(in),optional                      :: ilor_in  !! ilor initialization parameter from class (used by object-oriented interface)
+    integer,intent(in),optional                      :: ilos_in  !! ilos initialization parameter from class (used by object-oriented interface)
    
     real(wp),dimension(ky,kz,kq,kr,ks)            :: temp1
     real(wp),dimension(kz,kq,kr,ks)               :: temp2

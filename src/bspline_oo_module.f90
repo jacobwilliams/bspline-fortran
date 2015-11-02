@@ -23,10 +23,11 @@
     private        
 
     type,public,abstract :: bspline_class
-        !! base class for the b-spline types
-        integer :: inbvx = 1
+        !! Base class for the b-spline types
+        private
+        integer :: inbvx = 1  !! internal variable used by dbvalu for efficient processing
     contains
-        procedure(destroy_func),deferred :: destroy  !! destructor
+        procedure(destroy_func),deferred,public :: destroy  !! destructor
     end type bspline_class
 
     abstract interface
