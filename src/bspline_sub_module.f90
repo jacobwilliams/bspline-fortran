@@ -40,6 +40,7 @@
     module bspline_sub_module
 
     use,intrinsic :: iso_fortran_env, only: real64
+    use,intrinsic :: iso_fortran_env, only: error_unit
     
     implicit none
     
@@ -118,9 +119,9 @@
 
         !construct b-spline coefficients
         
-        call dbtpcf(x,nx,fcn,nx,1,tx,kx,bcoef,work)
+        call dbtpcf(x,nx,fcn,nx,1,tx,kx,bcoef,work,iflag)
 
-        iflag = 1
+        if (iflag==0) iflag = 1
     
     end if
 
@@ -176,13 +177,14 @@
     if (present(inbvx_in)) inbvx = inbvx_in
     
     f = 0.0_wp
-    iflag = 1
 
-    if (xval<tx(1) .or. xval>tx(nx+kx)) return
-        
-    iflag = 0
- 
-    f = dbvalu(tx,bcoef,nx,kx,idx,xval,inbvx,work)
+    if (xval<tx(1) .or. xval>tx(nx+kx)) then
+        write(error_unit,'(A)') 'db1val - x value out of bounds'
+        iflag = 1
+        return
+    end if
+    
+    f = dbvalu(tx,bcoef,nx,kx,idx,xval,inbvx,work,iflag)
         
     end subroutine db1val
 !*****************************************************************************************
@@ -297,10 +299,10 @@
 
         !construct b-spline coefficients
 
-        call dbtpcf(x,nx,fcn, nx,ny,tx,kx,temp, work)
-        call dbtpcf(y,ny,temp,ny,nx,ty,ky,bcoef,work)
+                      call dbtpcf(x,nx,fcn, nx,ny,tx,kx,temp, work,iflag)
+        if (iflag==0) call dbtpcf(y,ny,temp,ny,nx,ty,ky,bcoef,work,iflag)
 
-        iflag = 1
+        if (iflag==0) iflag = 1
     
     end if
 
@@ -372,24 +374,32 @@
     if (present(iloy_in))  iloy  = iloy_in
     
     f = 0.0_wp
-    iflag = 1
 
-    if (xval<tx(1) .or. xval>tx(nx+kx)) return
-    if (yval<ty(1) .or. yval>ty(ny+ky)) return
+    if (xval<tx(1) .or. xval>tx(nx+kx)) then
+        write(error_unit,'(A)') 'db2val - x value out of bounds'
+        iflag = 1
+        return
+    end if
+    if (yval<ty(1) .or. yval>ty(ny+ky)) then
+        write(error_unit,'(A)') 'db2val - y value out of bounds'
+        iflag = 2
+        return
+    end if
     
+    iflag = -1
     call dintrv(ty,ny+ky,yval,iloy,lefty,mflag); if (mflag /= 0) return
     
-    iflag = 0
     inbv = 1
 
     kcol = lefty - ky
     do k=1,ky
         kcol = kcol + 1
-        temp(k) = dbvalu(tx,bcoef(:,kcol),nx,kx,idx,xval,inbvx,work)
+        temp(k) = dbvalu(tx,bcoef(:,kcol),nx,kx,idx,xval,inbvx,work,iflag)
+        if (iflag/=0) return !error
     end do
     
     kcol = lefty - ky + 1
-    f = dbvalu(ty(kcol:),temp,ky,ky,idy,yval,inbv,work)
+    f = dbvalu(ty(kcol:),temp,ky,ky,idy,yval,inbv,work,iflag)
          
     end subroutine db2val
 !*****************************************************************************************
@@ -523,11 +533,11 @@
 
         ! construct b-spline coefficients
         
-        call dbtpcf(x,nx,temp, nx,ny*nz,tx,kx,bcoef,work)
-        call dbtpcf(y,ny,bcoef,ny,nx*nz,ty,ky,temp, work)
-        call dbtpcf(z,nz,temp, nz,nx*ny,tz,kz,bcoef,work)
+                      call dbtpcf(x,nx,temp, nx,ny*nz,tx,kx,bcoef,work,iflag)
+        if (iflag==0) call dbtpcf(y,ny,bcoef,ny,nx*nz,ty,ky,temp, work,iflag)
+        if (iflag==0) call dbtpcf(z,nz,temp, nz,nx*ny,tz,kz,bcoef,work,iflag)
     
-        iflag = 1
+        if (iflag==0) iflag = 1
     
     end if
 
@@ -617,12 +627,24 @@
     if (present(iloz_in))  iloz  = iloz_in
     
     f = 0.0_wp
-    iflag = 1
 
-    if (xval<tx(1) .or. xval>tx(nx+kx)) return
-    if (yval<ty(1) .or. yval>ty(ny+ky)) return
-    if (zval<tz(1) .or. zval>tz(nz+kz)) return
+    if (xval<tx(1) .or. xval>tx(nx+kx)) then
+        write(error_unit,'(A)') 'db3val - x value out of bounds'
+        iflag = 1
+        return
+    end if
+    if (yval<ty(1) .or. yval>ty(ny+ky)) then
+        write(error_unit,'(A)') 'db3val - y value out of bounds'
+        iflag = 2
+        return
+    end if
+    if (zval<tz(1) .or. zval>tz(nz+kz)) then
+        write(error_unit,'(A)') 'db3val - z value out of bounds'
+        iflag = 3
+        return
+    end if
 
+    iflag = -1
     call dintrv(ty,ny+ky,yval,iloy,lefty,mflag); if (mflag /= 0) return
     call dintrv(tz,nz+kz,zval,iloz,leftz,mflag); if (mflag /= 0) return
 
@@ -636,17 +658,19 @@
         kcoly = lefty - ky
         do j=1,ky
             kcoly = kcoly + 1
-            temp1(j,k) = dbvalu(tx,bcoef(:,kcoly,kcolz),nx,kx,idx,xval,inbvx,work)
+            temp1(j,k) = dbvalu(tx,bcoef(:,kcoly,kcolz),nx,kx,idx,xval,inbvx,work,iflag)
+            if (iflag/=0) return
         end do
     end do
 
     kcoly = lefty - ky + 1
     do k=1,kz
-        temp2(k) = dbvalu(ty(kcoly:),temp1(:,k),ky,ky,idy,yval,inbv1,work)
+        temp2(k) = dbvalu(ty(kcoly:),temp1(:,k),ky,ky,idy,yval,inbv1,work,iflag)
+        if (iflag/=0) return
     end do
 
     kcolz = leftz - kz + 1
-    f = dbvalu(tz(kcolz:),temp2,kz,kz,idz,zval,inbv2,work)
+    f = dbvalu(tz(kcolz:),temp2,kz,kz,idz,zval,inbv2,work,iflag)
 
     end subroutine db3val
 !*****************************************************************************************
@@ -720,7 +744,11 @@
                                                          !!                11 = nz out of range.
                                                          !!                12 = kz out of range.
                                                          !!                13 = z not strictly increasing.
-                                                         !!                14 = ty not non-decreasing.
+                                                         !!                14 = tz not non-decreasing.
+                                                         !!                15 = nq out of range.
+                                                         !!                16 = kq out of range.
+                                                         !!                17 = q not strictly increasing.
+                                                         !!                18 = tq not non-decreasing.
 
            
     real(wp),dimension(nx*ny*nz*nq) :: temp
@@ -750,12 +778,12 @@
 
         ! construct b-spline coefficients
 
-        call dbtpcf(x,nx,fcn,  nx,ny*nz*nq,tx,kx,temp, work)
-        call dbtpcf(y,ny,temp, ny,nx*nz*nq,ty,ky,bcoef,work)
-        call dbtpcf(z,nz,bcoef,nz,nx*ny*nq,tz,kz,temp, work)
-        call dbtpcf(q,nq,temp, nq,nx*ny*nz,tq,kq,bcoef,work)
+                      call dbtpcf(x,nx,fcn,  nx,ny*nz*nq,tx,kx,temp, work,iflag)
+        if (iflag==0) call dbtpcf(y,ny,temp, ny,nx*nz*nq,ty,ky,bcoef,work,iflag)
+        if (iflag==0) call dbtpcf(z,nz,bcoef,nz,nx*ny*nq,tz,kz,temp, work,iflag)
+        if (iflag==0) call dbtpcf(q,nq,temp, nq,nx*ny*nz,tq,kq,bcoef,work,iflag)
       
-        iflag = 1
+        if (iflag==0) iflag = 1
      
      end if
 
@@ -833,13 +861,29 @@
     if (present(iloq_in))  iloq  = iloq_in
     
     f = 0.0_wp
-    iflag = 1
 
-    if (xval<tx(1) .or. xval>tx(nx+kx) ) return
-    if (yval<ty(1) .or. yval>ty(ny+ky) ) return
-    if (zval<tz(1) .or. zval>tz(nz+kz) ) return
-    if (qval<tq(1) .or. qval>tq(nq+kq) ) return
+    if (xval<tx(1) .or. xval>tx(nx+kx)) then
+        write(error_unit,'(A)') 'db4val - x value out of bounds'
+        iflag = 1
+        return
+    end if
+    if (yval<ty(1) .or. yval>ty(ny+ky)) then
+        write(error_unit,'(A)') 'db4val - y value out of bounds'
+        iflag = 2
+        return
+    end if
+    if (zval<tz(1) .or. zval>tz(nz+kz)) then
+        write(error_unit,'(A)') 'db4val - z value out of bounds'
+        iflag = 3
+        return
+    end if
+    if (qval<tq(1) .or. qval>tq(nq+kq) ) then
+        write(error_unit,'(A)') 'db4val - q value out of bounds'
+        iflag = 4
+        return
+    end if
 
+    iflag = -1
     call dintrv(ty,ny+ky,yval,iloy,lefty,mflag); if (mflag /= 0) return
     call dintrv(tz,nz+kz,zval,iloz,leftz,mflag); if (mflag /= 0) return
     call dintrv(tq,nq+kq,qval,iloq,leftq,mflag); if (mflag /= 0) return
@@ -860,7 +904,8 @@
             do j=1,ky
                 kcoly = kcoly + 1
                 temp1(j,k,q) = dbvalu(tx,bcoef(:,kcoly,kcolz,kcolq),&
-                                        nx,kx,idx,xval,inbvx,work)
+                                        nx,kx,idx,xval,inbvx,work,iflag)
+                if (iflag/=0) return
             end do
         end do
     end do
@@ -869,19 +914,21 @@
     kcoly = lefty - ky + 1
     do q=1,kq
         do k=1,kz
-            temp2(k,q) = dbvalu(ty(kcoly:),temp1(:,k,q),ky,ky,idy,yval,inbv1,work)    
+            temp2(k,q) = dbvalu(ty(kcoly:),temp1(:,k,q),ky,ky,idy,yval,inbv1,work,iflag)    
+            if (iflag/=0) return
         end do
     end do
 
     ! z -> q
     kcolz = leftz - kz + 1
     do q=1,kq
-        temp3(q) = dbvalu(tz(kcolz:),temp2(:,q),kz,kz,idz,zval,inbv2,work)    
+        temp3(q) = dbvalu(tz(kcolz:),temp2(:,q),kz,kz,idz,zval,inbv2,work,iflag)    
+        if (iflag/=0) return
     end do
 
     ! q
     kcolq = leftq - kq + 1
-    f = dbvalu(tq(kcolq:),temp3,kq,kq,idq,qval,inbv3,work) 
+    f = dbvalu(tq(kcolq:),temp3,kq,kq,idq,qval,inbv3,work,iflag) 
 
     end subroutine db4val
 !*****************************************************************************************
@@ -960,7 +1007,15 @@
                                                             !!                11 = nz out of range.
                                                             !!                12 = kz out of range.
                                                             !!                13 = z not strictly increasing.
-                                                            !!                14 = ty not non-decreasing.
+                                                            !!                14 = tz not non-decreasing.
+                                                            !!                15 = nq out of range.
+                                                            !!                16 = kq out of range.
+                                                            !!                17 = q not strictly increasing.
+                                                            !!                18 = tq not non-decreasing.
+                                                            !!                19 = nr out of range.
+                                                            !!                20 = kr out of range.
+                                                            !!                21 = r not strictly increasing.
+                                                            !!                22 = tr not non-decreasing.
            
     real(wp),dimension(nx*ny*nz*nq*nr) :: temp
     real(wp),dimension(max( 2*kx*(nx+1),&
@@ -998,13 +1053,13 @@
 
         !  construct b-spline coefficients
     
-        call dbtpcf(x,nx,temp,  nx,ny*nz*nq*nr,tx,kx,bcoef, work)
-        call dbtpcf(y,ny,bcoef, ny,nx*nz*nq*nr,ty,ky,temp,  work)
-        call dbtpcf(z,nz,temp,  nz,nx*ny*nq*nr,tz,kz,bcoef, work)
-        call dbtpcf(q,nq,bcoef, nq,nx*ny*nz*nr,tq,kq,temp,  work)
-        call dbtpcf(r,nr,temp,  nr,nx*ny*nz*nq,tr,kr,bcoef, work)
+                      call dbtpcf(x,nx,temp,  nx,ny*nz*nq*nr,tx,kx,bcoef, work,iflag)
+        if (iflag==0) call dbtpcf(y,ny,bcoef, ny,nx*nz*nq*nr,ty,ky,temp,  work,iflag)
+        if (iflag==0) call dbtpcf(z,nz,temp,  nz,nx*ny*nq*nr,tz,kz,bcoef, work,iflag)
+        if (iflag==0) call dbtpcf(q,nq,bcoef, nq,nx*ny*nz*nr,tq,kq,temp,  work,iflag)
+        if (iflag==0) call dbtpcf(r,nr,temp,  nr,nx*ny*nz*nq,tr,kr,bcoef, work,iflag)
       
-        iflag = 1
+        if (iflag==0) iflag = 1
      
      end if
 
@@ -1092,14 +1147,34 @@
     if (present(ilor_in))  ilor  = ilor_in
     
     f = 0.0_wp
-    iflag = 1
         
-    if ( xval<tx(1) .or. xval>tx(nx+kx) ) return
-    if ( yval<ty(1) .or. yval>ty(ny+ky) ) return
-    if ( zval<tz(1) .or. zval>tz(nz+kz) ) return
-    if ( qval<tq(1) .or. qval>tq(nq+kq) ) return
-    if ( rval<tr(1) .or. rval>tr(nr+kr) ) return
+    if (xval<tx(1) .or. xval>tx(nx+kx)) then
+        write(error_unit,'(A)') 'db5val - x value out of bounds'
+        iflag = 1
+        return
+    end if
+    if (yval<ty(1) .or. yval>ty(ny+ky)) then
+        write(error_unit,'(A)') 'db5val - y value out of bounds'
+        iflag = 2
+        return
+    end if
+    if (zval<tz(1) .or. zval>tz(nz+kz)) then
+        write(error_unit,'(A)') 'db5val - z value out of bounds'
+        iflag = 3
+        return
+    end if
+    if (qval<tq(1) .or. qval>tq(nq+kq) ) then
+        write(error_unit,'(A)') 'db5val - q value out of bounds'
+        iflag = 4
+        return
+    end if
+    if ( rval<tr(1) .or. rval>tr(nr+kr) ) then
+        write(error_unit,'(A)') 'db5val - r value out of bounds'
+        iflag = 5
+        return
+    end if
     
+    iflag = -1
     call dintrv(ty,ny+ky,yval,iloy,lefty,mflag); if (mflag /= 0) return
     call dintrv(tz,nz+kz,zval,iloz,leftz,mflag); if (mflag /= 0) return
     call dintrv(tq,nq+kq,qval,iloq,leftq,mflag); if (mflag /= 0) return
@@ -1125,7 +1200,8 @@
                 do j=1,ky
                     kcoly = kcoly + 1
                     temp1(j,k,q,r) = dbvalu(tx,bcoef(:,kcoly,kcolz,kcolq,kcolr),&
-                                            nx,kx,idx,xval,inbvx,work)
+                                            nx,kx,idx,xval,inbvx,work,iflag)
+                    if (iflag/=0) return
                 end do
             end do
         end do    
@@ -1136,7 +1212,8 @@
     do r=1,kr
         do q=1,kq
             do k=1,kz
-                temp2(k,q,r) = dbvalu(ty(kcoly:),temp1(:,k,q,r),ky,ky,idy,yval,inbv1,work)    
+                temp2(k,q,r) = dbvalu(ty(kcoly:),temp1(:,k,q,r),ky,ky,idy,yval,inbv1,work,iflag)    
+                if (iflag/=0) return
             end do
         end do
     end do
@@ -1145,19 +1222,21 @@
     kcolz = leftz - kz + 1    
     do r=1,kr
         do q=1,kq
-            temp3(q,r) = dbvalu(tz(kcolz:),temp2(:,q,r),kz,kz,idz,zval,inbv2,work)    
+            temp3(q,r) = dbvalu(tz(kcolz:),temp2(:,q,r),kz,kz,idz,zval,inbv2,work,iflag)    
+            if (iflag/=0) return
         end do    
     end do
     
     ! q -> r
     kcolq = leftq - kq + 1
     do r=1,kr
-        temp4(r) = dbvalu(tq(kcolq:),temp3(:,r),kq,kq,idq,qval,inbv3,work)    
+        temp4(r) = dbvalu(tq(kcolq:),temp3(:,r),kq,kq,idq,qval,inbv3,work,iflag)    
+        if (iflag/=0) return
     end do
     
     ! r
     kcolr = leftr - kr + 1
-    f = dbvalu(tr(kcolr:),temp4,kr,kr,idr,rval,inbv4,work) 
+    f = dbvalu(tr(kcolr:),temp4,kr,kr,idr,rval,inbv4,work,iflag) 
     
     end subroutine db5val
 !*****************************************************************************************
@@ -1243,7 +1322,19 @@
                                                                !!                11 = nz out of range.
                                                                !!                12 = kz out of range.
                                                                !!                13 = z not strictly increasing.
-                                                               !!                14 = ty not non-decreasing.
+                                                               !!                14 = tz not non-decreasing.
+                                                               !!                15 = nq out of range.
+                                                               !!                16 = kq out of range.
+                                                               !!                17 = q not strictly increasing.
+                                                               !!                18 = tq not non-decreasing.
+                                                               !!                19 = nr out of range.
+                                                               !!                20 = kr out of range.
+                                                               !!                21 = r not strictly increasing.
+                                                               !!                22 = tr not non-decreasing.
+                                                               !!                23 = ns out of range.
+                                                               !!                24 = ks out of range.
+                                                               !!                25 = s not strictly increasing.
+                                                               !!                26 = ts not non-decreasing.
            
     real(wp),dimension(nx*ny*nz*nq*nr*ns) :: temp
     real(wp),dimension(max( 2*kx*(nx+1),&
@@ -1279,14 +1370,14 @@
 
         ! construct b-spline coefficients
     
-        call dbtpcf(x,nx,fcn,  nx,ny*nz*nq*nr*ns,tx,kx,temp, work)
-        call dbtpcf(y,ny,temp, ny,nx*nz*nq*nr*ns,ty,ky,bcoef,work)
-        call dbtpcf(z,nz,bcoef,nz,nx*ny*nq*nr*ns,tz,kz,temp, work)
-        call dbtpcf(q,nq,temp, nq,nx*ny*nz*nr*ns,tq,kq,bcoef,work)
-        call dbtpcf(r,nr,bcoef,nr,nx*ny*nz*nq*ns,tr,kr,temp, work)
-        call dbtpcf(s,ns,temp, ns,nx*ny*nz*nq*nr,ts,ks,bcoef,work)
+                      call dbtpcf(x,nx,fcn,  nx,ny*nz*nq*nr*ns,tx,kx,temp, work,iflag)
+        if (iflag==0) call dbtpcf(y,ny,temp, ny,nx*nz*nq*nr*ns,ty,ky,bcoef,work,iflag)
+        if (iflag==0) call dbtpcf(z,nz,bcoef,nz,nx*ny*nq*nr*ns,tz,kz,temp, work,iflag)
+        if (iflag==0) call dbtpcf(q,nq,temp, nq,nx*ny*nz*nr*ns,tq,kq,bcoef,work,iflag)
+        if (iflag==0) call dbtpcf(r,nr,bcoef,nr,nx*ny*nz*nq*ns,tr,kr,temp, work,iflag)
+        if (iflag==0) call dbtpcf(s,ns,temp, ns,nx*ny*nz*nq*nr,ts,ks,bcoef,work,iflag)
       
-        iflag = 1
+        if (iflag==0) iflag = 1
      
      end if
 
@@ -1386,15 +1477,39 @@
     if (present(ilos_in))  ilos  = ilos_in
     
     f = 0.0_wp
-    iflag = 1
 
-    if (xval<tx(1) .or. xval>tx(nx+kx) ) return
-    if (yval<ty(1) .or. yval>ty(ny+ky) ) return
-    if (zval<tz(1) .or. zval>tz(nz+kz) ) return
-    if (qval<tq(1) .or. qval>tq(nq+kq) ) return
-    if (rval<tr(1) .or. rval>tr(nr+kr) ) return
-    if (sval<ts(1) .or. sval>ts(ns+ks) ) return
+    if (xval<tx(1) .or. xval>tx(nx+kx)) then
+        write(error_unit,'(A)') 'db6val - x value out of bounds'
+        iflag = 1
+        return
+    end if
+    if (yval<ty(1) .or. yval>ty(ny+ky)) then
+        write(error_unit,'(A)') 'db6val - y value out of bounds'
+        iflag = 2
+        return
+    end if
+    if (zval<tz(1) .or. zval>tz(nz+kz)) then
+        write(error_unit,'(A)') 'db6val - z value out of bounds'
+        iflag = 3
+        return
+    end if
+    if (qval<tq(1) .or. qval>tq(nq+kq) ) then
+        write(error_unit,'(A)') 'db6val - q value out of bounds'
+        iflag = 4
+        return
+    end if
+    if ( rval<tr(1) .or. rval>tr(nr+kr) ) then
+        write(error_unit,'(A)') 'db6val - r value out of bounds'
+        iflag = 5
+        return
+    end if
+    if (sval<ts(1) .or. sval>ts(ns+ks) ) then
+        write(error_unit,'(A)') 'db6val - r value out of bounds'
+        iflag = 6
+        return
+    end if
 
+    iflag = -1
     call dintrv(ty,ny+ky,yval,iloy,lefty,mflag); if (mflag /= 0) return
     call dintrv(tz,nz+kz,zval,iloz,leftz,mflag); if (mflag /= 0) return
     call dintrv(tq,nq+kq,qval,iloq,leftq,mflag); if (mflag /= 0) return
@@ -1425,52 +1540,57 @@
                     do j=1,ky
                         kcoly = kcoly + 1
                         temp1(j,k,q,r,s) = dbvalu(tx,bcoef(:,kcoly,kcolz,kcolq,kcolr,kcols),&
-                                                    nx,kx,idx,xval,inbvx,work)
+                                                    nx,kx,idx,xval,inbvx,work,iflag)
+                        if (iflag/=0) return
                     end do
                 end do
             end do    
         end do
     end do
-    
+
     ! y -> z, q, r, s
     kcoly = lefty - ky + 1
     do s=1,ks
         do r=1,kr
             do q=1,kq
                 do k=1,kz
-                    temp2(k,q,r,s) = dbvalu(ty(kcoly:),temp1(:,k,q,r,s),ky,ky,idy,yval,inbv1,work)    
+                    temp2(k,q,r,s) = dbvalu(ty(kcoly:),temp1(:,k,q,r,s),ky,ky,idy,yval,inbv1,work,iflag)
+                    if (iflag/=0) return
                 end do
             end do
         end do
     end do
-    
+
     ! z -> q, r, s
     kcolz = leftz - kz + 1    
     do s=1,ks
         do r=1,kr
             do q=1,kq
-                temp3(q,r,s) = dbvalu(tz(kcolz:),temp2(:,q,r,s),kz,kz,idz,zval,inbv2,work)    
+                temp3(q,r,s) = dbvalu(tz(kcolz:),temp2(:,q,r,s),kz,kz,idz,zval,inbv2,work,iflag)
+                if (iflag/=0) return
             end do    
         end do
     end do
-    
+
     ! q -> r, s
     kcolq = leftq - kq + 1
     do s=1,ks
         do r=1,kr
-            temp4(r,s) = dbvalu(tq(kcolq:),temp3(:,r,s),kq,kq,idq,qval,inbv3,work)    
+            temp4(r,s) = dbvalu(tq(kcolq:),temp3(:,r,s),kq,kq,idq,qval,inbv3,work,iflag)
+            if (iflag/=0) return
         end do
     end do
-    
+
     ! r -> s
     kcolr = leftr - kr + 1
     do s=1,ks
-        temp5(s) = dbvalu(tr(kcolr:),temp4(:,s),kr,kr,idr,rval,inbv4,work)    
+        temp5(s) = dbvalu(tr(kcolr:),temp4(:,s),kr,kr,idr,rval,inbv4,work,iflag)
+        if (iflag/=0) return
     end do
-        
+
     ! s
     kcols = lefts - ks + 1
-    f = dbvalu(ts(kcols:),temp5,ks,ks,ids,sval,inbv5,work) 
+    f = dbvalu(ts(kcols:),temp5,ks,ks,ids,sval,inbv5,work,iflag) 
 
     end subroutine db6val
 !*****************************************************************************************
@@ -1515,8 +1635,9 @@
     
     if ((iflag < 0) .or. (iflag > 1)) then
     
-          write(*,*) trim(routine)//' - iflag is out of range: ',iflag
-          iflag = 2
+        write(error_unit,'(A,1X,I5)') &
+            trim(routine)//' - iflag is out of range: ',iflag
+        iflag = 2
           
     else
     
@@ -1537,13 +1658,13 @@
         
         implicit none
         
-        character(len=1),intent(in),optional       :: s        !! coordinate string: 'x','y','z','q','r','s'
-        integer,intent(in),optional                :: n        !! size of x
-        integer,intent(in),optional                :: k        !! order
-        real(wp),dimension(:),intent(in),optional  :: x        !! abcissae vector
-        real(wp),dimension(:),intent(in),optional  :: t        !! knot vector size(n+k)
-        integer,dimension(4),intent(in)            :: ierrs    !! int error codes for n,k,x,t checks
-        logical,intent(out)                        :: error    !! true if there was an error
+        character(len=1),intent(in),optional       :: s     !! coordinate string: 'x','y','z','q','r','s'
+        integer,intent(in),optional                :: n     !! size of x
+        integer,intent(in),optional                :: k     !! order
+        real(wp),dimension(:),intent(in),optional  :: x     !! abcissae vector
+        real(wp),dimension(:),intent(in),optional  :: t     !! knot vector size(n+k)
+        integer,dimension(4),intent(in)            :: ierrs !! int error codes for n,k,x,t checks
+        logical,intent(out)                        :: error !! true if there was an error
         
         if (present(n)) then
             call check_n('n'//s,n,ierrs(1),error); if (error) return
@@ -1572,14 +1693,15 @@
         logical,intent(out)         :: error
         
         if (n < 3) then
-            write(*,*) trim(routine)//' - '//trim(s)//' is out of range: ',n
+            write(error_unit,'(A,1X,I5)') &
+                trim(routine)//' - '//trim(s)//' is out of range: ',n
             iflag = ierr
             error = .true.
         else
             error = .false.
         end if        
           
-          end subroutine check_n
+        end subroutine check_n
 
         subroutine check_k(s,k,n,ierr,error)
         
@@ -1592,16 +1714,17 @@
         logical,intent(out)         :: error
         
         if ((k < 2) .or. (k >= n)) then              
-              write(*,*) trim(routine)//' - '//trim(s)//' is out of range: ',k
-              iflag = ierr
-              error = .true.
-          else
-              error = .false.
+            write(error_unit,'(A,1X,I5)') &
+                trim(routine)//' - '//trim(s)//' is out of range: ',k
+            iflag = ierr
+            error = .true.
+        else
+            error = .false.
         end if
                   
-          end subroutine check_k
+        end subroutine check_k
           
-          subroutine check_x(s,n,x,ierr,error)
+        subroutine check_x(s,n,x,ierr,error)
           
         implicit none
         
@@ -1616,17 +1739,17 @@
         error = .true.
         do i=2,n
             if (x(i) <= x(i-1)) then
-                  iflag = ierr
-                write(*,*) trim(routine)//' - '//trim(s)//&
+                iflag = ierr
+                write(error_unit,'(A)') trim(routine)//' - '//trim(s)//&
                             ' array must be strictly increasing'
                 return
             end if 
         end do          
-          error = .false.
+        error = .false.
                   
-          end subroutine check_x
+        end subroutine check_x
           
-          subroutine check_t(s,n,k,t,ierr,error)
+        subroutine check_t(s,n,k,t,ierr,error)
           
         implicit none
         
@@ -1643,14 +1766,14 @@
         do i=2,n + k
             if (t(i) < t(i-1))  then
                   iflag = ierr
-                write(*,*) trim(routine)//' - '//trim(s)//&
+                write(error_unit,'(A)') trim(routine)//' - '//trim(s)//&
                             ' array must be non-decreasing'
                 return
             end if 
         end do          
-          error = .false.
+        error = .false.
                   
-          end subroutine check_t
+        end subroutine check_t
           
     end subroutine check_inputs
 !*****************************************************************************************
@@ -1732,10 +1855,19 @@
 !
 !  * Jacob Williams, 2/24/2015 : Refactored this routine.
 
-    subroutine dbtpcf(x,n,fcn,ldf,nf,t,k,bcoef,work)
+    subroutine dbtpcf(x,n,fcn,ldf,nf,t,k,bcoef,work,iflag)
 
-    integer  :: n, nf, ldf, k
-    real(wp) :: x(n), fcn(ldf,nf), t(*), bcoef(nf,n), work(*)
+    integer,intent(in)  :: n
+    integer,intent(in)  :: nf
+    integer,intent(in)  :: ldf
+    integer,intent(in)  :: k
+    real(wp)            :: x(n)
+    real(wp)            :: fcn(ldf,nf)
+    real(wp)            :: t(*)
+    real(wp)            :: bcoef(nf,n)
+    real(wp)            :: work(*)
+    integer,intent(out) :: iflag  !!   0: no errors
+                                  !! 301: n should be >0
 
     integer :: i, j, m1, m2, iq, iw
 
@@ -1753,24 +1885,29 @@
 
         ! first data set
 
-        call dbintk(x,fcn,t,n,k,work,work(iq),work(iw))
-        do i=1,n
-            bcoef(1,i) = work(i)
-        end do
-
-        !  all remaining data sets by back-substitution
-
-        if (nf == 1)  return
-        do j=2,nf
+        call dbintk(x,fcn,t,n,k,work,work(iq),work(iw),iflag)
+        if (iflag == 0) then
             do i=1,n
-                work(i) = fcn(i,j)
+                bcoef(1,i) = work(i)
             end do
-            call dbnslv(work(iq),m2,n,m1,m1,work)
-            do i=1,n
-                bcoef(j,i) = work(i)
+
+            !  all remaining data sets by back-substitution
+
+            if (nf == 1)  return
+            do j=2,nf
+                do i=1,n
+                    work(i) = fcn(i,j)
+                end do
+                call dbnslv(work(iq),m2,n,m1,m1,work)
+                do i=1,n
+                    bcoef(j,i) = work(i)
+                end do
             end do
-        end do
+        end if
     
+    else
+        write(error_unit,'(A)') 'dbtpcf - n should be >0'
+        iflag = 301
     end if
 
     end subroutine dbtpcf
@@ -1813,22 +1950,22 @@
 !  * 000330 modified array declarations. (jec)
 !  * Jacob Williams, 5/10/2015 : converted to free-form Fortran.
 
-    subroutine dbintk(x,y,t,n,k,bcoef,q,work)
+    subroutine dbintk(x,y,t,n,k,bcoef,q,work,iflag)
 
     implicit none
 
-    integer,intent(in)                :: n      !!number of data points, n >= k
-    real(wp),dimension(n),intent(in)  :: x      !!vector of length n containing data point abscissa
+    integer,intent(in)                :: n      !! number of data points, n >= k
+    real(wp),dimension(n),intent(in)  :: x      !! vector of length n containing data point abscissa
                                                 !! in strictly increasing order.
-    real(wp),dimension(n),intent(in)  :: y      !!corresponding vector of length n containing data
+    real(wp),dimension(n),intent(in)  :: y      !! corresponding vector of length n containing data
                                                 !! point ordinates.
-    real(wp),dimension(*),intent(in)  :: t      !!knot vector of length n+k
+    real(wp),dimension(*),intent(in)  :: t      !! knot vector of length n+k
                                                 !! since t(1),..,t(k) <= x(1) and t(n+1),..,t(n+k)
                                                 !! >= x(n), this leaves only n-k knots (not
                                                 !! necessarily x(i) values) interior to (x(1),x(n))
-    integer,intent(in)                :: k      !!order of the spline, k >= 1
-    real(wp),dimension(n),intent(out) :: bcoef  !!a vector of length n containing the b-spline coefficients
-    real(wp),dimension(*),intent(out) :: q      !!a work vector of length (2*k-1)*n, containing
+    integer,intent(in)                :: k      !! order of the spline, k >= 1
+    real(wp),dimension(n),intent(out) :: bcoef  !! a vector of length n containing the b-spline coefficients
+    real(wp),dimension(*),intent(out) :: q      !! a work vector of length (2*k-1)*n, containing
                                                 !! the triangular factorization of the coefficient
                                                 !! matrix of the linear system being solved.  the
                                                 !! coefficients for the interpolant of an
@@ -1836,18 +1973,28 @@
                                                 !! with the same abscissa can be obtained by loading
                                                 !! yy into bcoef and then executing
                                                 !! call dbnslv(q,2k-1,n,k-1,k-1,bcoef)
-    real(wp),dimension(*),intent(out) :: work   !!work vector of length 2*k
+    real(wp),dimension(*),intent(out) :: work   !! work vector of length 2*k
+    integer,intent(out)               :: iflag  !!   0: no errors.
+                                                !! 100: k does not satisfy k>=1.
+                                                !! 101: n does not satisfy n>=k.
+                                                !! 102: x(i) does not satisfy x(i)<x(i+1) for some i.
+                                                !! 103: some abscissa was not in the support of the.
+                                                !! corresponding basis function and the system is singular.
+                                                !! 104: the system of solver detects a singular system.
+                                                !! although the theoretical conditions for a solution were satisfied.
 
-    integer :: iflag, iwork, i, ilp1mx, j, jj, km1, kpkm2, left,lenq, np1
+    integer :: iwork, i, ilp1mx, j, jj, km1, kpkm2, left,lenq, np1
     real(wp) :: xi
-
+    
     if (k<1) then
-        call xerror( ' dbintk,  k does not satisfy k>=1', 35, 2, 1)
+        write(error_unit,'(A)') 'dbintk - k does not satisfy k>=1'
+        iflag = 100
         return
     end if
 
     if (n<k) then
-        call xerror( ' dbintk,  n does not satisfy n>=k', 35, 2, 1)
+        write(error_unit,'(A)') 'dbintk - n does not satisfy n>=k'
+        iflag = 101
         return
     end if
 
@@ -1855,7 +2002,8 @@
     if (jj/=0) then
         do i=1,jj
             if (x(i)>=x(i+1)) then
-                call xerror( ' dbintk,  x(i) does not satisfy x(i)<x(i+1) for some i', 57, 2, 1)
+                write(error_unit,'(A)') 'dbintk - x(i) does not satisfy x(i)<x(i+1) for some i'
+                iflag = 102
                 return
             end if
         end do
@@ -1881,8 +2029,9 @@
         ! matrix is singular if this is not possible
         left = max(left,i)
         if (xi<t(left)) then
-            call xerror( ' dbintk,  some abscissa was not in the support of the'//&
-                         ' corresponding basis function and the system is singular.',109,2,1)
+            write(error_unit,'(A)') 'dbintk - some abscissa was not in the support of the'//&
+                         ' corresponding basis function and the system is singular'
+            iflag = 103
             return
         end if
         do
@@ -1892,8 +2041,9 @@
         end do
         left = left - 1
         if (xi>t(left+1)) then
-            call xerror( ' dbintk,  some abscissa was not in the support of the'//&
-                         ' corresponding basis function and the system is singular.',109,2,1)
+            write(error_unit,'(A)') 'dbintk - some abscissa was not in the support of the'//&
+                         ' corresponding basis function and the system is singular'
+            iflag = 103
             return
         end if
 
@@ -1902,7 +2052,8 @@
         ! left-k+1,...,left actually might be nonzero. these  k  numbers
         ! are returned, in  bcoef (used for temp.storage here), by the
         ! following
- 30     call dbspvn(t, k, k, 1, xi, left, bcoef, work, iwork)
+ 30     call dbspvn(t, k, k, 1, xi, left, bcoef, work, iwork, iflag)
+        if (iflag/=0) return
 
         ! we therefore want  bcoef(j) = b(left-k+j)(xi) to go into
         ! a(i,left-k+j), i.e., into  q(i-(left+j)+2*k,(left+j)-k) since
@@ -1932,9 +2083,11 @@
             bcoef(i) = y(i)
         end do
         call dbnslv(q, k+km1, n, km1, km1, bcoef)
+        iflag = 0
     else  !failure
-        call xerror( ' dbintk,  the system of solver detects a singular system'//&
-                     ' although the theoretical conditions for a solution were satisfied.',123,8,1)
+        write(error_unit,'(A)') 'dbintk - the system of solver detects a singular system'//&
+                     ' although the theoretical conditions for a solution were satisfied'
+        iflag = 104
     end if
 
     end subroutine dbintk
@@ -2189,28 +2342,33 @@
 !  * 000330 modified array declarations.  (jec)
 !  * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
 
-    subroutine dbspvn(t,jhigh,k,index,x,ileft,vnikx,work,iwork)
+    subroutine dbspvn(t,jhigh,k,index,x,ileft,vnikx,work,iwork,iflag)
 
     implicit none
 
-    real(wp),intent(in)  :: t(*)     !!knot vector of length n+k, where
+    real(wp),intent(in)  :: t(*)     !! knot vector of length n+k, where
                                      !! n = number of b-spline basis functions
                                      !! n = sum of knot multiplicities-k
-                                     !!    dimension t(ileft+jhigh)
-    integer,intent(in)   :: jhigh    !!order of b-spline, 1 <= jhigh <= k
-    integer,intent(in)   :: k        !!highest possible order
-    integer,intent(in)   :: index    !!index = 1 gives basis functions of order jhigh
-                                     !!      = 2 denotes previous entry with work, iwork
-                                     !!          values saved for subsequent calls to
-                                     !!          dbspvn.
-    real(wp),intent(in)  :: x        !!argument of basis functions, t(k) <= x <= t(n+1)
-    integer,intent(in)   :: ileft    !!largest integer such that t(ileft) <= x < t(ileft+1)
-    real(wp),intent(out) :: vnikx(k) !!vector of length k for spline values.
-    real(wp),intent(out) :: work(*)  !!a work vector of length 2*k
-    integer,intent(out)  :: iwork    !!a work parameter.  both work and iwork contain
+                                     !! dimension t(ileft+jhigh)
+    integer,intent(in)   :: jhigh    !! order of b-spline, 1 <= jhigh <= k
+    integer,intent(in)   :: k        !! highest possible order
+    integer,intent(in)   :: index    !! index = 1 gives basis functions of order jhigh
+                                     !!       = 2 denotes previous entry with work, iwork
+                                     !!         values saved for subsequent calls to
+                                     !!         dbspvn.
+    real(wp),intent(in)  :: x        !! argument of basis functions, t(k) <= x <= t(n+1)
+    integer,intent(in)   :: ileft    !! largest integer such that t(ileft) <= x < t(ileft+1)
+    real(wp),intent(out) :: vnikx(k) !! vector of length k for spline values.
+    real(wp),intent(out) :: work(*)  !! a work vector of length 2*k
+    integer,intent(out)  :: iwork    !! a work parameter.  both work and iwork contain
                                      !! information necessary to continue for index = 2.
                                      !! when index = 1 exclusively, these are scratch
                                      !! variables and can be used for other purposes.
+    integer,intent(out) :: iflag     !!   0: no errors
+                                     !! 201: k does not satisfy k>=1
+                                     !! 202: jhigh does not satisfy 1<=jhigh<=k
+                                     !! 203: index is not 1 or 2
+                                     !! 204: x does not satisfy t(ileft)<=x<=t(ileft+1)
 
     integer :: imjp1, ipj, jp1, jp1ml, l
     real(wp) :: vm, vmprev
@@ -2220,21 +2378,27 @@
     ! work(k+i) = deltam(i), i = 1,k
 
     if (k<1) then
-        call xerror( ' dbspvn,  k does not satisfy k>=1', 35, 2, 1)
+        write(error_unit,'(A)') 'dbspvn - k does not satisfy k>=1'
+        iflag = 201
         return
     end if
     if (jhigh>k .or. jhigh<1) then
-        call xerror( ' dbspvn,  jhigh does not satisfy 1<=jhigh<=k', 48, 2, 1)
+        write(error_unit,'(A)') 'dbspvn - jhigh does not satisfy 1<=jhigh<=k'
+        iflag = 202
         return
     end if
     if (index<1 .or. index>2) then
-        call xerror( ' dbspvn,  index is not 1 or 2',29,2,1)
+        write(error_unit,'(A)') 'dbspvn - index is not 1 or 2'
+        iflag = 203
         return
     end if
     if (x<t(ileft) .or. x>t(ileft+1)) then
-        call xerror( ' dbspvn,  x does not satisfy t(ileft)<=x<=t(ileft+1)', 56, 2, 1)
+        write(error_unit,'(A)') 'dbspvn - x does not satisfy t(ileft)<=x<=t(ileft+1)'
+        iflag = 204
         return
     end if
+    
+    iflag = 0
 
     if (index==1) then
         iwork = 1
@@ -2287,25 +2451,32 @@
 !  * 000330 modified array declarations.  (jec)
 !  * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
 
-    real(wp) function dbvalu(t,a,n,k,ideriv,x,inbv,work)  !!value of the ideriv-th derivative at x
+    real(wp) function dbvalu(t,a,n,k,ideriv,x,inbv,work,iflag)
 
     implicit none
 
-    integer,intent(in)               :: n       !!number of b-spline coefficients.
-                                                !!  (sum of knot multiplicities-k)
-    real(wp),dimension(:),intent(in) :: t       !!knot vector of length n+k
-    real(wp),dimension(n),intent(in) :: a       !!b-spline coefficient vector of length n 
-    integer,intent(in)               :: k       !!order of the b-spline, k >= 1
-    integer,intent(in)               :: ideriv  !!order of the derivative, 0 <= ideriv <= k-1.
-                                                !!  ideriv = 0 returns the b-spline value
-    real(wp),intent(in)              :: x       !!argument, t(k) <= x <= t(n+1)
-    integer,intent(inout)            :: inbv    !!an initialization parameter which must be set
-                                                !!  to 1 the first time dbvalu is called.
-                                                !!  inbv contains information for efficient process-
-                                                !!  ing after the initial call and inbv must not
-                                                !!  be changed by the user.  distinct splines require
-                                                !!  distinct inbv parameters.
-    real(wp),dimension(:)            :: work    !!work vector of length 3*k
+    integer,intent(in)               :: n       !! number of b-spline coefficients.
+                                                !! (sum of knot multiplicities-k)
+    real(wp),dimension(:),intent(in) :: t       !! knot vector of length n+k
+    real(wp),dimension(n),intent(in) :: a       !! b-spline coefficient vector of length n 
+    integer,intent(in)               :: k       !! order of the b-spline, k >= 1
+    integer,intent(in)               :: ideriv  !! order of the derivative, 0 <= ideriv <= k-1.
+                                                !! ideriv = 0 returns the b-spline value
+    real(wp),intent(in)              :: x       !! argument, t(k) <= x <= t(n+1)
+    integer,intent(inout)            :: inbv    !! an initialization parameter which must be set
+                                                !! to 1 the first time dbvalu is called.
+                                                !! inbv contains information for efficient process-
+                                                !! ing after the initial call and inbv must not
+                                                !! be changed by the user.  distinct splines require
+                                                !! distinct inbv parameters.
+    real(wp),dimension(:)            :: work    !! work vector of length 3*k
+    integer,intent(out)              :: iflag   !!   0: no errors
+                                                !! 401: k does not satisfy k>=1
+                                                !! 402: n does not satisfy n>=k
+                                                !! 403: ideriv does not satisfy 0<=ideriv<k
+                                                !! 404: x is not greater than or equal to t(k)
+                                                !! 405: x is not less than or equal to t(n+1)
+                                                !! 406: a left limiting value cannot be obtained at t(k)
 
     integer :: i,iderp1,ihi,ihmkmj,ilo,imk,imkpj,ipj,&
                ip1,ip1mj,j,jj,j1,j2,kmider,kmj,km1,kpk,mflag
@@ -2314,17 +2485,20 @@
     dbvalu = 0.0_wp
 
     if (k<1) then
-        call xerror( ' dbvalu,  k does not satisfy k>=1' )
+        write(error_unit,'(A)') 'dbvalu - k does not satisfy k>=1'
+        iflag = 401
         return
     end if
 
     if (n<k) then
-        call xerror( ' dbvalu,  n does not satisfy n>=k' )
+        write(error_unit,'(A)') 'dbvalu - n does not satisfy n>=k'
+        iflag = 402
         return
     end if
 
     if (ideriv<0 .or. ideriv>=k) then
-        call xerror( ' dbvalu,  ideriv does not satisfy 0<=ideriv<k' )
+        write(error_unit,'(A)') 'dbvalu - ideriv does not satisfy 0<=ideriv<k'
+        iflag = 403
         return
     end if
 
@@ -2336,20 +2510,23 @@
     km1 = k - 1
     call dintrv(t, n+1, x, inbv, i, mflag)
     if (x<t(k)) then
-        call xerror( ' dbvalu,  x is not greater than or equal to t(k)' )
+        write(error_unit,'(A)') 'dbvalu - x is not greater than or equal to t(k)'
+        iflag = 404
         return
     end if
 
     if (mflag/=0) then
 
         if (x>t(i)) then
-            call xerror( ' dbvalu,  x is not less than or equal to t(n+1)' )
+            write(error_unit,'(A)') 'dbvalu - x is not less than or equal to t(n+1)'
+            iflag = 405
             return
         end if
 
         do
             if (i==k) then
-                call xerror( ' dbvalu,  a left limiting value cannot be obtained at t(k)' )
+                write(error_unit,'(A)') 'dbvalu - a left limiting value cannot be obtained at t(k)'
+                iflag = 406
                 return
             end if
             i = i - 1
@@ -2407,6 +2584,7 @@
         end do
     end if
 
+    iflag = 0
     dbvalu = work(1)
 
     end function dbvalu
@@ -2511,23 +2689,6 @@
       ileft = lxt
 
     end subroutine dintrv      
-!*****************************************************************************************
-    
-!*****************************************************************************************
-!> Just a replacement for the CMLIB XERROR routine.
-
-    subroutine xerror(messg,nmessg,nerr,level)
-
-    use iso_fortran_env, only: error_unit
-
-    implicit none
-
-    character(len=*),intent(in) :: messg
-    integer,intent(in),optional :: nmessg,nerr,level
-    
-    write(error_unit,'(A)') trim(messg)
-
-    end subroutine xerror
 !*****************************************************************************************
 
 !*****************************************************************************************
