@@ -1504,7 +1504,7 @@
         return
     end if
     if (sval<ts(1) .or. sval>ts(ns+ks) ) then
-        write(error_unit,'(A)') 'db6val - r value out of bounds'
+        write(error_unit,'(A)') 'db6val - s value out of bounds'
         iflag = 6
         return
     end if
