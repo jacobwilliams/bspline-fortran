@@ -156,7 +156,7 @@
 !
 !  * Jacob Williams, 10/30/2015 : Created 1D routine.
 
-    subroutine db1val(xval,idx,tx,nx,kx,bcoef,f,iflag,inbvx_in)
+    subroutine db1val(xval,idx,tx,nx,kx,bcoef,f,iflag,inbvx)
 
     implicit none
 
@@ -168,13 +168,9 @@
     real(wp),dimension(nx),intent(in)    :: bcoef    !! the b-spline coefficients computed by db1ink.
     real(wp),intent(out)                 :: f        !! interpolated value
     integer,intent(out)                  :: iflag    !! status flag: 0 : no errors, /=0 : error
-    integer,intent(in),optional          :: inbvx_in !! inbvx initialization parameter from class (used by object-oriented interface)
+    integer,intent(inout)                :: inbvx    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
 
     real(wp),dimension(3*kx) :: work
-
-    integer,save :: inbvx = 1
-    
-    if (present(inbvx_in)) inbvx = inbvx_in
     
     f = 0.0_wp
 
@@ -343,7 +339,7 @@
 !  * JEC : 000330 modified array declarations.
 !  * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
 
-    subroutine db2val(xval,yval,idx,idy,tx,ty,nx,ny,kx,ky,bcoef,f,iflag,inbvx_in,iloy_in)
+    subroutine db2val(xval,yval,idx,idy,tx,ty,nx,ny,kx,ky,bcoef,f,iflag,inbvx,inbvy,iloy)
 
     implicit none
 
@@ -360,18 +356,13 @@
     real(wp),dimension(nx,ny),intent(in) :: bcoef    !! the b-spline coefficients computed by db2ink.
     real(wp),intent(out)                 :: f        !! interpolated value
     integer,intent(out)                  :: iflag    !! status flag: 0 : no errors, /=0 : error
-    integer,intent(in),optional          :: inbvx_in !! inbvx initialization parameter from class (used by object-oriented interface)
-    integer,intent(in),optional          :: iloy_in  !! iloy initialization parameter from class (used by object-oriented interface)
+    integer,intent(inout)                :: inbvx    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                :: inbvy    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                :: iloy     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
 
-    integer :: inbv, k, lefty, mflag, kcol
+    integer :: k, lefty, mflag, kcol
     real(wp),dimension(ky) :: temp
     real(wp),dimension(3*max(kx,ky)) :: work
-
-    integer,save :: inbvx = 1
-    integer,save :: iloy  = 1
-    
-    if (present(inbvx_in)) inbvx = inbvx_in
-    if (present(iloy_in))  iloy  = iloy_in
     
     f = 0.0_wp
 
@@ -388,8 +379,6 @@
     
     iflag = -1
     call dintrv(ty,ny+ky,yval,iloy,lefty,mflag); if (mflag /= 0) return
-    
-    inbv = 1
 
     kcol = lefty - ky
     do k=1,ky
@@ -399,7 +388,7 @@
     end do
     
     kcol = lefty - ky + 1
-    f = dbvalu(ty(kcol:),temp,ky,ky,idy,yval,inbv,work,iflag)
+    f = dbvalu(ty(kcol:),temp,ky,ky,idy,yval,inbvy,work,iflag)
          
     end subroutine db2val
 !*****************************************************************************************
@@ -585,7 +574,7 @@
     subroutine db3val(xval,yval,zval,idx,idy,idz,&
                                      tx,ty,tz,&
                                      nx,ny,nz,kx,ky,kz,bcoef,f,iflag,&
-                                     inbvx_in,iloy_in,iloz_in)
+                                     inbvx,inbvy,inbvz,iloy,iloz)
 
     implicit none
 
@@ -607,24 +596,18 @@
     real(wp),dimension(nx,ny,nz),intent(in) :: bcoef    !! the b-spline coefficients computed by db3ink.
     real(wp),intent(out)                    :: f        !! interpolated value
     integer,intent(out)                     :: iflag    !! status flag: 0 : no errors, /=0 : error
-    integer,intent(in),optional             :: inbvx_in !! inbvx initialization parameter from class (used by object-oriented interface)
-    integer,intent(in),optional             :: iloy_in  !! iloy initialization parameter from class (used by object-oriented interface)
-    integer,intent(in),optional             :: iloz_in  !! iloz initialization parameter from class (used by object-oriented interface)
+    integer,intent(inout)                   :: inbvx    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                   :: inbvy    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                   :: inbvz    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                   :: iloy     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                   :: iloz     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
 
     real(wp),dimension(ky,kz)              :: temp1
     real(wp),dimension(kz)                 :: temp2
     real(wp),dimension(3*max(kx,ky,kz))    :: work
 
-    integer :: inbv1, inbv2, lefty, leftz, mflag,&
+    integer :: lefty, leftz, mflag,&
                 kcoly, kcolz, izm1, j, k
-
-    integer,save :: inbvx = 1
-    integer,save :: iloy  = 1
-    integer,save :: iloz  = 1
-
-    if (present(inbvx_in)) inbvx = inbvx_in
-    if (present(iloy_in))  iloy  = iloy_in
-    if (present(iloz_in))  iloz  = iloz_in
     
     f = 0.0_wp
 
@@ -649,8 +632,6 @@
     call dintrv(tz,nz+kz,zval,iloz,leftz,mflag); if (mflag /= 0) return
 
     iflag = 0
-    inbv1 = 1
-    inbv2 = 1
 
     kcolz = leftz - kz
     do k=1,kz
@@ -665,12 +646,12 @@
 
     kcoly = lefty - ky + 1
     do k=1,kz
-        temp2(k) = dbvalu(ty(kcoly:),temp1(:,k),ky,ky,idy,yval,inbv1,work,iflag)
+        temp2(k) = dbvalu(ty(kcoly:),temp1(:,k),ky,ky,idy,yval,inbvy,work,iflag)
         if (iflag/=0) return
     end do
 
     kcolz = leftz - kz + 1
-    f = dbvalu(tz(kcolz:),temp2,kz,kz,idz,zval,inbv2,work,iflag)
+    f = dbvalu(tz(kcolz:),temp2,kz,kz,idz,zval,inbvz,work,iflag)
 
     end subroutine db3val
 !*****************************************************************************************
@@ -811,7 +792,7 @@
                                 nx,ny,nz,nq,&
                                 kx,ky,kz,kq,&
                                 bcoef,f,iflag,&
-                                inbvx_in,iloy_in,iloz_in,iloq_in)
+                                inbvx,inbvy,inbvz,inbvq,iloy,iloz,iloq)
 
     implicit none
 
@@ -838,27 +819,20 @@
     real(wp),dimension(nx,ny,nz,nq),intent(in) :: bcoef    !! the b-spline coefficients computed by db4ink.
     real(wp),intent(out)                       :: f        !! interpolated value
     integer,intent(out)                        :: iflag    !! status flag: 0 : no errors, /=0 : error
-    integer,intent(in),optional                :: inbvx_in !! inbvx initialization parameter from class (used by object-oriented interface)
-    integer,intent(in),optional                :: iloy_in  !! iloy initialization parameter from class (used by object-oriented interface)
-    integer,intent(in),optional                :: iloz_in  !! iloz initialization parameter from class (used by object-oriented interface)
-    integer,intent(in),optional                :: iloq_in  !! iloq initialization parameter from class (used by object-oriented interface)
+    integer,intent(inout)                      :: inbvx    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                      :: inbvy    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                      :: inbvz    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                      :: inbvq    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                      :: iloy     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                      :: iloz     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                      :: iloq     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
     
     real(wp),dimension(ky,kz,kq)             :: temp1
     real(wp),dimension(kz,kq)                :: temp2
     real(wp),dimension(kq)                   :: temp3
     real(wp),dimension(3*max(kx,ky,kz,kq))   :: work
-    integer :: inbv1, inbv2, inbv3, lefty, leftz, leftq, mflag,&
+    integer :: lefty, leftz, leftq, mflag,&
                 kcoly, kcolz, kcolq, i, j, k, q
-
-    integer,save :: inbvx = 1
-    integer,save :: iloy  = 1
-    integer,save :: iloz  = 1
-    integer,save :: iloq  = 1
-
-    if (present(inbvx_in)) inbvx = inbvx_in
-    if (present(iloy_in))  iloy  = iloy_in
-    if (present(iloz_in))  iloz  = iloz_in
-    if (present(iloq_in))  iloq  = iloq_in
     
     f = 0.0_wp
 
@@ -889,9 +863,6 @@
     call dintrv(tq,nq+kq,qval,iloq,leftq,mflag); if (mflag /= 0) return
 
     iflag = 0
-    inbv1 = 1
-    inbv2 = 1
-    inbv3 = 1
 
     ! x -> y, z, q
     kcolq = leftq - kq
@@ -914,7 +885,7 @@
     kcoly = lefty - ky + 1
     do q=1,kq
         do k=1,kz
-            temp2(k,q) = dbvalu(ty(kcoly:),temp1(:,k,q),ky,ky,idy,yval,inbv1,work,iflag)    
+            temp2(k,q) = dbvalu(ty(kcoly:),temp1(:,k,q),ky,ky,idy,yval,inbvy,work,iflag)    
             if (iflag/=0) return
         end do
     end do
@@ -922,13 +893,13 @@
     ! z -> q
     kcolz = leftz - kz + 1
     do q=1,kq
-        temp3(q) = dbvalu(tz(kcolz:),temp2(:,q),kz,kz,idz,zval,inbv2,work,iflag)    
+        temp3(q) = dbvalu(tz(kcolz:),temp2(:,q),kz,kz,idz,zval,inbvz,work,iflag)    
         if (iflag/=0) return
     end do
 
     ! q
     kcolq = leftq - kq + 1
-    f = dbvalu(tq(kcolq:),temp3,kq,kq,idq,qval,inbv3,work,iflag) 
+    f = dbvalu(tq(kcolq:),temp3,kq,kq,idq,qval,inbvq,work,iflag) 
 
     end subroutine db4val
 !*****************************************************************************************
@@ -1087,7 +1058,7 @@
                                 nx,ny,nz,nq,nr,&
                                 kx,ky,kz,kq,kr,&
                                 bcoef,f,iflag,&
-                                inbvx_in,iloy_in,iloz_in,iloq_in,ilor_in)
+                                inbvx,inbvy,inbvz,inbvq,inbvr,iloy,iloz,iloq,ilor)
 
     implicit none
 
@@ -1119,32 +1090,23 @@
     real(wp),dimension(nx,ny,nz,nq,nr),intent(in) :: bcoef    !! the b-spline coefficients computed by db5ink.
     real(wp),intent(out)                          :: f        !! interpolated value
     integer,intent(out)                           :: iflag    !! status flag: 0 : no errors, /=0 : error
-    integer,intent(in),optional                   :: inbvx_in !! inbvx initialization parameter from class (used by object-oriented interface)
-    integer,intent(in),optional                   :: iloy_in  !! iloy initialization parameter from class (used by object-oriented interface)
-    integer,intent(in),optional                   :: iloz_in  !! iloz initialization parameter from class (used by object-oriented interface)
-    integer,intent(in),optional                   :: iloq_in  !! iloq initialization parameter from class (used by object-oriented interface)
-    integer,intent(in),optional                   :: ilor_in  !! ilor initialization parameter from class (used by object-oriented interface)
+    integer,intent(inout)                         :: inbvx    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                         :: inbvy    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                         :: inbvz    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                         :: inbvq    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                         :: inbvr    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                         :: iloy     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                         :: iloz     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                         :: iloq     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                         :: ilor     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
     
     real(wp),dimension(ky,kz,kq,kr)           :: temp1
     real(wp),dimension(kz,kq,kr)              :: temp2
     real(wp),dimension(kq,kr)                 :: temp3
     real(wp),dimension(kr)                    :: temp4
     real(wp),dimension(3*max(kx,ky,kz,kq,kr)) :: work
-    integer :: inbv1, inbv2, inbv3, inbv4,&
-                lefty, leftz, leftq, leftr, mflag,&
-                kcoly, kcolz, kcolq, kcolr, i, j, k, q, r
-
-    integer,save :: inbvx = 1
-    integer,save :: iloy  = 1
-    integer,save :: iloz  = 1
-    integer,save :: iloq  = 1
-    integer,save :: ilor  = 1
-
-    if (present(inbvx_in)) inbvx = inbvx_in
-    if (present(iloy_in))  iloy  = iloy_in
-    if (present(iloz_in))  iloz  = iloz_in
-    if (present(iloq_in))  iloq  = iloq_in
-    if (present(ilor_in))  ilor  = ilor_in
+    integer :: lefty, leftz, leftq, leftr, mflag,&
+               kcoly, kcolz, kcolq, kcolr, i, j, k, q, r
     
     f = 0.0_wp
         
@@ -1181,10 +1143,6 @@
     call dintrv(tr,nr+kr,rval,ilor,leftr,mflag); if (mflag /= 0) return
         
     iflag = 0
-    inbv1 = 1
-    inbv2 = 1
-    inbv3 = 1
-    inbv4 = 1
 
     ! x -> y, z, q, r
     kcolr = leftr - kr
@@ -1212,7 +1170,7 @@
     do r=1,kr
         do q=1,kq
             do k=1,kz
-                temp2(k,q,r) = dbvalu(ty(kcoly:),temp1(:,k,q,r),ky,ky,idy,yval,inbv1,work,iflag)    
+                temp2(k,q,r) = dbvalu(ty(kcoly:),temp1(:,k,q,r),ky,ky,idy,yval,inbvy,work,iflag)    
                 if (iflag/=0) return
             end do
         end do
@@ -1222,7 +1180,7 @@
     kcolz = leftz - kz + 1    
     do r=1,kr
         do q=1,kq
-            temp3(q,r) = dbvalu(tz(kcolz:),temp2(:,q,r),kz,kz,idz,zval,inbv2,work,iflag)    
+            temp3(q,r) = dbvalu(tz(kcolz:),temp2(:,q,r),kz,kz,idz,zval,inbvz,work,iflag)    
             if (iflag/=0) return
         end do    
     end do
@@ -1230,13 +1188,13 @@
     ! q -> r
     kcolq = leftq - kq + 1
     do r=1,kr
-        temp4(r) = dbvalu(tq(kcolq:),temp3(:,r),kq,kq,idq,qval,inbv3,work,iflag)    
+        temp4(r) = dbvalu(tq(kcolq:),temp3(:,r),kq,kq,idq,qval,inbvq,work,iflag)    
         if (iflag/=0) return
     end do
     
     ! r
     kcolr = leftr - kr + 1
-    f = dbvalu(tr(kcolr:),temp4,kr,kr,idr,rval,inbv4,work,iflag) 
+    f = dbvalu(tr(kcolr:),temp4,kr,kr,idr,rval,inbvr,work,iflag) 
     
     end subroutine db5val
 !*****************************************************************************************
@@ -1405,7 +1363,7 @@
                                 nx,ny,nz,nq,nr,ns,&
                                 kx,ky,kz,kq,kr,ks,&
                                 bcoef,f,iflag,&
-                                inbvx_in,iloy_in,iloz_in,iloq_in,ilor_in,ilos_in)
+                                inbvx,inbvy,inbvz,inbvq,inbvr,inbvs,iloy,iloz,iloq,ilor,ilos)
 
     implicit none
 
@@ -1442,12 +1400,17 @@
     real(wp),dimension(nx,ny,nz,nq,nr,ns),intent(in) :: bcoef    !! the b-spline coefficients computed by db6ink.
     real(wp),intent(out)                             :: f        !! interpolated value
     integer,intent(out)                              :: iflag    !! status flag: 0 : no errors, /=0 : error
-    integer,intent(in),optional                      :: inbvx_in !! inbvx initialization parameter from class (used by object-oriented interface)
-    integer,intent(in),optional                      :: iloy_in  !! iloy initialization parameter from class (used by object-oriented interface)
-    integer,intent(in),optional                      :: iloz_in  !! iloz initialization parameter from class (used by object-oriented interface)
-    integer,intent(in),optional                      :: iloq_in  !! iloq initialization parameter from class (used by object-oriented interface)
-    integer,intent(in),optional                      :: ilor_in  !! ilor initialization parameter from class (used by object-oriented interface)
-    integer,intent(in),optional                      :: ilos_in  !! ilos initialization parameter from class (used by object-oriented interface)
+    integer,intent(inout)                            :: inbvx    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                            :: inbvy    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                            :: inbvz    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                            :: inbvq    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                            :: inbvr    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                            :: inbvs    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                            :: iloy     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                            :: iloz     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                            :: iloq     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                            :: ilor     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(inout)                            :: ilos     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
    
     real(wp),dimension(ky,kz,kq,kr,ks)            :: temp1
     real(wp),dimension(kz,kq,kr,ks)               :: temp2
@@ -1456,25 +1419,10 @@
     real(wp),dimension(ks)                        :: temp5
     real(wp),dimension(3*max(kx,ky,kz,kq,kr,ks))  :: work
     
-    integer :: inbv1,inbv2,inbv3,inbv4,inbv5,&
-                lefty,leftz,leftq,leftr,lefts,&
-                mflag,&
-                kcoly,kcolz,kcolq,kcolr,kcols,&
-                i,j,k,q,r,s
-
-    integer,save :: inbvx = 1
-    integer,save :: iloy  = 1
-    integer,save :: iloz  = 1
-    integer,save :: iloq  = 1
-    integer,save :: ilor  = 1
-    integer,save :: ilos  = 1
-
-    if (present(inbvx_in)) inbvx = inbvx_in
-    if (present(iloy_in))  iloy  = iloy_in
-    if (present(iloz_in))  iloz  = iloz_in
-    if (present(iloq_in))  iloq  = iloq_in
-    if (present(ilor_in))  ilor  = ilor_in
-    if (present(ilos_in))  ilos  = ilos_in
+    integer :: lefty,leftz,leftq,leftr,lefts,&
+               mflag,&
+               kcoly,kcolz,kcolq,kcolr,kcols,&
+               i,j,k,q,r,s
     
     f = 0.0_wp
 
@@ -1517,11 +1465,6 @@
     call dintrv(ts,ns+ks,sval,ilos,lefts,mflag); if (mflag /= 0) return
 
     iflag = 0
-    inbv1 = 1
-    inbv2 = 1
-    inbv3 = 1
-    inbv4 = 1
-    inbv5 = 1
 
     ! x -> y, z, q, r, s    
     kcols = lefts - ks
@@ -1554,7 +1497,7 @@
         do r=1,kr
             do q=1,kq
                 do k=1,kz
-                    temp2(k,q,r,s) = dbvalu(ty(kcoly:),temp1(:,k,q,r,s),ky,ky,idy,yval,inbv1,work,iflag)
+                    temp2(k,q,r,s) = dbvalu(ty(kcoly:),temp1(:,k,q,r,s),ky,ky,idy,yval,inbvy,work,iflag)
                     if (iflag/=0) return
                 end do
             end do
@@ -1566,7 +1509,7 @@
     do s=1,ks
         do r=1,kr
             do q=1,kq
-                temp3(q,r,s) = dbvalu(tz(kcolz:),temp2(:,q,r,s),kz,kz,idz,zval,inbv2,work,iflag)
+                temp3(q,r,s) = dbvalu(tz(kcolz:),temp2(:,q,r,s),kz,kz,idz,zval,inbvz,work,iflag)
                 if (iflag/=0) return
             end do    
         end do
@@ -1576,7 +1519,7 @@
     kcolq = leftq - kq + 1
     do s=1,ks
         do r=1,kr
-            temp4(r,s) = dbvalu(tq(kcolq:),temp3(:,r,s),kq,kq,idq,qval,inbv3,work,iflag)
+            temp4(r,s) = dbvalu(tq(kcolq:),temp3(:,r,s),kq,kq,idq,qval,inbvq,work,iflag)
             if (iflag/=0) return
         end do
     end do
@@ -1584,13 +1527,13 @@
     ! r -> s
     kcolr = leftr - kr + 1
     do s=1,ks
-        temp5(s) = dbvalu(tr(kcolr:),temp4(:,s),kr,kr,idr,rval,inbv4,work,iflag)
+        temp5(s) = dbvalu(tr(kcolr:),temp4(:,s),kr,kr,idr,rval,inbvr,work,iflag)
         if (iflag/=0) return
     end do
 
     ! s
     kcols = lefts - ks + 1
-    f = dbvalu(ts(kcols:),temp5,ks,ks,ids,sval,inbv5,work,iflag) 
+    f = dbvalu(ts(kcols:),temp5,ks,ks,ids,sval,inbvs,work,iflag) 
 
     end subroutine db6val
 !*****************************************************************************************

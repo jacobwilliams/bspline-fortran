@@ -61,6 +61,7 @@
         real(wp),dimension(:,:),allocatable :: bcoef
         real(wp),dimension(:),allocatable :: tx    
         real(wp),dimension(:),allocatable :: ty
+        integer :: inbvy = 1
         integer :: iloy = 1
         contains
         procedure,public :: initialize => initialize_2d
@@ -81,6 +82,8 @@
         real(wp),dimension(:),allocatable :: tx    
         real(wp),dimension(:),allocatable :: ty
         real(wp),dimension(:),allocatable :: tz
+        integer :: inbvy = 1
+        integer :: inbvz = 1
         integer :: iloy = 1
         integer :: iloz = 1
         contains
@@ -106,6 +109,9 @@
         real(wp),dimension(:),allocatable :: ty
         real(wp),dimension(:),allocatable :: tz
         real(wp),dimension(:),allocatable :: tq
+        integer :: inbvy = 1
+        integer :: inbvz = 1
+        integer :: inbvq = 1
         integer :: iloy  = 1
         integer :: iloz  = 1
         integer :: iloq  = 1
@@ -134,6 +140,10 @@
         real(wp),dimension(:),allocatable :: tz
         real(wp),dimension(:),allocatable :: tq
         real(wp),dimension(:),allocatable :: tr
+        integer :: inbvy = 1
+        integer :: inbvz = 1
+        integer :: inbvq = 1
+        integer :: inbvr = 1
         integer :: iloy  = 1
         integer :: iloz  = 1
         integer :: iloq  = 1
@@ -166,6 +176,11 @@
         real(wp),dimension(:),allocatable :: tq
         real(wp),dimension(:),allocatable :: tr
         real(wp),dimension(:),allocatable :: ts
+        integer :: inbvy = 1
+        integer :: inbvz = 1
+        integer :: inbvq = 1
+        integer :: inbvr = 1
+        integer :: inbvs = 1
         integer :: iloy  = 1
         integer :: iloz  = 1
         integer :: iloq  = 1
@@ -199,11 +214,11 @@
 
     implicit none
     
-    class(bspline_1d),intent(inout)         :: me
-    real(wp),dimension(:),intent(in)        :: x
-    real(wp),dimension(:),intent(in)        :: fcn
-    integer,intent(in)                      :: kx
-    integer,intent(out)                     :: iflag
+    class(bspline_1d),intent(inout)  :: me
+    real(wp),dimension(:),intent(in) :: x
+    real(wp),dimension(:),intent(in) :: fcn
+    integer,intent(in)               :: kx
+    integer,intent(out)              :: iflag
     
     integer :: iknot
     integer :: nx
@@ -234,11 +249,11 @@
     
     implicit none
     
-    class(bspline_1d),intent(in) :: me
-    real(wp),intent(in)          :: xval
-    integer,intent(in)           :: idx
-    real(wp),intent(out)         :: f
-    integer,intent(out)          :: iflag
+    class(bspline_1d),intent(inout) :: me
+    real(wp),intent(in)             :: xval
+    integer,intent(in)              :: idx
+    real(wp),intent(out)            :: f
+    integer,intent(out)             :: iflag
     
     call db1val(xval,idx,me%tx,me%nx,me%kx,me%bcoef,f,iflag,me%inbvx)
     
@@ -264,13 +279,13 @@
 
     implicit none
     
-    class(bspline_2d),intent(inout)         :: me
-    real(wp),dimension(:),intent(in)        :: x
-    real(wp),dimension(:),intent(in)        :: y
-    real(wp),dimension(:,:),intent(in)      :: fcn
-    integer,intent(in)                      :: kx
-    integer,intent(in)                      :: ky
-    integer,intent(out)                     :: iflag
+    class(bspline_2d),intent(inout)    :: me
+    real(wp),dimension(:),intent(in)   :: x
+    real(wp),dimension(:),intent(in)   :: y
+    real(wp),dimension(:,:),intent(in) :: fcn
+    integer,intent(in)                 :: kx
+    integer,intent(in)                 :: ky
+    integer,intent(out)                :: iflag
     
     integer :: iknot
     integer :: nx,ny
@@ -306,16 +321,21 @@
     
     implicit none
     
-    class(bspline_2d),intent(in) :: me
-    real(wp),intent(in)         :: xval
-    real(wp),intent(in)         :: yval
-    integer,intent(in)          :: idx
-    integer,intent(in)          :: idy
-    real(wp),intent(out)        :: f
-    integer,intent(out)         :: iflag
+    class(bspline_2d),intent(inout) :: me
+    real(wp),intent(in)             :: xval
+    real(wp),intent(in)             :: yval
+    integer,intent(in)              :: idx
+    integer,intent(in)              :: idy
+    real(wp),intent(out)            :: f
+    integer,intent(out)             :: iflag
     
-    call db2val(xval,yval,idx,idy,me%tx,me%ty,me%nx,me%ny,me%kx,me%ky,me%bcoef,f,iflag,&
-                me%inbvx,me%iloy)
+    call db2val(xval,yval,&
+                idx,idy,&
+                me%tx,me%ty,&
+                me%nx,me%ny,&
+                me%kx,me%ky,&
+                me%bcoef,f,iflag,&
+                me%inbvx,me%inbvy,me%iloy)
     
     end subroutine evaluate_2d
 !*****************************************************************************************
@@ -339,15 +359,15 @@
 
     implicit none
     
-    class(bspline_3d),intent(inout)         :: me
-    real(wp),dimension(:),intent(in)        :: x
-    real(wp),dimension(:),intent(in)        :: y
-    real(wp),dimension(:),intent(in)        :: z
-    real(wp),dimension(:,:,:),intent(in)    :: fcn
-    integer,intent(in)                      :: kx
-    integer,intent(in)                      :: ky
-    integer,intent(in)                      :: kz
-    integer,intent(out)                     :: iflag
+    class(bspline_3d),intent(inout)      :: me
+    real(wp),dimension(:),intent(in)     :: x
+    real(wp),dimension(:),intent(in)     :: y
+    real(wp),dimension(:),intent(in)     :: z
+    real(wp),dimension(:,:,:),intent(in) :: fcn
+    integer,intent(in)                   :: kx
+    integer,intent(in)                   :: ky
+    integer,intent(in)                   :: kz
+    integer,intent(out)                  :: iflag
     
     integer :: iknot
     integer :: nx,ny,nz
@@ -391,15 +411,15 @@
     
     implicit none
     
-    class(bspline_3d),intent(in) :: me
-    real(wp),intent(in)         :: xval
-    real(wp),intent(in)         :: yval
-    real(wp),intent(in)         :: zval
-    integer,intent(in)          :: idx
-    integer,intent(in)          :: idy
-    integer,intent(in)          :: idz
-    real(wp),intent(out)        :: f
-    integer,intent(out)         :: iflag
+    class(bspline_3d),intent(inout) :: me
+    real(wp),intent(in)             :: xval
+    real(wp),intent(in)             :: yval
+    real(wp),intent(in)             :: zval
+    integer,intent(in)              :: idx
+    integer,intent(in)              :: idy
+    integer,intent(in)              :: idz
+    real(wp),intent(out)            :: f
+    integer,intent(out)             :: iflag
     
     call db3val(xval,yval,zval,&
                 idx,idy,idz,&
@@ -407,7 +427,8 @@
                 me%nx,me%ny,me%nz,&
                 me%kx,me%ky,me%kz,&
                 me%bcoef,f,iflag,&
-                me%inbvx,me%iloy,me%iloz)
+                me%inbvx,me%inbvy,me%inbvz,&
+                me%iloy,me%iloz)
     
     end subroutine evaluate_3d
 !*****************************************************************************************
@@ -431,17 +452,17 @@
 
     implicit none
     
-    class(bspline_4d),intent(inout)            :: me
-    real(wp),dimension(:),intent(in)           :: x
-    real(wp),dimension(:),intent(in)           :: y
-    real(wp),dimension(:),intent(in)           :: z
-    real(wp),dimension(:),intent(in)           :: q
-    real(wp),dimension(:,:,:,:),intent(in)     :: fcn
-    integer,intent(in)                         :: kx
-    integer,intent(in)                         :: ky
-    integer,intent(in)                         :: kz
-    integer,intent(in)                         :: kq
-    integer,intent(out)                        :: iflag
+    class(bspline_4d),intent(inout)        :: me
+    real(wp),dimension(:),intent(in)       :: x
+    real(wp),dimension(:),intent(in)       :: y
+    real(wp),dimension(:),intent(in)       :: z
+    real(wp),dimension(:),intent(in)       :: q
+    real(wp),dimension(:,:,:,:),intent(in) :: fcn
+    integer,intent(in)                     :: kx
+    integer,intent(in)                     :: ky
+    integer,intent(in)                     :: kz
+    integer,intent(in)                     :: kq
+    integer,intent(out)                    :: iflag
     
     integer :: iknot
     integer :: nx,ny,nz,nq
@@ -489,17 +510,17 @@
     
     implicit none
     
-    class(bspline_4d),intent(in) :: me
-    real(wp),intent(in)         :: xval
-    real(wp),intent(in)         :: yval
-    real(wp),intent(in)         :: zval
-    real(wp),intent(in)         :: qval
-    integer,intent(in)          :: idx
-    integer,intent(in)          :: idy
-    integer,intent(in)          :: idz
-    integer,intent(in)          :: idq
-    real(wp),intent(out)        :: f
-    integer,intent(out)         :: iflag
+    class(bspline_4d),intent(inout) :: me
+    real(wp),intent(in)             :: xval
+    real(wp),intent(in)             :: yval
+    real(wp),intent(in)             :: zval
+    real(wp),intent(in)             :: qval
+    integer,intent(in)              :: idx
+    integer,intent(in)              :: idy
+    integer,intent(in)              :: idz
+    integer,intent(in)              :: idq
+    real(wp),intent(out)            :: f
+    integer,intent(out)             :: iflag
     
     call db4val(xval,yval,zval,qval,&
                 idx,idy,idz,idq,&
@@ -507,7 +528,8 @@
                 me%nx,me%ny,me%nz,me%nq,&
                 me%kx,me%ky,me%kz,me%kq,&
                 me%bcoef,f,iflag,&
-                me%inbvx,me%iloy,me%iloz,me%iloq)
+                me%inbvx,me%inbvy,me%inbvz,me%inbvq,&
+                me%iloy,me%iloz,me%iloq)
     
     end subroutine evaluate_4d
 !*****************************************************************************************
@@ -531,19 +553,19 @@
 
     implicit none
     
-    class(bspline_5d),intent(inout)               :: me
-    real(wp),dimension(:),intent(in)              :: x
-    real(wp),dimension(:),intent(in)              :: y
-    real(wp),dimension(:),intent(in)              :: z
-    real(wp),dimension(:),intent(in)              :: q
-    real(wp),dimension(:),intent(in)              :: r
-    real(wp),dimension(:,:,:,:,:),intent(in)      :: fcn
-    integer,intent(in)                            :: kx
-    integer,intent(in)                            :: ky
-    integer,intent(in)                            :: kz
-    integer,intent(in)                            :: kq
-    integer,intent(in)                            :: kr
-    integer,intent(out)                           :: iflag
+    class(bspline_5d),intent(inout)          :: me
+    real(wp),dimension(:),intent(in)         :: x
+    real(wp),dimension(:),intent(in)         :: y
+    real(wp),dimension(:),intent(in)         :: z
+    real(wp),dimension(:),intent(in)         :: q
+    real(wp),dimension(:),intent(in)         :: r
+    real(wp),dimension(:,:,:,:,:),intent(in) :: fcn
+    integer,intent(in)                       :: kx
+    integer,intent(in)                       :: ky
+    integer,intent(in)                       :: kz
+    integer,intent(in)                       :: kq
+    integer,intent(in)                       :: kr
+    integer,intent(out)                      :: iflag
     
     integer :: iknot
     integer :: nx,ny,nz,nq,nr
@@ -595,19 +617,19 @@
     
     implicit none
     
-    class(bspline_5d),intent(in) :: me
-    real(wp),intent(in)         :: xval
-    real(wp),intent(in)         :: yval
-    real(wp),intent(in)         :: zval
-    real(wp),intent(in)         :: qval
-    real(wp),intent(in)         :: rval
-    integer,intent(in)          :: idx
-    integer,intent(in)          :: idy
-    integer,intent(in)          :: idz
-    integer,intent(in)          :: idq
-    integer,intent(in)          :: idr
-    real(wp),intent(out)        :: f
-    integer,intent(out)         :: iflag
+    class(bspline_5d),intent(inout) :: me
+    real(wp),intent(in)             :: xval
+    real(wp),intent(in)             :: yval
+    real(wp),intent(in)             :: zval
+    real(wp),intent(in)             :: qval
+    real(wp),intent(in)             :: rval
+    integer,intent(in)              :: idx
+    integer,intent(in)              :: idy
+    integer,intent(in)              :: idz
+    integer,intent(in)              :: idq
+    integer,intent(in)              :: idr
+    real(wp),intent(out)            :: f
+    integer,intent(out)             :: iflag
     
     call db5val(xval,yval,zval,qval,rval,&
                 idx,idy,idz,idq,idr,&
@@ -615,7 +637,8 @@
                 me%nx,me%ny,me%nz,me%nq,me%nr,&
                 me%kx,me%ky,me%kz,me%kq,me%kr,&
                 me%bcoef,f,iflag,&
-                me%inbvx,me%iloy,me%iloz,me%iloq,me%ilor)
+                me%inbvx,me%inbvy,me%inbvz,me%inbvq,me%inbvr,&
+                me%iloy,me%iloz,me%iloq,me%ilor)
     
     end subroutine evaluate_5d
 !*****************************************************************************************
@@ -639,21 +662,21 @@
 
     implicit none
     
-    class(bspline_6d),intent(inout)                  :: me
-    real(wp),dimension(:),intent(in)                 :: x
-    real(wp),dimension(:),intent(in)                 :: y
-    real(wp),dimension(:),intent(in)                 :: z
-    real(wp),dimension(:),intent(in)                 :: q
-    real(wp),dimension(:),intent(in)                 :: r
-    real(wp),dimension(:),intent(in)                 :: s
-    real(wp),dimension(:,:,:,:,:,:),intent(in)       :: fcn
-    integer,intent(in)                               :: kx
-    integer,intent(in)                               :: ky
-    integer,intent(in)                               :: kz
-    integer,intent(in)                               :: kq
-    integer,intent(in)                               :: kr
-    integer,intent(in)                               :: ks
-    integer,intent(out)                              :: iflag
+    class(bspline_6d),intent(inout)            :: me
+    real(wp),dimension(:),intent(in)           :: x
+    real(wp),dimension(:),intent(in)           :: y
+    real(wp),dimension(:),intent(in)           :: z
+    real(wp),dimension(:),intent(in)           :: q
+    real(wp),dimension(:),intent(in)           :: r
+    real(wp),dimension(:),intent(in)           :: s
+    real(wp),dimension(:,:,:,:,:,:),intent(in) :: fcn
+    integer,intent(in)                         :: kx
+    integer,intent(in)                         :: ky
+    integer,intent(in)                         :: kz
+    integer,intent(in)                         :: kq
+    integer,intent(in)                         :: kr
+    integer,intent(in)                         :: ks
+    integer,intent(out)                        :: iflag
     
     integer :: iknot
     integer :: nx,ny,nz,nq,nr,ns
@@ -709,21 +732,21 @@
     
     implicit none
     
-    class(bspline_6d),intent(in) :: me
-    real(wp),intent(in)         :: xval
-    real(wp),intent(in)         :: yval
-    real(wp),intent(in)         :: zval
-    real(wp),intent(in)         :: qval
-    real(wp),intent(in)         :: rval
-    real(wp),intent(in)         :: sval
-    integer,intent(in)          :: idx
-    integer,intent(in)          :: idy
-    integer,intent(in)          :: idz
-    integer,intent(in)          :: idq
-    integer,intent(in)          :: idr
-    integer,intent(in)          :: ids
-    real(wp),intent(out)        :: f
-    integer,intent(out)         :: iflag
+    class(bspline_6d),intent(inout) :: me
+    real(wp),intent(in)             :: xval
+    real(wp),intent(in)             :: yval
+    real(wp),intent(in)             :: zval
+    real(wp),intent(in)             :: qval
+    real(wp),intent(in)             :: rval
+    real(wp),intent(in)             :: sval
+    integer,intent(in)              :: idx
+    integer,intent(in)              :: idy
+    integer,intent(in)              :: idz
+    integer,intent(in)              :: idq
+    integer,intent(in)              :: idr
+    integer,intent(in)              :: ids
+    real(wp),intent(out)            :: f
+    integer,intent(out)             :: iflag
     
     call db6val(xval,yval,zval,qval,rval,sval,&
                 idx,idy,idz,idq,idr,ids,&
@@ -731,7 +754,8 @@
                 me%nx,me%ny,me%nz,me%nq,me%nr,me%ns,&
                 me%kx,me%ky,me%kz,me%kq,me%kr,me%ks,&
                 me%bcoef,f,iflag,&
-                me%inbvx,me%iloy,me%iloz,me%iloq,me%ilor,me%ilos)
+                me%inbvx,me%inbvy,me%inbvz,me%inbvq,me%inbvr,me%inbvs,&
+                me%iloy,me%iloz,me%iloq,me%ilor,me%ilos)
     
     end subroutine evaluate_6d
 !*****************************************************************************************
