@@ -1606,7 +1606,7 @@
         integer,intent(in),optional                :: k     !! order
         real(wp),dimension(:),intent(in),optional  :: x     !! abcissae vector
         real(wp),dimension(:),intent(in),optional  :: t     !! knot vector size(n+k)
-        integer,dimension(4),intent(in)            :: ierrs !! int error codes for n,k,x,t checks
+        integer,dimension(:),intent(in)            :: ierrs !! int error codes for n,k,x,t checks
         logical,intent(out)                        :: error !! true if there was an error
         
         if (present(n)) then
