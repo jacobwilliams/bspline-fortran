@@ -1,6 +1,7 @@
 !*****************************************************************************************
 !> author: Jacob Williams
 !  license: BSD
+!  date: 6/20/2015
 ! 
 !# Description
 !
@@ -8,10 +9,6 @@
 !  This module provides classes ([[bspline_1d]], [[bspline_2d]],
 !  [[bspline_3d]], [[bspline_4d]], [[bspline_5d]], and [[bspline_6d]]) 
 !  which can be used instead of the main subroutine interface.
-!
-!# History
-!
-!  * Jacob Williams, created 6/20/2015.
 
     module bspline_oo_module
     
