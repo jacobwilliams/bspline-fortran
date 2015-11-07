@@ -95,7 +95,6 @@
                                                       !!                6 = tx not non-decreasing.
 
 
-    real(wp),dimension(nx) :: temp
     real(wp),dimension(2*kx*(nx+1)) :: work
     logical :: status_ok
   
@@ -607,7 +606,7 @@
     real(wp),dimension(3*max(kx,ky,kz))    :: work
 
     integer :: lefty, leftz, mflag,&
-                kcoly, kcolz, izm1, j, k
+                kcoly, kcolz, j, k
     
     f = 0.0_wp
 
@@ -832,7 +831,7 @@
     real(wp),dimension(kq)                   :: temp3
     real(wp),dimension(3*max(kx,ky,kz,kq))   :: work
     integer :: lefty, leftz, leftq, mflag,&
-                kcoly, kcolz, kcolq, i, j, k, q
+                kcoly, kcolz, kcolq, j, k, q
     
     f = 0.0_wp
 
@@ -1106,7 +1105,7 @@
     real(wp),dimension(kr)                    :: temp4
     real(wp),dimension(3*max(kx,ky,kz,kq,kr)) :: work
     integer :: lefty, leftz, leftq, leftr, mflag,&
-               kcoly, kcolz, kcolq, kcolr, i, j, k, q, r
+               kcoly, kcolz, kcolq, kcolr, j, k, q, r
     
     f = 0.0_wp
         
@@ -1422,7 +1421,7 @@
     integer :: lefty,leftz,leftq,leftr,lefts,&
                mflag,&
                kcoly,kcolz,kcolq,kcolr,kcols,&
-               i,j,k,q,r,s
+               j,k,q,r,s
     
     f = 0.0_wp
 
