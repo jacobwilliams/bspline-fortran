@@ -15,6 +15,7 @@ graph: true
 exclude: test_oo.f90
          test_regrid.f90
          test.f90
+         speed_test.f90
 
 Brief description
 ---------------
