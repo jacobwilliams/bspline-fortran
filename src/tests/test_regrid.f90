@@ -29,8 +29,9 @@
     real(wp),dimension(ny+ky) :: ty  !! y knots
     real(wp),dimension(nx,ny) :: fcn_2d  !! original grid function evaluations
     real(wp) :: val,tru,err,errmax
-    integer  :: i,j
+    integer :: i,j
     integer :: iflag  !! status flag
+    integer :: inbvx,inbvy,iloy
     
     !function evaluations for original grid:
     do i=1,nx
@@ -55,6 +56,10 @@
 
     !regrid:
     
+    inbvx = 1
+    inbvy = 1
+    iloy  = 1
+    
     iflag = 0
     call db2ink(x,nx,y,ny,fcn_2d,kx,ky,tx,ty,fcn_2d,iflag)
     if (iflag/=1) error stop 'error calling db2ink'
@@ -63,7 +68,8 @@
         x_new(i) = real(i-1,wp)
         do j=1,ny_new
             y_new(j) = real(j-1,wp)
-            call db2val(x_new(i),y_new(j),idx,idy,tx,ty,nx,ny,kx,ky,fcn_2d,val,iflag)
+            call db2val(x_new(i),y_new(j),idx,idy,tx,ty,nx,ny,kx,ky,fcn_2d,val,iflag,&
+                        inbvx,inbvy,iloy)
             if (iflag/=0) error stop 'error calling db2val'
             fcn_new(i,j) = val
             tru    = test_func(x_new(i),y_new(j))  !truth value
