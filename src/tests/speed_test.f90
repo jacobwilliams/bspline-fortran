@@ -9,19 +9,19 @@
 
     implicit none
     
-    integer,parameter :: nx = 6    !number of points
+    integer,parameter :: nx = 8   !number of points
     integer,parameter :: ny = 8
-    integer,parameter :: nz = 10
-    integer,parameter :: nq = 9
-    integer,parameter :: nr = 7
+    integer,parameter :: nz = 8
+    integer,parameter :: nq = 8
+    integer,parameter :: nr = 8
     integer,parameter :: ns = 8
     
-    integer,parameter :: kx = 2    !order
-    integer,parameter :: ky = 3
+    integer,parameter :: kx = 4    !order
+    integer,parameter :: ky = 4
     integer,parameter :: kz = 4
-    integer,parameter :: kq = 3
-    integer,parameter :: kr = 2
-    integer,parameter :: ks = 3
+    integer,parameter :: kq = 4
+    integer,parameter :: kr = 4
+    integer,parameter :: ks = 4
             
     real(wp) :: x(nx),y(ny),z(nz),q(nq),r(nr),s(ns)
     real(wp) :: fcn_1d(nx)
@@ -49,12 +49,14 @@
     idr = 0
     ids = 0
 
-    x = [(dble(i), i=1,nx)]
-    y = [(dble(i), i=1,ny)]
-    z = [(dble(i), i=1,nz)]
-    q = [(dble(i), i=1,nq)]
-    r = [(dble(i), i=1,nr)]
-    s = [(dble(i), i=1,ns)]
+    x = [ (dble(i), i=1,nx) ]
+    y = [ (dble(i), i=1,ny) ]
+    z = [ (dble(i), i=1,nz) ]
+    q = [ (dble(i), i=1,nq) ]
+    r = [ (dble(i), i=1,nr) ]
+    s = [ (dble(i), i=1,ns) ]
+    
+    !evaluate the functions:
 
     do i=1,nx
         fcn_1d(i) = f1(x(i))
@@ -84,26 +86,105 @@
      call s5%initialize(x,y,z,q,r,fcn_5d,kx,ky,kz,kq,kr,iflag)
      call s6%initialize(x,y,z,q,r,s,fcn_6d,kx,ky,kz,kq,kr,ks,iflag)
 
-    ! compute max error at interpolation points
+    ! evaluate the interpolants:
     sumval = 0.0_wp
-    n_cases = nx*ny*nz*nq*nr*ns
-    
+    n_cases = nx
     call cpu_time(tstart)
     do i=1,nx
         call s1%evaluate(x(i),idx,val,iflag)
         sumval = sumval + val
+    end do
+    call cpu_time(tend)
+    write(*,*) ''
+    write(*,*) '1D'
+    write(*,*) 'result         :', sumval
+    write(*,*) 'number of cases:', n_cases
+    write(*,*) 'cases/sec      :', n_cases/(tend-tstart)
+
+    sumval = 0.0_wp
+    n_cases = nx*ny
+    call cpu_time(tstart)
+    do i=1,nx
         do j=1,ny
            call s2%evaluate(x(i),y(j),idx,idy,val,iflag)
            sumval = sumval + val
+        end do
+    end do
+    call cpu_time(tend)
+    write(*,*) ''
+    write(*,*) '2D'
+    write(*,*) 'result         :', sumval
+    write(*,*) 'number of cases:', n_cases
+    write(*,*) 'cases/sec      :', n_cases/(tend-tstart)
+
+    sumval = 0.0_wp
+    n_cases = nx*ny*nz
+    call cpu_time(tstart)
+    do i=1,nx
+        do j=1,ny
            do k=1,nz
                 call s3%evaluate(x(i),y(j),z(k),idx,idy,idz,val,iflag)
                 sumval = sumval + val
+            end do
+        end do
+    end do
+    call cpu_time(tend)
+    write(*,*) ''
+    write(*,*) '3D'
+    write(*,*) 'result         :', sumval
+    write(*,*) 'number of cases:', n_cases
+    write(*,*) 'cases/sec      :', n_cases/(tend-tstart)
+
+    sumval = 0.0_wp
+    n_cases = nx*ny*nz*nq
+    call cpu_time(tstart)
+    do i=1,nx
+        do j=1,ny
+           do k=1,nz
                   do l=1,nq
                     call s4%evaluate(x(i),y(j),z(k),q(l),idx,idy,idz,idq,val,iflag)
                     sumval = sumval + val
+                end do
+            end do
+        end do
+    end do
+    call cpu_time(tend)
+    write(*,*) ''
+    write(*,*) '4D'
+    write(*,*) 'result         :', sumval
+    write(*,*) 'number of cases:', n_cases
+    write(*,*) 'cases/sec      :', n_cases/(tend-tstart)
+
+    sumval = 0.0_wp
+    n_cases = nx*ny*nz*nq*nr
+    call cpu_time(tstart)
+    do i=1,nx
+        do j=1,ny
+           do k=1,nz
+                  do l=1,nq
                     do m=1,nr
                         call s5%evaluate(x(i),y(j),z(k),q(l),r(m),idx,idy,idz,idq,idr,val,iflag)
                         sumval = sumval + val
+                    end do
+                end do
+            end do
+        end do
+    end do
+    call cpu_time(tend)
+    write(*,*) ''
+    write(*,*) '5D'
+    write(*,*) 'result         :', sumval
+    write(*,*) 'number of cases:', n_cases
+    write(*,*) 'cases/sec      :', n_cases/(tend-tstart)
+
+    sumval = 0.0_wp
+    n_cases = nx*ny*nz*nq*nr*ns
+    call cpu_time(tstart)
+    do i=1,nx
+        do j=1,ny
+           do k=1,nz
+                do l=1,nq
+                    do m=1,nr
                         do n=1,ns
                             call s6%evaluate(x(i),y(j),z(k),q(l),r(m),s(n),idx,idy,idz,idq,idr,ids,val,iflag)
                             sumval = sumval + val
@@ -114,52 +195,54 @@
         end do
     end do
     call cpu_time(tend)
-    
+    write(*,*) ''
+    write(*,*) '6D'
     write(*,*) 'result         :', sumval
     write(*,*) 'number of cases:', n_cases
     write(*,*) 'cases/sec      :', n_cases/(tend-tstart)
  
     contains
     
-        real(wp) function f1(x) !! 1d test function
+        function f1(x) result(f) !! 1d test function
         implicit none
-        real(wp) :: x
-        f1 = 0.5_wp * (x*exp(-x) + sin(x) )
+        real(wp),intent(in) :: x
+        real(wp) :: f
+        f = x**3
         end function f1
       
-        real(wp) function f2(x,y) !! 2d test function
+        function f2(x,y) result(f) !! 2d test function
         implicit none
-        real(wp) x,y,piov2
-        piov2 = 2.0_wp * atan(1.0_wp)
-        f2 = 0.5_wp * (y*exp(-x) + sin(piov2*y) )
+        real(wp),intent(in) :: x,y
+        real(wp) :: f
+        f = x**3 + y**3
         end function f2
     
-        real(wp) function f3 (x,y,z) !! 3d test function
+        function f3 (x,y,z) result(f) !! 3d test function
         implicit none
-        real(wp) x,y,z,piov2
-        piov2 = 2.0_wp*atan(1.0_wp)
-        f3 = 0.5_wp*( y*exp(-x) + z*sin(piov2*y) )
+        real(wp),intent(in) :: x,y,z
+        real(wp) :: f
+        f = x**3 + y**3 + z**3
         end function f3    
     
-        real(wp) function f4 (x,y,z,q) !! 4d test function
+        function f4 (x,y,z,q) result(f) !! 4d test function
         implicit none
-        real(wp) x,y,z,q,piov2
-        piov2 = 2.0_wp*atan(1.0_wp)
-        f4 = 0.5_wp*( y*exp(-x) + z*sin(piov2*y) + q )
+        real(wp),intent(in) :: x,y,z,q
+        real(wp) :: f
+        f = x**3 + y**3 + z**3 + q**3
         end function f4    
     
-        real(wp) function f5 (x,y,z,q,r) !! 5d test function
+        function f5 (x,y,z,q,r) result(f) !! 5d test function
         implicit none
-        real(wp) x,y,z,q,r,piov2
-        piov2 = 2.0_wp*atan(1.0_wp)
-        f5 = 0.5_wp*( y*exp(-x) + z*sin(piov2*y) + q*r )
+        real(wp),intent(in) :: x,y,z,q,r
+        real(wp) :: f
+        f = x**3 + y**3 + z**3 + q**3 + r**3
         end function f5
       
-        real(wp) function f6 (x,y,z,q,r,s) !! 6d test function
+        function f6 (x,y,z,q,r,s) result(f) !! 6d test function
         implicit none
-        real(wp) x,y,z,q,r,s,piov2
-        piov2 = 2.0_wp*atan(1.0_wp)
-        f6 = 0.5_wp*( y*exp(-x) + z*sin(piov2*y) + q*r + 2.0_wp*s )
+        real(wp),intent(in) :: x,y,z,q,r,s
+        real(wp) :: f
+        f = x**3 + y**3 + z**3 + q**3 + r**3 + s**3
         end function f6
                   
     end program bspline_speed_test
