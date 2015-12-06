@@ -1,24 +1,24 @@
 !*****************************************************************************************
 !> author: Jacob Williams
 !  license: BSD
-! 
+!
 !# Description
 !
 !  Multidimensional (1D-6D) B-Spline interpolation of data on a regular grid.
 !  Basic subroutine interface.
-! 
+!
 !# Notes
 !
 !  This module is based on the bspline and spline routines from [1].
 !  The original Fortran 77 routines were converted to free-form source.
 !  Some of them are relatively unchanged from the originals, but some have
-!  been extensively refactored. In addition, new routines for 
-!  1d, 4d, 5d, and 6d interpolation were also created (these are simply 
+!  been extensively refactored. In addition, new routines for
+!  1d, 4d, 5d, and 6d interpolation were also created (these are simply
 !  extensions of the same algorithm into higher dimensions).
 !
 !# See also
 !  * An object-oriented interface can be found in [[bspline_oo_module]].
-! 
+!
 !# References
 !
 !  1. DBSPLIN and DTENSBS from the
@@ -27,12 +27,12 @@
 !  2. Carl de Boor, "A Practical Guide to Splines",
 !     Springer-Verlag, New York, 1978.
 !  3. Carl de Boor, [Efficient Computer Manipulation of Tensor
-!     Products](http://dl.acm.org/citation.cfm?id=355831), 
+!     Products](http://dl.acm.org/citation.cfm?id=355831),
 !     ACM Transactions on Mathematical Software,
 !     Vol. 5 (1979), p. 173-182.
 !  4. D.E. Amos, "Computation with Splines and B-Splines",
 !     SAND78-1968, Sandia Laboratories, March, 1979.
-!  5. Carl de Boor, 
+!  5. Carl de Boor,
 !     [Package for calculating with B-splines](http://epubs.siam.org/doi/abs/10.1137/0714026),
 !     SIAM Journal on Numerical Analysis 14, 3 (June 1977), p. 441-472.
 
@@ -40,9 +40,9 @@
 
     use,intrinsic :: iso_fortran_env, only: real64
     use,intrinsic :: iso_fortran_env, only: error_unit
-    
+
     implicit none
-    
+
     private
 
     integer,parameter :: wp = real64  !! Real precision
@@ -54,9 +54,9 @@
     public :: db4ink, db4val
     public :: db5ink, db5val
     public :: db6ink, db6val
-    
+
     contains
-    
+
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -65,7 +65,7 @@
 !  $$ [x(i),\mathrm{fcn}(i)] ~\mathrm{for}~ i=1,..,n_x $$
 !  The interpolating function and its derivatives may
 !  subsequently be evaluated by the function [[db1val]].
-! 
+!
 !# History
 !
 !  * Jacob Williams, 10/30/2015 : Created 1D routine.
@@ -96,9 +96,9 @@
 
     real(wp),dimension(2*kx*(nx+1)) :: work
     logical :: status_ok
-  
+
     !check validity of inputs
-    
+
     call check_inputs('db1ink',&
                         iflag,&
                         nx=nx,&
@@ -106,21 +106,21 @@
                         x=x,&
                         tx=tx,&
                         status_ok=status_ok)
-                        
+
     if (status_ok) then
 
         !choose knots
-        
+
         if (iflag == 0) then
             call dbknot(x,nx,kx,tx)
         end if
 
         !construct b-spline coefficients
-        
+
         call dbtpcf(x,nx,fcn,nx,1,tx,kx,bcoef,work,iflag)
 
         if (iflag==0) iflag = 1
-    
+
     end if
 
     end subroutine db1ink
@@ -129,21 +129,21 @@
 !*****************************************************************************************
 !> Evaluates the tensor product piecewise polynomial
 !  interpolant constructed by the routine [[db1ink]] or one of its
-!  derivatives at the point xval. 
+!  derivatives at the point xval.
 !
-!  To evaluate the interpolant itself, set idx=0, 
+!  To evaluate the interpolant itself, set idx=0,
 !  to evaluate the first partial with respect to x, set idx=1, and so on.
 !
 !  db1val returns 0.0 if (xval,yval) is out of range. that is, if
 !```fortran
-!   xval < tx(1) .or. xval > tx(nx+kx) 
+!   xval < tx(1) .or. xval > tx(nx+kx)
 !```
 !  if the knots tx were chosen by [[db1ink]], then this is equivalent to:
 !```fortran
 !   xval < x(1) .or. xval > x(nx)+epsx
 !```
 !  where
-!```fortran 
+!```fortran
 !   epsx = 0.1*(x(nx)-x(nx-1))
 !```
 !
@@ -169,7 +169,7 @@
     integer,intent(inout)                :: inbvx    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
 
     real(wp),dimension(3*kx) :: work
-    
+
     f = 0.0_wp
 
     if (xval<tx(1) .or. xval>tx(nx+kx)) then
@@ -177,9 +177,9 @@
         iflag = 1
         return
     end if
-    
+
     f = dbvalu(tx,bcoef,nx,kx,idx,xval,inbvx,work,iflag)
-        
+
     end subroutine db1val
 !*****************************************************************************************
 
@@ -189,18 +189,18 @@
 !  $$ [x(i),y(j),\mathrm{fcn}(i,j)] ~\mathrm{for}~ i=1,..,n_x ~\mathrm{and}~ j=1,..,n_y $$
 !  The interpolating function and its derivatives may
 !  subsequently be evaluated by the function [[db2val]].
-! 
+!
 !  The interpolating function is a piecewise polynomial function
 !  represented as a tensor product of one-dimensional b-splines. the
 !  form of this function is
-! 
+!
 !  $$ s(x,y) = \sum_{i=1}^{n_x} \sum_{j=1}^{n_y} a_{ij} u_i(x) v_j(y) $$
-! 
+!
 !  where the functions \(u_i\) and \(v_j\) are one-dimensional b-spline
 !  basis functions. the coefficients \( a_{ij} \) are chosen so that
-! 
+!
 !  $$ s(x(i),y(j)) = \mathrm{fcn}(i,j) ~\mathrm{for}~ i=1,..,n_x ~\mathrm{and}~ j=1,..,n_y $$
-! 
+!
 !  Note that for each fixed value of y, \( s(x,y) \) is a piecewise
 !  polynomial function of x alone, and for each fixed value of x, \( s(x,y) \)
 !  is a piecewise polynomial function of y alone. in one dimension
@@ -209,7 +209,7 @@
 !  on each one. the points where adjacent subintervals meet are called
 !  knots. each of the functions \(u_i\) and \(v_j\) above is a piecewise
 !  polynomial.
-! 
+!
 !  Users of db2ink choose the order (degree+1) of the polynomial
 !  pieces used to define the piecewise polynomial in each of the x and
 !  y directions (kx and ky). users also may define their own knot
@@ -221,12 +221,12 @@
 !  are used, and the remaining knots are placed at data points if kx
 !  is even or at midpoints between data points if kx is odd. the y
 !  direction is treated similarly.)
-! 
+!
 !  After a call to db2ink, all information necessary to define the
 !  interpolating function are contained in the parameters nx, ny, kx,
 !  ky, tx, ty, and bcoef. These quantities should not be altered until
 !  after the last call of the evaluation routine [[db2val]].
-! 
+!
 !# History
 !
 !  * Boisvert, Ronald, NBS : 25 may 1982 : Author of original routine.
@@ -238,11 +238,11 @@
     implicit none
 
     integer,intent(in)                      :: nx     !! Number of x abcissae
-    integer,intent(in)                      :: ny     !! Number of y abcissae  
+    integer,intent(in)                      :: ny     !! Number of y abcissae
     integer,intent(in)                      :: kx     !! The order of spline pieces in x (>= 2, < nx). (order = polynomial degree + 1)
     integer,intent(in)                      :: ky     !! The order of spline pieces in y (>= 2, < ny). (order = polynomial degree + 1)
     real(wp),dimension(nx),intent(in)       :: x      !! Array of x abcissae. Must be strictly increasing.
-    real(wp),dimension(ny),intent(in)       :: y      !! Array of y abcissae. Must be strictly increasing.   
+    real(wp),dimension(ny),intent(in)       :: y      !! Array of y abcissae. Must be strictly increasing.
     real(wp),dimension(nx,ny),intent(in)    :: fcn    !! Array of function values to interpolate. fcn(i,j) should
                                                       !!    contain the function value at the point (x(i),y(j))
     real(wp),dimension(nx+kx),intent(inout) :: tx     !! The knots in the x direction for the spline interpolant.
@@ -271,9 +271,9 @@
     real(wp),dimension(nx*ny) :: temp
     real(wp),dimension(max(2*kx*(nx+1),2*ky*(ny+1))) :: work
     logical :: status_ok
-  
+
     !check validity of inputs
-    
+
     call check_inputs('db2ink',&
                         iflag,&
                         nx=nx,ny=ny,&
@@ -281,7 +281,7 @@
                         x=x,y=y,&
                         tx=tx,ty=ty,&
                         status_ok=status_ok)
-                        
+
     if (status_ok) then
 
         !choose knots
@@ -297,16 +297,16 @@
         if (iflag==0) call dbtpcf(y,ny,temp,ny,nx,ty,ky,bcoef,work,iflag)
 
         if (iflag==0) iflag = 1
-    
+
     end if
 
     end subroutine db2ink
 !*****************************************************************************************
-     
+
 !*****************************************************************************************
 !> Evaluates the tensor product piecewise polynomial
 !  interpolant constructed by the routine [[db2ink]] or one of its
-!  derivatives at the point (xval,yval). 
+!  derivatives at the point (xval,yval).
 !
 !  To evaluate the interpolant
 !  itself, set idx=idy=0, to evaluate the first partial with respect
@@ -314,18 +314,18 @@
 !
 !  db2val returns 0.0 if (xval,yval) is out of range. that is, if
 !```fortran
-!   xval < tx(1) .or. xval > tx(nx+kx) .or. 
+!   xval < tx(1) .or. xval > tx(nx+kx) .or.
 !   yval < ty(1) .or. yval > ty(ny+ky)
 !```
 !  if the knots tx and ty were chosen by [[db2ink]], then this is equivalent to:
 !```fortran
-!   xval < x(1) .or. xval > x(nx)+epsx .or. 
+!   xval < x(1) .or. xval > x(nx)+epsx .or.
 !   yval < y(1) .or. yval > y(ny)+epsy
 !```
 !  where
-!```fortran 
+!```fortran
 !   epsx = 0.1*(x(nx)-x(nx-1))
-!   epsy = 0.1*(y(ny)-y(ny-1)) 
+!   epsy = 0.1*(y(ny)-y(ny-1))
 !```
 !
 !  The input quantities tx, ty, nx, ny, kx, ky, and bcoef should be
@@ -361,7 +361,7 @@
     integer :: k, lefty, mflag, kcol
     real(wp),dimension(ky) :: temp
     real(wp),dimension(3*max(kx,ky)) :: work
-    
+
     f = 0.0_wp
 
     if (xval<tx(1) .or. xval>tx(nx+kx)) then
@@ -374,7 +374,7 @@
         iflag = 2
         return
     end if
-    
+
     iflag = -1
     call dintrv(ty,ny+ky,yval,iloy,lefty,mflag); if (mflag /= 0) return
 
@@ -384,36 +384,36 @@
         temp(k) = dbvalu(tx,bcoef(:,kcol),nx,kx,idx,xval,inbvx,work,iflag)
         if (iflag/=0) return !error
     end do
-    
+
     kcol = lefty - ky + 1
     f = dbvalu(ty(kcol:),temp,ky,ky,idy,yval,inbvy,work,iflag)
-         
+
     end subroutine db2val
 !*****************************************************************************************
-      
+
 !*****************************************************************************************
 !> Determines the parameters of a function that interpolates
-!  the three-dimensional gridded data 
-!  $$ [x(i),y(j),z(k),\mathrm{fcn}(i,j,k)] ~\mathrm{for}~ 
+!  the three-dimensional gridded data
+!  $$ [x(i),y(j),z(k),\mathrm{fcn}(i,j,k)] ~\mathrm{for}~
 !     i=1,..,n_x ~\mathrm{and}~ j=1,..,n_y, ~\mathrm{and}~ k=1,..,n_z $$
 !  The interpolating function and
 !  its derivatives may subsequently be evaluated by the function
 !  [[db3val]].
-! 
+!
 !  The interpolating function is a piecewise polynomial function
 !  represented as a tensor product of one-dimensional b-splines. the
 !  form of this function is
-!  $$ s(x,y,z) = \sum_{i=1}^{n_x} \sum_{j=1}^{n_y} \sum_{k=1}^{n_z} 
+!  $$ s(x,y,z) = \sum_{i=1}^{n_x} \sum_{j=1}^{n_y} \sum_{k=1}^{n_z}
 !                a_{ijk} u_i(x) v_j(y) w_k(z) $$
-! 
+!
 !  where the functions \(u_i\), \(v_j\), and \(w_k\) are one-dimensional b-
 !  spline basis functions. the coefficients \(a_{ijk}\) are chosen so that:
-! 
-!  $$ s(x(i),y(j),z(k)) = \mathrm{fcn}(i,j,k) 
+!
+!  $$ s(x(i),y(j),z(k)) = \mathrm{fcn}(i,j,k)
 !     ~\mathrm{for}~ i=1,..,n_x , j=1,..,n_y , k=1,..,n_z $$
-! 
+!
 !  Note that for fixed values of y and z s(x,y,z) is a piecewise
-!  polynomial function of x alone, for fixed values of x and z s(x,y,z) 
+!  polynomial function of x alone, for fixed values of x and z s(x,y,z)
 !  is a piecewise polynomial function of y alone, and for fixed
 !  values of x and y s(x,y,z) is a function of z alone. in one
 !  dimension a piecewise polynomial may be created by partitioning a
@@ -421,7 +421,7 @@
 !  piece on each one. the points where adjacent subintervals meet are
 !  called knots. each of the functions \(u_i\), \(v_j\), and \(w_k\) above is a
 !  piecewise polynomial.
-! 
+!
 !  Users of db3ink choose the order (degree+1) of the polynomial
 !  pieces used to define the piecewise polynomial in each of the x, y,
 !  and z directions (kx, ky, and kz). users also may define their own
@@ -434,12 +434,12 @@
 !  remaining knots are placed at data points if kx is even or at
 !  midpoints between data points if kx is odd. the y and z directions
 !  are treated similarly.)
-! 
+!
 !  After a call to db3ink, all information necessary to define the
 !  interpolating function are contained in the parameters nx, ny, nz,
 !  kx, ky, kz, tx, ty, tz, and bcoef. these quantities should not be
 !  altered until after the last call of the evaluation routine [[db3val]].
-! 
+!
 !# History
 !
 !  * Boisvert, Ronald, NBS : 25 may 1982 : Author of original routine.
@@ -494,7 +494,7 @@
     real(wp),dimension(nx*ny*nz) :: temp
     real(wp),dimension(max(2*kx*(nx+1),2*ky*(ny+1),2*kz*(nz+1))) :: work
     logical :: status_ok
-      
+
     ! check validity of input
 
     call check_inputs('db3ink',&
@@ -504,7 +504,7 @@
                         x=x,y=y,z=z,&
                         tx=tx,ty=ty,tz=tz,&
                         status_ok=status_ok)
-                        
+
     if (status_ok) then
 
         ! choose knots
@@ -514,18 +514,18 @@
             call dbknot(y,ny,ky,ty)
             call dbknot(z,nz,kz,tz)
         end if
-    
+
         ! copy fcn to work in packed for dbtpcf
         temp(1:nx*ny*nz) = reshape( fcn, [nx*ny*nz] )
 
         ! construct b-spline coefficients
-        
+
                       call dbtpcf(x,nx,temp, nx,ny*nz,tx,kx,bcoef,work,iflag)
         if (iflag==0) call dbtpcf(y,ny,bcoef,ny,nx*nz,ty,ky,temp, work,iflag)
         if (iflag==0) call dbtpcf(z,nz,temp, nz,nx*ny,tz,kz,bcoef,work,iflag)
-    
+
         if (iflag==0) iflag = 1
-    
+
     end if
 
     end subroutine db3ink
@@ -534,8 +534,8 @@
 !*****************************************************************************************
 !> Evaluates the tensor product piecewise polynomial
 !  interpolant constructed by the routine [[db3ink]] or one of its
-!  derivatives at the point (xval,yval,zval). 
-! 
+!  derivatives at the point (xval,yval,zval).
+!
 !  To evaluate the
 !  interpolant itself, set idx=idy=idz=0, to evaluate the first
 !  partial with respect to x, set idx=1,idy=idz=0, and so on.
@@ -555,7 +555,7 @@
 !```
 !  where
 !```fortran
-! epsx = 0.1*(x(nx)-x(nx-1)) 
+! epsx = 0.1*(x(nx)-x(nx-1))
 ! epsy = 0.1*(y(ny)-y(ny-1))
 ! epsz = 0.1*(z(nz)-z(nz-1))
 !```
@@ -580,7 +580,7 @@
     integer,intent(in)                      :: idy      !! y derivative of piecewise polynomial to evaluate.
     integer,intent(in)                      :: idz      !! z derivative of piecewise polynomial to evaluate.
     integer,intent(in)                      :: nx       !! the number of interpolation points in x. (same as in last call to [[db3ink]])
-    integer,intent(in)                      :: ny       !! the number of interpolation points in y. (same as in last call to [[db3ink]]) 
+    integer,intent(in)                      :: ny       !! the number of interpolation points in y. (same as in last call to [[db3ink]])
     integer,intent(in)                      :: nz       !! the number of interpolation points in z. (same as in last call to [[db3ink]])
     integer,intent(in)                      :: kx       !! order of polynomial pieces in x. (same as in last call to [[db3ink]])
     integer,intent(in)                      :: ky       !! order of polynomial pieces in y. (same as in last call to [[db3ink]])
@@ -589,8 +589,8 @@
     real(wp),intent(in)                     :: yval     !! y coordinate of evaluation point.
     real(wp),intent(in)                     :: zval     !! z coordinate of evaluation point.
     real(wp),dimension(nx+kx),intent(in)    :: tx       !! sequence of knots defining the piecewise polynomial in the x direction. (same as in last call to [[db3ink]])
-    real(wp),dimension(ny+ky),intent(in)    :: ty       !! sequence of knots defining the piecewise polynomial in the y direction. (same as in last call to [[db3ink]]) 
-    real(wp),dimension(nz+kz),intent(in)    :: tz       !! sequence of knots defining the piecewise polynomial in the z direction. (same as in last call to [[db3ink]]) 
+    real(wp),dimension(ny+ky),intent(in)    :: ty       !! sequence of knots defining the piecewise polynomial in the y direction. (same as in last call to [[db3ink]])
+    real(wp),dimension(nz+kz),intent(in)    :: tz       !! sequence of knots defining the piecewise polynomial in the z direction. (same as in last call to [[db3ink]])
     real(wp),dimension(nx,ny,nz),intent(in) :: bcoef    !! the b-spline coefficients computed by [[db3ink]].
     real(wp),intent(out)                    :: f        !! interpolated value
     integer,intent(out)                     :: iflag    !! status flag: 0 : no errors, /=0 : error
@@ -606,7 +606,7 @@
 
     integer :: lefty, leftz, mflag,&
                 kcoly, kcolz, j, k
-    
+
     f = 0.0_wp
 
     if (xval<tx(1) .or. xval>tx(nx+kx)) then
@@ -657,14 +657,14 @@
 !*****************************************************************************************
 !> Determines the parameters of a function that interpolates
 !  the four-dimensional gridded data
-!  $$ [x(i),y(j),z(k),q(l),\mathrm{fcn}(i,j,k,l)] ~\mathrm{for}~ 
-!     i=1,..,n_x ~\mathrm{and}~ j=1,..,n_y, ~\mathrm{and}~ k=1,..,n_z, 
+!  $$ [x(i),y(j),z(k),q(l),\mathrm{fcn}(i,j,k,l)] ~\mathrm{for}~
+!     i=1,..,n_x ~\mathrm{and}~ j=1,..,n_y, ~\mathrm{and}~ k=1,..,n_z,
 !     ~\mathrm{and}~ l=1,..,n_q $$
-!  The interpolating function and its derivatives may 
+!  The interpolating function and its derivatives may
 !  subsequently be evaluated by the function [[db4val]].
-!  
+!
 !  See [[db3ink]] header for more details.
-! 
+!
 !# History
 !
 !  * Jacob Williams, 2/24/2015 : Created this routine.
@@ -729,13 +729,13 @@
                                                          !!                17 = q not strictly increasing.
                                                          !!                18 = tq not non-decreasing.
 
-           
+
     real(wp),dimension(nx*ny*nz*nq) :: temp
     real(wp),dimension(max(2*kx*(nx+1),2*ky*(ny+1),2*kz*(nz+1),2*kq*(nq+1))) :: work
     logical :: status_ok
-      
+
     ! check validity of input
-    
+
     call check_inputs('db4ink',&
                         iflag,&
                         nx=nx,ny=ny,nz=nz,nq=nq,&
@@ -743,9 +743,9 @@
                         x=x,y=y,z=z,q=q,&
                         tx=tx,ty=ty,tz=tz,tq=tq,&
                         status_ok=status_ok)
-                        
+
     if (status_ok) then
-    
+
         ! choose knots
 
         if (iflag == 0) then
@@ -761,9 +761,9 @@
         if (iflag==0) call dbtpcf(y,ny,temp, ny,nx*nz*nq,ty,ky,bcoef,work,iflag)
         if (iflag==0) call dbtpcf(z,nz,bcoef,nz,nx*ny*nq,tz,kz,temp, work,iflag)
         if (iflag==0) call dbtpcf(q,nq,temp, nq,nx*ny*nz,tq,kq,bcoef,work,iflag)
-      
+
         if (iflag==0) iflag = 1
-     
+
      end if
 
     end subroutine db4ink
@@ -772,14 +772,14 @@
 !*****************************************************************************************
 !> Evaluates the tensor product piecewise polynomial
 !  interpolant constructed by the routine [[db4ink]] or one of its
-!  derivatives at the point (xval,yval,zval,qval). 
-! 
+!  derivatives at the point (xval,yval,zval,qval).
+!
 !  To evaluate the
 !  interpolant itself, set idx=idy=idz=idq=0, to evaluate the first
 !  partial with respect to x, set idx=1,idy=idz=idq=0, and so on.
-! 
+!
 !  See [[db3val]] header for more information.
-! 
+!
 !# History
 !
 !  * Jacob Williams, 2/24/2015 : Created this routine.
@@ -799,7 +799,7 @@
     integer,intent(in)                         :: idz      !! z derivative of piecewise polynomial to evaluate.
     integer,intent(in)                         :: idq      !! q derivative of piecewise polynomial to evaluate.
     integer,intent(in)                         :: nx       !! the number of interpolation points in x. (same as in last call to [[db4ink]])
-    integer,intent(in)                         :: ny       !! the number of interpolation points in y. (same as in last call to [[db4ink]]) 
+    integer,intent(in)                         :: ny       !! the number of interpolation points in y. (same as in last call to [[db4ink]])
     integer,intent(in)                         :: nz       !! the number of interpolation points in z. (same as in last call to [[db4ink]])
     integer,intent(in)                         :: nq       !! the number of interpolation points in q. (same as in last call to [[db4ink]])
     integer,intent(in)                         :: kx       !! order of polynomial pieces in x. (same as in last call to [[db4ink]])
@@ -811,9 +811,9 @@
     real(wp),intent(in)                        :: zval     !! z coordinate of evaluation point.
     real(wp),intent(in)                        :: qval     !! q coordinate of evaluation point.
     real(wp),dimension(nx+kx),intent(in)       :: tx       !! sequence of knots defining the piecewise polynomial in the x direction. (same as in last call to [[db4ink]])
-    real(wp),dimension(ny+ky),intent(in)       :: ty       !! sequence of knots defining the piecewise polynomial in the y direction. (same as in last call to [[db4ink]]) 
-    real(wp),dimension(nz+kz),intent(in)       :: tz       !! sequence of knots defining the piecewise polynomial in the z direction. (same as in last call to [[db4ink]]) 
-    real(wp),dimension(nq+kq),intent(in)       :: tq       !! sequence of knots defining the piecewise polynomial in the q direction. (same as in last call to [[db4ink]]) 
+    real(wp),dimension(ny+ky),intent(in)       :: ty       !! sequence of knots defining the piecewise polynomial in the y direction. (same as in last call to [[db4ink]])
+    real(wp),dimension(nz+kz),intent(in)       :: tz       !! sequence of knots defining the piecewise polynomial in the z direction. (same as in last call to [[db4ink]])
+    real(wp),dimension(nq+kq),intent(in)       :: tq       !! sequence of knots defining the piecewise polynomial in the q direction. (same as in last call to [[db4ink]])
     real(wp),dimension(nx,ny,nz,nq),intent(in) :: bcoef    !! the b-spline coefficients computed by [[db4ink]].
     real(wp),intent(out)                       :: f        !! interpolated value
     integer,intent(out)                        :: iflag    !! status flag: 0 : no errors, /=0 : error
@@ -824,14 +824,14 @@
     integer,intent(inout)                      :: iloy     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
     integer,intent(inout)                      :: iloz     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
     integer,intent(inout)                      :: iloq     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    
+
     real(wp),dimension(ky,kz,kq)             :: temp1
     real(wp),dimension(kz,kq)                :: temp2
     real(wp),dimension(kq)                   :: temp3
     real(wp),dimension(3*max(kx,ky,kz,kq))   :: work
     integer :: lefty, leftz, leftq, mflag,&
                 kcoly, kcolz, kcolq, j, k, q
-    
+
     f = 0.0_wp
 
     if (xval<tx(1) .or. xval>tx(nx+kx)) then
@@ -883,7 +883,7 @@
     kcoly = lefty - ky + 1
     do q=1,kq
         do k=1,kz
-            temp2(k,q) = dbvalu(ty(kcoly:),temp1(:,k,q),ky,ky,idy,yval,inbvy,work,iflag)    
+            temp2(k,q) = dbvalu(ty(kcoly:),temp1(:,k,q),ky,ky,idy,yval,inbvy,work,iflag)
             if (iflag/=0) return
         end do
     end do
@@ -891,13 +891,13 @@
     ! z -> q
     kcolz = leftz - kz + 1
     do q=1,kq
-        temp3(q) = dbvalu(tz(kcolz:),temp2(:,q),kz,kz,idz,zval,inbvz,work,iflag)    
+        temp3(q) = dbvalu(tz(kcolz:),temp2(:,q),kz,kz,idz,zval,inbvz,work,iflag)
         if (iflag/=0) return
     end do
 
     ! q
     kcolq = leftq - kq + 1
-    f = dbvalu(tq(kcolq:),temp3,kq,kq,idq,qval,inbvq,work,iflag) 
+    f = dbvalu(tq(kcolq:),temp3,kq,kq,idq,qval,inbvq,work,iflag)
 
     end subroutine db4val
 !*****************************************************************************************
@@ -905,12 +905,12 @@
 !*****************************************************************************************
 !> Determines the parameters of a function that interpolates
 !  the five-dimensional gridded data (x(i),y(j),z(k),q(l),r(m),fcn(i,j,k,l,m)) for
-!  i=1,..,nx, j=1,..,ny, k=1,..,nz, l=1,..,nq, and m=1,..,nr. 
-!  The interpolating function and its derivatives may subsequently be evaluated 
+!  i=1,..,nx, j=1,..,ny, k=1,..,nz, l=1,..,nq, and m=1,..,nr.
+!  The interpolating function and its derivatives may subsequently be evaluated
 !  by the function [[db5val]].
-! 
+!
 !  See [[db3ink]] header for more details.
-! 
+!
 !# History
 !
 !  * Jacob Williams, 2/24/2015 : Created this routine.
@@ -985,7 +985,7 @@
                                                             !!                20 = kr out of range.
                                                             !!                21 = r not strictly increasing.
                                                             !!                22 = tr not non-decreasing.
-           
+
     real(wp),dimension(nx*ny*nz*nq*nr) :: temp
     real(wp),dimension(max( 2*kx*(nx+1),&
                             2*ky*(ny+1),&
@@ -993,9 +993,9 @@
                             2*kq*(nq+1),&
                             2*kr*(nr+1) )) :: work
     logical :: status_ok
-      
+
     !  check validity of input
-    
+
     call check_inputs('db5ink',&
                         iflag,&
                         nx=nx,ny=ny,nz=nz,nq=nq,nr=nr,&
@@ -1003,9 +1003,9 @@
                         x=x,y=y,z=z,q=q,r=r,&
                         tx=tx,ty=ty,tz=tz,tq=tq,tr=tr,&
                         status_ok=status_ok)
-                        
+
     if (status_ok) then
-    
+
         !  choose knots
 
         if (iflag == 0) then
@@ -1017,19 +1017,19 @@
         end if
 
         ! copy fcn to work in packed for dbtpcf
-    
+
         temp(1:nx*ny*nz*nq*nr) = reshape( fcn, [nx*ny*nz*nq*nr] )
 
         !  construct b-spline coefficients
-    
+
                       call dbtpcf(x,nx,temp,  nx,ny*nz*nq*nr,tx,kx,bcoef, work,iflag)
         if (iflag==0) call dbtpcf(y,ny,bcoef, ny,nx*nz*nq*nr,ty,ky,temp,  work,iflag)
         if (iflag==0) call dbtpcf(z,nz,temp,  nz,nx*ny*nq*nr,tz,kz,bcoef, work,iflag)
         if (iflag==0) call dbtpcf(q,nq,bcoef, nq,nx*ny*nz*nr,tq,kq,temp,  work,iflag)
         if (iflag==0) call dbtpcf(r,nr,temp,  nr,nx*ny*nz*nq,tr,kr,bcoef, work,iflag)
-      
+
         if (iflag==0) iflag = 1
-     
+
      end if
 
     end subroutine db5ink
@@ -1039,13 +1039,13 @@
 !> Evaluates the tensor product piecewise polynomial
 !  interpolant constructed by the routine [[db5ink]] or one of its
 !  derivatives at the point (xval,yval,zval,qval,rval).
-! 
+!
 !  To evaluate the
 !  interpolant itself, set idx=idy=idz=idq=idr=0, to evaluate the first
 !  partial with respect to x, set idx=1,idy=idz=idq=idr=0, and so on.
-!  
+!
 !  See [[db3val]] header for more information.
-! 
+!
 !# History
 !
 !  * Jacob Williams, 2/24/2015 : Created this routine.
@@ -1066,7 +1066,7 @@
     integer,intent(in)                            :: idq      !! q derivative of piecewise polynomial to evaluate.
     integer,intent(in)                            :: idr      !! r derivative of piecewise polynomial to evaluate.
     integer,intent(in)                            :: nx       !! the number of interpolation points in x. (same as in last call to [[db5ink]])
-    integer,intent(in)                            :: ny       !! the number of interpolation points in y. (same as in last call to [[db5ink]]) 
+    integer,intent(in)                            :: ny       !! the number of interpolation points in y. (same as in last call to [[db5ink]])
     integer,intent(in)                            :: nz       !! the number of interpolation points in z. (same as in last call to [[db5ink]])
     integer,intent(in)                            :: nq       !! the number of interpolation points in q. (same as in last call to [[db5ink]])
     integer,intent(in)                            :: nr       !! the number of interpolation points in r. (same as in last call to [[db5ink]])
@@ -1081,10 +1081,10 @@
     real(wp),intent(in)                           :: qval     !! q coordinate of evaluation point.
     real(wp),intent(in)                           :: rval     !! r coordinate of evaluation point.
     real(wp),dimension(nx+kx),intent(in)          :: tx       !! sequence of knots defining the piecewise polynomial in the x direction. (same as in last call to [[db5ink]])
-    real(wp),dimension(ny+ky),intent(in)          :: ty       !! sequence of knots defining the piecewise polynomial in the y direction. (same as in last call to [[db5ink]]) 
-    real(wp),dimension(nz+kz),intent(in)          :: tz       !! sequence of knots defining the piecewise polynomial in the z direction. (same as in last call to [[db5ink]]) 
-    real(wp),dimension(nq+kq),intent(in)          :: tq       !! sequence of knots defining the piecewise polynomial in the q direction. (same as in last call to [[db5ink]]) 
-    real(wp),dimension(nr+kr),intent(in)          :: tr       !! sequence of knots defining the piecewise polynomial in the r direction. (same as in last call to [[db5ink]]) 
+    real(wp),dimension(ny+ky),intent(in)          :: ty       !! sequence of knots defining the piecewise polynomial in the y direction. (same as in last call to [[db5ink]])
+    real(wp),dimension(nz+kz),intent(in)          :: tz       !! sequence of knots defining the piecewise polynomial in the z direction. (same as in last call to [[db5ink]])
+    real(wp),dimension(nq+kq),intent(in)          :: tq       !! sequence of knots defining the piecewise polynomial in the q direction. (same as in last call to [[db5ink]])
+    real(wp),dimension(nr+kr),intent(in)          :: tr       !! sequence of knots defining the piecewise polynomial in the r direction. (same as in last call to [[db5ink]])
     real(wp),dimension(nx,ny,nz,nq,nr),intent(in) :: bcoef    !! the b-spline coefficients computed by [[db5ink]].
     real(wp),intent(out)                          :: f        !! interpolated value
     integer,intent(out)                           :: iflag    !! status flag: 0 : no errors, /=0 : error
@@ -1097,7 +1097,7 @@
     integer,intent(inout)                         :: iloz     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
     integer,intent(inout)                         :: iloq     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
     integer,intent(inout)                         :: ilor     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    
+
     real(wp),dimension(ky,kz,kq,kr)           :: temp1
     real(wp),dimension(kz,kq,kr)              :: temp2
     real(wp),dimension(kq,kr)                 :: temp3
@@ -1105,9 +1105,9 @@
     real(wp),dimension(3*max(kx,ky,kz,kq,kr)) :: work
     integer :: lefty, leftz, leftq, leftr, mflag,&
                kcoly, kcolz, kcolq, kcolr, j, k, q, r
-    
+
     f = 0.0_wp
-        
+
     if (xval<tx(1) .or. xval>tx(nx+kx)) then
         write(error_unit,'(A)') 'db5val - x value out of bounds'
         iflag = 1
@@ -1133,13 +1133,13 @@
         iflag = 5
         return
     end if
-    
+
     iflag = -1
     call dintrv(ty,ny+ky,yval,iloy,lefty,mflag); if (mflag /= 0) return
     call dintrv(tz,nz+kz,zval,iloz,leftz,mflag); if (mflag /= 0) return
     call dintrv(tq,nq+kq,qval,iloq,leftq,mflag); if (mflag /= 0) return
     call dintrv(tr,nr+kr,rval,ilor,leftr,mflag); if (mflag /= 0) return
-        
+
     iflag = 0
 
     ! x -> y, z, q, r
@@ -1160,52 +1160,52 @@
                     if (iflag/=0) return
                 end do
             end do
-        end do    
+        end do
     end do
-    
+
     ! y -> z, q, r
     kcoly = lefty - ky + 1
     do r=1,kr
         do q=1,kq
             do k=1,kz
-                temp2(k,q,r) = dbvalu(ty(kcoly:),temp1(:,k,q,r),ky,ky,idy,yval,inbvy,work,iflag)    
+                temp2(k,q,r) = dbvalu(ty(kcoly:),temp1(:,k,q,r),ky,ky,idy,yval,inbvy,work,iflag)
                 if (iflag/=0) return
             end do
         end do
     end do
-    
+
     ! z -> q, r
-    kcolz = leftz - kz + 1    
+    kcolz = leftz - kz + 1
     do r=1,kr
         do q=1,kq
-            temp3(q,r) = dbvalu(tz(kcolz:),temp2(:,q,r),kz,kz,idz,zval,inbvz,work,iflag)    
+            temp3(q,r) = dbvalu(tz(kcolz:),temp2(:,q,r),kz,kz,idz,zval,inbvz,work,iflag)
             if (iflag/=0) return
-        end do    
+        end do
     end do
-    
+
     ! q -> r
     kcolq = leftq - kq + 1
     do r=1,kr
-        temp4(r) = dbvalu(tq(kcolq:),temp3(:,r),kq,kq,idq,qval,inbvq,work,iflag)    
+        temp4(r) = dbvalu(tq(kcolq:),temp3(:,r),kq,kq,idq,qval,inbvq,work,iflag)
         if (iflag/=0) return
     end do
-    
+
     ! r
     kcolr = leftr - kr + 1
-    f = dbvalu(tr(kcolr:),temp4,kr,kr,idr,rval,inbvr,work,iflag) 
-    
+    f = dbvalu(tr(kcolr:),temp4,kr,kr,idr,rval,inbvr,work,iflag)
+
     end subroutine db5val
 !*****************************************************************************************
 
 !*****************************************************************************************
 !> Determines the parameters of a function that interpolates
 !  the six-dimensional gridded data (x(i),y(j),z(k),q(l),r(m),s(n),fcn(i,j,k,l,m,n)) for
-!  i=1,..,nx, j=1,..,ny, k=1,..,nz, l=1,..,nq, m=1,..,nr, n=1,..,ns. 
-!  the interpolating function and its derivatives may subsequently be evaluated 
+!  i=1,..,nx, j=1,..,ny, k=1,..,nz, l=1,..,nq, m=1,..,nr, n=1,..,ns.
+!  the interpolating function and its derivatives may subsequently be evaluated
 !  by the function [[db6val]].
-!  
+!
 !  See [[db3ink]] header for more details.
-! 
+!
 !# History
 !
 !  * Jacob Williams, 2/24/2015 : Created this routine.
@@ -1291,7 +1291,7 @@
                                                                !!                24 = ks out of range.
                                                                !!                25 = s not strictly increasing.
                                                                !!                26 = ts not non-decreasing.
-           
+
     real(wp),dimension(nx*ny*nz*nq*nr*ns) :: temp
     real(wp),dimension(max( 2*kx*(nx+1),&
                             2*ky*(ny+1),&
@@ -1300,9 +1300,9 @@
                             2*kr*(nr+1),&
                             2*ks*(ns+1))) :: work
     logical :: status_ok
-      
+
     ! check validity of input
-    
+
     call check_inputs('db6ink',&
                         iflag,&
                         nx=nx,ny=ny,nz=nz,nq=nq,nr=nr,ns=ns,&
@@ -1310,9 +1310,9 @@
                         x=x,y=y,z=z,q=q,r=r,s=s,&
                         tx=tx,ty=ty,tz=tz,tq=tq,tr=tr,ts=ts,&
                         status_ok=status_ok)
-                        
+
     if (status_ok) then
-    
+
         ! choose knots
 
         if (iflag == 0) then
@@ -1325,16 +1325,16 @@
         end if
 
         ! construct b-spline coefficients
-    
+
                       call dbtpcf(x,nx,fcn,  nx,ny*nz*nq*nr*ns,tx,kx,temp, work,iflag)
         if (iflag==0) call dbtpcf(y,ny,temp, ny,nx*nz*nq*nr*ns,ty,ky,bcoef,work,iflag)
         if (iflag==0) call dbtpcf(z,nz,bcoef,nz,nx*ny*nq*nr*ns,tz,kz,temp, work,iflag)
         if (iflag==0) call dbtpcf(q,nq,temp, nq,nx*ny*nz*nr*ns,tq,kq,bcoef,work,iflag)
         if (iflag==0) call dbtpcf(r,nr,bcoef,nr,nx*ny*nz*nq*ns,tr,kr,temp, work,iflag)
         if (iflag==0) call dbtpcf(s,ns,temp, ns,nx*ny*nz*nq*nr,ts,ks,bcoef,work,iflag)
-      
+
         if (iflag==0) iflag = 1
-     
+
      end if
 
     end subroutine db6ink
@@ -1344,13 +1344,13 @@
 !> Evaluates the tensor product piecewise polynomial
 !  interpolant constructed by the routine [[db6ink]] or one of its
 !  derivatives at the point (xval,yval,zval,qval,rval,sval).
-! 
+!
 !  To evaluate the
 !  interpolant itself, set idx=idy=idz=idq=idr=ids=0, to evaluate the first
 !  partial with respect to x, set idx=1,idy=idz=idq=idr=ids=0, and so on.
-!  
+!
 !  See [[db3val]] header for more information.
-! 
+!
 !# History
 !
 !  * Jacob Williams, 2/24/2015 : Created this routine.
@@ -1372,7 +1372,7 @@
     integer,intent(in)                               :: idr      !! r derivative of piecewise polynomial to evaluate.
     integer,intent(in)                               :: ids      !! s derivative of piecewise polynomial to evaluate.
     integer,intent(in)                               :: nx       !! the number of interpolation points in x. (same as in last call to [[db6ink]])
-    integer,intent(in)                               :: ny       !! the number of interpolation points in y. (same as in last call to [[db6ink]]) 
+    integer,intent(in)                               :: ny       !! the number of interpolation points in y. (same as in last call to [[db6ink]])
     integer,intent(in)                               :: nz       !! the number of interpolation points in z. (same as in last call to [[db6ink]])
     integer,intent(in)                               :: nq       !! the number of interpolation points in q. (same as in last call to [[db6ink]])
     integer,intent(in)                               :: nr       !! the number of interpolation points in r. (same as in last call to [[db6ink]])
@@ -1390,11 +1390,11 @@
     real(wp),intent(in)                              :: rval     !! r coordinate of evaluation point.
     real(wp),intent(in)                              :: sval     !! s coordinate of evaluation point.
     real(wp),dimension(nx+kx),intent(in)             :: tx       !! sequence of knots defining the piecewise polynomial in the x direction. (same as in last call to [[db6ink]])
-    real(wp),dimension(ny+ky),intent(in)             :: ty       !! sequence of knots defining the piecewise polynomial in the y direction. (same as in last call to [[db6ink]]) 
-    real(wp),dimension(nz+kz),intent(in)             :: tz       !! sequence of knots defining the piecewise polynomial in the z direction. (same as in last call to [[db6ink]]) 
-    real(wp),dimension(nq+kq),intent(in)             :: tq       !! sequence of knots defining the piecewise polynomial in the q direction. (same as in last call to [[db6ink]]) 
-    real(wp),dimension(nr+kr),intent(in)             :: tr       !! sequence of knots defining the piecewise polynomial in the r direction. (same as in last call to [[db6ink]]) 
-    real(wp),dimension(ns+ks),intent(in)             :: ts       !! sequence of knots defining the piecewise polynomial in the s direction. (same as in last call to [[db6ink]]) 
+    real(wp),dimension(ny+ky),intent(in)             :: ty       !! sequence of knots defining the piecewise polynomial in the y direction. (same as in last call to [[db6ink]])
+    real(wp),dimension(nz+kz),intent(in)             :: tz       !! sequence of knots defining the piecewise polynomial in the z direction. (same as in last call to [[db6ink]])
+    real(wp),dimension(nq+kq),intent(in)             :: tq       !! sequence of knots defining the piecewise polynomial in the q direction. (same as in last call to [[db6ink]])
+    real(wp),dimension(nr+kr),intent(in)             :: tr       !! sequence of knots defining the piecewise polynomial in the r direction. (same as in last call to [[db6ink]])
+    real(wp),dimension(ns+ks),intent(in)             :: ts       !! sequence of knots defining the piecewise polynomial in the s direction. (same as in last call to [[db6ink]])
     real(wp),dimension(nx,ny,nz,nq,nr,ns),intent(in) :: bcoef    !! the b-spline coefficients computed by [[db6ink]].
     real(wp),intent(out)                             :: f        !! interpolated value
     integer,intent(out)                              :: iflag    !! status flag: 0 : no errors, /=0 : error
@@ -1409,19 +1409,19 @@
     integer,intent(inout)                            :: iloq     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
     integer,intent(inout)                            :: ilor     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
     integer,intent(inout)                            :: ilos     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-   
+
     real(wp),dimension(ky,kz,kq,kr,ks)            :: temp1
     real(wp),dimension(kz,kq,kr,ks)               :: temp2
     real(wp),dimension(kq,kr,ks)                  :: temp3
     real(wp),dimension(kr,ks)                     :: temp4
     real(wp),dimension(ks)                        :: temp5
     real(wp),dimension(3*max(kx,ky,kz,kq,kr,ks))  :: work
-    
+
     integer :: lefty,leftz,leftq,leftr,lefts,&
                mflag,&
                kcoly,kcolz,kcolq,kcolr,kcols,&
                j,k,q,r,s
-    
+
     f = 0.0_wp
 
     if (xval<tx(1) .or. xval>tx(nx+kx)) then
@@ -1464,7 +1464,7 @@
 
     iflag = 0
 
-    ! x -> y, z, q, r, s    
+    ! x -> y, z, q, r, s
     kcols = lefts - ks
     do s=1,ks
         kcols = kcols + 1
@@ -1485,7 +1485,7 @@
                         if (iflag/=0) return
                     end do
                 end do
-            end do    
+            end do
         end do
     end do
 
@@ -1503,13 +1503,13 @@
     end do
 
     ! z -> q, r, s
-    kcolz = leftz - kz + 1    
+    kcolz = leftz - kz + 1
     do s=1,ks
         do r=1,kr
             do q=1,kq
                 temp3(q,r,s) = dbvalu(tz(kcolz:),temp2(:,q,r,s),kz,kz,idz,zval,inbvz,work,iflag)
                 if (iflag/=0) return
-            end do    
+            end do
         end do
     end do
 
@@ -1531,23 +1531,23 @@
 
     ! s
     kcols = lefts - ks + 1
-    f = dbvalu(ts(kcols:),temp5,ks,ks,ids,sval,inbvs,work,iflag) 
+    f = dbvalu(ts(kcols:),temp5,ks,ks,ids,sval,inbvs,work,iflag)
 
     end subroutine db6val
 !*****************************************************************************************
 
 !*****************************************************************************************
 !> Check the validity of the inputs to the "ink" routines.
-!  Prints warning message if there is an error, 
+!  Prints warning message if there is an error,
 !  and also sets iflag and status_ok.
-! 
+!
 !  Supports up to 6D: x,y,z,q,r,s
-! 
+!
 !# Notes
 !
 !  The code is new, but the logic is based on the original
 !  logic in the CMLIB routines db2ink and db3ink.
-! 
+!
 !# History
 !
 !  * Jacob Williams, 2/24/2015 : Created this routine.
@@ -1561,7 +1561,7 @@
                             status_ok)
 
     implicit none
-    
+
     character(len=*),intent(in)                :: routine
     integer,intent(inout)                      :: iflag
     integer,intent(in),optional                :: nx,ny,nz,nq,nr,ns
@@ -1569,19 +1569,19 @@
     real(wp),dimension(:),intent(in),optional  :: x,y,z,q,r,s
     real(wp),dimension(:),intent(in),optional  :: tx,ty,tz,tq,tr,ts
     logical,intent(out)                        :: status_ok
-    
+
     logical :: error
-    
+
     status_ok = .false.
-    
+
     if ((iflag < 0) .or. (iflag > 1)) then
-    
+
         write(error_unit,'(A,1X,I5)') &
             trim(routine)//' - iflag is out of range: ',iflag
         iflag = 2
-          
+
     else
-    
+
         call check('x',nx,kx,x,tx,[3,4,5,6],    error); if (error) return
         call check('y',ny,ky,y,ty,[7,8,9,10],   error); if (error) return
         call check('z',nz,kz,z,tz,[11,12,13,14],error); if (error) return
@@ -1590,15 +1590,15 @@
         call check('s',ns,ks,s,ts,[23,24,25,26],error); if (error) return
 
         status_ok = .true.
-    
+
     end if
-          
+
     contains
-    
+
         subroutine check(s,n,k,x,t,ierrs,error)  !check t,x,n,k for validity
-        
+
         implicit none
-        
+
         character(len=1),intent(in),optional       :: s     !! coordinate string: 'x','y','z','q','r','s'
         integer,intent(in),optional                :: n     !! size of x
         integer,intent(in),optional                :: k     !! order
@@ -1606,7 +1606,7 @@
         real(wp),dimension(:),intent(in),optional  :: t     !! knot vector size(n+k)
         integer,dimension(:),intent(in)            :: ierrs !! int error codes for n,k,x,t checks
         logical,intent(out)                        :: error !! true if there was an error
-        
+
         if (present(n)) then
             call check_n('n'//s,n,ierrs(1),error); if (error) return
             if (present(k)) then
@@ -1621,18 +1621,18 @@
                 end if
             end if
         end if
-        
+
         end subroutine check
-        
+
         subroutine check_n(s,n,ierr,error)
-        
+
         implicit none
-        
+
         character(len=*),intent(in) :: s
         integer,intent(in)          :: n
         integer,intent(in)          :: ierr
         logical,intent(out)         :: error
-        
+
         if (n < 3) then
             write(error_unit,'(A,1X,I5)') &
                 trim(routine)//' - '//trim(s)//' is out of range: ',n
@@ -1640,21 +1640,21 @@
             error = .true.
         else
             error = .false.
-        end if        
-          
+        end if
+
         end subroutine check_n
 
         subroutine check_k(s,k,n,ierr,error)
-        
+
         implicit none
-        
+
         character(len=*),intent(in) :: s
         integer,intent(in)          :: k
         integer,intent(in)          :: n
         integer,intent(in)          :: ierr
         logical,intent(out)         :: error
-        
-        if ((k < 2) .or. (k >= n)) then              
+
+        if ((k < 2) .or. (k >= n)) then
             write(error_unit,'(A,1X,I5)') &
                 trim(routine)//' - '//trim(s)//' is out of range: ',k
             iflag = ierr
@@ -1662,21 +1662,21 @@
         else
             error = .false.
         end if
-                  
+
         end subroutine check_k
-          
+
         subroutine check_x(s,n,x,ierr,error)
-          
+
         implicit none
-        
+
         character(len=*),intent(in)       :: s
         integer,intent(in)                :: n
         real(wp),dimension(:),intent(in)  :: x
         integer,intent(in)                :: ierr
         logical,intent(out)               :: error
-        
+
         integer :: i
-        
+
         error = .true.
         do i=2,n
             if (x(i) <= x(i-1)) then
@@ -1684,25 +1684,25 @@
                 write(error_unit,'(A)') trim(routine)//' - '//trim(s)//&
                             ' array must be strictly increasing'
                 return
-            end if 
-        end do          
+            end if
+        end do
         error = .false.
-                  
+
         end subroutine check_x
-          
+
         subroutine check_t(s,n,k,t,ierr,error)
-          
+
         implicit none
-        
+
         character(len=*),intent(in)       :: s
         integer,intent(in)                :: n
         integer,intent(in)                :: k
         real(wp),dimension(:),intent(in)  :: t
         integer,intent(in)                :: ierr
         logical,intent(out)               :: error
-        
+
         integer :: i
-        
+
         error = .true.
         do i=2,n + k
             if (t(i) < t(i-1))  then
@@ -1710,12 +1710,12 @@
                 write(error_unit,'(A)') trim(routine)//' - '//trim(s)//&
                             ' array must be non-decreasing'
                 return
-            end if 
-        end do          
+            end if
+        end do
         error = .false.
-                  
+
         end subroutine check_t
-          
+
     end subroutine check_inputs
 !*****************************************************************************************
 
@@ -1735,7 +1735,7 @@
     subroutine dbknot(x,n,k,t)
 
     implicit none
-    
+
     integer,intent(in)                 :: n
     integer,intent(in)                 :: k
     real(wp),dimension(n),intent(in)   :: x
@@ -1758,7 +1758,7 @@
     if (mod(k,2) == 1)  then
 
         !case of odd k --  knots between data points
-        
+
         i = (k-1)/2 - k
         ip1 = i + 1
         jstrt = k + 1
@@ -1845,7 +1845,7 @@
                 end do
             end do
         end if
-    
+
     else
         write(error_unit,'(A)') 'dbtpcf - n should be >0'
         iflag = 301
@@ -1854,12 +1854,12 @@
     end subroutine dbtpcf
 !*****************************************************************************************
 
-!***************************************************************************************** 
+!*****************************************************************************************
 !> dbintk produces the b-spline coefficients, bcoef, of the
 !  b-spline of order k with knots t(i), i=1,...,n+k, which
 !  takes on the value y(i) at x(i), i=1,...,n.  the spline or
 !  any of its derivatives can be evaluated by calls to [[dbvalu]].
-!  
+!
 !  the i-th equation of the linear system a*bcoef = b for the
 !  coefficients of the interpolant enforces interpolation at
 !  x(i), i=1,...,n.  hence, b(i) = y(i), for all i, and a is
@@ -1877,12 +1877,12 @@
 !  equality is permitted on the left for i=1 and on the right
 !  for i=n when k knots are used at x(1) or x(n).  otherwise,
 !  violation of this condition is certain to lead to an error.
-!  
+!
 !# Error conditions
 !
 !  * improper input
 !  * singular system of equations
-! 
+!
 !# History
 !
 !  * splint written by carl de boor [5]
@@ -1926,7 +1926,7 @@
 
     integer :: iwork, i, ilp1mx, j, jj, km1, kpkm2, left,lenq, np1
     real(wp) :: xi
-    
+
     if (k<1) then
         write(error_unit,'(A)') 'dbintk - k does not satisfy k>=1'
         iflag = 100
@@ -2036,7 +2036,7 @@
 
 !*****************************************************************************************
 !> Returns in w the LU-factorization (without pivoting) of the banded
-!  matrix a of order nrow with (nbandl + 1 + nbandu) bands or diagonals 
+!  matrix a of order nrow with (nbandl + 1 + nbandu) bands or diagonals
 !  in the work array w .
 !
 !  gauss elimination without pivoting is used. the routine is
@@ -2086,7 +2086,7 @@
 !        one of the potential pivots was found to be zero indicating
 !        that  a  does not have an lu-factorization. this implies that
 !        a  is singular in case it is totally positive .
-! 
+!
 !# History
 !
 !  * banfac written by carl de boor [5]
@@ -2180,17 +2180,17 @@
     if (w(middle,nrow)==0.0_wp) iflag = 2
 
     end subroutine dbnfac
-      
+
 !*****************************************************************************************
 !> Companion routine to [[dbnfac]]. it returns the solution x of the
 !  linear system a*x = b in place of b, given the lu-factorization
 !  for a in the work array w from dbnfac.
-! 
+!
 !  (with \( a = l*u \), as stored in w), the unit lower triangular system
 !  \( l(u*x) = b \) is solved for \( y = u*x \), and y stored in b. then the
-!  upper triangular system \(u*x = y \) is solved for x. the calculations 
+!  upper triangular system \(u*x = y \) is solved for x. the calculations
 !  are so arranged that the innermost loops stay within columns.
-! 
+!
 !# History
 !
 !  * banslv written by carl de boor [5]
@@ -2198,7 +2198,7 @@
 !  * Jacob Williams, 5/10/2015 : converted to free-form Fortran.
 
     subroutine dbnslv(w,nroww,nrow,nbandl,nbandu,b)
-    
+
     integer,intent(in) :: nroww   !! describes the lu-factorization of a banded matrix a of order nrow as constructed in [[dbnfac]].
     integer,intent(in) :: nrow    !! describes the lu-factorization of a banded matrix a of order nrow as constructed in [[dbnfac]].
     integer,intent(in) :: nbandl  !! describes the lu-factorization of a banded matrix a of order nrow as constructed in [[dbnfac]].
@@ -2216,7 +2216,7 @@
         if (nbandl/=0) then
 
             ! forward pass
-            ! for i=1,2,...,nrow-1, subtract right side(i)*(i-th column of l) 
+            ! for i=1,2,...,nrow-1, subtract right side(i)*(i-th column of l)
             !                       from right side (below i-th row).
             do i=1,nrowm1
                 jmax = min(nbandl,nrow-i)
@@ -2268,13 +2268,13 @@
 !  desired, setting jhigh=k and index=1 can be faster than
 !  calling dbspvd, but extra coding is required for derivatives
 !  (index=2) and dbspvd is set up for this purpose.
-!  
+!
 !  left limiting values are set up as described in dbspvd.
-! 
+!
 !#Error Conditions
 !
 !  * improper input
-! 
+!
 !# History
 !
 !  * bsplvn written by carl de boor [5]
@@ -2315,7 +2315,7 @@
     real(wp) :: vm, vmprev
 
     ! content of j, deltam, deltap is expected unchanged between calls.
-    ! work(i) = deltap(i), 
+    ! work(i) = deltap(i),
     ! work(k+i) = deltam(i), i = 1,k
 
     if (k<1) then
@@ -2338,7 +2338,7 @@
         iflag = 204
         return
     end if
-    
+
     iflag = 0
 
     if (index==1) then
@@ -2367,7 +2367,7 @@
 
     end subroutine dbspvn
 !*****************************************************************************************
-      
+
 !*****************************************************************************************
 !> Evaluates the b-representation (t,a,n,k) of a b-spline
 !  at x for the function value on ideriv=0 or any of its
@@ -2376,14 +2376,14 @@
 !  point x=t(n+1) where left limiting values are computed.  the
 !  spline is defined on t(k) <= x <= t(n+1).  dbvalu returns
 !  a fatal error message when x is outside of this interval.
-!  
+!
 !  to compute left derivatives or left limiting values at a
 !  knot t(i), replace n by i-1 and set x=t(i), i=k+1,n+1.
-! 
+!
 !#Error Conditions
 !
 !  * improper input
-! 
+!
 !# History
 !
 !  * bvalue written by carl de boor [5]
@@ -2399,7 +2399,7 @@
     integer,intent(in)               :: n       !! number of b-spline coefficients.
                                                 !! (sum of knot multiplicities-k)
     real(wp),dimension(:),intent(in) :: t       !! knot vector of length n+k
-    real(wp),dimension(n),intent(in) :: a       !! b-spline coefficient vector of length n 
+    real(wp),dimension(n),intent(in) :: a       !! b-spline coefficient vector of length n
     integer,intent(in)               :: k       !! order of the b-spline, k >= 1
     integer,intent(in)               :: ideriv  !! order of the derivative, 0 <= ideriv <= k-1.
                                                 !! ideriv = 0 returns the b-spline value
@@ -2530,11 +2530,11 @@
 
     end function dbvalu
 !*****************************************************************************************
-      
+
 !*****************************************************************************************
-!> Computes the largest integer ileft in 1 <= ileft <= lxt 
+!> Computes the largest integer ileft in 1 <= ileft <= lxt
 !  such that xt(ileft) <= x where xt(*) is a subdivision of
-!  the x interval.  
+!  the x interval.
 !  precisely,
 !
 !```fortran
@@ -2545,7 +2545,7 @@
 !
 !  that is, when multiplicities are present in the break point
 !  to the left of x, the largest index is taken for ileft.
-! 
+!
 !# History
 !
 !  * interv written by carl de boor [5]
@@ -2554,21 +2554,21 @@
 !  * Jacob Williams, 2/24/2015 : updated to free-form Fortran.
 
     subroutine dintrv(xt,lxt,x,ilo,ileft,mflag)
-    
+
     implicit none
-    
+
     integer,intent(in)                 :: lxt    !! length of the xt vector
     real(wp),dimension(lxt),intent(in) :: xt     !! a knot or break point vector of length lxt
     real(wp),intent(in)                :: x      !! argument
     integer,intent(inout)              :: ilo    !! an initialization parameter which must be set
                                                  !! to 1 the first time the spline array xt is
-                                                 !! processed by dintrv. ilo contains information for 
+                                                 !! processed by dintrv. ilo contains information for
                                                  !! efficient processing after the initial call and ilo
-                                                 !! must not be changed by the user.  distinct splines 
+                                                 !! must not be changed by the user.  distinct splines
                                                  !! require distinct ilo parameters.
     integer,intent(out)                :: ileft  !! largest integer satisfying xt(ileft) <= x
     integer,intent(out)                :: mflag  !! signals when x lies out of bounds
-    
+
     integer :: ihi, istep, middle
 
       ihi = ilo + 1
@@ -2629,7 +2629,7 @@
   110 mflag = 1
       ileft = lxt
 
-    end subroutine dintrv      
+    end subroutine dintrv
 !*****************************************************************************************
 
 !*****************************************************************************************

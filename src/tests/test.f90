@@ -3,42 +3,42 @@
 !> Units test for 2d-6d tensor product b-spline interpolation.
 
     program bspline_test
-    
+
     use bspline_module
     use,intrinsic :: iso_fortran_env, only: wp => real64
 
     implicit none
-    
+
     integer,parameter :: nx = 6    !number of points
     integer,parameter :: ny = 6
     integer,parameter :: nz = 6
     integer,parameter :: nq = 6
     integer,parameter :: nr = 6
     integer,parameter :: ns = 6
-    
+
     integer,parameter :: kx = 4    !order
     integer,parameter :: ky = 4
     integer,parameter :: kz = 4
     integer,parameter :: kq = 4
     integer,parameter :: kr = 4
     integer,parameter :: ks = 4
-            
+
     real(wp) :: x(nx),y(ny),z(nz),q(nq),r(nr),s(ns)
-    real(wp) :: tx(nx+kx),ty(ny+ky),tz(nz+kz),tq(nq+kq),tr(nr+kr),ts(ns+ks)    
+    real(wp) :: tx(nx+kx),ty(ny+ky),tz(nz+kz),tq(nq+kq),tr(nr+kr),ts(ns+ks)
     real(wp) :: fcn_1d(nx)
     real(wp) :: fcn_2d(nx,ny)
     real(wp) :: fcn_3d(nx,ny,nz)
     real(wp) :: fcn_4d(nx,ny,nz,nq)
     real(wp) :: fcn_5d(nx,ny,nz,nq,nr)
     real(wp) :: fcn_6d(nx,ny,nz,nq,nr,ns)
-        
+
     real(wp) :: tol
     real(wp),dimension(6) :: val,tru,err,errmax
     logical :: fail
     integer :: i,j,k,l,m,n,idx,idy,idz,idq,idr,ids,iflag
     integer :: inbvx,inbvy,inbvz,inbvq,inbvr,inbvs
     integer :: iloy,iloz,iloq,ilor,ilos
-    
+
     fail = .false.
     tol = 1.0e-14_wp
     idx = 0
@@ -84,7 +84,7 @@
            end do
         end do
      end do
-     
+
     inbvx = 1
     inbvy = 1
     inbvz = 1
@@ -96,7 +96,7 @@
     iloq  = 1
     ilor  = 1
     ilos  = 1
-    
+
     ! interpolate
     iflag = 0
     call db1ink(x,nx,fcn_1d,kx,tx,fcn_1d,iflag)
@@ -172,48 +172,48 @@
         end if
         write(*,*) ''
     end do
- 
+
     contains
-    
+
         real(wp) function f1(x) !! 1d test function
         implicit none
         real(wp) :: x
         f1 = 0.5_wp * (x*exp(-x) + sin(x) )
         end function f1
-      
+
         real(wp) function f2(x,y) !! 2d test function
         implicit none
         real(wp) x,y,piov2
         piov2 = 2.0_wp * atan(1.0_wp)
         f2 = 0.5_wp * (y*exp(-x) + sin(piov2*y) )
         end function f2
-    
+
         real(wp) function f3 (x,y,z) !! 3d test function
         implicit none
         real(wp) x,y,z,piov2
         piov2 = 2.0_wp*atan(1.0_wp)
         f3 = 0.5_wp*( y*exp(-x) + z*sin(piov2*y) )
-        end function f3    
-    
+        end function f3
+
         real(wp) function f4 (x,y,z,q) !! 4d test function
         implicit none
         real(wp) x,y,z,q,piov2
         piov2 = 2.0_wp*atan(1.0_wp)
         f4 = 0.5_wp*( y*exp(-x) + z*sin(piov2*y) + q )
-        end function f4    
-    
+        end function f4
+
         real(wp) function f5 (x,y,z,q,r) !! 5d test function
         implicit none
         real(wp) x,y,z,q,r,piov2
         piov2 = 2.0_wp*atan(1.0_wp)
         f5 = 0.5_wp*( y*exp(-x) + z*sin(piov2*y) + q*r )
         end function f5
-      
+
         real(wp) function f6 (x,y,z,q,r,s) !! 6d test function
         implicit none
         real(wp) x,y,z,q,r,s,piov2
         piov2 = 2.0_wp*atan(1.0_wp)
         f6 = 0.5_wp*( y*exp(-x) + z*sin(piov2*y) + q*r + 2.0_wp*s )
         end function f6
-                  
+
     end program bspline_test

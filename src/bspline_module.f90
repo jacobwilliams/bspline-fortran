@@ -1,7 +1,7 @@
 !*****************************************************************************************
 !> author: Jacob Williams
 !  license: BSD
-! 
+!
 !# Description
 !
 !  Multidimensional (2D-6D) B-Spline interpolation of data on a regular grid.
@@ -10,7 +10,7 @@
 !# iflag Codes
 !
 ! The following are the `iflag` codes that can be issued by the various
-! routines. They are divided into the initialize routines 
+! routines. They are divided into the initialize routines
 ! (e.g., [[db1ink]], [[db2ink]], etc.)
 ! and the evaluate routines (e.g., [[db1val]], [[db2val]], etc.).
 !
@@ -51,7 +51,7 @@
 !        202: jhigh does not satisfy 1<=jhigh<=k
 !        203: index is not 1 or 2
 !        204: x does not satisfy t(ileft)<=x<=t(ileft+1)
-!        
+!
 !dbtpcf  301: n should be >0
 !```
 !
@@ -64,7 +64,7 @@
 !         4: q value out of bounds
 !         5: r value out of bounds
 !         6: s value out of bounds
-!        
+!
 !dbvalu 401: k does not satisfy k>=1
 !       402: n does not satisfy n>=k
 !       403: ideriv does not satisfy 0<=ideriv<k
@@ -77,9 +77,9 @@
 
     use bspline_oo_module
     use bspline_sub_module
-    
+
     implicit none
-    
+
     public
 
     end module bspline_module
