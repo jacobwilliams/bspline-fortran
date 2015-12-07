@@ -60,7 +60,7 @@ Which uses the default "not-a-knot" end conditions. You can also specify the kno
 call s%initialize(x,y,z,fcn,kx,ky,kz,tx,ty,tz,iflag)
 ```
 
-See the [examples](https://github.com/jacobwilliams/bspline-fortran/tree/master/src/tests) for more details.
+See the [examples](https://github.com/jacobwilliams/bspline-fortran/tree/master/src/tests) for more details. Note that, to compile and run some of the test programs, the [pyplot_module.f90](https://github.com/jacobwilliams/pyplot-fortran) file (which is used to generate plots) must be copied into the `src/tests` directory.
 
 # Compiling
 
