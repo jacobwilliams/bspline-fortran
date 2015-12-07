@@ -9,9 +9,11 @@ Multidimensional B-Spline Interpolation of Data on a Regular Grid
 
 # Brief description
 
-The library provides subroutines for 1D-6D interpolation using b-splines. The code is written in modern Fortran (i.e., Fortran 2003+).
+The library provides subroutines for 1D-6D interpolation using B-splines. The code is written in modern Fortran (i.e., Fortran 2003+). There are two ways to use the module, via a basic subroutine interface and an object-oriented interface. Both are thread safe.
 
-The core routines are:
+## Subroutine interface
+
+The core routines for the subroutine interface are:
 
 ```Fortran
 
@@ -40,9 +42,11 @@ subroutine db6ink(x,nx,y,ny,z,nz,q,nq,r,nr,s,ns,fcn,kx,ky,kz,kq,kr,ks,tx,ty,tz,t
 subroutine db6val(xval,yval,zval,qval,rval,sval,idx,idy,idz,idq,idr,ids,tx,ty,tz,tq,tr,ts,nx,ny,nz,nq,nr,ns,kx,ky,kz,kq,kr,ks,bcoef,f,iflag,inbvx,inbvy,inbvz,inbvq,inbvr,inbvs,iloy,iloz,iloq,ilor,ilos)
 ```
 
-The ```ink``` routines compute the interpolant coefficients, and the ```val``` routines evalute the interpolant at the specified value of each coordinate.  Eventually, object-oriented wrappers will be created for these routines for ease of use.  The 2D and 3D routines are extensively refactored versions of the original routines from the [NIST Core Math Library](http://www.nist.gov/itl/math/mcsd-software.cfm).  The others are new, and are simply extensions of the same algorithm into higher dimensions.
+The ```ink``` routines compute the interpolant coefficients, and the ```val``` routines evalute the interpolant at the specified value of each coordinate.  Eventually, object-oriented wrappers will be created for these routines for ease of use.  The 2D and 3D routines are extensively refactored versions of the original routines from the [NIST Core Math Library](http://www.nist.gov/itl/math/mcsd-software.cfm).  The others are new, and are simply extensions of the same algorithm into the other dimensions.
 
-In addition to the main subroutines, an object-oriented wrapper is also provided. For example, for the 3D case:
+## Object-oriented interface
+
+In addition to the main subroutines, an object-oriented interface is also provided. For example, for the 3D case:
 
 ```Fortran
 type(bspline_3d) :: s
@@ -50,24 +54,21 @@ call s%initialize(x,y,z,fcn,kx,ky,kz,iflag)
 call s%evaluate(xval,yval,zval,idx,idy,idz,f,iflag)
 call s%destroy()
 ```
-Which uses the default "not-a-knot" end conditions. You can also specify the knot vectors (in this case, `tx`, `ty`, and `tz`) manually during class initialization via:
+Which uses the default "not-a-knot" end conditions. You can also specify the knot vectors (in this case, `tx`, `ty`, and `tz`) manually during class initialization:
 
 ```Fortran
-type(bspline_3d) :: s
 call s%initialize(x,y,z,fcn,kx,ky,kz,tx,ty,tz,iflag)
-call s%evaluate(xval,yval,zval,idx,idy,idz,f,iflag)
-call s%destroy()
 ```
 
-See the examples for more details.
+See the [examples](https://github.com/jacobwilliams/bspline-fortran/tree/master/src/tests) for more details.
 
 # Compiling
 
-A simple bash script ```build.sh``` is provided for building bspline-fortran with gfortran using [FoBiS](https://github.com/szaghi/FoBiS). It also builds the API documentation using [FORD](https://github.com/cmacmackin/ford).
+A simple bash script ```build.sh``` is provided for building bspline-fortran with gfortran using [FoBiS](https://github.com/szaghi/FoBiS). It also builds the API documentation using [FORD](https://github.com/cmacmackin/ford). The library can also be compiled with the Intel Fortran Compiler (and presumably any other Fortran compiler that supports modern standards).
 
 # Documentation
 
-The latest API documentation can be found [here](http://jacobwilliams.github.io/bspline-fortran/). This was generated using [FORD](https://github.com/cmacmackin/ford).
+The latest API documentation can be found [here](http://jacobwilliams.github.io/bspline-fortran/). This was generated from the source code using [FORD](https://github.com/cmacmackin/ford) (note that the build script will also generate these files).
 
 # License
 

@@ -20,7 +20,7 @@ exclude: test_oo.f90
 Brief description
 ---------------
 
-The library provides subroutines for 1D-6D interpolation using b-splines. The code is written in modern Fortran (i.e., Fortran 2003+).
+The library provides subroutines for 1D-6D interpolation using B-splines. The code is written in modern Fortran (i.e., Fortran 2003+).
 
 License
 ---------------
