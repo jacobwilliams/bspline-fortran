@@ -50,6 +50,15 @@ call s%initialize(x,y,z,fcn,kx,ky,kz,iflag)
 call s%evaluate(xval,yval,zval,idx,idy,idz,f,iflag)
 call s%destroy()
 ```
+Which uses the default "not-a-knot" end conditions. You can also specify the knot vectors (in this case, `tx`, `ty`, and `tz`) manually during class initialization via:
+
+```Fortran
+type(bspline_3d) :: s
+call s%initialize(x,y,z,fcn,kx,ky,kz,tx,ty,tz,iflag)
+call s%evaluate(xval,yval,zval,idx,idy,idz,f,iflag)
+call s%destroy()
+```
+
 See the examples for more details.
 
 # Compiling
