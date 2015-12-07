@@ -4,7 +4,7 @@
 !
 !# Description
 !
-!  Multidimensional (2D-6D) B-Spline interpolation of data on a regular grid.
+!  Multidimensional (1D-6D) B-Spline interpolation of data on a regular grid.
 !  This module uses both the subroutine and object-oriented modules.
 !
 !# iflag Codes
@@ -16,39 +16,40 @@
 !
 !## Initialize Routines
 !```
-!db*ink    1: successful execution.
+!db*ink    1: successful execution
 !          2: iflag out of range
 !          3: nx out of range
 !          4: kx out of range
 !          5: x not strictly increasing
 !          6: tx not non-decreasing
-!        501: tx is not the correct size (kx+nx)
 !          7: ny out of range
 !          8: ky out of range
 !          9: y not strictly increasing
 !         10: ty not non-decreasing
-!        502: ty is not the correct size (ky+ny)
 !         11: nz out of range
 !         12: kz out of range
 !         13: z not strictly increasing
 !         14: tz not non-decreasing
-!        503: tz is not the correct size (kz+nz)
 !         15: nq out of range
 !         16: kq out of range
 !         17: q not strictly increasing
 !         18: tq not non-decreasing
-!        504: tq is not the correct size (kq+nq)
 !         19: nr out of range
 !         20: kr out of range
 !         21: r not strictly increasing
 !         22: tr not non-decreasing
-!        505: tr is not the correct size (kr+nr)
-!         23: ns out of range.
-!         24: ks out of range.
-!         25: s not strictly increasing.
-!         26: ts not non-decreasing.
-!        506: ts is not the correct size (ks+ns)
-
+!         23: ns out of range
+!         24: ks out of range
+!         25: s not strictly increasing
+!         26: ts not non-decreasing
+!
+!initialize_*d_specify_knots 501: tx is not the correct size (kx+nx)
+!                            502: ty is not the correct size (ky+ny)
+!                            503: tz is not the correct size (kz+nz)
+!                            504: tq is not the correct size (kq+nq)
+!                            505: tr is not the correct size (kr+nr)
+!                            506: ts is not the correct size (ks+ns)
+!
 !dbintk  100: k does not satisfy k>=1
 !        101: n does not satisfy n>=k
 !        102: x(i) does not satisfy x(i)<x(i+1) for some i
