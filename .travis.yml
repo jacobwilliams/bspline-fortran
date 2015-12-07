@@ -12,9 +12,11 @@ before_install:
   - sudo -H pip install FoBiS.py && FoBiS.py --version
   - sudo -H pip install ford && ford --version
   - export PATH=".:$PATH"
+  - wget https://raw.githubusercontent.com/jacobwilliams/pyplot-fortran/master/src/pyplot_module.f90
+  - mv ./pyplot_module.f90 ./src/tests/
 
 before_script:
-  - FoBiS.py build -compiler gnu -cflags "-c -O2 -std=f2008" -dbld ./lib/ -s ./src/ -dmod ./ -dobj ./ -t bspline_module.f90 -o libbspline.a -mklib static -colors	
+  - FoBiS.py build -compiler gnu -cflags "-c -O2 -std=f2008" -dbld ./lib/ -s ./src/ -dmod ./ -dobj ./ -t bspline_module.f90 -o libbspline.a -mklib static -colors
   - FoBiS.py build -compiler gnu -cflags "-c -O2 -std=f2008" -dbld ./bin/ -s ./src/tests/ -dmod ./ -dobj ./ -colors -libs ./lib/libbspline.a --include ./lib/
 
 script:
@@ -22,6 +24,7 @@ script:
   - ./bin/test_oo
   - ./bin/test_regrid
   - ./bin/speed_test
+  - ./bin/knot_tests
 
 after_success:
   - git config --global user.name "TRAVIS-CI-for-$(git --no-pager show -s --format='%cn' $TRAVIS_COMMIT)"
