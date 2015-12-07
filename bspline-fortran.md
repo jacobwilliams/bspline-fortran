@@ -12,6 +12,8 @@ docmark: !
 display: public
 source: true
 graph: true
+exclude: pyplot_module.f90
+extra_mods: pyplot_module:https://github.com/jacobwilliams/pyplot-fortran
 
 Brief description
 ---------------
