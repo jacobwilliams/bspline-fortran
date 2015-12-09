@@ -1,6 +1,9 @@
 !*****************************************************************************************
 !
 !> Speed test for 1d-6d tensor product b-spline interpolation (object-oriented version).
+!
+!# Results
+!  ![Plot of results](https://raw.githubusercontent.com/jacobwilliams/bspline-fortran/master/src/tests/speed_test.png)
 
     program bspline_speed_test
 
