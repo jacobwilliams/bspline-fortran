@@ -241,7 +241,7 @@
 
     !plot results in bar chart:
     call plt%initialize(grid=.false.,xlabel='Dimension',ylabel='Cases Per Second',&
-                        title='Speed Test',legend=.false.,figsize=[20,10],&
+                        title='Speed Test',legend=.false.,&
                         font_size = 20,&
                         axes_labelsize = 20,&
                         xtick_labelsize = 20,&
