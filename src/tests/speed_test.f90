@@ -6,6 +6,7 @@
 
     use bspline_oo_module
     use,intrinsic :: iso_fortran_env, only: wp => real64
+    use pyplot_module
 
     implicit none
 
@@ -23,6 +24,8 @@
     integer,parameter :: kr = 4
     integer,parameter :: ks = 4
 
+    integer,parameter :: n_cases = nx*ny*nz*nq*nr*ns
+
     real(wp) :: x(nx),y(ny),z(nz),q(nq),r(nr),s(ns)
     real(wp) :: fcn_1d(nx)
     real(wp) :: fcn_2d(nx,ny)
@@ -39,8 +42,10 @@
     type(bspline_6d) :: s6
 
     real(wp) :: val,sumval
-    integer  :: i,j,k,l,m,n,idx,idy,idz,idq,idr,ids,iflag,n_cases
+    integer  :: i,j,k,l,m,n,idx,idy,idz,idq,idr,ids,iflag
     real :: tstart, tend
+    type(pyplot) :: plt
+    real(wp),dimension(6) :: cases_per_sec
 
     idx = 0
     idy = 0
@@ -77,22 +82,31 @@
         end do
     end do
 
-     !initialize:
+    !initialize:
 
-     call s1%initialize(x,fcn_1d,kx,iflag)
-     call s2%initialize(x,y,fcn_2d,kx,ky,iflag)
-     call s3%initialize(x,y,z,fcn_3d,kx,ky,kz,iflag)
-     call s4%initialize(x,y,z,q,fcn_4d,kx,ky,kz,kq,iflag)
-     call s5%initialize(x,y,z,q,r,fcn_5d,kx,ky,kz,kq,kr,iflag)
-     call s6%initialize(x,y,z,q,r,s,fcn_6d,kx,ky,kz,kq,kr,ks,iflag)
+    call s1%initialize(x,fcn_1d,kx,iflag)
+    call s2%initialize(x,y,fcn_2d,kx,ky,iflag)
+    call s3%initialize(x,y,z,fcn_3d,kx,ky,kz,iflag)
+    call s4%initialize(x,y,z,q,fcn_4d,kx,ky,kz,kq,iflag)
+    call s5%initialize(x,y,z,q,r,fcn_5d,kx,ky,kz,kq,kr,iflag)
+    call s6%initialize(x,y,z,q,r,s,fcn_6d,kx,ky,kz,kq,kr,ks,iflag)
 
     ! evaluate the interpolants:
     sumval = 0.0_wp
-    n_cases = nx
     call cpu_time(tstart)
     do i=1,nx
-        call s1%evaluate(x(i),idx,val,iflag)
-        sumval = sumval + val
+        do j=1,ny
+           do k=1,nz
+                do l=1,nq
+                    do m=1,nr
+                        do n=1,ns
+                            call s1%evaluate(x(i),idx,val,iflag)
+                            sumval = sumval + val
+                        end do
+                    end do
+                end do
+            end do
+        end do
     end do
     call cpu_time(tend)
     write(*,*) ''
@@ -100,15 +114,23 @@
     write(*,*) 'result         :', sumval
     write(*,*) 'number of cases:', n_cases
     write(*,*) 'cases/sec      :', n_cases/(tend-tstart)
+    cases_per_sec(1) = n_cases/(tend-tstart)
 
     sumval = 0.0_wp
-    n_cases = nx*ny
     call cpu_time(tstart)
     do i=1,nx
         do j=1,ny
-           call s2%evaluate(x(i),y(j),idx,idy,val,iflag)
-           sumval = sumval + val
-        end do
+           do k=1,nz
+                do l=1,nq
+                    do m=1,nr
+                        do n=1,ns
+                           call s2%evaluate(x(i),y(j),idx,idy,val,iflag)
+                           sumval = sumval + val
+                       end do
+                   end do
+               end do
+           end do
+       end do
     end do
     call cpu_time(tend)
     write(*,*) ''
@@ -116,15 +138,21 @@
     write(*,*) 'result         :', sumval
     write(*,*) 'number of cases:', n_cases
     write(*,*) 'cases/sec      :', n_cases/(tend-tstart)
+    cases_per_sec(2) = n_cases/(tend-tstart)
 
     sumval = 0.0_wp
-    n_cases = nx*ny*nz
     call cpu_time(tstart)
     do i=1,nx
         do j=1,ny
            do k=1,nz
-                call s3%evaluate(x(i),y(j),z(k),idx,idy,idz,val,iflag)
-                sumval = sumval + val
+                do l=1,nq
+                    do m=1,nr
+                        do n=1,ns
+                            call s3%evaluate(x(i),y(j),z(k),idx,idy,idz,val,iflag)
+                            sumval = sumval + val
+                        end do
+                    end do
+                end do
             end do
         end do
     end do
@@ -134,16 +162,20 @@
     write(*,*) 'result         :', sumval
     write(*,*) 'number of cases:', n_cases
     write(*,*) 'cases/sec      :', n_cases/(tend-tstart)
+    cases_per_sec(3) = n_cases/(tend-tstart)
 
     sumval = 0.0_wp
-    n_cases = nx*ny*nz*nq
     call cpu_time(tstart)
     do i=1,nx
         do j=1,ny
            do k=1,nz
-                  do l=1,nq
-                    call s4%evaluate(x(i),y(j),z(k),q(l),idx,idy,idz,idq,val,iflag)
-                    sumval = sumval + val
+                do l=1,nq
+                    do m=1,nr
+                        do n=1,ns
+                            call s4%evaluate(x(i),y(j),z(k),q(l),idx,idy,idz,idq,val,iflag)
+                            sumval = sumval + val
+                        end do
+                    end do
                 end do
             end do
         end do
@@ -154,17 +186,19 @@
     write(*,*) 'result         :', sumval
     write(*,*) 'number of cases:', n_cases
     write(*,*) 'cases/sec      :', n_cases/(tend-tstart)
+    cases_per_sec(4) = n_cases/(tend-tstart)
 
     sumval = 0.0_wp
-    n_cases = nx*ny*nz*nq*nr
     call cpu_time(tstart)
     do i=1,nx
         do j=1,ny
            do k=1,nz
-                  do l=1,nq
+                do l=1,nq
                     do m=1,nr
-                        call s5%evaluate(x(i),y(j),z(k),q(l),r(m),idx,idy,idz,idq,idr,val,iflag)
-                        sumval = sumval + val
+                        do n=1,ns
+                            call s5%evaluate(x(i),y(j),z(k),q(l),r(m),idx,idy,idz,idq,idr,val,iflag)
+                            sumval = sumval + val
+                        end do
                     end do
                 end do
             end do
@@ -176,9 +210,9 @@
     write(*,*) 'result         :', sumval
     write(*,*) 'number of cases:', n_cases
     write(*,*) 'cases/sec      :', n_cases/(tend-tstart)
+    cases_per_sec(5) = n_cases/(tend-tstart)
 
     sumval = 0.0_wp
-    n_cases = nx*ny*nz*nq*nr*ns
     call cpu_time(tstart)
     do i=1,nx
         do j=1,ny
@@ -200,6 +234,18 @@
     write(*,*) 'result         :', sumval
     write(*,*) 'number of cases:', n_cases
     write(*,*) 'cases/sec      :', n_cases/(tend-tstart)
+    cases_per_sec(6) = n_cases/(tend-tstart)
+
+    !plot results in bar chart:
+    call plt%initialize(grid=.false.,xlabel='Dimension',ylabel='Cases Per Second',&
+                        title='Speed Test',legend=.false.,figsize=[20,10],&
+                        font_size = 20,&
+                        axes_labelsize = 20,&
+                        xtick_labelsize = 20,&
+                        ytick_labelsize = 20)
+    call plt%add_bar(left=real([1,2,3,4,5,6],wp),height=cases_per_sec,label='Speed test runs',&
+                        yscale='log',align='center',color='r')
+    call plt%savefig('speed_test.png')
 
     contains
 

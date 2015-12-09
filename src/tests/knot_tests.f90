@@ -20,14 +20,13 @@
     integer :: i    !! counter
 
     integer,parameter :: kx  = 4    !! x bspline order
-    integer,parameter :: idx = 0    !! interpolation function value
     integer,parameter :: nx  = 6    !! number of points in x dimension
     real(wp),dimension(nx),parameter :: x = [(real(i*10,wp), i=0,11,(10+2)/nx)]    !! [0,20,40,60,80,100]
 
     real(wp),dimension(nx)    :: fcn
     real(wp),dimension(nx+kx) :: tx
     type(bspline_1d)          :: s_default, s1, s2
-    real(wp),dimension(0:100) :: x_new,f_new_default,f1,f2,f_actual
+    real(wp),dimension(0:100) :: x_new,f_new_default,f1,f2 !,f_actual
     real(wp)                  :: xval
     type(pyplot)              :: plt
     integer                   :: iflag
