@@ -47,7 +47,8 @@
         contains
         private
         generic,public :: initialize => initialize_1d_auto_knots,initialize_1d_specify_knots
-        procedure :: initialize_1d_auto_knots,initialize_1d_specify_knots
+        procedure :: initialize_1d_auto_knots
+        procedure :: initialize_1d_specify_knots
         procedure,public :: evaluate => evaluate_1d
         procedure,public :: destroy => destroy_1d
     end type bspline_1d
@@ -67,7 +68,8 @@
         contains
         private
         generic,public :: initialize => initialize_2d_auto_knots,initialize_2d_specify_knots
-        procedure :: initialize_2d_auto_knots,initialize_2d_specify_knots
+        procedure :: initialize_2d_auto_knots
+        procedure :: initialize_2d_specify_knots
         procedure,public :: evaluate => evaluate_2d
         procedure,public :: destroy => destroy_2d
     end type bspline_2d
@@ -92,7 +94,8 @@
         contains
         private
         generic,public :: initialize => initialize_3d_auto_knots,initialize_3d_specify_knots
-        procedure :: initialize_3d_auto_knots,initialize_3d_specify_knots
+        procedure :: initialize_3d_auto_knots
+        procedure :: initialize_3d_specify_knots
         procedure,public :: evaluate => evaluate_3d
         procedure,public :: destroy => destroy_3d
     end type bspline_3d
@@ -123,7 +126,8 @@
         contains
         private
         generic,public :: initialize => initialize_4d_auto_knots,initialize_4d_specify_knots
-        procedure :: initialize_4d_auto_knots,initialize_4d_specify_knots
+        procedure :: initialize_4d_auto_knots
+        procedure :: initialize_4d_specify_knots
         procedure,public :: evaluate => evaluate_4d
         procedure,public :: destroy => destroy_4d
     end type bspline_4d
@@ -158,7 +162,8 @@
         contains
         private
         generic,public :: initialize => initialize_5d_auto_knots,initialize_5d_specify_knots
-        procedure :: initialize_5d_auto_knots,initialize_5d_specify_knots
+        procedure :: initialize_5d_auto_knots
+        procedure :: initialize_5d_specify_knots
         procedure,public :: evaluate => evaluate_5d
         procedure,public :: destroy => destroy_5d
     end type bspline_5d
@@ -198,7 +203,8 @@
         contains
         private
         generic,public :: initialize => initialize_6d_auto_knots,initialize_6d_specify_knots
-        procedure :: initialize_6d_auto_knots,initialize_6d_specify_knots
+        procedure :: initialize_6d_auto_knots
+        procedure :: initialize_6d_specify_knots
         procedure,public :: evaluate => evaluate_6d
         procedure,public :: destroy => destroy_6d
     end type bspline_6d
