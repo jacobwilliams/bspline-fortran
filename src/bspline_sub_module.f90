@@ -1798,17 +1798,17 @@
 
     subroutine dbtpcf(x,n,fcn,ldf,nf,t,k,bcoef,work,iflag)
 
-    integer,intent(in)  :: n
-    integer,intent(in)  :: nf
-    integer,intent(in)  :: ldf
-    integer,intent(in)  :: k
-    real(wp)            :: x(n)
-    real(wp)            :: fcn(ldf,nf)
-    real(wp)            :: t(*)
-    real(wp)            :: bcoef(nf,n)
-    real(wp)            :: work(*)
-    integer,intent(out) :: iflag  !!   0: no errors
-                                  !! 301: n should be >0
+    integer,intent(in)         :: n
+    integer,intent(in)         :: nf
+    integer,intent(in)         :: ldf
+    integer,intent(in)         :: k
+    real(wp),dimension(n)      :: x
+    real(wp),dimension(ldf,nf) :: fcn
+    real(wp),dimension(*)      :: t
+    real(wp),dimension(nf,n)   :: bcoef
+    real(wp),dimension(*)      :: work
+    integer,intent(out)        :: iflag  !!   0: no errors
+                                         !! 301: n should be >0
 
     integer :: i, j, m1, m2, iq, iw
 
@@ -1926,6 +1926,7 @@
 
     integer :: iwork, i, ilp1mx, j, jj, km1, kpkm2, left,lenq, np1
     real(wp) :: xi
+    logical :: found
 
     if (k<1) then
         write(error_unit,'(A)') 'dbintk - k does not satisfy k>=1'
@@ -1965,7 +1966,7 @@
 
         xi = x(i)
         ilp1mx = min(i+k,np1)
-        ! *** find  left  in the closed interval (i,i+k-1) such that
+        ! find left in the closed interval (i,i+k-1) such that
         !         t(left) <= x(i) < t(left+1)
         ! matrix is singular if this is not possible
         left = max(left,i)
@@ -1975,25 +1976,28 @@
             iflag = 103
             return
         end if
+        found = .false.
         do
-            if (xi<t(left+1)) go to 30
+            found = (xi<t(left+1))
+            if (found) exit
             left = left + 1
             if (left>=ilp1mx) exit
         end do
-        left = left - 1
-        if (xi>t(left+1)) then
-            write(error_unit,'(A)') 'dbintk - some abscissa was not in the support of the'//&
-                         ' corresponding basis function and the system is singular'
-            iflag = 103
-            return
+        if (.not. found) then
+            left = left - 1
+            if (xi>t(left+1)) then
+                write(error_unit,'(A)') 'dbintk - some abscissa was not in the support of the'//&
+                             ' corresponding basis function and the system is singular'
+                iflag = 103
+                return
+            end if
         end if
-
-        ! *** the i-th equation enforces interpolation at xi, hence
+        ! the i-th equation enforces interpolation at xi, hence
         ! a(i,j) = b(j,k,t)(xi), all j. only the  k  entries with  j =
         ! left-k+1,...,left actually might be nonzero. these  k  numbers
         ! are returned, in  bcoef (used for temp.storage here), by the
         ! following
- 30     call dbspvn(t, k, k, 1, xi, left, bcoef, work, iwork, iflag)
+        call dbspvn(t, k, k, 1, xi, left, bcoef, work, iwork, iflag)
         if (iflag/=0) return
 
         ! we therefore want  bcoef(j) = b(left-k+j)(xi) to go into
@@ -2019,7 +2023,7 @@
     call dbnfac(q, k+km1, n, km1, km1, iflag)
 
     if (iflag==1) then !success
-        ! *** solve  a*bcoef = y  by backsubstitution
+        ! solve  a*bcoef = y  by backsubstitution
         do i=1,n
             bcoef(i) = y(i)
         end do
@@ -2287,29 +2291,29 @@
 
     implicit none
 
-    real(wp),intent(in)  :: t(*)     !! knot vector of length n+k, where
-                                     !! n = number of b-spline basis functions
-                                     !! n = sum of knot multiplicities-k
-                                     !! dimension t(ileft+jhigh)
-    integer,intent(in)   :: jhigh    !! order of b-spline, 1 <= jhigh <= k
-    integer,intent(in)   :: k        !! highest possible order
-    integer,intent(in)   :: index    !! index = 1 gives basis functions of order jhigh
-                                     !!       = 2 denotes previous entry with work, iwork
-                                     !!         values saved for subsequent calls to
-                                     !!         dbspvn.
-    real(wp),intent(in)  :: x        !! argument of basis functions, t(k) <= x <= t(n+1)
-    integer,intent(in)   :: ileft    !! largest integer such that t(ileft) <= x < t(ileft+1)
-    real(wp),intent(out) :: vnikx(k) !! vector of length k for spline values.
-    real(wp),intent(out) :: work(*)  !! a work vector of length 2*k
-    integer,intent(out)  :: iwork    !! a work parameter.  both work and iwork contain
-                                     !! information necessary to continue for index = 2.
-                                     !! when index = 1 exclusively, these are scratch
-                                     !! variables and can be used for other purposes.
-    integer,intent(out) :: iflag     !!   0: no errors
-                                     !! 201: k does not satisfy k>=1
-                                     !! 202: jhigh does not satisfy 1<=jhigh<=k
-                                     !! 203: index is not 1 or 2
-                                     !! 204: x does not satisfy t(ileft)<=x<=t(ileft+1)
+    real(wp),dimension(*),intent(in)  :: t        !! knot vector of length n+k, where
+                                                  !! n = number of b-spline basis functions
+                                                  !! n = sum of knot multiplicities-k
+                                                  !! dimension t(ileft+jhigh)
+    integer,intent(in)                :: jhigh    !! order of b-spline, 1 <= jhigh <= k
+    integer,intent(in)                :: k        !! highest possible order
+    integer,intent(in)                :: index    !! index = 1 gives basis functions of order jhigh
+                                                  !!       = 2 denotes previous entry with work, iwork
+                                                  !!         values saved for subsequent calls to
+                                                  !!         dbspvn.
+    real(wp),intent(in)               :: x        !! argument of basis functions, t(k) <= x <= t(n+1)
+    integer,intent(in)                :: ileft    !! largest integer such that t(ileft) <= x < t(ileft+1)
+    real(wp),dimension(k),intent(out) :: vnikx    !! vector of length k for spline values.
+    real(wp),dimension(*),intent(out) :: work     !! a work vector of length 2*k
+    integer,intent(out)               :: iwork    !! a work parameter.  both work and iwork contain
+                                                  !! information necessary to continue for index = 2.
+                                                  !! when index = 1 exclusively, these are scratch
+                                                  !! variables and can be used for other purposes.
+    integer,intent(out)               :: iflag    !!   0: no errors
+                                                  !! 201: k does not satisfy k>=1
+                                                  !! 202: jhigh does not satisfy 1<=jhigh<=k
+                                                  !! 203: index is not 1 or 2
+                                                  !! 204: x does not satisfy t(ileft)<=x<=t(ileft+1)
 
     integer :: imjp1, ipj, jp1, jp1ml, l
     real(wp) :: vm, vmprev
@@ -2552,22 +2556,24 @@
 !  * dintrv author: amos, d. e., (snla) : date written 800901
 !  * revision date 820801
 !  * Jacob Williams, 2/24/2015 : updated to free-form Fortran.
+!
+!@warning Need to remove all the `goto` statements from this routine.
 
     subroutine dintrv(xt,lxt,x,ilo,ileft,mflag)
 
     implicit none
 
-    integer,intent(in)                 :: lxt    !! length of the xt vector
-    real(wp),dimension(lxt),intent(in) :: xt     !! a knot or break point vector of length lxt
+    integer,intent(in)                 :: lxt    !! length of the `xt` vector
+    real(wp),dimension(lxt),intent(in) :: xt     !! a knot or break point vector of length `lxt`
     real(wp),intent(in)                :: x      !! argument
     integer,intent(inout)              :: ilo    !! an initialization parameter which must be set
-                                                 !! to 1 the first time the spline array xt is
-                                                 !! processed by dintrv. ilo contains information for
-                                                 !! efficient processing after the initial call and ilo
+                                                 !! to 1 the first time the spline array `xt` is
+                                                 !! processed by dintrv. `ilo` contains information for
+                                                 !! efficient processing after the initial call and `ilo`
                                                  !! must not be changed by the user.  distinct splines
-                                                 !! require distinct ilo parameters.
-    integer,intent(out)                :: ileft  !! largest integer satisfying xt(ileft) <= x
-    integer,intent(out)                :: mflag  !! signals when x lies out of bounds
+                                                 !! require distinct i`lo parameters.
+    integer,intent(out)                :: ileft  !! largest integer satisfying `xt(ileft) <= x`
+    integer,intent(out)                :: mflag  !! signals when `x` lies out of bounds
 
     integer :: ihi, istep, middle
 
