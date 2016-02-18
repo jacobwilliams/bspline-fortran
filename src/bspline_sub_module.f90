@@ -2578,61 +2578,61 @@
     integer :: ihi, istep, middle
 
       ihi = ilo + 1
-      if (ihi<lxt) go to 10
-      if (x>=xt(lxt)) go to 110
-      if (lxt<=1) go to 90
-      ilo = lxt - 1
-      ihi = lxt
+      if ( ihi>=lxt ) then
+         if ( x>=xt(lxt) ) goto 500
+         if ( lxt<=1 ) goto 300
+         ilo = lxt - 1
+         ihi = lxt
+      endif
 
-   10 if (x>=xt(ihi)) go to 40
-      if (x>=xt(ilo)) go to 100
+      if ( x>=xt(ihi) ) then
+         ! now x >= xt(ilo). find upper bound
+         istep = 1
+ 50      ilo = ihi
+         ihi = ilo + istep
+         if ( ihi>=lxt ) then
+            if ( x>=xt(lxt) ) goto 500
+            ihi = lxt
+         elseif ( x>=xt(ihi) ) then
+            istep = istep*2
+            goto 50
+         endif
+      else
+         if ( x>=xt(ilo) ) goto 400
+         ! now x <= xt(ihi). find lower bound
+         istep = 1
+ 100     ihi = ilo
+         ilo = ihi - istep
+         if ( ilo<=1 ) then
+            ilo = 1
+            if ( x<xt(1) ) goto 300
+         elseif ( x<xt(ilo) ) then
+            istep = istep*2
+            goto 100
+         endif
+      endif
 
-! *** now x < xt(ihi) . find lower bound
-      istep = 1
-   20 ihi = ilo
-      ilo = ihi - istep
-      if (ilo<=1) go to 30
-      if (x>=xt(ilo)) go to 70
-      istep = istep*2
-      go to 20
+      ! now xt(ilo) <= x < xt(ihi). narrow the interval
+ 200  middle = (ilo+ihi)/2
+      if ( middle==ilo ) goto 400
+      ! note. it is assumed that middle = ilo in case ihi = ilo+1
+      if ( x<xt(middle) ) then
+         ihi = middle
+      else
+         ilo = middle
+      endif
+      goto 200
 
-   30 ilo = 1
-      if (x<xt(1)) go to 90
-      go to 70
-
-! *** now x >= xt(ilo) . find upper bound
-   40 istep = 1
-   50 ilo = ihi
-      ihi = ilo + istep
-      if (ihi>=lxt) go to 60
-      if (x<xt(ihi)) go to 70
-      istep = istep*2
-      go to 50
-
-   60 if (x>=xt(lxt)) go to 110
-      ihi = lxt
-
-! *** now xt(ilo) <= x < xt(ihi) . narrow the interval
-   70 middle = (ilo+ihi)/2
-      if (middle==ilo) go to 100
-!     note. it is assumed that middle = ilo in case ihi = ilo+1
-      if (x<xt(middle)) go to 80
-      ilo = middle
-      go to 70
-
-   80 ihi = middle
-      go to 70
-
-! *** set output and return
-   90 mflag = -1
+      ! set output and return
+ 300  mflag = -1
       ileft = 1
       return
 
-  100 mflag = 0
+ 400  mflag = 0
       ileft = ilo
       return
 
-  110 mflag = 1
+ 500  mflag = 1
       ileft = lxt
 
     end subroutine dintrv
