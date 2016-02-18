@@ -2556,8 +2556,7 @@
 !  * dintrv author: amos, d. e., (snla) : date written 800901
 !  * revision date 820801
 !  * Jacob Williams, 2/24/2015 : updated to free-form Fortran.
-!
-!@warning Need to remove all the `goto` statements from this routine.
+!  * Jacob Williams, 2/17/2016 : additional refactoring (eliminated GOTOs).
 
     subroutine dintrv(xt,lxt,x,ilo,ileft,mflag)
 
@@ -2577,63 +2576,86 @@
 
     integer :: ihi, istep, middle
 
-      ihi = ilo + 1
-      if ( ihi>=lxt ) then
-         if ( x>=xt(lxt) ) goto 500
-         if ( lxt<=1 ) goto 300
-         ilo = lxt - 1
-         ihi = lxt
-      endif
+    ihi = ilo + 1
+    if ( ihi>=lxt ) then
+        if ( x>=xt(lxt) ) then
+            mflag = 1
+            ileft = lxt
+            return
+        end if
+        if ( lxt<=1 ) then
+            mflag = -1
+            ileft = 1
+            return
+        end if
+        ilo = lxt - 1
+        ihi = lxt
+    endif
 
-      if ( x>=xt(ihi) ) then
-         ! now x >= xt(ilo). find upper bound
-         istep = 1
- 50      ilo = ihi
-         ihi = ilo + istep
-         if ( ihi>=lxt ) then
-            if ( x>=xt(lxt) ) goto 500
-            ihi = lxt
-         elseif ( x>=xt(ihi) ) then
-            istep = istep*2
-            goto 50
-         endif
-      else
-         if ( x>=xt(ilo) ) goto 400
-         ! now x <= xt(ihi). find lower bound
-         istep = 1
- 100     ihi = ilo
-         ilo = ihi - istep
-         if ( ilo<=1 ) then
-            ilo = 1
-            if ( x<xt(1) ) goto 300
-         elseif ( x<xt(ilo) ) then
-            istep = istep*2
-            goto 100
-         endif
-      endif
+    if ( x>=xt(ihi) ) then
 
-      ! now xt(ilo) <= x < xt(ihi). narrow the interval
- 200  middle = (ilo+ihi)/2
-      if ( middle==ilo ) goto 400
-      ! note. it is assumed that middle = ilo in case ihi = ilo+1
-      if ( x<xt(middle) ) then
-         ihi = middle
-      else
-         ilo = middle
-      endif
-      goto 200
+        ! now x >= xt(ilo). find upper bound
+        istep = 1
+        do
+            ilo = ihi
+            ihi = ilo + istep
+            if ( ihi>=lxt ) then
+                if ( x>=xt(lxt) ) then
+                    mflag = 1
+                    ileft = lxt
+                    return
+                end if
+                ihi = lxt
+            elseif ( x>=xt(ihi) ) then
+                istep = istep*2
+                cycle
+            endif
+            exit
+        end do
 
-      ! set output and return
- 300  mflag = -1
-      ileft = 1
-      return
+    else
 
- 400  mflag = 0
-      ileft = ilo
-      return
+        if ( x>=xt(ilo) ) then
+            mflag = 0
+            ileft = ilo
+            return
+        end if
+        ! now x <= xt(ihi). find lower bound
+        istep = 1
+        do
+            ihi = ilo
+            ilo = ihi - istep
+            if ( ilo<=1 ) then
+                ilo = 1
+                if ( x<xt(1) ) then
+                    mflag = -1
+                    ileft = 1
+                    return
+                end if
+            elseif ( x<xt(ilo) ) then
+                istep = istep*2
+                cycle
+            endif
+            exit
+        end do
 
- 500  mflag = 1
-      ileft = lxt
+    endif
+
+    ! now xt(ilo) <= x < xt(ihi). narrow the interval
+    do
+        middle = (ilo+ihi)/2
+        if ( middle==ilo ) then
+            mflag = 0
+            ileft = ilo
+            return
+        end if
+        ! note. it is assumed that middle = ilo in case ihi = ilo+1
+        if ( x<xt(middle) ) then
+            ihi = middle
+        else
+            ilo = middle
+        endif
+    end do
 
     end subroutine dintrv
 !*****************************************************************************************
