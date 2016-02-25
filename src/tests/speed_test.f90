@@ -85,14 +85,14 @@
         end do
     end do
 
-    !initialize:
+    !initialize using the constructors:
 
-    call s1%initialize(x,fcn_1d,kx,iflag)
-    call s2%initialize(x,y,fcn_2d,kx,ky,iflag)
-    call s3%initialize(x,y,z,fcn_3d,kx,ky,kz,iflag)
-    call s4%initialize(x,y,z,q,fcn_4d,kx,ky,kz,kq,iflag)
-    call s5%initialize(x,y,z,q,r,fcn_5d,kx,ky,kz,kq,kr,iflag)
-    call s6%initialize(x,y,z,q,r,s,fcn_6d,kx,ky,kz,kq,kr,ks,iflag)
+    s1 = bspline_1d(x,fcn_1d,kx,iflag)
+    s2 = bspline_2d(x,y,fcn_2d,kx,ky,iflag)
+    s3 = bspline_3d(x,y,z,fcn_3d,kx,ky,kz,iflag)
+    s4 = bspline_4d(x,y,z,q,fcn_4d,kx,ky,kz,kq,iflag)
+    s5 = bspline_5d(x,y,z,q,r,fcn_5d,kx,ky,kz,kq,kr,iflag)
+    s6 = bspline_6d(x,y,z,q,r,s,fcn_6d,kx,ky,kz,kq,kr,ks,iflag)
 
     ! evaluate the interpolants:
     sumval = 0.0_wp
