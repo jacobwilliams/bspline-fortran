@@ -1,5 +1,6 @@
 !*****************************************************************************************
-!> author: Jacob Williams
+!>
+!  author: Jacob Williams
 !  license: BSD
 !  date: 12/6/2015
 !
@@ -209,11 +210,43 @@
         procedure,public :: destroy => destroy_6d
     end type bspline_6d
 
+    interface bspline_1d
+        procedure :: bspline_1d_constructor_empty,&
+                     bspline_1d_constructor_auto_knots,&
+                     bspline_1d_constructor_specify_knots
+    end interface
+    interface bspline_2d
+        procedure :: bspline_2d_constructor_empty,&
+                     bspline_2d_constructor_auto_knots,&
+                     bspline_2d_constructor_specify_knots
+    end interface
+    interface bspline_3d
+        procedure :: bspline_3d_constructor_empty,&
+                     bspline_3d_constructor_auto_knots,&
+                     bspline_3d_constructor_specify_knots
+    end interface
+    interface bspline_4d
+        procedure :: bspline_4d_constructor_empty,&
+                     bspline_4d_constructor_auto_knots,&
+                     bspline_4d_constructor_specify_knots
+    end interface
+    interface bspline_5d
+        procedure :: bspline_5d_constructor_empty,&
+                     bspline_5d_constructor_auto_knots,&
+                     bspline_5d_constructor_specify_knots
+    end interface
+    interface bspline_6d
+        procedure :: bspline_6d_constructor_empty,&
+                     bspline_6d_constructor_auto_knots,&
+                     bspline_6d_constructor_specify_knots
+    end interface
+
     contains
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Destructor for [[bspline_1d]] type.
+!>
+!  Destructor for [[bspline_1d]] type.
 
     subroutine destroy_1d(me)
 
@@ -225,7 +258,64 @@
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Initialize a [[bspline_1d]] type (with automatically-computed knots).
+!>
+!  It returns an empty [[bspline_1d]] type. Note that INITIALIZE still
+!  needs to be called before it can be used.
+!  Not really that useful except perhaps in some OpenMP applications.
+
+    elemental function bspline_1d_constructor_empty() result(me)
+
+    implicit none
+
+    type(bspline_1d) :: me
+
+    end function bspline_1d_constructor_empty
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Constructor for a [[bspline_1d]] type (auto knots).
+!  This is a wrapper for [[initialize_1d_auto_knots]].
+
+    function bspline_1d_constructor_auto_knots(x,fcn,kx,iflag) result(me)
+
+    implicit none
+
+    type(bspline_1d)                 :: me
+    real(wp),dimension(:),intent(in) :: x
+    real(wp),dimension(:),intent(in) :: fcn
+    integer,intent(in)               :: kx
+    integer,intent(out)              :: iflag
+
+    call initialize_1d_auto_knots(me,x,fcn,kx,iflag)
+
+    end function bspline_1d_constructor_auto_knots
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Constructor for a [[bspline_1d]] type (user-specified knots).
+!  This is a wrapper for [[initialize_1d_specify_knots]].
+
+    function bspline_1d_constructor_specify_knots(x,fcn,kx,tx,iflag) result(me)
+
+    implicit none
+
+    type(bspline_1d)                 :: me
+    real(wp),dimension(:),intent(in) :: x
+    real(wp),dimension(:),intent(in) :: fcn
+    integer,intent(in)               :: kx
+    real(wp),dimension(:),intent(in) :: tx
+    integer,intent(out)              :: iflag
+
+    call initialize_1d_specify_knots(me,x,fcn,kx,tx,iflag)
+
+    end function bspline_1d_constructor_specify_knots
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_1d]] type (with automatically-computed knots).
 !  This is a wrapper for [[db1ink]].
 
     subroutine initialize_1d_auto_knots(me,x,fcn,kx,iflag)
@@ -257,11 +347,12 @@
 
     iflag = iknot     !status flag
 
-end subroutine initialize_1d_auto_knots
+    end subroutine initialize_1d_auto_knots
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Initialize a [[bspline_1d]] type (with user-specified knots).
+!>
+!  Initialize a [[bspline_1d]] type (with user-specified knots).
 !  This is a wrapper for [[db1ink]].
 
     subroutine initialize_1d_specify_knots(me,x,fcn,kx,tx,iflag)
@@ -301,7 +392,8 @@ end subroutine initialize_1d_auto_knots
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Evaluate a [[bspline_1d]] interpolate.  This is a wrapper for [[db1val]].
+!>
+!  Evaluate a [[bspline_1d]] interpolate.  This is a wrapper for [[db1val]].
 
     subroutine evaluate_1d(me,xval,idx,f,iflag)
 
@@ -319,7 +411,8 @@ end subroutine initialize_1d_auto_knots
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Destructor for [[bspline_2d]] type.
+!>
+!  Destructor for [[bspline_2d]] type.
 
     subroutine destroy_2d(me)
 
@@ -331,7 +424,69 @@ end subroutine initialize_1d_auto_knots
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Initialize a [[bspline_2d]] type (with automatically-computed knots).
+!>
+!  It returns an empty [[bspline_2d]] type. Note that INITIALIZE still
+!  needs to be called before it can be used.
+!  Not really that useful except perhaps in some OpenMP applications.
+
+    elemental function bspline_2d_constructor_empty() result(me)
+
+    implicit none
+
+    type(bspline_2d) :: me
+
+    end function bspline_2d_constructor_empty
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Constructor for a [[bspline_2d]] type (auto knots).
+!  This is a wrapper for [[initialize_2d_auto_knots]].
+
+    function bspline_2d_constructor_auto_knots(x,y,fcn,kx,ky,iflag) result(me)
+
+    implicit none
+
+    type(bspline_2d)                   :: me
+    real(wp),dimension(:),intent(in)   :: x
+    real(wp),dimension(:),intent(in)   :: y
+    real(wp),dimension(:,:),intent(in) :: fcn
+    integer,intent(in)                 :: kx
+    integer,intent(in)                 :: ky
+    integer,intent(out)                :: iflag
+
+    call initialize_2d_auto_knots(me,x,y,fcn,kx,ky,iflag)
+
+    end function bspline_2d_constructor_auto_knots
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Constructor for a [[bspline_2d]] type (user-specified knots).
+!  This is a wrapper for [[initialize_2d_specify_knots]].
+
+    function bspline_2d_constructor_specify_knots(x,y,fcn,kx,ky,tx,ty,iflag) result(me)
+
+    implicit none
+
+    type(bspline_2d)                   :: me
+    real(wp),dimension(:),intent(in)   :: x
+    real(wp),dimension(:),intent(in)   :: y
+    real(wp),dimension(:,:),intent(in) :: fcn
+    integer,intent(in)                 :: kx
+    integer,intent(in)                 :: ky
+    real(wp),dimension(:),intent(in)   :: tx
+    real(wp),dimension(:),intent(in)   :: ty
+    integer,intent(out)                :: iflag
+
+    call initialize_2d_specify_knots(me,x,y,fcn,kx,ky,tx,ty,iflag)
+
+    end function bspline_2d_constructor_specify_knots
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_2d]] type (with automatically-computed knots).
 !  This is a wrapper for [[db2ink]].
 
     subroutine initialize_2d_auto_knots(me,x,y,fcn,kx,ky,iflag)
@@ -374,7 +529,8 @@ end subroutine initialize_1d_auto_knots
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Initialize a [[bspline_2d]] type (with user-specified knots).
+!>
+!  Initialize a [[bspline_2d]] type (with user-specified knots).
 !  This is a wrapper for [[db2ink]].
 
     subroutine initialize_2d_specify_knots(me,x,y,fcn,kx,ky,tx,ty,iflag)
@@ -425,7 +581,8 @@ end subroutine initialize_1d_auto_knots
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Evaluate a [[bspline_2d]] interpolate.  This is a wrapper for [[db2val]].
+!>
+!  Evaluate a [[bspline_2d]] interpolate.  This is a wrapper for [[db2val]].
 
     subroutine evaluate_2d(me,xval,yval,idx,idy,f,iflag)
 
@@ -451,7 +608,8 @@ end subroutine initialize_1d_auto_knots
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Destructor for [[bspline_3d]] type.
+!>
+!  Destructor for [[bspline_3d]] type.
 
     subroutine destroy_3d(me)
 
@@ -463,7 +621,74 @@ end subroutine initialize_1d_auto_knots
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Initialize a [[bspline_3d]] type (with automatically-computed knots).
+!>
+!  It returns an empty [[bspline_3d]] type. Note that INITIALIZE still
+!  needs to be called before it can be used.
+!  Not really that useful except perhaps in some OpenMP applications.
+
+    elemental function bspline_3d_constructor_empty() result(me)
+
+    implicit none
+
+    type(bspline_3d) :: me
+
+    end function bspline_3d_constructor_empty
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Constructor for a [[bspline_3d]] type (auto knots).
+!  This is a wrapper for [[initialize_3d_auto_knots]].
+
+    function bspline_3d_constructor_auto_knots(x,y,z,fcn,kx,ky,kz,iflag) result(me)
+
+    implicit none
+
+    type(bspline_3d)                     :: me
+    real(wp),dimension(:),intent(in)     :: x
+    real(wp),dimension(:),intent(in)     :: y
+    real(wp),dimension(:),intent(in)     :: z
+    real(wp),dimension(:,:,:),intent(in) :: fcn
+    integer,intent(in)                   :: kx
+    integer,intent(in)                   :: ky
+    integer,intent(in)                   :: kz
+    integer,intent(out)                  :: iflag
+
+    call initialize_3d_auto_knots(me,x,y,z,fcn,kx,ky,kz,iflag)
+
+    end function bspline_3d_constructor_auto_knots
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Constructor for a [[bspline_3d]] type (user-specified knots).
+!  This is a wrapper for [[initialize_3d_specify_knots]].
+
+    function bspline_3d_constructor_specify_knots(x,y,z,fcn,kx,ky,kz,tx,ty,tz,iflag) result(me)
+
+    implicit none
+
+    type(bspline_3d)                     :: me
+    real(wp),dimension(:),intent(in)     :: x
+    real(wp),dimension(:),intent(in)     :: y
+    real(wp),dimension(:),intent(in)     :: z
+    real(wp),dimension(:,:,:),intent(in) :: fcn
+    integer,intent(in)                   :: kx
+    integer,intent(in)                   :: ky
+    integer,intent(in)                   :: kz
+    real(wp),dimension(:),intent(in)     :: tx
+    real(wp),dimension(:),intent(in)     :: ty
+    real(wp),dimension(:),intent(in)     :: tz
+    integer,intent(out)                  :: iflag
+
+    call initialize_3d_specify_knots(me,x,y,z,fcn,kx,ky,kz,tx,ty,tz,iflag)
+
+    end function bspline_3d_constructor_specify_knots
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_3d]] type (with automatically-computed knots).
 !  This is a wrapper for [[db3ink]].
 
     subroutine initialize_3d_auto_knots(me,x,y,z,fcn,kx,ky,kz,iflag)
@@ -516,7 +741,8 @@ end subroutine initialize_1d_auto_knots
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Initialize a [[bspline_3d]] type (with user-specified knots).
+!>
+!  Initialize a [[bspline_3d]] type (with user-specified knots).
 !  This is a wrapper for [[db3ink]].
 
     subroutine initialize_3d_specify_knots(me,x,y,z,fcn,kx,ky,kz,tx,ty,tz,iflag)
@@ -580,7 +806,8 @@ end subroutine initialize_1d_auto_knots
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Evaluate a [[bspline_3d]] interpolate.  This is a wrapper for [[db3val]].
+!>
+!  Evaluate a [[bspline_3d]] interpolate.  This is a wrapper for [[db3val]].
 
     subroutine evaluate_3d(me,xval,yval,zval,idx,idy,idz,f,iflag)
 
@@ -609,7 +836,8 @@ end subroutine initialize_1d_auto_knots
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Destructor for [[bspline_4d]] type.
+!>
+!  Destructor for [[bspline_4d]] type.
 
     subroutine destroy_4d(me)
 
@@ -621,7 +849,79 @@ end subroutine initialize_1d_auto_knots
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Initialize a [[bspline_4d]] type (with automatically-computed knots).
+!>
+!  It returns an empty [[bspline_4d]] type. Note that INITIALIZE still
+!  needs to be called before it can be used.
+!  Not really that useful except perhaps in some OpenMP applications.
+
+    elemental function bspline_4d_constructor_empty() result(me)
+
+    implicit none
+
+    type(bspline_4d) :: me
+
+    end function bspline_4d_constructor_empty
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Constructor for a [[bspline_4d]] type (auto knots).
+!  This is a wrapper for [[initialize_4d_auto_knots]].
+
+    function bspline_4d_constructor_auto_knots(x,y,z,q,fcn,kx,ky,kz,kq,iflag) result(me)
+
+    implicit none
+
+    type(bspline_4d)                       :: me
+    real(wp),dimension(:),intent(in)       :: x
+    real(wp),dimension(:),intent(in)       :: y
+    real(wp),dimension(:),intent(in)       :: z
+    real(wp),dimension(:),intent(in)       :: q
+    real(wp),dimension(:,:,:,:),intent(in) :: fcn
+    integer,intent(in)                     :: kx
+    integer,intent(in)                     :: ky
+    integer,intent(in)                     :: kz
+    integer,intent(in)                     :: kq
+    integer,intent(out)                    :: iflag
+
+    call initialize_4d_auto_knots(me,x,y,z,q,fcn,kx,ky,kz,kq,iflag)
+
+    end function bspline_4d_constructor_auto_knots
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Constructor for a [[bspline_4d]] type (user-specified knots).
+!  This is a wrapper for [[initialize_4d_specify_knots]].
+
+    function bspline_4d_constructor_specify_knots(x,y,z,q,fcn,kx,ky,kz,kq,tx,ty,tz,tq,iflag) result(me)
+
+    implicit none
+
+    type(bspline_4d)                       :: me
+    real(wp),dimension(:),intent(in)       :: x
+    real(wp),dimension(:),intent(in)       :: y
+    real(wp),dimension(:),intent(in)       :: z
+    real(wp),dimension(:),intent(in)       :: q
+    real(wp),dimension(:,:,:,:),intent(in) :: fcn
+    integer,intent(in)                     :: kx
+    integer,intent(in)                     :: ky
+    integer,intent(in)                     :: kz
+    integer,intent(in)                     :: kq
+    real(wp),dimension(:),intent(in)       :: tx
+    real(wp),dimension(:),intent(in)       :: ty
+    real(wp),dimension(:),intent(in)       :: tz
+    real(wp),dimension(:),intent(in)       :: tq
+    integer,intent(out)                    :: iflag
+
+    call initialize_4d_specify_knots(me,x,y,z,q,fcn,kx,ky,kz,kq,tx,ty,tz,tq,iflag)
+
+    end function bspline_4d_constructor_specify_knots
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_4d]] type (with automatically-computed knots).
 !  This is a wrapper for [[db4ink]].
 
     subroutine initialize_4d_auto_knots(me,x,y,z,q,fcn,kx,ky,kz,kq,iflag)
@@ -680,7 +980,8 @@ end subroutine initialize_1d_auto_knots
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Initialize a [[bspline_4d]] type (with user-specified knots).
+!>
+!  Initialize a [[bspline_4d]] type (with user-specified knots).
 !  This is a wrapper for [[db4ink]].
 
     subroutine initialize_4d_specify_knots(me,x,y,z,q,fcn,kx,ky,kz,kq,tx,ty,tz,tq,iflag)
@@ -753,7 +1054,8 @@ end subroutine initialize_1d_auto_knots
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Evaluate a [[bspline_4d]] interpolate.  This is a wrapper for [[db4val]].
+!>
+!  Evaluate a [[bspline_4d]] interpolate.  This is a wrapper for [[db4val]].
 
     subroutine evaluate_4d(me,xval,yval,zval,qval,idx,idy,idz,idq,f,iflag)
 
@@ -784,7 +1086,8 @@ end subroutine initialize_1d_auto_knots
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Destructor for [[bspline_5d]] type.
+!>
+!  Destructor for [[bspline_5d]] type.
 
     subroutine destroy_5d(me)
 
@@ -796,7 +1099,84 @@ end subroutine initialize_1d_auto_knots
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Initialize a [[bspline_5d]] type (with automatically-computed knots).
+!>
+!  It returns an empty [[bspline_5d]] type. Note that INITIALIZE still
+!  needs to be called before it can be used.
+!  Not really that useful except perhaps in some OpenMP applications.
+
+    elemental function bspline_5d_constructor_empty() result(me)
+
+    implicit none
+
+    type(bspline_5d) :: me
+
+    end function bspline_5d_constructor_empty
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Constructor for a [[bspline_5d]] type (auto knots).
+!  This is a wrapper for [[initialize_5d_auto_knots]].
+
+    function bspline_5d_constructor_auto_knots(x,y,z,q,r,fcn,kx,ky,kz,kq,kr,iflag) result(me)
+
+    implicit none
+
+    type(bspline_5d)                         :: me
+    real(wp),dimension(:),intent(in)         :: x
+    real(wp),dimension(:),intent(in)         :: y
+    real(wp),dimension(:),intent(in)         :: z
+    real(wp),dimension(:),intent(in)         :: q
+    real(wp),dimension(:),intent(in)         :: r
+    real(wp),dimension(:,:,:,:,:),intent(in) :: fcn
+    integer,intent(in)                       :: kx
+    integer,intent(in)                       :: ky
+    integer,intent(in)                       :: kz
+    integer,intent(in)                       :: kq
+    integer,intent(in)                       :: kr
+    integer,intent(out)                      :: iflag
+
+    call initialize_5d_auto_knots(me,x,y,z,q,r,fcn,kx,ky,kz,kq,kr,iflag)
+
+    end function bspline_5d_constructor_auto_knots
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Constructor for a [[bspline_5d]] type (user-specified knots).
+!  This is a wrapper for [[initialize_5d_specify_knots]].
+
+    function bspline_5d_constructor_specify_knots(x,y,z,q,r,fcn,kx,ky,kz,kq,kr,tx,ty,tz,tq,tr,iflag) result(me)
+
+    implicit none
+
+    type(bspline_5d)                         :: me
+    real(wp),dimension(:),intent(in)         :: x
+    real(wp),dimension(:),intent(in)         :: y
+    real(wp),dimension(:),intent(in)         :: z
+    real(wp),dimension(:),intent(in)         :: q
+    real(wp),dimension(:),intent(in)         :: r
+    real(wp),dimension(:,:,:,:,:),intent(in) :: fcn
+    integer,intent(in)                       :: kx
+    integer,intent(in)                       :: ky
+    integer,intent(in)                       :: kz
+    integer,intent(in)                       :: kq
+    integer,intent(in)                       :: kr
+    real(wp),dimension(:),intent(in)         :: tx
+    real(wp),dimension(:),intent(in)         :: ty
+    real(wp),dimension(:),intent(in)         :: tz
+    real(wp),dimension(:),intent(in)         :: tq
+    real(wp),dimension(:),intent(in)         :: tr
+    integer,intent(out)                      :: iflag
+
+    call initialize_5d_specify_knots(me,x,y,z,q,r,fcn,kx,ky,kz,kq,kr,tx,ty,tz,tq,tr,iflag)
+
+    end function bspline_5d_constructor_specify_knots
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_5d]] type (with automatically-computed knots).
 !  This is a wrapper for [[db5ink]].
 
     subroutine initialize_5d_auto_knots(me,x,y,z,q,r,fcn,kx,ky,kz,kq,kr,iflag)
@@ -861,7 +1241,8 @@ end subroutine initialize_1d_auto_knots
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Initialize a [[bspline_5d]] type (with user-specified knots).
+!>
+!  Initialize a [[bspline_5d]] type (with user-specified knots).
 !  This is a wrapper for [[db5ink]].
 
     subroutine initialize_5d_specify_knots(me,x,y,z,q,r,fcn,kx,ky,kz,kq,kr,tx,ty,tz,tq,tr,iflag)
@@ -943,7 +1324,8 @@ end subroutine initialize_1d_auto_knots
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Evaluate a [[bspline_5d]] interpolate.  This is a wrapper for [[db5val]].
+!>
+!  Evaluate a [[bspline_5d]] interpolate.  This is a wrapper for [[db5val]].
 
     subroutine evaluate_5d(me,xval,yval,zval,qval,rval,idx,idy,idz,idq,idr,f,iflag)
 
@@ -976,7 +1358,8 @@ end subroutine initialize_1d_auto_knots
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Destructor for [[bspline_6d]] type.
+!>
+!  Destructor for [[bspline_6d]] type.
 
     subroutine destroy_6d(me)
 
@@ -988,7 +1371,89 @@ end subroutine initialize_1d_auto_knots
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Initialize a [[bspline_6d]] type (with automatically-computed knots).
+!>
+!  It returns an empty [[bspline_6d]] type. Note that INITIALIZE still
+!  needs to be called before it can be used.
+!  Not really that useful except perhaps in some OpenMP applications.
+
+    elemental function bspline_6d_constructor_empty() result(me)
+
+    implicit none
+
+    type(bspline_6d) :: me
+
+    end function bspline_6d_constructor_empty
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Constructor for a [[bspline_6d]] type (auto knots).
+!  This is a wrapper for [[initialize_6d_auto_knots]].
+
+    function bspline_6d_constructor_auto_knots(x,y,z,q,r,s,fcn,kx,ky,kz,kq,kr,ks,iflag) result(me)
+
+    implicit none
+
+    type(bspline_6d)                           :: me
+    real(wp),dimension(:),intent(in)           :: x
+    real(wp),dimension(:),intent(in)           :: y
+    real(wp),dimension(:),intent(in)           :: z
+    real(wp),dimension(:),intent(in)           :: q
+    real(wp),dimension(:),intent(in)           :: r
+    real(wp),dimension(:),intent(in)           :: s
+    real(wp),dimension(:,:,:,:,:,:),intent(in) :: fcn
+    integer,intent(in)                         :: kx
+    integer,intent(in)                         :: ky
+    integer,intent(in)                         :: kz
+    integer,intent(in)                         :: kq
+    integer,intent(in)                         :: kr
+    integer,intent(in)                         :: ks
+    integer,intent(out)                        :: iflag
+
+    call initialize_6d_auto_knots(me,x,y,z,q,r,s,fcn,kx,ky,kz,kq,kr,ks,iflag)
+
+    end function bspline_6d_constructor_auto_knots
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Constructor for a [[bspline_6d]] type (user-specified knots).
+!  This is a wrapper for [[initialize_6d_specify_knots]].
+
+    function bspline_6d_constructor_specify_knots(x,y,z,q,r,s,fcn,kx,ky,kz,kq,kr,ks,tx,ty,tz,tq,tr,ts,iflag) result(me)
+
+    implicit none
+
+    type(bspline_6d)                           :: me
+    real(wp),dimension(:),intent(in)           :: x
+    real(wp),dimension(:),intent(in)           :: y
+    real(wp),dimension(:),intent(in)           :: z
+    real(wp),dimension(:),intent(in)           :: q
+    real(wp),dimension(:),intent(in)           :: r
+    real(wp),dimension(:),intent(in)           :: s
+    real(wp),dimension(:,:,:,:,:,:),intent(in) :: fcn
+    integer,intent(in)                         :: kx
+    integer,intent(in)                         :: ky
+    integer,intent(in)                         :: kz
+    integer,intent(in)                         :: kq
+    integer,intent(in)                         :: kr
+    integer,intent(in)                         :: ks
+    real(wp),dimension(:),intent(in)           :: tx
+    real(wp),dimension(:),intent(in)           :: ty
+    real(wp),dimension(:),intent(in)           :: tz
+    real(wp),dimension(:),intent(in)           :: tq
+    real(wp),dimension(:),intent(in)           :: tr
+    real(wp),dimension(:),intent(in)           :: ts
+    integer,intent(out)                        :: iflag
+
+    call initialize_6d_specify_knots(me,x,y,z,q,r,s,fcn,kx,ky,kz,kq,kr,ks,tx,ty,tz,tq,tr,ts,iflag)
+
+    end function bspline_6d_constructor_specify_knots
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_6d]] type (with automatically-computed knots).
 !  This is a wrapper for [[db6ink]].
 
     subroutine initialize_6d_auto_knots(me,x,y,z,q,r,s,fcn,kx,ky,kz,kq,kr,ks,iflag)
@@ -1059,7 +1524,8 @@ end subroutine initialize_1d_auto_knots
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Initialize a [[bspline_6d]] type (with user-specified knots).
+!>
+!  Initialize a [[bspline_6d]] type (with user-specified knots).
 !  This is a wrapper for [[db6ink]].
 
     subroutine initialize_6d_specify_knots(me,x,y,z,q,r,s,fcn,kx,ky,kz,kq,kr,ks,tx,ty,tz,tq,tr,ts,iflag)
@@ -1150,7 +1616,8 @@ end subroutine initialize_1d_auto_knots
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Evaluate a [[bspline_6d]] interpolate.  This is a wrapper for [[db6val]].
+!>
+!  Evaluate a [[bspline_6d]] interpolate.  This is a wrapper for [[db6val]].
 
     subroutine evaluate_6d(me,xval,yval,zval,qval,rval,sval,idx,idy,idz,idq,idr,ids,f,iflag)
 
