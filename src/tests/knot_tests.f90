@@ -48,17 +48,17 @@
     ! t = [ 0,0,0,0,   40,60,      101,101,101,101 ] (tx for not a knot conditions)
 
     call s_default%initialize(x,fcn,kx,iflag)  !default (not-a-knot)
-    if (iflag/=1) error stop 'error initializing s_default'
+    if (iflag/=0) error stop 'error initializing s_default'
 
     !user-specified knots:
 
     tx = real([0,0,0,0,20,40,101,101,101,101], wp)
     call s1%initialize(x,fcn,kx,tx,iflag)
-    if (iflag/=1) error stop 'error initializing s1'
+    if (iflag/=0) error stop 'error initializing s1'
 
     tx = real([0,0,0,0,60,80,101,101,101,101], wp)
     call s2%initialize(x,fcn,kx,tx,iflag)
-    if (iflag/=1) error stop 'error initializing s2'
+    if (iflag/=0) error stop 'error initializing s2'
 
     do i = 0,100
 
