@@ -167,6 +167,8 @@
     integer,intent(out)                  :: iflag    !! status flag: 0 : no errors, /=0 : error
     integer,intent(inout)                :: inbvx    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
 
+    real(wp),dimension(3*kx) :: work
+
     f = 0.0_wp
 
     if (xval<tx(1) .or. xval>tx(nx+kx)) then
@@ -175,7 +177,7 @@
         return
     end if
 
-    call dbvalu(tx,bcoef,nx,kx,idx,xval,inbvx,iflag,f)
+    call dbvalu(tx,bcoef,nx,kx,idx,xval,inbvx,work,iflag,f)
 
     end subroutine db1val
 !*****************************************************************************************
@@ -354,6 +356,7 @@
 
     integer :: k, lefty, mflag, kcol
     real(wp),dimension(ky) :: temp
+    real(wp),dimension(3*max(kx,ky)) :: work
 
     f = 0.0_wp
 
@@ -374,12 +377,12 @@
     kcol = lefty - ky
     do k=1,ky
         kcol = kcol + 1
-        call dbvalu(tx,bcoef(:,kcol),nx,kx,idx,xval,inbvx,iflag,temp(k))
+        call dbvalu(tx,bcoef(:,kcol),nx,kx,idx,xval,inbvx,work,iflag,temp(k))
         if (iflag/=0) return !error
     end do
 
     kcol = lefty - ky + 1
-    call dbvalu(ty(kcol:),temp,ky,ky,idy,yval,inbvy,iflag,f)
+    call dbvalu(ty(kcol:),temp,ky,ky,idy,yval,inbvy,work,iflag,f)
 
     end subroutine db2val
 !*****************************************************************************************
@@ -595,6 +598,7 @@
 
     real(wp),dimension(ky,kz)              :: temp1
     real(wp),dimension(kz)                 :: temp2
+    real(wp),dimension(3*max(kx,ky,kz))    :: work
 
     integer :: lefty, leftz, mflag,&
                 kcoly, kcolz, j, k
@@ -629,19 +633,19 @@
         kcoly = lefty - ky
         do j=1,ky
             kcoly = kcoly + 1
-            call dbvalu(tx,bcoef(:,kcoly,kcolz),nx,kx,idx,xval,inbvx,iflag,temp1(j,k))
+            call dbvalu(tx,bcoef(:,kcoly,kcolz),nx,kx,idx,xval,inbvx,work,iflag,temp1(j,k))
             if (iflag/=0) return
         end do
     end do
 
     kcoly = lefty - ky + 1
     do k=1,kz
-        call dbvalu(ty(kcoly:),temp1(:,k),ky,ky,idy,yval,inbvy,iflag,temp2(k))
+        call dbvalu(ty(kcoly:),temp1(:,k),ky,ky,idy,yval,inbvy,work,iflag,temp2(k))
         if (iflag/=0) return
     end do
 
     kcolz = leftz - kz + 1
-    call dbvalu(tz(kcolz:),temp2,kz,kz,idz,zval,inbvz,iflag,f)
+    call dbvalu(tz(kcolz:),temp2,kz,kz,idz,zval,inbvz,work,iflag,f)
 
     end subroutine db3val
 !*****************************************************************************************
@@ -818,6 +822,7 @@
     real(wp),dimension(ky,kz,kq)             :: temp1
     real(wp),dimension(kz,kq)                :: temp2
     real(wp),dimension(kq)                   :: temp3
+    real(wp),dimension(3*max(kx,ky,kz,kq))   :: work
     integer :: lefty, leftz, leftq, mflag,&
                 kcoly, kcolz, kcolq, j, k, q
 
@@ -862,7 +867,7 @@
             do j=1,ky
                 kcoly = kcoly + 1
                 call dbvalu(tx,bcoef(:,kcoly,kcolz,kcolq),&
-                                     nx,kx,idx,xval,inbvx,iflag,temp1(j,k,q))
+                                     nx,kx,idx,xval,inbvx,work,iflag,temp1(j,k,q))
                 if (iflag/=0) return
             end do
         end do
@@ -872,7 +877,7 @@
     kcoly = lefty - ky + 1
     do q=1,kq
         do k=1,kz
-            call dbvalu(ty(kcoly:),temp1(:,k,q),ky,ky,idy,yval,inbvy,iflag,temp2(k,q))
+            call dbvalu(ty(kcoly:),temp1(:,k,q),ky,ky,idy,yval,inbvy,work,iflag,temp2(k,q))
             if (iflag/=0) return
         end do
     end do
@@ -880,13 +885,13 @@
     ! z -> q
     kcolz = leftz - kz + 1
     do q=1,kq
-        call dbvalu(tz(kcolz:),temp2(:,q),kz,kz,idz,zval,inbvz,iflag,temp3(q))
+        call dbvalu(tz(kcolz:),temp2(:,q),kz,kz,idz,zval,inbvz,work,iflag,temp3(q))
         if (iflag/=0) return
     end do
 
     ! q
     kcolq = leftq - kq + 1
-    call dbvalu(tq(kcolq:),temp3,kq,kq,idq,qval,inbvq,iflag,f)
+    call dbvalu(tq(kcolq:),temp3,kq,kq,idq,qval,inbvq,work,iflag,f)
 
     end subroutine db4val
 !*****************************************************************************************
@@ -1082,10 +1087,11 @@
     integer,intent(inout)                         :: iloq     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
     integer,intent(inout)                         :: ilor     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
 
-    real(wp),dimension(ky,kz,kq,kr)  :: temp1
-    real(wp),dimension(kz,kq,kr)     :: temp2
-    real(wp),dimension(kq,kr)        :: temp3
-    real(wp),dimension(kr)           :: temp4
+    real(wp),dimension(ky,kz,kq,kr)           :: temp1
+    real(wp),dimension(kz,kq,kr)              :: temp2
+    real(wp),dimension(kq,kr)                 :: temp3
+    real(wp),dimension(kr)                    :: temp4
+    real(wp),dimension(3*max(kx,ky,kz,kq,kr)) :: work
     integer :: lefty, leftz, leftq, leftr, mflag,&
                kcoly, kcolz, kcolq, kcolr, j, k, q, r
 
@@ -1139,7 +1145,7 @@
                 do j=1,ky
                     kcoly = kcoly + 1
                     call dbvalu(tx,bcoef(:,kcoly,kcolz,kcolq,kcolr),&
-                                nx,kx,idx,xval,inbvx,iflag,temp1(j,k,q,r))
+                                nx,kx,idx,xval,inbvx,work,iflag,temp1(j,k,q,r))
                     if (iflag/=0) return
                 end do
             end do
@@ -1151,7 +1157,7 @@
     do r=1,kr
         do q=1,kq
             do k=1,kz
-                call dbvalu(ty(kcoly:),temp1(:,k,q,r),ky,ky,idy,yval,inbvy,iflag,temp2(k,q,r))
+                call dbvalu(ty(kcoly:),temp1(:,k,q,r),ky,ky,idy,yval,inbvy,work,iflag,temp2(k,q,r))
                 if (iflag/=0) return
             end do
         end do
@@ -1161,7 +1167,7 @@
     kcolz = leftz - kz + 1
     do r=1,kr
         do q=1,kq
-            call dbvalu(tz(kcolz:),temp2(:,q,r),kz,kz,idz,zval,inbvz,iflag,temp3(q,r))
+            call dbvalu(tz(kcolz:),temp2(:,q,r),kz,kz,idz,zval,inbvz,work,iflag,temp3(q,r))
             if (iflag/=0) return
         end do
     end do
@@ -1169,13 +1175,13 @@
     ! q -> r
     kcolq = leftq - kq + 1
     do r=1,kr
-        call dbvalu(tq(kcolq:),temp3(:,r),kq,kq,idq,qval,inbvq,iflag,temp4(r))
+        call dbvalu(tq(kcolq:),temp3(:,r),kq,kq,idq,qval,inbvq,work,iflag,temp4(r))
         if (iflag/=0) return
     end do
 
     ! r
     kcolr = leftr - kr + 1
-    call dbvalu(tr(kcolr:),temp4,kr,kr,idr,rval,inbvr,iflag,f)
+    call dbvalu(tr(kcolr:),temp4,kr,kr,idr,rval,inbvr,work,iflag,f)
 
     end subroutine db5val
 !*****************************************************************************************
@@ -1387,11 +1393,12 @@
     integer,intent(inout)                            :: ilor     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
     integer,intent(inout)                            :: ilos     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
 
-    real(wp),dimension(ky,kz,kq,kr,ks)  :: temp1
-    real(wp),dimension(kz,kq,kr,ks)     :: temp2
-    real(wp),dimension(kq,kr,ks)        :: temp3
-    real(wp),dimension(kr,ks)           :: temp4
-    real(wp),dimension(ks)              :: temp5
+    real(wp),dimension(ky,kz,kq,kr,ks)            :: temp1
+    real(wp),dimension(kz,kq,kr,ks)               :: temp2
+    real(wp),dimension(kq,kr,ks)                  :: temp3
+    real(wp),dimension(kr,ks)                     :: temp4
+    real(wp),dimension(ks)                        :: temp5
+    real(wp),dimension(3*max(kx,ky,kz,kq,kr,ks))  :: work
 
     integer :: lefty,leftz,leftq,leftr,lefts,&
                mflag,&
@@ -1457,7 +1464,7 @@
                     do j=1,ky
                         kcoly = kcoly + 1
                         call dbvalu(tx,bcoef(:,kcoly,kcolz,kcolq,kcolr,kcols),&
-                                             nx,kx,idx,xval,inbvx,iflag,temp1(j,k,q,r,s))
+                                             nx,kx,idx,xval,inbvx,work,iflag,temp1(j,k,q,r,s))
                         if (iflag/=0) return
                     end do
                 end do
@@ -1471,7 +1478,7 @@
         do r=1,kr
             do q=1,kq
                 do k=1,kz
-                    call dbvalu(ty(kcoly:),temp1(:,k,q,r,s),ky,ky,idy,yval,inbvy,iflag,temp2(k,q,r,s))
+                    call dbvalu(ty(kcoly:),temp1(:,k,q,r,s),ky,ky,idy,yval,inbvy,work,iflag,temp2(k,q,r,s))
                     if (iflag/=0) return
                 end do
             end do
@@ -1483,7 +1490,7 @@
     do s=1,ks
         do r=1,kr
             do q=1,kq
-                call dbvalu(tz(kcolz:),temp2(:,q,r,s),kz,kz,idz,zval,inbvz,iflag,temp3(q,r,s))
+                call dbvalu(tz(kcolz:),temp2(:,q,r,s),kz,kz,idz,zval,inbvz,work,iflag,temp3(q,r,s))
                 if (iflag/=0) return
             end do
         end do
@@ -1493,7 +1500,7 @@
     kcolq = leftq - kq + 1
     do s=1,ks
         do r=1,kr
-            call dbvalu(tq(kcolq:),temp3(:,r,s),kq,kq,idq,qval,inbvq,iflag,temp4(r,s))
+            call dbvalu(tq(kcolq:),temp3(:,r,s),kq,kq,idq,qval,inbvq,work,iflag,temp4(r,s))
             if (iflag/=0) return
         end do
     end do
@@ -1501,13 +1508,13 @@
     ! r -> s
     kcolr = leftr - kr + 1
     do s=1,ks
-        call dbvalu(tr(kcolr:),temp4(:,s),kr,kr,idr,rval,inbvr,iflag,temp5(s))
+        call dbvalu(tr(kcolr:),temp4(:,s),kr,kr,idr,rval,inbvr,work,iflag,temp5(s))
         if (iflag/=0) return
     end do
 
     ! s
     kcols = lefts - ks + 1
-    call dbvalu(ts(kcols:),temp5,ks,ks,ids,sval,inbvs,iflag,f)
+    call dbvalu(ts(kcols:),temp5,ks,ks,ids,sval,inbvs,work,iflag,f)
 
     end subroutine db6val
 !*****************************************************************************************
@@ -2379,7 +2386,7 @@
 !  * 000330 modified array declarations.  (jec)
 !  * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
 
-    pure subroutine dbvalu(t,a,n,k,ideriv,x,inbv,iflag,val)
+    pure subroutine dbvalu(t,a,n,k,ideriv,x,inbv,work,iflag,val)
 
     implicit none
 
@@ -2398,6 +2405,7 @@
                                                 !! ing after the initial call and inbv must not
                                                 !! be changed by the user.  distinct splines require
                                                 !! distinct inbv parameters.
+    real(wp),dimension(:),intent(inout) :: work !! work vector of length at least 3*k
     integer,intent(out)              :: iflag   !!   0: no errors
                                                 !! 401: k does not satisfy k>=1
                                                 !! 402: n does not satisfy n>=k
@@ -2409,7 +2417,6 @@
     integer :: i,iderp1,ihi,ihmkmj,ilo,imk,imkpj,ipj,&
                ip1,ip1mj,j,jj,j1,j2,kmider,kmj,km1,kpk,mflag
     real(wp) :: fkmj
-    real(wp),dimension(3*k) :: work    !! work vector of length 3*k
 
     val = 0.0_wp
 
