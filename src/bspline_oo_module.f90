@@ -25,26 +25,22 @@
         !! Base class for the b-spline types
         private
         integer :: inbvx = 1  !! internal variable used by dbvalu for efficient processing
-        logical :: initialized = .false.  !! will be true after the class is properly initialized
-        integer :: init_iflag = 1   !! saved flag for the initialization call.
-                                    !! This is here because the function constructors
-                                    !! are pure and cannot have outputs. So, to get the
-                                    !! `iflag` value we set this variable, and the caller
-                                    !! has to check the `is_initialized` and/or
-                                    !! `status_message` methods to know
-                                    !! if it was successful.
+        integer :: iflag = 1  !! saved `iflag` from the list routine call.
+        logical :: initialized = .false. !! true if the class is initialized and ready to use
     contains
         private
+        procedure,non_overridable :: destroy_base  !! destructor for the abstract type
         procedure(destroy_func),deferred,public :: destroy  !! destructor
-        procedure,public,non_overridable :: is_initialized  !! returns true if the class is initialized
-        procedure,public,non_overridable :: status_message => get_bspline_status_message  !! retrieve the status message after class initialization
+        procedure,public,non_overridable :: status_ok  !! returns true if the last `iflag` status code was `=0`.
+        procedure,public,non_overridable :: status_message => get_bspline_status_message  !! retrieve the last status message
+        procedure,public,non_overridable :: clear_flag => clear_bspline_flag  !! to reset the `iflag` saved in the class.
     end type bspline_class
 
     abstract interface
-        subroutine destroy_func(me)  !! interface for bspline destructor routines
+        pure subroutine destroy_func(me)  !! interface for bspline destructor routines
         import :: bspline_class
         implicit none
-        class(bspline_class),intent(out) :: me
+        class(bspline_class),intent(inout) :: me
         end subroutine destroy_func
     end interface
 
@@ -62,6 +58,7 @@
         procedure :: initialize_1d_specify_knots
         procedure,public :: evaluate => evaluate_1d
         procedure,public :: destroy => destroy_1d
+        final :: finalize_1d
     end type bspline_1d
 
     type,extends(bspline_class),public :: bspline_2d
@@ -83,6 +80,7 @@
         procedure :: initialize_2d_specify_knots
         procedure,public :: evaluate => evaluate_2d
         procedure,public :: destroy => destroy_2d
+        final :: finalize_2d
     end type bspline_2d
 
     type,extends(bspline_class),public :: bspline_3d
@@ -109,6 +107,7 @@
         procedure :: initialize_3d_specify_knots
         procedure,public :: evaluate => evaluate_3d
         procedure,public :: destroy => destroy_3d
+        final :: finalize_3d
     end type bspline_3d
 
     type,extends(bspline_class),public :: bspline_4d
@@ -122,7 +121,6 @@
         integer :: ky  = 0
         integer :: kz  = 0
         integer :: kq  = 0
-        integer,dimension(4) :: k  = 0
         real(wp),dimension(:,:,:,:),allocatable :: bcoef
         real(wp),dimension(:),allocatable :: tx
         real(wp),dimension(:),allocatable :: ty
@@ -141,6 +139,7 @@
         procedure :: initialize_4d_specify_knots
         procedure,public :: evaluate => evaluate_4d
         procedure,public :: destroy => destroy_4d
+        final :: finalize_4d
     end type bspline_4d
 
     type,extends(bspline_class),public :: bspline_5d
@@ -177,6 +176,7 @@
         procedure :: initialize_5d_specify_knots
         procedure,public :: evaluate => evaluate_5d
         procedure,public :: destroy => destroy_5d
+        final :: finalize_5d
     end type bspline_5d
 
     type,extends(bspline_class),public :: bspline_6d
@@ -218,6 +218,7 @@
         procedure :: initialize_6d_specify_knots
         procedure,public :: evaluate => evaluate_6d
         procedure,public :: destroy => destroy_6d
+        final :: finalize_6d
     end type bspline_6d
 
     interface bspline_1d
@@ -256,31 +257,57 @@
 
 !*****************************************************************************************
 !>
-!  Can be used to determine if the class was properly initialied.
-!  Normally, this would be called after initializating using one
-!  of the constructor functions.
-!  If `initialized=.false.`, then the error message can be
+!  This routines returns true if the `iflag` code from the last
+!  routine called was `=0`. Maybe of the routines have output `iflag`
+!  variables, so they can be checked explicitly, or this routine
+!  can be used.
+!
+!  If the class is initialized using a function constructor, then
+!  this is the only way to know if it was properly initialized,
+!  since those are pure functions with not output `iflag` arguments.
+!
+!  If `status_ok=.false.`, then the error message can be
 !  obtained from the [[get_bspline_status_message]] routine.
+!
+!  Note: after an error condition, the [[clear_bspline_flag]] routine
+!  can be called to reset the `iflag` to 0.
 
-    elemental function is_initialized(me) result(initialized)
+    elemental function status_ok(me) result(ok)
 
     implicit none
 
     class(bspline_class),intent(in) :: me
-    logical                         :: initialized
+    logical                         :: ok
 
-    initialized = me%initialized
+    ok = ( me%iflag == 0 )
 
-    end function is_initialized
+    end function status_ok
 !*****************************************************************************************
 
 !*****************************************************************************************
 !>
-!  Get the status message from a [[bspline_class]] initialization call.
+!  This sets the `iflag` variable in the class to `0`
+!  (which indicates that everything is OK). It can be used
+!  after an error is encountered.
+
+    elemental subroutine clear_bspline_flag(me)
+
+    implicit none
+
+    class(bspline_class),intent(inout) :: me
+
+    me%iflag = 0
+
+    end subroutine clear_bspline_flag
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Get the status message from a [[bspline_class]] routine call.
 !
-!  Note that this can be used after initialization with one of the function
-!  constructors (e.g., [[bspline_1d_constructor_auto_knots]]) by not including
-!  the `iflag` argument.  For others applications, it will convert the
+!  If `iflag` is not included, then the one in the class is used (which
+!  corresponds to the last routine called.)
+!  Otherwise, it will convert the
 !  input `iflag` argument into the appropriate message.
 !
 !  This is a wrapper for [[get_status_message]].
@@ -294,19 +321,9 @@
     integer,intent(in),optional     :: iflag  !! the corresponding status code
 
     if (present(iflag)) then
-
         msg = get_status_message(iflag)
-
-    else    !for initialization
-
-        if (me%initialized) then
-            !in this case, the call was successful, so we ignore
-            !the code (which may have been set in a previous call).
-            msg = get_status_message(0)
-        else
-            msg = get_status_message(me%init_iflag)
-        end if
-
+    else
+        msg = get_status_message(me%iflag)
     end if
 
     end function get_bspline_status_message
@@ -314,88 +331,252 @@
 
 !*****************************************************************************************
 !>
-!  Destructor for [[bspline_1d]] type.
+!  Destructor for contents of the base [[bspline_class]] class.
+!  (this routine is called by the extended classes).
 
-    pure subroutine destroy_1d_type(me)
-
-    implicit none
-
-    type(bspline_1d),intent(out) :: me
-
-    end subroutine destroy_1d_type
-!*****************************************************************************************
-!*****************************************************************************************
-!>
-!  Destructor for [[bspline_2d]] type.
-
-    pure subroutine destroy_2d_type(me)
+    pure subroutine destroy_base(me)
 
     implicit none
 
-    type(bspline_2d),intent(out) :: me
+    class(bspline_class),intent(inout) :: me
 
-    end subroutine destroy_2d_type
-!*****************************************************************************************
-!*****************************************************************************************
-!>
-!  Destructor for [[bspline_3d]] type.
+    me%inbvx = 1
+    me%iflag = 1
+    me%initialized = .false.
 
-    pure subroutine destroy_3d_type(me)
-
-    implicit none
-
-    type(bspline_3d),intent(out) :: me
-
-    end subroutine destroy_3d_type
-!*****************************************************************************************
-!*****************************************************************************************
-!>
-!  Destructor for [[bspline_4d]] type.
-
-    pure subroutine destroy_4d_type(me)
-
-    implicit none
-
-    type(bspline_4d),intent(out) :: me
-
-    end subroutine destroy_4d_type
-!*****************************************************************************************
-!*****************************************************************************************
-!>
-!  Destructor for [[bspline_5d]] type.
-
-    pure subroutine destroy_5d_type(me)
-
-    implicit none
-
-    type(bspline_5d),intent(out) :: me
-
-    end subroutine destroy_5d_type
-!*****************************************************************************************
-!*****************************************************************************************
-!>
-!  Destructor for [[bspline_6d]] type.
-
-    pure subroutine destroy_6d_type(me)
-
-    implicit none
-
-    type(bspline_6d),intent(out) :: me
-
-    end subroutine destroy_6d_type
+    end subroutine destroy_base
 !*****************************************************************************************
 
 !*****************************************************************************************
 !>
 !  Destructor for [[bspline_1d]] class.
 
-    subroutine destroy_1d(me)
+    pure subroutine destroy_1d(me)
 
     implicit none
 
-    class(bspline_1d),intent(out) :: me
+    class(bspline_1d),intent(inout) :: me
+
+    call me%destroy_base()
+
+    me%nx  = 0
+    me%kx  = 0
+    if (allocated(me%bcoef))    deallocate(me%bcoef)
+    if (allocated(me%tx))       deallocate(me%tx)
 
     end subroutine destroy_1d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Destructor for [[bspline_2d]] class.
+
+    pure subroutine destroy_2d(me)
+
+    implicit none
+
+    class(bspline_2d),intent(inout) :: me
+
+    call me%destroy_base()
+
+    me%nx    = 0
+    me%ny    = 0
+    me%kx    = 0
+    me%ky    = 0
+    me%inbvy = 1
+    me%iloy  = 1
+    if (allocated(me%bcoef))    deallocate(me%bcoef)
+    if (allocated(me%tx))       deallocate(me%tx)
+    if (allocated(me%ty))       deallocate(me%ty)
+
+    end subroutine destroy_2d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Destructor for [[bspline_3d]] class.
+
+    pure subroutine destroy_3d(me)
+
+    implicit none
+
+    class(bspline_3d),intent(inout) :: me
+
+    call me%destroy_base()
+
+    me%nx    = 0
+    me%ny    = 0
+    me%nz    = 0
+    me%kx    = 0
+    me%ky    = 0
+    me%kz    = 0
+    me%inbvy = 1
+    me%inbvz = 1
+    me%iloy  = 1
+    me%iloz  = 1
+    if (allocated(me%bcoef))    deallocate(me%bcoef)
+    if (allocated(me%tx))       deallocate(me%tx)
+    if (allocated(me%ty))       deallocate(me%ty)
+    if (allocated(me%tz))       deallocate(me%tz)
+
+    end subroutine destroy_3d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Destructor for [[bspline_4d]] class.
+
+    pure subroutine destroy_4d(me)
+
+    implicit none
+
+    class(bspline_4d),intent(inout) :: me
+
+    me%nx    = 0
+    me%ny    = 0
+    me%nz    = 0
+    me%nq    = 0
+    me%kx    = 0
+    me%ky    = 0
+    me%kz    = 0
+    me%kq    = 0
+    me%inbvy = 1
+    me%inbvz = 1
+    me%inbvq = 1
+    me%iloy  = 1
+    me%iloz  = 1
+    me%iloq  = 1
+    if (allocated(me%bcoef))   deallocate(me%bcoef)
+    if (allocated(me%tx))      deallocate(me%tx)
+    if (allocated(me%ty))      deallocate(me%ty)
+    if (allocated(me%tz))      deallocate(me%tz)
+    if (allocated(me%tq))      deallocate(me%tq)
+
+    end subroutine destroy_4d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Destructor for [[bspline_5d]] class.
+
+    pure subroutine destroy_5d(me)
+
+    implicit none
+
+    class(bspline_5d),intent(inout) :: me
+
+    me%nx    = 0
+    me%ny    = 0
+    me%nz    = 0
+    me%nq    = 0
+    me%nr    = 0
+    me%kx    = 0
+    me%ky    = 0
+    me%kz    = 0
+    me%kq    = 0
+    me%kr    = 0
+    me%inbvy = 1
+    me%inbvz = 1
+    me%inbvq = 1
+    me%inbvr = 1
+    me%iloy  = 1
+    me%iloz  = 1
+    me%iloq  = 1
+    me%ilor  = 1
+    if (allocated(me%bcoef))    deallocate(me%bcoef)
+    if (allocated(me%tx))       deallocate(me%tx)
+    if (allocated(me%ty))       deallocate(me%ty)
+    if (allocated(me%tz))       deallocate(me%tz)
+    if (allocated(me%tq))       deallocate(me%tq)
+    if (allocated(me%tr))       deallocate(me%tr)
+
+    end subroutine destroy_5d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Destructor for [[bspline_6d]] class.
+
+    pure subroutine destroy_6d(me)
+
+    implicit none
+
+    class(bspline_6d),intent(inout) :: me
+
+    me%nx    = 0
+    me%ny    = 0
+    me%nz    = 0
+    me%nq    = 0
+    me%nr    = 0
+    me%ns    = 0
+    me%kx    = 0
+    me%ky    = 0
+    me%kz    = 0
+    me%kq    = 0
+    me%kr    = 0
+    me%ks    = 0
+    me%inbvy = 1
+    me%inbvz = 1
+    me%inbvq = 1
+    me%inbvr = 1
+    me%inbvs = 1
+    me%iloy  = 1
+    me%iloz  = 1
+    me%iloq  = 1
+    me%ilor  = 1
+    me%ilos  = 1
+    if (allocated(me%bcoef))    deallocate(me%bcoef)
+    if (allocated(me%tx))       deallocate(me%tx)
+    if (allocated(me%ty))       deallocate(me%ty)
+    if (allocated(me%tz))       deallocate(me%tz)
+    if (allocated(me%tq))       deallocate(me%tq)
+    if (allocated(me%tr))       deallocate(me%tr)
+    if (allocated(me%ts))       deallocate(me%ts)
+
+    end subroutine destroy_6d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Finalizer for [[bspline_1d]] class. Just a wrapper for [[destroy_1d]].
+    pure elemental subroutine finalize_1d(me)
+        type(bspline_1d),intent(inout) :: me; call me%destroy()
+    end subroutine finalize_1d
+!*****************************************************************************************
+!*****************************************************************************************
+!>
+!  Finalizer for [[bspline_2d]] class. Just a wrapper for [[destroy_2d]].
+    pure elemental subroutine finalize_2d(me)
+        type(bspline_2d),intent(inout) :: me; call me%destroy()
+    end subroutine finalize_2d
+!*****************************************************************************************
+!*****************************************************************************************
+!>
+!  Finalizer for [[bspline_3d]] class. Just a wrapper for [[destroy_3d]].
+    pure elemental subroutine finalize_3d(me)
+        type(bspline_3d),intent(inout) :: me; call me%destroy()
+    end subroutine finalize_3d
+!*****************************************************************************************
+!*****************************************************************************************
+!>
+!  Finalizer for [[bspline_4d]] class. Just a wrapper for [[destroy_4d]].
+    pure elemental subroutine finalize_4d(me)
+        type(bspline_4d),intent(inout) :: me; call me%destroy()
+    end subroutine finalize_4d
+!*****************************************************************************************
+!*****************************************************************************************
+!>
+!  Finalizer for [[bspline_5d]] class. Just a wrapper for [[destroy_5d]].
+    pure elemental subroutine finalize_5d(me)
+        type(bspline_5d),intent(inout) :: me; call me%destroy()
+    end subroutine finalize_5d
+!*****************************************************************************************
+!*****************************************************************************************
+!>
+!  Finalizer for [[bspline_6d]] class. Just a wrapper for [[destroy_6d]].
+    pure elemental subroutine finalize_6d(me)
+        type(bspline_6d),intent(inout) :: me; call me%destroy()
+    end subroutine finalize_6d
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -427,7 +608,7 @@
     real(wp),dimension(:),intent(in) :: fcn
     integer,intent(in)               :: kx
 
-    call initialize_1d_auto_knots(me,x,fcn,kx,me%init_iflag)
+    call initialize_1d_auto_knots(me,x,fcn,kx,me%iflag)
 
     end function bspline_1d_constructor_auto_knots
 !*****************************************************************************************
@@ -447,7 +628,7 @@
     integer,intent(in)               :: kx
     real(wp),dimension(:),intent(in) :: tx
 
-    call initialize_1d_specify_knots(me,x,fcn,kx,tx,me%init_iflag)
+    call initialize_1d_specify_knots(me,x,fcn,kx,tx,me%iflag)
 
     end function bspline_1d_constructor_specify_knots
 !*****************************************************************************************
@@ -470,10 +651,7 @@
     integer :: iknot
     integer :: nx
 
-    select type (me)
-    type is (bspline_1d)
-        call destroy_1d_type(me)
-    end select
+    call me%destroy()
 
     nx = size(x)
 
@@ -488,7 +666,7 @@
     call db1ink(x,nx,fcn,kx,iknot,me%tx,me%bcoef,iflag)
 
     me%initialized = iflag==0
-    me%init_iflag = iflag
+    me%iflag = iflag
 
     end subroutine initialize_1d_auto_knots
 !*****************************************************************************************
@@ -511,10 +689,7 @@
 
     integer :: nx
 
-    select type (me)
-    type is (bspline_1d)
-        call destroy_1d_type(me)
-    end select
+    call me%destroy()
 
     nx = size(x)
 
@@ -532,11 +707,10 @@
 
         call db1ink(x,nx,fcn,kx,1,me%tx,me%bcoef,iflag)
 
-        me%initialized = iflag==0
-
     end if
 
-    me%init_iflag = iflag
+    me%initialized = iflag==0
+    me%iflag = iflag
 
     end subroutine initialize_1d_specify_knots
 !*****************************************************************************************
@@ -560,21 +734,9 @@
     else
         iflag = 1
     end if
+    me%iflag = iflag
 
     end subroutine evaluate_1d
-!*****************************************************************************************
-
-!*****************************************************************************************
-!>
-!  Destructor for [[bspline_2d]] class.
-
-    subroutine destroy_2d(me)
-
-    implicit none
-
-    class(bspline_2d),intent(out) :: me
-
-    end subroutine destroy_2d
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -608,7 +770,7 @@
     integer,intent(in)                 :: kx
     integer,intent(in)                 :: ky
 
-    call initialize_2d_auto_knots(me,x,y,fcn,kx,ky,me%init_iflag)
+    call initialize_2d_auto_knots(me,x,y,fcn,kx,ky,me%iflag)
 
     end function bspline_2d_constructor_auto_knots
 !*****************************************************************************************
@@ -631,7 +793,7 @@
     real(wp),dimension(:),intent(in)   :: tx
     real(wp),dimension(:),intent(in)   :: ty
 
-    call initialize_2d_specify_knots(me,x,y,fcn,kx,ky,tx,ty,me%init_iflag)
+    call initialize_2d_specify_knots(me,x,y,fcn,kx,ky,tx,ty,me%iflag)
 
     end function bspline_2d_constructor_specify_knots
 !*****************************************************************************************
@@ -656,10 +818,7 @@
     integer :: iknot
     integer :: nx,ny
 
-    select type (me)
-    type is (bspline_2d)
-        call destroy_2d_type(me)
-    end select
+    call me%destroy()
 
     nx = size(x)
     ny = size(y)
@@ -679,7 +838,7 @@
     call db2ink(x,nx,y,ny,fcn,kx,ky,iknot,me%tx,me%ty,me%bcoef,iflag)
 
     me%initialized = iflag==0
-    me%init_iflag = iflag
+    me%iflag = iflag
 
     end subroutine initialize_2d_auto_knots
 !*****************************************************************************************
@@ -705,10 +864,7 @@
 
     integer :: nx,ny
 
-    select type (me)
-    type is (bspline_2d)
-        call destroy_2d_type(me)
-    end select
+    call me%destroy()
 
     nx = size(x)
     ny = size(y)
@@ -734,11 +890,10 @@
 
         call db2ink(x,nx,y,ny,fcn,kx,ky,1,me%tx,me%ty,me%bcoef,iflag)
 
-        me%initialized = iflag==0
-
     end if
 
-    me%init_iflag = iflag
+    me%initialized = iflag==0
+    me%iflag = iflag
 
     end subroutine initialize_2d_specify_knots
 !*****************************************************************************************
@@ -771,20 +926,9 @@
         iflag = 1
     end if
 
+    me%iflag = iflag
+
     end subroutine evaluate_2d
-!*****************************************************************************************
-
-!*****************************************************************************************
-!>
-!  Destructor for [[bspline_3d]] class.
-
-    subroutine destroy_3d(me)
-
-    implicit none
-
-    class(bspline_3d),intent(out) :: me
-
-    end subroutine destroy_3d
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -820,7 +964,7 @@
     integer,intent(in)                   :: ky
     integer,intent(in)                   :: kz
 
-    call initialize_3d_auto_knots(me,x,y,z,fcn,kx,ky,kz,me%init_iflag)
+    call initialize_3d_auto_knots(me,x,y,z,fcn,kx,ky,kz,me%iflag)
 
     end function bspline_3d_constructor_auto_knots
 !*****************************************************************************************
@@ -846,7 +990,7 @@
     real(wp),dimension(:),intent(in)     :: ty
     real(wp),dimension(:),intent(in)     :: tz
 
-    call initialize_3d_specify_knots(me,x,y,z,fcn,kx,ky,kz,tx,ty,tz,me%init_iflag)
+    call initialize_3d_specify_knots(me,x,y,z,fcn,kx,ky,kz,tx,ty,tz,me%iflag)
 
     end function bspline_3d_constructor_specify_knots
 !*****************************************************************************************
@@ -873,10 +1017,7 @@
     integer :: iknot
     integer :: nx,ny,nz
 
-    select type (me)
-    type is (bspline_3d)
-        call destroy_3d_type(me)
-    end select
+    call me%destroy()
 
     nx = size(x)
     ny = size(y)
@@ -905,7 +1046,7 @@
                 me%bcoef,iflag)
 
     me%initialized = iflag==0
-    me%init_iflag = iflag
+    me%iflag = iflag
 
     end subroutine initialize_3d_auto_knots
 !*****************************************************************************************
@@ -934,10 +1075,7 @@
 
     integer :: nx,ny,nz
 
-    select type (me)
-    type is (bspline_3d)
-        call destroy_3d_type(me)
-    end select
+    call me%destroy()
 
     nx = size(x)
     ny = size(y)
@@ -974,11 +1112,10 @@
                     me%tx,me%ty,me%tz,&
                     me%bcoef,iflag)
 
-        me%initialized = iflag==0
-
     end if
 
-    me%init_iflag = iflag
+    me%initialized = iflag==0
+    me%iflag = iflag
 
     end subroutine initialize_3d_specify_knots
 !*****************************************************************************************
@@ -1014,20 +1151,9 @@
         iflag = 1
     end if
 
+    me%iflag = iflag
+
     end subroutine evaluate_3d
-!*****************************************************************************************
-
-!*****************************************************************************************
-!>
-!  Destructor for [[bspline_4d]] class.
-
-    subroutine destroy_4d(me)
-
-    implicit none
-
-    class(bspline_4d),intent(out) :: me
-
-    end subroutine destroy_4d
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -1065,7 +1191,7 @@
     integer,intent(in)                     :: kz
     integer,intent(in)                     :: kq
 
-    call initialize_4d_auto_knots(me,x,y,z,q,fcn,kx,ky,kz,kq,me%init_iflag)
+    call initialize_4d_auto_knots(me,x,y,z,q,fcn,kx,ky,kz,kq,me%iflag)
 
     end function bspline_4d_constructor_auto_knots
 !*****************************************************************************************
@@ -1094,7 +1220,7 @@
     real(wp),dimension(:),intent(in)       :: tz
     real(wp),dimension(:),intent(in)       :: tq
 
-    call initialize_4d_specify_knots(me,x,y,z,q,fcn,kx,ky,kz,kq,tx,ty,tz,tq,me%init_iflag)
+    call initialize_4d_specify_knots(me,x,y,z,q,fcn,kx,ky,kz,kq,tx,ty,tz,tq,me%iflag)
 
     end function bspline_4d_constructor_specify_knots
 !*****************************************************************************************
@@ -1123,10 +1249,7 @@
     integer :: iknot
     integer :: nx,ny,nz,nq
 
-    select type (me)
-    type is (bspline_4d)
-        call destroy_4d_type(me)
-    end select
+    call me%destroy()
 
     nx = size(x)
     ny = size(y)
@@ -1159,7 +1282,7 @@
                 me%bcoef,iflag)
 
     me%initialized = iflag==0
-    me%init_iflag = iflag
+    me%iflag = iflag
 
     end subroutine initialize_4d_auto_knots
 !*****************************************************************************************
@@ -1191,10 +1314,7 @@
 
     integer :: nx,ny,nz,nq
 
-    select type (me)
-    type is (bspline_4d)
-        call destroy_4d_type(me)
-    end select
+    call me%destroy()
 
     nx = size(x)
     ny = size(y)
@@ -1237,11 +1357,10 @@
                     me%tx,me%ty,me%tz,me%tq,&
                     me%bcoef,iflag)
 
-        me%initialized = iflag==0
-
     end if
 
-    me%init_iflag = iflag
+    me%initialized = iflag==0
+    me%iflag = iflag
 
     end subroutine initialize_4d_specify_knots
 !*****************************************************************************************
@@ -1279,20 +1398,9 @@
         iflag = 1
     end if
 
+    me%iflag = iflag
+
     end subroutine evaluate_4d
-!*****************************************************************************************
-
-!*****************************************************************************************
-!>
-!  Destructor for [[bspline_5d]] class.
-
-    subroutine destroy_5d(me)
-
-    implicit none
-
-    class(bspline_5d),intent(out) :: me
-
-    end subroutine destroy_5d
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -1332,7 +1440,7 @@
     integer,intent(in)                       :: kq
     integer,intent(in)                       :: kr
 
-    call initialize_5d_auto_knots(me,x,y,z,q,r,fcn,kx,ky,kz,kq,kr,me%init_iflag)
+    call initialize_5d_auto_knots(me,x,y,z,q,r,fcn,kx,ky,kz,kq,kr,me%iflag)
 
     end function bspline_5d_constructor_auto_knots
 !*****************************************************************************************
@@ -1364,7 +1472,7 @@
     real(wp),dimension(:),intent(in)         :: tq
     real(wp),dimension(:),intent(in)         :: tr
 
-    call initialize_5d_specify_knots(me,x,y,z,q,r,fcn,kx,ky,kz,kq,kr,tx,ty,tz,tq,tr,me%init_iflag)
+    call initialize_5d_specify_knots(me,x,y,z,q,r,fcn,kx,ky,kz,kq,kr,tx,ty,tz,tq,tr,me%iflag)
 
     end function bspline_5d_constructor_specify_knots
 !*****************************************************************************************
@@ -1395,10 +1503,7 @@
     integer :: iknot
     integer :: nx,ny,nz,nq,nr
 
-    select type (me)
-    type is (bspline_5d)
-        call destroy_5d_type(me)
-    end select
+    call me%destroy()
 
     nx = size(x)
     ny = size(y)
@@ -1435,7 +1540,7 @@
                 me%bcoef,iflag)
 
     me%initialized = iflag==0
-    me%init_iflag = iflag
+    me%iflag = iflag
 
     end subroutine initialize_5d_auto_knots
 !*****************************************************************************************
@@ -1470,10 +1575,7 @@
 
     integer :: nx,ny,nz,nq,nr
 
-    select type (me)
-    type is (bspline_5d)
-        call destroy_5d_type(me)
-    end select
+    call me%destroy()
 
     nx = size(x)
     ny = size(y)
@@ -1522,11 +1624,10 @@
                     me%tx,me%ty,me%tz,me%tq,me%tr,&
                     me%bcoef,iflag)
 
-        me%initialized = iflag==0
-
     end if
 
-    me%init_iflag = iflag
+    me%initialized = iflag==0
+    me%iflag = iflag
 
     end subroutine initialize_5d_specify_knots
 !*****************************************************************************************
@@ -1566,20 +1667,9 @@
         iflag = 1
     end if
 
+    me%iflag = iflag
+
     end subroutine evaluate_5d
-!*****************************************************************************************
-
-!*****************************************************************************************
-!>
-!  Destructor for [[bspline_6d]] class.
-
-    subroutine destroy_6d(me)
-
-    implicit none
-
-    class(bspline_6d),intent(out) :: me
-
-    end subroutine destroy_6d
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -1621,7 +1711,7 @@
     integer,intent(in)                         :: kr
     integer,intent(in)                         :: ks
 
-    call initialize_6d_auto_knots(me,x,y,z,q,r,s,fcn,kx,ky,kz,kq,kr,ks,me%init_iflag)
+    call initialize_6d_auto_knots(me,x,y,z,q,r,s,fcn,kx,ky,kz,kq,kr,ks,me%iflag)
 
     end function bspline_6d_constructor_auto_knots
 !*****************************************************************************************
@@ -1656,7 +1746,7 @@
     real(wp),dimension(:),intent(in)           :: tr
     real(wp),dimension(:),intent(in)           :: ts
 
-    call initialize_6d_specify_knots(me,x,y,z,q,r,s,fcn,kx,ky,kz,kq,kr,ks,tx,ty,tz,tq,tr,ts,me%init_iflag)
+    call initialize_6d_specify_knots(me,x,y,z,q,r,s,fcn,kx,ky,kz,kq,kr,ks,tx,ty,tz,tq,tr,ts,me%iflag)
 
     end function bspline_6d_constructor_specify_knots
 !*****************************************************************************************
@@ -1689,10 +1779,7 @@
     integer :: iknot
     integer :: nx,ny,nz,nq,nr,ns
 
-    select type (me)
-    type is (bspline_6d)
-        call destroy_6d_type(me)
-    end select
+    call me%destroy()
 
     nx = size(x)
     ny = size(y)
@@ -1733,7 +1820,7 @@
                 me%bcoef,iflag)
 
     me%initialized = iflag==0
-    me%init_iflag = iflag
+    me%iflag = iflag
 
     end subroutine initialize_6d_auto_knots
 !*****************************************************************************************
@@ -1771,10 +1858,7 @@
 
     integer :: nx,ny,nz,nq,nr,ns
 
-    select type (me)
-    type is (bspline_6d)
-        call destroy_6d_type(me)
-    end select
+    call me%destroy()
 
     nx = size(x)
     ny = size(y)
@@ -1829,11 +1913,10 @@
                     me%tx,me%ty,me%tz,me%tq,me%tr,me%ts,&
                     me%bcoef,iflag)
 
-        me%initialized = iflag==0
-
     end if
 
-    me%init_iflag = iflag
+    me%initialized = iflag==0
+    me%iflag = iflag
 
     end subroutine initialize_6d_specify_knots
 !*****************************************************************************************
@@ -1874,6 +1957,8 @@
     else
         iflag = 1
     end if
+
+    me%iflag = iflag
 
     end subroutine evaluate_6d
 !*****************************************************************************************

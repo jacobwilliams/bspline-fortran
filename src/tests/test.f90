@@ -9,21 +9,21 @@
 
     implicit none
 
-    integer,parameter :: nx = 6    !number of points
-    integer,parameter :: ny = 6
-    integer,parameter :: nz = 6
-    integer,parameter :: nq = 6
-    integer,parameter :: nr = 6
-    integer,parameter :: ns = 6
+    integer,parameter :: nx = 6     !! number of points in x
+    integer,parameter :: ny = 6     !! number of points in y
+    integer,parameter :: nz = 6     !! number of points in z
+    integer,parameter :: nq = 6     !! number of points in q
+    integer,parameter :: nr = 6     !! number of points in r
+    integer,parameter :: ns = 6     !! number of points in s
 
-    integer,parameter :: kx = 4    !order
-    integer,parameter :: ky = 4
-    integer,parameter :: kz = 4
-    integer,parameter :: kq = 4
-    integer,parameter :: kr = 4
-    integer,parameter :: ks = 4
+    integer,parameter :: kx = 4     !! order in x
+    integer,parameter :: ky = 4     !! order in y
+    integer,parameter :: kz = 4     !! order in z
+    integer,parameter :: kq = 4     !! order in q
+    integer,parameter :: kr = 4     !! order in r
+    integer,parameter :: ks = 4     !! order in s
 
-    integer,parameter :: iknot = 0 !! automatically select the knots
+    integer,parameter :: iknot = 0  !! automatically select the knots
 
     real(wp) :: x(nx),y(ny),z(nz),q(nq),r(nr),s(ns)
     real(wp) :: tx(nx+kx),ty(ny+ky),tz(nz+kz),tq(nq+kq),tr(nr+kr),ts(ns+ks)
@@ -88,6 +88,7 @@
         end do
      end do
 
+    !have to set these before the first evaluate call:
     inbvx = 1
     inbvy = 1
     inbvz = 1

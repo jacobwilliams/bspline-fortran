@@ -87,12 +87,12 @@
 
     !initialize using the constructors:
 
-    s1 = bspline_1d(x,fcn_1d,kx)                         ; if (.not. s1%is_initialized()) error stop 'error initializing s1'
-    s2 = bspline_2d(x,y,fcn_2d,kx,ky)                    ; if (.not. s1%is_initialized()) error stop 'error initializing s2'
-    s3 = bspline_3d(x,y,z,fcn_3d,kx,ky,kz)               ; if (.not. s1%is_initialized()) error stop 'error initializing s3'
-    s4 = bspline_4d(x,y,z,q,fcn_4d,kx,ky,kz,kq)          ; if (.not. s1%is_initialized()) error stop 'error initializing s4'
-    s5 = bspline_5d(x,y,z,q,r,fcn_5d,kx,ky,kz,kq,kr)     ; if (.not. s1%is_initialized()) error stop 'error initializing s5'
-    s6 = bspline_6d(x,y,z,q,r,s,fcn_6d,kx,ky,kz,kq,kr,ks); if (.not. s1%is_initialized()) error stop 'error initializing s6'
+    s1 = bspline_1d(x,fcn_1d,kx)                         ; if (.not. s1%status_ok()) error stop 'error initializing s1'
+    s2 = bspline_2d(x,y,fcn_2d,kx,ky)                    ; if (.not. s1%status_ok()) error stop 'error initializing s2'
+    s3 = bspline_3d(x,y,z,fcn_3d,kx,ky,kz)               ; if (.not. s1%status_ok()) error stop 'error initializing s3'
+    s4 = bspline_4d(x,y,z,q,fcn_4d,kx,ky,kz,kq)          ; if (.not. s1%status_ok()) error stop 'error initializing s4'
+    s5 = bspline_5d(x,y,z,q,r,fcn_5d,kx,ky,kz,kq,kr)     ; if (.not. s1%status_ok()) error stop 'error initializing s5'
+    s6 = bspline_6d(x,y,z,q,r,s,fcn_6d,kx,ky,kz,kq,kr,ks); if (.not. s1%status_ok()) error stop 'error initializing s6'
 
     ! evaluate the interpolants:
     sumval = 0.0_wp
