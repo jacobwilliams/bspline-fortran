@@ -84,8 +84,8 @@
     integer,intent(in)                      :: iknot  !! 0 = knot sequence chosen by [[db1ink]].
                                                       !! 1 = knot sequence chosen by user.
     real(wp),dimension(nx+kx),intent(inout) :: tx     !! The knots in the x direction for the spline interpolant.
-                                                      !!    If iflag=0 these are chosen by [[db1ink]].
-                                                      !!    If iflag=1 these are specified by the user.
+                                                      !!    If iknot=0 these are chosen by [[db1ink]].
+                                                      !!    If iknot=1 these are specified by the user.
                                                       !!    Must be non-decreasing.
     real(wp),dimension(nx),intent(out)      :: bcoef  !! Array of coefficients of the b-spline interpolant.
     integer,intent(out)                     :: iflag  !! 0 = successful execution.
@@ -247,12 +247,12 @@
     integer,intent(in)                      :: iknot  !! 0 = knot sequence chosen by [[db1ink]].
                                                       !! 1 = knot sequence chosen by user.
     real(wp),dimension(nx+kx),intent(inout) :: tx     !! The knots in the x direction for the spline interpolant.
-                                                      !!    If iflag=0 these are chosen by [[db2ink]].
-                                                      !!    If iflag=1 these are specified by the user.
+                                                      !!    If iknot=0 these are chosen by [[db2ink]].
+                                                      !!    If iknot=1 these are specified by the user.
                                                       !!    Must be non-decreasing.
     real(wp),dimension(ny+ky),intent(inout) :: ty     !! The knots in the y direction for the spline interpolant.
-                                                      !!    If iflag=0 these are chosen by [[db2ink]].
-                                                      !!    If iflag=1 these are specified by the user.
+                                                      !!    If iknot=0 these are chosen by [[db2ink]].
+                                                      !!    If iknot=1 these are specified by the user.
                                                       !!    Must be non-decreasing.
     real(wp),dimension(nx,ny),intent(out)   :: bcoef  !! Array of coefficients of the b-spline interpolant.
     integer,intent(out)                     :: iflag  !!  0 = successful execution.
@@ -460,16 +460,16 @@
     integer,intent(in)                       :: iknot !! 0 = knot sequence chosen by [[db1ink]].
                                                       !! 1 = knot sequence chosen by user.
     real(wp),dimension(nx+kx),intent(inout)  :: tx    !! The knots in the x direction for the spline interpolant.
-                                                      !!   If iflag=0 these are chosen by [[db3ink]].
-                                                      !!   If iflag=1 these are specified by the user.
+                                                      !!   If iknot=0 these are chosen by [[db3ink]].
+                                                      !!   If iknot=1 these are specified by the user.
                                                       !!    Must be non-decreasing.
     real(wp),dimension(ny+ky),intent(inout)  :: ty    !! The knots in the y direction for the spline interpolant.
-                                                      !!    If iflag=0 these are chosen by [[db3ink]].
-                                                      !!    If iflag=1 these are specified by the user.
+                                                      !!    If iknot=0 these are chosen by [[db3ink]].
+                                                      !!    If iknot=1 these are specified by the user.
                                                       !!    Must be non-decreasing.
     real(wp),dimension(nz+kz),intent(inout)  :: tz    !! The knots in the z direction for the spline interpolant.
-                                                      !!    If iflag=0 these are chosen by [[db3ink]].
-                                                      !!    If iflag=1 these are specified by the user.
+                                                      !!    If iknot=0 these are chosen by [[db3ink]].
+                                                      !!    If iknot=1 these are specified by the user.
                                                       !!    Must be non-decreasing.
     real(wp),dimension(nx,ny,nz),intent(out) :: bcoef !! array of coefficients of the b-spline interpolant.
     integer,intent(out)                      :: iflag !! **on input**    0 = knot sequence chosen by [[db3ink]].
@@ -691,20 +691,20 @@
     integer,intent(in)                          :: iknot !! 0 = knot sequence chosen by [[db1ink]].
                                                          !! 1 = knot sequence chosen by user.
     real(wp),dimension(nx+kx),intent(inout)     :: tx    !! The knots in the x direction for the spline interpolant.
-                                                         !!   If iflag=0 these are chosen by [[db4ink]].
-                                                         !!   If iflag=1 these are specified by the user.
+                                                         !!   If iknot=0 these are chosen by [[db4ink]].
+                                                         !!   If iknot=1 these are specified by the user.
                                                          !!    Must be non-decreasing.
     real(wp),dimension(ny+ky),intent(inout)     :: ty    !! The knots in the y direction for the spline interpolant.
-                                                         !!    If iflag=0 these are chosen by [[db4ink]].
-                                                         !!    If iflag=1 these are specified by the user.
+                                                         !!    If iknot=0 these are chosen by [[db4ink]].
+                                                         !!    If iknot=1 these are specified by the user.
                                                          !!    Must be non-decreasing.
     real(wp),dimension(nz+kz),intent(inout)     :: tz    !! The knots in the z direction for the spline interpolant.
-                                                         !!    If iflag=0 these are chosen by [[db4ink]].
-                                                         !!    If iflag=1 these are specified by the user.
+                                                         !!    If iknot=0 these are chosen by [[db4ink]].
+                                                         !!    If iknot=1 these are specified by the user.
                                                          !!    Must be non-decreasing.
     real(wp),dimension(nq+kq),intent(inout)     :: tq    !! The knots in the q direction for the spline interpolant.
-                                                         !!    If iflag=0 these are chosen by [[db4ink]].
-                                                         !!    If iflag=1 these are specified by the user.
+                                                         !!    If iknot=0 these are chosen by [[db4ink]].
+                                                         !!    If iknot=1 these are specified by the user.
                                                          !!    Must be non-decreasing.
     real(wp),dimension(nx,ny,nz,nq),intent(out) :: bcoef !! array of coefficients of the b-spline interpolant.
     integer,intent(out)                         :: iflag !!  0 = successful execution.
@@ -938,24 +938,24 @@
     integer,intent(in)                             :: iknot !! 0 = knot sequence chosen by [[db1ink]].
                                                             !! 1 = knot sequence chosen by user.
     real(wp),dimension(nx+kx),intent(inout)        :: tx    !! The knots in the x direction for the spline interpolant.
-                                                            !!   If iflag=0 these are chosen by [[db5ink]].
-                                                            !!   If iflag=1 these are specified by the user.
+                                                            !!   If iknot=0 these are chosen by [[db5ink]].
+                                                            !!   If iknot=1 these are specified by the user.
                                                             !!    Must be non-decreasing.
     real(wp),dimension(ny+ky),intent(inout)        :: ty    !! The knots in the y direction for the spline interpolant.
-                                                            !!    If iflag=0 these are chosen by [[db5ink]].
-                                                            !!    If iflag=1 these are specified by the user.
+                                                            !!    If iknot=0 these are chosen by [[db5ink]].
+                                                            !!    If iknot=1 these are specified by the user.
                                                             !!    Must be non-decreasing.
     real(wp),dimension(nz+kz),intent(inout)        :: tz    !! The knots in the z direction for the spline interpolant.
-                                                            !!    If iflag=0 these are chosen by [[db5ink]].
-                                                            !!    If iflag=1 these are specified by the user.
+                                                            !!    If iknot=0 these are chosen by [[db5ink]].
+                                                            !!    If iknot=1 these are specified by the user.
                                                             !!    Must be non-decreasing.
     real(wp),dimension(nq+kq),intent(inout)        :: tq    !! The knots in the q direction for the spline interpolant.
-                                                            !!    If iflag=0 these are chosen by [[db5ink]].
-                                                            !!    If iflag=1 these are specified by the user.
+                                                            !!    If iknot=0 these are chosen by [[db5ink]].
+                                                            !!    If iknot=1 these are specified by the user.
                                                             !!    Must be non-decreasing.
     real(wp),dimension(nr+kr),intent(inout)        :: tr    !! The knots in the r direction for the spline interpolant.
-                                                            !!    If iflag=0 these are chosen by [[db5ink]].
-                                                            !!    If iflag=1 these are specified by the user.
+                                                            !!    If iknot=0 these are chosen by [[db5ink]].
+                                                            !!    If iknot=1 these are specified by the user.
                                                             !!    Must be non-decreasing.
     real(wp),dimension(nx,ny,nz,nq,nr),intent(out) :: bcoef !! array of coefficients of the b-spline interpolant.
     integer,intent(out)                            :: iflag !!  0 = successful execution.
@@ -1231,28 +1231,28 @@
     integer,intent(in)                                :: iknot !! 0 = knot sequence chosen by [[db1ink]].
                                                                !! 1 = knot sequence chosen by user.
     real(wp),dimension(nx+kx),intent(inout)           :: tx    !! The knots in the x direction for the spline interpolant.
-                                                               !!   If iflag=0 these are chosen by [[db6ink]].
-                                                               !!   If iflag=1 these are specified by the user.
+                                                               !!   If iknot=0 these are chosen by [[db6ink]].
+                                                               !!   If iknot=1 these are specified by the user.
                                                                !!    Must be non-decreasing.
     real(wp),dimension(ny+ky),intent(inout)           :: ty    !! The knots in the y direction for the spline interpolant.
-                                                               !!    If iflag=0 these are chosen by [[db6ink]].
-                                                               !!    If iflag=1 these are specified by the user.
+                                                               !!    If iknot=0 these are chosen by [[db6ink]].
+                                                               !!    If iknot=1 these are specified by the user.
                                                                !!    Must be non-decreasing.
     real(wp),dimension(nz+kz),intent(inout)           :: tz    !! The knots in the z direction for the spline interpolant.
-                                                               !!    If iflag=0 these are chosen by [[db6ink]].
-                                                               !!    If iflag=1 these are specified by the user.
+                                                               !!    If iknot=0 these are chosen by [[db6ink]].
+                                                               !!    If iknot=1 these are specified by the user.
                                                                !!    Must be non-decreasing.
     real(wp),dimension(nq+kq),intent(inout)           :: tq    !! The knots in the q direction for the spline interpolant.
-                                                               !!    If iflag=0 these are chosen by [[db6ink]].
-                                                               !!    If iflag=1 these are specified by the user.
+                                                               !!    If iknot=0 these are chosen by [[db6ink]].
+                                                               !!    If iknot=1 these are specified by the user.
                                                                !!    Must be non-decreasing.
     real(wp),dimension(nr+kr),intent(inout)           :: tr    !! The knots in the r direction for the spline interpolant.
-                                                               !!    If iflag=0 these are chosen by [[db6ink]].
-                                                               !!    If iflag=1 these are specified by the user.
+                                                               !!    If iknot=0 these are chosen by [[db6ink]].
+                                                               !!    If iknot=1 these are specified by the user.
                                                                !!    Must be non-decreasing.
     real(wp),dimension(ns+ks),intent(inout)           :: ts    !! The knots in the s direction for the spline interpolant.
-                                                               !!    If iflag=0 these are chosen by [[db6ink]].
-                                                               !!    If iflag=1 these are specified by the user.
+                                                               !!    If iknot=0 these are chosen by [[db6ink]].
+                                                               !!    If iknot=1 these are specified by the user.
                                                                !!    Must be non-decreasing.
     real(wp),dimension(nx,ny,nz,nq,nr,ns),intent(out) :: bcoef !! array of coefficients of the b-spline interpolant.
     integer,intent(out)                               :: iflag !!  0 = successful execution.
