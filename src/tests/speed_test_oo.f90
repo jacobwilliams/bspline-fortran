@@ -1,11 +1,11 @@
 !*****************************************************************************************
 !
-!> Speed test for 1d-6d tensor product b-spline interpolation (subroutine version).
+!> Speed test for 1d-6d tensor product b-spline interpolation (object-oriented version).
 !
 !# Results
-!  ![Plot of results](https://raw.githubusercontent.com/jacobwilliams/bspline-fortran/master/src/tests/speed_test.png)
+!  ![Plot of results](https://raw.githubusercontent.com/jacobwilliams/bspline-fortran/master/src/tests/speed_test_oo.png)
 
-    program bspline_speed_test
+    program bspline_speed_test_oo
 
     use bspline_module
     use,intrinsic :: iso_fortran_env, only: wp => real64
@@ -30,32 +30,25 @@
     integer,parameter :: n_cases = nx*ny*nz*nq*nr*ns
 
     real(wp) :: x(nx),y(ny),z(nz),q(nq),r(nr),s(ns)
-    real(wp),dimension(nx) :: fcn_1d, bcoef_1d
-    real(wp),dimension(nx,ny) :: fcn_2d, bcoef_2d
-    real(wp),dimension(nx,ny,nz) :: fcn_3d, bcoef_3d
-    real(wp),dimension(nx,ny,nz,nq) :: fcn_4d, bcoef_4d
-    real(wp),dimension(nx,ny,nz,nq,nr) :: fcn_5d, bcoef_5d
-    real(wp),dimension(nx,ny,nz,nq,nr,ns) :: fcn_6d, bcoef_6d
-    real(wp) :: tx(nx+kx),ty(ny+ky),tz(nz+kz),tq(nq+kq),tr(nr+kr),ts(ns+ks)
+    real(wp) :: fcn_1d(nx)
+    real(wp) :: fcn_2d(nx,ny)
+    real(wp) :: fcn_3d(nx,ny,nz)
+    real(wp) :: fcn_4d(nx,ny,nz,nq)
+    real(wp) :: fcn_5d(nx,ny,nz,nq,nr)
+    real(wp) :: fcn_6d(nx,ny,nz,nq,nr,ns)
+
+    type(bspline_1d) :: s1
+    type(bspline_2d) :: s2
+    type(bspline_3d) :: s3
+    type(bspline_4d) :: s4
+    type(bspline_5d) :: s5
+    type(bspline_6d) :: s6
 
     real(wp) :: val,sumval
-    integer  :: i,j,k,l,m,n,idx,idy,idz,idq,idr,ids,iknot,iflag
+    integer  :: i,j,k,l,m,n,idx,idy,idz,idq,idr,ids,iflag
     real :: tstart, tend
     type(pyplot) :: plt
     real(wp),dimension(6) :: cases_per_sec
-    integer :: inbvx,inbvy,inbvz,inbvq,inbvr,inbvs,iloy,iloz,iloq,ilor,ilos
-
-    inbvx = 1
-    inbvy = 1
-    inbvz = 1
-    inbvq = 1
-    inbvr = 1
-    inbvs = 1
-    iloy  = 1
-    iloz  = 1
-    iloq  = 1
-    ilor  = 1
-    ilos  = 1
 
     idx = 0
     idy = 0
@@ -92,40 +85,14 @@
         end do
     end do
 
-    iknot = 0 !auto-compute the knots
+    !initialize using the constructors:
 
-    !initialize:
-
-    call db1ink(x,nx,fcn_1d,kx,iknot,tx,bcoef_1d,iflag)
-        if (iflag/=0) then
-            write(*,*) 'iflag=',iflag
-            error stop 'error initializing 1d spline.'
-        end if
-    call db2ink(x,nx,y,ny,fcn_2d,kx,ky,iknot,tx,ty,bcoef_2d,iflag)
-        if (iflag/=0) then
-            write(*,*) 'iflag=',iflag
-            error stop 'error initializing 2d spline.'
-        end if
-    call db3ink(x,nx,y,ny,z,nz,fcn_3d,kx,ky,kz,iknot,tx,ty,tz,bcoef_3d,iflag)
-        if (iflag/=0) then
-            write(*,*) 'iflag=',iflag
-            error stop 'error initializing 3d spline.'
-        end if
-    call db4ink(x,nx,y,ny,z,nz,q,nq,fcn_4d,kx,ky,kz,kq,iknot,tx,ty,tz,tq,bcoef_4d,iflag)
-        if (iflag/=0) then
-            write(*,*) 'iflag=',iflag
-            error stop 'error initializing 4d spline.'
-        end if
-    call db5ink(x,nx,y,ny,z,nz,q,nq,r,nr,fcn_5d,kx,ky,kz,kq,kr,iknot,tx,ty,tz,tq,tr,bcoef_5d,iflag)
-        if (iflag/=0) then
-            write(*,*) 'iflag=',iflag
-            error stop 'error initializing 5d spline.'
-        end if
-    call db6ink(x,nx,y,ny,z,nz,q,nq,r,nr,s,ns,fcn_6d,kx,ky,kz,kq,kr,ks,iknot,tx,ty,tz,tq,tr,ts,bcoef_6d,iflag)
-        if (iflag/=0) then
-            write(*,*) 'iflag=',iflag
-            error stop 'error initializing 6d spline.'
-        end if
+    s1 = bspline_1d(x,fcn_1d,kx)                         ; if (.not. s1%status_ok()) error stop 'error initializing s1'
+    s2 = bspline_2d(x,y,fcn_2d,kx,ky)                    ; if (.not. s1%status_ok()) error stop 'error initializing s2'
+    s3 = bspline_3d(x,y,z,fcn_3d,kx,ky,kz)               ; if (.not. s1%status_ok()) error stop 'error initializing s3'
+    s4 = bspline_4d(x,y,z,q,fcn_4d,kx,ky,kz,kq)          ; if (.not. s1%status_ok()) error stop 'error initializing s4'
+    s5 = bspline_5d(x,y,z,q,r,fcn_5d,kx,ky,kz,kq,kr)     ; if (.not. s1%status_ok()) error stop 'error initializing s5'
+    s6 = bspline_6d(x,y,z,q,r,s,fcn_6d,kx,ky,kz,kq,kr,ks); if (.not. s1%status_ok()) error stop 'error initializing s6'
 
     ! evaluate the interpolants:
     sumval = 0.0_wp
@@ -136,7 +103,7 @@
                 do l=1,nq
                     do m=1,nr
                         do n=1,ns
-                            call db1val(x(i),idx,tx,nx,kx,bcoef_1d,val,iflag,inbvx)
+                            call s1%evaluate(x(i),idx,val,iflag)
                             sumval = sumval + val
                         end do
                     end do
@@ -160,9 +127,7 @@
                 do l=1,nq
                     do m=1,nr
                         do n=1,ns
-                            call db2val(x(i),y(j),idx,idy,tx,ty,&
-                                        nx,ny,kx,ky,bcoef_2d,val,iflag,&
-                                        inbvx,inbvy,iloy)
+                           call s2%evaluate(x(i),y(j),idx,idy,val,iflag)
                            sumval = sumval + val
                        end do
                    end do
@@ -186,9 +151,7 @@
                 do l=1,nq
                     do m=1,nr
                         do n=1,ns
-                            call db3val(x(i),y(j),z(k),idx,idy,idz,tx,ty,tz,&
-                                        nx,ny,nz,kx,ky,kz,bcoef_3d,val,iflag,&
-                                        inbvx,inbvy,inbvz,iloy,iloz)
+                            call s3%evaluate(x(i),y(j),z(k),idx,idy,idz,val,iflag)
                             sumval = sumval + val
                         end do
                     end do
@@ -212,9 +175,7 @@
                 do l=1,nq
                     do m=1,nr
                         do n=1,ns
-                            call db4val(x(i),y(j),z(k),q(l),idx,idy,idz,idq,tx,ty,tz,tq,&
-                                        nx,ny,nz,nq,kx,ky,kz,kq,bcoef_4d,val,iflag,&
-                                        inbvx,inbvy,inbvz,inbvq,iloy,iloz,iloq)
+                            call s4%evaluate(x(i),y(j),z(k),q(l),idx,idy,idz,idq,val,iflag)
                             sumval = sumval + val
                         end do
                     end do
@@ -238,9 +199,7 @@
                 do l=1,nq
                     do m=1,nr
                         do n=1,ns
-                            call db5val(x(i),y(j),z(k),q(l),r(m),idx,idy,idz,idq,idr,tx,ty,tz,tq,tr,&
-                                        nx,ny,nz,nq,nr,kx,ky,kz,kq,kr,bcoef_5d,val,iflag,&
-                                        inbvx,inbvy,inbvz,inbvq,inbvr,iloy,iloz,iloq,ilor)
+                            call s5%evaluate(x(i),y(j),z(k),q(l),r(m),idx,idy,idz,idq,idr,val,iflag)
                             sumval = sumval + val
                         end do
                     end do
@@ -264,10 +223,7 @@
                 do l=1,nq
                     do m=1,nr
                         do n=1,ns
-                            call db6val(x(i),y(j),z(k),q(l),r(m),s(n),idx,idy,idz,idq,idr,ids,&
-                                        tx,ty,tz,tq,tr,ts,&
-                                        nx,ny,nz,nq,nr,ns,kx,ky,kz,kq,kr,ks,bcoef_6d,val,iflag,&
-                                        inbvx,inbvy,inbvz,inbvq,inbvr,inbvs,iloy,iloz,iloq,ilor,ilos)
+                            call s6%evaluate(x(i),y(j),z(k),q(l),r(m),s(n),idx,idy,idz,idq,idr,ids,val,iflag)
                             sumval = sumval + val
                         end do
                     end do
@@ -285,14 +241,14 @@
 
     !plot results in bar chart:
     call plt%initialize(grid=.false.,xlabel='Dimension',ylabel='Cases Per Second',&
-                        title='Speed Test (Subroutine Interface)',legend=.false.,&
+                        title='Speed Test (Object-Oriented Interface)',legend=.false.,&
                         font_size = 20,&
                         axes_labelsize = 20,&
                         xtick_labelsize = 20,&
                         ytick_labelsize = 20)
     call plt%add_bar(left=real([1,2,3,4,5,6],wp),height=cases_per_sec,label='Speed test runs',&
                         yscale='log',align='center',color='r')
-    call plt%savefig('speed_test.png')
+    call plt%savefig('speed_test_oo.png')
 
     contains
 
@@ -338,4 +294,4 @@
         f = x**1.1_wp + y**1.2_wp + z**1.3_wp + q**1.4_wp + r**1.5_wp + s**1.6_wp
         end function f6
 
-    end program bspline_speed_test
+    end program bspline_speed_test_oo

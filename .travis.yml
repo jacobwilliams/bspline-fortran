@@ -26,6 +26,7 @@ script:
   - ./bin/test_oo
   - ./bin/test_regrid
   - ./bin/speed_test
+  - ./bin/speed_test_oo
   - ./bin/knot_tests
 
 after_success:
