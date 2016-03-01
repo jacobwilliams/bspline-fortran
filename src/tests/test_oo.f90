@@ -4,7 +4,7 @@
 
     program bspline_oo_test
 
-    use bspline_oo_module
+    use bspline_module
     use,intrinsic :: iso_fortran_env, only: wp => real64
 
     implicit none
@@ -41,7 +41,8 @@
     real(wp) :: tol
     real(wp),dimension(6) :: val,tru,err,errmax
     logical  :: fail
-    integer  :: i,j,k,l,m,n,idx,idy,idz,idq,idr,ids,iflag
+    integer  :: i,j,k,l,m,n,idx,idy,idz,idq,idr,ids
+    integer,dimension(6) :: iflag
 
     fail = .false.
     tol = 1.0e-14_wp
@@ -91,43 +92,51 @@
 
      !initialize:
 
-     call s1%initialize(x,fcn_1d,kx,iflag)
-     call s2%initialize(x,y,fcn_2d,kx,ky,iflag)
-     call s3%initialize(x,y,z,fcn_3d,kx,ky,kz,iflag)
-     call s4%initialize(x,y,z,q,fcn_4d,kx,ky,kz,kq,iflag)
-     call s5%initialize(x,y,z,q,r,fcn_5d,kx,ky,kz,kq,kr,iflag)
-     call s6%initialize(x,y,z,q,r,s,fcn_6d,kx,ky,kz,kq,kr,ks,iflag)
+     call s1%initialize(x,fcn_1d,kx,iflag(1))
+     call s2%initialize(x,y,fcn_2d,kx,ky,iflag(2))
+     call s3%initialize(x,y,z,fcn_3d,kx,ky,kz,iflag(3))
+     call s4%initialize(x,y,z,q,fcn_4d,kx,ky,kz,kq,iflag(4))
+     call s5%initialize(x,y,z,q,r,fcn_5d,kx,ky,kz,kq,kr,iflag(5))
+     call s6%initialize(x,y,z,q,r,s,fcn_6d,kx,ky,kz,kq,kr,ks,iflag(6))
+
+     if (any(iflag/=0)) then
+         do i=1,6
+             if (iflag(i)/=0) then
+                 write(*,*) 'Error initializing ',i,'D spline: '//get_status_message(iflag(i))
+             end if
+         end do
+     end if
 
     ! compute max error at interpolation points
 
      errmax = 0.0_wp
      do i=1,nx
-                        call s1%evaluate(x(i),idx,val(1),iflag)
+                        call s1%evaluate(x(i),idx,val(1),iflag(1))
                         tru(1)    = f1(x(i))
                         err(1)    = abs(tru(1)-val(1))
                         errmax(1) = max(err(1),errmax(1))
         do j=1,ny
-                        call s2%evaluate(x(i),y(j),idx,idy,val(2),iflag)
+                        call s2%evaluate(x(i),y(j),idx,idy,val(2),iflag(2))
                         tru(2)    = f2(x(i),y(j))
                         err(2)    = abs(tru(2)-val(2))
                         errmax(2) = max(err(2),errmax(2))
            do k=1,nz
-                        call s3%evaluate(x(i),y(j),z(k),idx,idy,idz,val(3),iflag)
+                        call s3%evaluate(x(i),y(j),z(k),idx,idy,idz,val(3),iflag(3))
                         tru(3)    = f3(x(i),y(j),z(k))
                         err(3)    = abs(tru(3)-val(3))
                         errmax(3) = max(err(3),errmax(3))
               do l=1,nq
-                        call s4%evaluate(x(i),y(j),z(k),q(l),idx,idy,idz,idq,val(4),iflag)
+                        call s4%evaluate(x(i),y(j),z(k),q(l),idx,idy,idz,idq,val(4),iflag(4))
                         tru(4)    = f4(x(i),y(j),z(k),q(l))
                         err(4)    = abs(tru(4)-val(4))
                         errmax(4) = max(err(4),errmax(4))
                 do m=1,nr
-                        call s5%evaluate(x(i),y(j),z(k),q(l),r(m),idx,idy,idz,idq,idr,val(5),iflag)
+                        call s5%evaluate(x(i),y(j),z(k),q(l),r(m),idx,idy,idz,idq,idr,val(5),iflag(5))
                         tru(5)    = f5(x(i),y(j),z(k),q(l),r(m))
                         err(5)    = abs(tru(5)-val(5))
                         errmax(5) = max(err(5),errmax(5))
                     do n=1,ns
-                        call s6%evaluate(x(i),y(j),z(k),q(l),r(m),s(n),idx,idy,idz,idq,idr,ids,val(6),iflag)
+                        call s6%evaluate(x(i),y(j),z(k),q(l),r(m),s(n),idx,idy,idz,idq,idr,ids,val(6),iflag(6))
                         tru(6)    = f6(x(i),y(j),z(k),q(l),r(m),s(n))
                         err(6)    = abs(tru(6)-val(6))
                         errmax(6) = max(err(6),errmax(6))
