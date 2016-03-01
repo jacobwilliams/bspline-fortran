@@ -99,6 +99,7 @@
                                                       !! 712 = size(tx) /= nx+kx.
                                                       !! 800 = size(x) /= size(bcoef,1).
 
+    real(wp),dimension(2*kx*(nx+1)) :: work
     logical :: status_ok
 
     !check validity of inputs
@@ -124,7 +125,7 @@
 
         !construct b-spline coefficients
 
-        call dbtpcf(x,nx,fcn,nx,1,tx,kx,bcoef,iflag)
+        call dbtpcf(x,nx,fcn,nx,1,tx,kx,bcoef,work,iflag)
 
     end if
 
@@ -281,6 +282,7 @@
                                                       !! 801 = size(y) /= size(bcoef,2).
 
     real(wp),dimension(nx*ny) :: temp
+    real(wp),dimension(max(2*kx*(nx+1),2*ky*(ny+1))) :: work
     logical :: status_ok
 
     !check validity of inputs
@@ -307,8 +309,8 @@
 
         !construct b-spline coefficients
 
-                      call dbtpcf(x,nx,fcn, nx,ny,tx,kx,temp, iflag)
-        if (iflag==0) call dbtpcf(y,ny,temp,ny,nx,ty,ky,bcoef,iflag)
+                      call dbtpcf(x,nx,fcn, nx,ny,tx,kx,temp, work,iflag)
+        if (iflag==0) call dbtpcf(y,ny,temp,ny,nx,ty,ky,bcoef,work,iflag)
 
     end if
 
@@ -516,6 +518,7 @@
                                                       !! 802 = size(z) /= size(bcoef,3).
 
     real(wp),dimension(nx*ny*nz) :: temp
+    real(wp),dimension(max(2*kx*(nx+1),2*ky*(ny+1),2*kz*(nz+1))) :: work
     logical :: status_ok
 
     ! check validity of input
@@ -546,9 +549,9 @@
 
         ! construct b-spline coefficients
 
-                      call dbtpcf(x,nx,temp, nx,ny*nz,tx,kx,bcoef,iflag)
-        if (iflag==0) call dbtpcf(y,ny,bcoef,ny,nx*nz,ty,ky,temp, iflag)
-        if (iflag==0) call dbtpcf(z,nz,temp, nz,nx*ny,tz,kz,bcoef,iflag)
+                      call dbtpcf(x,nx,temp, nx,ny*nz,tx,kx,bcoef,work,iflag)
+        if (iflag==0) call dbtpcf(y,ny,bcoef,ny,nx*nz,ty,ky,temp, work,iflag)
+        if (iflag==0) call dbtpcf(z,nz,temp, nz,nx*ny,tz,kz,bcoef,work,iflag)
 
     end if
 
@@ -771,6 +774,7 @@
                                                          !! 803 = size(q) /= size(bcoef,4).
 
     real(wp),dimension(nx*ny*nz*nq) :: temp
+    real(wp),dimension(max(2*kx*(nx+1),2*ky*(ny+1),2*kz*(nz+1),2*kq*(nq+1))) :: work
     logical :: status_ok
 
     ! check validity of input
@@ -799,10 +803,10 @@
 
         ! construct b-spline coefficients
 
-                      call dbtpcf(x,nx,fcn,  nx,ny*nz*nq,tx,kx,temp, iflag)
-        if (iflag==0) call dbtpcf(y,ny,temp, ny,nx*nz*nq,ty,ky,bcoef,iflag)
-        if (iflag==0) call dbtpcf(z,nz,bcoef,nz,nx*ny*nq,tz,kz,temp, iflag)
-        if (iflag==0) call dbtpcf(q,nq,temp, nq,nx*ny*nz,tq,kq,bcoef,iflag)
+                      call dbtpcf(x,nx,fcn,  nx,ny*nz*nq,tx,kx,temp, work,iflag)
+        if (iflag==0) call dbtpcf(y,ny,temp, ny,nx*nz*nq,ty,ky,bcoef,work,iflag)
+        if (iflag==0) call dbtpcf(z,nz,bcoef,nz,nx*ny*nq,tz,kz,temp, work,iflag)
+        if (iflag==0) call dbtpcf(q,nq,temp, nq,nx*ny*nz,tq,kq,bcoef,work,iflag)
 
      end if
 
@@ -1048,6 +1052,11 @@
                                                             !! 804 = size(r) /= size(bcoef,5).
 
     real(wp),dimension(nx*ny*nz*nq*nr) :: temp
+    real(wp),dimension(max( 2*kx*(nx+1),&
+                            2*ky*(ny+1),&
+                            2*kz*(nz+1),&
+                            2*kq*(nq+1),&
+                            2*kr*(nr+1) )) :: work
     logical :: status_ok
 
     !  check validity of input
@@ -1081,11 +1090,11 @@
 
         !  construct b-spline coefficients
 
-                      call dbtpcf(x,nx,temp,  nx,ny*nz*nq*nr,tx,kx,bcoef,iflag)
-        if (iflag==0) call dbtpcf(y,ny,bcoef, ny,nx*nz*nq*nr,ty,ky,temp, iflag)
-        if (iflag==0) call dbtpcf(z,nz,temp,  nz,nx*ny*nq*nr,tz,kz,bcoef,iflag)
-        if (iflag==0) call dbtpcf(q,nq,bcoef, nq,nx*ny*nz*nr,tq,kq,temp, iflag)
-        if (iflag==0) call dbtpcf(r,nr,temp,  nr,nx*ny*nz*nq,tr,kr,bcoef,iflag)
+                      call dbtpcf(x,nx,temp,  nx,ny*nz*nq*nr,tx,kx,bcoef,work,iflag)
+        if (iflag==0) call dbtpcf(y,ny,bcoef, ny,nx*nz*nq*nr,ty,ky,temp, work,iflag)
+        if (iflag==0) call dbtpcf(z,nz,temp,  nz,nx*ny*nq*nr,tz,kz,bcoef,work,iflag)
+        if (iflag==0) call dbtpcf(q,nq,bcoef, nq,nx*ny*nz*nr,tq,kq,temp, work,iflag)
+        if (iflag==0) call dbtpcf(r,nr,temp,  nr,nx*ny*nz*nq,tr,kr,bcoef,work,iflag)
 
      end if
 
@@ -1375,6 +1384,12 @@
                                                                !! 805 = size(s) /= size(bcoef,6).
 
     real(wp),dimension(nx*ny*nz*nq*nr*ns) :: temp
+    real(wp),dimension(max( 2*kx*(nx+1),&
+                            2*ky*(ny+1),&
+                            2*kz*(nz+1),&
+                            2*kq*(nq+1),&
+                            2*kr*(nr+1),&
+                            2*ks*(ns+1))) :: work
     logical :: status_ok
 
     ! check validity of input
@@ -1405,12 +1420,12 @@
 
         ! construct b-spline coefficients
 
-                      call dbtpcf(x,nx,fcn,  nx,ny*nz*nq*nr*ns,tx,kx,temp, iflag)
-        if (iflag==0) call dbtpcf(y,ny,temp, ny,nx*nz*nq*nr*ns,ty,ky,bcoef,iflag)
-        if (iflag==0) call dbtpcf(z,nz,bcoef,nz,nx*ny*nq*nr*ns,tz,kz,temp, iflag)
-        if (iflag==0) call dbtpcf(q,nq,temp, nq,nx*ny*nz*nr*ns,tq,kq,bcoef,iflag)
-        if (iflag==0) call dbtpcf(r,nr,bcoef,nr,nx*ny*nz*nq*ns,tr,kr,temp, iflag)
-        if (iflag==0) call dbtpcf(s,ns,temp, ns,nx*ny*nz*nq*nr,ts,ks,bcoef,iflag)
+                      call dbtpcf(x,nx,fcn,  nx,ny*nz*nq*nr*ns,tx,kx,temp, work,iflag)
+        if (iflag==0) call dbtpcf(y,ny,temp, ny,nx*nz*nq*nr*ns,ty,ky,bcoef,work,iflag)
+        if (iflag==0) call dbtpcf(z,nz,bcoef,nz,nx*ny*nq*nr*ns,tz,kz,temp, work,iflag)
+        if (iflag==0) call dbtpcf(q,nq,temp, nq,nx*ny*nz*nr*ns,tq,kq,bcoef,work,iflag)
+        if (iflag==0) call dbtpcf(r,nr,bcoef,nr,nx*ny*nz*nq*ns,tr,kr,temp, work,iflag)
+        if (iflag==0) call dbtpcf(s,ns,temp, ns,nx*ny*nz*nq*nr,ts,ks,bcoef,work,iflag)
 
      end if
 
@@ -1957,7 +1972,7 @@
 !
 !  * Jacob Williams, 2/24/2015 : Refactored this routine.
 
-    pure subroutine dbtpcf(x,n,fcn,ldf,nf,t,k,bcoef,iflag)
+    pure subroutine dbtpcf(x,n,fcn,ldf,nf,t,k,bcoef,work,iflag)
 
     integer,intent(in)                    :: n
     integer,intent(in)                    :: nf
@@ -1967,11 +1982,11 @@
     real(wp),dimension(ldf,nf),intent(in) :: fcn
     real(wp),dimension(*),intent(in)      :: t
     real(wp),dimension(nf,n),intent(out)  :: bcoef
+    real(wp),dimension(*),intent(out)     :: work   !! work array of size >= `2*k*(n+1)`
     integer,intent(out)                   :: iflag  !!   0: no errors
                                                     !! 301: n should be >0
 
     integer :: i, j, m1, m2, iq, iw
-    real(wp),dimension(2*k*(n+1)) :: work  !! work array
 
     ! check for null input
 
