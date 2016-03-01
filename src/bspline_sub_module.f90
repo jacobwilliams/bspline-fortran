@@ -4,12 +4,12 @@
 !
 !# Description
 !
-!  Multidimensional (1D-6D) B-Spline interpolation of data on a regular grid.
+!  Multidimensional (1D-6D) B-spline interpolation of data on a regular grid.
 !  Basic pure subroutine interface.
 !
 !# Notes
 !
-!  This module is based on the bspline and spline routines from [1].
+!  This module is based on the B-spline and spline routines from [1].
 !  The original Fortran 77 routines were converted to free-form source.
 !  Some of them are relatively unchanged from the originals, but some have
 !  been extensively refactored. In addition, new routines for
@@ -97,6 +97,7 @@
                                                       !! 700 = size(x) /= size(fcn,1).
                                                       !! 706 = size(x) /= nx.
                                                       !! 712 = size(tx) /= nx+kx.
+                                                      !! 800 = size(x) /= size(bcoef,1).
 
     logical :: status_ok
 
@@ -109,6 +110,7 @@
                         kx=kx,&
                         x=x,&
                         f1=fcn,&
+                        bcoef1=bcoef,&
                         tx=tx,&
                         status_ok=status_ok)
 
@@ -246,7 +248,7 @@
     integer,intent(in)                      :: ky     !! The order of spline pieces in y (>= 2, < ny). (order = polynomial degree + 1)
     real(wp),dimension(:),intent(in)        :: x      !! `nx` array of x abcissae. Must be strictly increasing.
     real(wp),dimension(:),intent(in)        :: y      !! `ny` array of y abcissae. Must be strictly increasing.
-    real(wp),dimension(:,:),intent(in)      :: fcn    !! '(nx,ny)` matrix of function values to interpolate. `fcn(i,j)` should
+    real(wp),dimension(:,:),intent(in)      :: fcn    !! `(nx,ny)` matrix of function values to interpolate. `fcn(i,j)` should
                                                       !!    contain the function value at the point `(x(i),y(j))`
     integer,intent(in)                      :: iknot  !! 0 = knot sequence chosen by [[db1ink]].
                                                       !! 1 = knot sequence chosen by user.
@@ -275,6 +277,8 @@
                                                       !! 707 = size(y) /= ny.
                                                       !! 712 = size(tx) /= nx+kx.
                                                       !! 713 = size(ty) /= ny+ky.
+                                                      !! 800 = size(x) /= size(bcoef,1).
+                                                      !! 801 = size(y) /= size(bcoef,2).
 
     real(wp),dimension(nx*ny) :: temp
     logical :: status_ok
@@ -289,6 +293,7 @@
                         x=x,y=y,&
                         tx=tx,ty=ty,&
                         f2=fcn,&
+                        bcoef2=bcoef,&
                         status_ok=status_ok)
 
     if (status_ok) then
@@ -466,7 +471,7 @@
     real(wp),dimension(:),intent(in)         :: x     !! `nx` array of x abcissae. must be strictly increasing.
     real(wp),dimension(:),intent(in)         :: y     !! `ny` array of y abcissae. must be strictly increasing.
     real(wp),dimension(:),intent(in)         :: z     !! `nz` array of z abcissae. must be strictly increasing.
-    real(wp),dimension(:,:,:),intent(in)     :: fcn   !! '(nx,ny,nz)' matrix of function values to interpolate. fcn(i,j,k) should
+    real(wp),dimension(:,:,:),intent(in)     :: fcn   !! `(nx,ny,nz)` matrix of function values to interpolate. fcn(i,j,k) should
                                                       !!   contain the function value at the point (x(i),y(j),z(k))
     integer,intent(in)                       :: iknot !! 0 = knot sequence chosen by [[db1ink]].
                                                       !! 1 = knot sequence chosen by user.
@@ -506,6 +511,9 @@
                                                       !! 712 = size(tx) /= nx+kx.
                                                       !! 713 = size(ty) /= ny+ky.
                                                       !! 714 = size(tz) /= nz+kz.
+                                                      !! 800 = size(x) /= size(bcoef,1).
+                                                      !! 801 = size(y) /= size(bcoef,2).
+                                                      !! 802 = size(z) /= size(bcoef,3).
 
     real(wp),dimension(nx*ny*nz) :: temp
     logical :: status_ok
@@ -520,6 +528,7 @@
                         x=x,y=y,z=z,&
                         tx=tx,ty=ty,tz=tz,&
                         f3=fcn,&
+                        bcoef3=bcoef,&
                         status_ok=status_ok)
 
     if (status_ok) then
@@ -756,6 +765,10 @@
                                                          !! 713 = size(ty) /= ny+ky.
                                                          !! 714 = size(tz) /= nz+kz.
                                                          !! 715 = size(tq) /= nq+kq.
+                                                         !! 800 = size(x) /= size(bcoef,1).
+                                                         !! 801 = size(y) /= size(bcoef,2).
+                                                         !! 802 = size(z) /= size(bcoef,3).
+                                                         !! 803 = size(q) /= size(bcoef,4).
 
     real(wp),dimension(nx*ny*nz*nq) :: temp
     logical :: status_ok
@@ -770,6 +783,7 @@
                         x=x,y=y,z=z,q=q,&
                         tx=tx,ty=ty,tz=tz,tq=tq,&
                         f4=fcn,&
+                        bcoef4=bcoef,&
                         status_ok=status_ok)
 
     if (status_ok) then
@@ -1027,6 +1041,11 @@
                                                             !! 714 = size(tz) /= nz+kz.
                                                             !! 715 = size(tq) /= nq+kq.
                                                             !! 716 = size(tr) /= nr+kr.
+                                                            !! 800 = size(x) /= size(bcoef,1).
+                                                            !! 801 = size(y) /= size(bcoef,2).
+                                                            !! 802 = size(z) /= size(bcoef,3).
+                                                            !! 803 = size(q) /= size(bcoef,4).
+                                                            !! 804 = size(r) /= size(bcoef,5).
 
     real(wp),dimension(nx*ny*nz*nq*nr) :: temp
     logical :: status_ok
@@ -1041,6 +1060,7 @@
                         x=x,y=y,z=z,q=q,r=r,&
                         tx=tx,ty=ty,tz=tz,tq=tq,tr=tr,&
                         f5=fcn,&
+                        bcoef5=bcoef,&
                         status_ok=status_ok)
 
     if (status_ok) then
@@ -1347,6 +1367,12 @@
                                                                !! 715 = size(tq) /= nq+kq.
                                                                !! 716 = size(tr) /= nr+kr.
                                                                !! 717 = size(ts) /= ns+ks.
+                                                               !! 800 = size(x) /= size(bcoef,1).
+                                                               !! 801 = size(y) /= size(bcoef,2).
+                                                               !! 802 = size(z) /= size(bcoef,3).
+                                                               !! 803 = size(q) /= size(bcoef,4).
+                                                               !! 804 = size(r) /= size(bcoef,5).
+                                                               !! 805 = size(s) /= size(bcoef,6).
 
     real(wp),dimension(nx*ny*nz*nq*nr*ns) :: temp
     logical :: status_ok
@@ -1360,6 +1386,8 @@
                         kx=kx,ky=ky,kz=kz,kq=kq,kr=kr,ks=ks,&
                         x=x,y=y,z=z,q=q,r=r,s=s,&
                         tx=tx,ty=ty,tz=tz,tq=tq,tr=tr,ts=ts,&
+                        f6=fcn,&
+                        bcoef6=bcoef,&
                         status_ok=status_ok)
 
     if (status_ok) then
@@ -1609,6 +1637,7 @@
                             x,y,z,q,r,s,&
                             tx,ty,tz,tq,tr,ts,&
                             f1,f2,f3,f4,f5,f6,&
+                            bcoef1,bcoef2,bcoef3,bcoef4,bcoef5,bcoef6,&
                             status_ok)
 
     implicit none
@@ -1620,12 +1649,12 @@
     integer,intent(in),optional                         :: kx,ky,kz,kq,kr,ks
     real(wp),dimension(:),intent(in),optional           :: x,y,z,q,r,s
     real(wp),dimension(:),intent(in),optional           :: tx,ty,tz,tq,tr,ts
-    real(wp),dimension(:),intent(in),optional           :: f1
-    real(wp),dimension(:,:),intent(in),optional         :: f2
-    real(wp),dimension(:,:,:),intent(in),optional       :: f3
-    real(wp),dimension(:,:,:,:),intent(in),optional     :: f4
-    real(wp),dimension(:,:,:,:,:),intent(in),optional   :: f5
-    real(wp),dimension(:,:,:,:,:,:),intent(in),optional :: f6
+    real(wp),dimension(:),intent(in),optional           :: f1,bcoef1
+    real(wp),dimension(:,:),intent(in),optional         :: f2,bcoef2
+    real(wp),dimension(:,:,:),intent(in),optional       :: f3,bcoef3
+    real(wp),dimension(:,:,:,:),intent(in),optional     :: f4,bcoef4
+    real(wp),dimension(:,:,:,:,:),intent(in),optional   :: f5,bcoef5
+    real(wp),dimension(:,:,:,:,:,:),intent(in),optional :: f6,bcoef6
     logical,intent(out)                                 :: status_ok
 
     logical :: error
@@ -1647,41 +1676,63 @@
         call check('r',nr,kr,r,tr,[19,20,21,22,710,716],iflag,error); if (error) return
         call check('s',ns,ks,s,ts,[23,24,25,26,711,717],iflag,error); if (error) return
 
-        if (present(x) .and. present(f1)) then
+        if (present(x) .and. present(f1) .and. present(bcoef1)) then
             if (size(x)/=size(f1,1)) then; iflag = 700; return; end if
+            if (size(x)/=size(bcoef1,1)) then; iflag = 800; return; end if
         end if
-        if (present(x) .and. present(y) .and. present(f2)) then
+        if (present(x) .and. present(y) .and. present(f2) .and. present(bcoef2)) then
             if (size(x)/=size(f2,1)) then; iflag = 700; return; end if
             if (size(y)/=size(f2,2)) then; iflag = 701; return; end if
+            if (size(x)/=size(bcoef2,1)) then; iflag = 800; return; end if
+            if (size(y)/=size(bcoef2,2)) then; iflag = 801; return; end if
         end if
-        if (present(x) .and. present(y) .and. present(z) .and. present(f3)) then
+        if (present(x) .and. present(y) .and. present(z) .and. present(f3) .and. &
+            present(bcoef3)) then
             if (size(x)/=size(f3,1)) then; iflag = 700; return; end if
             if (size(y)/=size(f3,2)) then; iflag = 701; return; end if
             if (size(z)/=size(f3,2)) then; iflag = 702; return; end if
+            if (size(x)/=size(bcoef3,1)) then; iflag = 800; return; end if
+            if (size(y)/=size(bcoef3,2)) then; iflag = 801; return; end if
+            if (size(z)/=size(bcoef3,3)) then; iflag = 802; return; end if
         end if
         if (present(x) .and. present(y) .and. present(z) .and. present(q) .and. &
-            present(f4)) then
+            present(f4) .and. present(bcoef4)) then
             if (size(x)/=size(f4,1)) then; iflag = 700; return; end if
             if (size(y)/=size(f4,2)) then; iflag = 701; return; end if
             if (size(z)/=size(f4,3)) then; iflag = 702; return; end if
             if (size(q)/=size(f4,4)) then; iflag = 703; return; end if
+            if (size(x)/=size(bcoef4,1)) then; iflag = 800; return; end if
+            if (size(y)/=size(bcoef4,2)) then; iflag = 801; return; end if
+            if (size(z)/=size(bcoef4,3)) then; iflag = 802; return; end if
+            if (size(q)/=size(bcoef4,4)) then; iflag = 803; return; end if
         end if
         if (present(x) .and. present(y) .and. present(z) .and. present(q) .and. &
-            present(r) .and. present(f5)) then
+            present(r) .and. present(f5) .and. present(bcoef5)) then
             if (size(x)/=size(f5,1)) then; iflag = 700; return; end if
             if (size(y)/=size(f5,2)) then; iflag = 701; return; end if
             if (size(z)/=size(f5,3)) then; iflag = 702; return; end if
             if (size(q)/=size(f5,4)) then; iflag = 703; return; end if
             if (size(r)/=size(f5,5)) then; iflag = 704; return; end if
+            if (size(x)/=size(bcoef5,1)) then; iflag = 800; return; end if
+            if (size(y)/=size(bcoef5,2)) then; iflag = 801; return; end if
+            if (size(z)/=size(bcoef5,3)) then; iflag = 802; return; end if
+            if (size(q)/=size(bcoef5,4)) then; iflag = 803; return; end if
+            if (size(r)/=size(bcoef5,5)) then; iflag = 804; return; end if
         end if
         if (present(x) .and. present(y) .and. present(z) .and. present(q) .and. &
-            present(r) .and. present(s) .and. present(f6)) then
+            present(r) .and. present(s) .and. present(f6) .and. present(bcoef6)) then
             if (size(x)/=size(f6,1)) then; iflag = 700; return; end if
             if (size(y)/=size(f6,2)) then; iflag = 701; return; end if
             if (size(z)/=size(f6,3)) then; iflag = 702; return; end if
             if (size(q)/=size(f6,4)) then; iflag = 703; return; end if
             if (size(r)/=size(f6,5)) then; iflag = 704; return; end if
             if (size(s)/=size(f6,6)) then; iflag = 705; return; end if
+            if (size(x)/=size(bcoef6,1)) then; iflag = 800; return; end if
+            if (size(y)/=size(bcoef6,2)) then; iflag = 801; return; end if
+            if (size(z)/=size(bcoef6,3)) then; iflag = 802; return; end if
+            if (size(q)/=size(bcoef6,4)) then; iflag = 803; return; end if
+            if (size(r)/=size(bcoef6,5)) then; iflag = 804; return; end if
+            if (size(s)/=size(bcoef6,6)) then; iflag = 805; return; end if
         end if
 
         status_ok = .true.
@@ -2834,6 +2885,12 @@
     case(715); msg='Error in db*ink: size(tq) /= nq+kq'
     case(716); msg='Error in db*ink: size(tr) /= nr+kr'
     case(717); msg='Error in db*ink: size(ts) /= ns+ks'
+    case(800); msg='Error in db*ink: size(x) /= size(bcoef,1)'
+    case(801); msg='Error in db*ink: size(y) /= size(bcoef,2)'
+    case(802); msg='Error in db*ink: size(z) /= size(bcoef,3)'
+    case(803); msg='Error in db*ink: size(q) /= size(bcoef,4)'
+    case(804); msg='Error in db*ink: size(r) /= size(bcoef,5)'
+    case(805); msg='Error in db*ink: size(s) /= size(bcoef,6)'
 
     case(100); msg='Error in dbintk: k does not satisfy k>=1'
     case(101); msg='Error in dbintk: n does not satisfy n>=k'
