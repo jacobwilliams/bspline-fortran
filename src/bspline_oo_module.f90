@@ -661,7 +661,7 @@
     allocate(me%tx(nx+kx))
     allocate(me%bcoef(nx))
 
-    iknot = 0         !knot sequence chosen by db2ink
+    iknot = 0         !knot sequence chosen by db1ink
 
     call db1ink(x,nx,fcn,kx,iknot,me%tx,me%bcoef,iflag)
 
