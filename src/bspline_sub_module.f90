@@ -78,22 +78,25 @@
 
     integer,intent(in)                      :: nx     !! Number of x abcissae
     integer,intent(in)                      :: kx     !! The order of spline pieces in x (>= 2, < nx). (order = polynomial degree + 1)
-    real(wp),dimension(nx),intent(in)       :: x      !! Array of x abcissae. Must be strictly increasing.
-    real(wp),dimension(nx),intent(in)       :: fcn    !! Array of function values to interpolate. fcn(i) should
-                                                      !!    contain the function value at the point x(i)
+    real(wp),dimension(:),intent(in)        :: x      !! `nx` array of x abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)        :: fcn    !! `(nx)` array of function values to interpolate. `fcn(i)` should
+                                                      !!    contain the function value at the point `x(i)`
     integer,intent(in)                      :: iknot  !! 0 = knot sequence chosen by [[db1ink]].
                                                       !! 1 = knot sequence chosen by user.
-    real(wp),dimension(nx+kx),intent(inout) :: tx     !! The knots in the x direction for the spline interpolant.
-                                                      !!    If iknot=0 these are chosen by [[db1ink]].
-                                                      !!    If iknot=1 these are specified by the user.
-                                                      !!    Must be non-decreasing.
-    real(wp),dimension(nx),intent(out)      :: bcoef  !! Array of coefficients of the b-spline interpolant.
+    real(wp),dimension(:),intent(inout)     :: tx     !! The `nx+kx` knots in the `x` direction for the spline interpolant.
+                                                      !!   If `iknot=0` these are chosen by [[db1ink]].
+                                                      !!   If `iknot=1` these are specified by the user.
+                                                      !!   Must be non-decreasing.
+    real(wp),dimension(:),intent(out)       :: bcoef  !! `(nx)` array of coefficients of the b-spline interpolant.
     integer,intent(out)                     :: iflag  !! 0 = successful execution.
                                                       !! 2 = iknot out of range.
                                                       !! 3 = nx out of range.
                                                       !! 4 = kx out of range.
                                                       !! 5 = x not strictly increasing.
                                                       !! 6 = tx not non-decreasing.
+                                                      !! 700 = size(x) /= size(fcn,1).
+                                                      !! 706 = size(x) /= nx.
+                                                      !! 712 = size(tx) /= nx+kx.
 
     logical :: status_ok
 
@@ -105,6 +108,7 @@
                         nx=nx,&
                         kx=kx,&
                         x=x,&
+                        f1=fcn,&
                         tx=tx,&
                         status_ok=status_ok)
 
@@ -240,21 +244,21 @@
     integer,intent(in)                      :: ny     !! Number of y abcissae
     integer,intent(in)                      :: kx     !! The order of spline pieces in x (>= 2, < nx). (order = polynomial degree + 1)
     integer,intent(in)                      :: ky     !! The order of spline pieces in y (>= 2, < ny). (order = polynomial degree + 1)
-    real(wp),dimension(nx),intent(in)       :: x      !! Array of x abcissae. Must be strictly increasing.
-    real(wp),dimension(ny),intent(in)       :: y      !! Array of y abcissae. Must be strictly increasing.
-    real(wp),dimension(nx,ny),intent(in)    :: fcn    !! Array of function values to interpolate. fcn(i,j) should
-                                                      !!    contain the function value at the point (x(i),y(j))
+    real(wp),dimension(:),intent(in)        :: x      !! `nx` array of x abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)        :: y      !! `ny` array of y abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:),intent(in)      :: fcn    !! '(nx,ny)` matrix of function values to interpolate. `fcn(i,j)` should
+                                                      !!    contain the function value at the point `(x(i),y(j))`
     integer,intent(in)                      :: iknot  !! 0 = knot sequence chosen by [[db1ink]].
                                                       !! 1 = knot sequence chosen by user.
-    real(wp),dimension(nx+kx),intent(inout) :: tx     !! The knots in the x direction for the spline interpolant.
-                                                      !!    If iknot=0 these are chosen by [[db2ink]].
-                                                      !!    If iknot=1 these are specified by the user.
+    real(wp),dimension(:),intent(inout)     :: tx     !! The `nx+kx` knots in the `x` direction for the spline interpolant.
+                                                      !!    If `iknot=0` these are chosen by [[db2ink]].
+                                                      !!    If `iknot=1` these are specified by the user.
                                                       !!    Must be non-decreasing.
-    real(wp),dimension(ny+ky),intent(inout) :: ty     !! The knots in the y direction for the spline interpolant.
-                                                      !!    If iknot=0 these are chosen by [[db2ink]].
-                                                      !!    If iknot=1 these are specified by the user.
+    real(wp),dimension(:),intent(inout)     :: ty     !! The `ny+ky` knots in the `y` direction for the spline interpolant.
+                                                      !!    If `iknot=0` these are chosen by [[db2ink]].
+                                                      !!    If `iknot=1` these are specified by the user.
                                                       !!    Must be non-decreasing.
-    real(wp),dimension(nx,ny),intent(out)   :: bcoef  !! Array of coefficients of the b-spline interpolant.
+    real(wp),dimension(:,:),intent(out)     :: bcoef  !! `(nx,ny)` matrix of coefficients of the b-spline interpolant.
     integer,intent(out)                     :: iflag  !!  0 = successful execution.
                                                       !!  2 = iknot out of range.
                                                       !!  3 = nx out of range.
@@ -265,6 +269,12 @@
                                                       !!  8 = ky out of range.
                                                       !!  9 = y not strictly increasing.
                                                       !! 10 = ty not non-decreasing.
+                                                      !! 700 = size(x) /= size(fcn,1).
+                                                      !! 701 = size(y) /= size(fcn,2).
+                                                      !! 706 = size(x) /= nx.
+                                                      !! 707 = size(y) /= ny.
+                                                      !! 712 = size(tx) /= nx+kx.
+                                                      !! 713 = size(ty) /= ny+ky.
 
     real(wp),dimension(nx*ny) :: temp
     logical :: status_ok
@@ -278,6 +288,7 @@
                         kx=kx,ky=ky,&
                         x=x,y=y,&
                         tx=tx,ty=ty,&
+                        f2=fcn,&
                         status_ok=status_ok)
 
     if (status_ok) then
@@ -452,42 +463,49 @@
     integer,intent(in)                       :: kx    !! the order of spline pieces in x (>= 2, < nx). (order = polynomial degree + 1)
     integer,intent(in)                       :: ky    !! the order of spline pieces in y (>= 2, < ny). (order = polynomial degree + 1)
     integer,intent(in)                       :: kz    !! the order of spline pieces in z (>= 2, < nz). (order = polynomial degree + 1)
-    real(wp),dimension(nx),intent(in)        :: x     !! array of x abcissae. must be strictly increasing.
-    real(wp),dimension(ny),intent(in)        :: y     !! array of y abcissae. must be strictly increasing.
-    real(wp),dimension(nz),intent(in)        :: z     !! array of z abcissae. must be strictly increasing.
-    real(wp),dimension(nx,ny,nz),intent(in)  :: fcn   !! array of function values to interpolate. fcn(i,j,k) should
+    real(wp),dimension(:),intent(in)         :: x     !! `nx` array of x abcissae. must be strictly increasing.
+    real(wp),dimension(:),intent(in)         :: y     !! `ny` array of y abcissae. must be strictly increasing.
+    real(wp),dimension(:),intent(in)         :: z     !! `nz` array of z abcissae. must be strictly increasing.
+    real(wp),dimension(:,:,:),intent(in)     :: fcn   !! '(nx,ny,nz)' matrix of function values to interpolate. fcn(i,j,k) should
                                                       !!   contain the function value at the point (x(i),y(j),z(k))
     integer,intent(in)                       :: iknot !! 0 = knot sequence chosen by [[db1ink]].
                                                       !! 1 = knot sequence chosen by user.
-    real(wp),dimension(nx+kx),intent(inout)  :: tx    !! The knots in the x direction for the spline interpolant.
-                                                      !!   If iknot=0 these are chosen by [[db3ink]].
-                                                      !!   If iknot=1 these are specified by the user.
+    real(wp),dimension(:),intent(inout)      :: tx    !! The `nx+kx` knots in the `x` direction for the spline interpolant.
+                                                      !!   If `iknot=0` these are chosen by [[db3ink]].
+                                                      !!   If `iknot=1` these are specified by the user.
                                                       !!    Must be non-decreasing.
-    real(wp),dimension(ny+ky),intent(inout)  :: ty    !! The knots in the y direction for the spline interpolant.
-                                                      !!    If iknot=0 these are chosen by [[db3ink]].
-                                                      !!    If iknot=1 these are specified by the user.
+    real(wp),dimension(:),intent(inout)      :: ty    !! The `ny+ky` knots in the `y` direction for the spline interpolant.
+                                                      !!    If `iknot=0` these are chosen by [[db3ink]].
+                                                      !!    If `iknot=1` these are specified by the user.
                                                       !!    Must be non-decreasing.
-    real(wp),dimension(nz+kz),intent(inout)  :: tz    !! The knots in the z direction for the spline interpolant.
-                                                      !!    If iknot=0 these are chosen by [[db3ink]].
-                                                      !!    If iknot=1 these are specified by the user.
+    real(wp),dimension(:),intent(inout)      :: tz    !! The `nz+kz` knots in the `z` direction for the spline interpolant.
+                                                      !!    If `iknot=0` these are chosen by [[db3ink]].
+                                                      !!    If `iknot=1` these are specified by the user.
                                                       !!    Must be non-decreasing.
-    real(wp),dimension(nx,ny,nz),intent(out) :: bcoef !! array of coefficients of the b-spline interpolant.
-    integer,intent(out)                      :: iflag !! **on input**    0 = knot sequence chosen by [[db3ink]].
-                                                      !!                 1 = knot sequence chosen by user.
-                                                      !! **on output**   0 = successful execution.
-                                                      !!                 2 = iknot out of range.
-                                                      !!                 3 = nx out of range.
-                                                      !!                 4 = kx out of range.
-                                                      !!                 5 = x not strictly increasing.
-                                                      !!                 6 = tx not non-decreasing.
-                                                      !!                 7 = ny out of range.
-                                                      !!                 8 = ky out of range.
-                                                      !!                 9 = y not strictly increasing.
-                                                      !!                10 = ty not non-decreasing.
-                                                      !!                11 = nz out of range.
-                                                      !!                12 = kz out of range.
-                                                      !!                13 = z not strictly increasing.
-                                                      !!                14 = ty not non-decreasing.
+    real(wp),dimension(:,:,:),intent(out)    :: bcoef !! '(nx,ny,nz)' matrix of coefficients of the b-spline interpolant.
+    integer,intent(out)                      :: iflag !!  0 = successful execution.
+                                                      !!  2 = iknot out of range.
+                                                      !!  3 = nx out of range.
+                                                      !!  4 = kx out of range.
+                                                      !!  5 = x not strictly increasing.
+                                                      !!  6 = tx not non-decreasing.
+                                                      !!  7 = ny out of range.
+                                                      !!  8 = ky out of range.
+                                                      !!  9 = y not strictly increasing.
+                                                      !! 10 = ty not non-decreasing.
+                                                      !! 11 = nz out of range.
+                                                      !! 12 = kz out of range.
+                                                      !! 13 = z not strictly increasing.
+                                                      !! 14 = ty not non-decreasing.
+                                                      !! 700 = size(x) /= size(fcn,1).
+                                                      !! 701 = size(y) /= size(fcn,2).
+                                                      !! 702 = size(z) /= size(fcn,3).
+                                                      !! 706 = size(x) /= nx.
+                                                      !! 707 = size(y) /= ny.
+                                                      !! 708 = size(z) /= nz.
+                                                      !! 712 = size(tx) /= nx+kx.
+                                                      !! 713 = size(ty) /= ny+ky.
+                                                      !! 714 = size(tz) /= nz+kz.
 
     real(wp),dimension(nx*ny*nz) :: temp
     logical :: status_ok
@@ -501,6 +519,7 @@
                         kx=kx,ky=ky,kz=kz,&
                         x=x,y=y,z=z,&
                         tx=tx,ty=ty,tz=tz,&
+                        f3=fcn,&
                         status_ok=status_ok)
 
     if (status_ok) then
@@ -682,31 +701,31 @@
     integer,intent(in)                          :: ky    !! the order of spline pieces in y (>= 2, < ny). (order = polynomial degree + 1)
     integer,intent(in)                          :: kz    !! the order of spline pieces in z (>= 2, < nz). (order = polynomial degree + 1)
     integer,intent(in)                          :: kq    !! the order of spline pieces in q (>= 2, < nq). (order = polynomial degree + 1)
-    real(wp),dimension(nx),intent(in)           :: x     !! array of x abcissae. must be strictly increasing.
-    real(wp),dimension(ny),intent(in)           :: y     !! array of y abcissae. must be strictly increasing.
-    real(wp),dimension(nz),intent(in)           :: z     !! array of z abcissae. must be strictly increasing.
-    real(wp),dimension(nq),intent(in)           :: q     !! array of q abcissae. must be strictly increasing.
-    real(wp),dimension(nx,ny,nz,nq),intent(in)  :: fcn   !! array of function values to interpolate. fcn(i,j,k,q) should
+    real(wp),dimension(:),intent(in)            :: x     !! `nx` array of x abcissae. must be strictly increasing.
+    real(wp),dimension(:),intent(in)            :: y     !! `ny` array of y abcissae. must be strictly increasing.
+    real(wp),dimension(:),intent(in)            :: z     !! `nz` array of z abcissae. must be strictly increasing.
+    real(wp),dimension(:),intent(in)            :: q     !! `nq` array of q abcissae. must be strictly increasing.
+    real(wp),dimension(:,:,:,:),intent(in)      :: fcn   !! `(nx,ny,nz,nq)` matrix of function values to interpolate. fcn(i,j,k,q) should
                                                          !!   contain the function value at the point (x(i),y(j),z(k),q(l))
     integer,intent(in)                          :: iknot !! 0 = knot sequence chosen by [[db1ink]].
                                                          !! 1 = knot sequence chosen by user.
-    real(wp),dimension(nx+kx),intent(inout)     :: tx    !! The knots in the x direction for the spline interpolant.
-                                                         !!   If iknot=0 these are chosen by [[db4ink]].
-                                                         !!   If iknot=1 these are specified by the user.
+    real(wp),dimension(:),intent(inout)         :: tx    !! The `nx+kx` knots in the x direction for the spline interpolant.
+                                                         !!   If `iknot=0` these are chosen by [[db4ink]].
+                                                         !!   If `iknot=1` these are specified by the user.
                                                          !!    Must be non-decreasing.
-    real(wp),dimension(ny+ky),intent(inout)     :: ty    !! The knots in the y direction for the spline interpolant.
-                                                         !!    If iknot=0 these are chosen by [[db4ink]].
-                                                         !!    If iknot=1 these are specified by the user.
+    real(wp),dimension(:),intent(inout)         :: ty    !! The `ny+ky` knots in the y direction for the spline interpolant.
+                                                         !!    If `iknot=0` these are chosen by [[db4ink]].
+                                                         !!    If `iknot=1` these are specified by the user.
                                                          !!    Must be non-decreasing.
-    real(wp),dimension(nz+kz),intent(inout)     :: tz    !! The knots in the z direction for the spline interpolant.
-                                                         !!    If iknot=0 these are chosen by [[db4ink]].
-                                                         !!    If iknot=1 these are specified by the user.
+    real(wp),dimension(:),intent(inout)         :: tz    !! The `nz+kz` knots in the z direction for the spline interpolant.
+                                                         !!    If `iknot=0` these are chosen by [[db4ink]].
+                                                         !!    If `iknot=1` these are specified by the user.
                                                          !!    Must be non-decreasing.
-    real(wp),dimension(nq+kq),intent(inout)     :: tq    !! The knots in the q direction for the spline interpolant.
-                                                         !!    If iknot=0 these are chosen by [[db4ink]].
-                                                         !!    If iknot=1 these are specified by the user.
+    real(wp),dimension(:),intent(inout)         :: tq    !! The `nq+kq` knots in the q direction for the spline interpolant.
+                                                         !!    If `iknot=0` these are chosen by [[db4ink]].
+                                                         !!    If `iknot=1` these are specified by the user.
                                                          !!    Must be non-decreasing.
-    real(wp),dimension(nx,ny,nz,nq),intent(out) :: bcoef !! array of coefficients of the b-spline interpolant.
+    real(wp),dimension(:,:,:,:),intent(out)     :: bcoef !! `(nx,ny,nz,nq)` matrix of coefficients of the b-spline interpolant.
     integer,intent(out)                         :: iflag !!  0 = successful execution.
                                                          !!  2 = iknot out of range.
                                                          !!  3 = nx out of range.
@@ -725,6 +744,18 @@
                                                          !! 16 = kq out of range.
                                                          !! 17 = q not strictly increasing.
                                                          !! 18 = tq not non-decreasing.
+                                                         !! 700 = size(x) /= size(fcn,1).
+                                                         !! 701 = size(y) /= size(fcn,2).
+                                                         !! 702 = size(z) /= size(fcn,3).
+                                                         !! 703 = size(q) /= size(fcn,4).
+                                                         !! 706 = size(x) /= nx.
+                                                         !! 707 = size(y) /= ny.
+                                                         !! 708 = size(z) /= nz.
+                                                         !! 709 = size(q) /= nq.
+                                                         !! 712 = size(tx) /= nx+kx.
+                                                         !! 713 = size(ty) /= ny+ky.
+                                                         !! 714 = size(tz) /= nz+kz.
+                                                         !! 715 = size(tq) /= nq+kq.
 
     real(wp),dimension(nx*ny*nz*nq) :: temp
     logical :: status_ok
@@ -738,6 +769,7 @@
                         kx=kx,ky=ky,kz=kz,kq=kq,&
                         x=x,y=y,z=z,q=q,&
                         tx=tx,ty=ty,tz=tz,tq=tq,&
+                        f4=fcn,&
                         status_ok=status_ok)
 
     if (status_ok) then
@@ -928,36 +960,36 @@
     integer,intent(in)                             :: kz    !! the order of spline pieces in z (>= 2, < nz). (order = polynomial degree + 1)
     integer,intent(in)                             :: kq    !! the order of spline pieces in q (>= 2, < nq). (order = polynomial degree + 1)
     integer,intent(in)                             :: kr    !! the order of spline pieces in r (>= 2, < nr). (order = polynomial degree + 1)
-    real(wp),dimension(nx),intent(in)              :: x     !! array of x abcissae. must be strictly increasing.
-    real(wp),dimension(ny),intent(in)              :: y     !! array of y abcissae. must be strictly increasing.
-    real(wp),dimension(nz),intent(in)              :: z     !! array of z abcissae. must be strictly increasing.
-    real(wp),dimension(nq),intent(in)              :: q     !! array of q abcissae. must be strictly increasing.
-    real(wp),dimension(nr),intent(in)              :: r     !! array of r abcissae. must be strictly increasing.
-    real(wp),dimension(nx,ny,nz,nq,nr),intent(in)  :: fcn   !! array of function values to interpolate. fcn(i,j,k,q,r) should
+    real(wp),dimension(:),intent(in)               :: x     !! `nx` array of x abcissae. must be strictly increasing.
+    real(wp),dimension(:),intent(in)               :: y     !! `ny` array of y abcissae. must be strictly increasing.
+    real(wp),dimension(:),intent(in)               :: z     !! `nz` array of z abcissae. must be strictly increasing.
+    real(wp),dimension(:),intent(in)               :: q     !! `nq` array of q abcissae. must be strictly increasing.
+    real(wp),dimension(:),intent(in)               :: r     !! `nr` array of r abcissae. must be strictly increasing.
+    real(wp),dimension(:,:,:,:,:),intent(in)       :: fcn   !! `(nx,ny,nz,nq,nr)` matrix of function values to interpolate. fcn(i,j,k,q,r) should
                                                             !!   contain the function value at the point (x(i),y(j),z(k),q(l),r(m))
     integer,intent(in)                             :: iknot !! 0 = knot sequence chosen by [[db1ink]].
                                                             !! 1 = knot sequence chosen by user.
-    real(wp),dimension(nx+kx),intent(inout)        :: tx    !! The knots in the x direction for the spline interpolant.
-                                                            !!   If iknot=0 these are chosen by [[db5ink]].
-                                                            !!   If iknot=1 these are specified by the user.
+    real(wp),dimension(:),intent(inout)            :: tx    !! The `nx+kx` knots in the x direction for the spline interpolant.
+                                                            !!   If `iknot=0` these are chosen by [[db5ink]].
+                                                            !!   If `iknot=1` these are specified by the user.
                                                             !!    Must be non-decreasing.
-    real(wp),dimension(ny+ky),intent(inout)        :: ty    !! The knots in the y direction for the spline interpolant.
-                                                            !!    If iknot=0 these are chosen by [[db5ink]].
-                                                            !!    If iknot=1 these are specified by the user.
+    real(wp),dimension(:),intent(inout)            :: ty    !! The `ny+ky` knots in the y direction for the spline interpolant.
+                                                            !!    If `iknot=0` these are chosen by [[db5ink]].
+                                                            !!    If `iknot=1` these are specified by the user.
                                                             !!    Must be non-decreasing.
-    real(wp),dimension(nz+kz),intent(inout)        :: tz    !! The knots in the z direction for the spline interpolant.
-                                                            !!    If iknot=0 these are chosen by [[db5ink]].
-                                                            !!    If iknot=1 these are specified by the user.
+    real(wp),dimension(:),intent(inout)            :: tz    !! The `nz+kz` knots in the z direction for the spline interpolant.
+                                                            !!    If `iknot=0` these are chosen by [[db5ink]].
+                                                            !!    If `iknot=1` these are specified by the user.
                                                             !!    Must be non-decreasing.
-    real(wp),dimension(nq+kq),intent(inout)        :: tq    !! The knots in the q direction for the spline interpolant.
-                                                            !!    If iknot=0 these are chosen by [[db5ink]].
-                                                            !!    If iknot=1 these are specified by the user.
+    real(wp),dimension(:),intent(inout)            :: tq    !! The `nq+kq` knots in the q direction for the spline interpolant.
+                                                            !!    If `iknot=0` these are chosen by [[db5ink]].
+                                                            !!    If `iknot=1` these are specified by the user.
                                                             !!    Must be non-decreasing.
-    real(wp),dimension(nr+kr),intent(inout)        :: tr    !! The knots in the r direction for the spline interpolant.
-                                                            !!    If iknot=0 these are chosen by [[db5ink]].
-                                                            !!    If iknot=1 these are specified by the user.
+    real(wp),dimension(:),intent(inout)            :: tr    !! The `nr+kr` knots in the r direction for the spline interpolant.
+                                                            !!    If `iknot=0` these are chosen by [[db5ink]].
+                                                            !!    If `iknot=1` these are specified by the user.
                                                             !!    Must be non-decreasing.
-    real(wp),dimension(nx,ny,nz,nq,nr),intent(out) :: bcoef !! array of coefficients of the b-spline interpolant.
+    real(wp),dimension(:,:,:,:,:),intent(out)      :: bcoef !! `(nx,ny,nz,nq,nr)` matrix of coefficients of the b-spline interpolant.
     integer,intent(out)                            :: iflag !!  0 = successful execution.
                                                             !!  2 = iknot out of range.
                                                             !!  3 = nx out of range.
@@ -980,6 +1012,21 @@
                                                             !! 20 = kr out of range.
                                                             !! 21 = r not strictly increasing.
                                                             !! 22 = tr not non-decreasing.
+                                                            !! 700 = size(x) /= size(fcn,1).
+                                                            !! 701 = size(y) /= size(fcn,2).
+                                                            !! 702 = size(z) /= size(fcn,3).
+                                                            !! 703 = size(q) /= size(fcn,4).
+                                                            !! 704 = size(r) /= size(fcn,5).
+                                                            !! 706 = size(x) /= nx.
+                                                            !! 707 = size(y) /= ny.
+                                                            !! 708 = size(z) /= nz.
+                                                            !! 709 = size(q) /= nq.
+                                                            !! 710 = size(r) /= nr.
+                                                            !! 712 = size(tx) /= nx+kx.
+                                                            !! 713 = size(ty) /= ny+ky.
+                                                            !! 714 = size(tz) /= nz+kz.
+                                                            !! 715 = size(tq) /= nq+kq.
+                                                            !! 716 = size(tr) /= nr+kr.
 
     real(wp),dimension(nx*ny*nz*nq*nr) :: temp
     logical :: status_ok
@@ -993,6 +1040,7 @@
                         kx=kx,ky=ky,kz=kz,kq=kq,kr=kr,&
                         x=x,y=y,z=z,q=q,r=r,&
                         tx=tx,ty=ty,tz=tz,tq=tq,tr=tr,&
+                        f5=fcn,&
                         status_ok=status_ok)
 
     if (status_ok) then
@@ -1220,41 +1268,41 @@
     integer,intent(in)                                :: kq    !! the order of spline pieces in q (>= 2, < nq). (order = polynomial degree + 1)
     integer,intent(in)                                :: kr    !! the order of spline pieces in r (>= 2, < nr). (order = polynomial degree + 1)
     integer,intent(in)                                :: ks    !! the order of spline pieces in s (>= 2, < ns). (order = polynomial degree + 1)
-    real(wp),dimension(nx),intent(in)                 :: x     !! array of x abcissae. must be strictly increasing.
-    real(wp),dimension(ny),intent(in)                 :: y     !! array of y abcissae. must be strictly increasing.
-    real(wp),dimension(nz),intent(in)                 :: z     !! array of z abcissae. must be strictly increasing.
-    real(wp),dimension(nq),intent(in)                 :: q     !! array of q abcissae. must be strictly increasing.
-    real(wp),dimension(nr),intent(in)                 :: r     !! array of r abcissae. must be strictly increasing.
-    real(wp),dimension(ns),intent(in)                 :: s     !! array of s abcissae. must be strictly increasing.
-    real(wp),dimension(nx,ny,nz,nq,nr,ns),intent(in)  :: fcn   !! array of function values to interpolate. fcn(i,j,k,q,r,s) should
+    real(wp),dimension(:),intent(in)                  :: x     !! `nx` array of x abcissae. must be strictly increasing.
+    real(wp),dimension(:),intent(in)                  :: y     !! `ny` array of y abcissae. must be strictly increasing.
+    real(wp),dimension(:),intent(in)                  :: z     !! `nz` array of z abcissae. must be strictly increasing.
+    real(wp),dimension(:),intent(in)                  :: q     !! `nq` array of q abcissae. must be strictly increasing.
+    real(wp),dimension(:),intent(in)                  :: r     !! `nr` array of r abcissae. must be strictly increasing.
+    real(wp),dimension(:),intent(in)                  :: s     !! `ns` array of s abcissae. must be strictly increasing.
+    real(wp),dimension(:,:,:,:,:,:),intent(in)        :: fcn   !! `(nx,ny,nz,nq,nr,ns)` matrix of function values to interpolate. fcn(i,j,k,q,r,s) should
                                                                !!   contain the function value at the point (x(i),y(j),z(k),q(l),r(m),s(n))
     integer,intent(in)                                :: iknot !! 0 = knot sequence chosen by [[db1ink]].
                                                                !! 1 = knot sequence chosen by user.
-    real(wp),dimension(nx+kx),intent(inout)           :: tx    !! The knots in the x direction for the spline interpolant.
-                                                               !!   If iknot=0 these are chosen by [[db6ink]].
-                                                               !!   If iknot=1 these are specified by the user.
+    real(wp),dimension(:),intent(inout)               :: tx    !! The `nx+kx` knots in the x direction for the spline interpolant.
+                                                               !!   If `iknot=0` these are chosen by [[db6ink]].
+                                                               !!   If `iknot=1` these are specified by the user.
                                                                !!    Must be non-decreasing.
-    real(wp),dimension(ny+ky),intent(inout)           :: ty    !! The knots in the y direction for the spline interpolant.
-                                                               !!    If iknot=0 these are chosen by [[db6ink]].
-                                                               !!    If iknot=1 these are specified by the user.
+    real(wp),dimension(:),intent(inout)               :: ty    !! The `ny+ky` knots in the y direction for the spline interpolant.
+                                                               !!    If `iknot=0` these are chosen by [[db6ink]].
+                                                               !!    If `iknot=1` these are specified by the user.
                                                                !!    Must be non-decreasing.
-    real(wp),dimension(nz+kz),intent(inout)           :: tz    !! The knots in the z direction for the spline interpolant.
-                                                               !!    If iknot=0 these are chosen by [[db6ink]].
-                                                               !!    If iknot=1 these are specified by the user.
+    real(wp),dimension(:),intent(inout)               :: tz    !! The `nz+kz` knots in the z direction for the spline interpolant.
+                                                               !!    If `iknot=0` these are chosen by [[db6ink]].
+                                                               !!    If `iknot=1` these are specified by the user.
                                                                !!    Must be non-decreasing.
-    real(wp),dimension(nq+kq),intent(inout)           :: tq    !! The knots in the q direction for the spline interpolant.
-                                                               !!    If iknot=0 these are chosen by [[db6ink]].
-                                                               !!    If iknot=1 these are specified by the user.
+    real(wp),dimension(:),intent(inout)               :: tq    !! The `nq+kq` knots in the q direction for the spline interpolant.
+                                                               !!    If `iknot=0` these are chosen by [[db6ink]].
+                                                               !!    If `iknot=1` these are specified by the user.
                                                                !!    Must be non-decreasing.
-    real(wp),dimension(nr+kr),intent(inout)           :: tr    !! The knots in the r direction for the spline interpolant.
-                                                               !!    If iknot=0 these are chosen by [[db6ink]].
-                                                               !!    If iknot=1 these are specified by the user.
+    real(wp),dimension(:),intent(inout)               :: tr    !! The `nr+kr` knots in the r direction for the spline interpolant.
+                                                               !!    If `iknot=0` these are chosen by [[db6ink]].
+                                                               !!    If `iknot=1` these are specified by the user.
                                                                !!    Must be non-decreasing.
-    real(wp),dimension(ns+ks),intent(inout)           :: ts    !! The knots in the s direction for the spline interpolant.
-                                                               !!    If iknot=0 these are chosen by [[db6ink]].
-                                                               !!    If iknot=1 these are specified by the user.
+    real(wp),dimension(:),intent(inout)               :: ts    !! The `ns+ks` knots in the s direction for the spline interpolant.
+                                                               !!    If `iknot=0` these are chosen by [[db6ink]].
+                                                               !!    If `iknot=1` these are specified by the user.
                                                                !!    Must be non-decreasing.
-    real(wp),dimension(nx,ny,nz,nq,nr,ns),intent(out) :: bcoef !! array of coefficients of the b-spline interpolant.
+    real(wp),dimension(:,:,:,:,:,:),intent(out)       :: bcoef !! `(nx,ny,nz,nq,nr,ns)` matrix of coefficients of the b-spline interpolant.
     integer,intent(out)                               :: iflag !!  0 = successful execution.
                                                                !!  2 = iknot out of range.
                                                                !!  3 = nx out of range.
@@ -1281,6 +1329,24 @@
                                                                !! 24 = ks out of range.
                                                                !! 25 = s not strictly increasing.
                                                                !! 26 = ts not non-decreasing.
+                                                               !! 700 = size(x) /= size(fcn,1).
+                                                               !! 701 = size(y) /= size(fcn,2).
+                                                               !! 702 = size(z) /= size(fcn,3).
+                                                               !! 703 = size(q) /= size(fcn,4).
+                                                               !! 704 = size(r) /= size(fcn,5).
+                                                               !! 705 = size(s) /= size(fcn,6).
+                                                               !! 706 = size(x) /= nx.
+                                                               !! 707 = size(y) /= ny.
+                                                               !! 708 = size(z) /= nz.
+                                                               !! 709 = size(q) /= nq.
+                                                               !! 710 = size(r) /= nr.
+                                                               !! 711 = size(s) /= ns.
+                                                               !! 712 = size(tx) /= nx+kx.
+                                                               !! 713 = size(ty) /= ny+ky.
+                                                               !! 714 = size(tz) /= nz+kz.
+                                                               !! 715 = size(tq) /= nq+kq.
+                                                               !! 716 = size(tr) /= nr+kr.
+                                                               !! 717 = size(ts) /= ns+ks.
 
     real(wp),dimension(nx*ny*nz*nq*nr*ns) :: temp
     logical :: status_ok
@@ -1542,18 +1608,25 @@
                             kx,ky,kz,kq,kr,ks,&
                             x,y,z,q,r,s,&
                             tx,ty,tz,tq,tr,ts,&
+                            f1,f2,f3,f4,f5,f6,&
                             status_ok)
 
     implicit none
 
-    character(len=*),intent(in)                :: routine
-    integer,intent(in)                         :: iknot !! = 0 if the INK routine is computing the knots.
-    integer,intent(out)                        :: iflag
-    integer,intent(in),optional                :: nx,ny,nz,nq,nr,ns
-    integer,intent(in),optional                :: kx,ky,kz,kq,kr,ks
-    real(wp),dimension(:),intent(in),optional  :: x,y,z,q,r,s
-    real(wp),dimension(:),intent(in),optional  :: tx,ty,tz,tq,tr,ts
-    logical,intent(out)                        :: status_ok
+    character(len=*),intent(in)                         :: routine
+    integer,intent(in)                                  :: iknot !! = 0 if the INK routine is computing the knots.
+    integer,intent(out)                                 :: iflag
+    integer,intent(in),optional                         :: nx,ny,nz,nq,nr,ns
+    integer,intent(in),optional                         :: kx,ky,kz,kq,kr,ks
+    real(wp),dimension(:),intent(in),optional           :: x,y,z,q,r,s
+    real(wp),dimension(:),intent(in),optional           :: tx,ty,tz,tq,tr,ts
+    real(wp),dimension(:),intent(in),optional           :: f1
+    real(wp),dimension(:,:),intent(in),optional         :: f2
+    real(wp),dimension(:,:,:),intent(in),optional       :: f3
+    real(wp),dimension(:,:,:,:),intent(in),optional     :: f4
+    real(wp),dimension(:,:,:,:,:),intent(in),optional   :: f5
+    real(wp),dimension(:,:,:,:,:,:),intent(in),optional :: f6
+    logical,intent(out)                                 :: status_ok
 
     logical :: error
 
@@ -1567,12 +1640,49 @@
 
     else
 
-        call check('x',nx,kx,x,tx,[3,4,5,6],    iflag,error); if (error) return
-        call check('y',ny,ky,y,ty,[7,8,9,10],   iflag,error); if (error) return
-        call check('z',nz,kz,z,tz,[11,12,13,14],iflag,error); if (error) return
-        call check('q',nq,kq,q,tq,[15,16,17,18],iflag,error); if (error) return
-        call check('r',nr,kr,r,tr,[19,20,21,22],iflag,error); if (error) return
-        call check('s',ns,ks,s,ts,[23,24,25,26],iflag,error); if (error) return
+        call check('x',nx,kx,x,tx,[3,  4, 5, 6,706,712],iflag,error); if (error) return
+        call check('y',ny,ky,y,ty,[7,  8, 9,10,707,713],iflag,error); if (error) return
+        call check('z',nz,kz,z,tz,[11,12,13,14,708,714],iflag,error); if (error) return
+        call check('q',nq,kq,q,tq,[15,16,17,18,709,715],iflag,error); if (error) return
+        call check('r',nr,kr,r,tr,[19,20,21,22,710,716],iflag,error); if (error) return
+        call check('s',ns,ks,s,ts,[23,24,25,26,711,717],iflag,error); if (error) return
+
+        if (present(x) .and. present(f1)) then
+            if (size(x)/=size(f1,1)) then; iflag = 700; return; end if
+        end if
+        if (present(x) .and. present(y) .and. present(f2)) then
+            if (size(x)/=size(f2,1)) then; iflag = 700; return; end if
+            if (size(y)/=size(f2,2)) then; iflag = 701; return; end if
+        end if
+        if (present(x) .and. present(y) .and. present(z) .and. present(f3)) then
+            if (size(x)/=size(f3,1)) then; iflag = 700; return; end if
+            if (size(y)/=size(f3,2)) then; iflag = 701; return; end if
+            if (size(z)/=size(f3,2)) then; iflag = 702; return; end if
+        end if
+        if (present(x) .and. present(y) .and. present(z) .and. present(q) .and. &
+            present(f4)) then
+            if (size(x)/=size(f4,1)) then; iflag = 700; return; end if
+            if (size(y)/=size(f4,2)) then; iflag = 701; return; end if
+            if (size(z)/=size(f4,3)) then; iflag = 702; return; end if
+            if (size(q)/=size(f4,4)) then; iflag = 703; return; end if
+        end if
+        if (present(x) .and. present(y) .and. present(z) .and. present(q) .and. &
+            present(r) .and. present(f5)) then
+            if (size(x)/=size(f5,1)) then; iflag = 700; return; end if
+            if (size(y)/=size(f5,2)) then; iflag = 701; return; end if
+            if (size(z)/=size(f5,3)) then; iflag = 702; return; end if
+            if (size(q)/=size(f5,4)) then; iflag = 703; return; end if
+            if (size(r)/=size(f5,5)) then; iflag = 704; return; end if
+        end if
+        if (present(x) .and. present(y) .and. present(z) .and. present(q) .and. &
+            present(r) .and. present(s) .and. present(f6)) then
+            if (size(x)/=size(f6,1)) then; iflag = 700; return; end if
+            if (size(y)/=size(f6,2)) then; iflag = 701; return; end if
+            if (size(z)/=size(f6,3)) then; iflag = 702; return; end if
+            if (size(q)/=size(f6,4)) then; iflag = 703; return; end if
+            if (size(r)/=size(f6,5)) then; iflag = 704; return; end if
+            if (size(s)/=size(f6,6)) then; iflag = 705; return; end if
+        end if
 
         status_ok = .true.
         iflag = 0
@@ -1585,49 +1695,51 @@
 
         implicit none
 
-        character(len=1),intent(in),optional       :: s     !! coordinate string: 'x','y','z','q','r','s'
-        integer,intent(in),optional                :: n     !! size of x
-        integer,intent(in),optional                :: k     !! order
-        real(wp),dimension(:),intent(in),optional  :: x     !! abcissae vector
-        real(wp),dimension(:),intent(in),optional  :: t     !! knot vector size(n+k)
-        integer,dimension(:),intent(in)            :: ierrs !! int error codes for n,k,x,t checks
-        integer,intent(out)                        :: iflag !! status return code
-        logical,intent(out)                        :: error !! true if there was an error
+        character(len=1),intent(in)               :: s     !! coordinate string: 'x','y','z','q','r','s'
+        integer,intent(in)              ,optional :: n     !! size of `x`
+        integer,intent(in)              ,optional :: k     !! order
+        real(wp),dimension(:),intent(in),optional :: x     !! abcissae vector
+        real(wp),dimension(:),intent(in),optional :: t     !! knot vector size(n+k)
+        integer,dimension(:),intent(in)           :: ierrs !! int error codes for n,k,x,t,size(x),size(t) checks
+        integer,intent(out)                       :: iflag !! status return code
+        logical,intent(out)                       :: error !! true if there was an error
 
-        if (present(n)) then
-            call check_n('n'//s,n,ierrs(1),iflag,error); if (error) return
-            if (present(k)) then
-                call check_k('k'//s,k,n,ierrs(2),iflag,error); if (error) return
-            end if
-            if (present(x)) then
-                call check_x(s,n,x,ierrs(3),iflag,error); if (error) return
-            end if
+        if (present(n) .and. present(k) .and. present(x) .and. present(t)) then
+            call check_n('n'//s,n,x,[ierrs(1),ierrs(5)],iflag,error); if (error) return
+            call check_k('k'//s,k,n,ierrs(2),iflag,error); if (error) return
+            call check_x(s,n,x,ierrs(3),iflag,error); if (error) return
             if (iknot /= 0) then
-                if (present(k) .and. present(t)) then
-                    call check_t('t'//s,n,k,t,ierrs(4),iflag,error); if (error) return
-                end if
+                call check_t('t'//s,n,k,t,[ierrs(4),ierrs(6)],iflag,error); if (error) return
             end if
         end if
 
         end subroutine check
 
-        pure subroutine check_n(s,n,ierr,iflag,error)
+        pure subroutine check_n(s,n,x,ierr,iflag,error)
 
         implicit none
 
-        character(len=*),intent(in) :: s
-        integer,intent(in)          :: n
-        integer,intent(in)          :: ierr
-        integer,intent(out)         :: iflag !! status return code
-        logical,intent(out)         :: error
+        character(len=*),intent(in)     :: s
+        integer,intent(in)              :: n
+        real(wp),dimension(:),intent(in):: x     !! abcissae vector
+        integer,dimension(2),intent(in) :: ierr  ![n<3 check, size(x)==n check]
+        integer,intent(out)             :: iflag !! status return code
+        logical,intent(out)             :: error
 
         if (n < 3) then
             !write(error_unit,'(A,1X,I5)') &
             !    trim(routine)//' - '//trim(s)//' is out of range: ',n
-            iflag = ierr
+            iflag = ierr(1)
             error = .true.
         else
-            error = .false.
+            if (size(x)/=n) then
+                !write(error_unit,'(A,1X,I5)') &
+                !    trim(routine)//' - '//trim(s)//' is not abscissa vector size'
+                iflag = ierr(2)
+                error = .true.
+            else
+                error = .false.
+            end if
         end if
 
         end subroutine check_n
@@ -1688,16 +1800,24 @@
         integer,intent(in)                :: n
         integer,intent(in)                :: k
         real(wp),dimension(:),intent(in)  :: t
-        integer,intent(in)                :: ierr
+        integer,dimension(2),intent(in)   :: ierr  !! [non-decreasing check, size check]
         integer,intent(out)               :: iflag !! status return code
         logical,intent(out)               :: error
 
         integer :: i
 
         error = .true.
+
+        if (size(t)/=(n+k)) then
+            !write(error_unit,'(A)') trim(routine)//' - '//trim(s)//&
+            !            ' array is not the correct size'
+            iflag = ierr(2)
+            return
+        end if
+
         do i=2,n + k
             if (t(i) < t(i-1))  then
-                iflag = ierr
+                iflag = ierr(1)
                 !write(error_unit,'(A)') trim(routine)//' - '//trim(s)//&
                 !            ' array must be non-decreasing'
                 return
@@ -2696,6 +2816,24 @@
     case( 24); msg='Error in db*ink: ks out of range'
     case( 25); msg='Error in db*ink: s not strictly increasing'
     case( 26); msg='Error in db*ink: ts not non-decreasing'
+    case(700); msg='Error in db*ink: size(x) /= size(fcn,1)'
+    case(701); msg='Error in db*ink: size(y) /= size(fcn,2)'
+    case(702); msg='Error in db*ink: size(z) /= size(fcn,3)'
+    case(703); msg='Error in db*ink: size(q) /= size(fcn,4)'
+    case(704); msg='Error in db*ink: size(r) /= size(fcn,5)'
+    case(705); msg='Error in db*ink: size(s) /= size(fcn,6)'
+    case(706); msg='Error in db*ink: size(x) /= nx'
+    case(707); msg='Error in db*ink: size(y) /= ny'
+    case(708); msg='Error in db*ink: size(z) /= nz'
+    case(709); msg='Error in db*ink: size(q) /= nq'
+    case(710); msg='Error in db*ink: size(r) /= nr'
+    case(711); msg='Error in db*ink: size(s) /= ns'
+    case(712); msg='Error in db*ink: size(tx) /= nx+kx'
+    case(713); msg='Error in db*ink: size(ty) /= ny+ky'
+    case(714); msg='Error in db*ink: size(tz) /= nz+kz'
+    case(715); msg='Error in db*ink: size(tq) /= nq+kq'
+    case(716); msg='Error in db*ink: size(tr) /= nr+kr'
+    case(717); msg='Error in db*ink: size(ts) /= ns+ks'
 
     case(100); msg='Error in dbintk: k does not satisfy k>=1'
     case(101); msg='Error in dbintk: n does not satisfy n>=k'
