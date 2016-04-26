@@ -1692,30 +1692,30 @@
         call check('s',ns,ks,s,ts,[23,24,25,26,711,717],iflag,error); if (error) return
 
         if (present(x) .and. present(f1) .and. present(bcoef1)) then
-            if (size(x)/=size(f1,1)) then; iflag = 700; return; end if
+            if (size(x)/=size(f1,1))     then; iflag = 700; return; end if
             if (size(x)/=size(bcoef1,1)) then; iflag = 800; return; end if
         end if
         if (present(x) .and. present(y) .and. present(f2) .and. present(bcoef2)) then
-            if (size(x)/=size(f2,1)) then; iflag = 700; return; end if
-            if (size(y)/=size(f2,2)) then; iflag = 701; return; end if
+            if (size(x)/=size(f2,1))     then; iflag = 700; return; end if
+            if (size(y)/=size(f2,2))     then; iflag = 701; return; end if
             if (size(x)/=size(bcoef2,1)) then; iflag = 800; return; end if
             if (size(y)/=size(bcoef2,2)) then; iflag = 801; return; end if
         end if
         if (present(x) .and. present(y) .and. present(z) .and. present(f3) .and. &
             present(bcoef3)) then
-            if (size(x)/=size(f3,1)) then; iflag = 700; return; end if
-            if (size(y)/=size(f3,2)) then; iflag = 701; return; end if
-            if (size(z)/=size(f3,2)) then; iflag = 702; return; end if
+            if (size(x)/=size(f3,1))     then; iflag = 700; return; end if
+            if (size(y)/=size(f3,2))     then; iflag = 701; return; end if
+            if (size(z)/=size(f3,3))     then; iflag = 702; return; end if
             if (size(x)/=size(bcoef3,1)) then; iflag = 800; return; end if
             if (size(y)/=size(bcoef3,2)) then; iflag = 801; return; end if
             if (size(z)/=size(bcoef3,3)) then; iflag = 802; return; end if
         end if
         if (present(x) .and. present(y) .and. present(z) .and. present(q) .and. &
             present(f4) .and. present(bcoef4)) then
-            if (size(x)/=size(f4,1)) then; iflag = 700; return; end if
-            if (size(y)/=size(f4,2)) then; iflag = 701; return; end if
-            if (size(z)/=size(f4,3)) then; iflag = 702; return; end if
-            if (size(q)/=size(f4,4)) then; iflag = 703; return; end if
+            if (size(x)/=size(f4,1))     then; iflag = 700; return; end if
+            if (size(y)/=size(f4,2))     then; iflag = 701; return; end if
+            if (size(z)/=size(f4,3))     then; iflag = 702; return; end if
+            if (size(q)/=size(f4,4))     then; iflag = 703; return; end if
             if (size(x)/=size(bcoef4,1)) then; iflag = 800; return; end if
             if (size(y)/=size(bcoef4,2)) then; iflag = 801; return; end if
             if (size(z)/=size(bcoef4,3)) then; iflag = 802; return; end if
@@ -1723,11 +1723,11 @@
         end if
         if (present(x) .and. present(y) .and. present(z) .and. present(q) .and. &
             present(r) .and. present(f5) .and. present(bcoef5)) then
-            if (size(x)/=size(f5,1)) then; iflag = 700; return; end if
-            if (size(y)/=size(f5,2)) then; iflag = 701; return; end if
-            if (size(z)/=size(f5,3)) then; iflag = 702; return; end if
-            if (size(q)/=size(f5,4)) then; iflag = 703; return; end if
-            if (size(r)/=size(f5,5)) then; iflag = 704; return; end if
+            if (size(x)/=size(f5,1))     then; iflag = 700; return; end if
+            if (size(y)/=size(f5,2))     then; iflag = 701; return; end if
+            if (size(z)/=size(f5,3))     then; iflag = 702; return; end if
+            if (size(q)/=size(f5,4))     then; iflag = 703; return; end if
+            if (size(r)/=size(f5,5))     then; iflag = 704; return; end if
             if (size(x)/=size(bcoef5,1)) then; iflag = 800; return; end if
             if (size(y)/=size(bcoef5,2)) then; iflag = 801; return; end if
             if (size(z)/=size(bcoef5,3)) then; iflag = 802; return; end if
@@ -1736,12 +1736,12 @@
         end if
         if (present(x) .and. present(y) .and. present(z) .and. present(q) .and. &
             present(r) .and. present(s) .and. present(f6) .and. present(bcoef6)) then
-            if (size(x)/=size(f6,1)) then; iflag = 700; return; end if
-            if (size(y)/=size(f6,2)) then; iflag = 701; return; end if
-            if (size(z)/=size(f6,3)) then; iflag = 702; return; end if
-            if (size(q)/=size(f6,4)) then; iflag = 703; return; end if
-            if (size(r)/=size(f6,5)) then; iflag = 704; return; end if
-            if (size(s)/=size(f6,6)) then; iflag = 705; return; end if
+            if (size(x)/=size(f6,1))     then; iflag = 700; return; end if
+            if (size(y)/=size(f6,2))     then; iflag = 701; return; end if
+            if (size(z)/=size(f6,3))     then; iflag = 702; return; end if
+            if (size(q)/=size(f6,4))     then; iflag = 703; return; end if
+            if (size(r)/=size(f6,5))     then; iflag = 704; return; end if
+            if (size(s)/=size(f6,6))     then; iflag = 705; return; end if
             if (size(x)/=size(bcoef6,1)) then; iflag = 800; return; end if
             if (size(y)/=size(bcoef6,2)) then; iflag = 801; return; end if
             if (size(z)/=size(bcoef6,3)) then; iflag = 802; return; end if
