@@ -47,6 +47,12 @@
 
     integer,parameter :: wp = real64  !! Real precision
 
+    !Spline function order (order = polynomial degree + 1)
+    integer,parameter,public :: bspline_order_quadratic = 3
+    integer,parameter,public :: bspline_order_cubic     = 4
+    integer,parameter,public :: bspline_order_quartic   = 5
+    integer,parameter,public :: bspline_order_quintic   = 6
+
     !main routines:
     public :: db1ink, db1val
     public :: db2ink, db2val
