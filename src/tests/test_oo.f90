@@ -107,6 +107,15 @@
          end do
      end if
 
+     write(*,*) ''
+     write(*,*) 'size of 1d structure: ', s1%size_of()*8, 'bytes'
+     write(*,*) 'size of 2d structure: ', s2%size_of()*8, 'bytes'
+     write(*,*) 'size of 3d structure: ', s3%size_of()*8, 'bytes'
+     write(*,*) 'size of 4d structure: ', s4%size_of()*8, 'bytes'
+     write(*,*) 'size of 5d structure: ', s5%size_of()*8, 'bytes'
+     write(*,*) 'size of 6d structure: ', s6%size_of()*8, 'bytes'
+     write(*,*) ''
+
     ! compute max error at interpolation points
 
      errmax = 0.0_wp

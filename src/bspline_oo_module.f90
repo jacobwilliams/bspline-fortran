@@ -21,6 +21,10 @@
 
     private
 
+    integer,parameter :: int_size     = storage_size(1)       !! size of a default integer [bits]
+    integer,parameter :: logical_size = storage_size(.true.)  !! size of a default logical [bits]
+    integer,parameter :: real_size    = storage_size(1.0_wp)  !! size of a real(wp) [bits]
+
     type,public,abstract :: bspline_class
         !! Base class for the b-spline types
         private
@@ -356,15 +360,10 @@
     class(bspline_1d),intent(in) :: me
     integer :: s !! size of the structure in bits
 
-    s = 0
-    s = s + storage_size(me%inbvx)
-    s = s + storage_size(me%iflag)
-    s = s + storage_size(me%initialized)
+    s = 2*int_size + logical_size + 2*int_size
 
-    s = s + storage_size(me%nx)
-    s = s + storage_size(me%kx)
-    if (allocated(me%bcoef)) s = s + storage_size(me%bcoef)*size(me%bcoef)
-    if (allocated(me%tx))    s = s + storage_size(me%tx)*size(me%tx)
+    if (allocated(me%bcoef)) s = s + real_size*size(me%bcoef)
+    if (allocated(me%tx))    s = s + real_size*size(me%tx)
 
     end function size_1d
 !*****************************************************************************************
@@ -380,21 +379,12 @@
     class(bspline_2d),intent(in) :: me
     integer :: s !! size of the structure in bits
 
-    s = 0
-    s = s + storage_size(me%inbvx)
-    s = s + storage_size(me%iflag)
-    s = s + storage_size(me%initialized)
+    s = 2*int_size + logical_size + 6*int_size
 
-    s = s + storage_size(me%nx    )
-    s = s + storage_size(me%ny    )
-    s = s + storage_size(me%kx    )
-    s = s + storage_size(me%ky    )
-    s = s + storage_size(me%inbvy )
-    s = s + storage_size(me%iloy  )
-    if (allocated(me%bcoef))    s = s + storage_size(me%bcoef)*&
-                                        size(me%bcoef,1)*size(me%bcoef,2)
-    if (allocated(me%tx))       s = s + storage_size(me%tx)*size(me%tx)
-    if (allocated(me%ty))       s = s + storage_size(me%ty)*size(me%ty)
+    if (allocated(me%bcoef)) s = s + real_size*size(me%bcoef,1)*&
+                                               size(me%bcoef,2)
+    if (allocated(me%tx)) s = s + real_size*size(me%tx)
+    if (allocated(me%ty)) s = s + real_size*size(me%ty)
 
     end function size_2d
 !*****************************************************************************************
@@ -410,26 +400,14 @@
     class(bspline_3d),intent(in) :: me
     integer :: s !! size of the structure in bits
 
-    s = 0
-    s = s + storage_size(me%inbvx)
-    s = s + storage_size(me%iflag)
-    s = s + storage_size(me%initialized)
+    s = 2*int_size + logical_size + 10*int_size
 
-    s = s + storage_size(me%nx    )
-    s = s + storage_size(me%ny    )
-    s = s + storage_size(me%nz    )
-    s = s + storage_size(me%kx    )
-    s = s + storage_size(me%ky    )
-    s = s + storage_size(me%kz    )
-    s = s + storage_size(me%inbvy )
-    s = s + storage_size(me%inbvz )
-    s = s + storage_size(me%iloy  )
-    s = s + storage_size(me%iloz  )
-    if (allocated(me%bcoef))    s = s + storage_size(me%bcoef)*&
-                                        size(me%bcoef,1)*size(me%bcoef,2)*size(me%bcoef,3)
-    if (allocated(me%tx))       s = s + storage_size(me%tx)*size(me%tx)
-    if (allocated(me%ty))       s = s + storage_size(me%ty)*size(me%ty)
-    if (allocated(me%tz))       s = s + storage_size(me%tz)*size(me%tz)
+    if (allocated(me%bcoef)) s = s + real_size*size(me%bcoef,1)*&
+                                               size(me%bcoef,2)*&
+                                               size(me%bcoef,3)
+    if (allocated(me%tx)) s = s + real_size*size(me%tx)
+    if (allocated(me%ty)) s = s + real_size*size(me%ty)
+    if (allocated(me%tz)) s = s + real_size*size(me%tz)
 
     end function size_3d
 !*****************************************************************************************
@@ -445,32 +423,16 @@
     class(bspline_4d),intent(in) :: me
     integer :: s !! size of the structure in bits
 
-    s = 0
-    s = s + storage_size(me%inbvx)
-    s = s + storage_size(me%iflag)
-    s = s + storage_size(me%initialized)
+    s = 2*int_size + logical_size + 14*int_size
 
-    s = s + storage_size(me%nx    )
-    s = s + storage_size(me%ny    )
-    s = s + storage_size(me%nz    )
-    s = s + storage_size(me%nq    )
-    s = s + storage_size(me%kx    )
-    s = s + storage_size(me%ky    )
-    s = s + storage_size(me%kz    )
-    s = s + storage_size(me%kq    )
-    s = s + storage_size(me%inbvy )
-    s = s + storage_size(me%inbvz )
-    s = s + storage_size(me%inbvq )
-    s = s + storage_size(me%iloy  )
-    s = s + storage_size(me%iloz  )
-    s = s + storage_size(me%iloq  )
-    if (allocated(me%bcoef))   s = s + storage_size(me%bcoef)*&
-                                        size(me%bcoef,1)*size(me%bcoef,2)*size(me%bcoef,3)*&
-                                        size(me%bcoef,4)
-    if (allocated(me%tx))      s = s + storage_size(me%tx)*size(me%tx)
-    if (allocated(me%ty))      s = s + storage_size(me%ty)*size(me%ty)
-    if (allocated(me%tz))      s = s + storage_size(me%tz)*size(me%tz)
-    if (allocated(me%tq))      s = s + storage_size(me%tq)*size(me%tq)
+    if (allocated(me%bcoef)) s = s + real_size*size(me%bcoef,1)*&
+                                               size(me%bcoef,2)*&
+                                               size(me%bcoef,3)*&
+                                               size(me%bcoef,4)
+    if (allocated(me%tx)) s = s + real_size*size(me%tx)
+    if (allocated(me%ty)) s = s + real_size*size(me%ty)
+    if (allocated(me%tz)) s = s + real_size*size(me%tz)
+    if (allocated(me%tq)) s = s + real_size*size(me%tq)
 
     end function size_4d
 !*****************************************************************************************
@@ -486,37 +448,18 @@
     class(bspline_5d),intent(in) :: me
     integer :: s !! size of the structure in bits
 
-    s = 0
-    s = s + storage_size(me%inbvx)
-    s = s + storage_size(me%iflag)
-    s = s + storage_size(me%initialized)
+    s = 2*int_size + logical_size + 18*int_size
 
-    s = s + storage_size(me%nx    )
-    s = s + storage_size(me%ny    )
-    s = s + storage_size(me%nz    )
-    s = s + storage_size(me%nq    )
-    s = s + storage_size(me%nr    )
-    s = s + storage_size(me%kx    )
-    s = s + storage_size(me%ky    )
-    s = s + storage_size(me%kz    )
-    s = s + storage_size(me%kq    )
-    s = s + storage_size(me%kr    )
-    s = s + storage_size(me%inbvy )
-    s = s + storage_size(me%inbvz )
-    s = s + storage_size(me%inbvq )
-    s = s + storage_size(me%inbvr )
-    s = s + storage_size(me%iloy  )
-    s = s + storage_size(me%iloz  )
-    s = s + storage_size(me%iloq  )
-    s = s + storage_size(me%ilor  )
-    if (allocated(me%bcoef))    s = s + storage_size(me%bcoef)*&
-                                        size(me%bcoef,1)*size(me%bcoef,2)*size(me%bcoef,3)*&
-                                        size(me%bcoef,4)*size(me%bcoef,5)
-    if (allocated(me%tx))       s = s + storage_size(me%tx)*size(me%tx)
-    if (allocated(me%ty))       s = s + storage_size(me%ty)*size(me%ty)
-    if (allocated(me%tz))       s = s + storage_size(me%tz)*size(me%tz)
-    if (allocated(me%tq))       s = s + storage_size(me%tq)*size(me%tq)
-    if (allocated(me%tr))       s = s + storage_size(me%tr)*size(me%tr)
+    if (allocated(me%bcoef)) s = s + real_size*size(me%bcoef,1)*&
+                                               size(me%bcoef,2)*&
+                                               size(me%bcoef,3)*&
+                                               size(me%bcoef,4)*&
+                                               size(me%bcoef,5)
+    if (allocated(me%tx)) s = s + real_size*size(me%tx)
+    if (allocated(me%ty)) s = s + real_size*size(me%ty)
+    if (allocated(me%tz)) s = s + real_size*size(me%tz)
+    if (allocated(me%tq)) s = s + real_size*size(me%tq)
+    if (allocated(me%tr)) s = s + real_size*size(me%tr)
 
     end function size_5d
 !*****************************************************************************************
@@ -532,42 +475,20 @@
     class(bspline_6d),intent(in) :: me
     integer :: s !! size of the structure in bits
 
-    s = 0
-    s = s + storage_size(me%inbvx)
-    s = s + storage_size(me%iflag)
-    s = s + storage_size(me%initialized)
+    s = 2*int_size + logical_size + 22*int_size
 
-    s = s + storage_size(me%nx    )
-    s = s + storage_size(me%ny    )
-    s = s + storage_size(me%nz    )
-    s = s + storage_size(me%nq    )
-    s = s + storage_size(me%nr    )
-    s = s + storage_size(me%ns    )
-    s = s + storage_size(me%kx    )
-    s = s + storage_size(me%ky    )
-    s = s + storage_size(me%kz    )
-    s = s + storage_size(me%kq    )
-    s = s + storage_size(me%kr    )
-    s = s + storage_size(me%ks    )
-    s = s + storage_size(me%inbvy )
-    s = s + storage_size(me%inbvz )
-    s = s + storage_size(me%inbvq )
-    s = s + storage_size(me%inbvr )
-    s = s + storage_size(me%inbvs )
-    s = s + storage_size(me%iloy  )
-    s = s + storage_size(me%iloz  )
-    s = s + storage_size(me%iloq  )
-    s = s + storage_size(me%ilor  )
-    s = s + storage_size(me%ilos  )
-    if (allocated(me%bcoef))    s = s + storage_size(me%bcoef)*&
-                                        size(me%bcoef,1)*size(me%bcoef,2)*size(me%bcoef,3)*&
-                                        size(me%bcoef,4)*size(me%bcoef,5)*size(me%bcoef,6)
-    if (allocated(me%tx))       s = s + storage_size(me%tx)*size(me%tx)
-    if (allocated(me%ty))       s = s + storage_size(me%ty)*size(me%ty)
-    if (allocated(me%tz))       s = s + storage_size(me%tz)*size(me%tz)
-    if (allocated(me%tq))       s = s + storage_size(me%tq)*size(me%tq)
-    if (allocated(me%tr))       s = s + storage_size(me%tr)*size(me%tr)
-    if (allocated(me%ts))       s = s + storage_size(me%ts)*size(me%ts)
+    if (allocated(me%bcoef)) s = s + real_size*size(me%bcoef,1)*&
+                                               size(me%bcoef,2)*&
+                                               size(me%bcoef,3)*&
+                                               size(me%bcoef,4)*&
+                                               size(me%bcoef,5)*&
+                                               size(me%bcoef,6)
+    if (allocated(me%tx)) s = s + real_size*size(me%tx)
+    if (allocated(me%ty)) s = s + real_size*size(me%ty)
+    if (allocated(me%tz)) s = s + real_size*size(me%tz)
+    if (allocated(me%tq)) s = s + real_size*size(me%tq)
+    if (allocated(me%tr)) s = s + real_size*size(me%tr)
+    if (allocated(me%ts)) s = s + real_size*size(me%ts)
 
     end function size_6d
 !*****************************************************************************************
