@@ -21,6 +21,10 @@
 
     private
 
+    integer,parameter :: int_size     = storage_size(1)       !! size of a default integer [bits]
+    integer,parameter :: logical_size = storage_size(.true.)  !! size of a default logical [bits]
+    integer,parameter :: real_size    = storage_size(1.0_wp)  !! size of a real(wp) [bits]
+
     type,public,abstract :: bspline_class
         !! Base class for the b-spline types
         private
@@ -31,17 +35,27 @@
         private
         procedure,non_overridable :: destroy_base  !! destructor for the abstract type
         procedure(destroy_func),deferred,public :: destroy  !! destructor
+        procedure(size_func),deferred,public :: size_of !! size of the structure in bits
         procedure,public,non_overridable :: status_ok  !! returns true if the last `iflag` status code was `=0`.
         procedure,public,non_overridable :: status_message => get_bspline_status_message  !! retrieve the last status message
         procedure,public,non_overridable :: clear_flag => clear_bspline_flag  !! to reset the `iflag` saved in the class.
     end type bspline_class
 
     abstract interface
+
         pure subroutine destroy_func(me)  !! interface for bspline destructor routines
         import :: bspline_class
         implicit none
         class(bspline_class),intent(inout) :: me
         end subroutine destroy_func
+
+        pure function size_func(me) result(s)  !! interface for size routines
+        import :: bspline_class
+        implicit none
+        class(bspline_class),intent(in) :: me
+        integer :: s !! size of the structure in bits
+        end function size_func
+
     end interface
 
     type,extends(bspline_class),public :: bspline_1d
@@ -58,6 +72,7 @@
         procedure :: initialize_1d_specify_knots
         procedure,public :: evaluate => evaluate_1d
         procedure,public :: destroy => destroy_1d
+        procedure,public :: size_of => size_1d
         final :: finalize_1d
     end type bspline_1d
 
@@ -80,6 +95,7 @@
         procedure :: initialize_2d_specify_knots
         procedure,public :: evaluate => evaluate_2d
         procedure,public :: destroy => destroy_2d
+        procedure,public :: size_of => size_2d
         final :: finalize_2d
     end type bspline_2d
 
@@ -107,6 +123,7 @@
         procedure :: initialize_3d_specify_knots
         procedure,public :: evaluate => evaluate_3d
         procedure,public :: destroy => destroy_3d
+        procedure,public :: size_of => size_3d
         final :: finalize_3d
     end type bspline_3d
 
@@ -139,6 +156,7 @@
         procedure :: initialize_4d_specify_knots
         procedure,public :: evaluate => evaluate_4d
         procedure,public :: destroy => destroy_4d
+        procedure,public :: size_of => size_4d
         final :: finalize_4d
     end type bspline_4d
 
@@ -176,6 +194,7 @@
         procedure :: initialize_5d_specify_knots
         procedure,public :: evaluate => evaluate_5d
         procedure,public :: destroy => destroy_5d
+        procedure,public :: size_of => size_5d
         final :: finalize_5d
     end type bspline_5d
 
@@ -218,6 +237,7 @@
         procedure :: initialize_6d_specify_knots
         procedure,public :: evaluate => evaluate_6d
         procedure,public :: destroy => destroy_6d
+        procedure,public :: size_of => size_6d
         final :: finalize_6d
     end type bspline_6d
 
@@ -327,6 +347,150 @@
     end if
 
     end function get_bspline_status_message
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Actual size of a [[bspline_1d]] structure in bits.
+
+    pure function size_1d(me) result(s)
+
+    implicit none
+
+    class(bspline_1d),intent(in) :: me
+    integer :: s !! size of the structure in bits
+
+    s = 2*int_size + logical_size + 2*int_size
+
+    if (allocated(me%bcoef)) s = s + real_size*size(me%bcoef)
+    if (allocated(me%tx))    s = s + real_size*size(me%tx)
+
+    end function size_1d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Actual size of a [[bspline_2d]] structure in bits.
+
+    pure function size_2d(me) result(s)
+
+    implicit none
+
+    class(bspline_2d),intent(in) :: me
+    integer :: s !! size of the structure in bits
+
+    s = 2*int_size + logical_size + 6*int_size
+
+    if (allocated(me%bcoef)) s = s + real_size*size(me%bcoef,1)*&
+                                               size(me%bcoef,2)
+    if (allocated(me%tx)) s = s + real_size*size(me%tx)
+    if (allocated(me%ty)) s = s + real_size*size(me%ty)
+
+    end function size_2d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Actual size of a [[bspline_3d]] structure in bits.
+
+    pure function size_3d(me) result(s)
+
+    implicit none
+
+    class(bspline_3d),intent(in) :: me
+    integer :: s !! size of the structure in bits
+
+    s = 2*int_size + logical_size + 10*int_size
+
+    if (allocated(me%bcoef)) s = s + real_size*size(me%bcoef,1)*&
+                                               size(me%bcoef,2)*&
+                                               size(me%bcoef,3)
+    if (allocated(me%tx)) s = s + real_size*size(me%tx)
+    if (allocated(me%ty)) s = s + real_size*size(me%ty)
+    if (allocated(me%tz)) s = s + real_size*size(me%tz)
+
+    end function size_3d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Actual size of a [[bspline_4d]] structure in bits.
+
+    pure function size_4d(me) result(s)
+
+    implicit none
+
+    class(bspline_4d),intent(in) :: me
+    integer :: s !! size of the structure in bits
+
+    s = 2*int_size + logical_size + 14*int_size
+
+    if (allocated(me%bcoef)) s = s + real_size*size(me%bcoef,1)*&
+                                               size(me%bcoef,2)*&
+                                               size(me%bcoef,3)*&
+                                               size(me%bcoef,4)
+    if (allocated(me%tx)) s = s + real_size*size(me%tx)
+    if (allocated(me%ty)) s = s + real_size*size(me%ty)
+    if (allocated(me%tz)) s = s + real_size*size(me%tz)
+    if (allocated(me%tq)) s = s + real_size*size(me%tq)
+
+    end function size_4d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Actual size of a [[bspline_5d]] structure in bits.
+
+    pure function size_5d(me) result(s)
+
+    implicit none
+
+    class(bspline_5d),intent(in) :: me
+    integer :: s !! size of the structure in bits
+
+    s = 2*int_size + logical_size + 18*int_size
+
+    if (allocated(me%bcoef)) s = s + real_size*size(me%bcoef,1)*&
+                                               size(me%bcoef,2)*&
+                                               size(me%bcoef,3)*&
+                                               size(me%bcoef,4)*&
+                                               size(me%bcoef,5)
+    if (allocated(me%tx)) s = s + real_size*size(me%tx)
+    if (allocated(me%ty)) s = s + real_size*size(me%ty)
+    if (allocated(me%tz)) s = s + real_size*size(me%tz)
+    if (allocated(me%tq)) s = s + real_size*size(me%tq)
+    if (allocated(me%tr)) s = s + real_size*size(me%tr)
+
+    end function size_5d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Actual size of a [[bspline_6d]] structure in bits.
+
+    pure function size_6d(me) result(s)
+
+    implicit none
+
+    class(bspline_6d),intent(in) :: me
+    integer :: s !! size of the structure in bits
+
+    s = 2*int_size + logical_size + 22*int_size
+
+    if (allocated(me%bcoef)) s = s + real_size*size(me%bcoef,1)*&
+                                               size(me%bcoef,2)*&
+                                               size(me%bcoef,3)*&
+                                               size(me%bcoef,4)*&
+                                               size(me%bcoef,5)*&
+                                               size(me%bcoef,6)
+    if (allocated(me%tx)) s = s + real_size*size(me%tx)
+    if (allocated(me%ty)) s = s + real_size*size(me%ty)
+    if (allocated(me%tz)) s = s + real_size*size(me%tz)
+    if (allocated(me%tq)) s = s + real_size*size(me%tq)
+    if (allocated(me%tr)) s = s + real_size*size(me%tr)
+    if (allocated(me%ts)) s = s + real_size*size(me%ts)
+
+    end function size_6d
 !*****************************************************************************************
 
 !*****************************************************************************************
