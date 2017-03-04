@@ -2653,6 +2653,7 @@
     if (w(middle,nrow)==0.0_wp) iflag = 2
 
     end subroutine dbnfac
+!*****************************************************************************************
 
 !*****************************************************************************************
 !>
@@ -2843,16 +2844,17 @@
 
 !*****************************************************************************************
 !>
-!  Evaluates the b-representation (t,a,n,k) of a b-spline
-!  at x for the function value on ideriv=0 or any of its
-!  derivatives on ideriv=1,2,...,k-1.  right limiting values
+!  Evaluates the b-representation (`t`,`a`,`n`,`k`) of a b-spline
+!  at `x` for the function value on `ideriv=0` or any of its
+!  derivatives on `ideriv=1,2,...,k-1`.  right limiting values
 !  (right derivatives) are returned except at the right end
-!  point x=t(n+1) where left limiting values are computed.  the
-!  spline is defined on t(k) <= x <= t(n+1).  dbvalu returns
-!  a fatal error message when x is outside of this interval.
+!  point `x=t(n+1)` where left limiting values are computed.  the
+!  spline is defined on `t(k)` \( \le \) `x` \( \le \) `t(n+1)`.
+!  dbvalu returns a fatal error message when `x` is outside of this
+!  interval.
 !
-!  to compute left derivatives or left limiting values at a
-!  knot t(i), replace n by i-1 and set x=t(i), i=k+1,n+1.
+!  To compute left derivatives or left limiting values at a
+!  knot `t(i)`, replace `n` by `i-1` and set `x=t(i), i=k+1,n+1`.
 !
 !### Error Conditions
 !
@@ -2871,27 +2873,29 @@
 
     real(wp),intent(out)             :: val     !! the interpolated value
     integer,intent(in)               :: n       !! number of b-spline coefficients.
-                                                !! (sum of knot multiplicities-k)
-    real(wp),dimension(:),intent(in) :: t       !! knot vector of length n+k
-    real(wp),dimension(n),intent(in) :: a       !! b-spline coefficient vector of length n
-    integer,intent(in)               :: k       !! order of the b-spline, k >= 1
-    integer,intent(in)               :: ideriv  !! order of the derivative, 0 <= ideriv <= k-1.
-                                                !! ideriv = 0 returns the b-spline value
-    real(wp),intent(in)              :: x       !! argument, t(k) <= x <= t(n+1)
+                                                !! (sum of knot multiplicities-`k`)
+    real(wp),dimension(:),intent(in) :: t       !! knot vector of length `n+k`
+    real(wp),dimension(n),intent(in) :: a       !! b-spline coefficient vector of length `n`
+    integer,intent(in)               :: k       !! order of the b-spline, `k >= 1`
+    integer,intent(in)               :: ideriv  !! order of the derivative, `0 <= ideriv <= k-1`.
+                                                !! `ideriv = 0` returns the b-spline value
+    real(wp),intent(in)              :: x       !! argument, `t(k) <= x <= t(n+1)`
     integer,intent(inout)            :: inbv    !! an initialization parameter which must be set
-                                                !! to 1 the first time dbvalu is called.
-                                                !! inbv contains information for efficient process-
-                                                !! ing after the initial call and inbv must not
+                                                !! to 1 the first time [[dbvalu]] is called.
+                                                !! `inbv` contains information for efficient processing
+                                                !! after the initial call and `inbv` must not
                                                 !! be changed by the user.  distinct splines require
-                                                !! distinct inbv parameters.
-    real(wp),dimension(:),intent(inout) :: work !! work vector of length at least 3*k
-    integer,intent(out)              :: iflag   !!   0: no errors
-                                                !! 401: k does not satisfy k>=1
-                                                !! 402: n does not satisfy n>=k
-                                                !! 403: ideriv does not satisfy 0<=ideriv<k
-                                                !! 404: x is not greater than or equal to t(k)
-                                                !! 405: x is not less than or equal to t(n+1)
-                                                !! 406: a left limiting value cannot be obtained at t(k)
+                                                !! distinct `inbv` parameters.
+    real(wp),dimension(:),intent(inout) :: work !! work vector of length at least `3*k`
+    integer,intent(out)              :: iflag   !! status flag:
+                                                !!
+                                                !! * 0: no errors
+                                                !! * 401: `k` does not satisfy `k` \( \ge \) 1
+                                                !! * 402: `n` does not satisfy `n` \( \ge \) `k`
+                                                !! * 403: `ideriv` does not satisfy 0 \( \le \) `ideriv` \(<\) `k`
+                                                !! * 404: `x` is not greater than or equal to `t(k)`
+                                                !! * 405: `x` is not less than or equal to `t(n+1)`
+                                                !! * 406: a left limiting value cannot be obtained at `t(k)`
 
     integer :: i,iderp1,ihi,ihmkmj,ilo,imk,imkpj,ipj,&
                ip1,ip1mj,j,jj,j1,j2,kmider,kmj,km1,kpk,mflag
@@ -3007,9 +3011,9 @@
 
 !*****************************************************************************************
 !>
-!  Computes the largest integer ileft in 1 <= ileft <= lxt
-!  such that xt(ileft) <= x where xt(*) is a subdivision of
-!  the x interval.
+!  Computes the largest integer `ileft` in 1 \( \le \) `ileft` \( \le \) `lxt`
+!  such that `xt(ileft)` \( \le \) `x` where `xt(*)` is a subdivision of
+!  the `x` interval.
 !  precisely,
 !
 !```fortran
@@ -3019,7 +3023,7 @@
 !```
 !
 !  that is, when multiplicities are present in the break point
-!  to the left of x, the largest index is taken for ileft.
+!  to the left of `x`, the largest index is taken for `ileft`.
 !
 !### History
 !  * interv written by carl de boor [5]
@@ -3041,7 +3045,7 @@
                                                  !! efficient processing after the initial call and `ilo`
                                                  !! must not be changed by the user.  distinct splines
                                                  !! require distinct `ilo` parameters.
-    integer,intent(out)                :: ileft  !! largest integer satisfying `xt(ileft) <= x`
+    integer,intent(out)                :: ileft  !! largest integer satisfying `xt(ileft)` \( \le \) `x`
     integer,intent(out)                :: mflag  !! signals when `x` lies out of bounds
 
     integer :: ihi, istep, middle
