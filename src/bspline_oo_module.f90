@@ -1,14 +1,11 @@
 !*****************************************************************************************
-!>
-!  author: Jacob Williams
+!> author: Jacob Williams
 !  license: BSD
 !  date: 12/6/2015
 !
-!# Description
-!
 !  Object-oriented style wrappers to [[bspline_sub_module]].
-!  This module provides classes ([[bspline_1d]], [[bspline_2d]],
-!  [[bspline_3d]], [[bspline_4d]], [[bspline_5d]], and [[bspline_6d]])
+!  This module provides classes ([[bspline_1d(type)]], [[bspline_2d(type)]],
+!  [[bspline_3d(type)]], [[bspline_4d(type)]], [[bspline_5d(type)]], and [[bspline_6d(type)]])
 !  which can be used instead of the main subroutine interface.
 
     module bspline_oo_module
@@ -23,12 +20,12 @@
 
     integer,parameter :: int_size     = storage_size(1)       !! size of a default integer [bits]
     integer,parameter :: logical_size = storage_size(.true.)  !! size of a default logical [bits]
-    integer,parameter :: real_size    = storage_size(1.0_wp)  !! size of a real(wp) [bits]
+    integer,parameter :: real_size    = storage_size(1.0_wp)  !! size of a `real(wp)` [bits]
 
     type,public,abstract :: bspline_class
         !! Base class for the b-spline types
         private
-        integer :: inbvx = 1  !! internal variable used by dbvalu for efficient processing
+        integer :: inbvx = 1  !! internal variable used by [[dbvalu]] for efficient processing
         integer :: iflag = 1  !! saved `iflag` from the list routine call.
         logical :: initialized = .false. !! true if the class is initialized and ready to use
     contains
@@ -43,13 +40,15 @@
 
     abstract interface
 
-        pure subroutine destroy_func(me)  !! interface for bspline destructor routines
+        pure subroutine destroy_func(me)
+        !! interface for bspline destructor routines
         import :: bspline_class
         implicit none
         class(bspline_class),intent(inout) :: me
         end subroutine destroy_func
 
-        pure function size_func(me) result(s)  !! interface for size routines
+        pure function size_func(me) result(s)
+        !! interface for size routines
         import :: bspline_class
         implicit none
         class(bspline_class),intent(in) :: me
@@ -61,10 +60,10 @@
     type,extends(bspline_class),public :: bspline_1d
         !! Class for 1d b-spline interpolation.
         private
-        integer :: nx  = 0
-        integer :: kx  = 0
-        real(wp),dimension(:),allocatable :: bcoef
-        real(wp),dimension(:),allocatable :: tx
+        integer :: nx  = 0  !! Number of \(x\) abcissae
+        integer :: kx  = 0  !! The order of spline pieces in \(x\)
+        real(wp),dimension(:),allocatable :: bcoef  !! array of coefficients of the b-spline interpolant
+        real(wp),dimension(:),allocatable :: tx  !! The knots in the \(x\) direction for the spline interpolant
         contains
         private
         generic,public :: initialize => initialize_1d_auto_knots,initialize_1d_specify_knots
@@ -79,15 +78,15 @@
     type,extends(bspline_class),public :: bspline_2d
         !! Class for 2d b-spline interpolation.
         private
-        integer :: nx  = 0
-        integer :: ny  = 0
-        integer :: kx  = 0
-        integer :: ky  = 0
-        real(wp),dimension(:,:),allocatable :: bcoef
-        real(wp),dimension(:),allocatable :: tx
-        real(wp),dimension(:),allocatable :: ty
-        integer :: inbvy = 1
-        integer :: iloy = 1
+        integer :: nx  = 0  !! Number of \(x\) abcissae
+        integer :: ny  = 0  !! Number of \(y\) abcissae
+        integer :: kx  = 0  !! The order of spline pieces in \(x\)
+        integer :: ky  = 0  !! The order of spline pieces in \(y\)
+        real(wp),dimension(:,:),allocatable :: bcoef  !! array of coefficients of the b-spline interpolant
+        real(wp),dimension(:),allocatable :: tx  !! The knots in the \(x\) direction for the spline interpolant
+        real(wp),dimension(:),allocatable :: ty  !! The knots in the \(y\) direction for the spline interpolant
+        integer :: inbvy = 1  !! internal variable used for efficient processing
+        integer :: iloy = 1  !! internal variable used for efficient processing
         contains
         private
         generic,public :: initialize => initialize_2d_auto_knots,initialize_2d_specify_knots
@@ -102,20 +101,20 @@
     type,extends(bspline_class),public :: bspline_3d
         !! Class for 3d b-spline interpolation.
         private
-        integer :: nx  = 0
-        integer :: ny  = 0
-        integer :: nz  = 0
-        integer :: kx  = 0
-        integer :: ky  = 0
-        integer :: kz  = 0
-        real(wp),dimension(:,:,:),allocatable :: bcoef
-        real(wp),dimension(:),allocatable :: tx
-        real(wp),dimension(:),allocatable :: ty
-        real(wp),dimension(:),allocatable :: tz
-        integer :: inbvy = 1
-        integer :: inbvz = 1
-        integer :: iloy = 1
-        integer :: iloz = 1
+        integer :: nx  = 0  !! Number of \(x\) abcissae
+        integer :: ny  = 0  !! Number of \(y\) abcissae
+        integer :: nz  = 0  !! Number of \(z\) abcissae
+        integer :: kx  = 0  !! The order of spline pieces in \(x\)
+        integer :: ky  = 0  !! The order of spline pieces in \(y\)
+        integer :: kz  = 0  !! The order of spline pieces in \(z\)
+        real(wp),dimension(:,:,:),allocatable :: bcoef  !! array of coefficients of the b-spline interpolant
+        real(wp),dimension(:),allocatable :: tx  !! The knots in the \(x\) direction for the spline interpolant
+        real(wp),dimension(:),allocatable :: ty  !! The knots in the \(y\) direction for the spline interpolant
+        real(wp),dimension(:),allocatable :: tz  !! The knots in the \(z\) direction for the spline interpolant
+        integer :: inbvy = 1  !! internal variable used for efficient processing
+        integer :: inbvz = 1  !! internal variable used for efficient processing
+        integer :: iloy = 1  !! internal variable used for efficient processing
+        integer :: iloz = 1  !! internal variable used for efficient processing
         contains
         private
         generic,public :: initialize => initialize_3d_auto_knots,initialize_3d_specify_knots
@@ -130,25 +129,25 @@
     type,extends(bspline_class),public :: bspline_4d
         !! Class for 4d b-spline interpolation.
         private
-        integer :: nx  = 0
-        integer :: ny  = 0
-        integer :: nz  = 0
-        integer :: nq  = 0
-        integer :: kx  = 0
-        integer :: ky  = 0
-        integer :: kz  = 0
-        integer :: kq  = 0
-        real(wp),dimension(:,:,:,:),allocatable :: bcoef
-        real(wp),dimension(:),allocatable :: tx
-        real(wp),dimension(:),allocatable :: ty
-        real(wp),dimension(:),allocatable :: tz
-        real(wp),dimension(:),allocatable :: tq
-        integer :: inbvy = 1
-        integer :: inbvz = 1
-        integer :: inbvq = 1
-        integer :: iloy  = 1
-        integer :: iloz  = 1
-        integer :: iloq  = 1
+        integer :: nx  = 0  !! Number of \(x\) abcissae
+        integer :: ny  = 0  !! Number of \(y\) abcissae
+        integer :: nz  = 0  !! Number of \(z\) abcissae
+        integer :: nq  = 0  !! Number of \(q\) abcissae
+        integer :: kx  = 0  !! The order of spline pieces in \(x\)
+        integer :: ky  = 0  !! The order of spline pieces in \(y\)
+        integer :: kz  = 0  !! The order of spline pieces in \(z\)
+        integer :: kq  = 0  !! The order of spline pieces in \(q\)
+        real(wp),dimension(:,:,:,:),allocatable :: bcoef  !! array of coefficients of the b-spline interpolant
+        real(wp),dimension(:),allocatable :: tx  !! The knots in the \(x\) direction for the spline interpolant
+        real(wp),dimension(:),allocatable :: ty  !! The knots in the \(y\) direction for the spline interpolant
+        real(wp),dimension(:),allocatable :: tz  !! The knots in the \(z\) direction for the spline interpolant
+        real(wp),dimension(:),allocatable :: tq  !! The knots in the \(q\) direction for the spline interpolant
+        integer :: inbvy = 1  !! internal variable used for efficient processing
+        integer :: inbvz = 1  !! internal variable used for efficient processing
+        integer :: inbvq = 1  !! internal variable used for efficient processing
+        integer :: iloy  = 1  !! internal variable used for efficient processing
+        integer :: iloz  = 1  !! internal variable used for efficient processing
+        integer :: iloq  = 1  !! internal variable used for efficient processing
         contains
         private
         generic,public :: initialize => initialize_4d_auto_knots,initialize_4d_specify_knots
@@ -163,30 +162,30 @@
     type,extends(bspline_class),public :: bspline_5d
         !! Class for 5d b-spline interpolation.
         private
-        integer :: nx  = 0
-        integer :: ny  = 0
-        integer :: nz  = 0
-        integer :: nq  = 0
-        integer :: nr  = 0
-        integer :: kx  = 0
-        integer :: ky  = 0
-        integer :: kz  = 0
-        integer :: kq  = 0
-        integer :: kr  = 0
-        real(wp),dimension(:,:,:,:,:),allocatable :: bcoef
-        real(wp),dimension(:),allocatable :: tx
-        real(wp),dimension(:),allocatable :: ty
-        real(wp),dimension(:),allocatable :: tz
-        real(wp),dimension(:),allocatable :: tq
-        real(wp),dimension(:),allocatable :: tr
-        integer :: inbvy = 1
-        integer :: inbvz = 1
-        integer :: inbvq = 1
-        integer :: inbvr = 1
-        integer :: iloy  = 1
-        integer :: iloz  = 1
-        integer :: iloq  = 1
-        integer :: ilor  = 1
+        integer :: nx  = 0  !! Number of \(x\) abcissae
+        integer :: ny  = 0  !! Number of \(y\) abcissae
+        integer :: nz  = 0  !! Number of \(z\) abcissae
+        integer :: nq  = 0  !! Number of \(q\) abcissae
+        integer :: nr  = 0  !! Number of \(r\) abcissae
+        integer :: kx  = 0  !! The order of spline pieces in \(x\)
+        integer :: ky  = 0  !! The order of spline pieces in \(y\)
+        integer :: kz  = 0  !! The order of spline pieces in \(z\)
+        integer :: kq  = 0  !! The order of spline pieces in \(q\)
+        integer :: kr  = 0  !! The order of spline pieces in \(r\)
+        real(wp),dimension(:,:,:,:,:),allocatable :: bcoef  !! array of coefficients of the b-spline interpolant
+        real(wp),dimension(:),allocatable :: tx  !! The knots in the \(x\) direction for the spline interpolant
+        real(wp),dimension(:),allocatable :: ty  !! The knots in the \(y\) direction for the spline interpolant
+        real(wp),dimension(:),allocatable :: tz  !! The knots in the \(z\) direction for the spline interpolant
+        real(wp),dimension(:),allocatable :: tq  !! The knots in the \(q\) direction for the spline interpolant
+        real(wp),dimension(:),allocatable :: tr  !! The knots in the \(r\) direction for the spline interpolant
+        integer :: inbvy = 1  !! internal variable used for efficient processing
+        integer :: inbvz = 1  !! internal variable used for efficient processing
+        integer :: inbvq = 1  !! internal variable used for efficient processing
+        integer :: inbvr = 1  !! internal variable used for efficient processing
+        integer :: iloy  = 1  !! internal variable used for efficient processing
+        integer :: iloz  = 1  !! internal variable used for efficient processing
+        integer :: iloq  = 1  !! internal variable used for efficient processing
+        integer :: ilor  = 1  !! internal variable used for efficient processing
         contains
         private
         generic,public :: initialize => initialize_5d_auto_knots,initialize_5d_specify_knots
@@ -201,35 +200,35 @@
     type,extends(bspline_class),public :: bspline_6d
         !! Class for 6d b-spline interpolation.
         private
-        integer :: nx  = 0
-        integer :: ny  = 0
-        integer :: nz  = 0
-        integer :: nq  = 0
-        integer :: nr  = 0
-        integer :: ns  = 0
-        integer :: kx  = 0
-        integer :: ky  = 0
-        integer :: kz  = 0
-        integer :: kq  = 0
-        integer :: kr  = 0
-        integer :: ks  = 0
-        real(wp),dimension(:,:,:,:,:,:),allocatable :: bcoef
-        real(wp),dimension(:),allocatable :: tx
-        real(wp),dimension(:),allocatable :: ty
-        real(wp),dimension(:),allocatable :: tz
-        real(wp),dimension(:),allocatable :: tq
-        real(wp),dimension(:),allocatable :: tr
-        real(wp),dimension(:),allocatable :: ts
-        integer :: inbvy = 1
-        integer :: inbvz = 1
-        integer :: inbvq = 1
-        integer :: inbvr = 1
-        integer :: inbvs = 1
-        integer :: iloy  = 1
-        integer :: iloz  = 1
-        integer :: iloq  = 1
-        integer :: ilor  = 1
-        integer :: ilos  = 1
+        integer :: nx  = 0  !! Number of \(x\) abcissae
+        integer :: ny  = 0  !! Number of \(y\) abcissae
+        integer :: nz  = 0  !! Number of \(z\) abcissae
+        integer :: nq  = 0  !! Number of \(q\) abcissae
+        integer :: nr  = 0  !! Number of \(r\) abcissae
+        integer :: ns  = 0  !! Number of \(s\) abcissae
+        integer :: kx  = 0  !! The order of spline pieces in \(x\)
+        integer :: ky  = 0  !! The order of spline pieces in \(y\)
+        integer :: kz  = 0  !! The order of spline pieces in \(z\)
+        integer :: kq  = 0  !! The order of spline pieces in \(q\)
+        integer :: kr  = 0  !! The order of spline pieces in \(r\)
+        integer :: ks  = 0  !! The order of spline pieces in \(s\)
+        real(wp),dimension(:,:,:,:,:,:),allocatable :: bcoef  !! array of coefficients of the b-spline interpolant
+        real(wp),dimension(:),allocatable :: tx  !! The knots in the \(x\) direction for the spline interpolant
+        real(wp),dimension(:),allocatable :: ty  !! The knots in the \(y\) direction for the spline interpolant
+        real(wp),dimension(:),allocatable :: tz  !! The knots in the \(z\) direction for the spline interpolant
+        real(wp),dimension(:),allocatable :: tq  !! The knots in the \(q\) direction for the spline interpolant
+        real(wp),dimension(:),allocatable :: tr  !! The knots in the \(r\) direction for the spline interpolant
+        real(wp),dimension(:),allocatable :: ts  !! The knots in the \(s\) direction for the spline interpolant
+        integer :: inbvy = 1  !! internal variable used for efficient processing
+        integer :: inbvz = 1  !! internal variable used for efficient processing
+        integer :: inbvq = 1  !! internal variable used for efficient processing
+        integer :: inbvr = 1  !! internal variable used for efficient processing
+        integer :: inbvs = 1  !! internal variable used for efficient processing
+        integer :: iloy  = 1  !! internal variable used for efficient processing
+        integer :: iloz  = 1  !! internal variable used for efficient processing
+        integer :: iloq  = 1  !! internal variable used for efficient processing
+        integer :: ilor  = 1  !! internal variable used for efficient processing
+        integer :: ilos  = 1  !! internal variable used for efficient processing
         contains
         private
         generic,public :: initialize => initialize_6d_auto_knots,initialize_6d_specify_knots
@@ -242,31 +241,37 @@
     end type bspline_6d
 
     interface bspline_1d
+        !! Constructor for [[bspline_1d(type)]]
         procedure :: bspline_1d_constructor_empty,&
                      bspline_1d_constructor_auto_knots,&
                      bspline_1d_constructor_specify_knots
     end interface
     interface bspline_2d
+        !! Constructor for [[bspline_2d(type)]]
         procedure :: bspline_2d_constructor_empty,&
                      bspline_2d_constructor_auto_knots,&
                      bspline_2d_constructor_specify_knots
     end interface
     interface bspline_3d
+        !! Constructor for [[bspline_3d(type)]]
         procedure :: bspline_3d_constructor_empty,&
                      bspline_3d_constructor_auto_knots,&
                      bspline_3d_constructor_specify_knots
     end interface
     interface bspline_4d
+        !! Constructor for [[bspline_4d(type)]]
         procedure :: bspline_4d_constructor_empty,&
                      bspline_4d_constructor_auto_knots,&
                      bspline_4d_constructor_specify_knots
     end interface
     interface bspline_5d
+        !! Constructor for [[bspline_5d(type)]]
         procedure :: bspline_5d_constructor_empty,&
                      bspline_5d_constructor_auto_knots,&
                      bspline_5d_constructor_specify_knots
     end interface
     interface bspline_6d
+        !! Constructor for [[bspline_6d(type)]]
         procedure :: bspline_6d_constructor_empty,&
                      bspline_6d_constructor_auto_knots,&
                      bspline_6d_constructor_specify_knots
@@ -768,9 +773,12 @@
     implicit none
 
     type(bspline_1d)                 :: me
-    real(wp),dimension(:),intent(in) :: x
-    real(wp),dimension(:),intent(in) :: fcn
-    integer,intent(in)               :: kx
+    real(wp),dimension(:),intent(in) :: x     !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: fcn   !! `(nx)` array of function values to interpolate. `fcn(i)` should
+                                              !! contain the function value at the point `x(i)`
+    integer,intent(in)               :: kx    !! The order of spline pieces in \(x\)
+                                              !! ( \( 2 \le k_x < n_x \) )
+                                              !! (order = polynomial degree + 1)
 
     call initialize_1d_auto_knots(me,x,fcn,kx,me%iflag)
 
@@ -787,10 +795,15 @@
     implicit none
 
     type(bspline_1d)                 :: me
-    real(wp),dimension(:),intent(in) :: x
-    real(wp),dimension(:),intent(in) :: fcn
-    integer,intent(in)               :: kx
-    real(wp),dimension(:),intent(in) :: tx
+    real(wp),dimension(:),intent(in) :: x     !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: fcn   !! `(nx)` array of function values to interpolate. `fcn(i)` should
+                                              !! contain the function value at the point `x(i)`
+    integer,intent(in)               :: kx    !! The order of spline pieces in \(x\)
+                                              !! ( \( 2 \le k_x < n_x \) )
+                                              !! (order = polynomial degree + 1)
+    real(wp),dimension(:),intent(in) :: tx    !! The `(nx+kx)` knots in the \(x\) direction
+                                              !! for the spline interpolant.
+                                              !! Must be non-decreasing.
 
     call initialize_1d_specify_knots(me,x,fcn,kx,tx,me%iflag)
 
@@ -807,10 +820,13 @@
     implicit none
 
     class(bspline_1d),intent(inout)  :: me
-    real(wp),dimension(:),intent(in) :: x
-    real(wp),dimension(:),intent(in) :: fcn
-    integer,intent(in)               :: kx
-    integer,intent(out)              :: iflag
+    real(wp),dimension(:),intent(in) :: x     !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: fcn   !! `(nx)` array of function values to interpolate. `fcn(i)` should
+                                              !! contain the function value at the point `x(i)`
+    integer,intent(in)               :: kx    !! The order of spline pieces in \(x\)
+                                              !! ( \( 2 \le k_x < n_x \) )
+                                              !! (order = polynomial degree + 1)
+    integer,intent(out)              :: iflag !! status flag (see [[db1ink]])
 
     integer :: iknot
     integer :: nx
@@ -845,11 +861,16 @@
     implicit none
 
     class(bspline_1d),intent(inout)  :: me
-    real(wp),dimension(:),intent(in) :: x
-    real(wp),dimension(:),intent(in) :: fcn
-    integer,intent(in)               :: kx
-    real(wp),dimension(:),intent(in) :: tx
-    integer,intent(out)              :: iflag
+    real(wp),dimension(:),intent(in) :: x     !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: fcn   !! `(nx)` array of function values to interpolate. `fcn(i)` should
+                                              !! contain the function value at the point `x(i)`
+    integer,intent(in)               :: kx    !! The order of spline pieces in \(x\)
+                                              !! ( \( 2 \le k_x < n_x \) )
+                                              !! (order = polynomial degree + 1)
+    real(wp),dimension(:),intent(in) :: tx    !! The `(nx+kx)` knots in the \(x\) direction
+                                              !! for the spline interpolant.
+                                              !! Must be non-decreasing.
+    integer,intent(out)              :: iflag !! status flag (see [[db1ink]])
 
     integer :: nx
 
@@ -888,10 +909,10 @@
     implicit none
 
     class(bspline_1d),intent(inout) :: me
-    real(wp),intent(in)             :: xval
-    integer,intent(in)              :: idx
-    real(wp),intent(out)            :: f
-    integer,intent(out)             :: iflag
+    real(wp),intent(in)             :: xval  !! \(x\) coordinate of evaluation point.
+    integer,intent(in)              :: idx   !! \(x\) derivative of piecewise polynomial to evaluate.
+    real(wp),intent(out)            :: f     !! interpolated value
+    integer,intent(out)             :: iflag !! status flag (see [[db1val]])
 
     if (me%initialized) then
         call db1val(xval,idx,me%tx,me%nx,me%kx,me%bcoef,f,iflag,me%inbvx)
@@ -928,11 +949,17 @@
     implicit none
 
     type(bspline_2d)                   :: me
-    real(wp),dimension(:),intent(in)   :: x
-    real(wp),dimension(:),intent(in)   :: y
-    real(wp),dimension(:,:),intent(in) :: fcn
-    integer,intent(in)                 :: kx
-    integer,intent(in)                 :: ky
+    real(wp),dimension(:),intent(in)   :: x     !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)   :: y     !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:),intent(in) :: fcn   !! `(nx,ny)` matrix of function values to interpolate.
+                                                !! `fcn(i,j)` should contain the function value at the
+                                                !! point (`x(i)`,`y(j)`)
+    integer,intent(in)                 :: kx    !! The order of spline pieces in \(x\)
+                                                !! ( \( 2 \le k_x < n_x \) )
+                                                !! (order = polynomial degree + 1)
+    integer,intent(in)                 :: ky    !! The order of spline pieces in \(y\)
+                                                !! ( \( 2 \le k_y < n_y \) )
+                                                !! (order = polynomial degree + 1)
 
     call initialize_2d_auto_knots(me,x,y,fcn,kx,ky,me%iflag)
 
@@ -949,13 +976,23 @@
     implicit none
 
     type(bspline_2d)                   :: me
-    real(wp),dimension(:),intent(in)   :: x
-    real(wp),dimension(:),intent(in)   :: y
-    real(wp),dimension(:,:),intent(in) :: fcn
-    integer,intent(in)                 :: kx
-    integer,intent(in)                 :: ky
-    real(wp),dimension(:),intent(in)   :: tx
-    real(wp),dimension(:),intent(in)   :: ty
+    real(wp),dimension(:),intent(in)   :: x     !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)   :: y     !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:),intent(in) :: fcn   !! `(nx,ny)` matrix of function values to interpolate.
+                                                !! `fcn(i,j)` should contain the function value at the
+                                                !! point (`x(i)`,`y(j)`)
+    integer,intent(in)                 :: kx    !! The order of spline pieces in \(x\)
+                                                !! ( \( 2 \le k_x < n_x \) )
+                                                !! (order = polynomial degree + 1)
+    integer,intent(in)                 :: ky    !! The order of spline pieces in \(y\)
+                                                !! ( \( 2 \le k_y < n_y \) )
+                                                !! (order = polynomial degree + 1)
+    real(wp),dimension(:),intent(in)   :: tx    !! The `(nx+kx)` knots in the \(x\) direction
+                                                !! for the spline interpolant.
+                                                !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)   :: ty    !! The `(ny+ky)` knots in the \(y\) direction
+                                                !! for the spline interpolant.
+                                                !! Must be non-decreasing.
 
     call initialize_2d_specify_knots(me,x,y,fcn,kx,ky,tx,ty,me%iflag)
 
@@ -972,12 +1009,18 @@
     implicit none
 
     class(bspline_2d),intent(inout)    :: me
-    real(wp),dimension(:),intent(in)   :: x
-    real(wp),dimension(:),intent(in)   :: y
-    real(wp),dimension(:,:),intent(in) :: fcn
-    integer,intent(in)                 :: kx
-    integer,intent(in)                 :: ky
-    integer,intent(out)                :: iflag
+    real(wp),dimension(:),intent(in)   :: x     !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)   :: y     !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:),intent(in) :: fcn   !! `(nx,ny)` matrix of function values to interpolate.
+                                                !! `fcn(i,j)` should contain the function value at the
+                                                !! point (`x(i)`,`y(j)`)
+    integer,intent(in)                 :: kx    !! The order of spline pieces in \(x\)
+                                                !! ( \( 2 \le k_x < n_x \) )
+                                                !! (order = polynomial degree + 1)
+    integer,intent(in)                 :: ky    !! The order of spline pieces in \(y\)
+                                                !! ( \( 2 \le k_y < n_y \) )
+                                                !! (order = polynomial degree + 1)
+    integer,intent(out)                :: iflag !! status flag (see [[db2ink]])
 
     integer :: iknot
     integer :: nx,ny
@@ -1017,14 +1060,24 @@
     implicit none
 
     class(bspline_2d),intent(inout)    :: me
-    real(wp),dimension(:),intent(in)   :: x
-    real(wp),dimension(:),intent(in)   :: y
-    real(wp),dimension(:,:),intent(in) :: fcn
-    integer,intent(in)                 :: kx
-    integer,intent(in)                 :: ky
-    real(wp),dimension(:),intent(in)   :: tx
-    real(wp),dimension(:),intent(in)   :: ty
-    integer,intent(out)                :: iflag
+    real(wp),dimension(:),intent(in)   :: x     !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)   :: y     !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:),intent(in) :: fcn   !! `(nx,ny)` matrix of function values to interpolate.
+                                                !! `fcn(i,j)` should contain the function value at the
+                                                !! point (`x(i)`,`y(j)`)
+    integer,intent(in)                 :: kx    !! The order of spline pieces in \(x\)
+                                                !! ( \( 2 \le k_x < n_x \) )
+                                                !! (order = polynomial degree + 1)
+    integer,intent(in)                 :: ky    !! The order of spline pieces in \(y\)
+                                                !! ( \( 2 \le k_y < n_y \) )
+                                                !! (order = polynomial degree + 1)
+    real(wp),dimension(:),intent(in)   :: tx    !! The `(nx+kx)` knots in the \(x\) direction
+                                                !! for the spline interpolant.
+                                                !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)   :: ty    !! The `(ny+ky)` knots in the \(y\) direction
+                                                !! for the spline interpolant.
+                                                !! Must be non-decreasing.
+    integer,intent(out)                :: iflag !! status flag (see [[db2ink]])
 
     integer :: nx,ny
 
@@ -1071,12 +1124,12 @@
     implicit none
 
     class(bspline_2d),intent(inout) :: me
-    real(wp),intent(in)             :: xval
-    real(wp),intent(in)             :: yval
-    integer,intent(in)              :: idx
-    integer,intent(in)              :: idy
-    real(wp),intent(out)            :: f
-    integer,intent(out)             :: iflag
+    real(wp),intent(in)             :: xval  !! \(x\) coordinate of evaluation point.
+    real(wp),intent(in)             :: yval  !! \(y\) coordinate of evaluation point.
+    integer,intent(in)              :: idx   !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)              :: idy   !! \(y\) derivative of piecewise polynomial to evaluate.
+    real(wp),intent(out)            :: f     !! interpolated value
+    integer,intent(out)             :: iflag !! status flag (see [[db2val]])
 
     if (me%initialized) then
         call db2val(xval,yval,&
@@ -1120,13 +1173,21 @@
     implicit none
 
     type(bspline_3d)                     :: me
-    real(wp),dimension(:),intent(in)     :: x
-    real(wp),dimension(:),intent(in)     :: y
-    real(wp),dimension(:),intent(in)     :: z
-    real(wp),dimension(:,:,:),intent(in) :: fcn
-    integer,intent(in)                   :: kx
-    integer,intent(in)                   :: ky
-    integer,intent(in)                   :: kz
+    real(wp),dimension(:),intent(in)     :: x   !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)     :: y   !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)     :: z   !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:),intent(in) :: fcn !! `(nx,ny,nz)` matrix of function values to interpolate.
+                                                !! `fcn(i,j,k)` should contain the function value at the
+                                                !! point (`x(i)`,`y(j)`,`z(k)`)
+    integer,intent(in)                   :: kx  !! The order of spline pieces in \(x\)
+                                                !! ( \( 2 \le k_x < n_x \) )
+                                                !! (order = polynomial degree + 1)
+    integer,intent(in)                   :: ky  !! The order of spline pieces in \(y\)
+                                                !! ( \( 2 \le k_y < n_y \) )
+                                                !! (order = polynomial degree + 1)
+    integer,intent(in)                   :: kz  !! The order of spline pieces in \(z\)
+                                                !! ( \( 2 \le k_z < n_z \) )
+                                                !! (order = polynomial degree + 1)
 
     call initialize_3d_auto_knots(me,x,y,z,fcn,kx,ky,kz,me%iflag)
 
@@ -1143,16 +1204,30 @@
     implicit none
 
     type(bspline_3d)                     :: me
-    real(wp),dimension(:),intent(in)     :: x
-    real(wp),dimension(:),intent(in)     :: y
-    real(wp),dimension(:),intent(in)     :: z
-    real(wp),dimension(:,:,:),intent(in) :: fcn
-    integer,intent(in)                   :: kx
-    integer,intent(in)                   :: ky
-    integer,intent(in)                   :: kz
-    real(wp),dimension(:),intent(in)     :: tx
-    real(wp),dimension(:),intent(in)     :: ty
-    real(wp),dimension(:),intent(in)     :: tz
+    real(wp),dimension(:),intent(in)     :: x   !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)     :: y   !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)     :: z   !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:),intent(in) :: fcn !! `(nx,ny,nz)` matrix of function values to interpolate.
+                                                !! `fcn(i,j,k)` should contain the function value at the
+                                                !! point (`x(i)`,`y(j)`,`z(k)`)
+    integer,intent(in)                   :: kx  !! The order of spline pieces in \(x\)
+                                                !! ( \( 2 \le k_x < n_x \) )
+                                                !! (order = polynomial degree + 1)
+    integer,intent(in)                   :: ky  !! The order of spline pieces in \(y\)
+                                                !! ( \( 2 \le k_y < n_y \) )
+                                                !! (order = polynomial degree + 1)
+    integer,intent(in)                   :: kz  !! The order of spline pieces in \(z\)
+                                                !! ( \( 2 \le k_z < n_z \) )
+                                                !! (order = polynomial degree + 1)
+    real(wp),dimension(:),intent(in)     :: tx  !! The `(nx+kx)` knots in the \(x\) direction
+                                                !! for the spline interpolant.
+                                                !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)     :: ty  !! The `(ny+ky)` knots in the \(y\) direction
+                                                !! for the spline interpolant.
+                                                !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)     :: tz  !! The `(nz+kz)` knots in the \(z\) direction
+                                                !! for the spline interpolant.
+                                                !! Must be non-decreasing.
 
     call initialize_3d_specify_knots(me,x,y,z,fcn,kx,ky,kz,tx,ty,tz,me%iflag)
 
@@ -1169,14 +1244,22 @@
     implicit none
 
     class(bspline_3d),intent(inout)      :: me
-    real(wp),dimension(:),intent(in)     :: x
-    real(wp),dimension(:),intent(in)     :: y
-    real(wp),dimension(:),intent(in)     :: z
-    real(wp),dimension(:,:,:),intent(in) :: fcn
-    integer,intent(in)                   :: kx
-    integer,intent(in)                   :: ky
-    integer,intent(in)                   :: kz
-    integer,intent(out)                  :: iflag
+    real(wp),dimension(:),intent(in)     :: x   !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)     :: y   !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)     :: z   !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:),intent(in) :: fcn !! `(nx,ny,nz)` matrix of function values to interpolate.
+                                                !! `fcn(i,j,k)` should contain the function value at the
+                                                !! point (`x(i)`,`y(j)`,`z(k)`)
+    integer,intent(in)                   :: kx  !! The order of spline pieces in \(x\)
+                                                !! ( \( 2 \le k_x < n_x \) )
+                                                !! (order = polynomial degree + 1)
+    integer,intent(in)                   :: ky  !! The order of spline pieces in \(y\)
+                                                !! ( \( 2 \le k_y < n_y \) )
+                                                !! (order = polynomial degree + 1)
+    integer,intent(in)                   :: kz  !! The order of spline pieces in \(z\)
+                                                !! ( \( 2 \le k_z < n_z \) )
+                                                !! (order = polynomial degree + 1)
+    integer,intent(out)                  :: iflag  !! status flag (see [[db3ink]])
 
     integer :: iknot
     integer :: nx,ny,nz
@@ -1225,17 +1308,31 @@
     implicit none
 
     class(bspline_3d),intent(inout)      :: me
-    real(wp),dimension(:),intent(in)     :: x
-    real(wp),dimension(:),intent(in)     :: y
-    real(wp),dimension(:),intent(in)     :: z
-    real(wp),dimension(:,:,:),intent(in) :: fcn
-    integer,intent(in)                   :: kx
-    integer,intent(in)                   :: ky
-    integer,intent(in)                   :: kz
-    real(wp),dimension(:),intent(in)     :: tx
-    real(wp),dimension(:),intent(in)     :: ty
-    real(wp),dimension(:),intent(in)     :: tz
-    integer,intent(out)                  :: iflag
+    real(wp),dimension(:),intent(in)     :: x   !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)     :: y   !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)     :: z   !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:),intent(in) :: fcn !! `(nx,ny,nz)` matrix of function values to interpolate.
+                                                !! `fcn(i,j,k)` should contain the function value at the
+                                                !! point (`x(i)`,`y(j)`,`z(k)`)
+    integer,intent(in)                   :: kx  !! The order of spline pieces in \(x\)
+                                                !! ( \( 2 \le k_x < n_x \) )
+                                                !! (order = polynomial degree + 1)
+    integer,intent(in)                   :: ky  !! The order of spline pieces in \(y\)
+                                                !! ( \( 2 \le k_y < n_y \) )
+                                                !! (order = polynomial degree + 1)
+    integer,intent(in)                   :: kz  !! The order of spline pieces in \(z\)
+                                                !! ( \( 2 \le k_z < n_z \) )
+                                                !! (order = polynomial degree + 1)
+    real(wp),dimension(:),intent(in)     :: tx  !! The `(nx+kx)` knots in the \(x\) direction
+                                                !! for the spline interpolant.
+                                                !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)     :: ty  !! The `(ny+ky)` knots in the \(y\) direction
+                                                !! for the spline interpolant.
+                                                !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)     :: tz  !! The `(nz+kz)` knots in the \(z\) direction
+                                                !! for the spline interpolant.
+                                                !! Must be non-decreasing.
+    integer,intent(out)                  :: iflag  !! status flag (see [[db3ink]])
 
     integer :: nx,ny,nz
 
@@ -1293,14 +1390,14 @@
     implicit none
 
     class(bspline_3d),intent(inout) :: me
-    real(wp),intent(in)             :: xval
-    real(wp),intent(in)             :: yval
-    real(wp),intent(in)             :: zval
-    integer,intent(in)              :: idx
-    integer,intent(in)              :: idy
-    integer,intent(in)              :: idz
-    real(wp),intent(out)            :: f
-    integer,intent(out)             :: iflag
+    real(wp),intent(in)             :: xval  !! \(x\) coordinate of evaluation point.
+    real(wp),intent(in)             :: yval  !! \(y\) coordinate of evaluation point.
+    real(wp),intent(in)             :: zval  !! \(z\) coordinate of evaluation point.
+    integer,intent(in)              :: idx   !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)              :: idy   !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)              :: idz   !! \(z\) derivative of piecewise polynomial to evaluate.
+    real(wp),intent(out)            :: f     !! interpolated value
+    integer,intent(out)             :: iflag !! status flag (see [[db3val]])
 
     if (me%initialized) then
         call db3val(xval,yval,zval,&
@@ -1345,15 +1442,25 @@
     implicit none
 
     type(bspline_4d)                       :: me
-    real(wp),dimension(:),intent(in)       :: x
-    real(wp),dimension(:),intent(in)       :: y
-    real(wp),dimension(:),intent(in)       :: z
-    real(wp),dimension(:),intent(in)       :: q
-    real(wp),dimension(:,:,:,:),intent(in) :: fcn
-    integer,intent(in)                     :: kx
-    integer,intent(in)                     :: ky
-    integer,intent(in)                     :: kz
-    integer,intent(in)                     :: kq
+    real(wp),dimension(:),intent(in)       :: x   !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)       :: y   !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)       :: z   !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)       :: q   !! `(nq)` array of \(q\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:,:),intent(in) :: fcn !! `(nx,ny,nz,nq)` matrix of function values to interpolate.
+                                                  !! `fcn(i,j,k,l)` should contain the function value at the
+                                                  !! point (`x(i)`,`y(j)`,`z(k)`,`q(l)`)
+    integer,intent(in)                     :: kx  !! The order of spline pieces in \(x\)
+                                                  !! ( \( 2 \le k_x < n_x \) )
+                                                  !! (order = polynomial degree + 1)
+    integer,intent(in)                     :: ky  !! The order of spline pieces in \(y\)
+                                                  !! ( \( 2 \le k_y < n_y \) )
+                                                  !! (order = polynomial degree + 1)
+    integer,intent(in)                     :: kz  !! The order of spline pieces in \(z\)
+                                                  !! ( \( 2 \le k_z < n_z \) )
+                                                  !! (order = polynomial degree + 1)
+    integer,intent(in)                     :: kq  !! The order of spline pieces in \(q\)
+                                                  !! ( \( 2 \le k_q < n_q \) )
+                                                  !! (order = polynomial degree + 1)
 
     call initialize_4d_auto_knots(me,x,y,z,q,fcn,kx,ky,kz,kq,me%iflag)
 
@@ -1369,20 +1476,38 @@
 
     implicit none
 
-    type(bspline_4d)                       :: me
-    real(wp),dimension(:),intent(in)       :: x
-    real(wp),dimension(:),intent(in)       :: y
-    real(wp),dimension(:),intent(in)       :: z
-    real(wp),dimension(:),intent(in)       :: q
-    real(wp),dimension(:,:,:,:),intent(in) :: fcn
-    integer,intent(in)                     :: kx
-    integer,intent(in)                     :: ky
-    integer,intent(in)                     :: kz
-    integer,intent(in)                     :: kq
-    real(wp),dimension(:),intent(in)       :: tx
-    real(wp),dimension(:),intent(in)       :: ty
-    real(wp),dimension(:),intent(in)       :: tz
-    real(wp),dimension(:),intent(in)       :: tq
+    type(bspline_4d)                           :: me
+    real(wp),dimension(:),intent(in)           :: x   !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: y   !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: z   !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: q   !! `(nq)` array of \(q\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:,:),intent(in)     :: fcn !! `(nx,ny,nz,nq)` matrix of function values to interpolate.
+                                                      !! `fcn(i,j,k,l)` should contain the function value at the
+                                                      !! point (`x(i)`,`y(j)`,`z(k)`,`q(l)`)
+    integer,intent(in)                         :: kx  !! The order of spline pieces in \(x\)
+                                                      !! ( \( 2 \le k_x < n_x \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: ky  !! The order of spline pieces in \(y\)
+                                                      !! ( \( 2 \le k_y < n_y \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kz  !! The order of spline pieces in \(z\)
+                                                      !! ( \( 2 \le k_z < n_z \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kq  !! The order of spline pieces in \(q\)
+                                                      !! ( \( 2 \le k_q < n_q \) )
+                                                      !! (order = polynomial degree + 1)
+    real(wp),dimension(:),intent(in)           :: tx  !! The `(nx+kx)` knots in the \(x\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)           :: ty  !! The `(ny+ky)` knots in the \(y\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)           :: tz  !! The `(nz+kz)` knots in the \(z\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)           :: tq  !! The `(nq+kq)` knots in the \(q\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
 
     call initialize_4d_specify_knots(me,x,y,z,q,fcn,kx,ky,kz,kq,tx,ty,tz,tq,me%iflag)
 
@@ -1398,17 +1523,27 @@
 
     implicit none
 
-    class(bspline_4d),intent(inout)        :: me
-    real(wp),dimension(:),intent(in)       :: x
-    real(wp),dimension(:),intent(in)       :: y
-    real(wp),dimension(:),intent(in)       :: z
-    real(wp),dimension(:),intent(in)       :: q
-    real(wp),dimension(:,:,:,:),intent(in) :: fcn
-    integer,intent(in)                     :: kx
-    integer,intent(in)                     :: ky
-    integer,intent(in)                     :: kz
-    integer,intent(in)                     :: kq
-    integer,intent(out)                    :: iflag
+    class(bspline_4d),intent(inout)            :: me
+    real(wp),dimension(:),intent(in)           :: x   !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: y   !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: z   !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: q   !! `(nq)` array of \(q\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:,:),intent(in)     :: fcn !! `(nx,ny,nz,nq)` matrix of function values to interpolate.
+                                                      !! `fcn(i,j,k,l)` should contain the function value at the
+                                                      !! point (`x(i)`,`y(j)`,`z(k)`,`q(l)`)
+    integer,intent(in)                         :: kx  !! The order of spline pieces in \(x\)
+                                                      !! ( \( 2 \le k_x < n_x \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: ky  !! The order of spline pieces in \(y\)
+                                                      !! ( \( 2 \le k_y < n_y \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kz  !! The order of spline pieces in \(z\)
+                                                      !! ( \( 2 \le k_z < n_z \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kq  !! The order of spline pieces in \(q\)
+                                                      !! ( \( 2 \le k_q < n_q \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(out)                        :: iflag  !! status flag (see [[db4ink]])
 
     integer :: iknot
     integer :: nx,ny,nz,nq
@@ -1460,21 +1595,39 @@
 
     implicit none
 
-    class(bspline_4d),intent(inout)        :: me
-    real(wp),dimension(:),intent(in)       :: x
-    real(wp),dimension(:),intent(in)       :: y
-    real(wp),dimension(:),intent(in)       :: z
-    real(wp),dimension(:),intent(in)       :: q
-    real(wp),dimension(:,:,:,:),intent(in) :: fcn
-    integer,intent(in)                     :: kx
-    integer,intent(in)                     :: ky
-    integer,intent(in)                     :: kz
-    integer,intent(in)                     :: kq
-    real(wp),dimension(:),intent(in)       :: tx
-    real(wp),dimension(:),intent(in)       :: ty
-    real(wp),dimension(:),intent(in)       :: tz
-    real(wp),dimension(:),intent(in)       :: tq
-    integer,intent(out)                    :: iflag
+    class(bspline_4d),intent(inout)            :: me
+    real(wp),dimension(:),intent(in)           :: x   !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: y   !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: z   !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: q   !! `(nq)` array of \(q\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:,:),intent(in)     :: fcn !! `(nx,ny,nz,nq)` matrix of function values to interpolate.
+                                                      !! `fcn(i,j,k,l)` should contain the function value at the
+                                                      !! point (`x(i)`,`y(j)`,`z(k)`,`q(l)`)
+    integer,intent(in)                         :: kx  !! The order of spline pieces in \(x\)
+                                                      !! ( \( 2 \le k_x < n_x \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: ky  !! The order of spline pieces in \(y\)
+                                                      !! ( \( 2 \le k_y < n_y \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kz  !! The order of spline pieces in \(z\)
+                                                      !! ( \( 2 \le k_z < n_z \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kq  !! The order of spline pieces in \(q\)
+                                                      !! ( \( 2 \le k_q < n_q \) )
+                                                      !! (order = polynomial degree + 1)
+    real(wp),dimension(:),intent(in)           :: tx  !! The `(nx+kx)` knots in the \(x\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)           :: ty  !! The `(ny+ky)` knots in the \(y\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)           :: tz  !! The `(nz+kz)` knots in the \(z\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)           :: tq  !! The `(nq+kq)` knots in the \(q\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    integer,intent(out)                    :: iflag   !! status flag (see [[db4ink]])
 
     integer :: nx,ny,nz,nq
 
@@ -1538,16 +1691,16 @@
     implicit none
 
     class(bspline_4d),intent(inout) :: me
-    real(wp),intent(in)             :: xval
-    real(wp),intent(in)             :: yval
-    real(wp),intent(in)             :: zval
-    real(wp),intent(in)             :: qval
-    integer,intent(in)              :: idx
-    integer,intent(in)              :: idy
-    integer,intent(in)              :: idz
-    integer,intent(in)              :: idq
-    real(wp),intent(out)            :: f
-    integer,intent(out)             :: iflag
+    real(wp),intent(in)             :: xval  !! \(x\) coordinate of evaluation point.
+    real(wp),intent(in)             :: yval  !! \(y\) coordinate of evaluation point.
+    real(wp),intent(in)             :: zval  !! \(z\) coordinate of evaluation point.
+    real(wp),intent(in)             :: qval  !! \(q\) coordinate of evaluation point.
+    integer,intent(in)              :: idx   !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)              :: idy   !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)              :: idz   !! \(z\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)              :: idq   !! \(q\) derivative of piecewise polynomial to evaluate.
+    real(wp),intent(out)            :: f     !! interpolated value
+    integer,intent(out)             :: iflag !! status flag (see [[db4val]])
 
     if (me%initialized) then
         call db4val(xval,yval,zval,qval,&
@@ -1591,18 +1744,30 @@
 
     implicit none
 
-    type(bspline_5d)                         :: me
-    real(wp),dimension(:),intent(in)         :: x
-    real(wp),dimension(:),intent(in)         :: y
-    real(wp),dimension(:),intent(in)         :: z
-    real(wp),dimension(:),intent(in)         :: q
-    real(wp),dimension(:),intent(in)         :: r
-    real(wp),dimension(:,:,:,:,:),intent(in) :: fcn
-    integer,intent(in)                       :: kx
-    integer,intent(in)                       :: ky
-    integer,intent(in)                       :: kz
-    integer,intent(in)                       :: kq
-    integer,intent(in)                       :: kr
+    type(bspline_5d)                           :: me
+    real(wp),dimension(:),intent(in)           :: x   !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: y   !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: z   !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: q   !! `(nq)` array of \(q\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: r   !! `(nr)` array of \(r\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:,:,:),intent(in)   :: fcn !! `(nx,ny,nz,nq,nr)` matrix of function values to interpolate.
+                                                      !! `fcn(i,j,k,l,m)` should contain the function value at the
+                                                      !! point (`x(i)`,`y(j)`,`z(k)`,`q(l)`,`r(m)`)
+    integer,intent(in)                         :: kx  !! The order of spline pieces in \(x\)
+                                                      !! ( \( 2 \le k_x < n_x \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: ky  !! The order of spline pieces in \(y\)
+                                                      !! ( \( 2 \le k_y < n_y \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kz  !! The order of spline pieces in \(z\)
+                                                      !! ( \( 2 \le k_z < n_z \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kq  !! The order of spline pieces in \(q\)
+                                                      !! ( \( 2 \le k_q < n_q \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kr  !! The order of spline pieces in \(r\)
+                                                      !! ( \( 2 \le k_r < n_r \) )
+                                                      !! (order = polynomial degree + 1)
 
     call initialize_5d_auto_knots(me,x,y,z,q,r,fcn,kx,ky,kz,kq,kr,me%iflag)
 
@@ -1618,23 +1783,45 @@
 
     implicit none
 
-    type(bspline_5d)                         :: me
-    real(wp),dimension(:),intent(in)         :: x
-    real(wp),dimension(:),intent(in)         :: y
-    real(wp),dimension(:),intent(in)         :: z
-    real(wp),dimension(:),intent(in)         :: q
-    real(wp),dimension(:),intent(in)         :: r
-    real(wp),dimension(:,:,:,:,:),intent(in) :: fcn
-    integer,intent(in)                       :: kx
-    integer,intent(in)                       :: ky
-    integer,intent(in)                       :: kz
-    integer,intent(in)                       :: kq
-    integer,intent(in)                       :: kr
-    real(wp),dimension(:),intent(in)         :: tx
-    real(wp),dimension(:),intent(in)         :: ty
-    real(wp),dimension(:),intent(in)         :: tz
-    real(wp),dimension(:),intent(in)         :: tq
-    real(wp),dimension(:),intent(in)         :: tr
+    type(bspline_5d)                           :: me
+    real(wp),dimension(:),intent(in)           :: x   !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: y   !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: z   !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: q   !! `(nq)` array of \(q\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: r   !! `(nr)` array of \(r\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:,:,:),intent(in)   :: fcn !! `(nx,ny,nz,nq,nr)` matrix of function values to interpolate.
+                                                      !! `fcn(i,j,k,l,m)` should contain the function value at the
+                                                      !! point (`x(i)`,`y(j)`,`z(k)`,`q(l)`,`r(m)`)
+    integer,intent(in)                         :: kx  !! The order of spline pieces in \(x\)
+                                                      !! ( \( 2 \le k_x < n_x \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: ky  !! The order of spline pieces in \(y\)
+                                                      !! ( \( 2 \le k_y < n_y \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kz  !! The order of spline pieces in \(z\)
+                                                      !! ( \( 2 \le k_z < n_z \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kq  !! The order of spline pieces in \(q\)
+                                                      !! ( \( 2 \le k_q < n_q \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kr  !! The order of spline pieces in \(r\)
+                                                      !! ( \( 2 \le k_r < n_r \) )
+                                                      !! (order = polynomial degree + 1)
+    real(wp),dimension(:),intent(in)           :: tx  !! The `(nx+kx)` knots in the \(x\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)           :: ty  !! The `(ny+ky)` knots in the \(y\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)           :: tz  !! The `(nz+kz)` knots in the \(z\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)           :: tq  !! The `(nq+kq)` knots in the \(q\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)           :: tr  !! The `(nr+kr)` knots in the \(r\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
 
     call initialize_5d_specify_knots(me,x,y,z,q,r,fcn,kx,ky,kz,kq,kr,tx,ty,tz,tq,tr,me%iflag)
 
@@ -1650,19 +1837,31 @@
 
     implicit none
 
-    class(bspline_5d),intent(inout)          :: me
-    real(wp),dimension(:),intent(in)         :: x
-    real(wp),dimension(:),intent(in)         :: y
-    real(wp),dimension(:),intent(in)         :: z
-    real(wp),dimension(:),intent(in)         :: q
-    real(wp),dimension(:),intent(in)         :: r
-    real(wp),dimension(:,:,:,:,:),intent(in) :: fcn
-    integer,intent(in)                       :: kx
-    integer,intent(in)                       :: ky
-    integer,intent(in)                       :: kz
-    integer,intent(in)                       :: kq
-    integer,intent(in)                       :: kr
-    integer,intent(out)                      :: iflag
+    class(bspline_5d),intent(inout)            :: me
+    real(wp),dimension(:),intent(in)           :: x   !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: y   !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: z   !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: q   !! `(nq)` array of \(q\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: r   !! `(nr)` array of \(r\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:,:,:),intent(in)   :: fcn !! `(nx,ny,nz,nq,nr)` matrix of function values to interpolate.
+                                                      !! `fcn(i,j,k,l,m)` should contain the function value at the
+                                                      !! point (`x(i)`,`y(j)`,`z(k)`,`q(l)`,`r(m)`)
+    integer,intent(in)                         :: kx  !! The order of spline pieces in \(x\)
+                                                      !! ( \( 2 \le k_x < n_x \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: ky  !! The order of spline pieces in \(y\)
+                                                      !! ( \( 2 \le k_y < n_y \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kz  !! The order of spline pieces in \(z\)
+                                                      !! ( \( 2 \le k_z < n_z \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kq  !! The order of spline pieces in \(q\)
+                                                      !! ( \( 2 \le k_q < n_q \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kr  !! The order of spline pieces in \(r\)
+                                                      !! ( \( 2 \le k_r < n_r \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(out)                        :: iflag !! status flag (see [[db5ink]])
 
     integer :: iknot
     integer :: nx,ny,nz,nq,nr
@@ -1718,24 +1917,46 @@
 
     implicit none
 
-    class(bspline_5d),intent(inout)          :: me
-    real(wp),dimension(:),intent(in)         :: x
-    real(wp),dimension(:),intent(in)         :: y
-    real(wp),dimension(:),intent(in)         :: z
-    real(wp),dimension(:),intent(in)         :: q
-    real(wp),dimension(:),intent(in)         :: r
-    real(wp),dimension(:,:,:,:,:),intent(in) :: fcn
-    integer,intent(in)                       :: kx
-    integer,intent(in)                       :: ky
-    integer,intent(in)                       :: kz
-    integer,intent(in)                       :: kq
-    integer,intent(in)                       :: kr
-    real(wp),dimension(:),intent(in)         :: tx
-    real(wp),dimension(:),intent(in)         :: ty
-    real(wp),dimension(:),intent(in)         :: tz
-    real(wp),dimension(:),intent(in)         :: tq
-    real(wp),dimension(:),intent(in)         :: tr
-    integer,intent(out)                      :: iflag
+    class(bspline_5d),intent(inout)            :: me
+    real(wp),dimension(:),intent(in)           :: x   !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: y   !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: z   !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: q   !! `(nq)` array of \(q\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: r   !! `(nr)` array of \(r\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:,:,:),intent(in)   :: fcn !! `(nx,ny,nz,nq,nr)` matrix of function values to interpolate.
+                                                      !! `fcn(i,j,k,l,m)` should contain the function value at the
+                                                      !! point (`x(i)`,`y(j)`,`z(k)`,`q(l)`,`r(m)`)
+    integer,intent(in)                         :: kx  !! The order of spline pieces in \(x\)
+                                                      !! ( \( 2 \le k_x < n_x \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: ky  !! The order of spline pieces in \(y\)
+                                                      !! ( \( 2 \le k_y < n_y \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kz  !! The order of spline pieces in \(z\)
+                                                      !! ( \( 2 \le k_z < n_z \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kq  !! The order of spline pieces in \(q\)
+                                                      !! ( \( 2 \le k_q < n_q \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kr  !! The order of spline pieces in \(r\)
+                                                      !! ( \( 2 \le k_r < n_r \) )
+                                                      !! (order = polynomial degree + 1)
+    real(wp),dimension(:),intent(in)           :: tx  !! The `(nx+kx)` knots in the \(x\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)           :: ty  !! The `(ny+ky)` knots in the \(y\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)           :: tz  !! The `(nz+kz)` knots in the \(z\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)           :: tq  !! The `(nq+kq)` knots in the \(q\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)           :: tr  !! The `(nr+kr)` knots in the \(r\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    integer,intent(out)                      :: iflag !! status flag (see [[db5ink]])
 
     integer :: nx,ny,nz,nq,nr
 
@@ -1805,18 +2026,18 @@
     implicit none
 
     class(bspline_5d),intent(inout) :: me
-    real(wp),intent(in)             :: xval
-    real(wp),intent(in)             :: yval
-    real(wp),intent(in)             :: zval
-    real(wp),intent(in)             :: qval
-    real(wp),intent(in)             :: rval
-    integer,intent(in)              :: idx
-    integer,intent(in)              :: idy
-    integer,intent(in)              :: idz
-    integer,intent(in)              :: idq
-    integer,intent(in)              :: idr
-    real(wp),intent(out)            :: f
-    integer,intent(out)             :: iflag
+    real(wp),intent(in)             :: xval  !! \(x\) coordinate of evaluation point.
+    real(wp),intent(in)             :: yval  !! \(y\) coordinate of evaluation point.
+    real(wp),intent(in)             :: zval  !! \(z\) coordinate of evaluation point.
+    real(wp),intent(in)             :: qval  !! \(q\) coordinate of evaluation point.
+    real(wp),intent(in)             :: rval  !! \(r\) coordinate of evaluation point.
+    integer,intent(in)              :: idx   !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)              :: idy   !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)              :: idz   !! \(z\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)              :: idq   !! \(q\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)              :: idr   !! \(r\) derivative of piecewise polynomial to evaluate.
+    real(wp),intent(out)            :: f     !! interpolated value
+    integer,intent(out)             :: iflag !! status flag (see [[db5val]])
 
     if (me%initialized) then
         call db5val(xval,yval,zval,qval,rval,&
@@ -1861,19 +2082,33 @@
     implicit none
 
     type(bspline_6d)                           :: me
-    real(wp),dimension(:),intent(in)           :: x
-    real(wp),dimension(:),intent(in)           :: y
-    real(wp),dimension(:),intent(in)           :: z
-    real(wp),dimension(:),intent(in)           :: q
-    real(wp),dimension(:),intent(in)           :: r
-    real(wp),dimension(:),intent(in)           :: s
-    real(wp),dimension(:,:,:,:,:,:),intent(in) :: fcn
-    integer,intent(in)                         :: kx
-    integer,intent(in)                         :: ky
-    integer,intent(in)                         :: kz
-    integer,intent(in)                         :: kq
-    integer,intent(in)                         :: kr
-    integer,intent(in)                         :: ks
+    real(wp),dimension(:),intent(in)           :: x   !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: y   !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: z   !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: q   !! `(nq)` array of \(q\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: r   !! `(nr)` array of \(r\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: s   !! `(ns)` array of \(s\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:,:,:,:),intent(in) :: fcn !! `(nx,ny,nz,nq,nr,ns)` matrix of function values to interpolate.
+                                                      !! `fcn(i,j,k,l,m,n)` should contain the function value at the
+                                                      !! point (`x(i)`,`y(j)`,`z(k)`,`q(l)`,`r(m)`,`s(n)`)
+    integer,intent(in)                         :: kx  !! The order of spline pieces in \(x\)
+                                                      !! ( \( 2 \le k_x < n_x \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: ky  !! The order of spline pieces in \(y\)
+                                                      !! ( \( 2 \le k_y < n_y \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kz  !! The order of spline pieces in \(z\)
+                                                      !! ( \( 2 \le k_z < n_z \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kq  !! The order of spline pieces in \(q\)
+                                                      !! ( \( 2 \le k_q < n_q \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kr  !! The order of spline pieces in \(r\)
+                                                      !! ( \( 2 \le k_r < n_r \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: ks  !! The order of spline pieces in \(z\)
+                                                      !! ( \( 2 \le k_z < n_z \) )
+                                                      !! (order = polynomial degree + 1)
 
     call initialize_6d_auto_knots(me,x,y,z,q,r,s,fcn,kx,ky,kz,kq,kr,ks,me%iflag)
 
@@ -1890,25 +2125,51 @@
     implicit none
 
     type(bspline_6d)                           :: me
-    real(wp),dimension(:),intent(in)           :: x
-    real(wp),dimension(:),intent(in)           :: y
-    real(wp),dimension(:),intent(in)           :: z
-    real(wp),dimension(:),intent(in)           :: q
-    real(wp),dimension(:),intent(in)           :: r
-    real(wp),dimension(:),intent(in)           :: s
-    real(wp),dimension(:,:,:,:,:,:),intent(in) :: fcn
-    integer,intent(in)                         :: kx
-    integer,intent(in)                         :: ky
-    integer,intent(in)                         :: kz
-    integer,intent(in)                         :: kq
-    integer,intent(in)                         :: kr
-    integer,intent(in)                         :: ks
-    real(wp),dimension(:),intent(in)           :: tx
-    real(wp),dimension(:),intent(in)           :: ty
-    real(wp),dimension(:),intent(in)           :: tz
-    real(wp),dimension(:),intent(in)           :: tq
-    real(wp),dimension(:),intent(in)           :: tr
-    real(wp),dimension(:),intent(in)           :: ts
+    real(wp),dimension(:),intent(in)           :: x   !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: y   !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: z   !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: q   !! `(nq)` array of \(q\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: r   !! `(nr)` array of \(r\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: s   !! `(ns)` array of \(s\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:,:,:,:),intent(in) :: fcn !! `(nx,ny,nz,nq,nr,ns)` matrix of function values to interpolate.
+                                                      !! `fcn(i,j,k,l,m,n)` should contain the function value at the
+                                                      !! point (`x(i)`,`y(j)`,`z(k)`,`q(l)`,`r(m)`,`s(n)`)
+    integer,intent(in)                         :: kx  !! The order of spline pieces in \(x\)
+                                                      !! ( \( 2 \le k_x < n_x \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: ky  !! The order of spline pieces in \(y\)
+                                                      !! ( \( 2 \le k_y < n_y \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kz  !! The order of spline pieces in \(z\)
+                                                      !! ( \( 2 \le k_z < n_z \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kq  !! The order of spline pieces in \(q\)
+                                                      !! ( \( 2 \le k_q < n_q \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kr  !! The order of spline pieces in \(r\)
+                                                      !! ( \( 2 \le k_r < n_r \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: ks  !! The order of spline pieces in \(z\)
+                                                      !! ( \( 2 \le k_z < n_z \) )
+                                                      !! (order = polynomial degree + 1)
+    real(wp),dimension(:),intent(in)           :: tx  !! The `(nx+kx)` knots in the \(x\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)           :: ty  !! The `(ny+ky)` knots in the \(y\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)           :: tz  !! The `(nz+kz)` knots in the \(z\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)           :: tq  !! The `(nq+kq)` knots in the \(q\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)           :: tr  !! The `(nr+kr)` knots in the \(r\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)           :: ts  !! The `(ns+ks)` knots in the \(s\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
 
     call initialize_6d_specify_knots(me,x,y,z,q,r,s,fcn,kx,ky,kz,kq,kr,ks,tx,ty,tz,tq,tr,ts,me%iflag)
 
@@ -1925,20 +2186,34 @@
     implicit none
 
     class(bspline_6d),intent(inout)            :: me
-    real(wp),dimension(:),intent(in)           :: x
-    real(wp),dimension(:),intent(in)           :: y
-    real(wp),dimension(:),intent(in)           :: z
-    real(wp),dimension(:),intent(in)           :: q
-    real(wp),dimension(:),intent(in)           :: r
-    real(wp),dimension(:),intent(in)           :: s
-    real(wp),dimension(:,:,:,:,:,:),intent(in) :: fcn
-    integer,intent(in)                         :: kx
-    integer,intent(in)                         :: ky
-    integer,intent(in)                         :: kz
-    integer,intent(in)                         :: kq
-    integer,intent(in)                         :: kr
-    integer,intent(in)                         :: ks
-    integer,intent(out)                        :: iflag
+    real(wp),dimension(:),intent(in)           :: x   !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: y   !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: z   !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: q   !! `(nq)` array of \(q\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: r   !! `(nr)` array of \(r\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: s   !! `(ns)` array of \(s\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:,:,:,:),intent(in) :: fcn !! `(nx,ny,nz,nq,nr,ns)` matrix of function values to interpolate.
+                                                      !! `fcn(i,j,k,l,m,n)` should contain the function value at the
+                                                      !! point (`x(i)`,`y(j)`,`z(k)`,`q(l)`,`r(m)`,`s(n)`)
+    integer,intent(in)                         :: kx  !! The order of spline pieces in \(x\)
+                                                      !! ( \( 2 \le k_x < n_x \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: ky  !! The order of spline pieces in \(y\)
+                                                      !! ( \( 2 \le k_y < n_y \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kz  !! The order of spline pieces in \(z\)
+                                                      !! ( \( 2 \le k_z < n_z \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kq  !! The order of spline pieces in \(q\)
+                                                      !! ( \( 2 \le k_q < n_q \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kr  !! The order of spline pieces in \(r\)
+                                                      !! ( \( 2 \le k_r < n_r \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: ks  !! The order of spline pieces in \(z\)
+                                                      !! ( \( 2 \le k_z < n_z \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(out)                        :: iflag !! status flag (see [[db6ink]])
 
     integer :: iknot
     integer :: nx,ny,nz,nq,nr,ns
@@ -1999,26 +2274,52 @@
     implicit none
 
     class(bspline_6d),intent(inout)            :: me
-    real(wp),dimension(:),intent(in)           :: x
-    real(wp),dimension(:),intent(in)           :: y
-    real(wp),dimension(:),intent(in)           :: z
-    real(wp),dimension(:),intent(in)           :: q
-    real(wp),dimension(:),intent(in)           :: r
-    real(wp),dimension(:),intent(in)           :: s
-    real(wp),dimension(:,:,:,:,:,:),intent(in) :: fcn
-    integer,intent(in)                         :: kx
-    integer,intent(in)                         :: ky
-    integer,intent(in)                         :: kz
-    integer,intent(in)                         :: kq
-    integer,intent(in)                         :: kr
-    integer,intent(in)                         :: ks
-    real(wp),dimension(:),intent(in)           :: tx
-    real(wp),dimension(:),intent(in)           :: ty
-    real(wp),dimension(:),intent(in)           :: tz
-    real(wp),dimension(:),intent(in)           :: tq
-    real(wp),dimension(:),intent(in)           :: tr
-    real(wp),dimension(:),intent(in)           :: ts
-    integer,intent(out)                        :: iflag
+    real(wp),dimension(:),intent(in)           :: x   !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: y   !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: z   !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: q   !! `(nq)` array of \(q\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: r   !! `(nr)` array of \(r\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)           :: s   !! `(ns)` array of \(s\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:,:,:,:),intent(in) :: fcn !! `(nx,ny,nz,nq,nr,ns)` matrix of function values to interpolate.
+                                                      !! `fcn(i,j,k,l,m,n)` should contain the function value at the
+                                                      !! point (`x(i)`,`y(j)`,`z(k)`,`q(l)`,`r(m)`,`s(n)`)
+    integer,intent(in)                         :: kx  !! The order of spline pieces in \(x\)
+                                                      !! ( \( 2 \le k_x < n_x \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: ky  !! The order of spline pieces in \(y\)
+                                                      !! ( \( 2 \le k_y < n_y \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kz  !! The order of spline pieces in \(z\)
+                                                      !! ( \( 2 \le k_z < n_z \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kq  !! The order of spline pieces in \(q\)
+                                                      !! ( \( 2 \le k_q < n_q \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: kr  !! The order of spline pieces in \(r\)
+                                                      !! ( \( 2 \le k_r < n_r \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                         :: ks  !! The order of spline pieces in \(z\)
+                                                      !! ( \( 2 \le k_z < n_z \) )
+                                                      !! (order = polynomial degree + 1)
+    real(wp),dimension(:),intent(in)           :: tx  !! The `(nx+kx)` knots in the \(x\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)           :: ty  !! The `(ny+ky)` knots in the \(y\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)           :: tz  !! The `(nz+kz)` knots in the \(z\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)           :: tq  !! The `(nq+kq)` knots in the \(q\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)           :: tr  !! The `(nr+kr)` knots in the \(r\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in)           :: ts  !! The `(ns+ks)` knots in the \(s\) direction
+                                                      !! for the spline interpolant.
+                                                      !! Must be non-decreasing.
+    integer,intent(out)                        :: iflag !! status flag (see [[db6ink]])
 
     integer :: nx,ny,nz,nq,nr,ns
 
@@ -2094,20 +2395,20 @@
     implicit none
 
     class(bspline_6d),intent(inout) :: me
-    real(wp),intent(in)             :: xval
-    real(wp),intent(in)             :: yval
-    real(wp),intent(in)             :: zval
-    real(wp),intent(in)             :: qval
-    real(wp),intent(in)             :: rval
-    real(wp),intent(in)             :: sval
-    integer,intent(in)              :: idx
-    integer,intent(in)              :: idy
-    integer,intent(in)              :: idz
-    integer,intent(in)              :: idq
-    integer,intent(in)              :: idr
-    integer,intent(in)              :: ids
-    real(wp),intent(out)            :: f
-    integer,intent(out)             :: iflag
+    real(wp),intent(in)             :: xval  !! \(x\) coordinate of evaluation point.
+    real(wp),intent(in)             :: yval  !! \(y\) coordinate of evaluation point.
+    real(wp),intent(in)             :: zval  !! \(z\) coordinate of evaluation point.
+    real(wp),intent(in)             :: qval  !! \(q\) coordinate of evaluation point.
+    real(wp),intent(in)             :: rval  !! \(r\) coordinate of evaluation point.
+    real(wp),intent(in)             :: sval  !! \(s\) coordinate of evaluation point.
+    integer,intent(in)              :: idx   !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)              :: idy   !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)              :: idz   !! \(z\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)              :: idq   !! \(q\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)              :: idr   !! \(r\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)              :: ids   !! \(s\) derivative of piecewise polynomial to evaluate.
+    real(wp),intent(out)            :: f     !! interpolated value
+    integer,intent(out)             :: iflag !! status flag (see [[db6val]])
 
     if (me%initialized) then
         call db6val(xval,yval,zval,qval,rval,sval,&

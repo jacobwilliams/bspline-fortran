@@ -2,12 +2,12 @@
 !> author: Jacob Williams
 !  license: BSD
 !
-!# Description
+!### Description
 !
 !  Multidimensional (1D-6D) B-spline interpolation of data on a regular grid.
 !  Basic pure subroutine interface.
 !
-!# Notes
+!### Notes
 !
 !  This module is based on the B-spline and spline routines from [1].
 !  The original Fortran 77 routines were converted to free-form source.
@@ -16,10 +16,10 @@
 !  1d, 4d, 5d, and 6d interpolation were also created (these are simply
 !  extensions of the same algorithm into higher dimensions).
 !
-!# See also
+!### See also
 !  * An object-oriented interface can be found in [[bspline_oo_module]].
 !
-!# References
+!### References
 !
 !  1. DBSPLIN and DTENSBS from the
 !     [NIST Core Math Library](http://www.nist.gov/itl/math/mcsd-software.cfm).
@@ -68,42 +68,51 @@
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Determines the parameters of a function that interpolates
+!>
+!  Determines the parameters of a function that interpolates
 !  the one-dimensional gridded data
 !  $$ [x(i),\mathrm{fcn}(i)] ~\mathrm{for}~ i=1,..,n_x $$
 !  The interpolating function and its derivatives may
 !  subsequently be evaluated by the function [[db1val]].
 !
-!# History
-!
+!### History
 !  * Jacob Williams, 10/30/2015 : Created 1D routine.
 
     pure subroutine db1ink(x,nx,fcn,kx,iknot,tx,bcoef,iflag)
 
     implicit none
 
-    integer,intent(in)                      :: nx     !! Number of x abcissae
-    integer,intent(in)                      :: kx     !! The order of spline pieces in x (>= 2, < nx). (order = polynomial degree + 1)
-    real(wp),dimension(:),intent(in)        :: x      !! `nx` array of x abcissae. Must be strictly increasing.
+    integer,intent(in)                      :: nx     !! Number of \(x\) abcissae
+    integer,intent(in)                      :: kx     !! The order of spline pieces in \(x\)
+                                                      !! ( \( 2 \le k_x < n_x \) )
+                                                      !! (order = polynomial degree + 1)
+    real(wp),dimension(:),intent(in)        :: x      !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
     real(wp),dimension(:),intent(in)        :: fcn    !! `(nx)` array of function values to interpolate. `fcn(i)` should
-                                                      !!    contain the function value at the point `x(i)`
-    integer,intent(in)                      :: iknot  !! 0 = knot sequence chosen by [[db1ink]].
-                                                      !! 1 = knot sequence chosen by user.
-    real(wp),dimension(:),intent(inout)     :: tx     !! The `nx+kx` knots in the `x` direction for the spline interpolant.
-                                                      !!   If `iknot=0` these are chosen by [[db1ink]].
-                                                      !!   If `iknot=1` these are specified by the user.
-                                                      !!   Must be non-decreasing.
+                                                      !! contain the function value at the point `x(i)`
+    integer,intent(in)                      :: iknot  !! knot sequence flag:
+                                                      !!
+                                                      !! * 0 = knot sequence chosen by [[db1ink]].
+                                                      !! * 1 = knot sequence chosen by user.
+    real(wp),dimension(:),intent(inout)     :: tx     !! The `(nx+kx)` knots in the \(x\) direction
+                                                      !! for the spline interpolant:
+                                                      !!
+                                                      !! * If `iknot=0` these are chosen by [[db1ink]].
+                                                      !! * If `iknot=1` these are specified by the user.
+                                                      !!
+                                                      !! Must be non-decreasing.
     real(wp),dimension(:),intent(out)       :: bcoef  !! `(nx)` array of coefficients of the b-spline interpolant.
-    integer,intent(out)                     :: iflag  !! 0 = successful execution.
-                                                      !! 2 = iknot out of range.
-                                                      !! 3 = nx out of range.
-                                                      !! 4 = kx out of range.
-                                                      !! 5 = x not strictly increasing.
-                                                      !! 6 = tx not non-decreasing.
-                                                      !! 700 = size(x) /= size(fcn,1).
-                                                      !! 706 = size(x) /= nx.
-                                                      !! 712 = size(tx) /= nx+kx.
-                                                      !! 800 = size(x) /= size(bcoef,1).
+    integer,intent(out)                     :: iflag  !! status flag:
+                                                      !!
+                                                      !! * 0 = successful execution.
+                                                      !! * 2 = `iknot` out of range.
+                                                      !! * 3 = `nx` out of range.
+                                                      !! * 4 = `kx` out of range.
+                                                      !! * 5 = `x` not strictly increasing.
+                                                      !! * 6 = `tx` not non-decreasing.
+                                                      !! * 700 = `size(x)` \( \ne \) `size(fcn,1)`.
+                                                      !! * 706 = `size(x)` \( \ne \) `nx`.
+                                                      !! * 712 = `size(tx)` \( \ne \) `nx+kx`.
+                                                      !! * 800 = `size(x)` \( \ne \) `size(bcoef,1)`.
 
     real(wp),dimension(2*kx*(nx+1)) :: work
     logical :: status_ok
@@ -139,18 +148,19 @@
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Evaluates the tensor product piecewise polynomial
+!>
+!  Evaluates the tensor product piecewise polynomial
 !  interpolant constructed by the routine [[db1ink]] or one of its
-!  derivatives at the point xval.
+!  derivatives at the point `xval`.
 !
-!  To evaluate the interpolant itself, set idx=0,
-!  to evaluate the first partial with respect to x, set idx=1, and so on.
+!  To evaluate the interpolant itself, set `idx=0`,
+!  to evaluate the first partial with respect to `x`, set `idx=1`, and so on.
 !
-!  db1val returns 0.0 if (xval,yval) is out of range. that is, if
+!  [[db1val]] returns 0.0 if (`xval`,`yval`) is out of range. that is, if
 !```fortran
 !   xval < tx(1) .or. xval > tx(nx+kx)
 !```
-!  if the knots tx were chosen by [[db1ink]], then this is equivalent to:
+!  if the knots `tx` were chosen by [[db1ink]], then this is equivalent to:
 !```fortran
 !   xval < x(1) .or. xval > x(nx)+epsx
 !```
@@ -159,26 +169,33 @@
 !   epsx = 0.1*(x(nx)-x(nx-1))
 !```
 !
-!  The input quantities tx, nx, kx, and bcoef should be
+!  The input quantities `tx`, `nx`, `kx`, and `bcoef` should be
 !  unchanged since the last call of [[db1ink]].
 !
-!# History
-!
+!### History
 !  * Jacob Williams, 10/30/2015 : Created 1D routine.
 
     pure subroutine db1val(xval,idx,tx,nx,kx,bcoef,f,iflag,inbvx)
 
     implicit none
 
-    integer,intent(in)                   :: idx      !! x derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                   :: nx       !! the number of interpolation points in x. (same as in last call to [[db1ink]])
-    integer,intent(in)                   :: kx       !! order of polynomial pieces in x. (same as in last call to [[db1ink]])
-    real(wp),intent(in)                  :: xval     !! x coordinate of evaluation point.
-    real(wp),dimension(nx+kx),intent(in) :: tx       !! sequence of knots defining the piecewise polynomial in the x direction. (same as in last call to [[db1ink]])
+    integer,intent(in)                   :: idx      !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                   :: nx       !! the number of interpolation points in \(x\).
+                                                     !! (same as in last call to [[db1ink]])
+    integer,intent(in)                   :: kx       !! order of polynomial pieces in \(x\).
+                                                     !! (same as in last call to [[db1ink]])
+    real(wp),intent(in)                  :: xval     !! \(x\) coordinate of evaluation point.
+    real(wp),dimension(nx+kx),intent(in) :: tx       !! sequence of knots defining the piecewise polynomial
+                                                     !! in the \(x\) direction. (same as in last call to [[db1ink]])
     real(wp),dimension(nx),intent(in)    :: bcoef    !! the b-spline coefficients computed by [[db1ink]].
     real(wp),intent(out)                 :: f        !! interpolated value
-    integer,intent(out)                  :: iflag    !! status flag: 0 : no errors, /=0 : error
-    integer,intent(inout)                :: inbvx    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(out)                  :: iflag    !! status flag:
+                                                     !!
+                                                     !! * \( = 0 \)   : no errors
+                                                     !! * \( \ne 0 \) : error
+    integer,intent(inout)                :: inbvx    !! initialization parameter which must be set
+                                                     !! to 1 the first time this routine is called,
+                                                     !! and must not be changed by the user.
 
     real(wp),dimension(3*kx) :: work
 
@@ -196,7 +213,8 @@
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Determines the parameters of a function that interpolates
+!>
+!  Determines the parameters of a function that interpolates
 !  the two-dimensional gridded data
 !  $$ [x(i),y(j),\mathrm{fcn}(i,j)] ~\mathrm{for}~ i=1,..,n_x ~\mathrm{and}~ j=1,..,n_y $$
 !  The interpolating function and its derivatives may
@@ -213,34 +231,33 @@
 !
 !  $$ s(x(i),y(j)) = \mathrm{fcn}(i,j) ~\mathrm{for}~ i=1,..,n_x ~\mathrm{and}~ j=1,..,n_y $$
 !
-!  Note that for each fixed value of y, \( s(x,y) \) is a piecewise
-!  polynomial function of x alone, and for each fixed value of x, \( s(x,y) \)
-!  is a piecewise polynomial function of y alone. in one dimension
+!  Note that for each fixed value of \(y\), \( s(x,y) \) is a piecewise
+!  polynomial function of \(x\) alone, and for each fixed value of \(x\), \( s(x,y) \)
+!  is a piecewise polynomial function of \(y\) alone. in one dimension
 !  a piecewise polynomial may be created by partitioning a given
 !  interval into subintervals and defining a distinct polynomial piece
 !  on each one. the points where adjacent subintervals meet are called
 !  knots. each of the functions \(u_i\) and \(v_j\) above is a piecewise
 !  polynomial.
 !
-!  Users of db2ink choose the order (degree+1) of the polynomial
-!  pieces used to define the piecewise polynomial in each of the x and
-!  y directions (kx and ky). users also may define their own knot
-!  sequence in x and y separately (tx and ty). if iflag=0, however,
-!  db2ink will choose sequences of knots that result in a piecewise
-!  polynomial interpolant with kx-2 continuous partial derivatives in
-!  x and ky-2 continuous partial derivatives in y. (kx knots are taken
-!  near each endpoint in the x direction, not-a-knot end conditions
-!  are used, and the remaining knots are placed at data points if kx
-!  is even or at midpoints between data points if kx is odd. the y
+!  Users of [[db2ink]] choose the order (degree+1) of the polynomial
+!  pieces used to define the piecewise polynomial in each of the \(x\) and
+!  \(y\) directions (`kx` and `ky`). users also may define their own knot
+!  sequence in \(x\) and \(y\) separately (`tx` and `ty`). if `iflag=0`, however,
+!  [[db2ink]] will choose sequences of knots that result in a piecewise
+!  polynomial interpolant with `kx-2` continuous partial derivatives in
+!  \(x\) and `ky-2` continuous partial derivatives in \(y\). (`kx` knots are taken
+!  near each endpoint in the \(x\) direction, not-a-knot end conditions
+!  are used, and the remaining knots are placed at data points if `kx`
+!  is even or at midpoints between data points if `kx` is odd. the \(y\)
 !  direction is treated similarly.)
 !
-!  After a call to db2ink, all information necessary to define the
-!  interpolating function are contained in the parameters nx, ny, kx,
-!  ky, tx, ty, and bcoef. These quantities should not be altered until
+!  After a call to [[db2ink]], all information necessary to define the
+!  interpolating function are contained in the parameters `nx`, `ny`, `kx`,
+!  `ky`, `tx`, `ty`, and `bcoef`. These quantities should not be altered until
 !  after the last call of the evaluation routine [[db2val]].
 !
-!# History
-!
+!### History
 !  * Boisvert, Ronald, NBS : 25 may 1982 : Author of original routine.
 !  * JEC : 000330 modified array declarations.
 !  * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
@@ -249,43 +266,54 @@
 
     implicit none
 
-    integer,intent(in)                      :: nx     !! Number of x abcissae
-    integer,intent(in)                      :: ny     !! Number of y abcissae
-    integer,intent(in)                      :: kx     !! The order of spline pieces in x (>= 2, < nx). (order = polynomial degree + 1)
-    integer,intent(in)                      :: ky     !! The order of spline pieces in y (>= 2, < ny). (order = polynomial degree + 1)
-    real(wp),dimension(:),intent(in)        :: x      !! `nx` array of x abcissae. Must be strictly increasing.
-    real(wp),dimension(:),intent(in)        :: y      !! `ny` array of y abcissae. Must be strictly increasing.
-    real(wp),dimension(:,:),intent(in)      :: fcn    !! `(nx,ny)` matrix of function values to interpolate. `fcn(i,j)` should
-                                                      !!    contain the function value at the point `(x(i),y(j))`
-    integer,intent(in)                      :: iknot  !! 0 = knot sequence chosen by [[db1ink]].
-                                                      !! 1 = knot sequence chosen by user.
-    real(wp),dimension(:),intent(inout)     :: tx     !! The `nx+kx` knots in the `x` direction for the spline interpolant.
-                                                      !!    If `iknot=0` these are chosen by [[db2ink]].
-                                                      !!    If `iknot=1` these are specified by the user.
-                                                      !!    Must be non-decreasing.
-    real(wp),dimension(:),intent(inout)     :: ty     !! The `ny+ky` knots in the `y` direction for the spline interpolant.
-                                                      !!    If `iknot=0` these are chosen by [[db2ink]].
-                                                      !!    If `iknot=1` these are specified by the user.
-                                                      !!    Must be non-decreasing.
+    integer,intent(in)                      :: nx     !! Number of \(x\) abcissae
+    integer,intent(in)                      :: ny     !! Number of \(y\) abcissae
+    integer,intent(in)                      :: kx     !! The order of spline pieces in \(x\)
+                                                      !! ( \( 2 \le k_x < n_x \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                      :: ky     !! The order of spline pieces in \(y\)
+                                                      !! ( \( 2 \le k_y < n_y \) )
+                                                      !! (order = polynomial degree + 1)
+    real(wp),dimension(:),intent(in)        :: x      !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)        :: y      !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:),intent(in)      :: fcn    !! `(nx,ny)` matrix of function values to interpolate.
+                                                      !! `fcn(i,j)` should contain the function value at the
+                                                      !! point (`x(i)`,`y(j)`)
+    integer,intent(in)                      :: iknot  !! knot sequence flag:
+                                                      !!
+                                                      !! * 0 = knot sequence chosen by [[db1ink]].
+                                                      !! * 1 = knot sequence chosen by user.
+    real(wp),dimension(:),intent(inout)     :: tx     !! The `(nx+kx)` knots in the \(x\) direction for the spline interpolant.
+                                                      !!
+                                                      !! * If `iknot=0` these are chosen by [[db2ink]].
+                                                      !! * If `iknot=1` these are specified by the user.
+                                                      !!
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(inout)     :: ty     !! The `(ny+ky)` knots in the \(y\) direction for the spline interpolant.
+                                                      !!
+                                                      !! * If `iknot=0` these are chosen by [[db2ink]].
+                                                      !! * If `iknot=1` these are specified by the user.
+                                                      !!
+                                                      !! Must be non-decreasing.
     real(wp),dimension(:,:),intent(out)     :: bcoef  !! `(nx,ny)` matrix of coefficients of the b-spline interpolant.
-    integer,intent(out)                     :: iflag  !!  0 = successful execution.
-                                                      !!  2 = iknot out of range.
-                                                      !!  3 = nx out of range.
-                                                      !!  4 = kx out of range.
-                                                      !!  5 = x not strictly increasing.
-                                                      !!  6 = tx not non-decreasing.
-                                                      !!  7 = ny out of range.
-                                                      !!  8 = ky out of range.
-                                                      !!  9 = y not strictly increasing.
-                                                      !! 10 = ty not non-decreasing.
-                                                      !! 700 = size(x) /= size(fcn,1).
-                                                      !! 701 = size(y) /= size(fcn,2).
-                                                      !! 706 = size(x) /= nx.
-                                                      !! 707 = size(y) /= ny.
-                                                      !! 712 = size(tx) /= nx+kx.
-                                                      !! 713 = size(ty) /= ny+ky.
-                                                      !! 800 = size(x) /= size(bcoef,1).
-                                                      !! 801 = size(y) /= size(bcoef,2).
+    integer,intent(out)                     :: iflag  !! *  0 = successful execution.
+                                                      !! *  2 = `iknot` out of range.
+                                                      !! *  3 = `nx` out of range.
+                                                      !! *  4 = `kx` out of range.
+                                                      !! *  5 = `x` not strictly increasing.
+                                                      !! *  6 = `tx` not non-decreasing.
+                                                      !! *  7 = `ny` out of range.
+                                                      !! *  8 = `ky` out of range.
+                                                      !! *  9 = `y` not strictly increasing.
+                                                      !! * 10 = `ty` not non-decreasing.
+                                                      !! * 700 = `size(x)`  \( \ne \) `size(fcn,1)`
+                                                      !! * 701 = `size(y)`  \( \ne \) `size(fcn,2)`
+                                                      !! * 706 = `size(x)`  \( \ne \) `nx`
+                                                      !! * 707 = `size(y)`  \( \ne \) `ny`
+                                                      !! * 712 = `size(tx)` \( \ne \) `nx+kx`
+                                                      !! * 713 = `size(ty)` \( \ne \) `ny+ky`
+                                                      !! * 800 = `size(x)`  \( \ne \) `size(bcoef,1)`
+                                                      !! * 801 = `size(y)`  \( \ne \) `size(bcoef,2)`
 
     real(wp),dimension(nx*ny) :: temp
     real(wp),dimension(max(2*kx*(nx+1),2*ky*(ny+1))) :: work
@@ -324,15 +352,16 @@
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Evaluates the tensor product piecewise polynomial
+!>
+!  Evaluates the tensor product piecewise polynomial
 !  interpolant constructed by the routine [[db2ink]] or one of its
-!  derivatives at the point (xval,yval).
+!  derivatives at the point (`xval`,`yval`).
 !
 !  To evaluate the interpolant
-!  itself, set idx=idy=0, to evaluate the first partial with respect
-!  to x, set idx=1,idy=0, and so on.
+!  itself, set `idx=idy=0`, to evaluate the first partial with respect
+!  to `x`, set `idx=1,idy=0`, and so on.
 !
-!  db2val returns 0.0 if (xval,yval) is out of range. that is, if
+!  [[db2val]] returns 0.0 if `(xval,yval)` is out of range. that is, if
 !```fortran
 !   xval < tx(1) .or. xval > tx(nx+kx) .or.
 !   yval < ty(1) .or. yval > ty(ny+ky)
@@ -348,11 +377,10 @@
 !   epsy = 0.1*(y(ny)-y(ny-1))
 !```
 !
-!  The input quantities tx, ty, nx, ny, kx, ky, and bcoef should be
+!  The input quantities `tx`, `ty`, `nx`, `ny`, `kx`, `ky`, and `bcoef` should be
 !  unchanged since the last call of [[db2ink]].
 !
-!# History
-!
+!### History
 !  * Boisvert, Ronald, NBS : 25 may 1982 : Author of original routine.
 !  * JEC : 000330 modified array declarations.
 !  * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
@@ -361,22 +389,39 @@
 
     implicit none
 
-    integer,intent(in)                   :: idx      !! x derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                   :: idy      !! y derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                   :: nx       !! the number of interpolation points in x. (same as in last call to [[db2ink]])
-    integer,intent(in)                   :: ny       !! the number of interpolation points in y. (same as in last call to [[db2ink]])
-    integer,intent(in)                   :: kx       !! order of polynomial pieces in x. (same as in last call to [[db2ink]])
-    integer,intent(in)                   :: ky       !! order of polynomial pieces in y. (same as in last call to [[db2ink]])
-    real(wp),intent(in)                  :: xval     !! x coordinate of evaluation point.
-    real(wp),intent(in)                  :: yval     !! y coordinate of evaluation point.
-    real(wp),dimension(nx+kx),intent(in) :: tx       !! sequence of knots defining the piecewise polynomial in the x direction. (same as in last call to [[db2ink]])
-    real(wp),dimension(ny+ky),intent(in) :: ty       !! sequence of knots defining the piecewise polynomial in the y direction. (same as in last call to [[db2ink]])
+    integer,intent(in)                   :: idx      !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                   :: idy      !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                   :: nx       !! the number of interpolation points in \(x\).
+                                                     !! (same as in last call to [[db2ink]])
+    integer,intent(in)                   :: ny       !! the number of interpolation points in \(y\).
+                                                     !! (same as in last call to [[db2ink]])
+    integer,intent(in)                   :: kx       !! order of polynomial pieces in \(x\).
+                                                     !! (same as in last call to [[db2ink]])
+    integer,intent(in)                   :: ky       !! order of polynomial pieces in \(y\).
+                                                     !! (same as in last call to [[db2ink]])
+    real(wp),intent(in)                  :: xval     !! \(x\) coordinate of evaluation point.
+    real(wp),intent(in)                  :: yval     !! \(y\) coordinate of evaluation point.
+    real(wp),dimension(nx+kx),intent(in) :: tx       !! sequence of knots defining the piecewise polynomial
+                                                     !! in the \(x\) direction.
+                                                     !! (same as in last call to [[db2ink]])
+    real(wp),dimension(ny+ky),intent(in) :: ty       !! sequence of knots defining the piecewise
+                                                     !! polynomial in the \(y\) direction.
+                                                     !! (same as in last call to [[db2ink]])
     real(wp),dimension(nx,ny),intent(in) :: bcoef    !! the b-spline coefficients computed by [[db2ink]].
     real(wp),intent(out)                 :: f        !! interpolated value
-    integer,intent(out)                  :: iflag    !! status flag: 0 : no errors, /=0 : error
-    integer,intent(inout)                :: inbvx    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                :: inbvy    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                :: iloy     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(out)                  :: iflag    !! status flag:
+                                                     !!
+                                                     !! * \( = 0 \)   : no errors
+                                                     !! * \( \ne 0 \) : error
+    integer,intent(inout)                :: inbvx    !! initialization parameter which must be set to 1
+                                                     !! the first time this routine is called,
+                                                     !! and must not be changed by the user.
+    integer,intent(inout)                :: inbvy    !! initialization parameter which must be set to 1
+                                                     !! the first time this routine is called,
+                                                     !! and must not be changed by the user.
+    integer,intent(inout)                :: iloy     !! initialization parameter which must be set to 1
+                                                     !! the first time this routine is called,
+                                                     !! and must not be changed by the user.
 
     integer :: k, lefty, mflag, kcol
     real(wp),dimension(ky) :: temp
@@ -412,7 +457,8 @@
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Determines the parameters of a function that interpolates
+!>
+!  Determines the parameters of a function that interpolates
 !  the three-dimensional gridded data
 !  $$ [x(i),y(j),z(k),\mathrm{fcn}(i,j,k)] ~\mathrm{for}~
 !     i=1,..,n_x ~\mathrm{and}~ j=1,..,n_y, ~\mathrm{and}~ k=1,..,n_z $$
@@ -432,36 +478,35 @@
 !  $$ s(x(i),y(j),z(k)) = \mathrm{fcn}(i,j,k)
 !     ~\mathrm{for}~ i=1,..,n_x , j=1,..,n_y , k=1,..,n_z $$
 !
-!  Note that for fixed values of y and z s(x,y,z) is a piecewise
-!  polynomial function of x alone, for fixed values of x and z s(x,y,z)
-!  is a piecewise polynomial function of y alone, and for fixed
-!  values of x and y s(x,y,z) is a function of z alone. in one
+!  Note that for fixed values of \(y\) and \(z\) \(s(x,y,z)\) is a piecewise
+!  polynomial function of \(x\) alone, for fixed values of \(x\) and \(z\) \(s(x,y,z)\)
+!  is a piecewise polynomial function of \(y\) alone, and for fixed
+!  values of \(x\) and \(y\) \(s(x,y,z)\) is a function of \(z\) alone. in one
 !  dimension a piecewise polynomial may be created by partitioning a
 !  given interval into subintervals and defining a distinct polynomial
 !  piece on each one. the points where adjacent subintervals meet are
 !  called knots. each of the functions \(u_i\), \(v_j\), and \(w_k\) above is a
 !  piecewise polynomial.
 !
-!  Users of db3ink choose the order (degree+1) of the polynomial
-!  pieces used to define the piecewise polynomial in each of the x, y,
-!  and z directions (kx, ky, and kz). users also may define their own
-!  knot sequence in x, y, and z separately (tx, ty, and tz). if iflag=
-!  0, however, db3ink will choose sequences of knots that result in a
-!  piecewise polynomial interpolant with kx-2 continuous partial
-!  derivatives in x, ky-2 continuous partial derivatives in y, and kz-
-!  2 continuous partial derivatives in z. (kx knots are taken near
-!  each endpoint in x, not-a-knot end conditions are used, and the
-!  remaining knots are placed at data points if kx is even or at
-!  midpoints between data points if kx is odd. the y and z directions
+!  Users of [[db3ink]] choose the order (degree+1) of the polynomial
+!  pieces used to define the piecewise polynomial in each of the \(x\), \(y\),
+!  and \(z\) directions (`kx`, `ky`, and `kz`). users also may define their own
+!  knot sequence in \(x\), \(y\), \(z\) separately (`tx`, `ty`, and `tz`). if `iflag=0`,
+!  however, [[db3ink]] will choose sequences of knots that result in a
+!  piecewise polynomial interpolant with `kx-2` continuous partial
+!  derivatives in \(x\), `ky-2` continuous partial derivatives in \(y\), and `kz-2`
+!  continuous partial derivatives in \(z\). (`kx` knots are taken near
+!  each endpoint in \(x\), not-a-knot end conditions are used, and the
+!  remaining knots are placed at data points if `kx` is even or at
+!  midpoints between data points if `kx` is odd. the \(y\) and \(z\) directions
 !  are treated similarly.)
 !
-!  After a call to db3ink, all information necessary to define the
-!  interpolating function are contained in the parameters nx, ny, nz,
-!  kx, ky, kz, tx, ty, tz, and bcoef. these quantities should not be
+!  After a call to [[db3ink]], all information necessary to define the
+!  interpolating function are contained in the parameters `nx`, `ny`, `nz`,
+!  `kx`, `ky`, `kz`, `tx`, `ty`, `tz`, and `bcoef`. these quantities should not be
 !  altered until after the last call of the evaluation routine [[db3val]].
 !
-!# History
-!
+!### History
 !  * Boisvert, Ronald, NBS : 25 may 1982 : Author of original routine.
 !  * JEC : 000330 modified array declarations.
 !  * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
@@ -470,58 +515,72 @@
 
     implicit none
 
-    integer,intent(in)                       :: nx    !! number of x abcissae (>= 3)
-    integer,intent(in)                       :: ny    !! number of y abcissae (>= 3)
-    integer,intent(in)                       :: nz    !! number of z abcissae (>= 3)
-    integer,intent(in)                       :: kx    !! the order of spline pieces in x (>= 2, < nx). (order = polynomial degree + 1)
-    integer,intent(in)                       :: ky    !! the order of spline pieces in y (>= 2, < ny). (order = polynomial degree + 1)
-    integer,intent(in)                       :: kz    !! the order of spline pieces in z (>= 2, < nz). (order = polynomial degree + 1)
-    real(wp),dimension(:),intent(in)         :: x     !! `nx` array of x abcissae. must be strictly increasing.
-    real(wp),dimension(:),intent(in)         :: y     !! `ny` array of y abcissae. must be strictly increasing.
-    real(wp),dimension(:),intent(in)         :: z     !! `nz` array of z abcissae. must be strictly increasing.
-    real(wp),dimension(:,:,:),intent(in)     :: fcn   !! `(nx,ny,nz)` matrix of function values to interpolate. fcn(i,j,k) should
-                                                      !!   contain the function value at the point (x(i),y(j),z(k))
-    integer,intent(in)                       :: iknot !! 0 = knot sequence chosen by [[db1ink]].
-                                                      !! 1 = knot sequence chosen by user.
-    real(wp),dimension(:),intent(inout)      :: tx    !! The `nx+kx` knots in the `x` direction for the spline interpolant.
-                                                      !!   If `iknot=0` these are chosen by [[db3ink]].
-                                                      !!   If `iknot=1` these are specified by the user.
-                                                      !!    Must be non-decreasing.
-    real(wp),dimension(:),intent(inout)      :: ty    !! The `ny+ky` knots in the `y` direction for the spline interpolant.
-                                                      !!    If `iknot=0` these are chosen by [[db3ink]].
-                                                      !!    If `iknot=1` these are specified by the user.
-                                                      !!    Must be non-decreasing.
-    real(wp),dimension(:),intent(inout)      :: tz    !! The `nz+kz` knots in the `z` direction for the spline interpolant.
-                                                      !!    If `iknot=0` these are chosen by [[db3ink]].
-                                                      !!    If `iknot=1` these are specified by the user.
-                                                      !!    Must be non-decreasing.
-    real(wp),dimension(:,:,:),intent(out)    :: bcoef !! '(nx,ny,nz)' matrix of coefficients of the b-spline interpolant.
-    integer,intent(out)                      :: iflag !!  0 = successful execution.
-                                                      !!  2 = iknot out of range.
-                                                      !!  3 = nx out of range.
-                                                      !!  4 = kx out of range.
-                                                      !!  5 = x not strictly increasing.
-                                                      !!  6 = tx not non-decreasing.
-                                                      !!  7 = ny out of range.
-                                                      !!  8 = ky out of range.
-                                                      !!  9 = y not strictly increasing.
-                                                      !! 10 = ty not non-decreasing.
-                                                      !! 11 = nz out of range.
-                                                      !! 12 = kz out of range.
-                                                      !! 13 = z not strictly increasing.
-                                                      !! 14 = ty not non-decreasing.
-                                                      !! 700 = size(x) /= size(fcn,1).
-                                                      !! 701 = size(y) /= size(fcn,2).
-                                                      !! 702 = size(z) /= size(fcn,3).
-                                                      !! 706 = size(x) /= nx.
-                                                      !! 707 = size(y) /= ny.
-                                                      !! 708 = size(z) /= nz.
-                                                      !! 712 = size(tx) /= nx+kx.
-                                                      !! 713 = size(ty) /= ny+ky.
-                                                      !! 714 = size(tz) /= nz+kz.
-                                                      !! 800 = size(x) /= size(bcoef,1).
-                                                      !! 801 = size(y) /= size(bcoef,2).
-                                                      !! 802 = size(z) /= size(bcoef,3).
+    integer,intent(in)                       :: nx    !! number of \(x\) abcissae ( \( \ge 3 \) )
+    integer,intent(in)                       :: ny    !! number of \(y\) abcissae ( \( \ge 3 \) )
+    integer,intent(in)                       :: nz    !! number of \(z\) abcissae ( \( \ge 3 \) )
+    integer,intent(in)                       :: kx    !! The order of spline pieces in \(x\)
+                                                      !! ( \( 2 \le k_x < n_x \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                       :: ky    !! The order of spline pieces in \(y\)
+                                                      !! ( \( 2 \le k_y < n_y \) )
+                                                      !! (order = polynomial degree + 1)
+    integer,intent(in)                       :: kz    !! the order of spline pieces in \(z\)
+                                                      !! ( \( 2 \le k_z < n_z \) )
+                                                      !! (order = polynomial degree + 1)
+    real(wp),dimension(:),intent(in)         :: x     !! `(nx)` array of \(x\) abcissae. must be strictly increasing.
+    real(wp),dimension(:),intent(in)         :: y     !! `(ny)` array of \(y\) abcissae. must be strictly increasing.
+    real(wp),dimension(:),intent(in)         :: z     !! `(nz)` array of \(z\) abcissae. must be strictly increasing.
+    real(wp),dimension(:,:,:),intent(in)     :: fcn   !! `(nx,ny,nz)` matrix of function values to interpolate. `fcn(i,j,k)` should
+                                                      !! contain the function value at the point (`x(i)`,`y(j)`,`z(k)`)
+    integer,intent(in)                       :: iknot !! knot sequence flag:
+                                                      !!
+                                                      !! * 0 = knot sequence chosen by [[db3ink]].
+                                                      !! * 1 = knot sequence chosen by user.
+    real(wp),dimension(:),intent(inout)      :: tx    !! The `(nx+kx)` knots in the \(x\) direction for the spline interpolant.
+                                                      !!
+                                                      !! * If `iknot=0` these are chosen by [[db3ink]].
+                                                      !! * If `iknot=1` these are specified by the user.
+                                                      !!
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(inout)      :: ty    !! The `(ny+ky)` knots in the \(y\) direction for the spline interpolant.
+                                                      !!
+                                                      !! * If `iknot=0` these are chosen by [[db3ink]].
+                                                      !! * If `iknot=1` these are specified by the user.
+                                                      !!
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:),intent(inout)      :: tz    !! The `(nz+kz)` knots in the \(z\) direction for the spline interpolant.
+                                                      !!
+                                                      !! * If `iknot=0` these are chosen by [[db3ink]].
+                                                      !! * If `iknot=1` these are specified by the user.
+                                                      !!
+                                                      !! Must be non-decreasing.
+    real(wp),dimension(:,:,:),intent(out)    :: bcoef !! `(nx,ny,nz)` matrix of coefficients of the b-spline interpolant.
+    integer,intent(out)                      :: iflag !! *  0 = successful execution.
+                                                      !! *  2 = `iknot` out of range.
+                                                      !! *  3 = `nx` out of range.
+                                                      !! *  4 = `kx` out of range.
+                                                      !! *  5 = `x` not strictly increasing.
+                                                      !! *  6 = `tx` not non-decreasing.
+                                                      !! *  7 = `ny` out of range.
+                                                      !! *  8 = `ky` out of range.
+                                                      !! *  9 = `y` not strictly increasing.
+                                                      !! * 10 = `ty` not non-decreasing.
+                                                      !! * 11 = `nz` out of range.
+                                                      !! * 12 = `kz` out of range.
+                                                      !! * 13 = `z` not strictly increasing.
+                                                      !! * 14 = `ty` not non-decreasing.
+                                                      !! * 700 = `size(x) ` \(\ne\) `size(fcn,1)`
+                                                      !! * 701 = `size(y) ` \(\ne\) `size(fcn,2)`
+                                                      !! * 702 = `size(z) ` \(\ne\) `size(fcn,3)`
+                                                      !! * 706 = `size(x) ` \(\ne\) `nx`
+                                                      !! * 707 = `size(y) ` \(\ne\) `ny`
+                                                      !! * 708 = `size(z) ` \(\ne\) `nz`
+                                                      !! * 712 = `size(tx)` \(\ne\) `nx+kx`
+                                                      !! * 713 = `size(ty)` \(\ne\) `ny+ky`
+                                                      !! * 714 = `size(tz)` \(\ne\) `nz+kz`
+                                                      !! * 800 = `size(x) ` \(\ne\) `size(bcoef,1)`
+                                                      !! * 801 = `size(y) ` \(\ne\) `size(bcoef,2)`
+                                                      !! * 802 = `size(z) ` \(\ne\) `size(bcoef,3)`
 
     real(wp),dimension(nx*ny*nz) :: temp
     real(wp),dimension(max(2*kx*(nx+1),2*ky*(ny+1),2*kz*(nz+1))) :: work
@@ -565,21 +624,22 @@
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Evaluates the tensor product piecewise polynomial
+!>
+!  Evaluates the tensor product piecewise polynomial
 !  interpolant constructed by the routine [[db3ink]] or one of its
-!  derivatives at the point (xval,yval,zval).
+!  derivatives at the point (`xval`,`yval`,`zval`).
 !
 !  To evaluate the
-!  interpolant itself, set idx=idy=idz=0, to evaluate the first
-!  partial with respect to x, set idx=1,idy=idz=0, and so on.
+!  interpolant itself, set `idx=idy=idz=0`, to evaluate the first
+!  partial with respect to `x`, set `idx=1`,`idy=idz=0`, and so on.
 !
-!  db3val returns 0.0 if (xval,yval,zval) is out of range. that is,
+!  [[db3val]] returns 0.0 if (`xval`,`yval`,`zval`) is out of range. that is,
 !```fortran
 ! xval<tx(1) .or. xval>tx(nx+kx) .or.
 ! yval<ty(1) .or. yval>ty(ny+ky) .or.
 ! zval<tz(1) .or. zval>tz(nz+kz)
 !```
-!  if the knots tx, ty, and tz were chosen by [[db3ink]], then this is
+!  if the knots `tx`, `ty`, and `tz` were chosen by [[db3ink]], then this is
 !  equivalent to
 !```fortran
 ! xval<x(1) .or. xval>x(nx)+epsx .or.
@@ -593,11 +653,10 @@
 ! epsz = 0.1*(z(nz)-z(nz-1))
 !```
 !
-!  The input quantities tx, ty, tz, nx, ny, nz, kx, ky, kz, and bcoef
+!  The input quantities `tx`, `ty`, `tz`, `nx`, `ny`, `nz`, `kx`, `ky`, `kz`, and `bcoef`
 !  should remain unchanged since the last call of [[db3ink]].
 !
-!# History
-!
+!### History
 !  * Boisvert, Ronald, NBS : 25 may 1982 : Author of original routine.
 !  * JEC : 000330 modified array declarations.
 !  * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
@@ -609,29 +668,51 @@
 
     implicit none
 
-    integer,intent(in)                      :: idx      !! x derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                      :: idy      !! y derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                      :: idz      !! z derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                      :: nx       !! the number of interpolation points in x. (same as in last call to [[db3ink]])
-    integer,intent(in)                      :: ny       !! the number of interpolation points in y. (same as in last call to [[db3ink]])
-    integer,intent(in)                      :: nz       !! the number of interpolation points in z. (same as in last call to [[db3ink]])
-    integer,intent(in)                      :: kx       !! order of polynomial pieces in x. (same as in last call to [[db3ink]])
-    integer,intent(in)                      :: ky       !! order of polynomial pieces in y. (same as in last call to [[db3ink]])
-    integer,intent(in)                      :: kz       !! order of polynomial pieces in z. (same as in last call to [[db3ink]])
-    real(wp),intent(in)                     :: xval     !! x coordinate of evaluation point.
-    real(wp),intent(in)                     :: yval     !! y coordinate of evaluation point.
-    real(wp),intent(in)                     :: zval     !! z coordinate of evaluation point.
-    real(wp),dimension(nx+kx),intent(in)    :: tx       !! sequence of knots defining the piecewise polynomial in the x direction. (same as in last call to [[db3ink]])
-    real(wp),dimension(ny+ky),intent(in)    :: ty       !! sequence of knots defining the piecewise polynomial in the y direction. (same as in last call to [[db3ink]])
-    real(wp),dimension(nz+kz),intent(in)    :: tz       !! sequence of knots defining the piecewise polynomial in the z direction. (same as in last call to [[db3ink]])
+    integer,intent(in)                      :: idx      !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                      :: idy      !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                      :: idz      !! \(z\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                      :: nx       !! the number of interpolation points in \(x\).
+                                                        !! (same as in last call to [[db3ink]])
+    integer,intent(in)                      :: ny       !! the number of interpolation points in \(y\).
+                                                        !! (same as in last call to [[db3ink]])
+    integer,intent(in)                      :: nz       !! the number of interpolation points in \(z\).
+                                                        !! (same as in last call to [[db3ink]])
+    integer,intent(in)                      :: kx       !! order of polynomial pieces in \(z\).
+                                                        !! (same as in last call to [[db3ink]])
+    integer,intent(in)                      :: ky       !! order of polynomial pieces in \(y\).
+                                                        !! (same as in last call to [[db3ink]])
+    integer,intent(in)                      :: kz       !! order of polynomial pieces in \(z\).
+                                                        !! (same as in last call to [[db3ink]])
+    real(wp),intent(in)                     :: xval     !! \(x\) coordinate of evaluation point.
+    real(wp),intent(in)                     :: yval     !! \(y\) coordinate of evaluation point.
+    real(wp),intent(in)                     :: zval     !! \(z\) coordinate of evaluation point.
+    real(wp),dimension(nx+kx),intent(in)    :: tx       !! sequence of knots defining the piecewise polynomial
+                                                        !! in the \(x\) direction. (same as in last call to [[db3ink]])
+    real(wp),dimension(ny+ky),intent(in)    :: ty       !! sequence of knots defining the piecewise polynomial
+                                                        !! in the \(y\) direction. (same as in last call to [[db3ink]])
+    real(wp),dimension(nz+kz),intent(in)    :: tz       !! sequence of knots defining the piecewise polynomial
+                                                        !! in the \(z\) direction. (same as in last call to [[db3ink]])
     real(wp),dimension(nx,ny,nz),intent(in) :: bcoef    !! the b-spline coefficients computed by [[db3ink]].
     real(wp),intent(out)                    :: f        !! interpolated value
-    integer,intent(out)                     :: iflag    !! status flag: 0 : no errors, /=0 : error
-    integer,intent(inout)                   :: inbvx    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                   :: inbvy    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                   :: inbvz    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                   :: iloy     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                   :: iloz     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(out)                     :: iflag    !! status flag:
+                                                        !!
+                                                        !! * \( = 0 \)   : no errors
+                                                        !! * \( \ne 0 \) : error
+    integer,intent(inout)                   :: inbvx    !! initialization parameter which must be
+                                                        !! set to 1 the first time this routine is called,
+                                                        !! and must not be changed by the user.
+    integer,intent(inout)                   :: inbvy    !! initialization parameter which must be
+                                                        !! set to 1 the first time this routine is called,
+                                                        !! and must not be changed by the user.
+    integer,intent(inout)                   :: inbvz    !! initialization parameter which must be
+                                                        !! set to 1 the first time this routine is called,
+                                                        !! and must not be changed by the user.
+    integer,intent(inout)                   :: iloy     !! initialization parameter which must be
+                                                        !! set to 1 the first time this routine is called,
+                                                        !! and must not be changed by the user.
+    integer,intent(inout)                   :: iloz     !! initialization parameter which must be
+                                                        !! set to 1 the first time this routine is called,
+                                                        !! and must not be changed by the user.
 
     real(wp),dimension(ky,kz)              :: temp1
     real(wp),dimension(kz)                 :: temp2
@@ -688,7 +769,8 @@
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Determines the parameters of a function that interpolates
+!>
+!  Determines the parameters of a function that interpolates
 !  the four-dimensional gridded data
 !  $$ [x(i),y(j),z(k),q(l),\mathrm{fcn}(i,j,k,l)] ~\mathrm{for}~
 !     i=1,..,n_x ~\mathrm{and}~ j=1,..,n_y, ~\mathrm{and}~ k=1,..,n_z,
@@ -698,8 +780,7 @@
 !
 !  See [[db3ink]] header for more details.
 !
-!# History
-!
+!### History
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
     pure subroutine db4ink(x,nx,y,ny,z,nz,q,nq,&
@@ -711,73 +792,91 @@
 
     implicit none
 
-    integer,intent(in)                          :: nx    !! number of x abcissae (>= 3)
-    integer,intent(in)                          :: ny    !! number of y abcissae (>= 3)
-    integer,intent(in)                          :: nz    !! number of z abcissae (>= 3)
-    integer,intent(in)                          :: nq    !! number of q abcissae (>= 3)
-    integer,intent(in)                          :: kx    !! the order of spline pieces in x (>= 2, < nx). (order = polynomial degree + 1)
-    integer,intent(in)                          :: ky    !! the order of spline pieces in y (>= 2, < ny). (order = polynomial degree + 1)
-    integer,intent(in)                          :: kz    !! the order of spline pieces in z (>= 2, < nz). (order = polynomial degree + 1)
-    integer,intent(in)                          :: kq    !! the order of spline pieces in q (>= 2, < nq). (order = polynomial degree + 1)
-    real(wp),dimension(:),intent(in)            :: x     !! `nx` array of x abcissae. must be strictly increasing.
-    real(wp),dimension(:),intent(in)            :: y     !! `ny` array of y abcissae. must be strictly increasing.
-    real(wp),dimension(:),intent(in)            :: z     !! `nz` array of z abcissae. must be strictly increasing.
-    real(wp),dimension(:),intent(in)            :: q     !! `nq` array of q abcissae. must be strictly increasing.
-    real(wp),dimension(:,:,:,:),intent(in)      :: fcn   !! `(nx,ny,nz,nq)` matrix of function values to interpolate. fcn(i,j,k,q) should
-                                                         !!   contain the function value at the point (x(i),y(j),z(k),q(l))
-    integer,intent(in)                          :: iknot !! 0 = knot sequence chosen by [[db1ink]].
-                                                         !! 1 = knot sequence chosen by user.
-    real(wp),dimension(:),intent(inout)         :: tx    !! The `nx+kx` knots in the x direction for the spline interpolant.
-                                                         !!   If `iknot=0` these are chosen by [[db4ink]].
-                                                         !!   If `iknot=1` these are specified by the user.
-                                                         !!    Must be non-decreasing.
-    real(wp),dimension(:),intent(inout)         :: ty    !! The `ny+ky` knots in the y direction for the spline interpolant.
-                                                         !!    If `iknot=0` these are chosen by [[db4ink]].
-                                                         !!    If `iknot=1` these are specified by the user.
-                                                         !!    Must be non-decreasing.
-    real(wp),dimension(:),intent(inout)         :: tz    !! The `nz+kz` knots in the z direction for the spline interpolant.
-                                                         !!    If `iknot=0` these are chosen by [[db4ink]].
-                                                         !!    If `iknot=1` these are specified by the user.
-                                                         !!    Must be non-decreasing.
-    real(wp),dimension(:),intent(inout)         :: tq    !! The `nq+kq` knots in the q direction for the spline interpolant.
-                                                         !!    If `iknot=0` these are chosen by [[db4ink]].
-                                                         !!    If `iknot=1` these are specified by the user.
-                                                         !!    Must be non-decreasing.
+    integer,intent(in)                          :: nx    !! number of \(x\) abcissae ( \( \ge 3 \) )
+    integer,intent(in)                          :: ny    !! number of \(y\) abcissae ( \( \ge 3 \) )
+    integer,intent(in)                          :: nz    !! number of \(z\) abcissae ( \( \ge 3 \) )
+    integer,intent(in)                          :: nq    !! number of \(q\) abcissae ( \( \ge 3 \) )
+    integer,intent(in)                          :: kx    !! the order of spline pieces in \(x\)
+                                                         !! ( \( 2 \le k_x < n_x \) ).
+                                                         !! (order = polynomial degree + 1)
+    integer,intent(in)                          :: ky    !! the order of spline pieces in \(y\)
+                                                         !! ( \( 2 \le k_y < n_y \) ).
+                                                         !! (order = polynomial degree + 1)
+    integer,intent(in)                          :: kz    !! the order of spline pieces in \(z\)
+                                                         !! ( \( 2 \le k_z < n_z \) ).
+                                                         !! (order = polynomial degree + 1)
+    integer,intent(in)                          :: kq    !! the order of spline pieces in \(q\)
+                                                         !! ( \( 2 \le k_q < n_q \) ).
+                                                         !! (order = polynomial degree + 1)
+    real(wp),dimension(:),intent(in)            :: x     !! `(nx)` array of \(x\) abcissae. must be strictly increasing.
+    real(wp),dimension(:),intent(in)            :: y     !! `(ny)` array of \(y\) abcissae. must be strictly increasing.
+    real(wp),dimension(:),intent(in)            :: z     !! `(nz)` array of \(z\) abcissae. must be strictly increasing.
+    real(wp),dimension(:),intent(in)            :: q     !! `(nq)` array of \(q\) abcissae. must be strictly increasing.
+    real(wp),dimension(:,:,:,:),intent(in)      :: fcn   !! `(nx,ny,nz,nq)` matrix of function values to interpolate. `fcn(i,j,k,q)` should
+                                                         !! contain the function value at the point (`x(i)`,`y(j)`,`z(k)`,`q(l)`)
+    integer,intent(in)                          :: iknot !! knot sequence flag:
+                                                         !!
+                                                         !! * 0 = knot sequence chosen by [[db4ink]].
+                                                         !! * 1 = knot sequence chosen by user.
+    real(wp),dimension(:),intent(inout)         :: tx    !! The `(nx+kx)` knots in the x direction for the spline interpolant.
+                                                         !!
+                                                         !! * If `iknot=0` these are chosen by [[db4ink]].
+                                                         !! * If `iknot=1` these are specified by the user.
+                                                         !!
+                                                         !! Must be non-decreasing.
+    real(wp),dimension(:),intent(inout)         :: ty    !! The `(ny+ky)` knots in the y direction for the spline interpolant.
+                                                         !!
+                                                         !! * If `iknot=0` these are chosen by [[db4ink]].
+                                                         !! * If `iknot=1` these are specified by the user.
+                                                         !!
+                                                         !! Must be non-decreasing.
+    real(wp),dimension(:),intent(inout)         :: tz    !! The `(nz+kz)` knots in the z direction for the spline interpolant.
+                                                         !!
+                                                         !! * If `iknot=0` these are chosen by [[db4ink]].
+                                                         !! * If `iknot=1` these are specified by the user.
+                                                         !!
+                                                         !! Must be non-decreasing.
+    real(wp),dimension(:),intent(inout)         :: tq    !! The `(nq+kq)` knots in the q direction for the spline interpolant.
+                                                         !!
+                                                         !! * If `iknot=0` these are chosen by [[db4ink]].
+                                                         !! * If `iknot=1` these are specified by the user.
+                                                         !!
+                                                         !! Must be non-decreasing.
     real(wp),dimension(:,:,:,:),intent(out)     :: bcoef !! `(nx,ny,nz,nq)` matrix of coefficients of the b-spline interpolant.
-    integer,intent(out)                         :: iflag !!  0 = successful execution.
-                                                         !!  2 = iknot out of range.
-                                                         !!  3 = nx out of range.
-                                                         !!  4 = kx out of range.
-                                                         !!  5 = x not strictly increasing.
-                                                         !!  6 = tx not non-decreasing.
-                                                         !!  7 = ny out of range.
-                                                         !!  8 = ky out of range.
-                                                         !!  9 = y not strictly increasing.
-                                                         !! 10 = ty not non-decreasing.
-                                                         !! 11 = nz out of range.
-                                                         !! 12 = kz out of range.
-                                                         !! 13 = z not strictly increasing.
-                                                         !! 14 = tz not non-decreasing.
-                                                         !! 15 = nq out of range.
-                                                         !! 16 = kq out of range.
-                                                         !! 17 = q not strictly increasing.
-                                                         !! 18 = tq not non-decreasing.
-                                                         !! 700 = size(x) /= size(fcn,1).
-                                                         !! 701 = size(y) /= size(fcn,2).
-                                                         !! 702 = size(z) /= size(fcn,3).
-                                                         !! 703 = size(q) /= size(fcn,4).
-                                                         !! 706 = size(x) /= nx.
-                                                         !! 707 = size(y) /= ny.
-                                                         !! 708 = size(z) /= nz.
-                                                         !! 709 = size(q) /= nq.
-                                                         !! 712 = size(tx) /= nx+kx.
-                                                         !! 713 = size(ty) /= ny+ky.
-                                                         !! 714 = size(tz) /= nz+kz.
-                                                         !! 715 = size(tq) /= nq+kq.
-                                                         !! 800 = size(x) /= size(bcoef,1).
-                                                         !! 801 = size(y) /= size(bcoef,2).
-                                                         !! 802 = size(z) /= size(bcoef,3).
-                                                         !! 803 = size(q) /= size(bcoef,4).
+    integer,intent(out)                         :: iflag !! *  0 = successful execution.
+                                                         !! *  2 = `iknot` out of range.
+                                                         !! *  3 = `nx` out of range.
+                                                         !! *  4 = `kx` out of range.
+                                                         !! *  5 = `x` not strictly increasing.
+                                                         !! *  6 = `tx` not non-decreasing.
+                                                         !! *  7 = `ny` out of range.
+                                                         !! *  8 = `ky` out of range.
+                                                         !! *  9 = `y` not strictly increasing.
+                                                         !! * 10 = `ty` not non-decreasing.
+                                                         !! * 11 = `nz` out of range.
+                                                         !! * 12 = `kz` out of range.
+                                                         !! * 13 = `z` not strictly increasing.
+                                                         !! * 14 = `tz` not non-decreasing.
+                                                         !! * 15 = `nq` out of range.
+                                                         !! * 16 = `kq` out of range.
+                                                         !! * 17 = `q` not strictly increasing.
+                                                         !! * 18 = `tq` not non-decreasing.
+                                                         !! * 700 = `size(x)`  \( \ne \) `size(fcn,1)`
+                                                         !! * 701 = `size(y)`  \( \ne \) `size(fcn,2)`
+                                                         !! * 702 = `size(z)`  \( \ne \) `size(fcn,3)`
+                                                         !! * 703 = `size(q)`  \( \ne \) `size(fcn,4)`
+                                                         !! * 706 = `size(x)`  \( \ne \) `nx`
+                                                         !! * 707 = `size(y)`  \( \ne \) `ny`
+                                                         !! * 708 = `size(z)`  \( \ne \) `nz`
+                                                         !! * 709 = `size(q)`  \( \ne \) `nq`
+                                                         !! * 712 = `size(tx`) \( \ne \) `nx+kx`
+                                                         !! * 713 = `size(ty`) \( \ne \) `ny+ky`
+                                                         !! * 714 = `size(tz`) \( \ne \) `nz+kz`
+                                                         !! * 715 = `size(tq`) \( \ne \) `nq+kq`
+                                                         !! * 800 = `size(x)`  \( \ne \) `size(bcoef,1)`
+                                                         !! * 801 = `size(y)`  \( \ne \) `size(bcoef,2)`
+                                                         !! * 802 = `size(z)`  \( \ne \) `size(bcoef,3)`
+                                                         !! * 803 = `size(q)`  \( \ne \) `size(bcoef,4)`
 
     real(wp),dimension(nx*ny*nz*nq) :: temp
     real(wp),dimension(max(2*kx*(nx+1),2*ky*(ny+1),2*kz*(nz+1),2*kq*(nq+1))) :: work
@@ -820,18 +919,18 @@
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Evaluates the tensor product piecewise polynomial
+!>
+!  Evaluates the tensor product piecewise polynomial
 !  interpolant constructed by the routine [[db4ink]] or one of its
-!  derivatives at the point (xval,yval,zval,qval).
+!  derivatives at the point (`xval`,`yval`,`zval`,`qval`).
 !
 !  To evaluate the
-!  interpolant itself, set idx=idy=idz=idq=0, to evaluate the first
-!  partial with respect to x, set idx=1,idy=idz=idq=0, and so on.
+!  interpolant itself, set `idx=idy=idz=idq=0`, to evaluate the first
+!  partial with respect to `x`, set `idx=1,idy=idz=idq=0`, and so on.
 !
 !  See [[db3val]] header for more information.
 !
-!# History
-!
+!### History
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
     pure subroutine db4val(xval,yval,zval,qval,&
@@ -844,36 +943,65 @@
 
     implicit none
 
-    integer,intent(in)                         :: idx      !! x derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                         :: idy      !! y derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                         :: idz      !! z derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                         :: idq      !! q derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                         :: nx       !! the number of interpolation points in x. (same as in last call to [[db4ink]])
-    integer,intent(in)                         :: ny       !! the number of interpolation points in y. (same as in last call to [[db4ink]])
-    integer,intent(in)                         :: nz       !! the number of interpolation points in z. (same as in last call to [[db4ink]])
-    integer,intent(in)                         :: nq       !! the number of interpolation points in q. (same as in last call to [[db4ink]])
-    integer,intent(in)                         :: kx       !! order of polynomial pieces in x. (same as in last call to [[db4ink]])
-    integer,intent(in)                         :: ky       !! order of polynomial pieces in y. (same as in last call to [[db4ink]])
-    integer,intent(in)                         :: kz       !! order of polynomial pieces in z. (same as in last call to [[db4ink]])
-    integer,intent(in)                         :: kq       !! order of polynomial pieces in q. (same as in last call to [[db4ink]])
-    real(wp),intent(in)                        :: xval     !! x coordinate of evaluation point.
-    real(wp),intent(in)                        :: yval     !! y coordinate of evaluation point.
-    real(wp),intent(in)                        :: zval     !! z coordinate of evaluation point.
-    real(wp),intent(in)                        :: qval     !! q coordinate of evaluation point.
-    real(wp),dimension(nx+kx),intent(in)       :: tx       !! sequence of knots defining the piecewise polynomial in the x direction. (same as in last call to [[db4ink]])
-    real(wp),dimension(ny+ky),intent(in)       :: ty       !! sequence of knots defining the piecewise polynomial in the y direction. (same as in last call to [[db4ink]])
-    real(wp),dimension(nz+kz),intent(in)       :: tz       !! sequence of knots defining the piecewise polynomial in the z direction. (same as in last call to [[db4ink]])
-    real(wp),dimension(nq+kq),intent(in)       :: tq       !! sequence of knots defining the piecewise polynomial in the q direction. (same as in last call to [[db4ink]])
+    integer,intent(in)                         :: idx      !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                         :: idy      !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                         :: idz      !! \(z\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                         :: idq      !! \(q\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                         :: nx       !! the number of interpolation points in \(x\).
+                                                           !! (same as in last call to [[db4ink]])
+    integer,intent(in)                         :: ny       !! the number of interpolation points in \(y\).
+                                                           !! (same as in last call to [[db4ink]])
+    integer,intent(in)                         :: nz       !! the number of interpolation points in \(z\).
+                                                           !! (same as in last call to [[db4ink]])
+    integer,intent(in)                         :: nq       !! the number of interpolation points in \(q\).
+                                                           !! (same as in last call to [[db4ink]])
+    integer,intent(in)                         :: kx       !! order of polynomial pieces in \(x\).
+                                                           !! (same as in last call to [[db4ink]])
+    integer,intent(in)                         :: ky       !! order of polynomial pieces in \(y\).
+                                                           !! (same as in last call to [[db4ink]])
+    integer,intent(in)                         :: kz       !! order of polynomial pieces in \(z\).
+                                                           !! (same as in last call to [[db4ink]])
+    integer,intent(in)                         :: kq       !! order of polynomial pieces in \(q\).
+                                                           !! (same as in last call to [[db4ink]])
+    real(wp),intent(in)                        :: xval     !! \(x\) coordinate of evaluation point.
+    real(wp),intent(in)                        :: yval     !! \(y\) coordinate of evaluation point.
+    real(wp),intent(in)                        :: zval     !! \(z\) coordinate of evaluation point.
+    real(wp),intent(in)                        :: qval     !! \(q\) coordinate of evaluation point.
+    real(wp),dimension(nx+kx),intent(in)       :: tx       !! sequence of knots defining the piecewise polynomial
+                                                           !! in the \(x\) direction. (same as in last call to [[db4ink]])
+    real(wp),dimension(ny+ky),intent(in)       :: ty       !! sequence of knots defining the piecewise polynomial
+                                                           !! in the \(y\) direction. (same as in last call to [[db4ink]])
+    real(wp),dimension(nz+kz),intent(in)       :: tz       !! sequence of knots defining the piecewise polynomial
+                                                           !! in the \(z\) direction. (same as in last call to [[db4ink]])
+    real(wp),dimension(nq+kq),intent(in)       :: tq       !! sequence of knots defining the piecewise polynomial
+                                                           !! in the \(q\) direction. (same as in last call to [[db4ink]])
     real(wp),dimension(nx,ny,nz,nq),intent(in) :: bcoef    !! the b-spline coefficients computed by [[db4ink]].
     real(wp),intent(out)                       :: f        !! interpolated value
-    integer,intent(out)                        :: iflag    !! status flag: 0 : no errors, /=0 : error
-    integer,intent(inout)                      :: inbvx    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                      :: inbvy    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                      :: inbvz    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                      :: inbvq    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                      :: iloy     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                      :: iloz     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                      :: iloq     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(out)                        :: iflag    !! status flag:
+                                                           !!
+                                                           !! * \( = 0 \)   : no errors
+                                                           !! * \( \ne 0 \) : error
+    integer,intent(inout)                      :: inbvx    !! initialization parameter which must be set
+                                                           !! to 1 the first time this routine is called,
+                                                           !! and must not be changed by the user.
+    integer,intent(inout)                      :: inbvy    !! initialization parameter which must be set
+                                                           !! to 1 the first time this routine is called,
+                                                           !! and must not be changed by the user.
+    integer,intent(inout)                      :: inbvz    !! initialization parameter which must be set
+                                                           !! to 1 the first time this routine is called,
+                                                           !! and must not be changed by the user.
+    integer,intent(inout)                      :: inbvq    !! initialization parameter which must be set
+                                                           !! to 1 the first time this routine is called,
+                                                           !! and must not be changed by the user.
+    integer,intent(inout)                      :: iloy     !! initialization parameter which must be set
+                                                           !! to 1 the first time this routine is called,
+                                                           !! and must not be changed by the user.
+    integer,intent(inout)                      :: iloz     !! initialization parameter which must be set
+                                                           !! to 1 the first time this routine is called,
+                                                           !! and must not be changed by the user.
+    integer,intent(inout)                      :: iloq     !! initialization parameter which must be set
+                                                           !! to 1 the first time this routine is called,
+                                                           !! and must not be changed by the user.
 
     real(wp),dimension(ky,kz,kq)             :: temp1
     real(wp),dimension(kz,kq)                :: temp2
@@ -953,16 +1081,23 @@
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Determines the parameters of a function that interpolates
-!  the five-dimensional gridded data (x(i),y(j),z(k),q(l),r(m),fcn(i,j,k,l,m)) for
-!  i=1,..,nx, j=1,..,ny, k=1,..,nz, l=1,..,nq, and m=1,..,nr.
-!  The interpolating function and its derivatives may subsequently be evaluated
-!  by the function [[db5val]].
+!>
+! Determines the parameters of a function that interpolates
+! the five-dimensional gridded data:
 !
-!  See [[db3ink]] header for more details.
+! $$ [x(i),y(j),z(k),q(l),r(m),\mathrm{fcn}(i,j,k,l,m)] $$
 !
-!# History
+! for:
 !
+! $$ i=1,..,n_x ~\mathrm{and}~ j=1,..,n_y, ~\mathrm{and}~ k=1,..,n_z,
+!    ~\mathrm{and}~ l=1,..,n_q, ~\mathrm{and}~ m=1,..,n_r $$
+!
+! The interpolating function and its derivatives may subsequently be evaluated
+! by the function [[db5val]].
+!
+! See [[db3ink]] header for more details.
+!
+!### History
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
     pure subroutine db5ink(x,nx,y,ny,z,nz,q,nq,r,nr,&
@@ -974,88 +1109,110 @@
 
     implicit none
 
-    integer,intent(in)                             :: nx    !! number of x abcissae (>= 3)
-    integer,intent(in)                             :: ny    !! number of y abcissae (>= 3)
-    integer,intent(in)                             :: nz    !! number of z abcissae (>= 3)
-    integer,intent(in)                             :: nq    !! number of q abcissae (>= 3)
-    integer,intent(in)                             :: nr    !! number of r abcissae (>= 3)
-    integer,intent(in)                             :: kx    !! the order of spline pieces in x (>= 2, < nx). (order = polynomial degree + 1)
-    integer,intent(in)                             :: ky    !! the order of spline pieces in y (>= 2, < ny). (order = polynomial degree + 1)
-    integer,intent(in)                             :: kz    !! the order of spline pieces in z (>= 2, < nz). (order = polynomial degree + 1)
-    integer,intent(in)                             :: kq    !! the order of spline pieces in q (>= 2, < nq). (order = polynomial degree + 1)
-    integer,intent(in)                             :: kr    !! the order of spline pieces in r (>= 2, < nr). (order = polynomial degree + 1)
-    real(wp),dimension(:),intent(in)               :: x     !! `nx` array of x abcissae. must be strictly increasing.
-    real(wp),dimension(:),intent(in)               :: y     !! `ny` array of y abcissae. must be strictly increasing.
-    real(wp),dimension(:),intent(in)               :: z     !! `nz` array of z abcissae. must be strictly increasing.
-    real(wp),dimension(:),intent(in)               :: q     !! `nq` array of q abcissae. must be strictly increasing.
-    real(wp),dimension(:),intent(in)               :: r     !! `nr` array of r abcissae. must be strictly increasing.
-    real(wp),dimension(:,:,:,:,:),intent(in)       :: fcn   !! `(nx,ny,nz,nq,nr)` matrix of function values to interpolate. fcn(i,j,k,q,r) should
-                                                            !!   contain the function value at the point (x(i),y(j),z(k),q(l),r(m))
-    integer,intent(in)                             :: iknot !! 0 = knot sequence chosen by [[db1ink]].
-                                                            !! 1 = knot sequence chosen by user.
-    real(wp),dimension(:),intent(inout)            :: tx    !! The `nx+kx` knots in the x direction for the spline interpolant.
-                                                            !!   If `iknot=0` these are chosen by [[db5ink]].
-                                                            !!   If `iknot=1` these are specified by the user.
-                                                            !!    Must be non-decreasing.
-    real(wp),dimension(:),intent(inout)            :: ty    !! The `ny+ky` knots in the y direction for the spline interpolant.
-                                                            !!    If `iknot=0` these are chosen by [[db5ink]].
-                                                            !!    If `iknot=1` these are specified by the user.
-                                                            !!    Must be non-decreasing.
-    real(wp),dimension(:),intent(inout)            :: tz    !! The `nz+kz` knots in the z direction for the spline interpolant.
-                                                            !!    If `iknot=0` these are chosen by [[db5ink]].
-                                                            !!    If `iknot=1` these are specified by the user.
-                                                            !!    Must be non-decreasing.
-    real(wp),dimension(:),intent(inout)            :: tq    !! The `nq+kq` knots in the q direction for the spline interpolant.
-                                                            !!    If `iknot=0` these are chosen by [[db5ink]].
-                                                            !!    If `iknot=1` these are specified by the user.
-                                                            !!    Must be non-decreasing.
-    real(wp),dimension(:),intent(inout)            :: tr    !! The `nr+kr` knots in the r direction for the spline interpolant.
-                                                            !!    If `iknot=0` these are chosen by [[db5ink]].
-                                                            !!    If `iknot=1` these are specified by the user.
-                                                            !!    Must be non-decreasing.
+    integer,intent(in)                             :: nx    !! number of \(x\) abcissae ( \( \ge 3 \) )
+    integer,intent(in)                             :: ny    !! number of \(y\) abcissae ( \( \ge 3 \) )
+    integer,intent(in)                             :: nz    !! number of \(z\) abcissae ( \( \ge 3 \) )
+    integer,intent(in)                             :: nq    !! number of \(q\) abcissae ( \( \ge 3 \) )
+    integer,intent(in)                             :: nr    !! number of \(r\) abcissae ( \( \ge 3 \) )
+    integer,intent(in)                             :: kx    !! the order of spline pieces in \(x\)
+                                                            !! ( \( 2 \le k_x < n_x \) ).
+                                                            !! (order = polynomial degree + 1)
+    integer,intent(in)                             :: ky    !! the order of spline pieces in \(y\)
+                                                            !! ( \( 2 \le k_y < n_y \) ).
+                                                            !! (order = polynomial degree + 1)
+    integer,intent(in)                             :: kz    !! the order of spline pieces in \(z\)
+                                                            !! ( \( 2 \le k_z < n_z \) ).
+                                                            !! (order = polynomial degree + 1)
+    integer,intent(in)                             :: kq    !! the order of spline pieces in \(q\)
+                                                            !! ( \( 2 \le k_q < n_q \) ).
+                                                            !! (order = polynomial degree + 1)
+    integer,intent(in)                             :: kr    !! the order of spline pieces in \(r\)
+                                                            !! ( \( 2 \le k_r < n_r \) ).
+                                                            !! (order = polynomial degree + 1)
+    real(wp),dimension(:),intent(in)               :: x     !! `(nx)` array of \(x\) abcissae. must be strictly increasing.
+    real(wp),dimension(:),intent(in)               :: y     !! `(ny)` array of \(y\) abcissae. must be strictly increasing.
+    real(wp),dimension(:),intent(in)               :: z     !! `(nz)` array of \(z\) abcissae. must be strictly increasing.
+    real(wp),dimension(:),intent(in)               :: q     !! `(nq)` array of \(q\) abcissae. must be strictly increasing.
+    real(wp),dimension(:),intent(in)               :: r     !! `(nr)` array of \(r\) abcissae. must be strictly increasing.
+    real(wp),dimension(:,:,:,:,:),intent(in)       :: fcn   !! `(nx,ny,nz,nq,nr)` matrix of function values to interpolate. `fcn(i,j,k,q,r)` should
+                                                            !! contain the function value at the point (`x(i)`,`y(j)`,`z(k)`,`q(l)`,`r(m)`)
+    integer,intent(in)                             :: iknot !! knot sequence flag:
+                                                            !!
+                                                            !! * 0 = knot sequence chosen by [[db5ink]].
+                                                            !! * 1 = knot sequence chosen by user.
+    real(wp),dimension(:),intent(inout)            :: tx    !! The `(nx+kx)` knots in the \(x\) direction for the spline interpolant.
+                                                            !!
+                                                            !! * If `iknot=0` these are chosen by [[db5ink]].
+                                                            !! * If `iknot=1` these are specified by the user.
+                                                            !!
+                                                            !! Must be non-decreasing.
+    real(wp),dimension(:),intent(inout)            :: ty    !! The `(ny+ky)` knots in the \(y\) direction for the spline interpolant.
+                                                            !!
+                                                            !! * If `iknot=0` these are chosen by [[db5ink]].
+                                                            !! * If `iknot=1` these are specified by the user.
+                                                            !!
+                                                            !! Must be non-decreasing.
+    real(wp),dimension(:),intent(inout)            :: tz    !! The `(nz+kz)` knots in the \(z\) direction for the spline interpolant.
+                                                            !!
+                                                            !! * If `iknot=0` these are chosen by [[db5ink]].
+                                                            !! * If `iknot=1` these are specified by the user.
+                                                            !!
+                                                            !! Must be non-decreasing.
+    real(wp),dimension(:),intent(inout)            :: tq    !! The `(nq+kq)` knots in the \(q\) direction for the spline interpolant.
+                                                            !!
+                                                            !! * If `iknot=0` these are chosen by [[db5ink]].
+                                                            !! * If `iknot=1` these are specified by the user.
+                                                            !!
+                                                            !! Must be non-decreasing.
+    real(wp),dimension(:),intent(inout)            :: tr    !! The `(nr+kr)` knots in the \(r\) direction for the spline interpolant.
+                                                            !!
+                                                            !! * If `iknot=0` these are chosen by [[db5ink]].
+                                                            !! * If `iknot=1` these are specified by the user.
+                                                            !!
+                                                            !! Must be non-decreasing.
     real(wp),dimension(:,:,:,:,:),intent(out)      :: bcoef !! `(nx,ny,nz,nq,nr)` matrix of coefficients of the b-spline interpolant.
-    integer,intent(out)                            :: iflag !!  0 = successful execution.
-                                                            !!  2 = iknot out of range.
-                                                            !!  3 = nx out of range.
-                                                            !!  4 = kx out of range.
-                                                            !!  5 = x not strictly increasing.
-                                                            !!  6 = tx not non-decreasing.
-                                                            !!  7 = ny out of range.
-                                                            !!  8 = ky out of range.
-                                                            !!  9 = y not strictly increasing.
-                                                            !! 10 = ty not non-decreasing.
-                                                            !! 11 = nz out of range.
-                                                            !! 12 = kz out of range.
-                                                            !! 13 = z not strictly increasing.
-                                                            !! 14 = tz not non-decreasing.
-                                                            !! 15 = nq out of range.
-                                                            !! 16 = kq out of range.
-                                                            !! 17 = q not strictly increasing.
-                                                            !! 18 = tq not non-decreasing.
-                                                            !! 19 = nr out of range.
-                                                            !! 20 = kr out of range.
-                                                            !! 21 = r not strictly increasing.
-                                                            !! 22 = tr not non-decreasing.
-                                                            !! 700 = size(x) /= size(fcn,1).
-                                                            !! 701 = size(y) /= size(fcn,2).
-                                                            !! 702 = size(z) /= size(fcn,3).
-                                                            !! 703 = size(q) /= size(fcn,4).
-                                                            !! 704 = size(r) /= size(fcn,5).
-                                                            !! 706 = size(x) /= nx.
-                                                            !! 707 = size(y) /= ny.
-                                                            !! 708 = size(z) /= nz.
-                                                            !! 709 = size(q) /= nq.
-                                                            !! 710 = size(r) /= nr.
-                                                            !! 712 = size(tx) /= nx+kx.
-                                                            !! 713 = size(ty) /= ny+ky.
-                                                            !! 714 = size(tz) /= nz+kz.
-                                                            !! 715 = size(tq) /= nq+kq.
-                                                            !! 716 = size(tr) /= nr+kr.
-                                                            !! 800 = size(x) /= size(bcoef,1).
-                                                            !! 801 = size(y) /= size(bcoef,2).
-                                                            !! 802 = size(z) /= size(bcoef,3).
-                                                            !! 803 = size(q) /= size(bcoef,4).
-                                                            !! 804 = size(r) /= size(bcoef,5).
+    integer,intent(out)                            :: iflag !! *  0 = successful execution.
+                                                            !! *  2 = `iknot` out of range.
+                                                            !! *  3 = `nx` out of range.
+                                                            !! *  4 = `kx` out of range.
+                                                            !! *  5 = `x` not strictly increasing.
+                                                            !! *  6 = `tx` not non-decreasing.
+                                                            !! *  7 = `ny` out of range.
+                                                            !! *  8 = `ky` out of range.
+                                                            !! *  9 = `y` not strictly increasing.
+                                                            !! * 10 = `ty` not non-decreasing.
+                                                            !! * 11 = `nz` out of range.
+                                                            !! * 12 = `kz` out of range.
+                                                            !! * 13 = `z` not strictly increasing.
+                                                            !! * 14 = `tz` not non-decreasing.
+                                                            !! * 15 = `nq` out of range.
+                                                            !! * 16 = `kq` out of range.
+                                                            !! * 17 = `q` not strictly increasing.
+                                                            !! * 18 = `tq` not non-decreasing.
+                                                            !! * 19 = `nr` out of range.
+                                                            !! * 20 = `kr` out of range.
+                                                            !! * 21 = `r` not strictly increasing.
+                                                            !! * 22 = `tr` not non-decreasing.
+                                                            !! * 700 = `size(x)`  \( \ne \) `size(fcn,1)`
+                                                            !! * 701 = `size(y)`  \( \ne \) `size(fcn,2)`
+                                                            !! * 702 = `size(z)`  \( \ne \) `size(fcn,3)`
+                                                            !! * 703 = `size(q)`  \( \ne \) `size(fcn,4)`
+                                                            !! * 704 = `size(r)`  \( \ne \) `size(fcn,5)`
+                                                            !! * 706 = `size(x)`  \( \ne \) `nx`
+                                                            !! * 707 = `size(y)`  \( \ne \) `ny`
+                                                            !! * 708 = `size(z)`  \( \ne \) `nz`
+                                                            !! * 709 = `size(q)`  \( \ne \) `nq`
+                                                            !! * 710 = `size(r)`  \( \ne \) `nr`
+                                                            !! * 712 = `size(tx)` \( \ne \) `nx+kx`
+                                                            !! * 713 = `size(ty)` \( \ne \) `ny+ky`
+                                                            !! * 714 = `size(tz)` \( \ne \) `nz+kz`
+                                                            !! * 715 = `size(tq)` \( \ne \) `nq+kq`
+                                                            !! * 716 = `size(tr)` \( \ne \) `nr+kr`
+                                                            !! * 800 = `size(x)`  \( \ne \) `size(bcoef,1)`
+                                                            !! * 801 = `size(y)`  \( \ne \) `size(bcoef,2)`
+                                                            !! * 802 = `size(z)`  \( \ne \) `size(bcoef,3)`
+                                                            !! * 803 = `size(q)`  \( \ne \) `size(bcoef,4)`
+                                                            !! * 804 = `size(r)`  \( \ne \) `size(bcoef,5)`
 
     real(wp),dimension(nx*ny*nz*nq*nr) :: temp
     real(wp),dimension(max( 2*kx*(nx+1),&
@@ -1108,18 +1265,18 @@
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Evaluates the tensor product piecewise polynomial
+!>
+!  Evaluates the tensor product piecewise polynomial
 !  interpolant constructed by the routine [[db5ink]] or one of its
-!  derivatives at the point (xval,yval,zval,qval,rval).
+!  derivatives at the point (`xval`,`yval`,`zval`,`qval`,`rval`).
 !
 !  To evaluate the
-!  interpolant itself, set idx=idy=idz=idq=idr=0, to evaluate the first
-!  partial with respect to x, set idx=1,idy=idz=idq=idr=0, and so on.
+!  interpolant itself, set `idx=idy=idz=idq=idr=0`, to evaluate the first
+!  partial with respect to `x`, set `idx=1,idy=idz=idq=idr=0,` and so on.
 !
 !  See [[db3val]] header for more information.
 !
-!# History
-!
+!### History
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
     pure subroutine db5val(xval,yval,zval,qval,rval,&
@@ -1132,43 +1289,84 @@
 
     implicit none
 
-    integer,intent(in)                            :: idx      !! x derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                            :: idy      !! y derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                            :: idz      !! z derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                            :: idq      !! q derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                            :: idr      !! r derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                            :: nx       !! the number of interpolation points in x. (same as in last call to [[db5ink]])
-    integer,intent(in)                            :: ny       !! the number of interpolation points in y. (same as in last call to [[db5ink]])
-    integer,intent(in)                            :: nz       !! the number of interpolation points in z. (same as in last call to [[db5ink]])
-    integer,intent(in)                            :: nq       !! the number of interpolation points in q. (same as in last call to [[db5ink]])
-    integer,intent(in)                            :: nr       !! the number of interpolation points in r. (same as in last call to [[db5ink]])
-    integer,intent(in)                            :: kx       !! order of polynomial pieces in x. (same as in last call to [[db5ink]])
-    integer,intent(in)                            :: ky       !! order of polynomial pieces in y. (same as in last call to [[db5ink]])
-    integer,intent(in)                            :: kz       !! order of polynomial pieces in z. (same as in last call to [[db5ink]])
-    integer,intent(in)                            :: kq       !! order of polynomial pieces in q. (same as in last call to [[db5ink]])
-    integer,intent(in)                            :: kr       !! order of polynomial pieces in r. (same as in last call to [[db5ink]])
-    real(wp),intent(in)                           :: xval     !! x coordinate of evaluation point.
-    real(wp),intent(in)                           :: yval     !! y coordinate of evaluation point.
-    real(wp),intent(in)                           :: zval     !! z coordinate of evaluation point.
-    real(wp),intent(in)                           :: qval     !! q coordinate of evaluation point.
-    real(wp),intent(in)                           :: rval     !! r coordinate of evaluation point.
-    real(wp),dimension(nx+kx),intent(in)          :: tx       !! sequence of knots defining the piecewise polynomial in the x direction. (same as in last call to [[db5ink]])
-    real(wp),dimension(ny+ky),intent(in)          :: ty       !! sequence of knots defining the piecewise polynomial in the y direction. (same as in last call to [[db5ink]])
-    real(wp),dimension(nz+kz),intent(in)          :: tz       !! sequence of knots defining the piecewise polynomial in the z direction. (same as in last call to [[db5ink]])
-    real(wp),dimension(nq+kq),intent(in)          :: tq       !! sequence of knots defining the piecewise polynomial in the q direction. (same as in last call to [[db5ink]])
-    real(wp),dimension(nr+kr),intent(in)          :: tr       !! sequence of knots defining the piecewise polynomial in the r direction. (same as in last call to [[db5ink]])
+    integer,intent(in)                            :: idx      !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                            :: idy      !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                            :: idz      !! \(z\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                            :: idq      !! \(q\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                            :: idr      !! \(r\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                            :: nx       !! the number of interpolation points in \(x\).
+                                                              !! (same as in last call to [[db5ink]])
+    integer,intent(in)                            :: ny       !! the number of interpolation points in \(y\).
+                                                              !! (same as in last call to [[db5ink]])
+    integer,intent(in)                            :: nz       !! the number of interpolation points in \(z\).
+                                                              !! (same as in last call to [[db5ink]])
+    integer,intent(in)                            :: nq       !! the number of interpolation points in \(q\).
+                                                              !! (same as in last call to [[db5ink]])
+    integer,intent(in)                            :: nr       !! the number of interpolation points in \(r\).
+                                                              !! (same as in last call to [[db5ink]])
+    integer,intent(in)                            :: kx       !! order of polynomial pieces in \(x\).
+                                                              !! (same as in last call to [[db5ink]])
+    integer,intent(in)                            :: ky       !! order of polynomial pieces in \(y\).
+                                                              !! (same as in last call to [[db5ink]])
+    integer,intent(in)                            :: kz       !! order of polynomial pieces in \(z\).
+                                                              !! (same as in last call to [[db5ink]])
+    integer,intent(in)                            :: kq       !! order of polynomial pieces in \(q\).
+                                                              !! (same as in last call to [[db5ink]])
+    integer,intent(in)                            :: kr       !! order of polynomial pieces in \(r\).
+                                                              !! (same as in last call to [[db5ink]])
+    real(wp),intent(in)                           :: xval     !! \(x\) coordinate of evaluation point.
+    real(wp),intent(in)                           :: yval     !! \(y\) coordinate of evaluation point.
+    real(wp),intent(in)                           :: zval     !! \(z\) coordinate of evaluation point.
+    real(wp),intent(in)                           :: qval     !! \(q\) coordinate of evaluation point.
+    real(wp),intent(in)                           :: rval     !! \(r\) coordinate of evaluation point.
+    real(wp),dimension(nx+kx),intent(in)          :: tx       !! sequence of knots defining the piecewise polynomial
+                                                              !! in the \(x\) direction.
+                                                              !! (same as in last call to [[db5ink]])
+    real(wp),dimension(ny+ky),intent(in)          :: ty       !! sequence of knots defining the piecewise polynomial
+                                                              !! in the \(y\) direction.
+                                                              !! (same as in last call to [[db5ink]])
+    real(wp),dimension(nz+kz),intent(in)          :: tz       !! sequence of knots defining the piecewise polynomial
+                                                              !! in the \(z\) direction.
+                                                              !! (same as in last call to [[db5ink]])
+    real(wp),dimension(nq+kq),intent(in)          :: tq       !! sequence of knots defining the piecewise polynomial
+                                                              !! in the \(q\) direction.
+                                                              !! (same as in last call to [[db5ink]])
+    real(wp),dimension(nr+kr),intent(in)          :: tr       !! sequence of knots defining the piecewise polynomial
+                                                              !! in the \(r\) direction.
+                                                              !! (same as in last call to [[db5ink]])
     real(wp),dimension(nx,ny,nz,nq,nr),intent(in) :: bcoef    !! the b-spline coefficients computed by [[db5ink]].
     real(wp),intent(out)                          :: f        !! interpolated value
-    integer,intent(out)                           :: iflag    !! status flag: 0 : no errors, /=0 : error
-    integer,intent(inout)                         :: inbvx    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                         :: inbvy    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                         :: inbvz    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                         :: inbvq    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                         :: inbvr    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                         :: iloy     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                         :: iloz     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                         :: iloq     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                         :: ilor     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(out)                           :: iflag    !! status flag:
+                                                              !!
+                                                              !! * \( = 0 \)   : no errors
+                                                              !! * \( \ne 0 \) : error
+    integer,intent(inout)                         :: inbvx    !! initialization parameter which must be set
+                                                              !! to 1 the first time this routine is called,
+                                                              !! and must not be changed by the user.
+    integer,intent(inout)                         :: inbvy    !! initialization parameter which must be set
+                                                              !! to 1 the first time this routine is called,
+                                                              !! and must not be changed by the user.
+    integer,intent(inout)                         :: inbvz    !! initialization parameter which must be set
+                                                              !! to 1 the first time this routine is called,
+                                                              !! and must not be changed by the user.
+    integer,intent(inout)                         :: inbvq    !! initialization parameter which must be set
+                                                              !! to 1 the first time this routine is called,
+                                                              !! and must not be changed by the user.
+    integer,intent(inout)                         :: inbvr    !! initialization parameter which must be set
+                                                              !! to 1 the first time this routine is called,
+                                                              !! and must not be changed by the user.
+    integer,intent(inout)                         :: iloy     !! initialization parameter which must be set
+                                                              !! to 1 the first time this routine is called,
+                                                              !! and must not be changed by the user.
+    integer,intent(inout)                         :: iloz     !! initialization parameter which must be set
+                                                              !! to 1 the first time this routine is called,
+                                                              !! and must not be changed by the user.
+    integer,intent(inout)                         :: iloq     !! initialization parameter which must be set
+                                                              !! to 1 the first time this routine is called,
+                                                              !! and must not be changed by the user.
+    integer,intent(inout)                         :: ilor     !! initialization parameter which must be set
+                                                              !! to 1 the first time this routine is called,
+                                                              !! and must not be changed by the user.
 
     real(wp),dimension(ky,kz,kq,kr)           :: temp1
     real(wp),dimension(kz,kq,kr)              :: temp2
@@ -1270,16 +1468,22 @@
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Determines the parameters of a function that interpolates
-!  the six-dimensional gridded data (x(i),y(j),z(k),q(l),r(m),s(n),fcn(i,j,k,l,m,n)) for
-!  i=1,..,nx, j=1,..,ny, k=1,..,nz, l=1,..,nq, m=1,..,nr, n=1,..,ns.
+!>
+!  Determines the parameters of a function that interpolates
+!  the six-dimensional gridded data:
+!
+!  $$ [x(i),y(j),z(k),q(l),r(m),s(n),\mathrm{fcn}(i,j,k,l,m,n)] $$
+!
+!  for:
+!
+!  $$ i=1,..,n_x, j=1,..,n_y, k=1,..,n_z, l=1,..,n_q, m=1,..,n_r, n=1,..,n_s $$
+!
 !  the interpolating function and its derivatives may subsequently be evaluated
 !  by the function [[db6val]].
 !
 !  See [[db3ink]] header for more details.
 !
-!# History
-!
+!### History
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
     pure subroutine db6ink(x,nx,y,ny,z,nz,q,nq,r,nr,s,ns,&
@@ -1291,103 +1495,136 @@
 
     implicit none
 
-    integer,intent(in)                                :: nx    !! number of x abcissae (>= 3)
-    integer,intent(in)                                :: ny    !! number of y abcissae (>= 3)
-    integer,intent(in)                                :: nz    !! number of z abcissae (>= 3)
-    integer,intent(in)                                :: nq    !! number of q abcissae (>= 3)
-    integer,intent(in)                                :: nr    !! number of r abcissae (>= 3)
-    integer,intent(in)                                :: ns    !! number of s abcissae (>= 3)
-    integer,intent(in)                                :: kx    !! the order of spline pieces in x (>= 2, < nx). (order = polynomial degree + 1)
-    integer,intent(in)                                :: ky    !! the order of spline pieces in y (>= 2, < ny). (order = polynomial degree + 1)
-    integer,intent(in)                                :: kz    !! the order of spline pieces in z (>= 2, < nz). (order = polynomial degree + 1)
-    integer,intent(in)                                :: kq    !! the order of spline pieces in q (>= 2, < nq). (order = polynomial degree + 1)
-    integer,intent(in)                                :: kr    !! the order of spline pieces in r (>= 2, < nr). (order = polynomial degree + 1)
-    integer,intent(in)                                :: ks    !! the order of spline pieces in s (>= 2, < ns). (order = polynomial degree + 1)
-    real(wp),dimension(:),intent(in)                  :: x     !! `nx` array of x abcissae. must be strictly increasing.
-    real(wp),dimension(:),intent(in)                  :: y     !! `ny` array of y abcissae. must be strictly increasing.
-    real(wp),dimension(:),intent(in)                  :: z     !! `nz` array of z abcissae. must be strictly increasing.
-    real(wp),dimension(:),intent(in)                  :: q     !! `nq` array of q abcissae. must be strictly increasing.
-    real(wp),dimension(:),intent(in)                  :: r     !! `nr` array of r abcissae. must be strictly increasing.
-    real(wp),dimension(:),intent(in)                  :: s     !! `ns` array of s abcissae. must be strictly increasing.
-    real(wp),dimension(:,:,:,:,:,:),intent(in)        :: fcn   !! `(nx,ny,nz,nq,nr,ns)` matrix of function values to interpolate. fcn(i,j,k,q,r,s) should
-                                                               !!   contain the function value at the point (x(i),y(j),z(k),q(l),r(m),s(n))
-    integer,intent(in)                                :: iknot !! 0 = knot sequence chosen by [[db1ink]].
-                                                               !! 1 = knot sequence chosen by user.
-    real(wp),dimension(:),intent(inout)               :: tx    !! The `nx+kx` knots in the x direction for the spline interpolant.
-                                                               !!   If `iknot=0` these are chosen by [[db6ink]].
-                                                               !!   If `iknot=1` these are specified by the user.
-                                                               !!    Must be non-decreasing.
-    real(wp),dimension(:),intent(inout)               :: ty    !! The `ny+ky` knots in the y direction for the spline interpolant.
-                                                               !!    If `iknot=0` these are chosen by [[db6ink]].
-                                                               !!    If `iknot=1` these are specified by the user.
-                                                               !!    Must be non-decreasing.
-    real(wp),dimension(:),intent(inout)               :: tz    !! The `nz+kz` knots in the z direction for the spline interpolant.
-                                                               !!    If `iknot=0` these are chosen by [[db6ink]].
-                                                               !!    If `iknot=1` these are specified by the user.
-                                                               !!    Must be non-decreasing.
-    real(wp),dimension(:),intent(inout)               :: tq    !! The `nq+kq` knots in the q direction for the spline interpolant.
-                                                               !!    If `iknot=0` these are chosen by [[db6ink]].
-                                                               !!    If `iknot=1` these are specified by the user.
-                                                               !!    Must be non-decreasing.
-    real(wp),dimension(:),intent(inout)               :: tr    !! The `nr+kr` knots in the r direction for the spline interpolant.
-                                                               !!    If `iknot=0` these are chosen by [[db6ink]].
-                                                               !!    If `iknot=1` these are specified by the user.
-                                                               !!    Must be non-decreasing.
-    real(wp),dimension(:),intent(inout)               :: ts    !! The `ns+ks` knots in the s direction for the spline interpolant.
-                                                               !!    If `iknot=0` these are chosen by [[db6ink]].
-                                                               !!    If `iknot=1` these are specified by the user.
-                                                               !!    Must be non-decreasing.
+    integer,intent(in)                                :: nx    !! number of \(x\) abcissae ( \( \ge 3 \) )
+    integer,intent(in)                                :: ny    !! number of \(y\) abcissae ( \( \ge 3 \) )
+    integer,intent(in)                                :: nz    !! number of \(z\) abcissae ( \( \ge 3 \) )
+    integer,intent(in)                                :: nq    !! number of \(q\) abcissae ( \( \ge 3 \) )
+    integer,intent(in)                                :: nr    !! number of \(r\) abcissae ( \( \ge 3 \) )
+    integer,intent(in)                                :: ns    !! number of \(s\) abcissae ( \( \ge 3 \) )
+    integer,intent(in)                                :: kx    !! the order of spline pieces in \(x\)
+                                                               !! ( \( 2 \le k_x < n_x \) )
+                                                               !! (order = polynomial degree + 1)
+    integer,intent(in)                                :: ky    !! the order of spline pieces in \(y\)
+                                                               !! ( \( 2 \le k_y < n_y \) )
+                                                               !! (order = polynomial degree + 1)
+    integer,intent(in)                                :: kz    !! the order of spline pieces in \(z\)
+                                                               !! ( \( 2 \le k_z < n_z \) )
+                                                               !! (order = polynomial degree + 1)
+    integer,intent(in)                                :: kq    !! the order of spline pieces in \(q\)
+                                                               !! ( \( 2 \le k_q < n_q \) )
+                                                               !! (order = polynomial degree + 1)
+    integer,intent(in)                                :: kr    !! the order of spline pieces in \(r\)
+                                                               !! ( \( 2 \le k_r < n_r \) )
+                                                               !! (order = polynomial degree + 1)
+    integer,intent(in)                                :: ks    !! the order of spline pieces in \(s\)
+                                                               !! ( \( 2 \le k_s < n_s \) )
+                                                               !! (order = polynomial degree + 1)
+    real(wp),dimension(:),intent(in)                  :: x     !! `(nx)` array of \(x\) abcissae.
+                                                               !! must be strictly increasing.
+    real(wp),dimension(:),intent(in)                  :: y     !! `(ny)` array of \(y\) abcissae.
+                                                               !! must be strictly increasing.
+    real(wp),dimension(:),intent(in)                  :: z     !! `(nz)` array of \(z\) abcissae.
+                                                               !! must be strictly increasing.
+    real(wp),dimension(:),intent(in)                  :: q     !! `(nq)` array of \(q\) abcissae.
+                                                               !! must be strictly increasing.
+    real(wp),dimension(:),intent(in)                  :: r     !! `(nr)` array of \(r\) abcissae.
+                                                               !! must be strictly increasing.
+    real(wp),dimension(:),intent(in)                  :: s     !! `(ns)` array of \(s\) abcissae.
+                                                               !! must be strictly increasing.
+    real(wp),dimension(:,:,:,:,:,:),intent(in)        :: fcn   !! `(nx,ny,nz,nq,nr,ns)` matrix of function values to interpolate.
+                                                               !! `fcn(i,j,k,q,r,s)` should contain the function value
+                                                               !! at the point (`x(i)`,`y(j)`,`z(k)`,`q(l)`,`r(m)`,`s(n)`)
+    integer,intent(in)                                :: iknot !! knot sequence flag:
+                                                               !!
+                                                               !! * 0 = knot sequence chosen by [[db6ink]].
+                                                               !! * 1 = knot sequence chosen by user.
+    real(wp),dimension(:),intent(inout)               :: tx    !! The `(nx+kx)` knots in the \(x\) direction for the spline interpolant.
+                                                               !!
+                                                               !! * f `iknot=0` these are chosen by [[db6ink]].
+                                                               !! * f `iknot=1` these are specified by the user.
+                                                               !!
+                                                               !! Must be non-decreasing.
+    real(wp),dimension(:),intent(inout)               :: ty    !! The `(ny+ky)` knots in the \(y\) direction for the spline interpolant.
+                                                               !!
+                                                               !! * If `iknot=0` these are chosen by [[db6ink]].
+                                                               !! * If `iknot=1` these are specified by the user.
+                                                               !!
+                                                               !! Must be non-decreasing.
+    real(wp),dimension(:),intent(inout)               :: tz    !! The `(nz+kz)` knots in the \(z\) direction for the spline interpolant.
+                                                               !!
+                                                               !! * If `iknot=0` these are chosen by [[db6ink]].
+                                                               !! * If `iknot=1` these are specified by the user.
+                                                               !!
+                                                               !! Must be non-decreasing.
+    real(wp),dimension(:),intent(inout)               :: tq    !! The `(nq+kq)` knots in the \(q\) direction for the spline interpolant.
+                                                               !!
+                                                               !! * If `iknot=0` these are chosen by [[db6ink]].
+                                                               !! * If `iknot=1` these are specified by the user.
+                                                               !!
+                                                               !! Must be non-decreasing.
+    real(wp),dimension(:),intent(inout)               :: tr    !! The `(nr+kr)` knots in the \(r\) direction for the spline interpolant.
+                                                               !!
+                                                               !! * If `iknot=0` these are chosen by [[db6ink]].
+                                                               !! * If `iknot=1` these are specified by the user.
+                                                               !!
+                                                               !! Must be non-decreasing.
+    real(wp),dimension(:),intent(inout)               :: ts    !! The `(ns+ks)` knots in the \(s\) direction for the spline interpolant.
+                                                               !!
+                                                               !! * If `iknot=0` these are chosen by [[db6ink]].
+                                                               !! * If `iknot=1` these are specified by the user.
+                                                               !!
+                                                               !! Must be non-decreasing.
     real(wp),dimension(:,:,:,:,:,:),intent(out)       :: bcoef !! `(nx,ny,nz,nq,nr,ns)` matrix of coefficients of the b-spline interpolant.
-    integer,intent(out)                               :: iflag !!  0 = successful execution.
-                                                               !!  2 = iknot out of range.
-                                                               !!  3 = nx out of range.
-                                                               !!  4 = kx out of range.
-                                                               !!  5 = x not strictly increasing.
-                                                               !!  6 = tx not non-decreasing.
-                                                               !!  7 = ny out of range.
-                                                               !!  8 = ky out of range.
-                                                               !!  9 = y not strictly increasing.
-                                                               !! 10 = ty not non-decreasing.
-                                                               !! 11 = nz out of range.
-                                                               !! 12 = kz out of range.
-                                                               !! 13 = z not strictly increasing.
-                                                               !! 14 = tz not non-decreasing.
-                                                               !! 15 = nq out of range.
-                                                               !! 16 = kq out of range.
-                                                               !! 17 = q not strictly increasing.
-                                                               !! 18 = tq not non-decreasing.
-                                                               !! 19 = nr out of range.
-                                                               !! 20 = kr out of range.
-                                                               !! 21 = r not strictly increasing.
-                                                               !! 22 = tr not non-decreasing.
-                                                               !! 23 = ns out of range.
-                                                               !! 24 = ks out of range.
-                                                               !! 25 = s not strictly increasing.
-                                                               !! 26 = ts not non-decreasing.
-                                                               !! 700 = size(x) /= size(fcn,1).
-                                                               !! 701 = size(y) /= size(fcn,2).
-                                                               !! 702 = size(z) /= size(fcn,3).
-                                                               !! 703 = size(q) /= size(fcn,4).
-                                                               !! 704 = size(r) /= size(fcn,5).
-                                                               !! 705 = size(s) /= size(fcn,6).
-                                                               !! 706 = size(x) /= nx.
-                                                               !! 707 = size(y) /= ny.
-                                                               !! 708 = size(z) /= nz.
-                                                               !! 709 = size(q) /= nq.
-                                                               !! 710 = size(r) /= nr.
-                                                               !! 711 = size(s) /= ns.
-                                                               !! 712 = size(tx) /= nx+kx.
-                                                               !! 713 = size(ty) /= ny+ky.
-                                                               !! 714 = size(tz) /= nz+kz.
-                                                               !! 715 = size(tq) /= nq+kq.
-                                                               !! 716 = size(tr) /= nr+kr.
-                                                               !! 717 = size(ts) /= ns+ks.
-                                                               !! 800 = size(x) /= size(bcoef,1).
-                                                               !! 801 = size(y) /= size(bcoef,2).
-                                                               !! 802 = size(z) /= size(bcoef,3).
-                                                               !! 803 = size(q) /= size(bcoef,4).
-                                                               !! 804 = size(r) /= size(bcoef,5).
-                                                               !! 805 = size(s) /= size(bcoef,6).
+    integer,intent(out)                               :: iflag !! *  0 = successful execution.
+                                                               !! *  2 = `iknot` out of range.
+                                                               !! *  3 = `nx` out of range.
+                                                               !! *  4 = `kx` out of range.
+                                                               !! *  5 = `x` not strictly increasing.
+                                                               !! *  6 = `tx` not non-decreasing.
+                                                               !! *  7 = `ny` out of range.
+                                                               !! *  8 = `ky` out of range.
+                                                               !! *  9 = `y` not strictly increasing.
+                                                               !! * 10 = `ty` not non-decreasing.
+                                                               !! * 11 = `nz` out of range.
+                                                               !! * 12 = `kz` out of range.
+                                                               !! * 13 = `z` not strictly increasing.
+                                                               !! * 14 = `tz` not non-decreasing.
+                                                               !! * 15 = `nq` out of range.
+                                                               !! * 16 = `kq` out of range.
+                                                               !! * 17 = `q` not strictly increasing.
+                                                               !! * 18 = `tq` not non-decreasing.
+                                                               !! * 19 = `nr` out of range.
+                                                               !! * 20 = `kr` out of range.
+                                                               !! * 21 = `r` not strictly increasing.
+                                                               !! * 22 = `tr` not non-decreasing.
+                                                               !! * 23 = `ns` out of range.
+                                                               !! * 24 = `ks` out of range.
+                                                               !! * 25 = `s` not strictly increasing.
+                                                               !! * 26 = `ts` not non-decreasing.
+                                                               !! * 700 = `size(x) ` \( \ne \) `size(fcn,1)`
+                                                               !! * 701 = `size(y) ` \( \ne \) `size(fcn,2)`
+                                                               !! * 702 = `size(z) ` \( \ne \) `size(fcn,3)`
+                                                               !! * 703 = `size(q) ` \( \ne \) `size(fcn,4)`
+                                                               !! * 704 = `size(r) ` \( \ne \) `size(fcn,5)`
+                                                               !! * 705 = `size(s) ` \( \ne \) `size(fcn,6)`
+                                                               !! * 706 = `size(x) ` \( \ne \) `nx`
+                                                               !! * 707 = `size(y) ` \( \ne \) `ny`
+                                                               !! * 708 = `size(z) ` \( \ne \) `nz`
+                                                               !! * 709 = `size(q) ` \( \ne \) `nq`
+                                                               !! * 710 = `size(r) ` \( \ne \) `nr`
+                                                               !! * 711 = `size(s) ` \( \ne \) `ns`
+                                                               !! * 712 = `size(tx)` \( \ne \) `nx+kx`
+                                                               !! * 713 = `size(ty)` \( \ne \) `ny+ky`
+                                                               !! * 714 = `size(tz)` \( \ne \) `nz+kz`
+                                                               !! * 715 = `size(tq)` \( \ne \) `nq+kq`
+                                                               !! * 716 = `size(tr)` \( \ne \) `nr+kr`
+                                                               !! * 717 = `size(ts)` \( \ne \) `ns+ks`
+                                                               !! * 800 = `size(x) ` \( \ne \) `size(bcoef,1)`
+                                                               !! * 801 = `size(y) ` \( \ne \) `size(bcoef,2)`
+                                                               !! * 802 = `size(z) ` \( \ne \) `size(bcoef,3)`
+                                                               !! * 803 = `size(q) ` \( \ne \) `size(bcoef,4)`
+                                                               !! * 804 = `size(r) ` \( \ne \) `size(bcoef,5)`
+                                                               !! * 805 = `size(s) ` \( \ne \) `size(bcoef,6)`
 
     real(wp),dimension(nx*ny*nz*nq*nr*ns) :: temp
     real(wp),dimension(max( 2*kx*(nx+1),&
@@ -1439,18 +1676,18 @@
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Evaluates the tensor product piecewise polynomial
+!>
+!  Evaluates the tensor product piecewise polynomial
 !  interpolant constructed by the routine [[db6ink]] or one of its
-!  derivatives at the point (xval,yval,zval,qval,rval,sval).
+!  derivatives at the point (`xval`,`yval`,`zval`,`qval`,`rval`,`sval`).
 !
 !  To evaluate the
-!  interpolant itself, set idx=idy=idz=idq=idr=ids=0, to evaluate the first
-!  partial with respect to x, set idx=1,idy=idz=idq=idr=ids=0, and so on.
+!  interpolant itself, set `idx=idy=idz=idq=idr=ids=0`, to evaluate the first
+!  partial with respect to `x`, set `idx=1,idy=idz=idq=idr=ids=0`, and so on.
 !
 !  See [[db3val]] header for more information.
 !
-!# History
-!
+!### History
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
     pure subroutine db6val(xval,yval,zval,qval,rval,sval,&
@@ -1463,50 +1700,99 @@
 
     implicit none
 
-    integer,intent(in)                               :: idx      !! x derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                               :: idy      !! y derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                               :: idz      !! z derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                               :: idq      !! q derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                               :: idr      !! r derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                               :: ids      !! s derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                               :: nx       !! the number of interpolation points in x. (same as in last call to [[db6ink]])
-    integer,intent(in)                               :: ny       !! the number of interpolation points in y. (same as in last call to [[db6ink]])
-    integer,intent(in)                               :: nz       !! the number of interpolation points in z. (same as in last call to [[db6ink]])
-    integer,intent(in)                               :: nq       !! the number of interpolation points in q. (same as in last call to [[db6ink]])
-    integer,intent(in)                               :: nr       !! the number of interpolation points in r. (same as in last call to [[db6ink]])
-    integer,intent(in)                               :: ns       !! the number of interpolation points in s. (same as in last call to [[db6ink]])
-    integer,intent(in)                               :: kx       !! order of polynomial pieces in x. (same as in last call to [[db6ink]])
-    integer,intent(in)                               :: ky       !! order of polynomial pieces in y. (same as in last call to [[db6ink]])
-    integer,intent(in)                               :: kz       !! order of polynomial pieces in z. (same as in last call to [[db6ink]])
-    integer,intent(in)                               :: kq       !! order of polynomial pieces in q. (same as in last call to [[db6ink]])
-    integer,intent(in)                               :: kr       !! order of polynomial pieces in r. (same as in last call to [[db6ink]])
-    integer,intent(in)                               :: ks       !! order of polynomial pieces in s. (same as in last call to [[db6ink]])
-    real(wp),intent(in)                              :: xval     !! x coordinate of evaluation point.
-    real(wp),intent(in)                              :: yval     !! y coordinate of evaluation point.
-    real(wp),intent(in)                              :: zval     !! z coordinate of evaluation point.
-    real(wp),intent(in)                              :: qval     !! q coordinate of evaluation point.
-    real(wp),intent(in)                              :: rval     !! r coordinate of evaluation point.
-    real(wp),intent(in)                              :: sval     !! s coordinate of evaluation point.
-    real(wp),dimension(nx+kx),intent(in)             :: tx       !! sequence of knots defining the piecewise polynomial in the x direction. (same as in last call to [[db6ink]])
-    real(wp),dimension(ny+ky),intent(in)             :: ty       !! sequence of knots defining the piecewise polynomial in the y direction. (same as in last call to [[db6ink]])
-    real(wp),dimension(nz+kz),intent(in)             :: tz       !! sequence of knots defining the piecewise polynomial in the z direction. (same as in last call to [[db6ink]])
-    real(wp),dimension(nq+kq),intent(in)             :: tq       !! sequence of knots defining the piecewise polynomial in the q direction. (same as in last call to [[db6ink]])
-    real(wp),dimension(nr+kr),intent(in)             :: tr       !! sequence of knots defining the piecewise polynomial in the r direction. (same as in last call to [[db6ink]])
-    real(wp),dimension(ns+ks),intent(in)             :: ts       !! sequence of knots defining the piecewise polynomial in the s direction. (same as in last call to [[db6ink]])
+    integer,intent(in)                               :: idx      !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                               :: idy      !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                               :: idz      !! \(z\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                               :: idq      !! \(q\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                               :: idr      !! \(r\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                               :: ids      !! \(s\) derivative of piecewise polynomial to evaluate.
+    integer,intent(in)                               :: nx       !! the number of interpolation points in \(x\).
+                                                                 !! (same as in last call to [[db6ink]])
+    integer,intent(in)                               :: ny       !! the number of interpolation points in \(y\).
+                                                                 !! (same as in last call to [[db6ink]])
+    integer,intent(in)                               :: nz       !! the number of interpolation points in \(z\).
+                                                                 !! (same as in last call to [[db6ink]])
+    integer,intent(in)                               :: nq       !! the number of interpolation points in \(q\).
+                                                                 !! (same as in last call to [[db6ink]])
+    integer,intent(in)                               :: nr       !! the number of interpolation points in \(r\).
+                                                                 !! (same as in last call to [[db6ink]])
+    integer,intent(in)                               :: ns       !! the number of interpolation points in \(s\).
+                                                                 !! (same as in last call to [[db6ink]])
+    integer,intent(in)                               :: kx       !! order of polynomial pieces in \(x\).
+                                                                 !! (same as in last call to [[db6ink]])
+    integer,intent(in)                               :: ky       !! order of polynomial pieces in \(y\).
+                                                                 !! (same as in last call to [[db6ink]])
+    integer,intent(in)                               :: kz       !! order of polynomial pieces in \(z\).
+                                                                 !! (same as in last call to [[db6ink]])
+    integer,intent(in)                               :: kq       !! order of polynomial pieces in \(q\).
+                                                                 !! (same as in last call to [[db6ink]])
+    integer,intent(in)                               :: kr       !! order of polynomial pieces in \(r\).
+                                                                 !! (same as in last call to [[db6ink]])
+    integer,intent(in)                               :: ks       !! order of polynomial pieces in \(s\).
+                                                                 !! (same as in last call to [[db6ink]])
+    real(wp),intent(in)                              :: xval     !! \(x\) coordinate of evaluation point.
+    real(wp),intent(in)                              :: yval     !! \(y\) coordinate of evaluation point.
+    real(wp),intent(in)                              :: zval     !! \(z\) coordinate of evaluation point.
+    real(wp),intent(in)                              :: qval     !! \(q\) coordinate of evaluation point.
+    real(wp),intent(in)                              :: rval     !! \(r\) coordinate of evaluation point.
+    real(wp),intent(in)                              :: sval     !! \(s\) coordinate of evaluation point.
+    real(wp),dimension(nx+kx),intent(in)             :: tx       !! sequence of knots defining the piecewise polynomial
+                                                                 !! in the \(x\) direction.
+                                                                 !! (same as in last call to [[db6ink]])
+    real(wp),dimension(ny+ky),intent(in)             :: ty       !! sequence of knots defining the piecewise polynomial
+                                                                 !! in the \(y\) direction.
+                                                                 !! (same as in last call to [[db6ink]])
+    real(wp),dimension(nz+kz),intent(in)             :: tz       !! sequence of knots defining the piecewise polynomial
+                                                                 !! in the \(z\) direction.
+                                                                 !! (same as in last call to [[db6ink]])
+    real(wp),dimension(nq+kq),intent(in)             :: tq       !! sequence of knots defining the piecewise polynomial
+                                                                 !! in the \(q\) direction.
+                                                                 !! (same as in last call to [[db6ink]])
+    real(wp),dimension(nr+kr),intent(in)             :: tr       !! sequence of knots defining the piecewise polynomial
+                                                                 !! in the \(r\) direction.
+                                                                 !! (same as in last call to [[db6ink]])
+    real(wp),dimension(ns+ks),intent(in)             :: ts       !! sequence of knots defining the piecewise polynomial
+                                                                 !! in the \(s\) direction.
+                                                                 !! (same as in last call to [[db6ink]])
     real(wp),dimension(nx,ny,nz,nq,nr,ns),intent(in) :: bcoef    !! the b-spline coefficients computed by [[db6ink]].
     real(wp),intent(out)                             :: f        !! interpolated value
-    integer,intent(out)                              :: iflag    !! status flag: 0 : no errors, /=0 : error
-    integer,intent(inout)                            :: inbvx    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                            :: inbvy    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                            :: inbvz    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                            :: inbvq    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                            :: inbvr    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                            :: inbvs    !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                            :: iloy     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                            :: iloz     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                            :: iloq     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                            :: ilor     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
-    integer,intent(inout)                            :: ilos     !! initialization parameter which must be set to 1 the first time this routine is called, and must not be changed by the user.
+    integer,intent(out)                              :: iflag    !! status flag:
+                                                                 !!
+                                                                 !! * \( = 0 \)   : no errors
+                                                                 !! * \( \ne 0 \) : error
+    integer,intent(inout)                            :: inbvx    !! initialization parameter which must be set
+                                                                 !! to 1 the first time this routine is called,
+                                                                 !! and must not be changed by the user.
+    integer,intent(inout)                            :: inbvy    !! initialization parameter which must be set
+                                                                 !! to 1 the first time this routine is called,
+                                                                 !! and must not be changed by the user.
+    integer,intent(inout)                            :: inbvz    !! initialization parameter which must be set
+                                                                 !! to 1 the first time this routine is called,
+                                                                 !! and must not be changed by the user.
+    integer,intent(inout)                            :: inbvq    !! initialization parameter which must be set
+                                                                 !! to 1 the first time this routine is called,
+                                                                 !! and must not be changed by the user.
+    integer,intent(inout)                            :: inbvr    !! initialization parameter which must be set
+                                                                 !! to 1 the first time this routine is called,
+                                                                 !! and must not be changed by the user.
+    integer,intent(inout)                            :: inbvs    !! initialization parameter which must be set
+                                                                 !! to 1 the first time this routine is called,
+                                                                 !! and must not be changed by the user.
+    integer,intent(inout)                            :: iloy     !! initialization parameter which must be set
+                                                                 !! to 1 the first time this routine is called,
+                                                                 !! and must not be changed by the user.
+    integer,intent(inout)                            :: iloz     !! initialization parameter which must be set
+                                                                 !! to 1 the first time this routine is called,
+                                                                 !! and must not be changed by the user.
+    integer,intent(inout)                            :: iloq     !! initialization parameter which must be set
+                                                                 !! to 1 the first time this routine is called,
+                                                                 !! and must not be changed by the user.
+    integer,intent(inout)                            :: ilor     !! initialization parameter which must be set
+                                                                 !! to 1 the first time this routine is called,
+                                                                 !! and must not be changed by the user.
+    integer,intent(inout)                            :: ilos     !! initialization parameter which must be set
+                                                                 !! to 1 the first time this routine is called,
+                                                                 !! and must not be changed by the user.
 
     real(wp),dimension(ky,kz,kq,kr,ks)            :: temp1
     real(wp),dimension(kz,kq,kr,ks)               :: temp2
@@ -1635,19 +1921,19 @@
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Check the validity of the inputs to the "ink" routines.
+!>
+!  Check the validity of the inputs to the `db*ink` routines.
 !  Prints warning message if there is an error,
 !  and also sets iflag and status_ok.
 !
-!  Supports up to 6D: x,y,z,q,r,s
+!  Supports up to 6D: `x`,`y`,`z`,`q`,`r`,`s`
 !
-!# Notes
+!### Notes
 !
 !  The code is new, but the logic is based on the original
-!  logic in the CMLIB routines db2ink and db3ink.
+!  logic in the CMLIB routines `db2ink` and `db3ink`.
 !
-!# History
-!
+!### History
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
     pure subroutine check_inputs(routine,&
@@ -1664,7 +1950,7 @@
     implicit none
 
     character(len=*),intent(in)                         :: routine
-    integer,intent(in)                                  :: iknot !! = 0 if the INK routine is computing the knots.
+    integer,intent(in)                                  :: iknot !! = 0 if the `INK` routine is computing the knots.
     integer,intent(out)                                 :: iflag
     integer,intent(in),optional                         :: nx,ny,nz,nq,nr,ns
     integer,intent(in),optional                         :: kx,ky,kz,kq,kr,ks
@@ -1763,7 +2049,7 @@
 
     contains
 
-        pure subroutine check(s,n,k,x,t,ierrs,iflag,error)  !check t,x,n,k for validity
+        pure subroutine check(s,n,k,x,t,ierrs,iflag,error)  !! check `t`,`x`,`n`,`k` for validity
 
         implicit none
 
@@ -1771,8 +2057,9 @@
         integer,intent(in)              ,optional :: n     !! size of `x`
         integer,intent(in)              ,optional :: k     !! order
         real(wp),dimension(:),intent(in),optional :: x     !! abcissae vector
-        real(wp),dimension(:),intent(in),optional :: t     !! knot vector size(n+k)
-        integer,dimension(:),intent(in)           :: ierrs !! int error codes for n,k,x,t,size(x),size(t) checks
+        real(wp),dimension(:),intent(in),optional :: t     !! knot vector `size(n+k)`
+        integer,dimension(:),intent(in)           :: ierrs !! int error codes for `n`,`k`,`x`,`t`,
+                                                           !! `size(x)`,`size(t)` checks
         integer,intent(out)                       :: iflag !! status return code
         logical,intent(out)                       :: error !! true if there was an error
 
@@ -1794,7 +2081,7 @@
         character(len=*),intent(in)     :: s
         integer,intent(in)              :: n
         real(wp),dimension(:),intent(in):: x     !! abcissae vector
-        integer,dimension(2),intent(in) :: ierr  ![n<3 check, size(x)==n check]
+        integer,dimension(2),intent(in) :: ierr  !! [n<3 check, size(x)==n check]
         integer,intent(out)             :: iflag !! status return code
         logical,intent(out)             :: error
 
@@ -1903,7 +2190,8 @@
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> dbknot chooses a knot sequence for interpolation of order k at the
+!>
+!  dbknot chooses a knot sequence for interpolation of order k at the
 !  data points x(i), i=1,..,n.  the n+k knots are placed in the array
 !  t.  k knots are placed at each endpoint and not-a-knot end
 !  conditions are used.  the remaining knots are placed at data points
@@ -1911,8 +2199,7 @@
 !  knot is shifted slightly to the right to insure proper interpolation
 !  at x(n) (see page 350 of the reference).
 !
-!# History
-!
+!### History
 !  * Jacob Williams, 2/24/2015 : Refactored this routine.
 
     pure subroutine dbknot(x,n,k,t)
@@ -1967,15 +2254,15 @@
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> dbtpcf computes b-spline interpolation coefficients for nf sets
+!>
+!  dbtpcf computes b-spline interpolation coefficients for nf sets
 !  of data stored in the columns of the array fcn. the b-spline
 !  coefficients are stored in the rows of bcoef however.
 !  each interpolation is based on the n abcissa stored in the
 !  array x, and the n+k knots stored in the array t. the order
 !  of each interpolation is k.
 !
-!# History
-!
+!### History
 !  * Jacob Williams, 2/24/2015 : Refactored this routine.
 
     pure subroutine dbtpcf(x,n,fcn,ldf,nf,t,k,bcoef,work,iflag)
@@ -2037,7 +2324,8 @@
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> dbintk produces the b-spline coefficients, bcoef, of the
+!>
+!  dbintk produces the b-spline coefficients, bcoef, of the
 !  b-spline of order k with knots t(i), i=1,...,n+k, which
 !  takes on the value y(i) at x(i), i=1,...,n.  the spline or
 !  any of its derivatives can be evaluated by calls to [[dbvalu]].
@@ -2065,8 +2353,7 @@
 !  * improper input
 !  * singular system of equations
 !
-!# History
-!
+!### History
 !  * splint written by carl de boor [5]
 !  * dbintk author: amos, d. e., (snla) : date written 800901
 !  * revision date 820801
@@ -2097,13 +2384,13 @@
                                                 !! yy into bcoef and then executing
                                                 !! call dbnslv(q,2k-1,n,k-1,k-1,bcoef)
     real(wp),dimension(*),intent(out) :: work   !! work vector of length 2*k
-    integer,intent(out)               :: iflag  !!   0: no errors.
-                                                !! 100: k does not satisfy k>=1.
-                                                !! 101: n does not satisfy n>=k.
-                                                !! 102: x(i) does not satisfy x(i)<x(i+1) for some i.
-                                                !! 103: some abscissa was not in the support of the.
+    integer,intent(out)               :: iflag  !! *   0: no errors.
+                                                !! * 100: k does not satisfy k>=1.
+                                                !! * 101: n does not satisfy n>=k.
+                                                !! * 102: x(i) does not satisfy x(i)<x(i+1) for some i.
+                                                !! * 103: some abscissa was not in the support of the.
                                                 !! corresponding basis function and the system is singular.
-                                                !! 104: the system of solver detects a singular system.
+                                                !! * 104: the system of solver detects a singular system.
                                                 !! although the theoretical conditions for a solution were satisfied.
 
     integer :: iwork, i, ilp1mx, j, jj, km1, kpkm2, left,lenq, np1
@@ -2221,7 +2508,8 @@
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Returns in w the LU-factorization (without pivoting) of the banded
+!>
+!  Returns in w the LU-factorization (without pivoting) of the banded
 !  matrix a of order nrow with (nbandl + 1 + nbandu) bands or diagonals
 !  in the work array w .
 !
@@ -2231,7 +2519,7 @@
 !  positive matrices which occur in spline calculations.
 !  the routine should not be used for an arbitrary banded matrix.
 !
-!# Work array
+!### Work array
 !
 ! **Input**
 !
@@ -2273,8 +2561,7 @@
 !        that  a  does not have an lu-factorization. this implies that
 !        a  is singular in case it is totally positive .
 !
-!# History
-!
+!### History
 !  * banfac written by carl de boor [5]
 !  * dbnfac from CMLIB [1]
 !  * Jacob Williams, 5/10/2015 : converted to free-form Fortran.
@@ -2368,7 +2655,8 @@
     end subroutine dbnfac
 
 !*****************************************************************************************
-!> Companion routine to [[dbnfac]]. it returns the solution x of the
+!>
+!  Companion routine to [[dbnfac]]. it returns the solution x of the
 !  linear system a*x = b in place of b, given the lu-factorization
 !  for a in the work array w from dbnfac.
 !
@@ -2377,21 +2665,20 @@
 !  upper triangular system \(u*x = y \) is solved for x. the calculations
 !  are so arranged that the innermost loops stay within columns.
 !
-!# History
-!
+!### History
 !  * banslv written by carl de boor [5]
 !  * dbnslv from SLATEC library [1]
 !  * Jacob Williams, 5/10/2015 : converted to free-form Fortran.
 
     pure subroutine dbnslv(w,nroww,nrow,nbandl,nbandu,b)
 
-    integer,intent(in) :: nroww   !! describes the lu-factorization of a banded matrix a of order nrow as constructed in [[dbnfac]].
-    integer,intent(in) :: nrow    !! describes the lu-factorization of a banded matrix a of order nrow as constructed in [[dbnfac]].
-    integer,intent(in) :: nbandl  !! describes the lu-factorization of a banded matrix a of order nrow as constructed in [[dbnfac]].
-    integer,intent(in) :: nbandu  !! describes the lu-factorization of a banded matrix a of order nrow as constructed in [[dbnfac]].
-    real(wp),dimension(nroww,nrow),intent(in) :: w    !! describes the lu-factorization of a banded matrix a of order nrow as constructed in [[dbnfac]].
-    real(wp),dimension(nrow),intent(inout) :: b  !! **in**: right side of the system to be solved
-                                                 !! **out**: the solution x, of order nrow
+    integer,intent(in) :: nroww   !! describes the lu-factorization of a banded matrix a of order `nrow` as constructed in [[dbnfac]].
+    integer,intent(in) :: nrow    !! describes the lu-factorization of a banded matrix a of order `nrow` as constructed in [[dbnfac]].
+    integer,intent(in) :: nbandl  !! describes the lu-factorization of a banded matrix a of order `nrow` as constructed in [[dbnfac]].
+    integer,intent(in) :: nbandu  !! describes the lu-factorization of a banded matrix a of order `nrow` as constructed in [[dbnfac]].
+    real(wp),dimension(nroww,nrow),intent(in) :: w    !! describes the lu-factorization of a banded matrix a of order `nrow` as constructed in [[dbnfac]].
+    real(wp),dimension(nrow),intent(inout) :: b  !! * **in**: right side of the system to be solved
+                                                 !! * **out**: the solution x, of order nrow
 
     integer :: i, j, jmax, middle, nrowm1
 
@@ -2444,7 +2731,8 @@
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Calculates the value of all (possibly) nonzero basis
+!>
+!  Calculates the value of all (possibly) nonzero basis
 !  functions at x of order max(jhigh,(j+1)*(index-1)), where t(k)
 !  <= x <= t(n+1) and j=iwork is set inside the routine on
 !  the first call when index=1.  ileft is such that t(ileft) <=
@@ -2457,12 +2745,11 @@
 !
 !  left limiting values are set up as described in dbspvd.
 !
-!#Error Conditions
+!### Error Conditions
 !
 !  * improper input
 !
-!# History
-!
+!### History
 !  * bsplvn written by carl de boor [5]
 !  * dbspvn author: amos, d. e., (snla) : date written 800901
 !  * revision date 820801
@@ -2555,7 +2842,8 @@
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Evaluates the b-representation (t,a,n,k) of a b-spline
+!>
+!  Evaluates the b-representation (t,a,n,k) of a b-spline
 !  at x for the function value on ideriv=0 or any of its
 !  derivatives on ideriv=1,2,...,k-1.  right limiting values
 !  (right derivatives) are returned except at the right end
@@ -2566,12 +2854,11 @@
 !  to compute left derivatives or left limiting values at a
 !  knot t(i), replace n by i-1 and set x=t(i), i=k+1,n+1.
 !
-!#Error Conditions
+!### Error Conditions
 !
 !  * improper input
 !
-!# History
-!
+!### History
 !  * bvalue written by carl de boor [5]
 !  * dbvalu author: amos, d. e., (snla) : date written 800901
 !  * revision date 820801
@@ -2719,7 +3006,8 @@
 !*****************************************************************************************
 
 !*****************************************************************************************
-!> Computes the largest integer ileft in 1 <= ileft <= lxt
+!>
+!  Computes the largest integer ileft in 1 <= ileft <= lxt
 !  such that xt(ileft) <= x where xt(*) is a subdivision of
 !  the x interval.
 !  precisely,
@@ -2733,8 +3021,7 @@
 !  that is, when multiplicities are present in the break point
 !  to the left of x, the largest index is taken for ileft.
 !
-!# History
-!
+!### History
 !  * interv written by carl de boor [5]
 !  * dintrv author: amos, d. e., (snla) : date written 800901
 !  * revision date 820801
@@ -2753,7 +3040,7 @@
                                                  !! processed by dintrv. `ilo` contains information for
                                                  !! efficient processing after the initial call and `ilo`
                                                  !! must not be changed by the user.  distinct splines
-                                                 !! require distinct i`lo parameters.
+                                                 !! require distinct `ilo` parameters.
     integer,intent(out)                :: ileft  !! largest integer satisfying `xt(ileft) <= x`
     integer,intent(out)                :: mflag  !! signals when `x` lies out of bounds
 
