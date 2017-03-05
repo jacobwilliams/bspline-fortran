@@ -1,6 +1,6 @@
 !*****************************************************************************************
-!
-!> Units test for 2d-6d tensor product b-spline interpolation.
+!> 
+!  Units test for 1d-6d tensor product b-spline interpolation.
 
     program bspline_test
 

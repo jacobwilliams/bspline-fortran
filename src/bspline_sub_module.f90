@@ -175,7 +175,7 @@
 !### History
 !  * Jacob Williams, 10/30/2015 : Created 1D routine.
 
-    pure subroutine db1val(xval,idx,tx,nx,kx,bcoef,f,iflag,inbvx)
+    pure subroutine db1val(xval,idx,tx,nx,kx,bcoef,f,iflag,inbvx,extrap)
 
     implicit none
 
@@ -196,18 +196,15 @@
     integer,intent(inout)                :: inbvx    !! initialization parameter which must be set
                                                      !! to 1 the first time this routine is called,
                                                      !! and must not be changed by the user.
+    logical,intent(in),optional          :: extrap   !! if extrapolation is allowed
 
     real(wp),dimension(3*kx) :: work
 
     f = 0.0_wp
 
-    if (xval<tx(1) .or. xval>tx(nx+kx)) then
-        !write(error_unit,'(A)') 'db1val - x value out of bounds'
-        iflag = 601
-        return
-    end if
+    iflag = check_value(xval,tx,1,extrap); if (iflag/=0) return
 
-    call dbvalu(tx,bcoef,nx,kx,idx,xval,inbvx,work,iflag,f)
+    call dbvalu(tx,bcoef,nx,kx,idx,xval,inbvx,work,iflag,f,extrap)
 
     end subroutine db1val
 !*****************************************************************************************
@@ -385,7 +382,7 @@
 !  * JEC : 000330 modified array declarations.
 !  * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
 
-    pure subroutine db2val(xval,yval,idx,idy,tx,ty,nx,ny,kx,ky,bcoef,f,iflag,inbvx,inbvy,iloy)
+    pure subroutine db2val(xval,yval,idx,idy,tx,ty,nx,ny,kx,ky,bcoef,f,iflag,inbvx,inbvy,iloy,extrap)
 
     implicit none
 
@@ -422,6 +419,7 @@
     integer,intent(inout)                :: iloy     !! initialization parameter which must be set to 1
                                                      !! the first time this routine is called,
                                                      !! and must not be changed by the user.
+    logical,intent(in),optional          :: extrap   !! if extrapolation is allowed
 
     integer :: k, lefty, mflag, kcol
     real(wp),dimension(ky) :: temp
@@ -429,29 +427,21 @@
 
     f = 0.0_wp
 
-    if (xval<tx(1) .or. xval>tx(nx+kx)) then
-        !write(error_unit,'(A)') 'db2val - x value out of bounds'
-        iflag = 601
-        return
-    end if
-    if (yval<ty(1) .or. yval>ty(ny+ky)) then
-        !write(error_unit,'(A)') 'db2val - y value out of bounds'
-        iflag = 602
-        return
-    end if
+    iflag = check_value(xval,tx,1,extrap); if (iflag/=0) return
+    iflag = check_value(yval,ty,2,extrap); if (iflag/=0) return
 
     iflag = -1
-    call dintrv(ty,ny+ky,yval,iloy,lefty,mflag); if (mflag /= 0) return
+    call dintrv(ty,ny+ky,yval,iloy,lefty,mflag,extrap); if (mflag /= 0) return
 
     kcol = lefty - ky
     do k=1,ky
         kcol = kcol + 1
-        call dbvalu(tx,bcoef(:,kcol),nx,kx,idx,xval,inbvx,work,iflag,temp(k))
+        call dbvalu(tx,bcoef(:,kcol),nx,kx,idx,xval,inbvx,work,iflag,temp(k),extrap)
         if (iflag/=0) return !error
     end do
 
     kcol = lefty - ky + 1
-    call dbvalu(ty(kcol:),temp,ky,ky,idy,yval,inbvy,work,iflag,f)
+    call dbvalu(ty(kcol:),temp,ky,ky,idy,yval,inbvy,work,iflag,f,extrap)
 
     end subroutine db2val
 !*****************************************************************************************
@@ -664,7 +654,7 @@
     pure subroutine db3val(xval,yval,zval,idx,idy,idz,&
                                      tx,ty,tz,&
                                      nx,ny,nz,kx,ky,kz,bcoef,f,iflag,&
-                                     inbvx,inbvy,inbvz,iloy,iloz)
+                                     inbvx,inbvy,inbvz,iloy,iloz,extrap)
 
     implicit none
 
@@ -713,35 +703,24 @@
     integer,intent(inout)                   :: iloz     !! initialization parameter which must be
                                                         !! set to 1 the first time this routine is called,
                                                         !! and must not be changed by the user.
+    logical,intent(in),optional             :: extrap   !! if extrapolation is allowed
 
-    real(wp),dimension(ky,kz)              :: temp1
-    real(wp),dimension(kz)                 :: temp2
-    real(wp),dimension(3*max(kx,ky,kz))    :: work
+    real(wp),dimension(ky,kz)           :: temp1
+    real(wp),dimension(kz)              :: temp2
+    real(wp),dimension(3*max(kx,ky,kz)) :: work
 
     integer :: lefty, leftz, mflag,&
                 kcoly, kcolz, j, k
 
     f = 0.0_wp
 
-    if (xval<tx(1) .or. xval>tx(nx+kx)) then
-        !write(error_unit,'(A)') 'db3val - x value out of bounds'
-        iflag = 601
-        return
-    end if
-    if (yval<ty(1) .or. yval>ty(ny+ky)) then
-        !write(error_unit,'(A)') 'db3val - y value out of bounds'
-        iflag = 602
-        return
-    end if
-    if (zval<tz(1) .or. zval>tz(nz+kz)) then
-        !write(error_unit,'(A)') 'db3val - z value out of bounds'
-        iflag = 603
-        return
-    end if
+    iflag = check_value(xval,tx,1,extrap); if (iflag/=0) return
+    iflag = check_value(yval,ty,2,extrap); if (iflag/=0) return
+    iflag = check_value(zval,tz,3,extrap); if (iflag/=0) return
 
     iflag = -1
-    call dintrv(ty,ny+ky,yval,iloy,lefty,mflag); if (mflag /= 0) return
-    call dintrv(tz,nz+kz,zval,iloz,leftz,mflag); if (mflag /= 0) return
+    call dintrv(ty,ny+ky,yval,iloy,lefty,mflag,extrap); if (mflag /= 0) return
+    call dintrv(tz,nz+kz,zval,iloz,leftz,mflag,extrap); if (mflag /= 0) return
 
     iflag = 0
 
@@ -751,19 +730,19 @@
         kcoly = lefty - ky
         do j=1,ky
             kcoly = kcoly + 1
-            call dbvalu(tx,bcoef(:,kcoly,kcolz),nx,kx,idx,xval,inbvx,work,iflag,temp1(j,k))
+            call dbvalu(tx,bcoef(:,kcoly,kcolz),nx,kx,idx,xval,inbvx,work,iflag,temp1(j,k),extrap)
             if (iflag/=0) return
         end do
     end do
 
     kcoly = lefty - ky + 1
     do k=1,kz
-        call dbvalu(ty(kcoly:),temp1(:,k),ky,ky,idy,yval,inbvy,work,iflag,temp2(k))
+        call dbvalu(ty(kcoly:),temp1(:,k),ky,ky,idy,yval,inbvy,work,iflag,temp2(k),extrap)
         if (iflag/=0) return
     end do
 
     kcolz = leftz - kz + 1
-    call dbvalu(tz(kcolz:),temp2,kz,kz,idz,zval,inbvz,work,iflag,f)
+    call dbvalu(tz(kcolz:),temp2,kz,kz,idz,zval,inbvz,work,iflag,f,extrap)
 
     end subroutine db3val
 !*****************************************************************************************
@@ -939,7 +918,8 @@
                                 nx,ny,nz,nq,&
                                 kx,ky,kz,kq,&
                                 bcoef,f,iflag,&
-                                inbvx,inbvy,inbvz,inbvq,iloy,iloz,iloq)
+                                inbvx,inbvy,inbvz,inbvq,&
+                                iloy,iloz,iloq,extrap)
 
     implicit none
 
@@ -1002,6 +982,7 @@
     integer,intent(inout)                      :: iloq     !! initialization parameter which must be set
                                                            !! to 1 the first time this routine is called,
                                                            !! and must not be changed by the user.
+    logical,intent(in),optional                :: extrap   !! if extrapolation is allowed
 
     real(wp),dimension(ky,kz,kq)             :: temp1
     real(wp),dimension(kz,kq)                :: temp2
@@ -1012,31 +993,15 @@
 
     f = 0.0_wp
 
-    if (xval<tx(1) .or. xval>tx(nx+kx)) then
-        !write(error_unit,'(A)') 'db4val - x value out of bounds'
-        iflag = 601
-        return
-    end if
-    if (yval<ty(1) .or. yval>ty(ny+ky)) then
-        !write(error_unit,'(A)') 'db4val - y value out of bounds'
-        iflag = 602
-        return
-    end if
-    if (zval<tz(1) .or. zval>tz(nz+kz)) then
-        !write(error_unit,'(A)') 'db4val - z value out of bounds'
-        iflag = 603
-        return
-    end if
-    if (qval<tq(1) .or. qval>tq(nq+kq) ) then
-        !write(error_unit,'(A)') 'db4val - q value out of bounds'
-        iflag = 604
-        return
-    end if
+    iflag = check_value(xval,tx,1,extrap); if (iflag/=0) return
+    iflag = check_value(yval,ty,2,extrap); if (iflag/=0) return
+    iflag = check_value(zval,tz,3,extrap); if (iflag/=0) return
+    iflag = check_value(qval,tq,4,extrap); if (iflag/=0) return
 
     iflag = -1
-    call dintrv(ty,ny+ky,yval,iloy,lefty,mflag); if (mflag /= 0) return
-    call dintrv(tz,nz+kz,zval,iloz,leftz,mflag); if (mflag /= 0) return
-    call dintrv(tq,nq+kq,qval,iloq,leftq,mflag); if (mflag /= 0) return
+    call dintrv(ty,ny+ky,yval,iloy,lefty,mflag,extrap); if (mflag /= 0) return
+    call dintrv(tz,nz+kz,zval,iloz,leftz,mflag,extrap); if (mflag /= 0) return
+    call dintrv(tq,nq+kq,qval,iloq,leftq,mflag,extrap); if (mflag /= 0) return
 
     iflag = 0
 
@@ -1051,7 +1016,8 @@
             do j=1,ky
                 kcoly = kcoly + 1
                 call dbvalu(tx,bcoef(:,kcoly,kcolz,kcolq),&
-                                     nx,kx,idx,xval,inbvx,work,iflag,temp1(j,k,q))
+                                     nx,kx,idx,xval,inbvx,work,iflag,&
+                                     temp1(j,k,q),extrap)
                 if (iflag/=0) return
             end do
         end do
@@ -1061,7 +1027,9 @@
     kcoly = lefty - ky + 1
     do q=1,kq
         do k=1,kz
-            call dbvalu(ty(kcoly:),temp1(:,k,q),ky,ky,idy,yval,inbvy,work,iflag,temp2(k,q))
+            call dbvalu(ty(kcoly:),temp1(:,k,q),&
+                        ky,ky,idy,yval,inbvy,work,iflag,&
+                        temp2(k,q),extrap)
             if (iflag/=0) return
         end do
     end do
@@ -1069,13 +1037,15 @@
     ! z -> q
     kcolz = leftz - kz + 1
     do q=1,kq
-        call dbvalu(tz(kcolz:),temp2(:,q),kz,kz,idz,zval,inbvz,work,iflag,temp3(q))
+        call dbvalu(tz(kcolz:),temp2(:,q),&
+                    kz,kz,idz,zval,inbvz,work,iflag,&
+                    temp3(q),extrap)
         if (iflag/=0) return
     end do
 
     ! q
     kcolq = leftq - kq + 1
-    call dbvalu(tq(kcolq:),temp3,kq,kq,idq,qval,inbvq,work,iflag,f)
+    call dbvalu(tq(kcolq:),temp3,kq,kq,idq,qval,inbvq,work,iflag,f,extrap)
 
     end subroutine db4val
 !*****************************************************************************************
@@ -1285,7 +1255,8 @@
                                 nx,ny,nz,nq,nr,&
                                 kx,ky,kz,kq,kr,&
                                 bcoef,f,iflag,&
-                                inbvx,inbvy,inbvz,inbvq,inbvr,iloy,iloz,iloq,ilor)
+                                inbvx,inbvy,inbvz,inbvq,inbvr,&
+                                iloy,iloz,iloq,ilor,extrap)
 
     implicit none
 
@@ -1367,6 +1338,7 @@
     integer,intent(inout)                         :: ilor     !! initialization parameter which must be set
                                                               !! to 1 the first time this routine is called,
                                                               !! and must not be changed by the user.
+    logical,intent(in),optional                   :: extrap   !! if extrapolation is allowed
 
     real(wp),dimension(ky,kz,kq,kr)           :: temp1
     real(wp),dimension(kz,kq,kr)              :: temp2
@@ -1378,37 +1350,17 @@
 
     f = 0.0_wp
 
-    if (xval<tx(1) .or. xval>tx(nx+kx)) then
-        !write(error_unit,'(A)') 'db5val - x value out of bounds'
-        iflag = 601
-        return
-    end if
-    if (yval<ty(1) .or. yval>ty(ny+ky)) then
-        !write(error_unit,'(A)') 'db5val - y value out of bounds'
-        iflag = 602
-        return
-    end if
-    if (zval<tz(1) .or. zval>tz(nz+kz)) then
-        !write(error_unit,'(A)') 'db5val - z value out of bounds'
-        iflag = 603
-        return
-    end if
-    if (qval<tq(1) .or. qval>tq(nq+kq) ) then
-        !write(error_unit,'(A)') 'db5val - q value out of bounds'
-        iflag = 604
-        return
-    end if
-    if ( rval<tr(1) .or. rval>tr(nr+kr) ) then
-        !write(error_unit,'(A)') 'db5val - r value out of bounds'
-        iflag = 605
-        return
-    end if
+    iflag = check_value(xval,tx,1,extrap); if (iflag/=0) return
+    iflag = check_value(yval,ty,2,extrap); if (iflag/=0) return
+    iflag = check_value(zval,tz,3,extrap); if (iflag/=0) return
+    iflag = check_value(qval,tq,4,extrap); if (iflag/=0) return
+    iflag = check_value(rval,tr,5,extrap); if (iflag/=0) return
 
     iflag = -1
-    call dintrv(ty,ny+ky,yval,iloy,lefty,mflag); if (mflag /= 0) return
-    call dintrv(tz,nz+kz,zval,iloz,leftz,mflag); if (mflag /= 0) return
-    call dintrv(tq,nq+kq,qval,iloq,leftq,mflag); if (mflag /= 0) return
-    call dintrv(tr,nr+kr,rval,ilor,leftr,mflag); if (mflag /= 0) return
+    call dintrv(ty,ny+ky,yval,iloy,lefty,mflag,extrap); if (mflag /= 0) return
+    call dintrv(tz,nz+kz,zval,iloz,leftz,mflag,extrap); if (mflag /= 0) return
+    call dintrv(tq,nq+kq,qval,iloq,leftq,mflag,extrap); if (mflag /= 0) return
+    call dintrv(tr,nr+kr,rval,ilor,leftr,mflag,extrap); if (mflag /= 0) return
 
     iflag = 0
 
@@ -1426,7 +1378,8 @@
                 do j=1,ky
                     kcoly = kcoly + 1
                     call dbvalu(tx,bcoef(:,kcoly,kcolz,kcolq,kcolr),&
-                                nx,kx,idx,xval,inbvx,work,iflag,temp1(j,k,q,r))
+                                nx,kx,idx,xval,inbvx,work,iflag,temp1(j,k,q,r),&
+                                extrap)
                     if (iflag/=0) return
                 end do
             end do
@@ -1438,7 +1391,8 @@
     do r=1,kr
         do q=1,kq
             do k=1,kz
-                call dbvalu(ty(kcoly:),temp1(:,k,q,r),ky,ky,idy,yval,inbvy,work,iflag,temp2(k,q,r))
+                call dbvalu(ty(kcoly:),temp1(:,k,q,r),ky,ky,idy,yval,inbvy,&
+                            work,iflag,temp2(k,q,r),extrap)
                 if (iflag/=0) return
             end do
         end do
@@ -1448,7 +1402,8 @@
     kcolz = leftz - kz + 1
     do r=1,kr
         do q=1,kq
-            call dbvalu(tz(kcolz:),temp2(:,q,r),kz,kz,idz,zval,inbvz,work,iflag,temp3(q,r))
+            call dbvalu(tz(kcolz:),temp2(:,q,r),kz,kz,idz,zval,inbvz,&
+                        work,iflag,temp3(q,r),extrap)
             if (iflag/=0) return
         end do
     end do
@@ -1456,13 +1411,14 @@
     ! q -> r
     kcolq = leftq - kq + 1
     do r=1,kr
-        call dbvalu(tq(kcolq:),temp3(:,r),kq,kq,idq,qval,inbvq,work,iflag,temp4(r))
+        call dbvalu(tq(kcolq:),temp3(:,r),kq,kq,idq,qval,inbvq,&
+                    work,iflag,temp4(r),extrap)
         if (iflag/=0) return
     end do
 
     ! r
     kcolr = leftr - kr + 1
-    call dbvalu(tr(kcolr:),temp4,kr,kr,idr,rval,inbvr,work,iflag,f)
+    call dbvalu(tr(kcolr:),temp4,kr,kr,idr,rval,inbvr,work,iflag,f,extrap)
 
     end subroutine db5val
 !*****************************************************************************************
@@ -1696,7 +1652,8 @@
                                 nx,ny,nz,nq,nr,ns,&
                                 kx,ky,kz,kq,kr,ks,&
                                 bcoef,f,iflag,&
-                                inbvx,inbvy,inbvz,inbvq,inbvr,inbvs,iloy,iloz,iloq,ilor,ilos)
+                                inbvx,inbvy,inbvz,inbvq,inbvr,inbvs,&
+                                iloy,iloz,iloq,ilor,ilos,extrap)
 
     implicit none
 
@@ -1793,6 +1750,7 @@
     integer,intent(inout)                            :: ilos     !! initialization parameter which must be set
                                                                  !! to 1 the first time this routine is called,
                                                                  !! and must not be changed by the user.
+    logical,intent(in),optional                      :: extrap   !! if extrapolation is allowed
 
     real(wp),dimension(ky,kz,kq,kr,ks)            :: temp1
     real(wp),dimension(kz,kq,kr,ks)               :: temp2
@@ -1808,43 +1766,19 @@
 
     f = 0.0_wp
 
-    if (xval<tx(1) .or. xval>tx(nx+kx)) then
-        !write(error_unit,'(A)') 'db6val - x value out of bounds'
-        iflag = 601
-        return
-    end if
-    if (yval<ty(1) .or. yval>ty(ny+ky)) then
-        !write(error_unit,'(A)') 'db6val - y value out of bounds'
-        iflag = 602
-        return
-    end if
-    if (zval<tz(1) .or. zval>tz(nz+kz)) then
-        !write(error_unit,'(A)') 'db6val - z value out of bounds'
-        iflag = 603
-        return
-    end if
-    if (qval<tq(1) .or. qval>tq(nq+kq) ) then
-        !write(error_unit,'(A)') 'db6val - q value out of bounds'
-        iflag = 604
-        return
-    end if
-    if ( rval<tr(1) .or. rval>tr(nr+kr) ) then
-        !write(error_unit,'(A)') 'db6val - r value out of bounds'
-        iflag = 605
-        return
-    end if
-    if (sval<ts(1) .or. sval>ts(ns+ks) ) then
-        !write(error_unit,'(A)') 'db6val - s value out of bounds'
-        iflag = 606
-        return
-    end if
+    iflag = check_value(xval,tx,1,extrap); if (iflag/=0) return
+    iflag = check_value(yval,ty,2,extrap); if (iflag/=0) return
+    iflag = check_value(zval,tz,3,extrap); if (iflag/=0) return
+    iflag = check_value(qval,tq,4,extrap); if (iflag/=0) return
+    iflag = check_value(rval,tr,5,extrap); if (iflag/=0) return
+    iflag = check_value(sval,ts,6,extrap); if (iflag/=0) return
 
     iflag = -1
-    call dintrv(ty,ny+ky,yval,iloy,lefty,mflag); if (mflag /= 0) return
-    call dintrv(tz,nz+kz,zval,iloz,leftz,mflag); if (mflag /= 0) return
-    call dintrv(tq,nq+kq,qval,iloq,leftq,mflag); if (mflag /= 0) return
-    call dintrv(tr,nr+kr,rval,ilor,leftr,mflag); if (mflag /= 0) return
-    call dintrv(ts,ns+ks,sval,ilos,lefts,mflag); if (mflag /= 0) return
+    call dintrv(ty,ny+ky,yval,iloy,lefty,mflag,extrap); if (mflag /= 0) return
+    call dintrv(tz,nz+kz,zval,iloz,leftz,mflag,extrap); if (mflag /= 0) return
+    call dintrv(tq,nq+kq,qval,iloq,leftq,mflag,extrap); if (mflag /= 0) return
+    call dintrv(tr,nr+kr,rval,ilor,leftr,mflag,extrap); if (mflag /= 0) return
+    call dintrv(ts,ns+ks,sval,ilos,lefts,mflag,extrap); if (mflag /= 0) return
 
     iflag = 0
 
@@ -1865,7 +1799,8 @@
                     do j=1,ky
                         kcoly = kcoly + 1
                         call dbvalu(tx,bcoef(:,kcoly,kcolz,kcolq,kcolr,kcols),&
-                                             nx,kx,idx,xval,inbvx,work,iflag,temp1(j,k,q,r,s))
+                                             nx,kx,idx,xval,inbvx,work,iflag,&
+                                             temp1(j,k,q,r,s),extrap)
                         if (iflag/=0) return
                     end do
                 end do
@@ -1879,7 +1814,9 @@
         do r=1,kr
             do q=1,kq
                 do k=1,kz
-                    call dbvalu(ty(kcoly:),temp1(:,k,q,r,s),ky,ky,idy,yval,inbvy,work,iflag,temp2(k,q,r,s))
+                    call dbvalu(ty(kcoly:),temp1(:,k,q,r,s),&
+                                ky,ky,idy,yval,inbvy,work,iflag,&
+                                temp2(k,q,r,s),extrap)
                     if (iflag/=0) return
                 end do
             end do
@@ -1891,7 +1828,9 @@
     do s=1,ks
         do r=1,kr
             do q=1,kq
-                call dbvalu(tz(kcolz:),temp2(:,q,r,s),kz,kz,idz,zval,inbvz,work,iflag,temp3(q,r,s))
+                call dbvalu(tz(kcolz:),temp2(:,q,r,s),&
+                            kz,kz,idz,zval,inbvz,work,iflag,&
+                            temp3(q,r,s),extrap)
                 if (iflag/=0) return
             end do
         end do
@@ -1901,7 +1840,9 @@
     kcolq = leftq - kq + 1
     do s=1,ks
         do r=1,kr
-            call dbvalu(tq(kcolq:),temp3(:,r,s),kq,kq,idq,qval,inbvq,work,iflag,temp4(r,s))
+            call dbvalu(tq(kcolq:),temp3(:,r,s),&
+                        kq,kq,idq,qval,inbvq,work,iflag,&
+                        temp4(r,s),extrap)
             if (iflag/=0) return
         end do
     end do
@@ -1909,15 +1850,55 @@
     ! r -> s
     kcolr = leftr - kr + 1
     do s=1,ks
-        call dbvalu(tr(kcolr:),temp4(:,s),kr,kr,idr,rval,inbvr,work,iflag,temp5(s))
+        call dbvalu(tr(kcolr:),temp4(:,s),&
+                    kr,kr,idr,rval,inbvr,work,iflag,&
+                    temp5(s),extrap)
         if (iflag/=0) return
     end do
 
     ! s
     kcols = lefts - ks + 1
-    call dbvalu(ts(kcols:),temp5,ks,ks,ids,sval,inbvs,work,iflag,f)
+    call dbvalu(ts(kcols:),temp5,ks,ks,ids,sval,inbvs,work,iflag,f,extrap)
 
     end subroutine db6val
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Checks if the value is withing the range of the knot vectors.
+!  This is called by the various `db*val` routines.
+
+    pure function check_value(x,t,i,extrap) result(iflag)
+
+    implicit none
+
+    integer :: iflag  !! returns 0 if value is OK, otherwise returns `600+i`
+    real(wp),intent(in) :: x !! the value to check
+    integer,intent(in) :: i !! 1=x, 2=y, 3=z, 4=q, 5=r, 6=s
+    real(wp),dimension(:),intent(in) :: t  !! the knot vector
+    logical,intent(in),optional :: extrap  !! if extrapolation is allowed
+                                           !! (if not present, default is False)
+
+    logical :: allow_extrapolation  !! if extrapolation is allowed
+
+    if (present(extrap)) then
+        allow_extrapolation = extrap
+    else
+        allow_extrapolation = .false.
+    end if
+
+    if (allow_extrapolation) then
+        ! in this case all values are OK
+        iflag = 0
+    else
+        if (x<t(1) .or. x>t(size(t))) then
+            iflag = 600 + i  ! value out of bounds (601, 602, etc.)
+        else
+            iflag = 0
+        end if
+    end if
+
+    end function check_value
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -2867,7 +2848,7 @@
 !  * 000330 modified array declarations.  (jec)
 !  * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
 
-    pure subroutine dbvalu(t,a,n,k,ideriv,x,inbv,work,iflag,val)
+    pure subroutine dbvalu(t,a,n,k,ideriv,x,inbv,work,iflag,val,extrap)
 
     implicit none
 
@@ -2896,28 +2877,49 @@
                                                 !! * 404: `x` is not greater than or equal to `t(k)`
                                                 !! * 405: `x` is not less than or equal to `t(n+1)`
                                                 !! * 406: a left limiting value cannot be obtained at `t(k)`
+    logical,intent(in),optional :: extrap   !! if extrapolation is allowed
+                                            !! (if not present, default if False)
 
     integer :: i,iderp1,ihi,ihmkmj,ilo,imk,imkpj,ipj,&
                ip1,ip1mj,j,jj,j1,j2,kmider,kmj,km1,kpk,mflag
     real(wp) :: fkmj
+    real(wp) :: xt
+    logical :: extrapolation_allowed  !! if extrapolation is allowe
+
+    if (present(extrap)) then
+        extrapolation_allowed = extrap
+    else
+        extrapolation_allowed = .false.
+    end if
+
+    ! make a temp copy of x (for computing the
+    ! interval) in case extrapolation is allowed
+    if (extrapolation_allowed) then
+        if (x<t(1)) then
+            xt = t(1)
+        else if(x>t(n+k)) then
+            xt = t(n+k)
+        else
+            xt = x
+        end if
+    else
+        xt = x
+    end if
 
     val = 0.0_wp
 
     if (k<1) then
-        !write(error_unit,'(A)') 'dbvalu - k does not satisfy k>=1'
-        iflag = 401
+        iflag = 401  ! dbvalu - k does not satisfy k>=1
         return
     end if
 
     if (n<k) then
-        !write(error_unit,'(A)') 'dbvalu - n does not satisfy n>=k'
-        iflag = 402
+        iflag = 402  ! dbvalu - n does not satisfy n>=k
         return
     end if
 
     if (ideriv<0 .or. ideriv>=k) then
-        !write(error_unit,'(A)') 'dbvalu - ideriv does not satisfy 0<=ideriv<k'
-        iflag = 403
+        iflag = 403  ! dbvalu - ideriv does not satisfy 0<=ideriv<k
         return
     end if
 
@@ -2927,29 +2929,26 @@
     ! (or, <= t(i+1) if t(i) < t(i+1) = t(n+1)).
 
     km1 = k - 1
-    call dintrv(t, n+1, x, inbv, i, mflag)
-    if (x<t(k)) then
-        !write(error_unit,'(A)') 'dbvalu - x is not greater than or equal to t(k)'
-        iflag = 404
+    call dintrv(t, n+1, xt, inbv, i, mflag)
+    if (xt<t(k)) then
+        iflag = 404  ! dbvalu - x is not greater than or equal to t(k)
         return
     end if
 
     if (mflag/=0) then
 
-        if (x>t(i)) then
-            !write(error_unit,'(A)') 'dbvalu - x is not less than or equal to t(n+1)'
-            iflag = 405
+        if (xt>t(i)) then
+            iflag = 405  ! dbvalu - x is not less than or equal to t(n+1)
             return
         end if
 
         do
             if (i==k) then
-                !write(error_unit,'(A)') 'dbvalu - a left limiting value cannot be obtained at t(k)'
-                iflag = 406
+                iflag = 406  ! dbvalu - a left limiting value cannot be obtained at t(k)
                 return
             end if
             i = i - 1
-            if (x/=t(i)) exit
+            if (xt/=t(i)) exit
         end do
 
     end if
@@ -3031,14 +3030,15 @@
 !  * revision date 820801
 !  * Jacob Williams, 2/24/2015 : updated to free-form Fortran.
 !  * Jacob Williams, 2/17/2016 : additional refactoring (eliminated GOTOs).
+!  * Jacob Williams, 3/4/2017 : added extrapolation option.
 
-    pure subroutine dintrv(xt,lxt,x,ilo,ileft,mflag)
+    pure subroutine dintrv(xt,lxt,xx,ilo,ileft,mflag,extrap)
 
     implicit none
 
     integer,intent(in)                 :: lxt    !! length of the `xt` vector
     real(wp),dimension(lxt),intent(in) :: xt     !! a knot or break point vector of length `lxt`
-    real(wp),intent(in)                :: x      !! argument
+    real(wp),intent(in)                :: xx     !! argument
     integer,intent(inout)              :: ilo    !! an initialization parameter which must be set
                                                  !! to 1 the first time the spline array `xt` is
                                                  !! processed by dintrv. `ilo` contains information for
@@ -3047,8 +3047,12 @@
                                                  !! require distinct `ilo` parameters.
     integer,intent(out)                :: ileft  !! largest integer satisfying `xt(ileft)` \( \le \) `x`
     integer,intent(out)                :: mflag  !! signals when `x` lies out of bounds
+    logical,intent(in),optional        :: extrap !! if extrapolation is allowed (default is False)
 
     integer :: ihi, istep, middle
+    real(wp) :: x
+
+    x = get_temp_x_for_extrap(xx,xt,extrap)
 
     ihi = ilo + 1
     if ( ihi>=lxt ) then
@@ -3132,6 +3136,51 @@
     end do
 
     end subroutine dintrv
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Returns the value of `x` to use for computing the interval
+!  in `t`, depending on if extrapolation is allowed or not.
+!
+!  If extrapolation is allowed and x is > t(1) or < t(n), then either
+!  t(1) or t(n) is returned. Otherwise, `x` is returned.
+
+    pure function get_temp_x_for_extrap(x,t,extrap) result(xt)
+
+    implicit none
+
+    real(wp),intent(in)              :: x       !! variable value
+    real(wp),dimension(:),intent(in) :: t       !! knot vector for b-splines
+    real(wp)                         :: xt      !! The value returned (it will either
+                                                !! be `t(1)`, `x`, or `t(n)`)
+    logical,intent(in),optional      :: extrap  !! if extrapolation is allowed
+                                                !! if not present, default is False
+
+    integer :: n  !! size of `t`
+    logical :: extrapolation_allowed  !! if extrapolation is allowe
+
+    if (present(extrap)) then
+        extrapolation_allowed = extrap
+    else
+        extrapolation_allowed = .false.
+    end if
+
+    n = size(t)
+
+    if (extrapolation_allowed) then
+        if (x<t(1)) then
+            xt = t(1)
+        elseif (x>t(n)) then
+            xt = t(n)
+        else
+            xt = x
+        end if
+    else
+        xt = x
+    end if
+
+    end function get_temp_x_for_extrap
 !*****************************************************************************************
 
 !*****************************************************************************************
