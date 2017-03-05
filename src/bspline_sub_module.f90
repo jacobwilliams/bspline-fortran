@@ -197,6 +197,7 @@
                                                      !! to 1 the first time this routine is called,
                                                      !! and must not be changed by the user.
     logical,intent(in),optional          :: extrap   !! if extrapolation is allowed
+                                                     !! (if not present, default is False)
 
     real(wp),dimension(3*kx) :: work
 
@@ -420,6 +421,7 @@
                                                      !! the first time this routine is called,
                                                      !! and must not be changed by the user.
     logical,intent(in),optional          :: extrap   !! if extrapolation is allowed
+                                                     !! (if not present, default is False)
 
     integer :: k, lefty, mflag, kcol
     real(wp),dimension(ky) :: temp
@@ -704,6 +706,7 @@
                                                         !! set to 1 the first time this routine is called,
                                                         !! and must not be changed by the user.
     logical,intent(in),optional             :: extrap   !! if extrapolation is allowed
+                                                        !! (if not present, default is False)
 
     real(wp),dimension(ky,kz)           :: temp1
     real(wp),dimension(kz)              :: temp2
@@ -983,6 +986,7 @@
                                                            !! to 1 the first time this routine is called,
                                                            !! and must not be changed by the user.
     logical,intent(in),optional                :: extrap   !! if extrapolation is allowed
+                                                           !! (if not present, default is False)
 
     real(wp),dimension(ky,kz,kq)             :: temp1
     real(wp),dimension(kz,kq)                :: temp2
@@ -1339,6 +1343,7 @@
                                                               !! to 1 the first time this routine is called,
                                                               !! and must not be changed by the user.
     logical,intent(in),optional                   :: extrap   !! if extrapolation is allowed
+                                                              !! (if not present, default is False)
 
     real(wp),dimension(ky,kz,kq,kr)           :: temp1
     real(wp),dimension(kz,kq,kr)              :: temp2
@@ -1751,6 +1756,7 @@
                                                                  !! to 1 the first time this routine is called,
                                                                  !! and must not be changed by the user.
     logical,intent(in),optional                      :: extrap   !! if extrapolation is allowed
+                                                                 !! (if not present, default is False)
 
     real(wp),dimension(ky,kz,kq,kr,ks)            :: temp1
     real(wp),dimension(kz,kq,kr,ks)               :: temp2
@@ -2878,7 +2884,7 @@
                                                 !! * 405: `x` is not less than or equal to `t(n+1)`
                                                 !! * 406: a left limiting value cannot be obtained at `t(k)`
     logical,intent(in),optional :: extrap   !! if extrapolation is allowed
-                                            !! (if not present, default if False)
+                                            !! (if not present, default is False)
 
     integer :: i,iderp1,ihi,ihmkmj,ilo,imk,imkpj,ipj,&
                ip1,ip1mj,j,jj,j1,j2,kmider,kmj,km1,kpk,mflag
@@ -3047,7 +3053,8 @@
                                                  !! require distinct `ilo` parameters.
     integer,intent(out)                :: ileft  !! largest integer satisfying `xt(ileft)` \( \le \) `x`
     integer,intent(out)                :: mflag  !! signals when `x` lies out of bounds
-    logical,intent(in),optional        :: extrap !! if extrapolation is allowed (default is False)
+    logical,intent(in),optional        :: extrap !! if extrapolation is allowed
+                                                 !! (if not present, default is False)
 
     integer :: ihi, istep, middle
     real(wp) :: x
@@ -3155,7 +3162,7 @@
     real(wp)                         :: xt      !! The value returned (it will either
                                                 !! be `t(1)`, `x`, or `t(n)`)
     logical,intent(in),optional      :: extrap  !! if extrapolation is allowed
-                                                !! if not present, default is False
+                                                !! (if not present, default is False)
 
     integer :: n  !! size of `t`
     logical :: extrapolation_allowed  !! if extrapolation is allowe
