@@ -753,21 +753,6 @@
 
 !*****************************************************************************************
 !>
-!  It returns an empty [[bspline_1d]] type. Note that INITIALIZE still
-!  needs to be called before it can be used.
-!  Not really that useful except perhaps in some OpenMP applications.
-
-    pure elemental function bspline_1d_constructor_empty() result(me)
-
-    implicit none
-
-    type(bspline_1d) :: me
-
-    end function bspline_1d_constructor_empty
-!*****************************************************************************************
-
-!*****************************************************************************************
-!>
 !  Sets the `extrap` flag in the class.
 
     pure subroutine set_extrap_flag(me,extrap)
@@ -784,6 +769,21 @@
     end if
 
     end subroutine set_extrap_flag
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  It returns an empty [[bspline_1d]] type. Note that INITIALIZE still
+!  needs to be called before it can be used.
+!  Not really that useful except perhaps in some OpenMP applications.
+
+    pure elemental function bspline_1d_constructor_empty() result(me)
+
+    implicit none
+
+    type(bspline_1d) :: me
+
+    end function bspline_1d_constructor_empty
 !*****************************************************************************************
 
 !*****************************************************************************************
