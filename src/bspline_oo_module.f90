@@ -28,9 +28,11 @@
         integer :: inbvx = 1  !! internal variable used by [[dbvalu]] for efficient processing
         integer :: iflag = 1  !! saved `iflag` from the list routine call.
         logical :: initialized = .false. !! true if the class is initialized and ready to use
+        logical :: extrap = .false. !! if true, then extrapolation is allowed during evaluation
     contains
         private
         procedure,non_overridable :: destroy_base  !! destructor for the abstract type
+        procedure,non_overridable :: set_extrap_flag !! internal routine to set the `extrap` flag
         procedure(destroy_func),deferred,public :: destroy  !! destructor
         procedure(size_func),deferred,public :: size_of !! size of the structure in bits
         procedure,public,non_overridable :: status_ok  !! returns true if the last `iflag` status code was `=0`.
@@ -512,6 +514,7 @@
     me%inbvx = 1
     me%iflag = 1
     me%initialized = .false.
+    me%extrap = .false.
 
     end subroutine destroy_base
 !*****************************************************************************************
@@ -765,22 +768,44 @@
 
 !*****************************************************************************************
 !>
+!  Sets the `extrap` flag in the class.
+
+    pure subroutine set_extrap_flag(me,extrap)
+
+    implicit none
+
+    class(bspline_class),intent(inout) :: me
+    logical,intent(in),optional :: extrap  !! if not present, then False is used
+
+    if (present(extrap)) then
+        me%extrap = extrap
+    else
+        me%extrap = .false.
+    end if
+
+    end subroutine set_extrap_flag
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
 !  Constructor for a [[bspline_1d]] type (auto knots).
 !  This is a wrapper for [[initialize_1d_auto_knots]].
 
-    pure function bspline_1d_constructor_auto_knots(x,fcn,kx) result(me)
+    pure function bspline_1d_constructor_auto_knots(x,fcn,kx,extrap) result(me)
 
     implicit none
 
     type(bspline_1d)                 :: me
-    real(wp),dimension(:),intent(in) :: x     !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
-    real(wp),dimension(:),intent(in) :: fcn   !! `(nx)` array of function values to interpolate. `fcn(i)` should
-                                              !! contain the function value at the point `x(i)`
-    integer,intent(in)               :: kx    !! The order of spline pieces in \(x\)
-                                              !! ( \( 2 \le k_x < n_x \) )
-                                              !! (order = polynomial degree + 1)
+    real(wp),dimension(:),intent(in) :: x      !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: fcn    !! `(nx)` array of function values to interpolate. `fcn(i)` should
+                                               !! contain the function value at the point `x(i)`
+    integer,intent(in)               :: kx     !! The order of spline pieces in \(x\)
+                                               !! ( \( 2 \le k_x < n_x \) )
+                                               !! (order = polynomial degree + 1)
+    logical,intent(in),optional      :: extrap !! if true, then extrapolation is allowed
+                                               !! (default is false)
 
-    call initialize_1d_auto_knots(me,x,fcn,kx,me%iflag)
+    call initialize_1d_auto_knots(me,x,fcn,kx,me%iflag,extrap)
 
     end function bspline_1d_constructor_auto_knots
 !*****************************************************************************************
@@ -790,7 +815,7 @@
 !  Constructor for a [[bspline_1d]] type (user-specified knots).
 !  This is a wrapper for [[initialize_1d_specify_knots]].
 
-    pure function bspline_1d_constructor_specify_knots(x,fcn,kx,tx) result(me)
+    pure function bspline_1d_constructor_specify_knots(x,fcn,kx,tx,extrap) result(me)
 
     implicit none
 
@@ -804,8 +829,10 @@
     real(wp),dimension(:),intent(in) :: tx    !! The `(nx+kx)` knots in the \(x\) direction
                                               !! for the spline interpolant.
                                               !! Must be non-decreasing.
+    logical,intent(in),optional      :: extrap !! if true, then extrapolation is allowed
+                                               !! (default is false)
 
-    call initialize_1d_specify_knots(me,x,fcn,kx,tx,me%iflag)
+    call initialize_1d_specify_knots(me,x,fcn,kx,tx,me%iflag,extrap)
 
     end function bspline_1d_constructor_specify_knots
 !*****************************************************************************************
@@ -815,7 +842,7 @@
 !  Initialize a [[bspline_1d]] type (with automatically-computed knots).
 !  This is a wrapper for [[db1ink]].
 
-    pure subroutine initialize_1d_auto_knots(me,x,fcn,kx,iflag)
+    pure subroutine initialize_1d_auto_knots(me,x,fcn,kx,iflag,extrap)
 
     implicit none
 
@@ -827,6 +854,8 @@
                                               !! ( \( 2 \le k_x < n_x \) )
                                               !! (order = polynomial degree + 1)
     integer,intent(out)              :: iflag !! status flag (see [[db1ink]])
+    logical,intent(in),optional      :: extrap !! if true, then extrapolation is allowed
+                                               !! (default is false)
 
     integer :: iknot
     integer :: nx
@@ -845,6 +874,10 @@
 
     call db1ink(x,nx,fcn,kx,iknot,me%tx,me%bcoef,iflag)
 
+    if (iflag==0) then
+        call me%set_extrap_flag(extrap)
+    end if
+
     me%initialized = iflag==0
     me%iflag = iflag
 
@@ -856,7 +889,7 @@
 !  Initialize a [[bspline_1d]] type (with user-specified knots).
 !  This is a wrapper for [[db1ink]].
 
-    pure subroutine initialize_1d_specify_knots(me,x,fcn,kx,tx,iflag)
+    pure subroutine initialize_1d_specify_knots(me,x,fcn,kx,tx,iflag,extrap)
 
     implicit none
 
@@ -871,6 +904,8 @@
                                               !! for the spline interpolant.
                                               !! Must be non-decreasing.
     integer,intent(out)              :: iflag !! status flag (see [[db1ink]])
+    logical,intent(in),optional      :: extrap !! if true, then extrapolation is allowed
+                                               !! (default is false)
 
     integer :: nx
 
@@ -878,7 +913,7 @@
 
     nx = size(x)
 
-    call check_knot_vectors_sizes('initialize_1d_specify_knots',nx=nx,kx=kx,tx=tx,iflag=iflag)
+    call check_knot_vectors_sizes(nx=nx,kx=kx,tx=tx,iflag=iflag)
 
     if (iflag == 0) then
 
@@ -891,6 +926,8 @@
         me%tx = tx
 
         call db1ink(x,nx,fcn,kx,1,me%tx,me%bcoef,iflag)
+
+        call me%set_extrap_flag(extrap)
 
     end if
 
@@ -915,7 +952,7 @@
     integer,intent(out)             :: iflag !! status flag (see [[db1val]])
 
     if (me%initialized) then
-        call db1val(xval,idx,me%tx,me%nx,me%kx,me%bcoef,f,iflag,me%inbvx)
+        call db1val(xval,idx,me%tx,me%nx,me%kx,me%bcoef,f,iflag,me%inbvx,me%extrap)
     else
         iflag = 1
     end if
@@ -944,7 +981,7 @@
 !  Constructor for a [[bspline_2d]] type (auto knots).
 !  This is a wrapper for [[initialize_2d_auto_knots]].
 
-    pure function bspline_2d_constructor_auto_knots(x,y,fcn,kx,ky) result(me)
+    pure function bspline_2d_constructor_auto_knots(x,y,fcn,kx,ky,extrap) result(me)
 
     implicit none
 
@@ -960,8 +997,10 @@
     integer,intent(in)                 :: ky    !! The order of spline pieces in \(y\)
                                                 !! ( \( 2 \le k_y < n_y \) )
                                                 !! (order = polynomial degree + 1)
+    logical,intent(in),optional      :: extrap !! if true, then extrapolation is allowed
+                                               !! (default is false)
 
-    call initialize_2d_auto_knots(me,x,y,fcn,kx,ky,me%iflag)
+    call initialize_2d_auto_knots(me,x,y,fcn,kx,ky,me%iflag,extrap)
 
     end function bspline_2d_constructor_auto_knots
 !*****************************************************************************************
@@ -971,7 +1010,7 @@
 !  Constructor for a [[bspline_2d]] type (user-specified knots).
 !  This is a wrapper for [[initialize_2d_specify_knots]].
 
-    pure function bspline_2d_constructor_specify_knots(x,y,fcn,kx,ky,tx,ty) result(me)
+    pure function bspline_2d_constructor_specify_knots(x,y,fcn,kx,ky,tx,ty,extrap) result(me)
 
     implicit none
 
@@ -993,8 +1032,10 @@
     real(wp),dimension(:),intent(in)   :: ty    !! The `(ny+ky)` knots in the \(y\) direction
                                                 !! for the spline interpolant.
                                                 !! Must be non-decreasing.
+    logical,intent(in),optional      :: extrap  !! if true, then extrapolation is allowed
+                                                !! (default is false)
 
-    call initialize_2d_specify_knots(me,x,y,fcn,kx,ky,tx,ty,me%iflag)
+    call initialize_2d_specify_knots(me,x,y,fcn,kx,ky,tx,ty,me%iflag,extrap)
 
     end function bspline_2d_constructor_specify_knots
 !*****************************************************************************************
@@ -1004,7 +1045,7 @@
 !  Initialize a [[bspline_2d]] type (with automatically-computed knots).
 !  This is a wrapper for [[db2ink]].
 
-    pure subroutine initialize_2d_auto_knots(me,x,y,fcn,kx,ky,iflag)
+    pure subroutine initialize_2d_auto_knots(me,x,y,fcn,kx,ky,iflag,extrap)
 
     implicit none
 
@@ -1021,6 +1062,8 @@
                                                 !! ( \( 2 \le k_y < n_y \) )
                                                 !! (order = polynomial degree + 1)
     integer,intent(out)                :: iflag !! status flag (see [[db2ink]])
+    logical,intent(in),optional      :: extrap  !! if true, then extrapolation is allowed
+                                                !! (default is false)
 
     integer :: iknot
     integer :: nx,ny
@@ -1044,6 +1087,10 @@
 
     call db2ink(x,nx,y,ny,fcn,kx,ky,iknot,me%tx,me%ty,me%bcoef,iflag)
 
+    if (iflag==0) then
+        call me%set_extrap_flag(extrap)
+    end if
+
     me%initialized = iflag==0
     me%iflag = iflag
 
@@ -1055,7 +1102,7 @@
 !  Initialize a [[bspline_2d]] type (with user-specified knots).
 !  This is a wrapper for [[db2ink]].
 
-    pure subroutine initialize_2d_specify_knots(me,x,y,fcn,kx,ky,tx,ty,iflag)
+    pure subroutine initialize_2d_specify_knots(me,x,y,fcn,kx,ky,tx,ty,iflag,extrap)
 
     implicit none
 
@@ -1078,6 +1125,8 @@
                                                 !! for the spline interpolant.
                                                 !! Must be non-decreasing.
     integer,intent(out)                :: iflag !! status flag (see [[db2ink]])
+    logical,intent(in),optional      :: extrap  !! if true, then extrapolation is allowed
+                                                !! (default is false)
 
     integer :: nx,ny
 
@@ -1086,9 +1135,9 @@
     nx = size(x)
     ny = size(y)
 
-    call check_knot_vectors_sizes('initialize_2d_specify_knots',nx=nx,kx=kx,tx=tx,&
-                                                                ny=ny,ky=ky,ty=ty,&
-                                                                iflag=iflag)
+    call check_knot_vectors_sizes(nx=nx,kx=kx,tx=tx,&
+                                  ny=ny,ky=ky,ty=ty,&
+                                  iflag=iflag)
 
     if (iflag == 0) then
 
@@ -1106,6 +1155,8 @@
         me%ty = ty
 
         call db2ink(x,nx,y,ny,fcn,kx,ky,1,me%tx,me%ty,me%bcoef,iflag)
+
+        call me%set_extrap_flag(extrap)
 
     end if
 
@@ -1138,7 +1189,8 @@
                     me%nx,me%ny,&
                     me%kx,me%ky,&
                     me%bcoef,f,iflag,&
-                    me%inbvx,me%inbvy,me%iloy)
+                    me%inbvx,me%inbvy,me%iloy,&
+                    me%extrap)
     else
         iflag = 1
     end if
@@ -1168,7 +1220,7 @@
 !  Constructor for a [[bspline_3d]] type (auto knots).
 !  This is a wrapper for [[initialize_3d_auto_knots]].
 
-    pure function bspline_3d_constructor_auto_knots(x,y,z,fcn,kx,ky,kz) result(me)
+    pure function bspline_3d_constructor_auto_knots(x,y,z,fcn,kx,ky,kz,extrap) result(me)
 
     implicit none
 
@@ -1188,8 +1240,10 @@
     integer,intent(in)                   :: kz  !! The order of spline pieces in \(z\)
                                                 !! ( \( 2 \le k_z < n_z \) )
                                                 !! (order = polynomial degree + 1)
+    logical,intent(in),optional      :: extrap !! if true, then extrapolation is allowed
+                                               !! (default is false)
 
-    call initialize_3d_auto_knots(me,x,y,z,fcn,kx,ky,kz,me%iflag)
+    call initialize_3d_auto_knots(me,x,y,z,fcn,kx,ky,kz,me%iflag,extrap)
 
     end function bspline_3d_constructor_auto_knots
 !*****************************************************************************************
@@ -1199,7 +1253,7 @@
 !  Constructor for a [[bspline_3d]] type (user-specified knots).
 !  This is a wrapper for [[initialize_3d_specify_knots]].
 
-    pure function bspline_3d_constructor_specify_knots(x,y,z,fcn,kx,ky,kz,tx,ty,tz) result(me)
+    pure function bspline_3d_constructor_specify_knots(x,y,z,fcn,kx,ky,kz,tx,ty,tz,extrap) result(me)
 
     implicit none
 
@@ -1228,8 +1282,10 @@
     real(wp),dimension(:),intent(in)     :: tz  !! The `(nz+kz)` knots in the \(z\) direction
                                                 !! for the spline interpolant.
                                                 !! Must be non-decreasing.
+    logical,intent(in),optional :: extrap       !! if true, then extrapolation is allowed
+                                                !! (default is false)
 
-    call initialize_3d_specify_knots(me,x,y,z,fcn,kx,ky,kz,tx,ty,tz,me%iflag)
+    call initialize_3d_specify_knots(me,x,y,z,fcn,kx,ky,kz,tx,ty,tz,me%iflag,extrap)
 
     end function bspline_3d_constructor_specify_knots
 !*****************************************************************************************
@@ -1239,7 +1295,7 @@
 !  Initialize a [[bspline_3d]] type (with automatically-computed knots).
 !  This is a wrapper for [[db3ink]].
 
-    pure subroutine initialize_3d_auto_knots(me,x,y,z,fcn,kx,ky,kz,iflag)
+    pure subroutine initialize_3d_auto_knots(me,x,y,z,fcn,kx,ky,kz,iflag,extrap)
 
     implicit none
 
@@ -1259,7 +1315,9 @@
     integer,intent(in)                   :: kz  !! The order of spline pieces in \(z\)
                                                 !! ( \( 2 \le k_z < n_z \) )
                                                 !! (order = polynomial degree + 1)
-    integer,intent(out)                  :: iflag  !! status flag (see [[db3ink]])
+    integer,intent(out) :: iflag                !! status flag (see [[db3ink]])
+    logical,intent(in),optional :: extrap       !! if true, then extrapolation is allowed
+                                                !! (default is false)
 
     integer :: iknot
     integer :: nx,ny,nz
@@ -1292,6 +1350,10 @@
                 me%tx,me%ty,me%tz,&
                 me%bcoef,iflag)
 
+    if (iflag==0) then
+        call me%set_extrap_flag(extrap)
+    end if
+
     me%initialized = iflag==0
     me%iflag = iflag
 
@@ -1303,7 +1365,7 @@
 !  Initialize a [[bspline_3d]] type (with user-specified knots).
 !  This is a wrapper for [[db3ink]].
 
-    pure subroutine initialize_3d_specify_knots(me,x,y,z,fcn,kx,ky,kz,tx,ty,tz,iflag)
+    pure subroutine initialize_3d_specify_knots(me,x,y,z,fcn,kx,ky,kz,tx,ty,tz,iflag,extrap)
 
     implicit none
 
@@ -1332,7 +1394,9 @@
     real(wp),dimension(:),intent(in)     :: tz  !! The `(nz+kz)` knots in the \(z\) direction
                                                 !! for the spline interpolant.
                                                 !! Must be non-decreasing.
-    integer,intent(out)                  :: iflag  !! status flag (see [[db3ink]])
+    integer,intent(out)  :: iflag               !! status flag (see [[db3ink]])
+    logical,intent(in),optional  :: extrap      !! if true, then extrapolation is allowed
+                                                !! (default is false)
 
     integer :: nx,ny,nz
 
@@ -1342,10 +1406,10 @@
     ny = size(y)
     nz = size(z)
 
-    call check_knot_vectors_sizes('initialize_3d_specify_knots',nx=nx,kx=kx,tx=tx,&
-                                                                ny=ny,ky=ky,ty=ty,&
-                                                                nz=nz,kz=kz,tz=tz,&
-                                                                iflag=iflag)
+    call check_knot_vectors_sizes(nx=nx,kx=kx,tx=tx,&
+                                  ny=ny,ky=ky,ty=ty,&
+                                  nz=nz,kz=kz,tz=tz,&
+                                  iflag=iflag)
 
     if (iflag == 0) then
 
@@ -1372,6 +1436,8 @@
                     1,&
                     me%tx,me%ty,me%tz,&
                     me%bcoef,iflag)
+
+        call me%set_extrap_flag(extrap)
 
     end if
 
@@ -1407,7 +1473,8 @@
                     me%kx,me%ky,me%kz,&
                     me%bcoef,f,iflag,&
                     me%inbvx,me%inbvy,me%inbvz,&
-                    me%iloy,me%iloz)
+                    me%iloy,me%iloz,&
+                    me%extrap)
     else
         iflag = 1
     end if
@@ -1437,7 +1504,7 @@
 !  Constructor for a [[bspline_4d]] type (auto knots).
 !  This is a wrapper for [[initialize_4d_auto_knots]].
 
-    pure function bspline_4d_constructor_auto_knots(x,y,z,q,fcn,kx,ky,kz,kq) result(me)
+    pure function bspline_4d_constructor_auto_knots(x,y,z,q,fcn,kx,ky,kz,kq,extrap) result(me)
 
     implicit none
 
@@ -1461,8 +1528,10 @@
     integer,intent(in)                     :: kq  !! The order of spline pieces in \(q\)
                                                   !! ( \( 2 \le k_q < n_q \) )
                                                   !! (order = polynomial degree + 1)
+    logical,intent(in),optional      :: extrap    !! if true, then extrapolation is allowed
+                                                  !! (default is false)
 
-    call initialize_4d_auto_knots(me,x,y,z,q,fcn,kx,ky,kz,kq,me%iflag)
+    call initialize_4d_auto_knots(me,x,y,z,q,fcn,kx,ky,kz,kq,me%iflag,extrap)
 
     end function bspline_4d_constructor_auto_knots
 !*****************************************************************************************
@@ -1472,7 +1541,8 @@
 !  Constructor for a [[bspline_4d]] type (user-specified knots).
 !  This is a wrapper for [[initialize_4d_specify_knots]].
 
-    pure function bspline_4d_constructor_specify_knots(x,y,z,q,fcn,kx,ky,kz,kq,tx,ty,tz,tq) result(me)
+    pure function bspline_4d_constructor_specify_knots(x,y,z,q,fcn,kx,ky,kz,kq,&
+                                                        tx,ty,tz,tq,extrap) result(me)
 
     implicit none
 
@@ -1508,8 +1578,10 @@
     real(wp),dimension(:),intent(in)           :: tq  !! The `(nq+kq)` knots in the \(q\) direction
                                                       !! for the spline interpolant.
                                                       !! Must be non-decreasing.
+    logical,intent(in),optional      :: extrap        !! if true, then extrapolation is allowed
+                                                      !! (default is false)
 
-    call initialize_4d_specify_knots(me,x,y,z,q,fcn,kx,ky,kz,kq,tx,ty,tz,tq,me%iflag)
+    call initialize_4d_specify_knots(me,x,y,z,q,fcn,kx,ky,kz,kq,tx,ty,tz,tq,me%iflag,extrap)
 
     end function bspline_4d_constructor_specify_knots
 !*****************************************************************************************
@@ -1519,7 +1591,7 @@
 !  Initialize a [[bspline_4d]] type (with automatically-computed knots).
 !  This is a wrapper for [[db4ink]].
 
-    pure subroutine initialize_4d_auto_knots(me,x,y,z,q,fcn,kx,ky,kz,kq,iflag)
+    pure subroutine initialize_4d_auto_knots(me,x,y,z,q,fcn,kx,ky,kz,kq,iflag,extrap)
 
     implicit none
 
@@ -1543,7 +1615,9 @@
     integer,intent(in)                         :: kq  !! The order of spline pieces in \(q\)
                                                       !! ( \( 2 \le k_q < n_q \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(out)                        :: iflag  !! status flag (see [[db4ink]])
+    integer,intent(out)  :: iflag                     !! status flag (see [[db4ink]])
+    logical,intent(in),optional  :: extrap            !! if true, then extrapolation is allowed
+                                                      !! (default is false)
 
     integer :: iknot
     integer :: nx,ny,nz,nq
@@ -1580,6 +1654,10 @@
                 me%tx,me%ty,me%tz,me%tq,&
                 me%bcoef,iflag)
 
+    if (iflag==0) then
+        call me%set_extrap_flag(extrap)
+    end if
+
     me%initialized = iflag==0
     me%iflag = iflag
 
@@ -1591,7 +1669,8 @@
 !  Initialize a [[bspline_4d]] type (with user-specified knots).
 !  This is a wrapper for [[db4ink]].
 
-    pure subroutine initialize_4d_specify_knots(me,x,y,z,q,fcn,kx,ky,kz,kq,tx,ty,tz,tq,iflag)
+    pure subroutine initialize_4d_specify_knots(me,x,y,z,q,fcn,&
+                                                kx,ky,kz,kq,tx,ty,tz,tq,iflag,extrap)
 
     implicit none
 
@@ -1627,7 +1706,9 @@
     real(wp),dimension(:),intent(in)           :: tq  !! The `(nq+kq)` knots in the \(q\) direction
                                                       !! for the spline interpolant.
                                                       !! Must be non-decreasing.
-    integer,intent(out)                    :: iflag   !! status flag (see [[db4ink]])
+    integer,intent(out)  :: iflag                     !! status flag (see [[db4ink]])
+    logical,intent(in),optional  :: extrap            !! if true, then extrapolation is allowed
+                                                      !! (default is false)
 
     integer :: nx,ny,nz,nq
 
@@ -1638,11 +1719,11 @@
     nz = size(z)
     nq = size(q)
 
-    call check_knot_vectors_sizes('initialize_4d_specify_knots',nx=nx,kx=kx,tx=tx,&
-                                                                ny=ny,ky=ky,ty=ty,&
-                                                                nz=nz,kz=kz,tz=tz,&
-                                                                nq=nq,kq=kq,tq=tq,&
-                                                                iflag=iflag)
+    call check_knot_vectors_sizes(nx=nx,kx=kx,tx=tx,&
+                                  ny=ny,ky=ky,ty=ty,&
+                                  nz=nz,kz=kz,tz=tz,&
+                                  nq=nq,kq=kq,tq=tq,&
+                                  iflag=iflag)
 
     if (iflag == 0) then
 
@@ -1673,6 +1754,8 @@
                     1,&
                     me%tx,me%ty,me%tz,me%tq,&
                     me%bcoef,iflag)
+
+        call me%set_extrap_flag(extrap)
 
     end if
 
@@ -1710,7 +1793,8 @@
                     me%kx,me%ky,me%kz,me%kq,&
                     me%bcoef,f,iflag,&
                     me%inbvx,me%inbvy,me%inbvz,me%inbvq,&
-                    me%iloy,me%iloz,me%iloq)
+                    me%iloy,me%iloz,me%iloq,&
+                    me%extrap)
     else
         iflag = 1
     end if
@@ -1740,7 +1824,7 @@
 !  Constructor for a [[bspline_5d]] type (auto knots).
 !  This is a wrapper for [[initialize_5d_auto_knots]].
 
-    pure function bspline_5d_constructor_auto_knots(x,y,z,q,r,fcn,kx,ky,kz,kq,kr) result(me)
+    pure function bspline_5d_constructor_auto_knots(x,y,z,q,r,fcn,kx,ky,kz,kq,kr,extrap) result(me)
 
     implicit none
 
@@ -1768,8 +1852,10 @@
     integer,intent(in)                         :: kr  !! The order of spline pieces in \(r\)
                                                       !! ( \( 2 \le k_r < n_r \) )
                                                       !! (order = polynomial degree + 1)
+    logical,intent(in),optional      :: extrap        !! if true, then extrapolation is allowed
+                                                      !! (default is false)
 
-    call initialize_5d_auto_knots(me,x,y,z,q,r,fcn,kx,ky,kz,kq,kr,me%iflag)
+    call initialize_5d_auto_knots(me,x,y,z,q,r,fcn,kx,ky,kz,kq,kr,me%iflag,extrap)
 
     end function bspline_5d_constructor_auto_knots
 !*****************************************************************************************
@@ -1779,7 +1865,9 @@
 !  Constructor for a [[bspline_5d]] type (user-specified knots).
 !  This is a wrapper for [[initialize_5d_specify_knots]].
 
-    pure function bspline_5d_constructor_specify_knots(x,y,z,q,r,fcn,kx,ky,kz,kq,kr,tx,ty,tz,tq,tr) result(me)
+    pure function bspline_5d_constructor_specify_knots(x,y,z,q,r,fcn,&
+                                                        kx,ky,kz,kq,kr,&
+                                                        tx,ty,tz,tq,tr,extrap) result(me)
 
     implicit none
 
@@ -1822,8 +1910,10 @@
     real(wp),dimension(:),intent(in)           :: tr  !! The `(nr+kr)` knots in the \(r\) direction
                                                       !! for the spline interpolant.
                                                       !! Must be non-decreasing.
+    logical,intent(in),optional      :: extrap        !! if true, then extrapolation is allowed
+                                                      !! (default is false)
 
-    call initialize_5d_specify_knots(me,x,y,z,q,r,fcn,kx,ky,kz,kq,kr,tx,ty,tz,tq,tr,me%iflag)
+    call initialize_5d_specify_knots(me,x,y,z,q,r,fcn,kx,ky,kz,kq,kr,tx,ty,tz,tq,tr,me%iflag,extrap)
 
     end function bspline_5d_constructor_specify_knots
 !*****************************************************************************************
@@ -1833,7 +1923,7 @@
 !  Initialize a [[bspline_5d]] type (with automatically-computed knots).
 !  This is a wrapper for [[db5ink]].
 
-    pure subroutine initialize_5d_auto_knots(me,x,y,z,q,r,fcn,kx,ky,kz,kq,kr,iflag)
+    pure subroutine initialize_5d_auto_knots(me,x,y,z,q,r,fcn,kx,ky,kz,kq,kr,iflag,extrap)
 
     implicit none
 
@@ -1861,7 +1951,9 @@
     integer,intent(in)                         :: kr  !! The order of spline pieces in \(r\)
                                                       !! ( \( 2 \le k_r < n_r \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(out)                        :: iflag !! status flag (see [[db5ink]])
+    integer,intent(out)  :: iflag                     !! status flag (see [[db5ink]])
+    logical,intent(in),optional  :: extrap            !! if true, then extrapolation is allowed
+                                                      !! (default is false)
 
     integer :: iknot
     integer :: nx,ny,nz,nq,nr
@@ -1902,6 +1994,10 @@
                 me%tx,me%ty,me%tz,me%tq,me%tr,&
                 me%bcoef,iflag)
 
+    if (iflag==0) then
+        call me%set_extrap_flag(extrap)
+    end if
+
     me%initialized = iflag==0
     me%iflag = iflag
 
@@ -1913,7 +2009,9 @@
 !  Initialize a [[bspline_5d]] type (with user-specified knots).
 !  This is a wrapper for [[db5ink]].
 
-    pure subroutine initialize_5d_specify_knots(me,x,y,z,q,r,fcn,kx,ky,kz,kq,kr,tx,ty,tz,tq,tr,iflag)
+    pure subroutine initialize_5d_specify_knots(me,x,y,z,q,r,fcn,&
+                                                kx,ky,kz,kq,kr,&
+                                                tx,ty,tz,tq,tr,iflag,extrap)
 
     implicit none
 
@@ -1956,7 +2054,9 @@
     real(wp),dimension(:),intent(in)           :: tr  !! The `(nr+kr)` knots in the \(r\) direction
                                                       !! for the spline interpolant.
                                                       !! Must be non-decreasing.
-    integer,intent(out)                      :: iflag !! status flag (see [[db5ink]])
+    integer,intent(out)  :: iflag                     !! status flag (see [[db5ink]])
+    logical,intent(in),optional  :: extrap            !! if true, then extrapolation is allowed
+                                                      !! (default is false)
 
     integer :: nx,ny,nz,nq,nr
 
@@ -1968,12 +2068,12 @@
     nq = size(q)
     nr = size(r)
 
-    call check_knot_vectors_sizes('initialize_5d_specify_knots',nx=nx,kx=kx,tx=tx,&
-                                                                ny=ny,ky=ky,ty=ty,&
-                                                                nz=nz,kz=kz,tz=tz,&
-                                                                nq=nq,kq=kq,tq=tq,&
-                                                                nr=nr,kr=kr,tr=tr,&
-                                                                iflag=iflag)
+    call check_knot_vectors_sizes(nx=nx,kx=kx,tx=tx,&
+                                  ny=ny,ky=ky,ty=ty,&
+                                  nz=nz,kz=kz,tz=tz,&
+                                  nq=nq,kq=kq,tq=tq,&
+                                  nr=nr,kr=kr,tr=tr,&
+                                  iflag=iflag)
 
     if (iflag == 0) then
 
@@ -2008,6 +2108,8 @@
                     1,&
                     me%tx,me%ty,me%tz,me%tq,me%tr,&
                     me%bcoef,iflag)
+
+        call me%set_extrap_flag(extrap)
 
     end if
 
@@ -2047,7 +2149,8 @@
                     me%kx,me%ky,me%kz,me%kq,me%kr,&
                     me%bcoef,f,iflag,&
                     me%inbvx,me%inbvy,me%inbvz,me%inbvq,me%inbvr,&
-                    me%iloy,me%iloz,me%iloq,me%ilor)
+                    me%iloy,me%iloz,me%iloq,me%ilor,&
+                    me%extrap)
     else
         iflag = 1
     end if
@@ -2077,7 +2180,8 @@
 !  Constructor for a [[bspline_6d]] type (auto knots).
 !  This is a wrapper for [[initialize_6d_auto_knots]].
 
-    pure function bspline_6d_constructor_auto_knots(x,y,z,q,r,s,fcn,kx,ky,kz,kq,kr,ks) result(me)
+    pure function bspline_6d_constructor_auto_knots(x,y,z,q,r,s,fcn,&
+                                                    kx,ky,kz,kq,kr,ks,extrap) result(me)
 
     implicit none
 
@@ -2109,8 +2213,10 @@
     integer,intent(in)                         :: ks  !! The order of spline pieces in \(z\)
                                                       !! ( \( 2 \le k_z < n_z \) )
                                                       !! (order = polynomial degree + 1)
+    logical,intent(in),optional      :: extrap        !! if true, then extrapolation is allowed
+                                                      !! (default is false)
 
-    call initialize_6d_auto_knots(me,x,y,z,q,r,s,fcn,kx,ky,kz,kq,kr,ks,me%iflag)
+    call initialize_6d_auto_knots(me,x,y,z,q,r,s,fcn,kx,ky,kz,kq,kr,ks,me%iflag,extrap)
 
     end function bspline_6d_constructor_auto_knots
 !*****************************************************************************************
@@ -2120,7 +2226,9 @@
 !  Constructor for a [[bspline_6d]] type (user-specified knots).
 !  This is a wrapper for [[initialize_6d_specify_knots]].
 
-    pure function bspline_6d_constructor_specify_knots(x,y,z,q,r,s,fcn,kx,ky,kz,kq,kr,ks,tx,ty,tz,tq,tr,ts) result(me)
+    pure function bspline_6d_constructor_specify_knots(x,y,z,q,r,s,fcn,&
+                                                        kx,ky,kz,kq,kr,ks,&
+                                                        tx,ty,tz,tq,tr,ts,extrap) result(me)
 
     implicit none
 
@@ -2170,8 +2278,12 @@
     real(wp),dimension(:),intent(in)           :: ts  !! The `(ns+ks)` knots in the \(s\) direction
                                                       !! for the spline interpolant.
                                                       !! Must be non-decreasing.
+    logical,intent(in),optional      :: extrap        !! if true, then extrapolation is allowed
+                                                      !! (default is false)
 
-    call initialize_6d_specify_knots(me,x,y,z,q,r,s,fcn,kx,ky,kz,kq,kr,ks,tx,ty,tz,tq,tr,ts,me%iflag)
+    call initialize_6d_specify_knots(me,x,y,z,q,r,s,fcn,&
+                                        kx,ky,kz,kq,kr,ks,&
+                                        tx,ty,tz,tq,tr,ts,me%iflag,extrap)
 
     end function bspline_6d_constructor_specify_knots
 !*****************************************************************************************
@@ -2181,7 +2293,8 @@
 !  Initialize a [[bspline_6d]] type (with automatically-computed knots).
 !  This is a wrapper for [[db6ink]].
 
-    pure subroutine initialize_6d_auto_knots(me,x,y,z,q,r,s,fcn,kx,ky,kz,kq,kr,ks,iflag)
+    pure subroutine initialize_6d_auto_knots(me,x,y,z,q,r,s,fcn,&
+                                                kx,ky,kz,kq,kr,ks,iflag,extrap)
 
     implicit none
 
@@ -2213,7 +2326,9 @@
     integer,intent(in)                         :: ks  !! The order of spline pieces in \(z\)
                                                       !! ( \( 2 \le k_z < n_z \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(out)                        :: iflag !! status flag (see [[db6ink]])
+    integer,intent(out)  :: iflag                     !! status flag (see [[db6ink]])
+    logical,intent(in),optional  :: extrap            !! if true, then extrapolation is allowed
+                                                      !! (default is false)
 
     integer :: iknot
     integer :: nx,ny,nz,nq,nr,ns
@@ -2258,6 +2373,10 @@
                 me%tx,me%ty,me%tz,me%tq,me%tr,me%ts,&
                 me%bcoef,iflag)
 
+    if (iflag==0) then
+        call me%set_extrap_flag(extrap)
+    end if
+
     me%initialized = iflag==0
     me%iflag = iflag
 
@@ -2269,7 +2388,9 @@
 !  Initialize a [[bspline_6d]] type (with user-specified knots).
 !  This is a wrapper for [[db6ink]].
 
-    pure subroutine initialize_6d_specify_knots(me,x,y,z,q,r,s,fcn,kx,ky,kz,kq,kr,ks,tx,ty,tz,tq,tr,ts,iflag)
+    pure subroutine initialize_6d_specify_knots(me,x,y,z,q,r,s,fcn,&
+                                                kx,ky,kz,kq,kr,ks,&
+                                                tx,ty,tz,tq,tr,ts,iflag,extrap)
 
     implicit none
 
@@ -2319,7 +2440,9 @@
     real(wp),dimension(:),intent(in)           :: ts  !! The `(ns+ks)` knots in the \(s\) direction
                                                       !! for the spline interpolant.
                                                       !! Must be non-decreasing.
-    integer,intent(out)                        :: iflag !! status flag (see [[db6ink]])
+    integer,intent(out)  :: iflag                     !! status flag (see [[db6ink]])
+    logical,intent(in),optional  :: extrap            !! if true, then extrapolation is allowed
+                                                      !! (default is false)
 
     integer :: nx,ny,nz,nq,nr,ns
 
@@ -2332,13 +2455,13 @@
     nr = size(r)
     ns = size(s)
 
-    call check_knot_vectors_sizes('initialize_6d_specify_knots',nx=nx,kx=kx,tx=tx,&
-                                                                ny=ny,ky=ky,ty=ty,&
-                                                                nz=nz,kz=kz,tz=tz,&
-                                                                nq=nq,kq=kq,tq=tq,&
-                                                                nr=nr,kr=kr,tr=tr,&
-                                                                ns=ns,ks=ks,ts=ts,&
-                                                                iflag=iflag)
+    call check_knot_vectors_sizes(nx=nx,kx=kx,tx=tx,&
+                                  ny=ny,ky=ky,ty=ty,&
+                                  nz=nz,kz=kz,tz=tz,&
+                                  nq=nq,kq=kq,tq=tq,&
+                                  nr=nr,kr=kr,tr=tr,&
+                                  ns=ns,ks=ks,ts=ts,&
+                                  iflag=iflag)
 
     if (iflag == 0) then
 
@@ -2377,6 +2500,8 @@
                     1,&
                     me%tx,me%ty,me%tz,me%tq,me%tr,me%ts,&
                     me%bcoef,iflag)
+
+        call me%set_extrap_flag(extrap)
 
     end if
 
@@ -2418,7 +2543,8 @@
                     me%kx,me%ky,me%kz,me%kq,me%kr,me%ks,&
                     me%bcoef,f,iflag,&
                     me%inbvx,me%inbvy,me%inbvz,me%inbvq,me%inbvr,me%inbvs,&
-                    me%iloy,me%iloz,me%iloq,me%ilor,me%ilos)
+                    me%iloy,me%iloz,me%iloq,me%ilor,me%ilos,&
+                    me%extrap)
     else
         iflag = 1
     end if
@@ -2431,16 +2557,16 @@
 !*****************************************************************************************
 !>
 !  Error checks for the user-specified knot vector sizes.
-!  Note that if more than one is the wrong size, then the iflag error code will
-!  correspond to the one with for the highest rank.
+!
+!@note If more than one is the wrong size, then the `iflag` error code will
+!      correspond to the one with the highest rank.
 
-    pure subroutine check_knot_vectors_sizes(routine,nx,ny,nz,nq,nr,ns,&
+    pure subroutine check_knot_vectors_sizes(nx,ny,nz,nq,nr,ns,&
                                              kx,ky,kz,kq,kr,ks,&
                                              tx,ty,tz,tq,tr,ts,iflag)
 
     implicit none
 
-    character(len=*),intent(in)               :: routine
     integer,intent(in),optional               :: nx
     integer,intent(in),optional               :: ny
     integer,intent(in),optional               :: nz
@@ -2465,43 +2591,37 @@
 
     if (present(nx) .and. present(kx) .and. present(tx)) then
         if (size(tx)/=(nx+kx)) then
-            !write(error_unit,'(A)') trim(routine)//' - tx is not the correct size (nx+kx)'
-            iflag = 501
+            iflag = 501  ! tx is not the correct size (nx+kx)
         end if
     end if
 
     if (present(ny) .and. present(ky) .and. present(ty)) then
         if (size(ty)/=(ny+ky)) then
-            !write(error_unit,'(A)') trim(routine)//' - ty is not the correct size (ny+ky)'
-            iflag = 502
+            iflag = 502  ! ty is not the correct size (ny+ky)
         end if
     end if
 
     if (present(nz) .and. present(kz) .and. present(tz)) then
         if (size(tz)/=(nz+kz)) then
-            !write(error_unit,'(A)') trim(routine)//' - tz is not the correct size (nz+kz)'
-            iflag = 503
+            iflag = 503  ! tz is not the correct size (nz+kz)
         end if
     end if
 
     if (present(nq) .and. present(kq) .and. present(tq)) then
         if (size(tq)/=(nq+kq)) then
-            !write(error_unit,'(A)') trim(routine)//' - tq is not the correct size (nq+kq)'
-            iflag = 504
+            iflag = 504  ! tq is not the correct size (nq+kq)
         end if
     end if
 
     if (present(nr) .and. present(kr) .and. present(tr)) then
         if (size(tr)/=(nr+kr)) then
-            !write(error_unit,'(A)') trim(routine)//' - tr is not the correct size (nr+kr)'
-            iflag = 505
+            iflag = 505  ! tr is not the correct size (nr+kr)
         end if
     end if
 
     if (present(ns) .and. present(ks) .and. present(ts)) then
         if (size(ts)/=(ns+ks)) then
-            !write(error_unit,'(A)') trim(routine)//' - ts is not the correct size (ns+ks)'
-            iflag = 506
+            iflag = 506  ! ts is not the correct size (ns+ks)
         end if
     end if
 
