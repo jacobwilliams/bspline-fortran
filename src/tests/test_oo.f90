@@ -1,6 +1,6 @@
 !*****************************************************************************************
-!
-!> Units test for 2d-6d tensor product b-spline interpolation (object-oriented version).
+!> 
+!  Units test for 1d-6d tensor product b-spline interpolation (object-oriented version).
 
     program bspline_oo_test
 

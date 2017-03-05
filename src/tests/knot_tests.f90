@@ -6,7 +6,7 @@
 !
 !  This requires [pyplot_module](https://github.com/jacobwilliams/pyplot-fortran)
 !
-!# Results
+!### Results
 !  ![Plot of results](https://raw.githubusercontent.com/jacobwilliams/bspline-fortran/master/src/tests/knot_tests.png)
 
     program knot_tests

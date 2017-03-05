@@ -2,7 +2,7 @@
 !> author: Jacob Williams
 !  license: BSD
 !
-!# Description
+!### Description
 !
 !  Multidimensional (1D-6D) B-Spline interpolation of data on a regular grid.
 !  This module uses both the subroutine and object-oriented modules.
