@@ -64,12 +64,12 @@ The various bspline classes can also be initialized using constructors, which ha
 
 ```Fortran
 type(bspline_3d) :: s
-s = bspline_3d(x,y,z,fcn,kx,ky,kz,iflag,extrap
+s = bspline_3d(x,y,z,fcn,kx,ky,kz,iflag,extrap)
 ```
 
 ## Extrapolation
 
-The library optionally supports extrapolation for points outside the range of the coefficients. This is disabled by default (in which case an error code is returned). To enable it, use the optional `extrap` input to the various `db*val` subroutines or the `initialize` methods from the object-oriented interface.
+The library optionally supports extrapolation for points outside the range of the coefficients. This is disabled by default (in which case an error code is returned for points outside the bounds). To enable extrapolation, use the optional `extrap` input to the various `db*val` subroutines or the `initialize` methods from the object-oriented interface.
 
 # Examples
 
