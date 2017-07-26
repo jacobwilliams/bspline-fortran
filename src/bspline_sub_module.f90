@@ -2890,7 +2890,7 @@
                ip1,ip1mj,j,jj,j1,j2,kmider,kmj,km1,kpk,mflag
     real(wp) :: fkmj
     real(wp) :: xt
-    logical :: extrapolation_allowed  !! if extrapolation is allowe
+    logical :: extrapolation_allowed  !! if extrapolation is allowed
 
     if (present(extrap)) then
         extrapolation_allowed = extrap
@@ -3165,7 +3165,7 @@
                                                 !! (if not present, default is False)
 
     integer :: n  !! size of `t`
-    logical :: extrapolation_allowed  !! if extrapolation is allowe
+    logical :: extrapolation_allowed  !! if extrapolation is allowed
 
     if (present(extrap)) then
         extrapolation_allowed = extrap
