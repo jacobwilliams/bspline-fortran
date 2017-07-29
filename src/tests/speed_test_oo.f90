@@ -49,6 +49,7 @@
     real :: tstart, tend
     type(pyplot) :: plt
     real(wp),dimension(6) :: cases_per_sec
+    integer :: istat  !! pyplot-fortran status flag
 
     idx = 0
     idy = 0
@@ -247,8 +248,8 @@
                         xtick_labelsize = 20,&
                         ytick_labelsize = 20)
     call plt%add_bar(left=real([1,2,3,4,5,6],wp),height=cases_per_sec,label='Speed test runs',&
-                        yscale='log',align='center',color='r')
-    call plt%savefig('speed_test_oo.png')
+                        yscale='log',align='center',color='r',istat=istat)
+    call plt%savefig('speed_test_oo.png',istat=istat)
 
     contains
 

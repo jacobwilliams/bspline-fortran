@@ -30,6 +30,7 @@
     real(wp)                  :: xval
     type(pyplot)              :: plt
     integer                   :: iflag
+    integer                   :: istat  !! pyplot-fortran status flag
 
     !function evaluations for original grid:
     do i=1,nx
@@ -40,7 +41,7 @@
     call plt%initialize(grid=.true.,xlabel='x',ylabel='f(x)',&
                         title='Knot Test',legend=.true.)
     call plt%add_plot(x,fcn,label='Function $f(x) = \sin(x \cdot \pi/18)$ : $x=[0,20,40,60,80,100]$',&
-                        linestyle='ko--',markersize=5,linewidth=2)
+                        linestyle='ko--',markersize=5,linewidth=2,istat=istat)
 
     !initialize three with different knot sequences:
 
@@ -82,16 +83,16 @@
 
     call plt%add_plot(x_new,f_new_default,&
             label='Interpolated : $t_x=[0,0,0,0,40,60,102,102,102,102]$ (Default)',&
-            linestyle='b-',linewidth=1)
+            linestyle='b-',linewidth=1,istat=istat)
     call plt%add_plot(x_new,f1,&
             label='Interpolated : $t_x=[0,0,0,0,20,40,101,101,101,101]$',&
-            linestyle='r-',linewidth=1)
+            linestyle='r-',linewidth=1,istat=istat)
     call plt%add_plot(x_new,f2,&
             label='Interpolated : $t_x=[0,0,0,0,60,80,101,101,101,101]$',&
-            linestyle='g-',linewidth=1)
+            linestyle='g-',linewidth=1,istat=istat)
 
     !plot the results:
-    call plt%savefig('knot_tests.png')
+    call plt%savefig('knot_tests.png',istat=istat)
 
     contains
 
