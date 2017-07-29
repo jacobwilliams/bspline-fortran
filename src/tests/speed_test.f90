@@ -1,5 +1,5 @@
 !*****************************************************************************************
-!> 
+!>
 !  Speed test for 1d-6d tensor product b-spline interpolation (subroutine version).
 !
 !### Results
@@ -44,6 +44,7 @@
     type(pyplot) :: plt
     real(wp),dimension(6) :: cases_per_sec
     integer :: inbvx,inbvy,inbvz,inbvq,inbvr,inbvs,iloy,iloz,iloq,ilor,ilos
+    integer :: istat  !! pyplot-fortran status flag
 
     inbvx = 1
     inbvy = 1
@@ -291,8 +292,8 @@
                         xtick_labelsize = 20,&
                         ytick_labelsize = 20)
     call plt%add_bar(left=real([1,2,3,4,5,6],wp),height=cases_per_sec,label='Speed test runs',&
-                        yscale='log',align='center',color='r')
-    call plt%savefig('speed_test.png')
+                        yscale='log',align='center',color='r',istat=istat)
+    call plt%savefig('speed_test.png',istat=istat)
 
     contains
 
