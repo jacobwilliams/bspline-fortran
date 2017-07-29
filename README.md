@@ -79,6 +79,26 @@ See the [examples](https://github.com/jacobwilliams/bspline-fortran/tree/master/
 
 A simple bash script ```build.sh``` is provided for building bspline-fortran with gfortran using [FoBiS](https://github.com/szaghi/FoBiS). It also builds the API documentation using [FORD](https://github.com/cmacmackin/ford). The library can also be compiled with the Intel Fortran Compiler (and presumably any other Fortran compiler that supports modern standards).
 
+A basic CMake configuration file is also included. For example, to build a static library:
+
+```bash
+ mkdir build
+ cd build
+ cmake ..
+ make
+```
+
+Or, to build a shared library:
+
+```bash
+ cmake -DBUILD_SHARED_LIBS=ON ..
+```
+
+For a debug build:
+```bash
+ cmake -DCMAKE_BUILD_TYPE=DEBUG ..
+```
+
 # Documentation
 
 The latest API documentation can be found [here](http://jacobwilliams.github.io/bspline-fortran/). This was generated from the source code using [FORD](https://github.com/cmacmackin/ford) (note that the build script will also generate these files).
