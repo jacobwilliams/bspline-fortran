@@ -27,6 +27,7 @@
     integer  :: i,j,idx,iflag,inbvx,iloy
     logical :: extrap
     type(pyplot) :: plt
+    integer :: istat  !! pyplot-fortran status flag
 
     real(wp),parameter :: rad2deg = 180.0_wp / acos(-1.0_wp)  !! deg. to radians conversion factor
 
@@ -55,7 +56,7 @@
     call plt%initialize(grid=.true.,xlabel='x (deg)',ylabel='f(x)',&
                         title='Extrapolation Test',legend=.true.)
     call plt%add_plot(x*rad2deg,fcn_1d,label='Function $f(x) = \sin(x)$',&
-                        linestyle='ko',markersize=5,linewidth=2)
+                        linestyle='ko',markersize=5,linewidth=2,istat=istat)
 
     do j=1,2
 
@@ -80,8 +81,8 @@
         if (extrap) then
             call plt%add_plot(xval*rad2deg,fval,&
                     label='Interpolated',&
-                    linestyle='g.-',linewidth=1)
-            call plt%savefig('bspline_extrap_test.png')
+                    linestyle='g.-',linewidth=1,istat=istat)
+            call plt%savefig('bspline_extrap_test.png',istat=istat)
         end if
 
     end do
