@@ -74,6 +74,7 @@
         procedure,public :: evaluate => evaluate_1d
         procedure,public :: destroy => destroy_1d
         procedure,public :: size_of => size_1d
+        procedure,public :: integral => integral_1d
         final :: finalize_1d
     end type bspline_1d
 
@@ -959,6 +960,30 @@
     me%iflag = iflag
 
     end subroutine evaluate_1d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Evaluate a [[bspline_1d]] definite integral.  This is a wrapper for [[db1qad]].
+
+    pure subroutine integral_1d(me,x1,x2,f,iflag)
+
+    implicit none
+
+    class(bspline_1d),intent(inout) :: me
+    real(wp),intent(in)             :: x1    !! left point of interval
+    real(wp),intent(in)             :: x2    !! right point of interval
+    real(wp),intent(out)            :: f     !! integral of the b-spline over \( [x_1, x_2] \)
+    integer,intent(out)             :: iflag !! status flag (see [[db1qad]])
+
+    if (me%initialized) then
+        call db1qad(me%tx,me%bcoef,me%nx,me%kx,x1,x2,f,iflag)
+    else
+        iflag = 1
+    end if
+    me%iflag = iflag
+
+    end subroutine integral_1d
 !*****************************************************************************************
 
 !*****************************************************************************************

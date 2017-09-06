@@ -56,7 +56,7 @@
     integer,parameter,public :: bspline_order_quintic   = 6
 
     !main routines:
-    public :: db1ink, db1val
+    public :: db1ink, db1val, db1qad
     public :: db2ink, db2val
     public :: db3ink, db3val
     public :: db4ink, db4val
@@ -210,6 +210,39 @@
     call dbvalu(tx,bcoef,nx,kx,idx,xval,inbvx,work,iflag,f,extrap)
 
     end subroutine db1val
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Computes the integral on `(x1,x2)` of a `kx`-th order b-spline.
+!  Orders `kx` as high as 20 are permitted by applying a 2, 6, or 10
+!  point gauss formula on subintervals of `(x1,x2)` which are
+!  formed by included (distinct) knots.
+!
+!### See also
+!  * [[dbsqad]] -- the core routine.
+
+    pure subroutine db1qad(tx,bcoef,nx,kx,x1,x2,f,iflag)
+
+    implicit none
+
+    integer,intent(in)                   :: nx      !! length of coefficient array
+    integer,intent(in)                   :: kx      !! order of b-spline, `1 <= k <= 20`
+    real(wp),dimension(nx+kx),intent(in) :: tx      !! knot array
+    real(wp),dimension(nx),intent(in)    :: bcoef   !! b-spline coefficient array
+    real(wp),intent(in)                  :: x1      !! end point of quadrature interval in `t(kx) <= x <= t(nx+1)`
+    real(wp),intent(in)                  :: x2      !! end point of quadrature interval in `t(kx) <= x <= t(nx+1)`
+    real(wp),intent(out)                 :: f       !! integral of the b-spline over (`x1`,`x2`)
+    integer,intent(out)                  :: iflag   !! status flag:
+                                                    !!
+                                                    !! * \( = 0 \)   : no errors
+                                                    !! * \( \ne 0 \) : error
+
+    real(wp),dimension(3*kx) :: work !! work array for [[dbsqad]]
+
+    call dbsqad(tx,bcoef,nx,kx,x1,x2,f,work,iflag)
+
+    end subroutine db1qad
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -3181,7 +3214,7 @@
 !
 !@note Extrapolation is not enabled for this routine.
 
-    subroutine dbsqad(t,bcoef,n,k,x1,x2,bquad,work,iflag)
+    pure subroutine dbsqad(t,bcoef,n,k,x1,x2,bquad,work,iflag)
 
     implicit none
 
