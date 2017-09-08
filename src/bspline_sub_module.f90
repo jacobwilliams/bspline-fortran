@@ -49,6 +49,15 @@
 
     integer,parameter :: wp = real64  !! Real precision
 
+    abstract interface
+        function int_func(x) result(f)
+        !! interface for the input function in [[dbfqad]]
+        import :: wp
+        real(wp),intent(in) :: x
+        real(wp)            :: f  !! f(x)
+        end function int_func
+    end interface
+
     !Spline function order (order = polynomial degree + 1)
     integer,parameter,public :: bspline_order_quadratic = 3
     integer,parameter,public :: bspline_order_cubic     = 4
@@ -66,7 +75,6 @@
     public :: get_status_message
 
     contains
-
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -3188,7 +3196,7 @@
 !  point Gauss formula on subintervals of `(X1,X2)` which are
 !  formed by included (distinct) knots.
 !
-!  If orders `K` greater than 20 are needed, use `DBFQAD` with
+!  If orders `K` greater than 20 are needed, use [[dbfqad]] with
 !  `F(X) = 1`.
 !
 !### Note
@@ -3321,6 +3329,347 @@
     end if
 
     end subroutine dbsqad
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  DBFQAD computes the integral on (X1,X2) of a product of a
+!  function F and the ID-th derivative of a K-th order B-spline,
+!  using the B-representation (T,BCOEF,N,K).  (X1,X2) must be a
+!  subinterval of T(K) .LE. X .LE. T(N+1).  An integration rou-
+!  tine, DBSGQ8 (a modification of GAUS8), integrates the product
+!  on subintervals of (X1,X2) formed by included (distinct) knots
+!
+!  The maximum number of significant digits obtainable in
+!  DBSQAD is the smaller of 18 and the number of digits
+!  carried in real(wp) arithmetic.
+!
+!### Reference
+!  * D. E. Amos, "Quadrature subroutines for splines and
+!    B-splines", Report SAND79-1825, Sandia Laboratories,
+!    December 1979.
+!
+!### History
+!  * 800901  Amos, D. E., (SNLA)
+!  * 890531  Changed all specific intrinsics to generic.  (WRB)
+!  * 890531  REVISION DATE from Version 3.2
+!  * 891214  Prologue converted to Version 4.0 format.  (BAB)
+!  * 900315  CALLs to XERROR changed to CALLs to XERMSG.  (THJ)
+!  * 900326  Removed duplicate information from DESCRIPTION section. (WRB)
+!  * 920501  Reformatted the REFERENCES section.  (WRB)
+!  * Jacob Williams, 9/6/2017 : refactored to modern Fortran. Some changes.
+
+    subroutine dbfqad(f,t,bcoef,n,k,id,x1,x2,tol,quad,iflag,work)
+
+    implicit none
+
+    procedure(int_func)                 :: f      !! external function of one argument for the
+                                                  !! integrand `bf(x)=f(x)*dbvalu(t,bcoef,n,k,id,x,inbv,work)`
+    integer,intent(in)                  :: n      !! length of coefficient array
+    integer,intent(in)                  :: k      !! order of b-spline, `k >= 1`
+    real(wp),dimension(n+k),intent(in)  :: t      !! knot array
+    real(wp),dimension(n),intent(in)    :: bcoef  !! coefficient array
+    integer,intent(in)                  :: id     !! order of the spline derivative, `0 <= id <= k-1`
+                                                  !! `id=0` gives the spline function
+    real(wp),intent(in)                 :: x1     !! left point of quadrature interval in `t(k) <= x <= t(n+1)`
+    real(wp),intent(in)                 :: x2     !! right point of quadrature interval in `t(k) <= x <= t(n+1)`
+    real(wp),intent(in)                 :: tol    !! desired accuracy for the quadrature, suggest
+                                                  !! `10*dtol < tol <= 0.1` where `dtol` is the maximum
+                                                  !! of `1.0e-18` and real(wp) unit roundoff for
+                                                  !! the machine
+    real(wp),intent(out)                :: quad   !! integral of `bf(x)` on `(x1,x2)`
+    real(wp),dimension(:),intent(inout) :: work   !! work vector of length `3*k`
+    integer,intent(out)                 :: iflag  !! status flag:
+                                                  !!
+                                                  !! * 0: no errors
+                                                  !! * 1001: `k` does not satisfy `k>=1`
+                                                  !! * 1002: `n` does not satisfy `n>=k`
+                                                  !! * 1003: `d` does not satisfy `0<=id<k`
+                                                  !! * 1004: `x1` or `x2` or both do not
+                                                  !!   satisfy `t(k)<=x<=t(n+1)`
+                                                  !! * 1005: `tol` is less than machine
+                                                  !!   epsilon or greater than 0.1
+
+    integer :: inbv,ilo,il1,il2,left,mflag,npk,np1
+    real(wp) :: a,aa,ans,b,bb,q,ta,tb,err
+
+    real(wp),parameter :: eps = epsilon(1.0_wp) !! replaces d1mach(4) in original code.
+
+    iflag = 0
+    quad = 0.0_wp
+    err = tol
+    if ( k<1 ) then
+        iflag = 1001     ! error
+    elseif ( n<k ) then
+        iflag = 1002     ! error
+    elseif ( id<0 .or. id>=k ) then
+        iflag = 1003     ! error
+    else
+        if ( tol>=eps .and. tol<=0.1_wp ) then
+            aa = min(x1,x2)
+            bb = max(x1,x2)
+            if ( aa>=t(k) ) then
+                np1 = n + 1
+                if ( bb<=t(np1) ) then
+                    if ( aa==bb ) return
+                    npk = n + k
+                    ilo = 1
+                    call dintrv(t,npk,aa,ilo,il1,mflag)
+                    call dintrv(t,npk,bb,ilo,il2,mflag)
+                    if ( il2>=np1 ) il2 = n
+                    inbv = 1
+                    q = 0.0_wp
+                    do left = il1 , il2
+                        ta = t(left)
+                        tb = t(left+1)
+                        if ( ta/=tb ) then
+                            a = max(aa,ta)
+                            b = min(bb,tb)
+                            call dbsgq8(f,t,bcoef,n,k,id,a,b,inbv,err,ans,iflag,work)
+                            if ( iflag/=0 .and. iflag/=1101 ) return
+                            q = q + ans
+                        end if
+                    end do
+                    if ( x1>x2 ) q = -q
+                    quad = q
+                end if
+            else
+                iflag = 1004  ! error
+            end if
+        else
+            iflag = 1005  ! error
+        end if
+    end if
+
+    end subroutine dbfqad
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  DBSGQ8, a modification of `GAUS8`, integrates the
+!  product of FUN(X) by the ID-th derivative of a spline
+!  [[DBVALU]]() between limits A and B.
+!
+!### See also
+!  * [[dbfqad]]
+!
+!### History
+!  * 800901  Jones, R. E., (SNLA)
+!  * 890531  Changed all specific intrinsics to generic.  (WRB)
+!  * 890911  Removed unnecessary intrinsics.  (WRB)
+!  * 891214  Prologue converted to Version 4.0 format.  (BAB)
+!  * 900315  CALLs to XERROR changed to CALLs to XERMSG.  (THJ)
+!  * 900326  Removed duplicate information from DESCRIPTION section. (WRB)
+!  * 900328  Added TYPE section.  (WRB)
+!  * 910408  Updated the AUTHOR section.  (WRB)
+
+    subroutine dbsgq8(fun,xt,bc,n,kk,id,a,b,inbv,err,ans,iflag,work)
+
+    implicit none
+
+    procedure(int_func)                 :: fun     !! name of external function of one argument which multiplies dbvalu.
+    integer,intent(in)                  :: n       !! number of b-coefficients for dbvalu
+    integer,intent(in)                  :: kk      !! order of the spline, kk>=1
+    real(wp),dimension(:),intent(in)    :: xt      !! knot array for dbvalu
+    real(wp),dimension(n),intent(in)    :: bc      !! b-coefficient array for dbvalu
+    integer,intent(in)                  :: id      !! Order of the spline derivative, 0<=ID<=KK-1
+    real(wp),intent(in)                 :: a       !! lower limit of integral
+    real(wp),intent(in)                 :: b       !! upper limit of integral (may be less than a)
+    integer,intent(inout)               :: inbv    !! initialization parameter for [[dbvalu]]
+    real(wp),intent(inout)              :: err     !! in: is a requested pseudorelative error tolerance.  normally
+                                                   !! pick a value of abs(err)<1e-3.  ans will normally
+                                                   !! have no more error than abs(err) times the integral of
+                                                   !! the absolute value of fun(x)*dbvalu().
+                                                   !!
+                                                   !! out: will be an estimate of the absolute error in ans if the
+                                                   !! input value of err was negative.  (err is unchanged if
+                                                   !! the input value of err was nonnegative.)  the estimated
+                                                   !! error is solely for information to the user and should
+                                                   !! not be used as a correction to the computed integral.
+    real(wp),intent(out)                :: ans     !! computed value of integral
+    integer,intent(out)                 :: iflag   !! a status code:
+                                                   !!
+                                                   !! * 0: ans most likely meets requested
+                                                   !!   error tolerance, or a=b.
+                                                   !! * 1101: a and b are too nearly equal
+                                                   !!   to allow normal integration.
+                                                   !!   ans is set to zero.
+                                                   !! * 1102: ans probably does not meet
+                                                   !!   requested error tolerance.
+    real(wp),dimension(:),intent(inout) :: work    !! work vector of length `3*k` for [[dbvalu]]
+
+    integer :: k,l,lmn,lmx,mxl,nbits,nib,nlmx
+    real(wp) :: ae,anib,area,c,ce,ee,ef,eps,est,gl,glr,tol,vr,x,h
+
+    real(wp),dimension(60) :: aa
+    real(wp),dimension(60) :: hh
+    integer,dimension(60)  :: lr
+    real(wp),dimension(60) :: vl
+    real(wp),dimension(60) :: gr
+
+    integer,parameter  :: i1mach14 = digits(1.0_wp)            !! i1mach(14)
+    real(wp),parameter :: d1mach5  = log10(real(radix(x),wp))  !! d1mach(5)
+    real(wp),parameter :: ln2      = log(2.0_wp)               !! 0.69314718d0
+    real(wp),parameter :: sq2      = sqrt(2.0_wp)
+    integer,parameter  :: nlmn     = 1
+    integer,parameter  :: kmx      = 5000
+    integer,parameter  :: kml      = 6
+    real(wp),parameter :: x1       = 1.83434642495649805e-01_wp
+    real(wp),parameter :: x2       = 5.25532409916328986e-01_wp
+    real(wp),parameter :: x3       = 7.96666477413626740e-01_wp
+    real(wp),parameter :: x4       = 9.60289856497536232e-01_wp
+    real(wp),parameter :: w1       = 3.62683783378361983e-01_wp
+    real(wp),parameter :: w2       = 3.13706645877887287e-01_wp
+    real(wp),parameter :: w3       = 2.22381034453374471e-01_wp
+    real(wp),parameter :: w4       = 1.01228536290376259e-01_wp
+
+    ! initialize
+    inbv  = 1
+    iflag = 0
+    k     = i1mach14
+    anib  = d1mach5*k/0.30102000_wp
+    nbits = int(anib)
+    nlmx  = min((nbits*5)/8,60)
+    ans   = 0.0_wp
+    ce    = 0.0_wp
+
+    if ( a==b ) then
+        if ( err<0.0_wp ) err = ce
+    else
+        lmx = nlmx
+        lmn = nlmn
+        if ( b/=0.0_wp ) then
+            if ( sign(1.0_wp,b)*a>0.0_wp ) then
+                c = abs(1.0_wp-a/b)
+                if ( c<=0.1_wp ) then
+                    if ( c<=0.0_wp ) then
+                        if ( err<0.0_wp ) err = ce
+                        return
+                    else
+                        anib = 0.5_wp - log(c)/ln2
+                        nib = int(anib)
+                        lmx = min(nlmx,nbits-nib-7)
+                        if ( lmx<1 ) then
+                            ! a and b are too nearly equal to allow normal integration
+                            iflag = 1101
+                            if ( err<0.0_wp ) err = ce
+                            return
+                        else
+                            lmn = min(lmn,lmx)
+                        end if
+                    end if
+                end if
+            end if
+        end if
+        tol = max(abs(err),2.0_wp**(5-nbits))/2.0_wp
+        if ( err==0.0_wp ) tol = sqrt(epsilon(1.0_wp))  ! was d1mach(4)
+        eps = tol
+        hh(1) = (b-a)/4.0_wp
+        aa(1) = a
+        lr(1) = 1
+        l = 1
+        call g8(aa(l)+2.0_wp*hh(l),2.0_wp*hh(l),est,iflag)    !est = g8(aa(l)+2.0_wp*hh(l),2.0_wp*hh(l))
+        if (iflag/=0) return
+        k = 8
+        area = abs(est)
+        ef = 0.5_wp
+        mxl = 0
+    end if
+
+    do
+        ! compute refined estimates, estimate the error, etc.
+        call g8(aa(l)+hh(l),hh(l),gl,iflag)               ! gl = g8(aa(l)+hh(l),hh(l))
+        if (iflag/=0) return
+        call g8(aa(l)+3.0_wp*hh(l),hh(l),gr(l),iflag)     ! gr(l) = g8(aa(l)+3.0_wp*hh(l),hh(l))
+        if (iflag/=0) return
+        k = k + 16
+        area = area + (abs(gl)+abs(gr(l))-abs(est))
+        glr = gl + gr(l)
+        ee = abs(est-glr)*ef
+        ae = max(eps*area,tol*abs(glr))
+        if ( ee>ae ) then
+            ! consider the left half of this level
+            if ( k>kmx ) lmx = kml
+            if ( l>=lmx ) then
+                mxl = 1
+            else
+                l = l + 1
+                eps = eps*0.5_wp
+                ef = ef/sq2
+                hh(l) = hh(l-1)*0.5_wp
+                lr(l) = -1
+                aa(l) = aa(l-1)
+                est = gl
+                cycle
+            end if
+        end if
+        ce = ce + (est-glr)
+        if ( lr(l)<=0 ) then
+            ! proceed to right half at this level
+            vl(l) = glr
+        else
+            ! return one level
+            vr = glr
+            do
+                if ( l<=1 ) then
+                    ! exit
+                    ans = vr
+                    if ( (mxl/=0) .and. (abs(ce)>2.0_wp*tol*area) ) then
+                        iflag = 1102
+                    end if
+                    if ( err<0.0_wp ) err = ce
+                    return
+                else
+                    l = l - 1
+                    eps = eps*2.0_wp
+                    ef = ef*sq2
+                    if ( lr(l)<=0 ) then
+                        vl(l) = vl(l+1) + vr
+                        exit
+                    else
+                        vr = vl(l+1) + vr
+                    end if
+                end if
+            end do
+        end if
+        est = gr(l-1)
+        lr(l) = 1
+        aa(l) = aa(l) + 4.0_wp*hh(l)
+    end do
+
+    contains
+
+        subroutine g8(x,h,res,iflag)
+
+        implicit none
+
+        real(wp),intent(in)  :: x
+        real(wp),intent(in)  :: h
+        real(wp),intent(out) :: res
+        integer,intent(out)  :: iflag
+
+        integer,dimension(8) :: iflags
+        real(wp),dimension(8) :: f
+
+        res = 0.0_wp
+
+        call dbvalu(xt,bc,n,kk,id,x-x1*h,inbv,work,iflag,f(1)); if (iflag/=0) return
+        call dbvalu(xt,bc,n,kk,id,x+x1*h,inbv,work,iflag,f(2)); if (iflag/=0) return
+        call dbvalu(xt,bc,n,kk,id,x-x2*h,inbv,work,iflag,f(3)); if (iflag/=0) return
+        call dbvalu(xt,bc,n,kk,id,x+x2*h,inbv,work,iflag,f(4)); if (iflag/=0) return
+        call dbvalu(xt,bc,n,kk,id,x-x3*h,inbv,work,iflag,f(5)); if (iflag/=0) return
+        call dbvalu(xt,bc,n,kk,id,x+x3*h,inbv,work,iflag,f(6)); if (iflag/=0) return
+        call dbvalu(xt,bc,n,kk,id,x-x4*h,inbv,work,iflag,f(7)); if (iflag/=0) return
+        call dbvalu(xt,bc,n,kk,id,x+x4*h,inbv,work,iflag,f(8)); if (iflag/=0) return
+
+        res = h*((w1*(fun(x-x1*h)*f(1)+fun(x+x1*h)*f(2)) + &
+                 w2*(fun(x-x2*h)*f(3)+fun(x+x2*h)*f(4))) + &
+                (w3*(fun(x-x3*h)*f(5)+fun(x+x3*h)*f(6))  + &
+                 w4*(fun(x-x4*h)*f(7)+fun(x+x4*h)*f(8))))
+
+        end subroutine g8
+
+    end subroutine dbsgq8
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -3477,6 +3826,15 @@
     case(901); msg='Error in dbsqad: k does not satisfy 1<=k<=20'
     case(902); msg='Error in dbsqad: n does not satisfy n>=k'
     case(903); msg='Error in dbsqad: x1 or x2 or both do not satisfy t(k)<=x<=t(n+1)'
+
+    case(1001); msg='Error in dbfqad: k does not satisfy k>=1'
+    case(1002); msg='Error in dbfqad: n does not satisfy n>=k'
+    case(1003); msg='Error in dbfqad: d does not satisfy 0<=id<k'
+    case(1004); msg='Error in dbfqad: x1 or x2 or both do not satisfy t(k)<=x<=t(n+1)'
+    case(1005); msg='Error in dbfqad: is less than machine epsilon or greater than 0.1'
+
+    case(1101); msg='Warning in dbsgq8: a and b are too nearly equal to allow normal integration.'
+    case(1102); msg='Error in dbsgq8: ans is probably insufficiently accurate.'
 
     case default
         write(istr,fmt='(I10)',iostat=istat) iflag
