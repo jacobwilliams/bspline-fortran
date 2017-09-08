@@ -35,6 +35,8 @@
 !  5. Carl de Boor,
 !     [Package for calculating with B-splines](http://epubs.siam.org/doi/abs/10.1137/0714026),
 !     SIAM Journal on Numerical Analysis 14, 3 (June 1977), p. 441-472.
+!  6. D.E. Amos, "Quadrature subroutines for splines and B-splines",
+!     Report SAND79-1825, Sandia Laboratories, December 1979.
 
     module bspline_sub_module
 
@@ -54,7 +56,7 @@
     integer,parameter,public :: bspline_order_quintic   = 6
 
     !main routines:
-    public :: db1ink, db1val
+    public :: db1ink, db1val, db1qad
     public :: db2ink, db2val
     public :: db3ink, db3val
     public :: db4ink, db4val
@@ -208,6 +210,39 @@
     call dbvalu(tx,bcoef,nx,kx,idx,xval,inbvx,work,iflag,f,extrap)
 
     end subroutine db1val
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Computes the integral on `(x1,x2)` of a `kx`-th order b-spline.
+!  Orders `kx` as high as 20 are permitted by applying a 2, 6, or 10
+!  point gauss formula on subintervals of `(x1,x2)` which are
+!  formed by included (distinct) knots.
+!
+!### See also
+!  * [[dbsqad]] -- the core routine.
+
+    pure subroutine db1qad(tx,bcoef,nx,kx,x1,x2,f,iflag)
+
+    implicit none
+
+    integer,intent(in)                   :: nx      !! length of coefficient array
+    integer,intent(in)                   :: kx      !! order of b-spline, `1 <= k <= 20`
+    real(wp),dimension(nx+kx),intent(in) :: tx      !! knot array
+    real(wp),dimension(nx),intent(in)    :: bcoef   !! b-spline coefficient array
+    real(wp),intent(in)                  :: x1      !! end point of quadrature interval in `t(kx) <= x <= t(nx+1)`
+    real(wp),intent(in)                  :: x2      !! end point of quadrature interval in `t(kx) <= x <= t(nx+1)`
+    real(wp),intent(out)                 :: f       !! integral of the b-spline over (`x1`,`x2`)
+    integer,intent(out)                  :: iflag   !! status flag:
+                                                    !!
+                                                    !! * \( = 0 \)   : no errors
+                                                    !! * \( \ne 0 \) : error
+
+    real(wp),dimension(3*kx) :: work !! work array for [[dbsqad]]
+
+    call dbsqad(tx,bcoef,nx,kx,x1,x2,f,work,iflag)
+
+    end subroutine db1qad
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -2572,7 +2607,7 @@
     if (nrowm1 < 0) then
         iflag = 2
         return
-    elseif (nrowm1 == 0) then
+    else if (nrowm1 == 0) then
         if (w(middle,nrow)==0.0_wp) iflag = 2
         return
     end if
@@ -3075,7 +3110,7 @@
         end if
         ilo = lxt - 1
         ihi = lxt
-    endif
+    end if
 
     if ( x>=xt(ihi) ) then
 
@@ -3091,10 +3126,10 @@
                     return
                 end if
                 ihi = lxt
-            elseif ( x>=xt(ihi) ) then
+            else if ( x>=xt(ihi) ) then
                 istep = istep*2
                 cycle
-            endif
+            end if
             exit
         end do
 
@@ -3117,14 +3152,14 @@
                     ileft = 1
                     return
                 end if
-            elseif ( x<xt(ilo) ) then
+            else if ( x<xt(ilo) ) then
                 istep = istep*2
                 cycle
-            endif
+            end if
             exit
         end do
 
-    endif
+    end if
 
     ! now xt(ilo) <= x < xt(ihi). narrow the interval
     do
@@ -3139,10 +3174,153 @@
             ihi = middle
         else
             ilo = middle
-        endif
+        end if
     end do
 
     end subroutine dintrv
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  DBSQAD computes the integral on `(X1,X2)` of a `K`-th order
+!  B-spline using the B-representation `(T,BCOEF,N,K)`.  Orders
+!  `K` as high as 20 are permitted by applying a 2, 6, or 10
+!  point Gauss formula on subintervals of `(X1,X2)` which are
+!  formed by included (distinct) knots.
+!
+!  If orders `K` greater than 20 are needed, use `DBFQAD` with
+!  `F(X) = 1`.
+!
+!### Note
+!  * The maximum number of significant digits obtainable in
+!    DBSQAD is the smaller of 18 and the number of digits
+!    carried in `real(wp)` arithmetic.
+!
+!### References
+!  * D. E. Amos, "Quadrature subroutines for splines and
+!    B-splines", Report SAND79-1825, Sandia Laboratories,
+!    December 1979.
+!
+!### History
+!  * Author: Amos, D. E., (SNLA)
+!  * 800901  DATE WRITTEN
+!  * 890531  Changed all specific intrinsics to generic.  (WRB)
+!  * 890531  REVISION DATE from Version 3.2
+!  * 891214  Prologue converted to Version 4.0 format.  (BAB)
+!  * 900315  CALLs to XERROR changed to CALLs to XERMSG.  (THJ)
+!  * 900326  Removed duplicate information from DESCRIPTION section. (WRB)
+!  * 920501  Reformatted the REFERENCES section.  (WRB)
+!  * Jacob Williams, 9/6/2017 : refactored to modern Fortran.
+!
+!@note Extrapolation is not enabled for this routine.
+
+    pure subroutine dbsqad(t,bcoef,n,k,x1,x2,bquad,work,iflag)
+
+    implicit none
+
+    real(wp),dimension(:),intent(in) :: t       !! knot array of length `n+k`
+    real(wp),dimension(:),intent(in) :: bcoef   !! b-spline coefficient array of length `n`
+    integer,intent(in)  :: n                    !! length of coefficient array
+    integer,intent(in)  :: k                    !! order of b-spline, `1 <= k <= 20`
+    real(wp),intent(in) :: x1                   !! end point of quadrature interval in `t(k) <= x <= t(n+1)`
+    real(wp),intent(in) :: x2                   !! end point of quadrature interval in `t(k) <= x <= t(n+1)`
+    real(wp),intent(out) :: bquad               !! integral of the b-spline over (`x1`,`x2`)
+    real(wp),dimension(:),intent(inout) :: work !! work vector of length `3*k`
+    integer,intent(out) :: iflag   !! status flag:
+                                   !!
+                                   !! * 0: no errors
+                                   !! * 901: `k` does not satisfy `1<=k<=20`
+                                   !! * 902: `n` does not satisfy `n>=k`
+                                   !! * 903: `x1` or `x2` or both do not satisfy `t(k)<=x<=t(n+1)`
+
+    integer :: i,il1,il2,ilo,inbv,jf,left,m,mf,mflag,npk,np1
+    real(wp) :: a,aa,b,bb,bma,bpa,c1,gx,q,ta,tb,y1,y2
+    real(wp),dimension(5) :: s  !! sum
+
+    real(wp),dimension(9),parameter :: gpts = [ &
+        5.77350269189625764e-01_wp , 2.38619186083196909e-01_wp , 6.61209386466264514e-01_wp , &
+        9.32469514203152028e-01_wp , 1.48874338981631211e-01_wp , 4.33395394129247191e-01_wp , &
+        6.79409568299024406e-01_wp , 8.65063366688984511e-01_wp , 9.73906528517171720e-01_wp ]
+
+    real(wp),dimension(9),parameter :: gwts = [ &
+        1.00000000000000000e+00_wp , 4.67913934572691047e-01_wp , 3.60761573048138608e-01_wp , &
+        1.71324492379170345e-01_wp , 2.95524224714752870e-01_wp , 2.69266719309996355e-01_wp , &
+        2.19086362515982044e-01_wp , 1.49451349150580593e-01_wp , 6.66713443086881376e-02_wp ]
+
+    iflag = 0
+    bquad = 0.0_wp
+
+    if ( k<1 .or. k>20 ) then
+
+        iflag = 901 ! error return
+
+    else if ( n<k ) then
+
+        iflag = 902 ! error return
+
+    else
+
+        aa = min(x1,x2)
+        bb = max(x1,x2)
+        if ( aa>=t(k) ) then
+            np1 = n + 1
+            if ( bb<=t(np1) ) then
+            if ( aa==bb ) return
+            npk = n + k
+            ! selection of 2, 6, or 10 point gauss formula
+            jf = 0
+            mf = 1
+            if ( k>4 ) then
+                jf = 1
+                mf = 3
+                if ( k>12 ) then
+                    jf = 4
+                    mf = 5
+                end if
+            end if
+            do i = 1 , mf
+                s(i) = 0.0_wp
+            end do
+            ilo = 1
+            inbv = 1
+            call dintrv(t,npk,aa,ilo,il1,mflag)
+            call dintrv(t,npk,bb,ilo,il2,mflag)
+            if ( il2>=np1 ) il2 = n
+            do left = il1 , il2
+                ta = t(left)
+                tb = t(left+1)
+                if ( ta/=tb ) then
+                    a = max(aa,ta)
+                    b = min(bb,tb)
+                    bma = 0.5_wp*(b-a)
+                    bpa = 0.5_wp*(b+a)
+                    do m = 1 , mf
+                        c1 = bma*gpts(jf+m)
+                        gx = -c1 + bpa
+                        call dbvalu(t,bcoef,n,k,0,gx,inbv,work,iflag,y2)
+                        if (iflag/=0) return
+                        gx = c1 + bpa
+                        call dbvalu(t,bcoef,n,k,0,gx,inbv,work,iflag,y1)
+                        if (iflag/=0) return
+                        s(m) = s(m) + (y1+y2)*bma
+                    end do
+                end if
+            end do
+            q = 0.0_wp
+            do m = 1 , mf
+                q = q + gwts(jf+m)*s(m)
+            end do
+            if ( x1>x2 ) q = -q
+                bquad = q
+                return
+            end if
+        end if
+
+        iflag = 903 ! error return
+
+    end if
+
+    end subroutine dbsqad
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -3178,7 +3356,7 @@
     if (extrapolation_allowed) then
         if (x<t(1)) then
             xt = t(1)
-        elseif (x>t(n)) then
+        else if (x>t(n)) then
             xt = t(n)
         else
             xt = x
@@ -3295,6 +3473,10 @@
     case(604); msg='Error in db*val: q value out of bounds'
     case(605); msg='Error in db*val: r value out of bounds'
     case(606); msg='Error in db*val: s value out of bounds'
+
+    case(901); msg='Error in dbsqad: k does not satisfy 1<=k<=20'
+    case(902); msg='Error in dbsqad: n does not satisfy n>=k'
+    case(903); msg='Error in dbsqad: x1 or x2 or both do not satisfy t(k)<=x<=t(n+1)'
 
     case default
         write(istr,fmt='(I10)',iostat=istat) iflag
