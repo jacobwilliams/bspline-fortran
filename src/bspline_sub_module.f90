@@ -3403,8 +3403,10 @@
 !  * Jacob Williams, 9/6/2017 : refactored to modern Fortran. Some changes.
 !
 !@note the maximum number of significant digits obtainable in
-!      dbsqad is the smaller of 18 and the number of digits
-!      carried in real(wp) arithmetic.
+!      [[dbsqad]] is the smaller of 18 and the number of digits
+!      carried in `real(wp)` arithmetic.
+!
+!@note Extrapolation is not enabled for this routine.
 
     subroutine dbfqad(f,t,bcoef,n,k,id,x1,x2,tol,quad,iflag,work)
 
@@ -3434,13 +3436,13 @@
                                                   !! * 1003: `d` does not satisfy `0<=id<k`
                                                   !! * 1004: `x1` or `x2` or both do not
                                                   !!   satisfy `t(k)<=x<=t(n+1)`
-                                                  !! * 1005: `tol` is less than machine
-                                                  !!   epsilon or greater than 0.1
+                                                  !! * 1005: `tol` is less than `dtol`
+                                                  !!   or greater than 0.1
 
     integer :: inbv,ilo,il1,il2,left,mflag,npk,np1
     real(wp) :: a,aa,ans,b,bb,q,ta,tb,err
 
-    real(wp),parameter :: eps = epsilon(1.0_wp) !! replaced `d1mach(4)` in original code.
+    real(wp),parameter :: min_tol = max(epsilon(1.0_wp),1.0e-18_wp) !! minimum allowed `tol`
 
     iflag = 0
     quad = 0.0_wp
@@ -3452,7 +3454,7 @@
     elseif ( id<0 .or. id>=k ) then
         iflag = 1003     ! error
     else
-        if ( tol>=eps .and. tol<=0.1_wp ) then
+        if ( tol>=min_tol .and. tol<=0.1_wp ) then
             aa = min(x1,x2)
             bb = max(x1,x2)
             if ( aa>=t(k) ) then
@@ -3899,7 +3901,7 @@
     case(1002); msg='Error in dbfqad: n does not satisfy n>=k'
     case(1003); msg='Error in dbfqad: d does not satisfy 0<=id<k'
     case(1004); msg='Error in dbfqad: x1 or x2 or both do not satisfy t(k)<=x<=t(n+1)'
-    case(1005); msg='Error in dbfqad: is less than machine epsilon or greater than 0.1'
+    case(1005); msg='Error in dbfqad: tol is less than dtol or greater than 0.1'
 
     case(1101); msg='Warning in dbsgq8: a and b are too nearly equal to allow normal integration.'
     case(1102); msg='Error in dbsgq8: ans is probably insufficiently accurate.'
