@@ -71,6 +71,15 @@ s = bspline_3d(x,y,z,fcn,kx,ky,kz,iflag,extrap)
 
 The library optionally supports extrapolation for points outside the range of the coefficients. This is disabled by default (in which case an error code is returned for points outside the bounds). To enable extrapolation, use the optional `extrap` input to the various `db*val` subroutines or the `initialize` methods from the object-oriented interface.
 
+## Integration
+
+The library also contains routines for computing definite integrals of bsplines. There are two methods (currently only for 1D):
+
+* Basic version: `db1sqad` (`integral` in the object-oriented interface) -- Computes the integral on `(x1,x2)` of a b-spline by applying a 2, 6, or 10 point Gauss formula on subintervals of `(x1,x2)`. This is only valid for orders <= 20.
+* More general version: `db1fqad` (`fintegral` in the object-oriented interface) -- Computes the integral on `(x1,x2)` of a product of a user-defined function `fun(x)` and the ith derivative of a b-spline with an adaptive 8-point Legendre-Gauss algorithm.
+
+Note that extrapolation is not currently supported for these.
+
 # Examples
 
 See the [examples](https://github.com/jacobwilliams/bspline-fortran/tree/master/src/tests) for more details. Note that, to compile and run some of the test programs, the [pyplot_module.f90](https://github.com/jacobwilliams/pyplot-fortran) file (which is used to generate plots) must be copied into the `src/tests` directory.
