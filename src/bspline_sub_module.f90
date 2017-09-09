@@ -50,13 +50,15 @@
     integer,parameter :: wp = real64  !! Real precision
 
     abstract interface
-        function int_func(x) result(f)
+        function b1fqad_func(x) result(f)
         !! interface for the input function in [[dbfqad]]
         import :: wp
+        implicit none
         real(wp),intent(in) :: x
         real(wp)            :: f  !! f(x)
-        end function int_func
+        end function b1fqad_func
     end interface
+    public :: b1fqad_func
 
     !Spline function order (order = polynomial degree + 1)
     integer,parameter,public :: bspline_order_quadratic = 3
@@ -65,7 +67,7 @@
     integer,parameter,public :: bspline_order_quintic   = 6
 
     !main routines:
-    public :: db1ink, db1val, db1qad
+    public :: db1ink, db1val, db1sqad, db1fqad
     public :: db2ink, db2val
     public :: db3ink, db3val
     public :: db4ink, db4val
@@ -230,7 +232,7 @@
 !### See also
 !  * [[dbsqad]] -- the core routine.
 
-    pure subroutine db1qad(tx,bcoef,nx,kx,x1,x2,f,iflag)
+    pure subroutine db1sqad(tx,bcoef,nx,kx,x1,x2,f,iflag)
 
     implicit none
 
@@ -238,8 +240,8 @@
     integer,intent(in)                   :: kx      !! order of b-spline, `1 <= k <= 20`
     real(wp),dimension(nx+kx),intent(in) :: tx      !! knot array
     real(wp),dimension(nx),intent(in)    :: bcoef   !! b-spline coefficient array
-    real(wp),intent(in)                  :: x1      !! end point of quadrature interval in `t(kx) <= x <= t(nx+1)`
-    real(wp),intent(in)                  :: x2      !! end point of quadrature interval in `t(kx) <= x <= t(nx+1)`
+    real(wp),intent(in)                  :: x1      !! left point of quadrature interval in `t(kx) <= x <= t(nx+1)`
+    real(wp),intent(in)                  :: x2      !! right point of quadrature interval in `t(kx) <= x <= t(nx+1)`
     real(wp),intent(out)                 :: f       !! integral of the b-spline over (`x1`,`x2`)
     integer,intent(out)                  :: iflag   !! status flag:
                                                     !!
@@ -250,7 +252,52 @@
 
     call dbsqad(tx,bcoef,nx,kx,x1,x2,f,work,iflag)
 
-    end subroutine db1qad
+    end subroutine db1sqad
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Computes the integral on `(x1,x2)` of a product of a
+!  function `fun` and the `idx`-th derivative of a `kx`-th order b-spline,
+!  using the b-representation `(tx,bcoef,nx,kx)`, with an adaptive
+!  8-point Legendre-Gauss algorithm.
+!  `(x1,x2)` must be a subinterval of `t(kx) <= x <= t(nx+1)`.
+!
+!### See also
+!  * [[dbfqad]] -- the core routine.
+!
+!@note This one is not pure, because we are not enforcing
+!      that the user function `fun` be pure.
+
+    subroutine db1fqad(fun,tx,bcoef,nx,kx,idx,x1,x2,tol,f,iflag)
+
+    implicit none
+
+    procedure(b1fqad_func)              :: fun    !! external function of one argument for the
+                                                  !! integrand `bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,id,x,inbv,work)`
+    integer,intent(in)                  :: nx     !! length of coefficient array
+    integer,intent(in)                  :: kx     !! order of b-spline, `kx >= 1`
+    real(wp),dimension(nx+kx),intent(in):: tx     !! knot array
+    real(wp),dimension(nx),intent(in)   :: bcoef  !! b-spline coefficient array
+    integer,intent(in)                  :: idx    !! order of the spline derivative, `0 <= idx <= k-1`
+                                                  !! `idx=0` gives the spline function
+    real(wp),intent(in)                 :: x1     !! left point of quadrature interval in `t(k) <= x <= t(n+1)`
+    real(wp),intent(in)                 :: x2     !! right point of quadrature interval in `t(k) <= x <= t(n+1)`
+    real(wp),intent(in)                 :: tol    !! desired accuracy for the quadrature, suggest
+                                                  !! `10*dtol < tol <= 0.1` where `dtol` is the maximum
+                                                  !! of `1.0e-18` and real(wp) unit roundoff for
+                                                  !! the machine
+    real(wp),intent(out)                :: f      !! integral of `bf(x)` on `(x1,x2)`
+    integer,intent(out)                 :: iflag  !! status flag:
+                                                  !!
+                                                  !! * \( = 0 \)   : no errors
+                                                  !! * \( \ne 0 \) : error
+
+    real(wp),dimension(3*kx) :: work !! work array for [[dbfqad]]
+
+    call dbfqad(fun,tx,bcoef,nx,kx,idx,x1,x2,tol,f,iflag,work)
+
+    end subroutine db1fqad
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -3363,7 +3410,7 @@
 
     implicit none
 
-    procedure(int_func)                 :: f      !! external function of one argument for the
+    procedure(b1fqad_func)              :: f      !! external function of one argument for the
                                                   !! integrand `bf(x)=f(x)*dbvalu(t,bcoef,n,k,id,x,inbv,work)`
     integer,intent(in)                  :: n      !! length of coefficient array
     integer,intent(in)                  :: k      !! order of b-spline, `k >= 1`
@@ -3469,7 +3516,7 @@
 
     implicit none
 
-    procedure(int_func)                 :: fun     !! name of external function of one
+    procedure(b1fqad_func)              :: fun     !! name of external function of one
                                                    !! argument which multiplies [[dbvalu]].
     integer,intent(in)                  :: n       !! number of b-coefficients for [[dbvalu]]
     integer,intent(in)                  :: kk      !! order of the spline, `kk>=1`

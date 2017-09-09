@@ -26,6 +26,7 @@
     real(wp),parameter :: x2      = pi             !! right endpoint
     integer,parameter  :: nx      = 181            !! number of points in x dimension
                                                    !! in original grid
+    real(wp),parameter :: tol     = 1.0e-12_wp     !! tolerance for [[db1fqad]]
 
     real(wp),dimension(:),allocatable :: tx     !! x knots
     integer                           :: kx     !! x bspline order
@@ -38,7 +39,7 @@
                                                 !! (should be close to 2)
 
     write(*,*) ''
-    write(*,'(A5,1X,A30,1X,A30)') 'Order','Integral','Error'
+    write(*,'(A8,1X,A5,1X,A30,1X,A30)') 'Method','Order','Integral','Error'
 
     do kx = 2, 8
 
@@ -56,7 +57,7 @@
         if (iflag/=0) error stop 'error calling db1ink'
 
         ! now integrate:
-        call db1qad(tx,fcn,nx,kx,x1,x2,f,iflag)
+        call db1sqad(tx,fcn,nx,kx,x1,x2,f,iflag)
 
         ! display results:
         if (iflag/=0) then
@@ -64,11 +65,37 @@
             write(*,*) 'iflag: ',iflag
             error stop 'error calling db1qad'
         else
-            write(*,'(I5,1X,E30.16,1X,E30.16)') kx,f,f-2.0_wp
+            write(*,'(A8,1X,I5,1X,E30.16,1X,E30.16)') 'db1qad',kx,f,f-2.0_wp
         end if
+
+        ! integrate using adaptive version:
+        call db1fqad(test_function,tx,fcn,nx,kx,0,x1,x2,tol,f,iflag)
+
+        ! display results:
+        if (iflag/=0) then
+            write(*,*) ''
+            write(*,*) 'iflag: ',iflag
+            error stop 'error calling db1fqad'
+        else
+            write(*,'(A8,1X,I5,1X,E30.16,1X,E30.16)') 'db1fqad',kx,f,f-4.0_wp
+        end if
+
 
     end do
     write(*,*) ''
+
+    contains
+
+        function test_function(x) result(f)
+
+        implicit none
+
+        real(wp),intent(in) :: x
+        real(wp)            :: f  !! f(x)
+
+        f = 2.0_wp
+
+        end function test_function
 
     end program bspline_integrate_test
 !*****************************************************************************************

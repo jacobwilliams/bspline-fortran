@@ -75,6 +75,7 @@
         procedure,public :: destroy => destroy_1d
         procedure,public :: size_of => size_1d
         procedure,public :: integral => integral_1d
+        procedure,public :: fintegral => fintegral_1d
         final :: finalize_1d
     end type bspline_1d
 
@@ -964,7 +965,7 @@
 
 !*****************************************************************************************
 !>
-!  Evaluate a [[bspline_1d]] definite integral.  This is a wrapper for [[db1qad]].
+!  Evaluate a [[bspline_1d]] definite integral.  This is a wrapper for [[db1sqad]].
 
     pure subroutine integral_1d(me,x1,x2,f,iflag)
 
@@ -974,16 +975,45 @@
     real(wp),intent(in)             :: x1    !! left point of interval
     real(wp),intent(in)             :: x2    !! right point of interval
     real(wp),intent(out)            :: f     !! integral of the b-spline over \( [x_1, x_2] \)
-    integer,intent(out)             :: iflag !! status flag (see [[db1qad]])
+    integer,intent(out)             :: iflag !! status flag (see [[db1sqad]])
 
     if (me%initialized) then
-        call db1qad(me%tx,me%bcoef,me%nx,me%kx,x1,x2,f,iflag)
+        call db1sqad(me%tx,me%bcoef,me%nx,me%kx,x1,x2,f,iflag)
     else
         iflag = 1
     end if
     me%iflag = iflag
 
     end subroutine integral_1d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Evaluate a [[bspline_1d]] definite integral.  This is a wrapper for [[db1fqad]].
+
+    subroutine fintegral_1d(me,fun,idx,x1,x2,tol,f,iflag)
+
+    implicit none
+
+    class(bspline_1d),intent(inout) :: me
+    procedure(b1fqad_func)          :: fun   !! external function of one argument for the
+                                             !! integrand `bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,idx,x,inbv)`
+    integer,intent(in)              :: idx   !! order of the spline derivative, `0 <= idx <= k-1`
+                                             !! `idx=0` gives the spline function
+    real(wp),intent(in)             :: x1    !! left point of interval
+    real(wp),intent(in)             :: x2    !! right point of interval
+    real(wp),intent(in)             :: tol   !! desired accuracy for the quadrature
+    real(wp),intent(out)            :: f     !! integral of `bf(x)` over \( [x_1, x_2] \)
+    integer,intent(out)             :: iflag !! status flag (see [[db1sqad]])
+
+    if (me%initialized) then
+        call db1fqad(fun,me%tx,me%bcoef,me%nx,me%kx,idx,x1,x2,tol,f,iflag)
+    else
+        iflag = 1
+    end if
+    me%iflag = iflag
+
+    end subroutine fintegral_1d
 !*****************************************************************************************
 
 !*****************************************************************************************
