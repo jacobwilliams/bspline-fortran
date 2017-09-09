@@ -16,201 +16,126 @@ $CSTATIC_GNU = -c -fbacktrace -Wall -Wextra -Wno-maybe-uninitialized -Wno-unused
 $DEBUG_GNU   = -O0 -g3 -Warray-bounds -Wcharacter-truncation -Wline-truncation -Wimplicit-interface -Wimplicit-procedure -Wunderflow -fcheck=all -fmodule-private -ffree-line-length-132 -fimplicit-none -fbacktrace -fdump-core -finit-real=nan -std=f2008ts -fall-intrinsics
 $CSTATIC_INT = -c -std15
 $DEBUG_INT   = -O0 -debug all -check all -warn all -extend-source 132 -traceback -gen-interfaces -fpe-all=0 -fp-stack-check -fstack-protector-all -ftrapuv -no-ftz -std15
+$EXCLUDE_DIRS = ./src/pyplot-fortran/src/tests/
+
+# modes templates
+[template-static]
+cflags_heritage = True
+build_dir       = ./lib/
+mod_dir         = ./mod/
+obj_dir         = ./obj/
+src             = ./src/
+colors          = True
+quiet           = False
+log             = False
+jobs            = 2
+mklib           = static
+target          = $MOD_FILE
+output          = $STATIC_LIB
+exclude_dirs    = $EXCLUDE_DIRS
+
+[template-shared]
+cflags_heritage = True
+build_dir       = ./lib/
+mod_dir         = ./mod/
+obj_dir         = ./obj/
+src             = ./src/
+colors          = True
+quiet           = False
+log             = False
+jobs            = 2
+mklib           = shared
+target          = $MOD_FILE
+output          = $SHARED_LIB
+exclude_dirs    = $EXCLUDE_DIRS
+
+[template-tests]
+cflags_heritage = True
+build_dir       = ./bin/
+mod_dir         = ./mod/
+obj_dir         = ./obj/
+src             = ./src/
+colors          = True
+quiet           = False
+log             = False
+jobs            = 2
+exclude_dirs    = $EXCLUDE_DIRS
 
 # main modes
+
 # library
 [static-gnu]
 description     = Build library with GNU gfortran by optimized-static flags
 compiler        = gnu
 cflags          = $CSTATIC_GNU $OPTIMIZE
-cflags_heritage = True
-build_dir       = ./lib/
-mod_dir         = ./mod/
-obj_dir         = ./obj/
-src             = ./src/
-colors          = True
-quiet           = False
-log             = False
-jobs            = 2
-mklib           = static
-target          = $MOD_FILE
-output          = $STATIC_LIB
+template        = template-static
 
 [static-gnu-debug]
 description     = Build library with GNU gfortran by debug-static flags
 compiler        = gnu
 cflags          = $CSTATIC_GNU $DEBUG_GNU
-cflags_heritage = True
-build_dir       = ./lib/
-mod_dir         = ./mod/
-obj_dir         = ./obj/
-src             = ./src/
-colors          = True
-quiet           = False
-log             = False
-jobs            = 2
-mklib           = static
-target          = $MOD_FILE
-output          = $STATIC_LIB
+template        = template-static
 
 [static-intel]
 description     = Build library with Intel Fortran by optimized-static flags
 compiler        = intel
 cflags          = $CSTATIC_INT $OPTIMIZE
-cflags_heritage = True
-build_dir       = ./lib/
-mod_dir         = ./mod/
-obj_dir         = ./obj/
-src             = ./src/
-colors          = True
-quiet           = False
-log             = False
-jobs            = 2
-mklib           = static
-target          = $MOD_FILE
-output          = $STATIC_LIB
+template        = template-static
 
 [static-intel-debug]
 description     = Build library with Intel Fortran by debug-static flags
 compiler        = intel
 cflags          = $CSTATIC_INT $DEBUG_INT
-cflags_heritage = True
-build_dir       = ./lib/
-mod_dir         = ./mod/
-obj_dir         = ./obj/
-src             = ./src/
-colors          = True
-quiet           = False
-log             = False
-jobs            = 2
-mklib           = static
-target          = $MOD_FILE
-output          = $STATIC_LIB
+template        = template-static
 
 [shared-gnu]
 description     = Build library with GNU gfortran by optimized-shared flags
 compiler        = gnu
 cflags          = $CSTATIC_GNU $OPTIMIZE
-cflags_heritage = True
-build_dir       = ./lib/
-mod_dir         = ./mod/
-obj_dir         = ./obj/
-src             = ./src/
-colors          = True
-quiet           = False
-log             = False
-jobs            = 2
-mklib           = shared
-target          = $MOD_FILE
-output          = $SHARED_LIB
+template        = template-shared
 
 [shared-gnu-debug]
 description     = Build library with GNU gfortran by debug-shared flags
 compiler        = gnu
 cflags          = $CSTATIC_GNU $DEBUG_GNU
-cflags_heritage = True
-build_dir       = ./lib/
-mod_dir         = ./mod/
-obj_dir         = ./obj/
-src             = ./src/
-colors          = True
-quiet           = False
-log             = False
-jobs            = 2
-mklib           = shared
-target          = $MOD_FILE
-output          = $SHARED_LIB
+template        = template-shared
 
 [shared-intel]
 description     = Build library with Intel Fortran by optimized-shared flags
 compiler        = intel
 cflags          = $CSTATIC_INT $OPTIMIZE
-cflags_heritage = True
-build_dir       = ./lib/
-mod_dir         = ./mod/
-obj_dir         = ./obj/
-src             = ./src/
-colors          = True
-quiet           = False
-log             = False
-jobs            = 2
-mklib           = shared
-target          = $MOD_FILE
-output          = $SHARED_LIB
+template        = template-shared
 
 [shared-intel-debug]
 description     = Build library with Intel Fortran by debug-shared flags
 compiler        = intel
 cflags          = $CSTATIC_INT $DEBUG_INT
-cflags_heritage = True
-build_dir       = ./lib/
-mod_dir         = ./mod/
-obj_dir         = ./obj/
-src             = ./src/
-colors          = True
-quiet           = False
-log             = False
-jobs            = 2
-mklib           = shared
-target          = $MOD_FILE
-output          = $SHARED_LIB
+template        = template-shared
 
 # test programs
 [tests-gnu]
 description     = Build all tests with GNU gfortran by optimized-static flags
 compiler        = gnu
 cflags          = $CSTATIC_GNU $OPTIMIZE
-cflags_heritage = True
-build_dir       = ./bin/
-mod_dir         = ./mod/
-obj_dir         = ./obj/
-src             = ./src/
-colors          = True
-quiet           = False
-log             = False
-jobs            = 2
+template        = template-tests
 
 [tests-gnu-debug]
 description     = Build all tests with GNU gfortran by debug-static flags
 compiler        = gnu
 cflags          = $CSTATIC_GNU $DEBUG_GNU
-cflags_heritage = True
-build_dir       = ./bin/
-mod_dir         = ./mod/
-obj_dir         = ./obj/
-src             = ./src/
-colors          = True
-quiet           = False
-log             = False
-jobs            = 2
+template        = template-tests
 
 [tests-intel]
 description     = Build all tests with Intel Fortran by optimized-static flags
 compiler        = intel
 cflags          = $CSTATIC_INT $OPTIMIZE
-cflags_heritage = True
-build_dir       = ./bin/
-mod_dir         = ./mod/
-obj_dir         = ./obj/
-src             = ./src/
-colors          = True
-quiet           = False
-log             = False
-jobs            = 2
+template        = template-tests
 
 [tests-intel-debug]
 description     = Build all tests with Intel Fortran by debug-static flags
 compiler        = intel
 cflags          = $CSTATIC_INT $DEBUG_INT
-cflags_heritage = True
-build_dir       = ./bin/
-mod_dir         = ./mod/
-obj_dir         = ./obj/
-src             = ./src/
-colors          = True
-quiet           = False
-log             = False
-jobs            = 2
+template        = template-tests
 
 # auxiliary rules
 [rule-makedoc]
