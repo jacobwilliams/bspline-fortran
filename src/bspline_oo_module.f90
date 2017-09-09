@@ -10,7 +10,7 @@
 
     module bspline_oo_module
 
-    use,intrinsic :: iso_fortran_env, only: wp => real64
+    use bspline_kinds_module, only: wp
     use,intrinsic :: iso_fortran_env, only: error_unit
     use bspline_sub_module
 
@@ -61,6 +61,9 @@
 
     type,extends(bspline_class),public :: bspline_1d
         !! Class for 1d b-spline interpolation.
+        !!
+        !!@note The 1D class also contains two methods
+        !!      for computing definite integrals.
         private
         integer :: nx  = 0  !! Number of \(x\) abcissae
         integer :: kx  = 0  !! The order of spline pieces in \(x\)

@@ -1,11 +1,11 @@
 !*****************************************************************************************
-!> 
+!>
 !  Units test for 1d-6d tensor product b-spline interpolation.
 
     program bspline_test
 
     use bspline_module
-    use,intrinsic :: iso_fortran_env, only: wp => real64
+    use bspline_kinds_module, only: wp
 
     implicit none
 

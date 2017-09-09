@@ -12,7 +12,7 @@
     program knot_tests
 
     use bspline_module
-    use,intrinsic :: iso_fortran_env, only: wp => real64
+    use bspline_kinds_module, only: wp
     use pyplot_module
 
     implicit none

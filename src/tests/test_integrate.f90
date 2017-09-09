@@ -15,7 +15,7 @@
     program bspline_integrate_test
 
     use bspline_module
-    use,intrinsic :: iso_fortran_env, only: wp => real64
+    use bspline_kinds_module, only: wp
 
     implicit none
 
@@ -26,7 +26,7 @@
     real(wp),parameter :: x2      = pi             !! right endpoint
     integer,parameter  :: nx      = 181            !! number of points in x dimension
                                                    !! in original grid
-    real(wp),parameter :: tol     = 10.0_wp*epsilon(1.0_wp)  !! tolerance for [[db1fqad]]
+    real(wp),parameter :: tol = 10.0_wp*epsilon(1.0_wp)  !! tolerance for [[db1fqad]]
 
     real(wp),dimension(:),allocatable :: tx     !! x knots
     integer                           :: kx     !! x bspline order
@@ -71,6 +71,7 @@
 
             ! integrate:
             if (imeth==1) then
+                if (kx>20) cycle
                 meth = 'db1sqad'
                 call db1sqad(tx,fcn,nx,kx,x1,x2,f,iflag)
             else
@@ -82,7 +83,8 @@
             if (iflag/=0) then
                 write(*,*) ''
                 write(*,*) 'iflag: ',iflag
-                error stop 'error calling '//meth
+                write(*,*) 'error calling '//meth
+                error stop
             else
                 write(*,'(A8,1X,I5,1X,E30.16,1X,E30.16)') meth,kx,f,f-f_true
             end if
