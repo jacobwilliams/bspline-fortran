@@ -7,7 +7,7 @@
     program bspline_regridding_test
 
     use bspline_module
-    use,intrinsic :: iso_fortran_env, only: wp => real64
+    use bspline_kinds_module, only: wp
 
     implicit none
 

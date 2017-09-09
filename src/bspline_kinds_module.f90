@@ -3,20 +3,18 @@
 !  license: BSD
 !
 !### Description
-!
-!  Multidimensional (1D-6D) B-Spline interpolation of data on a regular grid.
-!  This module uses both the subroutine and object-oriented modules.
+!  Numeric kind definitions for BSpline-Fortran.
 
-    module bspline_module
+    module bspline_kinds_module
 
-    use bspline_kinds_module, only: bspline_wp => wp
-    use bspline_oo_module
-    use bspline_sub_module
+    use,intrinsic :: iso_fortran_env
 
     implicit none
 
-    public
+    private
+
+    integer,parameter,public :: wp = real64  !! Real precision
 
 !*****************************************************************************************
-    end module bspline_module
+    end module bspline_kinds_module
 !*****************************************************************************************

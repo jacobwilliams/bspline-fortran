@@ -40,14 +40,23 @@
 
     module bspline_sub_module
 
-    use,intrinsic :: iso_fortran_env, only: real64
+    use bspline_kinds_module, only: wp
     use,intrinsic :: iso_fortran_env, only: error_unit
 
     implicit none
 
     private
 
-    integer,parameter :: wp = real64  !! Real precision
+    abstract interface
+        function b1fqad_func(x) result(f)
+        !! interface for the input function in [[dbfqad]]
+        import :: wp
+        implicit none
+        real(wp),intent(in) :: x
+        real(wp)            :: f  !! f(x)
+        end function b1fqad_func
+    end interface
+    public :: b1fqad_func
 
     !Spline function order (order = polynomial degree + 1)
     integer,parameter,public :: bspline_order_quadratic = 3
@@ -56,7 +65,7 @@
     integer,parameter,public :: bspline_order_quintic   = 6
 
     !main routines:
-    public :: db1ink, db1val, db1qad
+    public :: db1ink, db1val, db1sqad, db1fqad
     public :: db2ink, db2val
     public :: db3ink, db3val
     public :: db4ink, db4val
@@ -66,7 +75,6 @@
     public :: get_status_message
 
     contains
-
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -222,7 +230,7 @@
 !### See also
 !  * [[dbsqad]] -- the core routine.
 
-    pure subroutine db1qad(tx,bcoef,nx,kx,x1,x2,f,iflag)
+    pure subroutine db1sqad(tx,bcoef,nx,kx,x1,x2,f,iflag)
 
     implicit none
 
@@ -230,8 +238,8 @@
     integer,intent(in)                   :: kx      !! order of b-spline, `1 <= k <= 20`
     real(wp),dimension(nx+kx),intent(in) :: tx      !! knot array
     real(wp),dimension(nx),intent(in)    :: bcoef   !! b-spline coefficient array
-    real(wp),intent(in)                  :: x1      !! end point of quadrature interval in `t(kx) <= x <= t(nx+1)`
-    real(wp),intent(in)                  :: x2      !! end point of quadrature interval in `t(kx) <= x <= t(nx+1)`
+    real(wp),intent(in)                  :: x1      !! left point of quadrature interval in `t(kx) <= x <= t(nx+1)`
+    real(wp),intent(in)                  :: x2      !! right point of quadrature interval in `t(kx) <= x <= t(nx+1)`
     real(wp),intent(out)                 :: f       !! integral of the b-spline over (`x1`,`x2`)
     integer,intent(out)                  :: iflag   !! status flag:
                                                     !!
@@ -242,7 +250,52 @@
 
     call dbsqad(tx,bcoef,nx,kx,x1,x2,f,work,iflag)
 
-    end subroutine db1qad
+    end subroutine db1sqad
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Computes the integral on `(x1,x2)` of a product of a
+!  function `fun` and the `idx`-th derivative of a `kx`-th order b-spline,
+!  using the b-representation `(tx,bcoef,nx,kx)`, with an adaptive
+!  8-point Legendre-Gauss algorithm.
+!  `(x1,x2)` must be a subinterval of `t(kx) <= x <= t(nx+1)`.
+!
+!### See also
+!  * [[dbfqad]] -- the core routine.
+!
+!@note This one is not pure, because we are not enforcing
+!      that the user function `fun` be pure.
+
+    subroutine db1fqad(fun,tx,bcoef,nx,kx,idx,x1,x2,tol,f,iflag)
+
+    implicit none
+
+    procedure(b1fqad_func)              :: fun    !! external function of one argument for the
+                                                  !! integrand `bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,id,x,inbv,work)`
+    integer,intent(in)                  :: nx     !! length of coefficient array
+    integer,intent(in)                  :: kx     !! order of b-spline, `kx >= 1`
+    real(wp),dimension(nx+kx),intent(in):: tx     !! knot array
+    real(wp),dimension(nx),intent(in)   :: bcoef  !! b-spline coefficient array
+    integer,intent(in)                  :: idx    !! order of the spline derivative, `0 <= idx <= k-1`
+                                                  !! `idx=0` gives the spline function
+    real(wp),intent(in)                 :: x1     !! left point of quadrature interval in `t(k) <= x <= t(n+1)`
+    real(wp),intent(in)                 :: x2     !! right point of quadrature interval in `t(k) <= x <= t(n+1)`
+    real(wp),intent(in)                 :: tol    !! desired accuracy for the quadrature, suggest
+                                                  !! `10*dtol < tol <= 0.1` where `dtol` is the maximum
+                                                  !! of `1.0e-300` and real(wp) unit roundoff for
+                                                  !! the machine
+    real(wp),intent(out)                :: f      !! integral of `bf(x)` on `(x1,x2)`
+    integer,intent(out)                 :: iflag  !! status flag:
+                                                  !!
+                                                  !! * \( = 0 \)   : no errors
+                                                  !! * \( \ne 0 \) : error
+
+    real(wp),dimension(3*kx) :: work !! work array for [[dbfqad]]
+
+    call dbfqad(fun,tx,bcoef,nx,kx,idx,x1,x2,tol,f,iflag,work)
+
+    end subroutine db1fqad
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -3182,18 +3235,18 @@
 
 !*****************************************************************************************
 !>
-!  DBSQAD computes the integral on `(X1,X2)` of a `K`-th order
-!  B-spline using the B-representation `(T,BCOEF,N,K)`.  Orders
-!  `K` as high as 20 are permitted by applying a 2, 6, or 10
-!  point Gauss formula on subintervals of `(X1,X2)` which are
+!  DBSQAD computes the integral on `(x1,x2)` of a `k`-th order
+!  b-spline using the b-representation `(t,bcoef,n,k)`.  orders
+!  `k` as high as 20 are permitted by applying a 2, 6, or 10
+!  point gauss formula on subintervals of `(x1,x2)` which are
 !  formed by included (distinct) knots.
 !
-!  If orders `K` greater than 20 are needed, use `DBFQAD` with
-!  `F(X) = 1`.
+!  If orders `k` greater than 20 are needed, use [[dbfqad]] with
+!  `f(x) = 1`.
 !
 !### Note
 !  * The maximum number of significant digits obtainable in
-!    DBSQAD is the smaller of 18 and the number of digits
+!    DBSQAD is the smaller of ~300 and the number of digits
 !    carried in `real(wp)` arithmetic.
 !
 !### References
@@ -3211,6 +3264,7 @@
 !  * 900326  Removed duplicate information from DESCRIPTION section. (WRB)
 !  * 920501  Reformatted the REFERENCES section.  (WRB)
 !  * Jacob Williams, 9/6/2017 : refactored to modern Fortran.
+!    Added higher precision coefficients.
 !
 !@note Extrapolation is not enabled for this routine.
 
@@ -3218,34 +3272,117 @@
 
     implicit none
 
-    real(wp),dimension(:),intent(in) :: t       !! knot array of length `n+k`
-    real(wp),dimension(:),intent(in) :: bcoef   !! b-spline coefficient array of length `n`
-    integer,intent(in)  :: n                    !! length of coefficient array
-    integer,intent(in)  :: k                    !! order of b-spline, `1 <= k <= 20`
-    real(wp),intent(in) :: x1                   !! end point of quadrature interval in `t(k) <= x <= t(n+1)`
-    real(wp),intent(in) :: x2                   !! end point of quadrature interval in `t(k) <= x <= t(n+1)`
-    real(wp),intent(out) :: bquad               !! integral of the b-spline over (`x1`,`x2`)
-    real(wp),dimension(:),intent(inout) :: work !! work vector of length `3*k`
-    integer,intent(out) :: iflag   !! status flag:
-                                   !!
-                                   !! * 0: no errors
-                                   !! * 901: `k` does not satisfy `1<=k<=20`
-                                   !! * 902: `n` does not satisfy `n>=k`
-                                   !! * 903: `x1` or `x2` or both do not satisfy `t(k)<=x<=t(n+1)`
+    real(wp),dimension(:),intent(in)    :: t       !! knot array of length `n+k`
+    real(wp),dimension(:),intent(in)    :: bcoef   !! b-spline coefficient array of length `n`
+    integer,intent(in)                  :: n       !! length of coefficient array
+    integer,intent(in)                  :: k       !! order of b-spline, `1 <= k <= 20`
+    real(wp),intent(in)                 :: x1      !! end point of quadrature interval
+                                                   !! in `t(k) <= x <= t(n+1)`
+    real(wp),intent(in)                 :: x2      !! end point of quadrature interval
+                                                   !! in `t(k) <= x <= t(n+1)`
+    real(wp),intent(out)                :: bquad   !! integral of the b-spline over (`x1`,`x2`)
+    real(wp),dimension(:),intent(inout) :: work    !! work vector of length `3*k`
+    integer,intent(out)                 :: iflag   !! status flag:
+                                                   !!
+                                                   !! * 0: no errors
+                                                   !! * 901: `k` does not satisfy `1<=k<=20`
+                                                   !! * 902: `n` does not satisfy `n>=k`
+                                                   !! * 903: `x1` or `x2` or both do
+                                                   !!   not satisfy `t(k)<=x<=t(n+1)`
 
     integer :: i,il1,il2,ilo,inbv,jf,left,m,mf,mflag,npk,np1
     real(wp) :: a,aa,b,bb,bma,bpa,c1,gx,q,ta,tb,y1,y2
     real(wp),dimension(5) :: s  !! sum
 
     real(wp),dimension(9),parameter :: gpts = [ &
-        5.77350269189625764e-01_wp , 2.38619186083196909e-01_wp , 6.61209386466264514e-01_wp , &
-        9.32469514203152028e-01_wp , 1.48874338981631211e-01_wp , 4.33395394129247191e-01_wp , &
-        6.79409568299024406e-01_wp , 8.65063366688984511e-01_wp , 9.73906528517171720e-01_wp ]
+        &0.577350269189625764509148780501957455647601751270126876018602326483977&
+        &67230293334569371539558574952522520871380513556767665664836499965082627&
+        &05518373647912161760310773007685273559916067003615583077550051041144223&
+        &01107628883557418222973945990409015710553455953862673016662179126619796&
+        &4892168_wp,&
+        &0.238619186083196908630501721680711935418610630140021350181395164574274&
+        &93427563984224922442725734913160907222309701068720295545303507720513526&
+        &28872175189982985139866216812636229030578298770859440976999298617585739&
+        &46921613621659222233462641640013936777894532787145324672151888999339900&
+        &0945406150514997832_wp,&
+        &0.661209386466264513661399595019905347006448564395170070814526705852183&
+        &49660714310094428640374646145642988837163927514667955734677222538043817&
+        &23198010093367423918538864300079016299442625145884902455718821970386303&
+        &22362011735232135702218793618906974301231555871064213101639896769013566&
+        &1651261150514997832_wp,&
+        &0.932469514203152027812301554493994609134765737712289824872549616526613&
+        &50084420019627628873992192598504786367972657283410658797137951163840419&
+        &21786180750210169211578452038930846310372961174632524612619760497437974&
+        &07422632089671621172178385230505104744277222209386367655366917903888025&
+        &2326771150514997832_wp,&
+        &0.148874338981631210884826001129719984617564859420691695707989253515903&
+        &61735566852137117762979946369123003116080525533882610289018186437654023&
+        &16761969968090913050737827720371059070942475859422743249837177174247346&
+        &21691485290294292900319346665908243383809435507599683357023000500383728&
+        &0634351_wp,&
+        &0.433395394129247190799265943165784162200071837656246496502701513143766&
+        &98907770350122510275795011772122368293504099893794727422475772324920512&
+        &67741032822086200952319270933462032011328320387691584063411149801129823&
+        &14148878744320432476641442157678880770848387945248811854979703928792696&
+        &4254222_wp,&
+        &0.679409568299024406234327365114873575769294711834809467664817188952558&
+        &57539507492461507857357048037949983390204739931506083674084257663009076&
+        &82741718202923543197852846977409718369143712013552962837733153108679126&
+        &93254495485472934132472721168027426848661712101171203022718105101071880&
+        &4444161_wp,&
+        &0.865063366688984510732096688423493048527543014965330452521959731845374&
+        &75513805556135679072894604577069440463108641176516867830016149345356373&
+        &92729396890950011571349689893051612072435760480900979725923317923795535&
+        &73929059587977695683242770223694276591148364371481692378170157259728913&
+        &9322313_wp,&
+        &0.973906528517171720077964012084452053428269946692382119231212066696595&
+        &20323463615962572356495626855625823304251877421121502216860143447777992&
+        &05409587259942436704413695764881258799146633143510758737119877875210567&
+        &06745243536871368303386090938831164665358170712568697066873725922944928&
+        &4383797_wp]
 
     real(wp),dimension(9),parameter :: gwts = [ &
-        1.00000000000000000e+00_wp , 4.67913934572691047e-01_wp , 3.60761573048138608e-01_wp , &
-        1.71324492379170345e-01_wp , 2.95524224714752870e-01_wp , 2.69266719309996355e-01_wp , &
-        2.19086362515982044e-01_wp , 1.49451349150580593e-01_wp , 6.66713443086881376e-02_wp ]
+        &1.0_wp,&
+        &0.467913934572691047389870343989550994811655605769210535311625319963914&
+        &20162039812703111009258479198230476626878975479710092836255417350295459&
+        &35635592733866593364825926382559018030281273563502536241704619318259000&
+        &99756987095900533474080074634376824431808173206369174103416261765346292&
+        &7888917150514997832_wp,&
+        &0.360761573048138607569833513837716111661521892746745482289739240237140&
+        &03783726171832096220198881934794311720914037079858987989027836432107077&
+        &67872114085818922114502722525757771126000732368828591631602895111800517&
+        &40813685547074482472486101183259931449817216402425586777526768199930950&
+        &3106873150514997832_wp,&
+        &0.171324492379170345040296142172732893526822501484043982398635439798945&
+        &76054234015464792770542638866975211652206987440430919174716746217597462&
+        &96492293180314484520671351091683210843717994067668872126692485569940481&
+        &59429327357024984053433824182363244118374610391205239119044219703570297&
+        &7497812150514997832_wp,&
+        &0.295524224714752870173892994651338329421046717026853601354308029755995&
+        &93821715232927035659579375421672271716440125255838681849078955200582600&
+        &19363424941869666095627186488841680432313050615358674090830512706638652&
+        &87483901746874726597515954450775158914556548308329986393605934912382356&
+        &670244_wp,&
+        &0.269266719309996355091226921569469352859759938460883795800563276242153&
+        &43231917927676422663670925276075559581145036869830869292346938114524155&
+        &64658846634423711656014432259960141729044528030344411297902977067142537&
+        &53480628460839927657500691168674984281408628886853320804215041950888191&
+        &6391898_wp,&
+        &0.219086362515982043995534934228163192458771870522677089880956543635199&
+        &91065295128124268399317720219278659121687281288763476662690806694756883&
+        &09211843316656677105269915322077536772652826671027878246851010208832173&
+        &32006427348325475625066841588534942071161341022729156547776892831330068&
+        &8702802_wp,&
+        &0.149451349150580593145776339657697332402556639669427367835477268753238&
+        &65472663001094594726463473195191400575256104543633823445170674549760147&
+        &13716011937109528798134828865118770953566439639333773939909201690204649&
+        &08381561877915752257830034342778536175692764212879241228297015017259084&
+        &2897331_wp,&
+        &0.066671344308688137593568809893331792857864834320158145128694881613412&
+        &06408408710177678550968505887782109005471452041933148750712625440376213&
+        &93049873169940416344953637064001870112423155043935262424506298327181987&
+        &18647480566044117862086478449236378557180717569208295026105115288152794&
+        &421677_wp]
 
     iflag = 0
     bquad = 0.0_wp
@@ -3321,6 +3458,413 @@
     end if
 
     end subroutine dbsqad
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  dbfqad computes the integral on `(x1,x2)` of a product of a
+!  function `f` and the `id`-th derivative of a `k`-th order b-spline,
+!  using the b-representation `(t,bcoef,n,k)`.  `(x1,x2)` must be a
+!  subinterval of `t(k) <= x <= t(n+1)`.  an integration routine,
+!  [[dbsgq8]] (a modification of `gaus8`), integrates the product
+!  on subintervals of `(x1,x2)` formed by included (distinct) knots
+!
+!### Reference
+!  * D. E. Amos, "Quadrature subroutines for splines and
+!    B-splines", Report SAND79-1825, Sandia Laboratories,
+!    December 1979.
+!
+!### History
+!  * 800901  Amos, D. E., (SNLA)
+!  * 890531  Changed all specific intrinsics to generic.  (WRB)
+!  * 890531  REVISION DATE from Version 3.2
+!  * 891214  Prologue converted to Version 4.0 format.  (BAB)
+!  * 900315  CALLs to XERROR changed to CALLs to XERMSG.  (THJ)
+!  * 900326  Removed duplicate information from DESCRIPTION section. (WRB)
+!  * 920501  Reformatted the REFERENCES section.  (WRB)
+!  * Jacob Williams, 9/6/2017 : refactored to modern Fortran. Some changes.
+!
+!@note the maximum number of significant digits obtainable in
+!      [[dbsqad]] is the smaller of ~300 and the number of digits
+!      carried in `real(wp)` arithmetic.
+!
+!@note Extrapolation is not enabled for this routine.
+
+    subroutine dbfqad(f,t,bcoef,n,k,id,x1,x2,tol,quad,iflag,work)
+
+    implicit none
+
+    procedure(b1fqad_func)              :: f      !! external function of one argument for the
+                                                  !! integrand `bf(x)=f(x)*dbvalu(t,bcoef,n,k,id,x,inbv,work)`
+    integer,intent(in)                  :: n      !! length of coefficient array
+    integer,intent(in)                  :: k      !! order of b-spline, `k >= 1`
+    real(wp),dimension(n+k),intent(in)  :: t      !! knot array
+    real(wp),dimension(n),intent(in)    :: bcoef  !! coefficient array
+    integer,intent(in)                  :: id     !! order of the spline derivative, `0 <= id <= k-1`
+                                                  !! `id=0` gives the spline function
+    real(wp),intent(in)                 :: x1     !! left point of quadrature interval in `t(k) <= x <= t(n+1)`
+    real(wp),intent(in)                 :: x2     !! right point of quadrature interval in `t(k) <= x <= t(n+1)`
+    real(wp),intent(in)                 :: tol    !! desired accuracy for the quadrature, suggest
+                                                  !! `10*dtol < tol <= 0.1` where `dtol` is the maximum
+                                                  !! of `1.0e-300` and real(wp) unit roundoff for
+                                                  !! the machine
+    real(wp),intent(out)                :: quad   !! integral of `bf(x)` on `(x1,x2)`
+    real(wp),dimension(:),intent(inout) :: work   !! work vector of length `3*k`
+    integer,intent(out)                 :: iflag  !! status flag:
+                                                  !!
+                                                  !! * 0: no errors
+                                                  !! * 1001: `k` does not satisfy `k>=1`
+                                                  !! * 1002: `n` does not satisfy `n>=k`
+                                                  !! * 1003: `d` does not satisfy `0<=id<k`
+                                                  !! * 1004: `x1` or `x2` or both do not
+                                                  !!   satisfy `t(k)<=x<=t(n+1)`
+                                                  !! * 1005: `tol` is less than `dtol`
+                                                  !!   or greater than 0.1
+
+    integer :: inbv,ilo,il1,il2,left,mflag,npk,np1
+    real(wp) :: a,aa,ans,b,bb,q,ta,tb,err
+
+    real(wp),parameter :: min_tol = max(epsilon(1.0_wp),1.0e-300_wp) !! minimum allowed `tol`
+
+    iflag = 0
+    quad = 0.0_wp
+    err = tol
+    if ( k<1 ) then
+        iflag = 1001     ! error
+    elseif ( n<k ) then
+        iflag = 1002     ! error
+    elseif ( id<0 .or. id>=k ) then
+        iflag = 1003     ! error
+    else
+        if ( tol>=min_tol .and. tol<=0.1_wp ) then
+            aa = min(x1,x2)
+            bb = max(x1,x2)
+            if ( aa>=t(k) ) then
+                np1 = n + 1
+                if ( bb<=t(np1) ) then
+                    if ( aa==bb ) return
+                    npk = n + k
+                    ilo = 1
+                    call dintrv(t,npk,aa,ilo,il1,mflag)
+                    call dintrv(t,npk,bb,ilo,il2,mflag)
+                    if ( il2>=np1 ) il2 = n
+                    inbv = 1
+                    q = 0.0_wp
+                    do left = il1 , il2
+                        ta = t(left)
+                        tb = t(left+1)
+                        if ( ta/=tb ) then
+                            a = max(aa,ta)
+                            b = min(bb,tb)
+                            call dbsgq8(f,t,bcoef,n,k,id,a,b,inbv,err,ans,iflag,work)
+                            if ( iflag/=0 .and. iflag/=1101 ) return
+                            q = q + ans
+                        end if
+                    end do
+                    if ( x1>x2 ) q = -q
+                    quad = q
+                end if
+            else
+                iflag = 1004  ! error
+            end if
+        else
+            iflag = 1005  ! error
+        end if
+    end if
+
+    end subroutine dbfqad
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  DBSGQ8, a modification of [gaus8](http://netlib.sandia.gov/slatec/src/gaus8.f),
+!  integrates the product of `fun(x)` by the `id`-th derivative of a spline
+!  [[dbvalu]] between limits `a` and `b` using an adaptive 8-point Legendre-Gauss
+!  algorithm.
+!
+!### See also
+!  * [[dbfqad]]
+!
+!### History
+!  * 800901  Jones, R. E., (SNLA)
+!  * 890531  Changed all specific intrinsics to generic.  (WRB)
+!  * 890911  Removed unnecessary intrinsics.  (WRB)
+!  * 891214  Prologue converted to Version 4.0 format.  (BAB)
+!  * 900315  CALLs to XERROR changed to CALLs to XERMSG.  (THJ)
+!  * 900326  Removed duplicate information from DESCRIPTION section. (WRB)
+!  * 900328  Added TYPE section.  (WRB)
+!  * 910408  Updated the AUTHOR section.  (WRB)
+!  * Jacob Williams, 9/6/2017 : refactored to modern Fortran. Some changes.
+!    Added higher precision coefficients.
+
+    subroutine dbsgq8(fun,xt,bc,n,kk,id,a,b,inbv,err,ans,iflag,work)
+
+    implicit none
+
+    procedure(b1fqad_func)              :: fun     !! name of external function of one
+                                                   !! argument which multiplies [[dbvalu]].
+    integer,intent(in)                  :: n       !! number of b-coefficients for [[dbvalu]]
+    integer,intent(in)                  :: kk      !! order of the spline, `kk>=1`
+    real(wp),dimension(:),intent(in)    :: xt      !! knot array for [[dbvalu]]
+    real(wp),dimension(n),intent(in)    :: bc      !! b-coefficient array for [[dbvalu]]
+    integer,intent(in)                  :: id      !! Order of the spline derivative, `0<=id<=kk-1`
+    real(wp),intent(in)                 :: a       !! lower limit of integral
+    real(wp),intent(in)                 :: b       !! upper limit of integral (may be less than `a`)
+    integer,intent(inout)               :: inbv    !! initialization parameter for [[dbvalu]]
+    real(wp),intent(inout)              :: err     !! **IN:** is a requested pseudorelative error
+                                                   !! tolerance.  normally pick a value of
+                                                   !! `abs(err)<1e-3`.  `ans` will normally
+                                                   !! have no more error than `abs(err)` times
+                                                   !! the integral of the absolute value of
+                                                   !! `fun(x)*[[dbvalu]]()`.
+                                                   !!
+                                                   !! **OUT:** will be an estimate of the absolute
+                                                   !! error in ans if the input value of `err`
+                                                   !! was negative.  (`err` is unchanged if
+                                                   !! the input value of `err` was nonnegative.)
+                                                   !! the estimated error is solely for information
+                                                   !! to the user and should not be used as a
+                                                   !! correction to the computed integral.
+    real(wp),intent(out)                :: ans     !! computed value of integral
+    integer,intent(out)                 :: iflag   !! a status code:
+                                                   !!
+                                                   !! * 0: `ans` most likely meets requested
+                                                   !!   error tolerance, or `a=b`.
+                                                   !! * 1101: `a` and `b` are too nearly equal
+                                                   !!   to allow normal integration.
+                                                   !!   `ans` is set to zero.
+                                                   !! * 1102: `ans` probably does not meet
+                                                   !!   requested error tolerance.
+    real(wp),dimension(:),intent(inout) :: work    !! work vector of length `3*k` for [[dbvalu]]
+
+    integer :: k,l,lmn,lmx,mxl,nbits,nib,nlmx
+    real(wp) :: ae,anib,area,c,ce,ee,ef,eps,est,gl,glr,tol,vr,x,h
+    integer,dimension(60)  :: lr
+    real(wp),dimension(60) :: aa,hh,vl,gr
+
+    integer,parameter  :: i1mach14 = digits(1.0_wp)            !! i1mach(14)
+    real(wp),parameter :: d1mach5  = log10(real(radix(x),wp))  !! d1mach(5)
+    real(wp),parameter :: ln2      = log(2.0_wp)               !! 0.69314718d0
+    real(wp),parameter :: sq2      = sqrt(2.0_wp)
+    integer,parameter  :: nlmn     = 1
+    integer,parameter  :: kmx      = 5000
+    integer,parameter  :: kml      = 6
+
+    ! initialize
+    inbv  = 1
+    iflag = 0
+    k     = i1mach14
+    anib  = d1mach5*k/0.30102000_wp
+    nbits = int(anib)
+    nlmx  = min((nbits*5)/8,60)
+    ans   = 0.0_wp
+    ce    = 0.0_wp
+
+    if ( a==b ) then
+        if ( err<0.0_wp ) err = ce
+    else
+        lmx = nlmx
+        lmn = nlmn
+        if ( b/=0.0_wp ) then
+            if ( sign(1.0_wp,b)*a>0.0_wp ) then
+                c = abs(1.0_wp-a/b)
+                if ( c<=0.1_wp ) then
+                    if ( c<=0.0_wp ) then
+                        if ( err<0.0_wp ) err = ce
+                        return
+                    else
+                        anib = 0.5_wp - log(c)/ln2
+                        nib = int(anib)
+                        lmx = min(nlmx,nbits-nib-7)
+                        if ( lmx<1 ) then
+                            ! a and b are too nearly equal
+                            ! to allow normal integration
+                            iflag = 1101
+                            if ( err<0.0_wp ) err = ce
+                            return
+                        else
+                            lmn = min(lmn,lmx)
+                        end if
+                    end if
+                end if
+            end if
+        end if
+        tol = max(abs(err),2.0_wp**(5-nbits))/2.0_wp
+        if ( err==0.0_wp ) tol = sqrt(epsilon(1.0_wp))
+        eps = tol
+        hh(1) = (b-a)/4.0_wp
+        aa(1) = a
+        lr(1) = 1
+        l = 1
+        call g8(aa(l)+2.0_wp*hh(l),2.0_wp*hh(l),est,iflag)
+        if (iflag/=0) return
+        k = 8
+        area = abs(est)
+        ef = 0.5_wp
+        mxl = 0
+    end if
+
+    do
+        ! compute refined estimates, estimate the error, etc.
+        call g8(aa(l)+hh(l),hh(l),gl,iflag)
+        if (iflag/=0) return
+        call g8(aa(l)+3.0_wp*hh(l),hh(l),gr(l),iflag)
+        if (iflag/=0) return
+        k = k + 16
+        area = area + (abs(gl)+abs(gr(l))-abs(est))
+        glr = gl + gr(l)
+        ee = abs(est-glr)*ef
+        ae = max(eps*area,tol*abs(glr))
+        if ( ee>ae ) then
+            ! consider the left half of this level
+            if ( k>kmx ) lmx = kml
+            if ( l>=lmx ) then
+                mxl = 1
+            else
+                l = l + 1
+                eps = eps*0.5_wp
+                ef = ef/sq2
+                hh(l) = hh(l-1)*0.5_wp
+                lr(l) = -1
+                aa(l) = aa(l-1)
+                est = gl
+                cycle
+            end if
+        end if
+        ce = ce + (est-glr)
+        if ( lr(l)<=0 ) then
+            ! proceed to right half at this level
+            vl(l) = glr
+        else
+            ! return one level
+            vr = glr
+            do
+                if ( l<=1 ) then
+                    ! exit
+                    ans = vr
+                    if ( (mxl/=0) .and. (abs(ce)>2.0_wp*tol*area) ) then
+                        iflag = 1102
+                    end if
+                    if ( err<0.0_wp ) err = ce
+                    return
+                else
+                    l = l - 1
+                    eps = eps*2.0_wp
+                    ef = ef*sq2
+                    if ( lr(l)<=0 ) then
+                        vl(l) = vl(l+1) + vr
+                        exit
+                    else
+                        vr = vl(l+1) + vr
+                    end if
+                end if
+            end do
+        end if
+        est = gr(l-1)
+        lr(l) = 1
+        aa(l) = aa(l) + 4.0_wp*hh(l)
+    end do
+
+    contains
+
+        subroutine g8(x,h,res,iflag)
+
+        !! 8-point formula.
+        !!
+        !!@note Replaced the original double precision abscissa and weight
+        !!      coefficients with the higher precision versions from here:
+        !!      http://pomax.github.io/bezierinfo/legendre-gauss.html
+        !!      So, if `wp` is changed to say, `real128`, more precision
+        !!      can be obtained. These coefficients have about 300 digits.
+
+        implicit none
+
+        real(wp),intent(in)  :: x
+        real(wp),intent(in)  :: h
+        real(wp),intent(out) :: res
+        integer,intent(out)  :: iflag
+
+        real(wp),dimension(8) :: f
+        real(wp),dimension(8) :: v
+
+        ! abscissa and weight coefficients:
+        real(wp),parameter :: x1 = &
+        &0.1834346424956498049394761423601839806667578129129737823171884736992044&
+        &742215421141160682237111233537452676587642867666089196012523876865683788&
+        &569995160663568104475551617138501966385810764205532370882654749492812314&
+        &961247764619363562770645716456613159405134052985058171969174306064445289&
+        &638150514997832_wp
+        real(wp),parameter :: x2 = &
+        &0.5255324099163289858177390491892463490419642431203928577508570992724548&
+        &207685612725239614001936319820619096829248252608507108793766638779939805&
+        &395303668253631119018273032402360060717470006127901479587576756241288895&
+        &336619643528330825624263470540184224603688817537938539658502113876953598&
+        &879150514997832_wp
+        real(wp),parameter :: x3 = &
+        &0.7966664774136267395915539364758304368371717316159648320701702950392173&
+        &056764730921471519272957259390191974534530973092653656494917010859602772&
+        &562074621689676153935016290342325645582634205301545856060095727342603557&
+        &415761265140428851957341933710803722783136113628137267630651413319993338&
+        &002150514997832_wp
+        real(wp),parameter :: x4 = &
+        &0.9602898564975362316835608685694729904282352343014520382716397773724248&
+        &977434192844394389592633122683104243928172941762102389581552171285479373&
+        &642204909699700433982618326637346808781263553346927867359663480870597542&
+        &547603929318533866568132868842613474896289232087639988952409772489387324&
+        &25615051499783203_wp
+        real(wp),parameter :: w1 = &
+        &0.3626837833783619829651504492771956121941460398943305405248230675666867&
+        &347239066773243660420848285095502587699262967065529258215569895173844995&
+        &576007862076842778350382862546305771007553373269714714894268328780431822&
+        &779077846722965535548199601402487767505928976560993309027632737537826127&
+        &502150514997832_wp
+        real(wp),parameter :: w2 = &
+        &0.3137066458778872873379622019866013132603289990027349376902639450749562&
+        &719421734969616980762339285560494275746410778086162472468322655616056890&
+        &624276469758994622503118776562559463287222021520431626467794721603822601&
+        &295276898652509723185157998353156062419751736972560423953923732838789657&
+        &919150514997832_wp
+        real(wp),parameter :: w3 = &
+        &0.2223810344533744705443559944262408844301308700512495647259092892936168&
+        &145704490408536531423771979278421592661012122181231114375798525722419381&
+        &826674532090577908613289536840402789398648876004385697202157482063253247&
+        &195590228631570651319965589733545440605952819880671616779621183704306688&
+        &233150514997832_wp
+        real(wp),parameter :: w4 = &
+        &0.1012285362903762591525313543099621901153940910516849570590036980647401&
+        &787634707848602827393040450065581543893314132667077154940308923487678731&
+        &973041136073584690533208824050731976306575729205467961435779467552492328&
+        &730055025992954089946676810510810729468366466585774650346143712142008566&
+        &866150514997832_wp
+
+        res = 0.0_wp
+
+        v(1) = x-x1*h
+        v(2) = x+x1*h
+        v(3) = x-x2*h
+        v(4) = x+x2*h
+        v(5) = x-x3*h
+        v(6) = x+x3*h
+        v(7) = x-x4*h
+        v(8) = x+x4*h
+
+        call dbvalu(xt,bc,n,kk,id,v(1),inbv,work,iflag,f(1)); if (iflag/=0) return
+        call dbvalu(xt,bc,n,kk,id,v(2),inbv,work,iflag,f(2)); if (iflag/=0) return
+        call dbvalu(xt,bc,n,kk,id,v(3),inbv,work,iflag,f(3)); if (iflag/=0) return
+        call dbvalu(xt,bc,n,kk,id,v(4),inbv,work,iflag,f(4)); if (iflag/=0) return
+        call dbvalu(xt,bc,n,kk,id,v(5),inbv,work,iflag,f(5)); if (iflag/=0) return
+        call dbvalu(xt,bc,n,kk,id,v(6),inbv,work,iflag,f(6)); if (iflag/=0) return
+        call dbvalu(xt,bc,n,kk,id,v(7),inbv,work,iflag,f(7)); if (iflag/=0) return
+        call dbvalu(xt,bc,n,kk,id,v(8),inbv,work,iflag,f(8)); if (iflag/=0) return
+
+        res = h*((w1*(fun(v(1))*f(1) + fun(v(2))*f(2))  + &
+                  w2*(fun(v(3))*f(3) + fun(v(4))*f(4))) + &
+                 (w3*(fun(v(5))*f(5) + fun(v(6))*f(6))  + &
+                  w4*(fun(v(7))*f(7) + fun(v(8))*f(8))))
+
+        end subroutine g8
+
+    end subroutine dbsgq8
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -3477,6 +4021,15 @@
     case(901); msg='Error in dbsqad: k does not satisfy 1<=k<=20'
     case(902); msg='Error in dbsqad: n does not satisfy n>=k'
     case(903); msg='Error in dbsqad: x1 or x2 or both do not satisfy t(k)<=x<=t(n+1)'
+
+    case(1001); msg='Error in dbfqad: k does not satisfy k>=1'
+    case(1002); msg='Error in dbfqad: n does not satisfy n>=k'
+    case(1003); msg='Error in dbfqad: d does not satisfy 0<=id<k'
+    case(1004); msg='Error in dbfqad: x1 or x2 or both do not satisfy t(k)<=x<=t(n+1)'
+    case(1005); msg='Error in dbfqad: tol is less than dtol or greater than 0.1'
+
+    case(1101); msg='Warning in dbsgq8: a and b are too nearly equal to allow normal integration.'
+    case(1102); msg='Error in dbsgq8: ans is probably insufficiently accurate.'
 
     case default
         write(istr,fmt='(I10)',iostat=istat) iflag
