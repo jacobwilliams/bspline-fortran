@@ -46,7 +46,7 @@
         write(*,*) ''
         write(*,'(A8,1X,A5,1X,A30,1X,A30)') 'Method','Order','Integral','Error'
 
-        do kx = 2, 8  ! spline orders
+        do kx = 2, 15  ! spline orders
 
             if (allocated(tx)) deallocate(tx)
             allocate(tx(nx+kx))
