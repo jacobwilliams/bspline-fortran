@@ -15,21 +15,18 @@ graph: true
 exclude: pyplot_module.f90
 extra_mods: pyplot_module:https://github.com/jacobwilliams/pyplot-fortran
 
-Brief description
----------------
+### Brief description
 
 The library provides subroutines for 1D-6D interpolation using B-splines. The code is written in modern Fortran (i.e., Fortran 2003+).
 
-License
----------------
+### License
 
 The bspline-fortran source code and related files and documentation are distributed under a permissive free software [license](https://github.com/jacobwilliams/bspline-fortran/blob/master/LICENSE) (BSD-style).
 
-See also
----------------
+### See also
 
 * This library includes the public domain DBSPLIN and DTENSBS code from the [NIST Core Math Library](http://www.nist.gov/itl/math/mcsd-software.cfm) (CMLIB).
 
-Keywords
----------------
-* Bspline, spline, interpolation, data fitting, multivariate interpolation, multidimensional interpolation
+### Keywords
+
+* Bspline, spline, interpolation, data fitting, multivariate interpolation, multidimensional interpolation, integration
