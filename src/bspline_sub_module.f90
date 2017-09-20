@@ -3638,7 +3638,7 @@
     real(wp),dimension(:),intent(inout) :: work    !! work vector of length `3*k` for [[dbvalu]]
 
     integer :: k,l,lmn,lmx,mxl,nbits,nib,nlmx
-    real(wp) :: ae,anib,area,c,ce,ee,ef,eps,est,gl,glr,tol,vr,x,h
+    real(wp) :: ae,anib,area,c,ce,ee,ef,eps,est,gl,glr,tol,vr,x
     integer,dimension(60)  :: lr
     real(wp),dimension(60) :: aa,hh,vl,gr
 
