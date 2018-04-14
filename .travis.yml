@@ -13,12 +13,9 @@ before_install:
   - sudo apt-get install graphviz
   - sudo ln -fs /usr/bin/gfortran-4.9 /usr/bin/gfortran && gfortran --version
   - sudo -H pip install FoBiS.py && FoBiS.py --version
+  - sudo -H pip install ford && ford --version
   - sudo -H pip install matplotlib
   - export PATH=".:$PATH"
-  - export PYTHONPATH="/usr/lib/python2.7/dist-packages:$PYTHONPATH"
-  - export PYTHONPATH="/home/travis/.local/lib/python2.7/site-packages/:$PYTHONPATH"
-  - export PYTHONPATH="/home/travis/virtualenv/python2.7.14/dist-packages/:$PYTHONPATH"
-  - export PYTHONPATH="/home/travis/virtualenv/python2.7.14/site-packages/:$PYTHONPATH"
 
 before_script:
   - FoBiS.py build -compiler gnu -cflags "-c -O2 -std=f2008" -dbld ./lib/ -s ./src/ -dmod ./ -dobj ./ -t bspline_module.f90 -o libbspline.a -mklib static -colors
@@ -41,8 +38,7 @@ after_success:
   - git config --global user.email "$(git --no-pager show -s --format='%ce' $TRAVIS_COMMIT)"
   - git clone -q --branch=gh-pages "https://${GH_TOKEN}@github.com/$TRAVIS_REPO_SLUG" gh-pages >/dev/null 2>&1
   - rm -rf gh-pages/*
-  - ./ford/ford.py ./bspline-fortran.md
-  - rm -rf ./ford
+  - ford ./bspline-fortran.md
   - cp -rf ./doc/* gh-pages/
   - cd gh-pages/
   - git add -f --all * || true
