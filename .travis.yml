@@ -4,6 +4,10 @@ python:
   - 2.7
 
 before_install:
+  - which python
+  - python --version
+  - export PYTHONPATH=/usr/lib/python2.7/dist-packages:$PYTHONPATH
+  - export PYTHONPATH=/home/travis/.local/lib/python2.7/site-packages/:$PYTHONPATH
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
   - sudo apt-get update -qq
   - sudo apt-get install -qq python-numpy python-scipy
@@ -12,7 +16,6 @@ before_install:
   - sudo ln -fs /usr/bin/gfortran-4.9 /usr/bin/gfortran && gfortran --version
   - sudo -H pip install FoBiS.py && FoBiS.py --version
   - sudo -H pip install ford && ford --version
-  - sudo -H pip install markdown
   - sudo -H pip install matplotlib
   - export PATH=".:$PATH"
 
