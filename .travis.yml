@@ -17,6 +17,8 @@ before_install:
   - sudo -H pip install FoBiS.py && FoBiS.py --version
   - sudo -H pip install ford && ford --version
   - sudo -H pip install matplotlib
+  - git clone -q https://github.com/cmacmackin/ford ./ford >/dev/null 2>&1
+  - python ./ford/setup.py install
   - export PATH=".:$PATH"
 
 before_script:
@@ -37,7 +39,6 @@ after_success:
   - git config --global user.name "TRAVIS-CI-for-$(git --no-pager show -s --format='%cn' $TRAVIS_COMMIT)"
   - git config --global user.email "$(git --no-pager show -s --format='%ce' $TRAVIS_COMMIT)"
   - git clone -q --branch=gh-pages "https://${GH_TOKEN}@github.com/$TRAVIS_REPO_SLUG" gh-pages >/dev/null 2>&1
-  - git clone -q https://github.com/cmacmackin/ford ./ford >/dev/null 2>&1
   - rm -rf gh-pages/*
   - ./ford/ford.py ./bspline-fortran.md
   - rm -rf ./ford
