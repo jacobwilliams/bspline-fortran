@@ -12,6 +12,7 @@ before_install:
   - sudo ln -fs /usr/bin/gfortran-4.9 /usr/bin/gfortran && gfortran --version
   - sudo -H pip install FoBiS.py && FoBiS.py --version
   - sudo -H pip install ford && ford --version
+  - sudo -H pip install markdown
   - sudo -H pip install matplotlib
   - export PATH=".:$PATH"
 
