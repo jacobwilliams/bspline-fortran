@@ -291,7 +291,7 @@
                         axes_labelsize = 20,&
                         xtick_labelsize = 20,&
                         ytick_labelsize = 20)
-    call plt%add_bar(left=real([1,2,3,4,5,6],wp),height=cases_per_sec,label='Speed test runs',&
+    call plt%add_bar(x=real([1,2,3,4,5,6],wp),height=cases_per_sec,label='Speed test runs',&
                         yscale='log',align='center',color='r',istat=istat)
     call plt%savefig('speed_test.png',istat=istat)
 
