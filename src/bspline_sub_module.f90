@@ -520,8 +520,7 @@
     iflag = check_value(xval,tx,1,extrap); if (iflag/=0) return
     iflag = check_value(yval,ty,2,extrap); if (iflag/=0) return
 
-    iflag = -1
-    call dintrv(ty,ny+ky,yval,iloy,lefty,mflag,extrap); if (mflag /= 0) return
+    call dintrv(ty,ny+ky,yval,iloy,lefty,iflag,extrap); if (iflag/=0) return
 
     kcol = lefty - ky
     do k=1,ky
@@ -809,9 +808,8 @@
     iflag = check_value(yval,ty,2,extrap); if (iflag/=0) return
     iflag = check_value(zval,tz,3,extrap); if (iflag/=0) return
 
-    iflag = -1
-    call dintrv(ty,ny+ky,yval,iloy,lefty,mflag,extrap); if (mflag /= 0) return
-    call dintrv(tz,nz+kz,zval,iloz,leftz,mflag,extrap); if (mflag /= 0) return
+    call dintrv(ty,ny+ky,yval,iloy,lefty,iflag,extrap); if (iflag/=0) return
+    call dintrv(tz,nz+kz,zval,iloz,leftz,iflag,extrap); if (iflag/=0) return
 
     iflag = 0
 
@@ -1090,10 +1088,9 @@
     iflag = check_value(zval,tz,3,extrap); if (iflag/=0) return
     iflag = check_value(qval,tq,4,extrap); if (iflag/=0) return
 
-    iflag = -1
-    call dintrv(ty,ny+ky,yval,iloy,lefty,mflag,extrap); if (mflag /= 0) return
-    call dintrv(tz,nz+kz,zval,iloz,leftz,mflag,extrap); if (mflag /= 0) return
-    call dintrv(tq,nq+kq,qval,iloq,leftq,mflag,extrap); if (mflag /= 0) return
+    call dintrv(ty,ny+ky,yval,iloy,lefty,iflag,extrap); if (iflag/=0) return
+    call dintrv(tz,nz+kz,zval,iloz,leftz,iflag,extrap); if (iflag/=0) return
+    call dintrv(tq,nq+kq,qval,iloq,leftq,iflag,extrap); if (iflag/=0) return
 
     iflag = 0
 
@@ -1449,11 +1446,10 @@
     iflag = check_value(qval,tq,4,extrap); if (iflag/=0) return
     iflag = check_value(rval,tr,5,extrap); if (iflag/=0) return
 
-    iflag = -1
-    call dintrv(ty,ny+ky,yval,iloy,lefty,mflag,extrap); if (mflag /= 0) return
-    call dintrv(tz,nz+kz,zval,iloz,leftz,mflag,extrap); if (mflag /= 0) return
-    call dintrv(tq,nq+kq,qval,iloq,leftq,mflag,extrap); if (mflag /= 0) return
-    call dintrv(tr,nr+kr,rval,ilor,leftr,mflag,extrap); if (mflag /= 0) return
+    call dintrv(ty,ny+ky,yval,iloy,lefty,iflag,extrap); if (iflag/=0) return
+    call dintrv(tz,nz+kz,zval,iloz,leftz,iflag,extrap); if (iflag/=0) return
+    call dintrv(tq,nq+kq,qval,iloq,leftq,iflag,extrap); if (iflag/=0) return
+    call dintrv(tr,nr+kr,rval,ilor,leftr,iflag,extrap); if (iflag/=0) return
 
     iflag = 0
 
@@ -1867,12 +1863,11 @@
     iflag = check_value(rval,tr,5,extrap); if (iflag/=0) return
     iflag = check_value(sval,ts,6,extrap); if (iflag/=0) return
 
-    iflag = -1
-    call dintrv(ty,ny+ky,yval,iloy,lefty,mflag,extrap); if (mflag /= 0) return
-    call dintrv(tz,nz+kz,zval,iloz,leftz,mflag,extrap); if (mflag /= 0) return
-    call dintrv(tq,nq+kq,qval,iloq,leftq,mflag,extrap); if (mflag /= 0) return
-    call dintrv(tr,nr+kr,rval,ilor,leftr,mflag,extrap); if (mflag /= 0) return
-    call dintrv(ts,ns+ks,sval,ilos,lefts,mflag,extrap); if (mflag /= 0) return
+    call dintrv(ty,ny+ky,yval,iloy,lefty,iflag,extrap); if (iflag/=0) return
+    call dintrv(tz,nz+kz,zval,iloz,leftz,iflag,extrap); if (iflag/=0) return
+    call dintrv(tq,nq+kq,qval,iloq,leftq,iflag,extrap); if (iflag/=0) return
+    call dintrv(tr,nr+kr,rval,ilor,leftr,iflag,extrap); if (iflag/=0) return
+    call dintrv(ts,ns+ks,sval,ilos,lefts,iflag,extrap); if (iflag/=0) return
 
     iflag = 0
 
@@ -3112,7 +3107,7 @@
 !```fortran
 !         if            x < xt(1)   then ileft=1,   mflag=-1
 !         if   xt(i) <= x < xt(i+1) then ileft=i,   mflag=0
-!         if xt(lxt) <= x           then ileft=lxt, mflag=1
+!         if xt(lxt) <= x           then ileft=lxt, mflag=-2
 !```
 !
 !  that is, when multiplicities are present in the break point
@@ -3147,12 +3142,12 @@
     integer :: ihi, istep, middle
     real(wp) :: x
 
-    x = get_temp_x_for_extrap(xx,xt,extrap)
+    x = get_temp_x_for_extrap(xx,xt(1),xt(lxt),extrap)
 
     ihi = ilo + 1
     if ( ihi>=lxt ) then
         if ( x>=xt(lxt) ) then
-            mflag = 1
+            mflag = -2
             ileft = lxt
             return
         end if
@@ -3174,7 +3169,7 @@
             ihi = ilo + istep
             if ( ihi>=lxt ) then
                 if ( x>=xt(lxt) ) then
-                    mflag = 1
+                    mflag = -2
                     ileft = lxt
                     return
                 end if
@@ -3872,21 +3867,22 @@
 !  Returns the value of `x` to use for computing the interval
 !  in `t`, depending on if extrapolation is allowed or not.
 !
-!  If extrapolation is allowed and x is > t(1) or < t(n), then either
-!  t(1) or t(n) is returned. Otherwise, `x` is returned.
+!  If extrapolation is allowed and x is < tmin or > tmax, then either
+!  `tmin` or `tmax - 2.0_wp*spacing(tmax)` is returned.
+!  Otherwise, `x` is returned.
 
-    pure function get_temp_x_for_extrap(x,t,extrap) result(xt)
+    pure function get_temp_x_for_extrap(x,tmin,tmax,extrap) result(xt)
 
     implicit none
 
-    real(wp),intent(in)              :: x       !! variable value
-    real(wp),dimension(:),intent(in) :: t       !! knot vector for b-splines
-    real(wp)                         :: xt      !! The value returned (it will either
-                                                !! be `t(1)`, `x`, or `t(n)`)
-    logical,intent(in),optional      :: extrap  !! if extrapolation is allowed
-                                                !! (if not present, default is False)
+    real(wp),intent(in) :: x    !! variable value
+    real(wp),intent(in) :: tmin !! first knot vector element for b-splines
+    real(wp),intent(in) :: tmax !! last knot vector element for b-splines
+    real(wp)            :: xt   !! The value returned (it will either
+                                !! be `tmin`, `x`, or `tmax`)
+    logical,intent(in),optional :: extrap  !! if extrapolation is allowed
+                                           !! (if not present, default is False)
 
-    integer :: n  !! size of `t`
     logical :: extrapolation_allowed  !! if extrapolation is allowed
 
     if (present(extrap)) then
@@ -3895,13 +3891,14 @@
         extrapolation_allowed = .false.
     end if
 
-    n = size(t)
-
     if (extrapolation_allowed) then
-        if (x<t(1)) then
-            xt = t(1)
-        else if (x>t(n)) then
-            xt = t(n)
+        if (x<tmin) then
+            xt = tmin
+        else if (x>tmax) then
+            ! Put it just inside the upper bound.
+            ! This is sort of a hack to get
+            ! extrapolation to work.
+            xt = tmax - 2.0_wp*spacing(tmax)
         else
             xt = x
         end if
@@ -3929,6 +3926,9 @@
     select case (iflag)
 
     case(  0); msg='Successful execution'
+
+    case( -1); msg='Error in dintrv: x < xt(1)'
+    case( -2); msg='Error in dintrv: x >= xt(lxt)'
 
     case(  1); msg='Error in evaluate_*d: class is not initialized'
 
