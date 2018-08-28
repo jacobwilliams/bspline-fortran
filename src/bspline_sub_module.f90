@@ -511,7 +511,7 @@
     logical,intent(in),optional          :: extrap   !! if extrapolation is allowed
                                                      !! (if not present, default is False)
 
-    integer :: k, lefty, mflag, kcol
+    integer :: k, lefty, kcol
     real(wp),dimension(ky) :: temp
     real(wp),dimension(3*max(kx,ky)) :: work
 
@@ -799,7 +799,7 @@
     real(wp),dimension(kz)              :: temp2
     real(wp),dimension(3*max(kx,ky,kz)) :: work
 
-    integer :: lefty, leftz, mflag,&
+    integer :: lefty, leftz, &
                 kcoly, kcolz, j, k
 
     f = 0.0_wp
@@ -1078,8 +1078,8 @@
     real(wp),dimension(kz,kq)                :: temp2
     real(wp),dimension(kq)                   :: temp3
     real(wp),dimension(3*max(kx,ky,kz,kq))   :: work
-    integer :: lefty, leftz, leftq, mflag,&
-                kcoly, kcolz, kcolq, j, k, q
+    integer :: lefty, leftz, leftq, &
+               kcoly, kcolz, kcolq, j, k, q
 
     f = 0.0_wp
 
@@ -1435,7 +1435,7 @@
     real(wp),dimension(kq,kr)                 :: temp3
     real(wp),dimension(kr)                    :: temp4
     real(wp),dimension(3*max(kx,ky,kz,kq,kr)) :: work
-    integer :: lefty, leftz, leftq, leftr, mflag,&
+    integer :: lefty, leftz, leftq, leftr, &
                kcoly, kcolz, kcolq, kcolr, j, k, q, r
 
     f = 0.0_wp
@@ -1850,7 +1850,6 @@
     real(wp),dimension(3*max(kx,ky,kz,kq,kr,ks))  :: work
 
     integer :: lefty,leftz,leftq,leftr,lefts,&
-               mflag,&
                kcoly,kcolz,kcolq,kcolr,kcols,&
                j,k,q,r,s
 
