@@ -2975,6 +2975,23 @@
     real(wp) :: xt
     logical :: extrapolation_allowed  !! if extrapolation is allowed
 
+    val = 0.0_wp
+
+    if (k<1) then
+        iflag = 401  ! dbvalu - k does not satisfy k>=1
+        return
+    end if
+
+    if (n<k) then
+        iflag = 402  ! dbvalu - n does not satisfy n>=k
+        return
+    end if
+
+    if (ideriv<0 .or. ideriv>=k) then
+        iflag = 403  ! dbvalu - ideriv does not satisfy 0<=ideriv<k
+        return
+    end if
+
     if (present(extrap)) then
         extrapolation_allowed = extrap
     else
@@ -2993,23 +3010,6 @@
         end if
     else
         xt = x
-    end if
-
-    val = 0.0_wp
-
-    if (k<1) then
-        iflag = 401  ! dbvalu - k does not satisfy k>=1
-        return
-    end if
-
-    if (n<k) then
-        iflag = 402  ! dbvalu - n does not satisfy n>=k
-        return
-    end if
-
-    if (ideriv<0 .or. ideriv>=k) then
-        iflag = 403  ! dbvalu - ideriv does not satisfy 0<=ideriv<k
-        return
     end if
 
     kmider = k - ideriv
