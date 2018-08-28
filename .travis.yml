@@ -13,7 +13,7 @@ before_install:
   - sudo apt-get install graphviz
   - sudo ln -fs /usr/bin/gfortran-4.9 /usr/bin/gfortran && gfortran --version
   - sudo -H pip install FoBiS.py && FoBiS.py --version
-  - sudo -H pip install ford==5.0.6 && ford --version
+  - sudo -H pip install --upgrade ford==6.0.0 && ford --version
   - sudo -H pip install matplotlib
   - sudo -H pip install markdown==2.6.9
   - export PATH=".:$PATH"
