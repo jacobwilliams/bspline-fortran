@@ -15,7 +15,6 @@ before_install:
   - sudo -H pip install FoBiS.py && FoBiS.py --version
   - sudo -H pip install --upgrade ford==6.0.0 && ford --version
   - sudo -H pip install matplotlib
-  - sudo -H pip install markdown==2.6.9
   - export PATH=".:$PATH"
 
 before_script:
