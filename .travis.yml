@@ -23,6 +23,7 @@ before_script:
 
 script:
   - ./bin/bspline_test
+  - ./bin/bspline_test_2
   - ./bin/bspline_extrap_test
   - ./bin/test_regrid
   - ./bin/knot_tests
