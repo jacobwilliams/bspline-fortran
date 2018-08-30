@@ -36,7 +36,8 @@
         procedure(destroy_func),deferred,public :: destroy  !! destructor
         procedure(size_func),deferred,public :: size_of !! size of the structure in bits
         procedure,public,non_overridable :: status_ok  !! returns true if the last `iflag` status code was `=0`.
-        procedure,public,non_overridable :: status_message => get_bspline_status_message  !! retrieve the last status message
+        procedure,public,non_overridable :: status_message => get_bspline_status_message  !! retrieve the last
+                                                                                          !! status message
         procedure,public,non_overridable :: clear_flag => clear_bspline_flag  !! to reset the `iflag` saved in the class.
     end type bspline_class
 
