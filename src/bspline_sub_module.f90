@@ -2425,7 +2425,7 @@
 !  for i=n when k knots are used at x(1) or x(n).  otherwise,
 !  violation of this condition is certain to lead to an error.
 !
-!# Error conditions
+!### Error conditions
 !
 !  * improper input
 !  * singular system of equations
@@ -3242,6 +3242,384 @@
 
 !*****************************************************************************************
 !>
+!  DBINT4 computes the B representation (T,BCOEF,N,K) of a
+!  cubic spline (K=4) which interpolates data (X(I),Y(I)),
+!  I=1,NDATA.  Parameters IBCL, IBCR, FBCL, FBCR allow the
+!  specification of the spline first or second derivative at
+!  both X(1) and X(NDATA).  When this data is not specified
+!  by the problem, it is common practice to use a natural
+!  spline by setting second derivatives at X(1) and X(NDATA)
+!  to zero (IBCL=IBCR=2,FBCL=FBCR=0.0).  The spline is defined
+!  on T(4) <= X <= T(N+1) with (ordered) interior knots at
+!  X(I) values where N=NDATA+2.  The knots T(1),T(2),T(3) lie to
+!  the left of T(4)=X(1) and the knots T(N+2), T(N+3), T(N+4)
+!  lie to the right of T(N+1)=X(NDATA) in increasing order.  If
+!  no extrapolation outside (X(1),X(NDATA)) is anticipated, the
+!  knots T(1)=T(2)=T(3)=T(4)=X(1) and T(N+2)=T(N+3)=T(N+4)=
+!  T(N+1)=X(NDATA) can be specified by KNTOPT=1.  KNTOPT=2
+!  selects a knot placement for T(1), T(2), T(3) to make the
+!  first 7 knots symmetric about T(4)=X(1) and similarly for
+!  T(N+2), T(N+3), T(N+4) about T(N+1)=X(NDATA).  KNTOPT=3
+!  allows the user to make his own selection, in increasing
+!  order, for T(1), T(2), T(3) to the left of X(1) and T(N+2),
+!  T(N+3), T(N+4) to the right of X(NDATA) in the work array
+!  W(1) through W(6).  In any case, the interpolation on
+!  T(4) <= X <= T(N+1) by using function DBVALU is unique
+!  for given boundary conditions.
+!
+!### Error conditions
+!  * improper input
+!  * singular system of equations
+!
+!### See also
+!  * [[dbintk]]
+!
+!### History
+!  * Written by D. E. Amos (SNLA), August, 1979.
+!  * date written 800901
+!  * revision date 820801
+!  * 000330  Modified array declarations.  (JEC)
+!  * Jacob Williams, 8/30/2018 : refactored to modern Fortran.
+
+    pure subroutine dbint4(x,y,ndata,ibcl,ibcr,fbcl,fbcr,kntopt,t,bcoef,n,k,w,iflag)
+
+    implicit none
+
+    real(wp),dimension(*),intent(in)   :: x       !! X vector of abscissae of length NDATA, distinct
+                                                  !! and in increasing order
+    real(wp),dimension(*),intent(in)   :: y       !! y vector of ordinates of length ndata
+    integer,intent(in)                 :: ndata   !! number of data points, ndata >= 2
+    integer,intent(in)                 :: ibcl    !! selection parameter for left boundary condition:
+                                                  !!
+                                                  !! * ibcl = 1 constrain the first derivative at x(1) to fbcl
+                                                  !! * ibcl = 2 constrain the second derivative at x(1) to fbcl
+    integer,intent(in)                 :: ibcr    !! selection parameter for right boundary condition:
+                                                  !!
+                                                  !! * ibcr = 1 constrain first derivative at x(ndata) to fbcr
+                                                  !! * ibcr = 2 constrain second derivative at x(ndata) to fbcr
+    real(wp),intent(in)                :: fbcl    !! left boundary values governed by ibcl
+    real(wp),intent(in)                :: fbcr    !! right boundary values governed by ibcr
+    integer,intent(in)                 :: kntopt  !! knot selection parameter:
+                                                  !!
+                                                  !! * kntopt = 1 sets knot multiplicity at t(4) and
+                                                  !!   t(n+1) to 4
+                                                  !! * kntopt = 2 sets a symmetric placement of knots
+                                                  !!   about t(4) and t(n+1)
+                                                  !! * kntopt = 3 sets t(i)=w(i) and t(n+1+i)=w(3+i),i=1,3
+                                                  !!   where w(i),i=1,6 is supplied by the user
+    real(wp),dimension(*),intent(out)  :: t       !! knot array of length n+4
+    real(wp),dimension(*),intent(out)  :: bcoef   !! b spline coefficient array of length n
+    integer,intent(out)                :: n       !! number of coefficients, n=ndata+2
+    integer,intent(out)                :: k       !! order of spline, k=4
+    real(wp),dimension(5,*),intent(inout) :: w    !! work array of dimension at least 5*(ndata+2)
+                                                  !! if kntopt=3, then w(1),w(2),w(3) are knot values to
+                                                  !! the left of x(1) and w(4),w(5),w(6) are knot
+                                                  !! values to the right of x(ndata) in increasing
+                                                  !! order to be supplied by the user.
+                                                  !! Note that the values are changed by this routine.
+    integer,intent(out)              :: iflag     !! status flag:
+                                                  !!
+                                                  !! * 0: no errors
+                                                  !! * 2001: ndata is less than 2
+                                                  !! * 2002: x values are not distinct or not ordered
+                                                  !! * 2003: ibcl is not 1 or 2
+                                                  !! * 2004: ibcr is not 1 or 2
+                                                  !! * 2005: kntopt is not 1, 2, or 3
+                                                  !! * 2006: knot input through w array is not ordered properly
+                                                  !! * 2007: the system of equations is singular
+
+    integer  :: i, ilb, ileft, it, iub, iw, iwp, j, jw, ndm, np, nwrow
+    real(wp) :: txn, tx1, xl
+    real(wp),dimension(4,4) :: vnikx
+    real(wp),dimension(15) :: work
+
+    real(wp),parameter :: wdtol = radix(1.0_wp)**(1-digits(1.0_wp)) !! d1mach(4)
+    real(wp),parameter :: tol = sqrt(wdtol)
+
+    if (ndata<2) then
+        iflag = 2001 ! ndata is less than 2
+        return
+    end if
+
+    ndm = ndata - 1
+    do i=1,ndm
+        if (x(i)>=x(i+1)) then
+            iflag = 2002 ! x values are not distinct or not ordered
+            return
+        end if
+    end do
+
+    if (ibcl<1 .or. ibcl>2) then
+        iflag = 2003 ! ibcl is not 1 or 2
+        return
+    end if
+
+    if (ibcr<1 .or. ibcr>2) then
+        iflag = 2004 ! ibcr is not 1 or 2
+        return
+    end if
+
+    if (kntopt<1 .or. kntopt>3) then
+        iflag = 2005 ! kntopt is not 1, 2, or 3
+        return
+    end if
+
+    iflag = 0
+
+    k = 4
+    n = ndata + 2
+    np = n + 1
+    do i=1,ndata
+        t(i+3) = x(i)
+    end do
+
+    select case (kntopt)
+    case(1)
+        ! set up knot array with multiplicity 4 at x(1) and x(ndata)
+        do i=1,3
+            t(4-i) = x(1)
+            t(np+i) = x(ndata)
+        end do
+    case(2)
+        !set up knot array with symmetric placement about end points
+        if (ndata>3) then
+            tx1 = x(1) + x(1)
+            txn = x(ndata) + x(ndata)
+            do i=1,3
+                t(4-i) = tx1 - x(i+1)
+                t(np+i) = txn - x(ndata-i)
+            end do
+        else
+            xl = (x(ndata)-x(1))/3.0_wp
+            do i=1,3
+                t(4-i) = t(5-i) - xl
+                t(np+i) = t(np+i-1) + xl
+            end do
+        end if
+    case(3)
+        ! set up knot array less than x(1) and greater than x(ndata) to be
+        ! supplied by user in work locations w(1) through w(6) when kntopt=3
+        do i=1,3
+            t(4-i) = w(4-i,1)
+            jw = max(1,i-1)
+            iw = mod(i+2,5)+1
+            t(np+i) = w(iw,jw)
+            if ((t(4-i)>t(5-i)) .or. (t(np+i)<t(np+i-1))) then
+                iflag = 2006 ! knot input through w array is not ordered properly
+                return
+            end if
+        end do
+    end select
+
+    do i=1,5
+        do j=1,n
+            w(i,j) = 0.0_wp
+        end do
+    end do
+
+    ! set up left interpolation point and left boundary condition for
+    ! right limits
+    it = ibcl + 1
+    call dbspvd(t, k, it, x(1), k, 4, vnikx, work, iflag)
+    if (iflag/=0) return ! error check
+    iw = 0
+    if (abs(vnikx(3,1))<tol) iw = 1
+    do j=1,3
+        w(j+1,4-j) = vnikx(4-j,it)
+        w(j,4-j) = vnikx(4-j,1)
+    end do
+    bcoef(1) = y(1)
+    bcoef(2) = fbcl
+    ! set up interpolation equations for points i=2 to i=ndata-1
+    ileft = 4
+    if (ndm>=2) then
+        do i=2,ndm
+            ileft = ileft + 1
+            call dbspvd(t, k, 1, x(i), ileft, 4, vnikx, work, iflag)
+            if (iflag/=0) return ! error check
+            do j=1,3
+                w(j+1,3+i-j) = vnikx(4-j,1)
+            end do
+            bcoef(i+1) = y(i)
+        end do
+    end if
+
+    ! set up right interpolation point and right boundary condition for
+    ! left limits(ileft is associated with t(n)=x(ndata-1))
+    it = ibcr + 1
+    call dbspvd(t, k, it, x(ndata), ileft, 4, vnikx, work, iflag)
+    if (iflag/=0) return ! error check
+    jw = 0
+    if (abs(vnikx(2,1))<tol) jw = 1
+    do j=1,3
+        w(j+1,3+ndata-j) = vnikx(5-j,it)
+        w(j+2,3+ndata-j) = vnikx(5-j,1)
+    end do
+    bcoef(n-1) = fbcr
+    bcoef(n) = y(ndata)
+    ! solve system of equations
+    ilb = 2 - jw
+    iub = 2 - iw
+    nwrow = 5
+    iwp = iw + 1
+    call dbnfac(w(iwp,1), nwrow, n, ilb, iub, iflag)
+    if (iflag==2) then
+        iflag = 2007 ! the system of equations is singular
+        return
+    end if
+    call dbnslv(w(iwp,1), nwrow, n, ilb, iub, bcoef)
+
+    end subroutine dbint4
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  DBSPVD calculates the value and all derivatives of order
+!  less than NDERIV of all basis functions which do not
+!  (possibly) vanish at X.  ILEFT is input such that
+!  T(ILEFT) <= X < T(ILEFT+1).  A call to INTRV(T,N+1,X,
+!  ILO,ILEFT,MFLAG) will produce the proper ILEFT.  The output of
+!  DBSPVD is a matrix VNIKX(I,J) of dimension at least (K,NDERIV)
+!  whose columns contain the K nonzero basis functions and
+!  their NDERIV-1 right derivatives at X, I=1,K, J=1,NDERIV.
+!  These basis functions have indices ILEFT-K+I, I=1,K,
+!  K <= ILEFT <= N.  The nonzero part of the I-th basis
+!  function lies in (T(I),T(I+K)), I=1,N).
+!
+!  If X=T(ILEFT+1) then VNIKX contains left limiting values
+!  (left derivatives) at T(ILEFT+1).  In particular, ILEFT = N
+!  produces left limiting values at the right end point
+!  X=T(N+1).  To obtain left limiting values at T(I), I=K+1,N+1,
+!  set X= next lower distinct knot, call INTRV to get ILEFT,
+!  set X=T(I), and then call DBSPVD.
+!
+!### History
+!  * Written by Carl de Boor and modified by D. E. Amos
+!  * date written 800901
+!  * revision date 820801
+!  * 000330  Modified array declarations.  (JEC)
+!  * Jacob Williams, 8/30/2018 : refactored to modern Fortran.
+!
+!@note `DBSPVD` is the `BSPLVD` routine of the reference.
+
+    pure subroutine dbspvd(t,k,nderiv,x,ileft,ldvnik,vnikx,work,iflag)
+
+    implicit none
+
+    real(wp),dimension(*),intent(in)              :: t       !! knot vector of length N+K, where
+                                                             !! N = number of B-spline basis functions
+                                                             !! N = sum of knot multiplicities-K
+    integer,intent(in)                            :: k       !! order of the B-spline, K >= 1
+    integer,intent(in)                            :: nderiv  !! number of derivatives = NDERIV-1,
+                                                             !! 1 <= NDERIV <= K
+    real(wp),intent(in)                           :: x       !! argument of basis functions,
+                                                             !! T(K) <= X <= T(N+1)
+    integer,intent(in)                            :: ileft   !! largest integer such that
+                                                             !! T(ILEFT) <= X < T(ILEFT+1)
+    integer,intent(in)                            :: ldvnik  !! leading dimension of matrix VNIKX
+    real(wp),dimension(ldvnik,nderiv),intent(out) :: vnikx   !! matrix of dimension at least (K,NDERIV)
+                                                             !! containing the nonzero basis functions
+                                                             !! at X and their derivatives columnwise.
+    real(wp),dimension(*),intent(out)             :: work    !! a work vector of length (K+1)*(K+2)/2
+    integer,intent(out)                           :: iflag   !! status flag:
+                                                             !!
+                                                             !! * 0: no errors
+                                                             !! * 3001: k does not satisfy k>=1
+                                                             !! * 3002: nderiv does not satisfy 1<=nderiv<=k
+                                                             !! * 3003: ldvnik does not satisfy ldvnik>=k
+
+    integer :: i,ideriv,ipkmd,j,jj,jlow,jm,jp1mid,kmd,kp1,l,ldummy,m,mhigh,iwork
+    real(wp) :: factor, fkmd, v
+
+    ! dimension t(ileft+k), work((k+1)*(k+2)/2)
+    ! a(i,j) = work(i+j*(j+1)/2),  i=1,j+1  j=1,k-1
+    ! a(i,k) = work(i+k*(k-1)/2)  i=1.k
+    ! work(1) and work((k+1)*(k+2)/2) are not used.
+
+    if (k<1) then
+        iflag = 3001 ! k does not satisfy k>=1
+        return
+    end if
+
+    if (nderiv<1 .or. nderiv>k) then
+        iflag = 3002 ! nderiv does not satisfy 1<=nderiv<=k
+        return
+    end if
+
+    if (ldvnik<k) then
+        iflag = 3003 ! ldvnik does not satisfy ldvnik>=k
+        return
+    end if
+
+    iflag = 0
+
+    ideriv = nderiv
+    kp1 = k + 1
+    jj = kp1 - ideriv
+    call dbspvn(t, jj, k, 1, x, ileft, vnikx, work, iwork, iflag)
+    if (iflag/=0 .or. ideriv==1) return
+    mhigh = ideriv
+    do m=2,mhigh
+        jp1mid = 1
+        do j=ideriv,k
+            vnikx(j,ideriv) = vnikx(jp1mid,1)
+            jp1mid = jp1mid + 1
+        end do
+        ideriv = ideriv - 1
+        jj = kp1 - ideriv
+        call dbspvn(t, jj, k, 2, x, ileft, vnikx, work, iwork, iflag)
+        if (iflag/=0) return
+    end do
+
+    jm = kp1*(kp1+1)/2
+    do l = 1,jm
+        work(l) = 0.0_wp
+    end do
+    ! a(i,i) = work(i*(i+3)/2) = 1.0       i = 1,k
+    l = 2
+    j = 0
+    do i = 1,k
+        j = j + l
+        work(j) = 1.0_wp
+        l = l + 1
+    end do
+    kmd = k
+    do m=2,mhigh
+        kmd = kmd - 1
+        fkmd = float(kmd)
+        i = ileft
+        j = k
+        jj = j*(j+1)/2
+        jm = jj - j
+        do ldummy=1,kmd
+            ipkmd = i + kmd
+            factor = fkmd/(t(ipkmd)-t(i))
+            do l=1,j
+                work(l+jj) = (work(l+jj)-work(l+jm))*factor
+            end do
+            i = i - 1
+            j = j - 1
+            jj = jm
+            jm = jm - j
+        end do
+
+        do i=1,k
+            v = 0.0_wp
+            jlow = max(i,m)
+            jj = jlow*(jlow+1)/2
+            do j=jlow,k
+                v = work(i+jj)*vnikx(j,m) + v
+                jj = jj + j + 1
+            end do
+            vnikx(i,m) = v
+        end do
+    end do
+
+    end subroutine dbspvd
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
 !  DBSQAD computes the integral on `(x1,x2)` of a `k`-th order
 !  b-spline using the b-representation `(t,bcoef,n,k)`.  orders
 !  `k` as high as 20 are permitted by applying a 2, 6, or 10
@@ -4042,6 +4420,18 @@
 
     case(1101); msg='Warning in dbsgq8: a and b are too nearly equal to allow normal integration.'
     case(1102); msg='Error in dbsgq8: ans is probably insufficiently accurate.'
+
+    case(2001); msg='Error in dbint4: ndata is less than 2'
+    case(2002); msg='Error in dbint4: x values are not distinct or not ordered'
+    case(2003); msg='Error in dbint4: ibcl is not 1 or 2'
+    case(2004); msg='Error in dbint4: ibcr is not 1 or 2'
+    case(2005); msg='Error in dbint4: kntopt is not 1, 2, or 3'
+    case(2006); msg='Error in dbint4: knot input through w array is not ordered properly'
+    case(2007); msg='Error in dbint4: the system of equations is singular'
+
+    case(3001); msg='Error in dbspvd: k does not satisfy k>=1'
+    case(3002); msg='Error in dbspvd: nderiv does not satisfy 1<=nderiv<=k'
+    case(3003); msg='Error in dbspvd: ldvnik does not satisfy ldvnik>=k'
 
     case default
         write(istr,fmt='(I10)',iostat=istat) iflag
