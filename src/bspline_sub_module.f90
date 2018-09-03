@@ -3015,10 +3015,10 @@
     ! make a temp copy of x (for computing the
     ! interval) in case extrapolation is allowed
     if (extrapolation_allowed) then
-        if (x<t(1)) then
-            xt = t(1)
-        else if(x>t(n+k)) then
-            xt = t(n+k)
+        if (x<t(k)) then
+            xt = t(k)
+        else if (x>t(n+1)) then
+            xt = t(n+1)
         else
             xt = x
         end if
