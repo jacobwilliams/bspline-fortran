@@ -72,6 +72,8 @@
     public :: db5ink, db5val
     public :: db6ink, db6val
 
+    public :: dbint4 !! for testing
+
     public :: get_status_message
 
     contains
@@ -3280,14 +3282,17 @@
 !  * revision date 820801
 !  * 000330  Modified array declarations.  (JEC)
 !  * Jacob Williams, 8/30/2018 : refactored to modern Fortran.
+!
+!@warning `w` work array input is very old fashioned and unclear. need to fix that.
+!         just input `t(1:3) = tstart(1:3)` and `t(ndata+4:ndata+6) = tend(1:3)`.
 
     pure subroutine dbint4(x,y,ndata,ibcl,ibcr,fbcl,fbcr,kntopt,t,bcoef,n,k,w,iflag)
 
     implicit none
 
-    real(wp),dimension(*),intent(in)   :: x       !! X vector of abscissae of length NDATA, distinct
+    real(wp),dimension(:),intent(in)   :: x       !! X vector of abscissae of length NDATA, distinct
                                                   !! and in increasing order
-    real(wp),dimension(*),intent(in)   :: y       !! y vector of ordinates of length ndata
+    real(wp),dimension(:),intent(in)   :: y       !! y vector of ordinates of length ndata
     integer,intent(in)                 :: ndata   !! number of data points, ndata >= 2
     integer,intent(in)                 :: ibcl    !! selection parameter for left boundary condition:
                                                   !!
@@ -3307,8 +3312,8 @@
                                                   !!   about t(4) and t(n+1)
                                                   !! * kntopt = 3 sets t(i)=w(i) and t(n+1+i)=w(3+i),i=1,3
                                                   !!   where w(i),i=1,6 is supplied by the user
-    real(wp),dimension(*),intent(out)  :: t       !! knot array of length n+4
-    real(wp),dimension(*),intent(out)  :: bcoef   !! b spline coefficient array of length n
+    real(wp),dimension(:),intent(out)  :: t       !! knot array of length n+4
+    real(wp),dimension(:),intent(out)  :: bcoef   !! b spline coefficient array of length n
     integer,intent(out)                :: n       !! number of coefficients, n=ndata+2
     integer,intent(out)                :: k       !! order of spline, k=4
     real(wp),dimension(5,*),intent(inout) :: w    !! work array of dimension at least 5*(ndata+2)
@@ -3331,7 +3336,7 @@
     integer  :: i, ilb, ileft, it, iub, iw, iwp, j, jw, ndm, np, nwrow
     real(wp) :: txn, tx1, xl
     real(wp),dimension(4,4) :: vnikx
-    real(wp),dimension(15) :: work
+    real(wp),dimension(15) :: work  !! work array for [[dbspvd]] -- length (k+1)*(k+2)/2
 
     real(wp),parameter :: wdtol = radix(1.0_wp)**(1-digits(1.0_wp)) !! d1mach(4)
     real(wp),parameter :: tol = sqrt(wdtol)
@@ -3365,7 +3370,6 @@
     end if
 
     iflag = 0
-
     k = 4
     n = ndata + 2
     np = n + 1
@@ -3466,6 +3470,9 @@
     if (iflag==2) then
         iflag = 2007 ! the system of equations is singular
         return
+    else
+        ! success
+        iflag = 0
     end if
     call dbnslv(w(iwp,1), nwrow, n, ilb, iub, bcoef)
 
