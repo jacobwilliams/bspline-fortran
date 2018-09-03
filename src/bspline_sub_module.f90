@@ -3513,7 +3513,7 @@
 
     implicit none
 
-    real(wp),dimension(*),intent(in)              :: t       !! knot vector of length N+K, where
+    real(wp),dimension(:),intent(in)              :: t       !! knot vector of length N+K, where
                                                              !! N = number of B-spline basis functions
                                                              !! N = sum of knot multiplicities-K
     integer,intent(in)                            :: k       !! order of the B-spline, K >= 1

@@ -13,7 +13,7 @@
     integer,parameter :: nx = 6     !! number of points in x
     integer,parameter :: kx = 4     !! order in x
 
-    logical,parameter :: extrap = .true.
+    logical,parameter :: extrap = .false.
     real(wp),parameter :: rad2deg = 180.0_wp / acos(-1.0_wp)  !! deg. to radians conversion factor
 
     real(wp) :: x(nx)
@@ -28,12 +28,16 @@
     type(pyplot) :: plt
     integer :: istat
     integer :: icase
-    character(len=*),dimension(3),parameter :: labels = ['not-a-knot [db1ink]', &
-                                                         '2nd der=0 [dbint4] ', &
-                                                         '1st der=0 [dbint4] ']
-    character(len=*),dimension(3),parameter :: linestyles = ['r-', &
+    character(len=*),dimension(5),parameter :: labels = ['not-a-knot [db1ink]          ', &
+                                                         '2nd der=0, kntopt=1 [dbint4] ', &
+                                                         '1st der=0, kntopt=1 [dbint4] ', &
+                                                         '2nd der=0, kntopt=2 [dbint4] ', &
+                                                         '1st der=0, kntopt=2 [dbint4] ']
+    character(len=*),dimension(5),parameter :: linestyles = ['r-', &
                                                              'g-', &
-                                                             'b-']
+                                                             'b-', &
+                                                             'c-', &
+                                                             'm-' ]
 
     fail = .false.
     tol = 1.0e-14_wp
@@ -52,19 +56,30 @@
         xval = real([(real(i)/100.0_wp, i=50, 650)], wp) ! 0.9,1.,2.,3.,4.,5.,6.,6.9], wp)
     else
         ! points to evaluate [no extrapolation]:
-        xval = real([1.,1.,2.,3.,4.,5.,6.,6.], wp)
+        !xval = real([1.,1.,2.,3.,4.,5.,6.,6.], wp)
+        xval = real([(real(i)/100.0_wp, i=100, 600, 10)], wp)
     end if
     allocate(fval(size(xval)))
 
-    do icase = 1,3
+    do icase = 1, 5
+
+        write(*,*) ''
+        write(*,*) '==============================================='
+        write(*,'(I3,1X,A)') icase, ' ... '//trim(labels(icase))//' ... '
+
+        ! 1 - use db1ink
+        ! 2 - use dbint4 - constrain 2nd derivative, kntopt = 1
+        ! 3 - use dvint4 - constrain 1st derivative, kntopt = 1
+        ! 4 - use dbint4 - constrain 2nd derivative, kntopt = 2
+        ! 5 - use dvint4 - constrain 1st derivative, kntopt = 2
 
         if (allocated(bcoef)) deallocate(bcoef)
         if (allocated(tx))    deallocate(tx)
 
         ! initialize
-        write(*,*) '==============================================='
-        write(*,*) 'initialize'
-        write(*,*) '==============================================='
+        ! write(*,*) '==============================================='
+        ! write(*,*) 'initialize'
+        ! write(*,*) '==============================================='
         if (icase==1) then
             ! use the original init routine
             allocate(bcoef(nx))
@@ -74,7 +89,7 @@
             ! use the dbint4 routine and specify the endpoint derivatives
             allocate(bcoef(nx+2))
             allocate(tx(nx+2+kx))
-            if (icase==2) then
+            if (icase==2 .or. icase==4) then
                 ! constrain 2nd derivative
                 ibcl = 2
                 ibcr = 2
@@ -85,8 +100,26 @@
             end if
             fbcl = 0.0_wp
             fbcr = 0.0_wp
-            kntopt = 1
+            if (icase==2 .or. icase==3) then
+                kntopt = 1
+            else
+                kntopt = 2
+            end if
+
+            !
+            ! WARNING: kntopt seems to have no effect on
+            !          result for this example. Why???
+            !
+
+            write(*,*) 'kntopt:  ', kntopt
             call dbint4(x,fcn_1d,nx,ibcl,ibcr,fbcl,fbcr,kntopt,tx,bcoef,n,k,w,iflag)
+
+            ! write(*,*) ''
+            ! write(*,*) 'x:  ', x
+            ! write(*,*) ''
+            ! write(*,*) 'tx: ', tx
+            ! write(*,*) ''
+
         end if
         if (iflag/=0) then
             write(*,*) 'Error initializing 1D spline: '//get_status_message(iflag)
@@ -94,10 +127,10 @@
         end if
 
         ! compute max error at interpolation points
-        write(*,*) ''
-        write(*,*) '==============================================='
-        write(*,*) 'db1val'
-        write(*,*) '==============================================='
+        ! write(*,*) ''
+        ! write(*,*) '==============================================='
+        ! write(*,*) 'db1val'
+        ! write(*,*) '==============================================='
 
         inbvx = 1    !have to set this before the first evaluate call
         val = 0.0_wp
@@ -110,16 +143,17 @@
                 call db1val(xval(i),idx,tx,n,k,bcoef,val,iflag,inbvx,extrap=extrap)  ! note: these n,k are outputs of dbint4
             end if
             fval(i) = val  ! save it for plot
-            tru    = f1(xval(i))
-            err    = abs(tru-val)
-            errmax = max(err,errmax)
-            write(*,*) '1D: xval(i),err = ', xval(i),err
+            tru     = f1(xval(i))
+            err     = abs(tru-val)
+            errmax  = max(err,errmax)
+            !write(*,*) '1D: xval(i),err = ', xval(i),err
             if (iflag/=0) then
                 write(*,*) 'Error evaluating 1D spline: '//get_status_message(iflag)
+                write(*,*) 'x = ', xval(i)
                 stop
             end if
         end do
-        write(*,*) '==============================================='
+        !write(*,*) '==============================================='
 
         ! check max error against tolerance
         write(*,*) '1D: max error:', errmax
@@ -128,8 +162,8 @@
         else
             write(*,*)  ' ** test passed ** '
         end if
-        write(*,*) ''
-        write(*,*) '==============================================='
+        !write(*,*) ''
+        !write(*,*) '==============================================='
 
         call plt%add_plot(xval*rad2deg,fval,&
                 label=trim(labels(icase)),&
@@ -137,7 +171,7 @@
 
     end do
 
-    call plt%savefig('dbint4_test.png',istat=istat)
+    call plt%savefig('dbint4_test.png',pyfile='dbint4_test.py',istat=istat)
 
     contains
 
