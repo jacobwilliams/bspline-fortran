@@ -13,7 +13,7 @@
     integer,parameter :: nx = 6     !! number of points in x
     integer,parameter :: kx = 4     !! order in x
 
-    logical,parameter :: extrap = .false.
+    logical,parameter :: extrap = .true.
     real(wp),parameter :: rad2deg = 180.0_wp / acos(-1.0_wp)  !! deg. to radians conversion factor
 
     real(wp) :: x(nx)
@@ -24,25 +24,30 @@
     real(wp) :: tol,val,tru,err,errmax,fbcr,fbcl
     logical  :: fail
     integer  :: n,k,i,idx,iflag,inbvx,ibcl,ibcr,kntopt
-    real(wp),dimension(5,5*(nx+2)) :: w
+    real(wp),dimension(5,nx+2) :: w
     type(pyplot) :: plt
     integer :: istat
     integer :: icase
-    character(len=*),dimension(5),parameter :: labels = ['not-a-knot [db1ink]          ', &
+    real(wp),dimension(3) :: tleft, tright
+    character(len=*),dimension(7),parameter :: labels = ['not-a-knot [db1ink]          ', &
                                                          '2nd der=0, kntopt=1 [dbint4] ', &
                                                          '1st der=0, kntopt=1 [dbint4] ', &
                                                          '2nd der=0, kntopt=2 [dbint4] ', &
-                                                         '1st der=0, kntopt=2 [dbint4] ']
-    character(len=*),dimension(5),parameter :: linestyles = ['r-', &
+                                                         '1st der=0, kntopt=2 [dbint4] ', &
+                                                         '2nd der=0, kntopt=3 [dbint4] ', &
+                                                         '1st der=0, kntopt=3 [dbint4] ']
+    character(len=*),dimension(7),parameter :: linestyles = ['r-', &
                                                              'g-', &
                                                              'b-', &
                                                              'c-', &
-                                                             'm-' ]
+                                                             'm-', &
+                                                             'c:', &
+                                                             'm:' ]
 
-    fail = .false.
-    tol = 1.0e-14_wp
-    idx = 0
-    x = real([1,2,3,4,5,6], wp)  ! nx points
+    fail   = .false.
+    tol    = 1.0e-14_wp
+    idx    = 0
+    x      = real([1,2,3,4,5,6], wp)  ! nx points
     fcn_1d = f1(x)
 
     !initialize the plot:
@@ -53,15 +58,14 @@
 
     if (extrap) then
         ! points to evaluate [with extrapolation]:
-        xval = real([(real(i)/100.0_wp, i=50, 650)], wp) ! 0.9,1.,2.,3.,4.,5.,6.,6.9], wp)
+        xval = real([(real(i)/100.0_wp, i=50, 650)], wp)
     else
         ! points to evaluate [no extrapolation]:
-        !xval = real([1.,1.,2.,3.,4.,5.,6.,6.], wp)
         xval = real([(real(i)/100.0_wp, i=100, 600, 10)], wp)
     end if
     allocate(fval(size(xval)))
 
-    do icase = 1, 5
+    do icase = 1, 7
 
         write(*,*) ''
         write(*,*) '==============================================='
@@ -72,6 +76,8 @@
         ! 3 - use dvint4 - constrain 1st derivative, kntopt = 1
         ! 4 - use dbint4 - constrain 2nd derivative, kntopt = 2
         ! 5 - use dvint4 - constrain 1st derivative, kntopt = 2
+        ! 6 - use dbint4 - constrain 2nd derivative, kntopt = 3
+        ! 7 - use dvint4 - constrain 1st derivative, kntopt = 3
 
         if (allocated(bcoef)) deallocate(bcoef)
         if (allocated(tx))    deallocate(tx)
@@ -89,7 +95,7 @@
             ! use the dbint4 routine and specify the endpoint derivatives
             allocate(bcoef(nx+2))
             allocate(tx(nx+2+kx))
-            if (icase==2 .or. icase==4) then
+            if (icase==2 .or. icase==4 .or. icase==6) then
                 ! constrain 2nd derivative
                 ibcl = 2
                 ibcr = 2
@@ -100,25 +106,30 @@
             end if
             fbcl = 0.0_wp
             fbcr = 0.0_wp
-            if (icase==2 .or. icase==3) then
-                kntopt = 1
-            else
-                kntopt = 2
-            end if
 
-            !
-            ! WARNING: kntopt seems to have no effect on
-            !          result for this example. Why???
-            !
+            select case (icase)
+            case(2,3)
+                kntopt = 1
+            case(4,5)
+                kntopt = 2
+            case(6,7)
+                kntopt = 3
+                w = 0.0_wp
+                ! WARNING: the knot values seem to make no difference in the result
+                tleft  = [-999.0_wp,-999.0_wp,1.0_wp]
+                tright = [6.0_wp, 999.0_wp, 999.0_wp]
+            end select
+
+            ! WARNING: kntopt seems to have no effect on result for this example.
 
             write(*,*) 'kntopt:  ', kntopt
-            call dbint4(x,fcn_1d,nx,ibcl,ibcr,fbcl,fbcr,kntopt,tx,bcoef,n,k,w,iflag)
+            call dbint4(x,fcn_1d,nx,ibcl,ibcr,fbcl,fbcr,kntopt,tleft,tright,tx,bcoef,n,k,w,iflag)
 
-            ! write(*,*) ''
-            ! write(*,*) 'x:  ', x
-            ! write(*,*) ''
-            ! write(*,*) 'tx: ', tx
-            ! write(*,*) ''
+            write(*,*) ''
+            write(*,*) 'x:  ', x
+            write(*,*) ''
+            write(*,*) 'tx: ', tx
+            write(*,*) ''
 
         end if
         if (iflag/=0) then
@@ -136,6 +147,7 @@
         val = 0.0_wp
         errmax = 0.0_wp
         err = -99999.9_wp
+        fval = 0.0_wp
         do i=1,size(xval)
             if (icase==1) then
                 call db1val(xval(i),idx,tx,nx,kx,bcoef,val,iflag,inbvx,extrap=extrap)
@@ -171,7 +183,7 @@
 
     end do
 
-    call plt%savefig('dbint4_test.png',pyfile='dbint4_test.py',istat=istat)
+    call plt%savefig('dbint4_test.png',istat=istat)
 
     contains
 

@@ -3286,7 +3286,7 @@
 !@warning `w` work array input is very old fashioned and unclear. need to fix that.
 !         just input `t(1:3) = tstart(1:3)` and `t(ndata+4:ndata+6) = tend(1:3)`.
 
-    pure subroutine dbint4(x,y,ndata,ibcl,ibcr,fbcl,fbcr,kntopt,t,bcoef,n,k,w,iflag)
+    pure subroutine dbint4(x,y,ndata,ibcl,ibcr,fbcl,fbcr,kntopt,tleft,tright,t,bcoef,n,k,w,iflag)
 
     implicit none
 
@@ -3310,18 +3310,17 @@
                                                   !!   t(n+1) to 4
                                                   !! * kntopt = 2 sets a symmetric placement of knots
                                                   !!   about t(4) and t(n+1)
-                                                  !! * kntopt = 3 sets t(i)=w(i) and t(n+1+i)=w(3+i),i=1,3
-                                                  !!   where w(i),i=1,6 is supplied by the user
+                                                  !! * kntopt = 3 sets t(i)=tleft(i) and
+                                                  !!   t(n+1+i)=tright(3+i),i=1,3
+    real(wp),dimension(3),intent(in)  :: tleft    !! when kntopt = 3: t(1:3) in increasing
+                                                  !! order to be supplied by the user.
+    real(wp),dimension(3),intent(in)  :: tright   !! when kntopt = 3: t(n+2:n+4) in increasing
+                                                  !! order to be supplied by the user.
     real(wp),dimension(:),intent(out)  :: t       !! knot array of length n+4
     real(wp),dimension(:),intent(out)  :: bcoef   !! b spline coefficient array of length n
     integer,intent(out)                :: n       !! number of coefficients, n=ndata+2
     integer,intent(out)                :: k       !! order of spline, k=4
-    real(wp),dimension(5,*),intent(inout) :: w    !! work array of dimension at least 5*(ndata+2)
-                                                  !! if kntopt=3, then w(1),w(2),w(3) are knot values to
-                                                  !! the left of x(1) and w(4),w(5),w(6) are knot
-                                                  !! values to the right of x(ndata) in increasing
-                                                  !! order to be supplied by the user.
-                                                  !! Note that the values are changed by this routine.
+    real(wp),dimension(5,ndata+2),intent(inout) :: w    !! work array
     integer,intent(out)              :: iflag     !! status flag:
                                                   !!
                                                   !! * 0: no errors
@@ -3330,7 +3329,8 @@
                                                   !! * 2003: ibcl is not 1 or 2
                                                   !! * 2004: ibcr is not 1 or 2
                                                   !! * 2005: kntopt is not 1, 2, or 3
-                                                  !! * 2006: knot input through w array is not ordered properly
+                                                  !! * 2006: knot input through tleft, tright is
+                                                  !!   not ordered properly
                                                   !! * 2007: the system of equations is singular
 
     integer  :: i, ilb, ileft, it, iub, iw, iwp, j, jw, ndm, np, nwrow
@@ -3402,24 +3402,18 @@
         end if
     case(3)
         ! set up knot array less than x(1) and greater than x(ndata) to be
-        ! supplied by user in work locations w(1) through w(6) when kntopt=3
+        ! supplied by user in tleft & tright when kntopt=3
+        t(1:3)             = tleft
+        t(ndata+4:ndata+6) = tright
         do i=1,3
-            t(4-i) = w(4-i,1)
-            jw = max(1,i-1)
-            iw = mod(i+2,5)+1
-            t(np+i) = w(iw,jw)
             if ((t(4-i)>t(5-i)) .or. (t(np+i)<t(np+i-1))) then
-                iflag = 2006 ! knot input through w array is not ordered properly
+                iflag = 2006 ! knot input through tleft, tright is not ordered properly
                 return
             end if
         end do
     end select
 
-    do i=1,5
-        do j=1,n
-            w(i,j) = 0.0_wp
-        end do
-    end do
+    w = 0.0_wp
 
     ! set up left interpolation point and left boundary condition for
     ! right limits
@@ -4433,7 +4427,7 @@
     case(2003); msg='Error in dbint4: ibcl is not 1 or 2'
     case(2004); msg='Error in dbint4: ibcr is not 1 or 2'
     case(2005); msg='Error in dbint4: kntopt is not 1, 2, or 3'
-    case(2006); msg='Error in dbint4: knot input through w array is not ordered properly'
+    case(2006); msg='Error in dbint4: knot input through tleft, tright is not ordered properly'
     case(2007); msg='Error in dbint4: the system of equations is singular'
 
     case(3001); msg='Error in dbspvd: k does not satisfy k>=1'
