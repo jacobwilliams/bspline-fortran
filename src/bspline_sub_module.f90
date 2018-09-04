@@ -3308,7 +3308,7 @@
                                                   !! * kntopt = 2 sets a symmetric placement of knots
                                                   !!   about t(4) and t(n+1)
                                                   !! * kntopt = 3 sets t(i)=tleft(i) and
-                                                  !!   t(n+1+i)=tright(3+i),i=1,3
+                                                  !!   t(n+1+i)=tright(i),i=1,3
     real(wp),dimension(3),intent(in)  :: tleft    !! when kntopt = 3: t(1:3) in increasing
                                                   !! order to be supplied by the user.
     real(wp),dimension(3),intent(in)  :: tright   !! when kntopt = 3: t(n+2:n+4) in increasing
