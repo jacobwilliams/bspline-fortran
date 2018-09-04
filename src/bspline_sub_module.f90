@@ -3264,10 +3264,10 @@
 !  T(N+2), T(N+3), T(N+4) about T(N+1)=X(NDATA).  KNTOPT=3
 !  allows the user to make his own selection, in increasing
 !  order, for T(1), T(2), T(3) to the left of X(1) and T(N+2),
-!  T(N+3), T(N+4) to the right of X(NDATA) in the work array
-!  W(1) through W(6).  In any case, the interpolation on
-!  T(4) <= X <= T(N+1) by using function DBVALU is unique
-!  for given boundary conditions.
+!  T(N+3), T(N+4) to the right of X(NDATA).
+!  In any case, the interpolation on T(4) <= X <= T(N+1)
+!  by using function DBVALU is unique for given boundary
+!  conditions.
 !
 !### Error conditions
 !  * improper input
@@ -3282,9 +3282,6 @@
 !  * revision date 820801
 !  * 000330  Modified array declarations.  (JEC)
 !  * Jacob Williams, 8/30/2018 : refactored to modern Fortran.
-!
-!@warning `w` work array input is very old fashioned and unclear. need to fix that.
-!         just input `t(1:3) = tstart(1:3)` and `t(ndata+4:ndata+6) = tend(1:3)`.
 
     pure subroutine dbint4(x,y,ndata,ibcl,ibcr,fbcl,fbcr,kntopt,tleft,tright,t,bcoef,n,k,w,iflag)
 
@@ -3587,7 +3584,7 @@
     kmd = k
     do m=2,mhigh
         kmd = kmd - 1
-        fkmd = float(kmd)
+        fkmd = real(kmd,wp)
         i = ileft
         j = k
         jj = j*(j+1)/2
