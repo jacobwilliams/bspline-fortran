@@ -10,7 +10,7 @@
 
     implicit none
 
-    integer,parameter :: nx = 6     !! number of points in x
+    integer,parameter :: nx = 7     !! number of points in x
     integer,parameter :: kx = 4     !! order in x
 
     logical,parameter :: extrap = .true.
@@ -23,7 +23,7 @@
     real(wp),dimension(:),allocatable :: bcoef   !(nx+2)
     real(wp) :: tol,val,tru,err,errmax,fbcr,fbcl
     logical  :: fail
-    integer  :: n,k,i,idx,iflag,inbvx,ibcl,ibcr,kntopt
+    integer  :: n,i,idx,iflag,inbvx,ibcl,ibcr,kntopt
     real(wp),dimension(5,nx+2) :: w
     type(pyplot) :: plt
     integer :: istat
@@ -47,7 +47,7 @@
     fail   = .false.
     tol    = 1.0e-14_wp
     idx    = 0
-    x      = real([1,2,3,4,5,6], wp)  ! nx points
+    x      = real([1,2,3,4,5,6,7], wp)  ! nx points
     fcn_1d = f1(x)
 
     !initialize the plot:
@@ -58,10 +58,10 @@
 
     if (extrap) then
         ! points to evaluate [with extrapolation]:
-        xval = real([(real(i)/100.0_wp, i=50, 650)], wp)
+        xval = real([(real(i)/100.0_wp, i=50, 750)], wp)
     else
         ! points to evaluate [no extrapolation]:
-        xval = real([(real(i)/100.0_wp, i=100, 600, 10)], wp)
+        xval = real([(real(i)/100.0_wp, i=100, 700, 10)], wp)
     end if
     allocate(fval(size(xval)))
 
@@ -107,23 +107,25 @@
             fbcl = 0.0_wp
             fbcr = 0.0_wp
 
+            write(*,*) 'kntopt:  ', kntopt
+
+            ! WARNING: kntopt seems to have no effect on result for this example.
+
             select case (icase)
             case(2,3)
                 kntopt = 1
+                call db1ink(x,nx,fcn_1d,kx,ibcl,ibcr,fbcl,fbcr,kntopt,tx,bcoef,iflag)
             case(4,5)
                 kntopt = 2
+                call db1ink(x,nx,fcn_1d,kx,ibcl,ibcr,fbcl,fbcr,kntopt,tx,bcoef,iflag)
             case(6,7)
                 kntopt = 3
                 w = 0.0_wp
                 ! WARNING: the knot values seem to make no difference in the result
-                tleft  = [-999.0_wp,-999.0_wp,1.0_wp]
-                tright = [6.0_wp, 999.0_wp, 999.0_wp]
+                tleft  = [-999.0_wp,-999.0_wp,-999.0_wp]
+                tright = [999.0_wp, 999.0_wp, 999.0_wp]
+                call db1ink(x,nx,fcn_1d,kx,ibcl,ibcr,fbcl,fbcr,tleft,tright,tx,bcoef,iflag)
             end select
-
-            ! WARNING: kntopt seems to have no effect on result for this example.
-
-            write(*,*) 'kntopt:  ', kntopt
-            call dbint4(x,fcn_1d,nx,ibcl,ibcr,fbcl,fbcr,kntopt,tleft,tright,tx,bcoef,n,k,w,iflag)
 
             write(*,*) ''
             write(*,*) 'x:  ', x
@@ -152,7 +154,7 @@
             if (icase==1) then
                 call db1val(xval(i),idx,tx,nx,kx,bcoef,val,iflag,inbvx,extrap=extrap)
             else
-                call db1val(xval(i),idx,tx,n,k,bcoef,val,iflag,inbvx,extrap=extrap)  ! note: these n,k are outputs of dbint4
+                call db1val(xval(i),idx,tx,nx+2,kx,bcoef,val,iflag,inbvx,extrap=extrap)
             end if
             fval(i) = val  ! save it for plot
             tru     = f1(xval(i))

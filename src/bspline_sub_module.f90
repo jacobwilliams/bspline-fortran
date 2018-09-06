@@ -58,11 +58,32 @@
     end interface
     public :: b1fqad_func
 
-    !Spline function order (order = polynomial degree + 1)
-    integer,parameter,public :: bspline_order_quadratic = 3
-    integer,parameter,public :: bspline_order_cubic     = 4
-    integer,parameter,public :: bspline_order_quartic   = 5
-    integer,parameter,public :: bspline_order_quintic   = 6
+    integer,parameter,public :: bspline_order_quadratic = 3 !! spline order `k` parameter
+                                                            !! (for input to the `db*ink` routines)
+                                                            !! [order = polynomial degree + 1]
+    integer,parameter,public :: bspline_order_cubic     = 4 !! spline order `k` parameter
+                                                            !! (for input to the `db*ink` routines)
+                                                            !! [order = polynomial degree + 1]
+    integer,parameter,public :: bspline_order_quartic   = 5 !! spline order `k` parameter
+                                                            !! (for input to the `db*ink` routines)
+                                                            !! [order = polynomial degree + 1]
+    integer,parameter,public :: bspline_order_quintic   = 6 !! spline order `k` parameter
+                                                            !! (for input to the `db*ink` routines)
+                                                            !! [order = polynomial degree + 1]
+    integer,parameter,public :: bspline_order_hexic     = 7 !! spline order `k` parameter
+                                                            !! (for input to the `db*ink` routines)
+                                                            !! [order = polynomial degree + 1]
+    integer,parameter,public :: bspline_order_heptic    = 8 !! spline order `k` parameter
+                                                            !! (for input to the `db*ink` routines)
+                                                            !! [order = polynomial degree + 1]
+    integer,parameter,public :: bspline_order_octic     = 9 !! spline order `k` parameter
+                                                            !! (for input to the `db*ink` routines)
+                                                            !! [order = polynomial degree + 1]
+
+    interface db1ink
+        !! 1D initialization routines.
+        module procedure :: db1ink_default, db1ink_alt, db1ink_alt_2
+    end interface
 
     !main routines:
     public :: db1ink, db1val, db1sqad, db1fqad
@@ -71,8 +92,6 @@
     public :: db4ink, db4val
     public :: db5ink, db5val
     public :: db6ink, db6val
-
-    public :: dbint4 !! for testing
 
     public :: get_status_message
 
@@ -90,7 +109,7 @@
 !### History
 !  * Jacob Williams, 10/30/2015 : Created 1D routine.
 
-    pure subroutine db1ink(x,nx,fcn,kx,iknot,tx,bcoef,iflag)
+    pure subroutine db1ink_default(x,nx,fcn,kx,iknot,tx,bcoef,iflag)
 
     implicit none
 
@@ -155,7 +174,155 @@
 
     end if
 
-    end subroutine db1ink
+    end subroutine db1ink_default
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Alternate version of [[db1ink_default]], where the boundary conditions can be specified.
+!
+!### History
+!  * Jacob Williams, 9/4/2018 : created this routine.
+!
+!### See also
+!  * [[dbint4]] -- the main routine that is called here.
+!
+!@note Currently, this only works for 3rd order (k=4).
+
+    pure subroutine db1ink_alt(x,nx,fcn,kx,ibcl,ibcr,fbcl,fbcr,kntopt,tx,bcoef,iflag)
+
+    implicit none
+
+    real(wp),dimension(:),intent(in)   :: x       !! X vector of abscissae of length nx, distinct
+                                                  !! and in increasing order
+    integer,intent(in)                 :: nx      !! number of data points, nx >= 2
+    real(wp),dimension(:),intent(in)   :: fcn     !! y vector of ordinates of length nx
+    integer,intent(in)                 :: kx      !! spline order
+    integer,intent(in)                 :: ibcl    !! selection parameter for left boundary condition:
+                                                  !!
+                                                  !! * ibcl = 1 constrain the first derivative at x(1) to fbcl
+                                                  !! * ibcl = 2 constrain the second derivative at x(1) to fbcl
+    integer,intent(in)                 :: ibcr    !! selection parameter for right boundary condition:
+                                                  !!
+                                                  !! * ibcr = 1 constrain first derivative at x(nx) to fbcr
+                                                  !! * ibcr = 2 constrain second derivative at x(nx) to fbcr
+    real(wp),intent(in)                :: fbcl    !! left boundary values governed by ibcl
+    real(wp),intent(in)                :: fbcr    !! right boundary values governed by ibcr
+    integer,intent(in)                 :: kntopt  !! knot selection parameter:
+                                                  !!
+                                                  !! * kntopt = 1 sets knot multiplicity at t(4) and
+                                                  !!   t(nx+3) to 4
+                                                  !! * kntopt = 2 sets a symmetric placement of knots
+                                                  !!   about t(4) and t(nx+3)
+    real(wp),dimension(:),intent(out)  :: tx      !! knot array of length nx+6
+    real(wp),dimension(:),intent(out)  :: bcoef   !! b spline coefficient array of length nx+2
+    integer,intent(out)                :: iflag   !! status flag:
+                                                  !!
+                                                  !! * 0: no errors
+                                                  !! * 806: [[dbint4]] can only be used when k=4
+
+    integer                    :: n         !! number of coefficients (n=nx+2)
+    integer                    :: k         !! order of spline (k=4)
+    real(wp),dimension(5,nx+2) :: w         !! work array
+    logical                    :: status_ok !! status flag for error checking
+
+    real(wp),dimension(3),parameter :: tleft = 0.0_wp   !! not used for this case (see [[dbint4]])
+    real(wp),dimension(3),parameter :: tright = 0.0_wp  !! not used for this case (see [[dbint4]])
+
+    if (kx /= 4) then
+        iflag = 806
+    else
+
+        call check_inputs(  1,& ! so it will check size of t
+                            iflag,&
+                            nx=nx,&
+                            kx=kx,&
+                            x=x,&
+                            f1=fcn,&
+                            bcoef1=bcoef,&
+                            tx=tx,&
+                            status_ok=status_ok,&
+                            alt=.true.)
+
+        if (status_ok) then
+            call dbint4(x,fcn,nx,ibcl,ibcr,fbcl,fbcr,kntopt,tleft,tright,tx,bcoef,n,k,w,iflag)
+        end if
+
+    end if
+
+    end subroutine db1ink_alt
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Alternate version of [[db1ink_alt]], where the first and
+!  last 3 knots are specified by the user.
+!
+!### History
+!  * Jacob Williams, 9/4/2018 : created this routine.
+!
+!### See also
+!  * [[dbint4]] -- the main routine that is called here.
+!
+!@note Currently, this only works for 3rd order (k=4).
+
+    pure subroutine db1ink_alt_2(x,nx,fcn,kx,ibcl,ibcr,fbcl,fbcr,tleft,tright,tx,bcoef,iflag)
+
+    implicit none
+
+    real(wp),dimension(:),intent(in)   :: x       !! X vector of abscissae of length nx, distinct
+                                                  !! and in increasing order
+    integer,intent(in)                 :: nx      !! number of data points, nx >= 2
+    real(wp),dimension(:),intent(in)   :: fcn     !! y vector of ordinates of length nx
+    integer,intent(in)                 :: kx      !! spline order
+    integer,intent(in)                 :: ibcl    !! selection parameter for left boundary condition:
+                                                  !!
+                                                  !! * ibcl = 1 constrain the first derivative at x(1) to fbcl
+                                                  !! * ibcl = 2 constrain the second derivative at x(1) to fbcl
+    integer,intent(in)                 :: ibcr    !! selection parameter for right boundary condition:
+                                                  !!
+                                                  !! * ibcr = 1 constrain first derivative at x(nx) to fbcr
+                                                  !! * ibcr = 2 constrain second derivative at x(nx) to fbcr
+    real(wp),intent(in)                :: fbcl    !! left boundary values governed by ibcl
+    real(wp),intent(in)                :: fbcr    !! right boundary values governed by ibcr
+    real(wp),dimension(3),intent(in)   :: tleft   !! t(1:3) in increasing order supplied by the user.
+    real(wp),dimension(3),intent(in)   :: tright  !! t(nx+4:nx+6) in increasing order supplied by the user.
+    real(wp),dimension(:),intent(out)  :: tx      !! knot array of length nx+6
+    real(wp),dimension(:),intent(out)  :: bcoef   !! b spline coefficient array of length nx+2
+    integer,intent(out)                :: iflag   !! status flag:
+                                                  !!
+                                                  !! * 0: no errors
+                                                  !! * 806: [[dbint4]] can only be used when k=4
+
+    integer                    :: n         !! number of coefficients (n=nx+2)
+    integer                    :: k         !! order of spline (k=4)
+    real(wp),dimension(5,nx+2) :: w         !! work array
+    logical                    :: status_ok !! status flag for error checking
+
+    integer,parameter :: kntopt = 3 !! use `tleft` and `tright` in [[dbint4]]
+
+    if (kx /= 4) then
+        iflag = 806
+    else
+
+        call check_inputs(  1,& ! so it will check size of t
+                            iflag,&
+                            nx=nx,&
+                            kx=kx,&
+                            x=x,&
+                            f1=fcn,&
+                            bcoef1=bcoef,&
+                            tx=tx,&
+                            status_ok=status_ok,&
+                            alt=.true.)
+
+        if (status_ok) then
+            call dbint4(x,fcn,nx,ibcl,ibcr,fbcl,fbcr,kntopt,tleft,tright,tx,bcoef,n,k,w,iflag)
+        end if
+
+    end if
+
+    end subroutine db1ink_alt_2
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -2039,6 +2206,7 @@
                                  tx,ty,tz,tq,tr,ts,&
                                  f1,f2,f3,f4,f5,f6,&
                                  bcoef1,bcoef2,bcoef3,bcoef4,bcoef5,bcoef6,&
+                                 alt,&
                                  status_ok)
 
     implicit none
@@ -2055,11 +2223,21 @@
     real(wp),dimension(:,:,:,:),intent(in),optional     :: f4,bcoef4
     real(wp),dimension(:,:,:,:,:),intent(in),optional   :: f5,bcoef5
     real(wp),dimension(:,:,:,:,:,:),intent(in),optional :: f6,bcoef6
+    logical,intent(in),optional                         :: alt !! using the alt routine where 1st or
+                                                               !! 2nd deriv is fixed at endpoints
+                                                               !! [default is False]
     logical,intent(out)                                 :: status_ok
 
     logical :: error
+    integer :: iex  !! extra points for the alt case (in `t` and `bcoef`)
+                    !! [currently, only allowed for the 1D case & k=4]
 
     status_ok = .false.
+
+    iex = 0 ! default
+    if (present(alt)) then
+        if (alt) iex = 2  ! for "alt" mode
+    end if
 
     if ((iknot < 0) .or. (iknot > 1)) then
 
@@ -2067,70 +2245,70 @@
 
     else
 
-        call check('x',nx,kx,x,tx,[3,  4, 5, 6,706,712],iflag,error); if (error) return
-        call check('y',ny,ky,y,ty,[7,  8, 9,10,707,713],iflag,error); if (error) return
-        call check('z',nz,kz,z,tz,[11,12,13,14,708,714],iflag,error); if (error) return
-        call check('q',nq,kq,q,tq,[15,16,17,18,709,715],iflag,error); if (error) return
-        call check('r',nr,kr,r,tr,[19,20,21,22,710,716],iflag,error); if (error) return
-        call check('s',ns,ks,s,ts,[23,24,25,26,711,717],iflag,error); if (error) return
+        call check('x',nx,kx,x,tx,[3,  4, 5, 6,706,712],iflag,error,iex); if (error) return
+        call check('y',ny,ky,y,ty,[7,  8, 9,10,707,713],iflag,error,iex); if (error) return
+        call check('z',nz,kz,z,tz,[11,12,13,14,708,714],iflag,error,iex); if (error) return
+        call check('q',nq,kq,q,tq,[15,16,17,18,709,715],iflag,error,iex); if (error) return
+        call check('r',nr,kr,r,tr,[19,20,21,22,710,716],iflag,error,iex); if (error) return
+        call check('s',ns,ks,s,ts,[23,24,25,26,711,717],iflag,error,iex); if (error) return
 
         if (present(x) .and. present(f1) .and. present(bcoef1)) then
-            if (size(x)/=size(f1,1))     then; iflag = 700; return; end if
-            if (size(x)/=size(bcoef1,1)) then; iflag = 800; return; end if
+            if (size(x)/=size(f1,1))         then; iflag = 700; return; end if
+            if (size(x)+iex/=size(bcoef1,1)) then; iflag = 800; return; end if
         end if
         if (present(x) .and. present(y) .and. present(f2) .and. present(bcoef2)) then
-            if (size(x)/=size(f2,1))     then; iflag = 700; return; end if
-            if (size(y)/=size(f2,2))     then; iflag = 701; return; end if
-            if (size(x)/=size(bcoef2,1)) then; iflag = 800; return; end if
-            if (size(y)/=size(bcoef2,2)) then; iflag = 801; return; end if
+            if (size(x)/=size(f2,1))         then; iflag = 700; return; end if
+            if (size(y)/=size(f2,2))         then; iflag = 701; return; end if
+            if (size(x)+iex/=size(bcoef2,1)) then; iflag = 800; return; end if
+            if (size(y)+iex/=size(bcoef2,2)) then; iflag = 801; return; end if
         end if
         if (present(x) .and. present(y) .and. present(z) .and. present(f3) .and. &
             present(bcoef3)) then
-            if (size(x)/=size(f3,1))     then; iflag = 700; return; end if
-            if (size(y)/=size(f3,2))     then; iflag = 701; return; end if
-            if (size(z)/=size(f3,3))     then; iflag = 702; return; end if
-            if (size(x)/=size(bcoef3,1)) then; iflag = 800; return; end if
-            if (size(y)/=size(bcoef3,2)) then; iflag = 801; return; end if
-            if (size(z)/=size(bcoef3,3)) then; iflag = 802; return; end if
+            if (size(x)/=size(f3,1))         then; iflag = 700; return; end if
+            if (size(y)/=size(f3,2))         then; iflag = 701; return; end if
+            if (size(z)/=size(f3,3))         then; iflag = 702; return; end if
+            if (size(x)+iex/=size(bcoef3,1)) then; iflag = 800; return; end if
+            if (size(y)+iex/=size(bcoef3,2)) then; iflag = 801; return; end if
+            if (size(z)+iex/=size(bcoef3,3)) then; iflag = 802; return; end if
         end if
         if (present(x) .and. present(y) .and. present(z) .and. present(q) .and. &
             present(f4) .and. present(bcoef4)) then
-            if (size(x)/=size(f4,1))     then; iflag = 700; return; end if
-            if (size(y)/=size(f4,2))     then; iflag = 701; return; end if
-            if (size(z)/=size(f4,3))     then; iflag = 702; return; end if
-            if (size(q)/=size(f4,4))     then; iflag = 703; return; end if
-            if (size(x)/=size(bcoef4,1)) then; iflag = 800; return; end if
-            if (size(y)/=size(bcoef4,2)) then; iflag = 801; return; end if
-            if (size(z)/=size(bcoef4,3)) then; iflag = 802; return; end if
-            if (size(q)/=size(bcoef4,4)) then; iflag = 803; return; end if
+            if (size(x)/=size(f4,1))         then; iflag = 700; return; end if
+            if (size(y)/=size(f4,2))         then; iflag = 701; return; end if
+            if (size(z)/=size(f4,3))         then; iflag = 702; return; end if
+            if (size(q)/=size(f4,4))         then; iflag = 703; return; end if
+            if (size(x)+iex/=size(bcoef4,1)) then; iflag = 800; return; end if
+            if (size(y)+iex/=size(bcoef4,2)) then; iflag = 801; return; end if
+            if (size(z)+iex/=size(bcoef4,3)) then; iflag = 802; return; end if
+            if (size(q)+iex/=size(bcoef4,4)) then; iflag = 803; return; end if
         end if
         if (present(x) .and. present(y) .and. present(z) .and. present(q) .and. &
             present(r) .and. present(f5) .and. present(bcoef5)) then
-            if (size(x)/=size(f5,1))     then; iflag = 700; return; end if
-            if (size(y)/=size(f5,2))     then; iflag = 701; return; end if
-            if (size(z)/=size(f5,3))     then; iflag = 702; return; end if
-            if (size(q)/=size(f5,4))     then; iflag = 703; return; end if
-            if (size(r)/=size(f5,5))     then; iflag = 704; return; end if
-            if (size(x)/=size(bcoef5,1)) then; iflag = 800; return; end if
-            if (size(y)/=size(bcoef5,2)) then; iflag = 801; return; end if
-            if (size(z)/=size(bcoef5,3)) then; iflag = 802; return; end if
-            if (size(q)/=size(bcoef5,4)) then; iflag = 803; return; end if
-            if (size(r)/=size(bcoef5,5)) then; iflag = 804; return; end if
+            if (size(x)/=size(f5,1))         then; iflag = 700; return; end if
+            if (size(y)/=size(f5,2))         then; iflag = 701; return; end if
+            if (size(z)/=size(f5,3))         then; iflag = 702; return; end if
+            if (size(q)/=size(f5,4))         then; iflag = 703; return; end if
+            if (size(r)/=size(f5,5))         then; iflag = 704; return; end if
+            if (size(x)+iex/=size(bcoef5,1)) then; iflag = 800; return; end if
+            if (size(y)+iex/=size(bcoef5,2)) then; iflag = 801; return; end if
+            if (size(z)+iex/=size(bcoef5,3)) then; iflag = 802; return; end if
+            if (size(q)+iex/=size(bcoef5,4)) then; iflag = 803; return; end if
+            if (size(r)+iex/=size(bcoef5,5)) then; iflag = 804; return; end if
         end if
         if (present(x) .and. present(y) .and. present(z) .and. present(q) .and. &
             present(r) .and. present(s) .and. present(f6) .and. present(bcoef6)) then
-            if (size(x)/=size(f6,1))     then; iflag = 700; return; end if
-            if (size(y)/=size(f6,2))     then; iflag = 701; return; end if
-            if (size(z)/=size(f6,3))     then; iflag = 702; return; end if
-            if (size(q)/=size(f6,4))     then; iflag = 703; return; end if
-            if (size(r)/=size(f6,5))     then; iflag = 704; return; end if
-            if (size(s)/=size(f6,6))     then; iflag = 705; return; end if
-            if (size(x)/=size(bcoef6,1)) then; iflag = 800; return; end if
-            if (size(y)/=size(bcoef6,2)) then; iflag = 801; return; end if
-            if (size(z)/=size(bcoef6,3)) then; iflag = 802; return; end if
-            if (size(q)/=size(bcoef6,4)) then; iflag = 803; return; end if
-            if (size(r)/=size(bcoef6,5)) then; iflag = 804; return; end if
-            if (size(s)/=size(bcoef6,6)) then; iflag = 805; return; end if
+            if (size(x)/=size(f6,1))         then; iflag = 700; return; end if
+            if (size(y)/=size(f6,2))         then; iflag = 701; return; end if
+            if (size(z)/=size(f6,3))         then; iflag = 702; return; end if
+            if (size(q)/=size(f6,4))         then; iflag = 703; return; end if
+            if (size(r)/=size(f6,5))         then; iflag = 704; return; end if
+            if (size(s)/=size(f6,6))         then; iflag = 705; return; end if
+            if (size(x)+iex/=size(bcoef6,1)) then; iflag = 800; return; end if
+            if (size(y)+iex/=size(bcoef6,2)) then; iflag = 801; return; end if
+            if (size(z)+iex/=size(bcoef6,3)) then; iflag = 802; return; end if
+            if (size(q)+iex/=size(bcoef6,4)) then; iflag = 803; return; end if
+            if (size(r)+iex/=size(bcoef6,5)) then; iflag = 804; return; end if
+            if (size(s)+iex/=size(bcoef6,6)) then; iflag = 805; return; end if
         end if
 
         status_ok = .true.
@@ -2140,7 +2318,7 @@
 
     contains
 
-        pure subroutine check(s,n,k,x,t,ierrs,iflag,error)  !! check `t`,`x`,`n`,`k` for validity
+        pure subroutine check(s,n,k,x,t,ierrs,iflag,error,ik)  !! check `t`,`x`,`n`,`k` for validity
 
         implicit none
 
@@ -2153,13 +2331,14 @@
                                                            !! `size(x)`,`size(t)` checks
         integer,intent(out)                       :: iflag !! status return code
         logical,intent(out)                       :: error !! true if there was an error
+        integer,intent(in)                        :: ik    !! add this value to k
 
         if (present(n) .and. present(k) .and. present(x) .and. present(t)) then
             call check_n('n'//s,n,x,[ierrs(1),ierrs(5)],iflag,error); if (error) return
-            call check_k('k'//s,k,n,ierrs(2),iflag,error); if (error) return
+            call check_k('k'//s,k+ik,n,ierrs(2),iflag,error); if (error) return
             call check_x(s,n,x,ierrs(3),iflag,error); if (error) return
             if (iknot /= 0) then
-                call check_t('t'//s,n,k,t,[ierrs(4),ierrs(6)],iflag,error); if (error) return
+                call check_t('t'//s,n,k+ik,t,[ierrs(4),ierrs(6)],iflag,error); if (error) return
             end if
         end if
 
@@ -2255,12 +2434,15 @@
             return
         end if
 
-        do i=2,n + k
-            if (t(i) < t(i-1))  then
-                iflag = ierr(1)
-                return
-            end if
-        end do
+        if (iex==0) then ! don't do this for "alt" mode since they haven't been computed yet
+            do i=2,n + k
+                if (t(i) < t(i-1))  then
+                    iflag = ierr(1)
+                    return
+                end if
+            end do
+        end if
+
         error = .false.
 
         end subroutine check_t
@@ -4369,6 +4551,8 @@
     case(803); msg='Error in db*ink: size(q) /= size(bcoef,4)'
     case(804); msg='Error in db*ink: size(r) /= size(bcoef,5)'
     case(805); msg='Error in db*ink: size(s) /= size(bcoef,6)'
+
+    case(806); msg='Error in db*ink_alt: dbint4 can only be used when k=4'
 
     case(100); msg='Error in dbintk: k does not satisfy k>=1'
     case(101); msg='Error in dbintk: n does not satisfy n>=k'
