@@ -193,29 +193,29 @@
 
     implicit none
 
-    real(wp),dimension(:),intent(in)   :: x       !! X vector of abscissae of length nx, distinct
+    real(wp),dimension(:),intent(in)   :: x       !! \(x\) vector of abscissae of length `nx`, distinct
                                                   !! and in increasing order
-    integer,intent(in)                 :: nx      !! number of data points, nx >= 2
-    real(wp),dimension(:),intent(in)   :: fcn     !! y vector of ordinates of length nx
+    integer,intent(in)                 :: nx      !! number of data points, \( n_x \ge 2 \)
+    real(wp),dimension(:),intent(in)   :: fcn     !! \(y\) vector of ordinates of length `nx`
     integer,intent(in)                 :: kx      !! spline order
     integer,intent(in)                 :: ibcl    !! selection parameter for left boundary condition:
                                                   !!
-                                                  !! * ibcl = 1 constrain the first derivative at x(1) to fbcl
-                                                  !! * ibcl = 2 constrain the second derivative at x(1) to fbcl
+                                                  !! * `ibcl = 1` constrain the first derivative at `x(1)` to `fbcl`
+                                                  !! * `ibcl = 2` constrain the second derivative at `x(1)` to `fbcl`
     integer,intent(in)                 :: ibcr    !! selection parameter for right boundary condition:
                                                   !!
-                                                  !! * ibcr = 1 constrain first derivative at x(nx) to fbcr
-                                                  !! * ibcr = 2 constrain second derivative at x(nx) to fbcr
-    real(wp),intent(in)                :: fbcl    !! left boundary values governed by ibcl
-    real(wp),intent(in)                :: fbcr    !! right boundary values governed by ibcr
+                                                  !! * `ibcr = 1` constrain first derivative at `x(nx)` to `fbcr`
+                                                  !! * `ibcr = 2` constrain second derivative at `x(nx)` to `fbcr`
+    real(wp),intent(in)                :: fbcl    !! left boundary values governed by `ibcl`
+    real(wp),intent(in)                :: fbcr    !! right boundary values governed by `ibcr`
     integer,intent(in)                 :: kntopt  !! knot selection parameter:
                                                   !!
-                                                  !! * kntopt = 1 sets knot multiplicity at t(4) and
-                                                  !!   t(nx+3) to 4
-                                                  !! * kntopt = 2 sets a symmetric placement of knots
-                                                  !!   about t(4) and t(nx+3)
-    real(wp),dimension(:),intent(out)  :: tx      !! knot array of length nx+6
-    real(wp),dimension(:),intent(out)  :: bcoef   !! b spline coefficient array of length nx+2
+                                                  !! * `kntopt = 1` sets knot multiplicity at `t(4)` and
+                                                  !!   `t(nx+3)` to 4
+                                                  !! * `kntopt = 2` sets a symmetric placement of knots
+                                                  !!   about `t(4)` and `t(nx+3)`
+    real(wp),dimension(:),intent(out)  :: tx      !! knot array of length `nx+6`
+    real(wp),dimension(:),intent(out)  :: bcoef   !! b spline coefficient array of length `nx+2`
     integer,intent(out)                :: iflag   !! status flag:
                                                   !!
                                                   !! * 0: no errors
@@ -270,32 +270,32 @@
 
     implicit none
 
-    real(wp),dimension(:),intent(in)   :: x       !! X vector of abscissae of length nx, distinct
+    real(wp),dimension(:),intent(in)   :: x       !! \(x\) vector of abscissae of length `nx`, distinct
                                                   !! and in increasing order
-    integer,intent(in)                 :: nx      !! number of data points, nx >= 2
-    real(wp),dimension(:),intent(in)   :: fcn     !! y vector of ordinates of length nx
+    integer,intent(in)                 :: nx      !! number of data points, \( n_x \ge 2 \)
+    real(wp),dimension(:),intent(in)   :: fcn     !! \(y\) vector of ordinates of length `nx`
     integer,intent(in)                 :: kx      !! spline order
     integer,intent(in)                 :: ibcl    !! selection parameter for left boundary condition:
                                                   !!
-                                                  !! * ibcl = 1 constrain the first derivative at x(1) to fbcl
-                                                  !! * ibcl = 2 constrain the second derivative at x(1) to fbcl
+                                                  !! * `ibcl = 1` constrain the first derivative at `x(1)` to `fbcl`
+                                                  !! * `ibcl = 2` constrain the second derivative at `x(1)` to `fbcl`
     integer,intent(in)                 :: ibcr    !! selection parameter for right boundary condition:
                                                   !!
-                                                  !! * ibcr = 1 constrain first derivative at x(nx) to fbcr
-                                                  !! * ibcr = 2 constrain second derivative at x(nx) to fbcr
-    real(wp),intent(in)                :: fbcl    !! left boundary values governed by ibcl
-    real(wp),intent(in)                :: fbcr    !! right boundary values governed by ibcr
-    real(wp),dimension(3),intent(in)   :: tleft   !! t(1:3) in increasing order supplied by the user.
-    real(wp),dimension(3),intent(in)   :: tright  !! t(nx+4:nx+6) in increasing order supplied by the user.
-    real(wp),dimension(:),intent(out)  :: tx      !! knot array of length nx+6
-    real(wp),dimension(:),intent(out)  :: bcoef   !! b spline coefficient array of length nx+2
+                                                  !! * `ibcr = 1` constrain first derivative at `x(nx)` to `fbcr`
+                                                  !! * `ibcr = 2` constrain second derivative at `x(nx)` to `fbcr`
+    real(wp),intent(in)                :: fbcl    !! left boundary values governed by `ibcl`
+    real(wp),intent(in)                :: fbcr    !! right boundary values governed by `ibcr`
+    real(wp),dimension(3),intent(in)   :: tleft   !! `t(1:3)` in increasing order supplied by the user.
+    real(wp),dimension(3),intent(in)   :: tright  !! `t(nx+4:nx+6)` in increasing order supplied by the user.
+    real(wp),dimension(:),intent(out)  :: tx      !! knot array of length `nx+6`
+    real(wp),dimension(:),intent(out)  :: bcoef   !! b spline coefficient array of length `nx+2`
     integer,intent(out)                :: iflag   !! status flag:
                                                   !!
                                                   !! * 0: no errors
                                                   !! * 806: [[dbint4]] can only be used when k=4
 
-    integer                    :: n         !! number of coefficients (n=nx+2)
-    integer                    :: k         !! order of spline (k=4)
+    integer                    :: n         !! number of coefficients (`n=nx+2`)
+    integer                    :: k         !! order of spline (`k=4`)
     real(wp),dimension(5,nx+2) :: w         !! work array
     logical                    :: status_ok !! status flag for error checking
 
@@ -3469,7 +3469,7 @@
 
     implicit none
 
-    real(wp),dimension(:),intent(in)   :: x       !! X vector of abscissae of length NDATA, distinct
+    real(wp),dimension(:),intent(in)   :: x       !! x vector of abscissae of length `ndata`, distinct
                                                   !! and in increasing order
     real(wp),dimension(:),intent(in)   :: y       !! y vector of ordinates of length ndata
     integer,intent(in)                 :: ndata   !! number of data points, ndata >= 2
