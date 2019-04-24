@@ -219,7 +219,7 @@
     integer,intent(out)                :: iflag   !! status flag:
                                                   !!
                                                   !! * 0: no errors
-                                                  !! * 806: [[dbint4]] can only be used when k=4
+                                                  !! * 806: [[dbint4]] can only be used when `k=4`
 
     integer                    :: n         !! number of coefficients (n=nx+2)
     integer                    :: k         !! order of spline (k=4)
@@ -3427,26 +3427,28 @@
 !*****************************************************************************************
 !>
 !  DBINT4 computes the B representation (T,BCOEF,N,K) of a
-!  cubic spline (K=4) which interpolates data (X(I),Y(I)),
-!  I=1,NDATA.  Parameters IBCL, IBCR, FBCL, FBCR allow the
-!  specification of the spline first or second derivative at
-!  both X(1) and X(NDATA).  When this data is not specified
-!  by the problem, it is common practice to use a natural
-!  spline by setting second derivatives at X(1) and X(NDATA)
-!  to zero (IBCL=IBCR=2,FBCL=FBCR=0.0).  The spline is defined
-!  on T(4) <= X <= T(N+1) with (ordered) interior knots at
-!  X(I) values where N=NDATA+2.  The knots T(1),T(2),T(3) lie to
-!  the left of T(4)=X(1) and the knots T(N+2), T(N+3), T(N+4)
-!  lie to the right of T(N+1)=X(NDATA) in increasing order.  If
-!  no extrapolation outside (X(1),X(NDATA)) is anticipated, the
-!  knots T(1)=T(2)=T(3)=T(4)=X(1) and T(N+2)=T(N+3)=T(N+4)=
-!  T(N+1)=X(NDATA) can be specified by KNTOPT=1.  KNTOPT=2
-!  selects a knot placement for T(1), T(2), T(3) to make the
-!  first 7 knots symmetric about T(4)=X(1) and similarly for
-!  T(N+2), T(N+3), T(N+4) about T(N+1)=X(NDATA).  KNTOPT=3
-!  allows the user to make his own selection, in increasing
-!  order, for T(1), T(2), T(3) to the left of X(1) and T(N+2),
-!  T(N+3), T(N+4) to the right of X(NDATA).
+!  cubic spline (K=4) which interpolates data (X(I),Y(I)),I=1,NDATA.
+!
+!  Parameters IBCL, IBCR, FBCL, FBCR allow the specification of the spline
+!  first or second derivative at both X(1) and X(NDATA).  When this data is not specified
+!  by the problem, it is common practice to use a natural spline by setting second
+!  derivatives at X(1) and X(NDATA) to zero (IBCL=IBCR=2,FBCL=FBCR=0.0).
+!
+!  The spline is defined on T(4) <= X <= T(N+1) with (ordered) interior knots at
+!  X(I) values where N=NDATA+2.  The knots T(1),T(2),T(3) lie to the left of
+!  T(4)=X(1) and the knots T(N+2), T(N+3), T(N+4) lie to the right of T(N+1)=X(NDATA)
+!  in increasing order.
+!
+!  * If no extrapolation outside (X(1),X(NDATA)) is anticipated, the
+!    knots T(1)=T(2)=T(3)=T(4)=X(1) and T(N+2)=T(N+3)=T(N+4)=T(N+1)=X(NDATA)
+!    can be specified by KNTOPT=1.
+!  * KNTOPT=2 selects a knot placement for T(1), T(2), T(3) to make the
+!    first 7 knots symmetric about T(4)=X(1) and similarly for
+!    T(N+2), T(N+3), T(N+4) about T(N+1)=X(NDATA).
+!  * KNTOPT=3 allows the user to make his own selection, in increasing order,
+!    for T(1), T(2), T(3) to the left of X(1) and T(N+2), T(N+3), T(N+4) to
+!    the right of X(NDATA).
+!
 !  In any case, the interpolation on T(4) <= X <= T(N+1)
 !  by using function DBVALU is unique for given boundary
 !  conditions.
