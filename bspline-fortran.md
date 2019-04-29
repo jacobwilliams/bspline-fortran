@@ -1,8 +1,10 @@
 project: bspline-fortran
 project_dir: ./src
 output_dir: ./doc
+media_dir: ./media
 project_github: https://github.com/jacobwilliams/bspline-fortran
-summary: BSPLINE-FORTRAN -- Multidimensional B-Spline Interpolation of Data on a Regular Grid
+summary: ![BSPLINE-FORTRAN](|media|/bspline-fortran.png)<br>
+         BSPLINE-FORTRAN -- Multidimensional B-Spline Interpolation of Data on a Regular Grid
 author: Jacob Williams
 github: https://github.com/jacobwilliams
 predocmark_alt: >
