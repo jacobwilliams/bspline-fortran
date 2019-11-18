@@ -186,7 +186,7 @@
 !### History
 !  * Jacob Williams, 10/30/2015 : Created 1D routine.
 
-    pure subroutine db1val(xval,idx,tx,nx,kx,bcoef,f,iflag,inbvx,work,extrap)
+    pure subroutine db1val(xval,idx,tx,nx,kx,bcoef,f,iflag,inbvx,w0,extrap)
 
     implicit none
 
@@ -207,7 +207,7 @@
     integer,intent(inout)                :: inbvx    !! initialization parameter which must be set
                                                      !! to 1 the first time this routine is called,
                                                      !! and must not be changed by the user.
-    real(wp),dimension(3*kx),intent(inout) :: work   !! work array
+    real(wp),dimension(3*kx),intent(inout) :: w0     !! work array
     logical,intent(in),optional          :: extrap   !! if extrapolation is allowed
                                                      !! (if not present, default is False)
 
@@ -215,7 +215,7 @@
 
     iflag = check_value(xval,tx,1,extrap); if (iflag/=0) return
 
-    call dbvalu(tx,bcoef,nx,kx,idx,xval,inbvx,work,iflag,f,extrap)
+    call dbvalu(tx,bcoef,nx,kx,idx,xval,inbvx,w0,iflag,f,extrap)
 
     end subroutine db1val
 !*****************************************************************************************
@@ -230,7 +230,7 @@
 !### See also
 !  * [[dbsqad]] -- the core routine.
 
-    pure subroutine db1sqad(tx,bcoef,nx,kx,x1,x2,f,iflag,work)
+    pure subroutine db1sqad(tx,bcoef,nx,kx,x1,x2,f,iflag,w0)
 
     implicit none
 
@@ -245,9 +245,9 @@
                                                     !!
                                                     !! * \( = 0 \)   : no errors
                                                     !! * \( \ne 0 \) : error
-    real(wp),dimension(3*kx),intent(inout) :: work  !! work array for [[dbsqad]]
+    real(wp),dimension(3*kx),intent(inout) :: w0    !! work array for [[dbsqad]]
 
-    call dbsqad(tx,bcoef,nx,kx,x1,x2,f,work,iflag)
+    call dbsqad(tx,bcoef,nx,kx,x1,x2,f,w0,iflag)
 
     end subroutine db1sqad
 !*****************************************************************************************
@@ -266,7 +266,7 @@
 !@note This one is not pure, because we are not enforcing
 !      that the user function `fun` be pure.
 
-    subroutine db1fqad(fun,tx,bcoef,nx,kx,idx,x1,x2,tol,f,iflag,work)
+    subroutine db1fqad(fun,tx,bcoef,nx,kx,idx,x1,x2,tol,f,iflag,w0)
 
     implicit none
 
@@ -289,9 +289,9 @@
                                                   !!
                                                   !! * \( = 0 \)   : no errors
                                                   !! * \( \ne 0 \) : error
-    real(wp),dimension(3*kx),intent(inout) :: work !! work array for [[dbfqad]]
+    real(wp),dimension(3*kx),intent(inout) :: w0  !! work array for [[dbfqad]]
 
-    call dbfqad(fun,tx,bcoef,nx,kx,idx,x1,x2,tol,f,iflag,work)
+    call dbfqad(fun,tx,bcoef,nx,kx,idx,x1,x2,tol,f,iflag,w0)
 
     end subroutine db1fqad
 !*****************************************************************************************
@@ -474,7 +474,7 @@
 !  * JEC : 000330 modified array declarations.
 !  * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
 
-    pure subroutine db2val(xval,yval,idx,idy,tx,ty,nx,ny,kx,ky,bcoef,f,iflag,inbvx,inbvy,iloy,temp,work,extrap)
+    pure subroutine db2val(xval,yval,idx,idy,tx,ty,nx,ny,kx,ky,bcoef,f,iflag,inbvx,inbvy,iloy,w1,w0,extrap)
 
     implicit none
 
@@ -511,8 +511,8 @@
     integer,intent(inout)                :: iloy     !! initialization parameter which must be set to 1
                                                      !! the first time this routine is called,
                                                      !! and must not be changed by the user.
-    real(wp),dimension(ky),intent(inout) :: temp !! work array
-    real(wp),dimension(3*max(kx,ky)),intent(inout) :: work !! work array
+    real(wp),dimension(ky),intent(inout)           :: w1 !! work array
+    real(wp),dimension(3*max(kx,ky)),intent(inout) :: w0 !! work array
     logical,intent(in),optional          :: extrap   !! if extrapolation is allowed
                                                      !! (if not present, default is False)
 
@@ -528,12 +528,12 @@
     kcol = lefty - ky
     do k=1,ky
         kcol = kcol + 1
-        call dbvalu(tx,bcoef(:,kcol),nx,kx,idx,xval,inbvx,work,iflag,temp(k),extrap)
+        call dbvalu(tx,bcoef(:,kcol),nx,kx,idx,xval,inbvx,w0,iflag,w1(k),extrap)
         if (iflag/=0) return !error
     end do
 
     kcol = lefty - ky + 1
-    call dbvalu(ty(kcol:),temp,ky,ky,idy,yval,inbvy,work,iflag,f,extrap)
+    call dbvalu(ty(kcol:),w1,ky,ky,idy,yval,inbvy,w0,iflag,f,extrap)
 
     end subroutine db2val
 !*****************************************************************************************
@@ -752,7 +752,7 @@
     pure subroutine db3val(xval,yval,zval,idx,idy,idz,&
                            tx,ty,tz,&
                            nx,ny,nz,kx,ky,kz,bcoef,f,iflag,&
-                           inbvx,inbvy,inbvz,iloy,iloz,temp1,temp2,work,extrap)
+                           inbvx,inbvy,inbvz,iloy,iloz,w2,w1,w0,extrap)
 
     implicit none
 
@@ -801,9 +801,9 @@
     integer,intent(inout)                   :: iloz     !! initialization parameter which must be
                                                         !! set to 1 the first time this routine is called,
                                                         !! and must not be changed by the user.
-    real(wp),dimension(ky,kz),intent(inout)             :: temp1    !! work array
-    real(wp),dimension(kz),intent(inout)                :: temp2    !! work array
-    real(wp),dimension(3*max(kx,ky,kz)),intent(inout)   :: work     !! work array
+    real(wp),dimension(ky,kz),intent(inout)           :: w2  !! work array
+    real(wp),dimension(kz),intent(inout)              :: w1  !! work array
+    real(wp),dimension(3*max(kx,ky,kz)),intent(inout) :: w0  !! work array
     logical,intent(in),optional             :: extrap   !! if extrapolation is allowed
                                                         !! (if not present, default is False)
 
@@ -826,19 +826,19 @@
         kcoly = lefty - ky
         do j=1,ky
             kcoly = kcoly + 1
-            call dbvalu(tx,bcoef(:,kcoly,kcolz),nx,kx,idx,xval,inbvx,work,iflag,temp1(j,k),extrap)
+            call dbvalu(tx,bcoef(:,kcoly,kcolz),nx,kx,idx,xval,inbvx,w0,iflag,w2(j,k),extrap)
             if (iflag/=0) return
         end do
     end do
 
     kcoly = lefty - ky + 1
     do k=1,kz
-        call dbvalu(ty(kcoly:),temp1(:,k),ky,ky,idy,yval,inbvy,work,iflag,temp2(k),extrap)
+        call dbvalu(ty(kcoly:),w2(:,k),ky,ky,idy,yval,inbvy,w0,iflag,w1(k),extrap)
         if (iflag/=0) return
     end do
 
     kcolz = leftz - kz + 1
-    call dbvalu(tz(kcolz:),temp2,kz,kz,idz,zval,inbvz,work,iflag,f,extrap)
+    call dbvalu(tz(kcolz:),w1,kz,kz,idz,zval,inbvz,w0,iflag,f,extrap)
 
     end subroutine db3val
 !*****************************************************************************************
@@ -1024,7 +1024,7 @@
                                 kx,ky,kz,kq,&
                                 bcoef,f,iflag,&
                                 inbvx,inbvy,inbvz,inbvq,&
-                                iloy,iloz,iloq,temp1,temp2,temp3,work,extrap)
+                                iloy,iloz,iloq,w3,w2,w1,w0,extrap)
 
     implicit none
 
@@ -1091,10 +1091,10 @@
     integer,intent(inout)                      :: iloq     !! initialization parameter which must be set
                                                            !! to 1 the first time this routine is called,
                                                            !! and must not be changed by the user.
-    real(wp),dimension(ky,kz,kq),intent(inout)           :: temp1 !! work array
-    real(wp),dimension(kz,kq),intent(inout)              :: temp2 !! work array
-    real(wp),dimension(kq),intent(inout)                 :: temp3 !! work array
-    real(wp),dimension(3*max(kx,ky,kz,kq)),intent(inout) :: work  !! work array
+    real(wp),dimension(ky,kz,kq),intent(inout)           :: w3 !! work array
+    real(wp),dimension(kz,kq),intent(inout)              :: w2 !! work array
+    real(wp),dimension(kq),intent(inout)                 :: w1 !! work array
+    real(wp),dimension(3*max(kx,ky,kz,kq)),intent(inout) :: w0 !! work array
     logical,intent(in),optional                :: extrap   !! if extrapolation is allowed
                                                            !! (if not present, default is False)
 
@@ -1125,8 +1125,8 @@
             do j=1,ky
                 kcoly = kcoly + 1
                 call dbvalu(tx,bcoef(:,kcoly,kcolz,kcolq),&
-                                     nx,kx,idx,xval,inbvx,work,iflag,&
-                                     temp1(j,k,q),extrap)
+                                     nx,kx,idx,xval,inbvx,w0,iflag,&
+                                     w3(j,k,q),extrap)
                 if (iflag/=0) return
             end do
         end do
@@ -1136,9 +1136,9 @@
     kcoly = lefty - ky + 1
     do q=1,kq
         do k=1,kz
-            call dbvalu(ty(kcoly:),temp1(:,k,q),&
-                        ky,ky,idy,yval,inbvy,work,iflag,&
-                        temp2(k,q),extrap)
+            call dbvalu(ty(kcoly:),w3(:,k,q),&
+                        ky,ky,idy,yval,inbvy,w0,iflag,&
+                        w2(k,q),extrap)
             if (iflag/=0) return
         end do
     end do
@@ -1146,15 +1146,15 @@
     ! z -> q
     kcolz = leftz - kz + 1
     do q=1,kq
-        call dbvalu(tz(kcolz:),temp2(:,q),&
-                    kz,kz,idz,zval,inbvz,work,iflag,&
-                    temp3(q),extrap)
+        call dbvalu(tz(kcolz:),w2(:,q),&
+                    kz,kz,idz,zval,inbvz,w0,iflag,&
+                    w1(q),extrap)
         if (iflag/=0) return
     end do
 
     ! q
     kcolq = leftq - kq + 1
-    call dbvalu(tq(kcolq:),temp3,kq,kq,idq,qval,inbvq,work,iflag,f,extrap)
+    call dbvalu(tq(kcolq:),w1,kq,kq,idq,qval,inbvq,w0,iflag,f,extrap)
 
     end subroutine db4val
 !*****************************************************************************************
@@ -1371,7 +1371,7 @@
                                 bcoef,f,iflag,&
                                 inbvx,inbvy,inbvz,inbvq,inbvr,&
                                 iloy,iloz,iloq,ilor,&
-                                temp1,temp2,temp3,temp4,work,extrap)
+                                w4,w3,w2,w1,w0,extrap)
 
     implicit none
 
@@ -1453,11 +1453,11 @@
     integer,intent(inout)                         :: ilor     !! initialization parameter which must be set
                                                               !! to 1 the first time this routine is called,
                                                               !! and must not be changed by the user.
-    real(wp),dimension(ky,kz,kq,kr),intent(inout) :: temp1  !! work array
-    real(wp),dimension(kz,kq,kr),intent(inout)    :: temp2  !! work array
-    real(wp),dimension(kq,kr),intent(inout)       :: temp3  !! work array
-    real(wp),dimension(kr),intent(inout)          :: temp4  !! work array
-    real(wp),dimension(3*max(kx,ky,kz,kq,kr)),intent(inout)  :: work  !! work array
+    real(wp),dimension(ky,kz,kq,kr),intent(inout)           :: w4  !! work array
+    real(wp),dimension(kz,kq,kr),intent(inout)              :: w3  !! work array
+    real(wp),dimension(kq,kr),intent(inout)                 :: w2  !! work array
+    real(wp),dimension(kr),intent(inout)                    :: w1  !! work array
+    real(wp),dimension(3*max(kx,ky,kz,kq,kr)),intent(inout) :: w0  !! work array
     logical,intent(in),optional                   :: extrap   !! if extrapolation is allowed
                                                               !! (if not present, default is False)
 
@@ -1493,7 +1493,7 @@
                 do j=1,ky
                     kcoly = kcoly + 1
                     call dbvalu(tx,bcoef(:,kcoly,kcolz,kcolq,kcolr),&
-                                nx,kx,idx,xval,inbvx,work,iflag,temp1(j,k,q,r),&
+                                nx,kx,idx,xval,inbvx,w0,iflag,w4(j,k,q,r),&
                                 extrap)
                     if (iflag/=0) return
                 end do
@@ -1506,8 +1506,8 @@
     do r=1,kr
         do q=1,kq
             do k=1,kz
-                call dbvalu(ty(kcoly:),temp1(:,k,q,r),ky,ky,idy,yval,inbvy,&
-                            work,iflag,temp2(k,q,r),extrap)
+                call dbvalu(ty(kcoly:),w4(:,k,q,r),ky,ky,idy,yval,inbvy,&
+                            w0,iflag,w3(k,q,r),extrap)
                 if (iflag/=0) return
             end do
         end do
@@ -1517,8 +1517,8 @@
     kcolz = leftz - kz + 1
     do r=1,kr
         do q=1,kq
-            call dbvalu(tz(kcolz:),temp2(:,q,r),kz,kz,idz,zval,inbvz,&
-                        work,iflag,temp3(q,r),extrap)
+            call dbvalu(tz(kcolz:),w3(:,q,r),kz,kz,idz,zval,inbvz,&
+                        w0,iflag,w2(q,r),extrap)
             if (iflag/=0) return
         end do
     end do
@@ -1526,14 +1526,14 @@
     ! q -> r
     kcolq = leftq - kq + 1
     do r=1,kr
-        call dbvalu(tq(kcolq:),temp3(:,r),kq,kq,idq,qval,inbvq,&
-                    work,iflag,temp4(r),extrap)
+        call dbvalu(tq(kcolq:),w2(:,r),kq,kq,idq,qval,inbvq,&
+                    w0,iflag,w1(r),extrap)
         if (iflag/=0) return
     end do
 
     ! r
     kcolr = leftr - kr + 1
-    call dbvalu(tr(kcolr:),temp4,kr,kr,idr,rval,inbvr,work,iflag,f,extrap)
+    call dbvalu(tr(kcolr:),w1,kr,kr,idr,rval,inbvr,w0,iflag,f,extrap)
 
     end subroutine db5val
 !*****************************************************************************************
@@ -1775,7 +1775,7 @@
                                 bcoef,f,iflag,&
                                 inbvx,inbvy,inbvz,inbvq,inbvr,inbvs,&
                                 iloy,iloz,iloq,ilor,ilos,&
-                                temp1,temp2,temp3,temp4,temp5,work,extrap)
+                                w5,w4,w3,w2,w1,w0,extrap)
 
     implicit none
 
@@ -1872,15 +1872,14 @@
     integer,intent(inout)                            :: ilos     !! initialization parameter which must be set
                                                                  !! to 1 the first time this routine is called,
                                                                  !! and must not be changed by the user.
-    real(wp),dimension(ky,kz,kq,kr,ks),intent(inout)   :: temp1 !! work array
-    real(wp),dimension(kz,kq,kr,ks),intent(inout)      :: temp2 !! work array
-    real(wp),dimension(kq,kr,ks),intent(inout)         :: temp3 !! work array
-    real(wp),dimension(kr,ks),intent(inout)            :: temp4 !! work array
-    real(wp),dimension(ks),intent(inout)               :: temp5 !! work array
-    real(wp),dimension(3*max(kx,ky,kz,kq,kr,ks)),intent(inout) :: work !! work array
+    real(wp),dimension(ky,kz,kq,kr,ks),intent(inout)           :: w5 !! work array
+    real(wp),dimension(kz,kq,kr,ks),intent(inout)              :: w4 !! work array
+    real(wp),dimension(kq,kr,ks),intent(inout)                 :: w3 !! work array
+    real(wp),dimension(kr,ks),intent(inout)                    :: w2 !! work array
+    real(wp),dimension(ks),intent(inout)                       :: w1 !! work array
+    real(wp),dimension(3*max(kx,ky,kz,kq,kr,ks)),intent(inout) :: w0 !! work array
     logical,intent(in),optional                      :: extrap   !! if extrapolation is allowed
                                                                  !! (if not present, default is False)
-
 
     integer :: lefty,leftz,leftq,leftr,lefts,&
                kcoly,kcolz,kcolq,kcolr,kcols,&
@@ -1920,8 +1919,8 @@
                     do j=1,ky
                         kcoly = kcoly + 1
                         call dbvalu(tx,bcoef(:,kcoly,kcolz,kcolq,kcolr,kcols),&
-                                             nx,kx,idx,xval,inbvx,work,iflag,&
-                                             temp1(j,k,q,r,s),extrap)
+                                             nx,kx,idx,xval,inbvx,w0,iflag,&
+                                             w5(j,k,q,r,s),extrap)
                         if (iflag/=0) return
                     end do
                 end do
@@ -1935,9 +1934,9 @@
         do r=1,kr
             do q=1,kq
                 do k=1,kz
-                    call dbvalu(ty(kcoly:),temp1(:,k,q,r,s),&
-                                ky,ky,idy,yval,inbvy,work,iflag,&
-                                temp2(k,q,r,s),extrap)
+                    call dbvalu(ty(kcoly:),w5(:,k,q,r,s),&
+                                ky,ky,idy,yval,inbvy,w0,iflag,&
+                                w4(k,q,r,s),extrap)
                     if (iflag/=0) return
                 end do
             end do
@@ -1949,9 +1948,9 @@
     do s=1,ks
         do r=1,kr
             do q=1,kq
-                call dbvalu(tz(kcolz:),temp2(:,q,r,s),&
-                            kz,kz,idz,zval,inbvz,work,iflag,&
-                            temp3(q,r,s),extrap)
+                call dbvalu(tz(kcolz:),w4(:,q,r,s),&
+                            kz,kz,idz,zval,inbvz,w0,iflag,&
+                            w3(q,r,s),extrap)
                 if (iflag/=0) return
             end do
         end do
@@ -1961,9 +1960,9 @@
     kcolq = leftq - kq + 1
     do s=1,ks
         do r=1,kr
-            call dbvalu(tq(kcolq:),temp3(:,r,s),&
-                        kq,kq,idq,qval,inbvq,work,iflag,&
-                        temp4(r,s),extrap)
+            call dbvalu(tq(kcolq:),w3(:,r,s),&
+                        kq,kq,idq,qval,inbvq,w0,iflag,&
+                        w2(r,s),extrap)
             if (iflag/=0) return
         end do
     end do
@@ -1971,15 +1970,15 @@
     ! r -> s
     kcolr = leftr - kr + 1
     do s=1,ks
-        call dbvalu(tr(kcolr:),temp4(:,s),&
-                    kr,kr,idr,rval,inbvr,work,iflag,&
-                    temp5(s),extrap)
+        call dbvalu(tr(kcolr:),w2(:,s),&
+                    kr,kr,idr,rval,inbvr,w0,iflag,&
+                    w1(s),extrap)
         if (iflag/=0) return
     end do
 
     ! s
     kcols = lefts - ks + 1
-    call dbvalu(ts(kcols:),temp5,ks,ks,ids,sval,inbvs,work,iflag,f,extrap)
+    call dbvalu(ts(kcols:),w1,ks,ks,ids,sval,inbvs,w0,iflag,f,extrap)
 
     end subroutine db6val
 !*****************************************************************************************
