@@ -169,11 +169,11 @@
 !
 !  [[db1val]] returns 0.0 if (`xval`,`yval`) is out of range. that is, if
 !```fortran
-!   xval < tx(1_ip) .or. xval > tx(nx+kx)
+!   xval < tx(1) .or. xval > tx(nx+kx)
 !```
 !  if the knots `tx` were chosen by [[db1ink]], then this is equivalent to:
 !```fortran
-!   xval < x(1_ip) .or. xval > x(nx)+epsx
+!   xval < x(1) .or. xval > x(nx)+epsx
 !```
 !  where
 !```fortran
@@ -258,7 +258,7 @@
 !  function `fun` and the `idx`-th derivative of a `kx`-th order b-spline,
 !  using the b-representation `(tx,bcoef,nx,kx)`, with an adaptive
 !  8-point Legendre-Gauss algorithm.
-!  `(x1,x2)` must be a subinterval of `t(kx) <= x <= t(nx+1_ip)`.
+!  `(x1,x2)` must be a subinterval of `t(kx) <= x <= t(nx+1)`.
 !
 !### See also
 !  * [[dbfqad]] -- the core routine.
@@ -300,7 +300,7 @@
 !>
 !  Determines the parameters of a function that interpolates
 !  the two-dimensional gridded data
-!  $$ [x(i),y(j),\mathrm{fcn}(i,j)] ~\mathrm{for}~ i=1_ip,..,n_x ~\mathrm{and}~ j=1_ip,..,n_y $$
+!  $$ [x(i),y(j),\mathrm{fcn}(i,j)] ~\mathrm{for}~ i=1,..,n_x ~\mathrm{and}~ j=1,..,n_y $$
 !  The interpolating function and its derivatives may
 !  subsequently be evaluated by the function [[db2val]].
 !
@@ -313,7 +313,7 @@
 !  where the functions \(u_i\) and \(v_j\) are one-dimensional b-spline
 !  basis functions. the coefficients \( a_{ij} \) are chosen so that
 !
-!  $$ s(x(i),y(j)) = \mathrm{fcn}(i,j) ~\mathrm{for}~ i=1_ip,..,n_x ~\mathrm{and}~ j=1_ip,..,n_y $$
+!  $$ s(x(i),y(j)) = \mathrm{fcn}(i,j) ~\mathrm{for}~ i=1,..,n_x ~\mathrm{and}~ j=1,..,n_y $$
 !
 !  Note that for each fixed value of \(y\), \( s(x,y) \) is a piecewise
 !  polynomial function of \(x\) alone, and for each fixed value of \(x\), \( s(x,y) \)
@@ -403,7 +403,7 @@
 
     logical :: status_ok
     real(wp),dimension(:),allocatable :: temp !! work array of length `nx*ny`
-    real(wp),dimension(:),allocatable :: work !! work array of length `max(2_ip*kx*(nx+1_ip),2_ip*ky*(ny+1_ip))`
+    real(wp),dimension(:),allocatable :: work !! work array of length `max(2*kx*(nx+1),2*ky*(ny+1))`
 
     !check validity of inputs
 
@@ -448,17 +448,17 @@
 !
 !  To evaluate the interpolant
 !  itself, set `idx=idy=0`, to evaluate the first partial with respect
-!  to `x`, set `idx=1_ip,idy=0`, and so on.
+!  to `x`, set `idx=1,idy=0`, and so on.
 !
 !  [[db2val]] returns 0.0 if `(xval,yval)` is out of range. that is, if
 !```fortran
-!   xval < tx(1_ip) .or. xval > tx(nx+kx) .or.
-!   yval < ty(1_ip) .or. yval > ty(ny+ky)
+!   xval < tx(1) .or. xval > tx(nx+kx) .or.
+!   yval < ty(1) .or. yval > ty(ny+ky)
 !```
 !  if the knots tx and ty were chosen by [[db2ink]], then this is equivalent to:
 !```fortran
-!   xval < x(1_ip) .or. xval > x(nx)+epsx .or.
-!   yval < y(1_ip) .or. yval > y(ny)+epsy
+!   xval < x(1) .or. xval > x(nx)+epsx .or.
+!   yval < y(1) .or. yval > y(ny)+epsy
 !```
 !  where
 !```fortran
@@ -861,8 +861,8 @@
 !  Determines the parameters of a function that interpolates
 !  the four-dimensional gridded data
 !  $$ [x(i),y(j),z(k),q(l),\mathrm{fcn}(i,j,k,l)] ~\mathrm{for}~
-!     i=1_ip,..,n_x ~\mathrm{and}~ j=1_ip,..,n_y, ~\mathrm{and}~ k=1_ip,..,n_z,
-!     ~\mathrm{and}~ l=1_ip,..,n_q $$
+!     i=1,..,n_x ~\mathrm{and}~ j=1,..,n_y, ~\mathrm{and}~ k=1,..,n_z,
+!     ~\mathrm{and}~ l=1,..,n_q $$
 !  The interpolating function and its derivatives may
 !  subsequently be evaluated by the function [[db4val]].
 !
@@ -974,8 +974,8 @@
 
     logical :: status_ok
     real(wp),dimension(:),allocatable :: temp !! work array of dimension `nx*ny*nz*nq`
-    real(wp),dimension(:),allocatable :: work !! work array of dimension `max(2_ip*kx*(nx+1_ip),
-                                              !! 2_ip*ky*(ny+1_ip),2_ip*kz*(nz+1_ip),2_ip*kq*(nq+1_ip))`
+    real(wp),dimension(:),allocatable :: work !! work array of dimension `max(2*kx*(nx+1),
+                                              !! 2*ky*(ny+1),2*kz*(nz+1),2*kq*(nq+1))`
 
     ! check validity of input
 
@@ -1003,7 +1003,7 @@
         allocate(work(max(2_ip*kx*(nx+1_ip),2_ip*ky*(ny+1_ip),2_ip*kz*(nz+1_ip),2_ip*kq*(nq+1_ip))))
 
         ! construct b-spline coefficients
-                      call dbtpcf(x,nx,fcn,  nx,ny*nz*nq,tx,kx,temp, work,iflag)
+                         call dbtpcf(x,nx,fcn,  nx,ny*nz*nq,tx,kx,temp, work,iflag)
         if (iflag==0_ip) call dbtpcf(y,ny,temp, ny,nx*nz*nq,ty,ky,bcoef,work,iflag)
         if (iflag==0_ip) call dbtpcf(z,nz,bcoef,nz,nx*ny*nq,tz,kz,temp, work,iflag)
         if (iflag==0_ip) call dbtpcf(q,nq,temp, nq,nx*ny*nz,tq,kq,bcoef,work,iflag)
@@ -1317,7 +1317,7 @@
     logical :: status_ok
     real(wp),dimension(:),allocatable :: temp !! work array of length `nx*ny*nz*nq*nr`
     real(wp),dimension(:),allocatable :: work !! work array of length `max(2*kx*(nx+1),
-                                              !! 2*ky*(ny+1),2*kz*(nz+1),2*kq*(nq+1),2_ip*kr*(nr+1))`
+                                              !! 2*ky*(ny+1),2*kz*(nz+1),2*kq*(nq+1),2*kr*(nr+1))`
     integer(ip) :: i, j, k, l, m, ii !! counter
 
     !  check validity of input
@@ -1364,7 +1364,7 @@
         end do
 
         !  construct b-spline coefficients
-                      call dbtpcf(x,nx,temp,  nx,ny*nz*nq*nr,tx,kx,bcoef,work,iflag)
+                         call dbtpcf(x,nx,temp,  nx,ny*nz*nq*nr,tx,kx,bcoef,work,iflag)
         if (iflag==0_ip) call dbtpcf(y,ny,bcoef, ny,nx*nz*nq*nr,ty,ky,temp, work,iflag)
         if (iflag==0_ip) call dbtpcf(z,nz,temp,  nz,nx*ny*nq*nr,tz,kz,bcoef,work,iflag)
         if (iflag==0_ip) call dbtpcf(q,nq,bcoef, nq,nx*ny*nz*nr,tq,kq,temp, work,iflag)
