@@ -42,7 +42,7 @@
     real(wp),allocatable  :: fcn_3d(:,:,:)
     real(wp) :: val,tru,err,errmax
     logical  :: fail
-    integer  :: i,j,k,l,m,idx,idy,idz
+    integer  :: i,j,k,idx,idy,idz
     integer  :: iflag
 
     nx = n; ny = n; nz = n
