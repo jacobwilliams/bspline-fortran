@@ -70,6 +70,7 @@
         integer :: kx  = 0  !! The order of spline pieces in \(x\)
         real(wp),dimension(:),allocatable :: bcoef  !! array of coefficients of the b-spline interpolant
         real(wp),dimension(:),allocatable :: tx  !! The knots in the \(x\) direction for the spline interpolant
+        real(wp),dimension(:),allocatable :: work_val_1   !! [[db1val] work array of dimension `3*kx`
         contains
         private
         generic,public :: initialize => initialize_1d_auto_knots,initialize_1d_specify_knots
@@ -95,6 +96,8 @@
         real(wp),dimension(:),allocatable :: ty  !! The knots in the \(y\) direction for the spline interpolant
         integer :: inbvy = 1  !! internal variable used for efficient processing
         integer :: iloy = 1  !! internal variable used for efficient processing
+        real(wp),dimension(:),allocatable :: work_val_1  !! [[db2val] work array of dimension `ky`
+        real(wp),dimension(:),allocatable :: work_val_2  !! [[db2val] work array of dimension `3*max(kx,ky)`
         contains
         private
         generic,public :: initialize => initialize_2d_auto_knots,initialize_2d_specify_knots
@@ -123,6 +126,9 @@
         integer :: inbvz = 1  !! internal variable used for efficient processing
         integer :: iloy = 1  !! internal variable used for efficient processing
         integer :: iloz = 1  !! internal variable used for efficient processing
+        real(wp),dimension(:,:),allocatable :: work_val_1  !! [[db3val] work array of dimension `ky,kz`
+        real(wp),dimension(:),allocatable   :: work_val_2  !! [[db3val] work array of dimension `kz`
+        real(wp),dimension(:),allocatable   :: work_val_3  !! [[db3val] work array of dimension `3*max(kx,ky,kz)`
         contains
         private
         generic,public :: initialize => initialize_3d_auto_knots,initialize_3d_specify_knots
@@ -156,6 +162,10 @@
         integer :: iloy  = 1  !! internal variable used for efficient processing
         integer :: iloz  = 1  !! internal variable used for efficient processing
         integer :: iloq  = 1  !! internal variable used for efficient processing
+        real(wp),dimension(:,:,:),allocatable :: work_val_1  !! [[db4val]] work array of dimension `ky,kz,kq`
+        real(wp),dimension(:,:),allocatable   :: work_val_2  !! [[db4val]] work array of dimension `kz,kq`
+        real(wp),dimension(:),allocatable     :: work_val_3  !! [[db4val]] work array of dimension `kq`
+        real(wp),dimension(:),allocatable     :: work_val_4  !! [[db4val]] work array of dimension `3*max(kx,ky,kz,kq)`
         contains
         private
         generic,public :: initialize => initialize_4d_auto_knots,initialize_4d_specify_knots
@@ -194,6 +204,11 @@
         integer :: iloz  = 1  !! internal variable used for efficient processing
         integer :: iloq  = 1  !! internal variable used for efficient processing
         integer :: ilor  = 1  !! internal variable used for efficient processing
+        real(wp),dimension(:,:,:,:),allocatable :: work_val_1  !! [[db5val]] work array of dimension `ky,kz,kq,kr`
+        real(wp),dimension(:,:,:),allocatable   :: work_val_2  !! [[db5val]] work array of dimension `kz,kq,kr`
+        real(wp),dimension(:,:),allocatable     :: work_val_3  !! [[db5val]] work array of dimension `kq,kr`
+        real(wp),dimension(:),allocatable       :: work_val_4  !! [[db5val]] work array of dimension `kr`
+        real(wp),dimension(:),allocatable       :: work_val_5  !! [[db5val]] work array of dimension `3*max(kx,ky,kz,kq,kr)`
         contains
         private
         generic,public :: initialize => initialize_5d_auto_knots,initialize_5d_specify_knots
@@ -237,6 +252,12 @@
         integer :: iloq  = 1  !! internal variable used for efficient processing
         integer :: ilor  = 1  !! internal variable used for efficient processing
         integer :: ilos  = 1  !! internal variable used for efficient processing
+        real(wp),dimension(:,:,:,:,:),allocatable :: work_val_1  !! [[db6val]] work array of dimension `ky,kz,kq,kr,ks`
+        real(wp),dimension(:,:,:,:),allocatable   :: work_val_2  !! [[db6val]] work array of dimension `kz,kq,kr,ks`
+        real(wp),dimension(:,:,:),allocatable     :: work_val_3  !! [[db6val]] work array of dimension `kq,kr,ks`
+        real(wp),dimension(:,:),allocatable       :: work_val_4  !! [[db6val]] work array of dimension `kr,ks`
+        real(wp),dimension(:),allocatable         :: work_val_5  !! [[db6val]] work array of dimension `ks`
+        real(wp),dimension(:),allocatable         :: work_val_6  !! [[db6val]] work array of dimension `3*max(kx,ky,kz,kq,kr,ks)`
         contains
         private
         generic,public :: initialize => initialize_6d_auto_knots,initialize_6d_specify_knots
@@ -375,8 +396,9 @@
 
     s = 2*int_size + logical_size + 2*int_size
 
-    if (allocated(me%bcoef)) s = s + real_size*size(me%bcoef)
-    if (allocated(me%tx))    s = s + real_size*size(me%tx)
+    if (allocated(me%bcoef))      s = s + real_size*size(me%bcoef)
+    if (allocated(me%tx))         s = s + real_size*size(me%tx)
+    if (allocated(me%work_val_1)) s = s + real_size*size(me%work_val_1)
 
     end function size_1d
 !*****************************************************************************************
@@ -394,10 +416,12 @@
 
     s = 2*int_size + logical_size + 6*int_size
 
-    if (allocated(me%bcoef)) s = s + real_size*size(me%bcoef,1)*&
-                                               size(me%bcoef,2)
-    if (allocated(me%tx)) s = s + real_size*size(me%tx)
-    if (allocated(me%ty)) s = s + real_size*size(me%ty)
+    if (allocated(me%bcoef))      s = s + real_size*size(me%bcoef,1)*&
+                                                    size(me%bcoef,2)
+    if (allocated(me%tx))         s = s + real_size*size(me%tx)
+    if (allocated(me%ty))         s = s + real_size*size(me%ty)
+    if (allocated(me%work_val_1)) s = s + real_size*size(me%work_val_1)
+    if (allocated(me%work_val_2)) s = s + real_size*size(me%work_val_2)
 
     end function size_2d
 !*****************************************************************************************
@@ -415,12 +439,16 @@
 
     s = 2*int_size + logical_size + 10*int_size
 
-    if (allocated(me%bcoef)) s = s + real_size*size(me%bcoef,1)*&
-                                               size(me%bcoef,2)*&
-                                               size(me%bcoef,3)
-    if (allocated(me%tx)) s = s + real_size*size(me%tx)
-    if (allocated(me%ty)) s = s + real_size*size(me%ty)
-    if (allocated(me%tz)) s = s + real_size*size(me%tz)
+    if (allocated(me%bcoef))      s = s + real_size*size(me%bcoef,1)*&
+                                                    size(me%bcoef,2)*&
+                                                    size(me%bcoef,3)
+    if (allocated(me%tx))         s = s + real_size*size(me%tx)
+    if (allocated(me%ty))         s = s + real_size*size(me%ty)
+    if (allocated(me%tz))         s = s + real_size*size(me%tz)
+    if (allocated(me%work_val_1)) s = s + real_size*size(me%work_val_1,1)*&
+                                                    size(me%work_val_1,2)
+    if (allocated(me%work_val_2)) s = s + real_size*size(me%work_val_2)
+    if (allocated(me%work_val_3)) s = s + real_size*size(me%work_val_3)
 
     end function size_3d
 !*****************************************************************************************
@@ -438,14 +466,21 @@
 
     s = 2*int_size + logical_size + 14*int_size
 
-    if (allocated(me%bcoef)) s = s + real_size*size(me%bcoef,1)*&
-                                               size(me%bcoef,2)*&
-                                               size(me%bcoef,3)*&
-                                               size(me%bcoef,4)
-    if (allocated(me%tx)) s = s + real_size*size(me%tx)
-    if (allocated(me%ty)) s = s + real_size*size(me%ty)
-    if (allocated(me%tz)) s = s + real_size*size(me%tz)
-    if (allocated(me%tq)) s = s + real_size*size(me%tq)
+    if (allocated(me%bcoef))      s = s + real_size*size(me%bcoef,1)*&
+                                                    size(me%bcoef,2)*&
+                                                    size(me%bcoef,3)*&
+                                                    size(me%bcoef,4)
+    if (allocated(me%tx))         s = s + real_size*size(me%tx)
+    if (allocated(me%ty))         s = s + real_size*size(me%ty)
+    if (allocated(me%tz))         s = s + real_size*size(me%tz)
+    if (allocated(me%tq))         s = s + real_size*size(me%tq)
+    if (allocated(me%work_val_1)) s = s + real_size*size(me%work_val_1,1)*&
+                                                    size(me%work_val_1,2)*&
+                                                    size(me%work_val_1,3)
+    if (allocated(me%work_val_2)) s = s + real_size*size(me%work_val_2,1)*&
+                                                    size(me%work_val_2,2)
+    if (allocated(me%work_val_3)) s = s + real_size*size(me%work_val_3)
+    if (allocated(me%work_val_4)) s = s + real_size*size(me%work_val_4)
 
     end function size_4d
 !*****************************************************************************************
@@ -463,16 +498,27 @@
 
     s = 2*int_size + logical_size + 18*int_size
 
-    if (allocated(me%bcoef)) s = s + real_size*size(me%bcoef,1)*&
-                                               size(me%bcoef,2)*&
-                                               size(me%bcoef,3)*&
-                                               size(me%bcoef,4)*&
-                                               size(me%bcoef,5)
-    if (allocated(me%tx)) s = s + real_size*size(me%tx)
-    if (allocated(me%ty)) s = s + real_size*size(me%ty)
-    if (allocated(me%tz)) s = s + real_size*size(me%tz)
-    if (allocated(me%tq)) s = s + real_size*size(me%tq)
-    if (allocated(me%tr)) s = s + real_size*size(me%tr)
+    if (allocated(me%bcoef))      s = s + real_size*size(me%bcoef,1)*&
+                                                    size(me%bcoef,2)*&
+                                                    size(me%bcoef,3)*&
+                                                    size(me%bcoef,4)*&
+                                                    size(me%bcoef,5)
+    if (allocated(me%tx))         s = s + real_size*size(me%tx)
+    if (allocated(me%ty))         s = s + real_size*size(me%ty)
+    if (allocated(me%tz))         s = s + real_size*size(me%tz)
+    if (allocated(me%tq))         s = s + real_size*size(me%tq)
+    if (allocated(me%tr))         s = s + real_size*size(me%tr)
+    if (allocated(me%work_val_1)) s = s + real_size*size(me%work_val_1,1)*&
+                                                    size(me%work_val_1,2)*&
+                                                    size(me%work_val_1,3)*&
+                                                    size(me%work_val_1,4)
+    if (allocated(me%work_val_2)) s = s + real_size*size(me%work_val_2,1)*&
+                                                    size(me%work_val_2,2)*&
+                                                    size(me%work_val_2,3)
+    if (allocated(me%work_val_3)) s = s + real_size*size(me%work_val_3,1)*&
+                                                    size(me%work_val_3,2)
+    if (allocated(me%work_val_4)) s = s + real_size*size(me%work_val_4)
+    if (allocated(me%work_val_5)) s = s + real_size*size(me%work_val_5)
 
     end function size_5d
 !*****************************************************************************************
@@ -490,18 +536,34 @@
 
     s = 2*int_size + logical_size + 22*int_size
 
-    if (allocated(me%bcoef)) s = s + real_size*size(me%bcoef,1)*&
-                                               size(me%bcoef,2)*&
-                                               size(me%bcoef,3)*&
-                                               size(me%bcoef,4)*&
-                                               size(me%bcoef,5)*&
-                                               size(me%bcoef,6)
-    if (allocated(me%tx)) s = s + real_size*size(me%tx)
-    if (allocated(me%ty)) s = s + real_size*size(me%ty)
-    if (allocated(me%tz)) s = s + real_size*size(me%tz)
-    if (allocated(me%tq)) s = s + real_size*size(me%tq)
-    if (allocated(me%tr)) s = s + real_size*size(me%tr)
-    if (allocated(me%ts)) s = s + real_size*size(me%ts)
+    if (allocated(me%bcoef))      s = s + real_size*size(me%bcoef,1)*&
+                                                    size(me%bcoef,2)*&
+                                                    size(me%bcoef,3)*&
+                                                    size(me%bcoef,4)*&
+                                                    size(me%bcoef,5)*&
+                                                    size(me%bcoef,6)
+    if (allocated(me%tx))         s = s + real_size*size(me%tx)
+    if (allocated(me%ty))         s = s + real_size*size(me%ty)
+    if (allocated(me%tz))         s = s + real_size*size(me%tz)
+    if (allocated(me%tq))         s = s + real_size*size(me%tq)
+    if (allocated(me%tr))         s = s + real_size*size(me%tr)
+    if (allocated(me%ts))         s = s + real_size*size(me%ts)
+    if (allocated(me%work_val_1)) s = s + real_size*size(me%work_val_1,1)*&
+                                                    size(me%work_val_1,2)*&
+                                                    size(me%work_val_1,3)*&
+                                                    size(me%work_val_1,4)*&
+                                                    size(me%work_val_1,5)
+    if (allocated(me%work_val_2)) s = s + real_size*size(me%work_val_2,1)*&
+                                                    size(me%work_val_2,2)*&
+                                                    size(me%work_val_2,3)*&
+                                                    size(me%work_val_2,4)
+    if (allocated(me%work_val_3)) s = s + real_size*size(me%work_val_3,1)*&
+                                                    size(me%work_val_3,2)*&
+                                                    size(me%work_val_3,3)
+    if (allocated(me%work_val_4)) s = s + real_size*size(me%work_val_4,1)*&
+                                                    size(me%work_val_4,2)
+    if (allocated(me%work_val_5)) s = s + real_size*size(me%work_val_5)
+    if (allocated(me%work_val_6)) s = s + real_size*size(me%work_val_6)
 
     end function size_6d
 !*****************************************************************************************
@@ -539,8 +601,9 @@
 
     me%nx  = 0
     me%kx  = 0
-    if (allocated(me%bcoef))    deallocate(me%bcoef)
-    if (allocated(me%tx))       deallocate(me%tx)
+    if (allocated(me%bcoef))      deallocate(me%bcoef)
+    if (allocated(me%tx))         deallocate(me%tx)
+    if (allocated(me%work_val_1)) deallocate(me%work_val_1)
 
     end subroutine destroy_1d
 !*****************************************************************************************
@@ -563,9 +626,11 @@
     me%ky    = 0
     me%inbvy = 1
     me%iloy  = 1
-    if (allocated(me%bcoef))    deallocate(me%bcoef)
-    if (allocated(me%tx))       deallocate(me%tx)
-    if (allocated(me%ty))       deallocate(me%ty)
+    if (allocated(me%bcoef))      deallocate(me%bcoef)
+    if (allocated(me%tx))         deallocate(me%tx)
+    if (allocated(me%ty))         deallocate(me%ty)
+    if (allocated(me%work_val_1)) deallocate(me%work_val_1)
+    if (allocated(me%work_val_2)) deallocate(me%work_val_2)
 
     end subroutine destroy_2d
 !*****************************************************************************************
@@ -592,10 +657,13 @@
     me%inbvz = 1
     me%iloy  = 1
     me%iloz  = 1
-    if (allocated(me%bcoef))    deallocate(me%bcoef)
-    if (allocated(me%tx))       deallocate(me%tx)
-    if (allocated(me%ty))       deallocate(me%ty)
-    if (allocated(me%tz))       deallocate(me%tz)
+    if (allocated(me%bcoef))      deallocate(me%bcoef)
+    if (allocated(me%tx))         deallocate(me%tx)
+    if (allocated(me%ty))         deallocate(me%ty)
+    if (allocated(me%tz))         deallocate(me%tz)
+    if (allocated(me%work_val_1)) deallocate(me%work_val_1)
+    if (allocated(me%work_val_2)) deallocate(me%work_val_2)
+    if (allocated(me%work_val_3)) deallocate(me%work_val_3)
 
     end subroutine destroy_3d
 !*****************************************************************************************
@@ -624,11 +692,15 @@
     me%iloy  = 1
     me%iloz  = 1
     me%iloq  = 1
-    if (allocated(me%bcoef))   deallocate(me%bcoef)
-    if (allocated(me%tx))      deallocate(me%tx)
-    if (allocated(me%ty))      deallocate(me%ty)
-    if (allocated(me%tz))      deallocate(me%tz)
-    if (allocated(me%tq))      deallocate(me%tq)
+    if (allocated(me%bcoef))      deallocate(me%bcoef)
+    if (allocated(me%tx))         deallocate(me%tx)
+    if (allocated(me%ty))         deallocate(me%ty)
+    if (allocated(me%tz))         deallocate(me%tz)
+    if (allocated(me%tq))         deallocate(me%tq)
+    if (allocated(me%work_val_1)) deallocate(me%work_val_1)
+    if (allocated(me%work_val_2)) deallocate(me%work_val_2)
+    if (allocated(me%work_val_3)) deallocate(me%work_val_3)
+    if (allocated(me%work_val_4)) deallocate(me%work_val_4)
 
     end subroutine destroy_4d
 !*****************************************************************************************
@@ -661,12 +733,17 @@
     me%iloz  = 1
     me%iloq  = 1
     me%ilor  = 1
-    if (allocated(me%bcoef))    deallocate(me%bcoef)
-    if (allocated(me%tx))       deallocate(me%tx)
-    if (allocated(me%ty))       deallocate(me%ty)
-    if (allocated(me%tz))       deallocate(me%tz)
-    if (allocated(me%tq))       deallocate(me%tq)
-    if (allocated(me%tr))       deallocate(me%tr)
+    if (allocated(me%bcoef))      deallocate(me%bcoef)
+    if (allocated(me%tx))         deallocate(me%tx)
+    if (allocated(me%ty))         deallocate(me%ty)
+    if (allocated(me%tz))         deallocate(me%tz)
+    if (allocated(me%tq))         deallocate(me%tq)
+    if (allocated(me%tr))         deallocate(me%tr)
+    if (allocated(me%work_val_1)) deallocate(me%work_val_1)
+    if (allocated(me%work_val_2)) deallocate(me%work_val_2)
+    if (allocated(me%work_val_3)) deallocate(me%work_val_3)
+    if (allocated(me%work_val_4)) deallocate(me%work_val_4)
+    if (allocated(me%work_val_5)) deallocate(me%work_val_5)
 
     end subroutine destroy_5d
 !*****************************************************************************************
@@ -703,13 +780,19 @@
     me%iloq  = 1
     me%ilor  = 1
     me%ilos  = 1
-    if (allocated(me%bcoef))    deallocate(me%bcoef)
-    if (allocated(me%tx))       deallocate(me%tx)
-    if (allocated(me%ty))       deallocate(me%ty)
-    if (allocated(me%tz))       deallocate(me%tz)
-    if (allocated(me%tq))       deallocate(me%tq)
-    if (allocated(me%tr))       deallocate(me%tr)
-    if (allocated(me%ts))       deallocate(me%ts)
+    if (allocated(me%bcoef))      deallocate(me%bcoef)
+    if (allocated(me%tx))         deallocate(me%tx)
+    if (allocated(me%ty))         deallocate(me%ty)
+    if (allocated(me%tz))         deallocate(me%tz)
+    if (allocated(me%tq))         deallocate(me%tq)
+    if (allocated(me%tr))         deallocate(me%tr)
+    if (allocated(me%ts))         deallocate(me%ts)
+    if (allocated(me%work_val_1)) deallocate(me%work_val_1)
+    if (allocated(me%work_val_2)) deallocate(me%work_val_2)
+    if (allocated(me%work_val_3)) deallocate(me%work_val_3)
+    if (allocated(me%work_val_4)) deallocate(me%work_val_4)
+    if (allocated(me%work_val_5)) deallocate(me%work_val_5)
+    if (allocated(me%work_val_6)) deallocate(me%work_val_6)
 
     end subroutine destroy_6d
 !*****************************************************************************************
@@ -875,6 +958,7 @@
 
     allocate(me%tx(nx+kx))
     allocate(me%bcoef(nx))
+    allocate(me%work_val_1(3*kx))
 
     iknot = 0         !knot sequence chosen by db1ink
 
@@ -928,6 +1012,7 @@
 
         allocate(me%tx(nx+kx))
         allocate(me%bcoef(nx))
+        allocate(me%work_val_1(3*kx))
 
         me%tx = tx
 
@@ -958,7 +1043,8 @@
     integer,intent(out)             :: iflag !! status flag (see [[db1val]])
 
     if (me%initialized) then
-        call db1val(xval,idx,me%tx,me%nx,me%kx,me%bcoef,f,iflag,me%inbvx,me%extrap)
+        call db1val(xval,idx,me%tx,me%nx,me%kx,me%bcoef,f,iflag,&
+                    me%inbvx,me%work_val_1,extrap=me%extrap)
     else
         iflag = 1
     end if
@@ -982,7 +1068,7 @@
     integer,intent(out)             :: iflag !! status flag (see [[db1sqad]])
 
     if (me%initialized) then
-        call db1sqad(me%tx,me%bcoef,me%nx,me%kx,x1,x2,f,iflag)
+        call db1sqad(me%tx,me%bcoef,me%nx,me%kx,x1,x2,f,iflag,me%work_val_1)
     else
         iflag = 1
     end if
@@ -1011,7 +1097,7 @@
     integer,intent(out)             :: iflag !! status flag (see [[db1sqad]])
 
     if (me%initialized) then
-        call db1fqad(fun,me%tx,me%bcoef,me%nx,me%kx,idx,x1,x2,tol,f,iflag)
+        call db1fqad(fun,me%tx,me%bcoef,me%nx,me%kx,idx,x1,x2,tol,f,iflag,me%work_val_1)
     else
         iflag = 1
     end if
@@ -1141,6 +1227,8 @@
     allocate(me%tx(nx+kx))
     allocate(me%ty(ny+ky))
     allocate(me%bcoef(nx,ny))
+    allocate(me%work_val_1(ky))
+    allocate(me%work_val_2(3*max(kx,ky)))
 
     iknot = 0         !knot sequence chosen by db2ink
 
@@ -1209,6 +1297,8 @@
         allocate(me%tx(nx+kx))
         allocate(me%ty(ny+ky))
         allocate(me%bcoef(nx,ny))
+        allocate(me%work_val_1(ky))
+        allocate(me%work_val_2(3*max(kx,ky)))
 
         me%tx = tx
         me%ty = ty
@@ -1249,7 +1339,8 @@
                     me%kx,me%ky,&
                     me%bcoef,f,iflag,&
                     me%inbvx,me%inbvy,me%iloy,&
-                    me%extrap)
+                    me%work_val_1,me%work_val_2,&
+                    extrap=me%extrap)
     else
         iflag = 1
     end if
@@ -1399,6 +1490,9 @@
     allocate(me%ty(ny+ky))
     allocate(me%tz(nz+kz))
     allocate(me%bcoef(nx,ny,nz))
+    allocate(me%work_val_1(ky,kz))
+    allocate(me%work_val_2(kz))
+    allocate(me%work_val_3(3*max(kx,ky,kz)))
 
     iknot = 0         !knot sequence chosen by db3ink
 
@@ -1484,6 +1578,9 @@
         allocate(me%ty(ny+ky))
         allocate(me%tz(nz+kz))
         allocate(me%bcoef(nx,ny,nz))
+        allocate(me%work_val_1(ky,kz))
+        allocate(me%work_val_2(kz))
+        allocate(me%work_val_3(3*max(kx,ky,kz)))
 
         me%tx = tx
         me%ty = ty
@@ -1533,7 +1630,8 @@
                     me%bcoef,f,iflag,&
                     me%inbvx,me%inbvy,me%inbvz,&
                     me%iloy,me%iloz,&
-                    me%extrap)
+                    me%work_val_1,me%work_val_2,me%work_val_3,&
+                    extrap=me%extrap)
     else
         iflag = 1
     end if
@@ -1703,6 +1801,10 @@
     allocate(me%tz(nz+kz))
     allocate(me%tq(nq+kq))
     allocate(me%bcoef(nx,ny,nz,nq))
+    allocate(me%work_val_1(ky,kz,kq))
+    allocate(me%work_val_2(kz,kq))
+    allocate(me%work_val_3(kq))
+    allocate(me%work_val_4(3*max(kx,ky,kz,kq)))
 
     iknot = 0         !knot sequence chosen by db4ink
 
@@ -1801,6 +1903,10 @@
         allocate(me%tz(nz+kz))
         allocate(me%tq(nq+kq))
         allocate(me%bcoef(nx,ny,nz,nq))
+        allocate(me%work_val_1(ky,kz,kq))
+        allocate(me%work_val_2(kz,kq))
+        allocate(me%work_val_3(kq))
+        allocate(me%work_val_4(3*max(kx,ky,kz,kq)))
 
         me%tx = tx
         me%ty = ty
@@ -1853,7 +1959,8 @@
                     me%bcoef,f,iflag,&
                     me%inbvx,me%inbvy,me%inbvz,me%inbvq,&
                     me%iloy,me%iloz,me%iloq,&
-                    me%extrap)
+                    me%work_val_1,me%work_val_2,me%work_val_3,me%work_val_4,&
+                    extrap=me%extrap)
     else
         iflag = 1
     end if
@@ -2043,6 +2150,11 @@
     allocate(me%tq(nq+kq))
     allocate(me%tr(nr+kr))
     allocate(me%bcoef(nx,ny,nz,nq,nr))
+    allocate(me%work_val_1(ky,kz,kq,kr))
+    allocate(me%work_val_2(kz,kq,kr))
+    allocate(me%work_val_3(kq,kr))
+    allocate(me%work_val_4(kr))
+    allocate(me%work_val_5(3*max(kx,ky,kz,kq,kr)))
 
     iknot = 0         !knot sequence chosen by db5ink
 
@@ -2154,6 +2266,11 @@
         allocate(me%tq(nq+kq))
         allocate(me%tr(nr+kr))
         allocate(me%bcoef(nx,ny,nz,nq,nr))
+        allocate(me%work_val_1(ky,kz,kq,kr))
+        allocate(me%work_val_2(kz,kq,kr))
+        allocate(me%work_val_3(kq,kr))
+        allocate(me%work_val_4(kr))
+        allocate(me%work_val_5(3*max(kx,ky,kz,kq,kr)))
 
         me%tx = tx
         me%ty = ty
@@ -2209,7 +2326,8 @@
                     me%bcoef,f,iflag,&
                     me%inbvx,me%inbvy,me%inbvz,me%inbvq,me%inbvr,&
                     me%iloy,me%iloz,me%iloq,me%ilor,&
-                    me%extrap)
+                    me%work_val_1,me%work_val_2,me%work_val_3,me%work_val_4,me%work_val_5,&
+                    extrap=me%extrap)
     else
         iflag = 1
     end if
@@ -2422,6 +2540,12 @@
     allocate(me%tr(nr+kr))
     allocate(me%ts(ns+ks))
     allocate(me%bcoef(nx,ny,nz,nq,nr,ns))
+    allocate(me%work_val_1(ky,kz,kq,kr,ks))
+    allocate(me%work_val_2(kz,kq,kr,ks))
+    allocate(me%work_val_3(kq,kr,ks))
+    allocate(me%work_val_4(kr,ks))
+    allocate(me%work_val_5(ks))
+    allocate(me%work_val_6(3*max(kx,ky,kz,kq,kr,ks)))
 
     iknot = 0         !knot sequence chosen by db6ink
 
@@ -2545,6 +2669,12 @@
         allocate(me%tr(nr+kr))
         allocate(me%ts(ns+ks))
         allocate(me%bcoef(nx,ny,nz,nq,nr,ns))
+        allocate(me%work_val_1(ky,kz,kq,kr,ks))
+        allocate(me%work_val_2(kz,kq,kr,ks))
+        allocate(me%work_val_3(kq,kr,ks))
+        allocate(me%work_val_4(kr,ks))
+        allocate(me%work_val_5(ks))
+        allocate(me%work_val_6(3*max(kx,ky,kz,kq,kr,ks)))
 
         me%tx = tx
         me%ty = ty
@@ -2603,7 +2733,8 @@
                     me%bcoef,f,iflag,&
                     me%inbvx,me%inbvy,me%inbvz,me%inbvq,me%inbvr,me%inbvs,&
                     me%iloy,me%iloz,me%iloq,me%ilor,me%ilos,&
-                    me%extrap)
+                    me%work_val_1,me%work_val_2,me%work_val_3,me%work_val_4,me%work_val_5,me%work_val_6,&
+                    extrap=me%extrap)
     else
         iflag = 1
     end if

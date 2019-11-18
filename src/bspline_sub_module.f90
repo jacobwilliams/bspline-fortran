@@ -124,8 +124,8 @@
                                                       !! * 712 = `size(tx)` \( \ne \) `nx+kx`.
                                                       !! * 800 = `size(x)` \( \ne \) `size(bcoef,1)`.
 
-    real(wp),dimension(2*kx*(nx+1)) :: work
     logical :: status_ok
+    real(wp),dimension(:),allocatable :: work   !! work array of dimension `2*kx*(nx+1)`
 
     !check validity of inputs
 
@@ -142,14 +142,16 @@
     if (status_ok) then
 
         !choose knots
-
         if (iknot == 0) then
             call dbknot(x,nx,kx,tx)
         end if
 
-        !construct b-spline coefficients
+        allocate(work(2*kx*(nx+1)))
 
+        !construct b-spline coefficients
         call dbtpcf(x,nx,fcn,nx,1,tx,kx,bcoef,work,iflag)
+
+        deallocate(work)
 
     end if
 
@@ -184,7 +186,7 @@
 !### History
 !  * Jacob Williams, 10/30/2015 : Created 1D routine.
 
-    pure subroutine db1val(xval,idx,tx,nx,kx,bcoef,f,iflag,inbvx,extrap)
+    pure subroutine db1val(xval,idx,tx,nx,kx,bcoef,f,iflag,inbvx,work,extrap)
 
     implicit none
 
@@ -205,10 +207,9 @@
     integer,intent(inout)                :: inbvx    !! initialization parameter which must be set
                                                      !! to 1 the first time this routine is called,
                                                      !! and must not be changed by the user.
+    real(wp),dimension(3*kx),intent(inout) :: work   !! work array
     logical,intent(in),optional          :: extrap   !! if extrapolation is allowed
                                                      !! (if not present, default is False)
-
-    real(wp),dimension(3*kx) :: work
 
     f = 0.0_wp
 
@@ -229,7 +230,7 @@
 !### See also
 !  * [[dbsqad]] -- the core routine.
 
-    pure subroutine db1sqad(tx,bcoef,nx,kx,x1,x2,f,iflag)
+    pure subroutine db1sqad(tx,bcoef,nx,kx,x1,x2,f,iflag,work)
 
     implicit none
 
@@ -244,8 +245,7 @@
                                                     !!
                                                     !! * \( = 0 \)   : no errors
                                                     !! * \( \ne 0 \) : error
-
-    real(wp),dimension(3*kx) :: work !! work array for [[dbsqad]]
+    real(wp),dimension(3*kx),intent(inout) :: work  !! work array for [[dbsqad]]
 
     call dbsqad(tx,bcoef,nx,kx,x1,x2,f,work,iflag)
 
@@ -266,7 +266,7 @@
 !@note This one is not pure, because we are not enforcing
 !      that the user function `fun` be pure.
 
-    subroutine db1fqad(fun,tx,bcoef,nx,kx,idx,x1,x2,tol,f,iflag)
+    subroutine db1fqad(fun,tx,bcoef,nx,kx,idx,x1,x2,tol,f,iflag,work)
 
     implicit none
 
@@ -289,8 +289,7 @@
                                                   !!
                                                   !! * \( = 0 \)   : no errors
                                                   !! * \( \ne 0 \) : error
-
-    real(wp),dimension(3*kx) :: work !! work array for [[dbfqad]]
+    real(wp),dimension(3*kx),intent(inout) :: work !! work array for [[dbfqad]]
 
     call dbfqad(fun,tx,bcoef,nx,kx,idx,x1,x2,tol,f,iflag,work)
 
@@ -402,9 +401,9 @@
                                                       !! * 800 = `size(x)`  \( \ne \) `size(bcoef,1)`
                                                       !! * 801 = `size(y)`  \( \ne \) `size(bcoef,2)`
 
-    real(wp),dimension(nx*ny) :: temp
-    real(wp),dimension(max(2*kx*(nx+1),2*ky*(ny+1))) :: work
     logical :: status_ok
+    real(wp),dimension(:),allocatable :: temp !! work array of length `nx*ny`
+    real(wp),dimension(:),allocatable :: work !! work array of length `max(2*kx*(nx+1),2*ky*(ny+1))`
 
     !check validity of inputs
 
@@ -421,16 +420,20 @@
     if (status_ok) then
 
         !choose knots
-
         if (iknot == 0) then
             call dbknot(x,nx,kx,tx)
             call dbknot(y,ny,ky,ty)
         end if
 
-        !construct b-spline coefficients
+        allocate(temp(nx*ny))
+        allocate(work(max(2*kx*(nx+1),2*ky*(ny+1))))
 
+        !construct b-spline coefficients
                       call dbtpcf(x,nx,fcn, nx,ny,tx,kx,temp, work,iflag)
         if (iflag==0) call dbtpcf(y,ny,temp,ny,nx,ty,ky,bcoef,work,iflag)
+
+        deallocate(temp)
+        deallocate(work)
 
     end if
 
@@ -471,7 +474,7 @@
 !  * JEC : 000330 modified array declarations.
 !  * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
 
-    pure subroutine db2val(xval,yval,idx,idy,tx,ty,nx,ny,kx,ky,bcoef,f,iflag,inbvx,inbvy,iloy,extrap)
+    pure subroutine db2val(xval,yval,idx,idy,tx,ty,nx,ny,kx,ky,bcoef,f,iflag,inbvx,inbvy,iloy,temp,work,extrap)
 
     implicit none
 
@@ -508,12 +511,12 @@
     integer,intent(inout)                :: iloy     !! initialization parameter which must be set to 1
                                                      !! the first time this routine is called,
                                                      !! and must not be changed by the user.
+    real(wp),dimension(ky),intent(inout) :: temp !! work array
+    real(wp),dimension(3*max(kx,ky)),intent(inout) :: work !! work array
     logical,intent(in),optional          :: extrap   !! if extrapolation is allowed
                                                      !! (if not present, default is False)
 
     integer :: k, lefty, kcol
-    real(wp),dimension(ky) :: temp
-    real(wp),dimension(3*max(kx,ky)) :: work
 
     f = 0.0_wp
 
@@ -664,9 +667,9 @@
                                                       !! * 801 = `size(y) ` \(\ne\) `size(bcoef,2)`
                                                       !! * 802 = `size(z) ` \(\ne\) `size(bcoef,3)`
 
-    real(wp),dimension(nx*ny*nz) :: temp
-    real(wp),dimension(max(2*kx*(nx+1),2*ky*(ny+1),2*kz*(nz+1))) :: work
     logical :: status_ok
+    real(wp),dimension(:),allocatable :: temp !! work array of length `nx*ny*nz`
+    real(wp),dimension(:),allocatable :: work !! work array of length `max(2*kx*(nx+1),2*ky*(ny+1),2*kz*(nz+1))`
 
     ! check validity of input
 
@@ -683,21 +686,25 @@
     if (status_ok) then
 
         ! choose knots
-
         if (iknot == 0) then
             call dbknot(x,nx,kx,tx)
             call dbknot(y,ny,ky,ty)
             call dbknot(z,nz,kz,tz)
         end if
 
+        allocate(temp(nx*ny*nz))
+        allocate(work(max(2*kx*(nx+1),2*ky*(ny+1),2*kz*(nz+1))))
+
         ! copy fcn to work in packed for dbtpcf
         temp(1:nx*ny*nz) = reshape( fcn, [nx*ny*nz] )
 
         ! construct b-spline coefficients
-
                       call dbtpcf(x,nx,temp, nx,ny*nz,tx,kx,bcoef,work,iflag)
         if (iflag==0) call dbtpcf(y,ny,bcoef,ny,nx*nz,ty,ky,temp, work,iflag)
         if (iflag==0) call dbtpcf(z,nz,temp, nz,nx*ny,tz,kz,bcoef,work,iflag)
+
+        deallocate(temp)
+        deallocate(work)
 
     end if
 
@@ -743,9 +750,9 @@
 !  * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
 
     pure subroutine db3val(xval,yval,zval,idx,idy,idz,&
-                                     tx,ty,tz,&
-                                     nx,ny,nz,kx,ky,kz,bcoef,f,iflag,&
-                                     inbvx,inbvy,inbvz,iloy,iloz,extrap)
+                           tx,ty,tz,&
+                           nx,ny,nz,kx,ky,kz,bcoef,f,iflag,&
+                           inbvx,inbvy,inbvz,iloy,iloz,temp1,temp2,work,extrap)
 
     implicit none
 
@@ -794,15 +801,13 @@
     integer,intent(inout)                   :: iloz     !! initialization parameter which must be
                                                         !! set to 1 the first time this routine is called,
                                                         !! and must not be changed by the user.
+    real(wp),dimension(ky,kz),intent(inout)             :: temp1    !! work array
+    real(wp),dimension(kz),intent(inout)                :: temp2    !! work array
+    real(wp),dimension(3*max(kx,ky,kz)),intent(inout)   :: work     !! work array
     logical,intent(in),optional             :: extrap   !! if extrapolation is allowed
                                                         !! (if not present, default is False)
 
-    real(wp),dimension(ky,kz)           :: temp1
-    real(wp),dimension(kz)              :: temp2
-    real(wp),dimension(3*max(kx,ky,kz)) :: work
-
-    integer :: lefty, leftz, &
-                kcoly, kcolz, j, k
+    integer :: lefty, leftz, kcoly, kcolz, j, k
 
     f = 0.0_wp
 
@@ -854,11 +859,11 @@
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
     pure subroutine db4ink(x,nx,y,ny,z,nz,q,nq,&
-                        fcn,&
-                        kx,ky,kz,kq,&
-                        iknot,&
-                        tx,ty,tz,tq,&
-                        bcoef,iflag)
+                           fcn,&
+                           kx,ky,kz,kq,&
+                           iknot,&
+                           tx,ty,tz,tq,&
+                           bcoef,iflag)
 
     implicit none
 
@@ -954,9 +959,9 @@
                                                          !! * 802 = `size(z)`  \( \ne \) `size(bcoef,3)`
                                                          !! * 803 = `size(q)`  \( \ne \) `size(bcoef,4)`
 
-    real(wp),dimension(nx*ny*nz*nq) :: temp
-    real(wp),dimension(max(2*kx*(nx+1),2*ky*(ny+1),2*kz*(nz+1),2*kq*(nq+1))) :: work
     logical :: status_ok
+    real(wp),dimension(:),allocatable :: temp !! work array of dimension `nx*ny*nz*nq`
+    real(wp),dimension(:),allocatable :: work !! work array of dimension `max(2*kx*(nx+1),2*ky*(ny+1),2*kz*(nz+1),2*kq*(nq+1))`
 
     ! check validity of input
 
@@ -973,7 +978,6 @@
     if (status_ok) then
 
         ! choose knots
-
         if (iknot == 0) then
             call dbknot(x,nx,kx,tx)
             call dbknot(y,ny,ky,ty)
@@ -981,12 +985,17 @@
             call dbknot(q,nq,kq,tq)
         end if
 
-        ! construct b-spline coefficients
+        allocate(temp(nx*ny*nz*nq))
+        allocate(work(max(2*kx*(nx+1),2*ky*(ny+1),2*kz*(nz+1),2*kq*(nq+1))))
 
+        ! construct b-spline coefficients
                       call dbtpcf(x,nx,fcn,  nx,ny*nz*nq,tx,kx,temp, work,iflag)
         if (iflag==0) call dbtpcf(y,ny,temp, ny,nx*nz*nq,ty,ky,bcoef,work,iflag)
         if (iflag==0) call dbtpcf(z,nz,bcoef,nz,nx*ny*nq,tz,kz,temp, work,iflag)
         if (iflag==0) call dbtpcf(q,nq,temp, nq,nx*ny*nz,tq,kq,bcoef,work,iflag)
+
+        deallocate(temp)
+        deallocate(work)
 
      end if
 
@@ -1015,7 +1024,7 @@
                                 kx,ky,kz,kq,&
                                 bcoef,f,iflag,&
                                 inbvx,inbvy,inbvz,inbvq,&
-                                iloy,iloz,iloq,extrap)
+                                iloy,iloz,iloq,temp1,temp2,temp3,work,extrap)
 
     implicit none
 
@@ -1082,13 +1091,13 @@
     integer,intent(inout)                      :: iloq     !! initialization parameter which must be set
                                                            !! to 1 the first time this routine is called,
                                                            !! and must not be changed by the user.
+    real(wp),dimension(ky,kz,kq),intent(inout)           :: temp1 !! work array
+    real(wp),dimension(kz,kq),intent(inout)              :: temp2 !! work array
+    real(wp),dimension(kq),intent(inout)                 :: temp3 !! work array
+    real(wp),dimension(3*max(kx,ky,kz,kq)),intent(inout) :: work  !! work array
     logical,intent(in),optional                :: extrap   !! if extrapolation is allowed
                                                            !! (if not present, default is False)
 
-    real(wp),dimension(ky,kz,kq)             :: temp1
-    real(wp),dimension(kz,kq)                :: temp2
-    real(wp),dimension(kq)                   :: temp3
-    real(wp),dimension(3*max(kx,ky,kz,kq))   :: work
     integer :: lefty, leftz, leftq, &
                kcoly, kcolz, kcolq, j, k, q
 
@@ -1291,16 +1300,12 @@
                                                             !! * 803 = `size(q)`  \( \ne \) `size(bcoef,4)`
                                                             !! * 804 = `size(r)`  \( \ne \) `size(bcoef,5)`
 
-    real(wp),dimension(nx*ny*nz*nq*nr) :: temp
-    real(wp),dimension(max( 2*kx*(nx+1),&
-                            2*ky*(ny+1),&
-                            2*kz*(nz+1),&
-                            2*kq*(nq+1),&
-                            2*kr*(nr+1) )) :: work
     logical :: status_ok
+    real(wp),dimension(:),allocatable :: temp !! work array of length `nx*ny*nz*nq*nr`
+    real(wp),dimension(:),allocatable :: work !! work array of length `max(2*kx*(nx+1),
+                                              !! 2*ky*(ny+1),2*kz*(nz+1),2*kq*(nq+1),2*kr*(nr+1))`
 
     !  check validity of input
-
     call check_inputs(  iknot,&
                         iflag,&
                         nx=nx,ny=ny,nz=nz,nq=nq,nr=nr,&
@@ -1314,7 +1319,6 @@
     if (status_ok) then
 
         !  choose knots
-
         if (iknot == 0) then
             call dbknot(x,nx,kx,tx)
             call dbknot(y,ny,ky,ty)
@@ -1323,17 +1327,21 @@
             call dbknot(r,nr,kr,tr)
         end if
 
-        ! copy fcn to work in packed for dbtpcf
+        allocate(temp(nx*ny*nz*nq*nr))
+        allocate(work(max(2*kx*(nx+1),2*ky*(ny+1),2*kz*(nz+1),2*kq*(nq+1),2*kr*(nr+1))))
 
+        ! copy fcn to work in packed for dbtpcf
         temp(1:nx*ny*nz*nq*nr) = reshape( fcn, [nx*ny*nz*nq*nr] )
 
         !  construct b-spline coefficients
-
                       call dbtpcf(x,nx,temp,  nx,ny*nz*nq*nr,tx,kx,bcoef,work,iflag)
         if (iflag==0) call dbtpcf(y,ny,bcoef, ny,nx*nz*nq*nr,ty,ky,temp, work,iflag)
         if (iflag==0) call dbtpcf(z,nz,temp,  nz,nx*ny*nq*nr,tz,kz,bcoef,work,iflag)
         if (iflag==0) call dbtpcf(q,nq,bcoef, nq,nx*ny*nz*nr,tq,kq,temp, work,iflag)
         if (iflag==0) call dbtpcf(r,nr,temp,  nr,nx*ny*nz*nq,tr,kr,bcoef,work,iflag)
+
+        deallocate(temp)
+        deallocate(work)
 
      end if
 
@@ -1362,7 +1370,8 @@
                                 kx,ky,kz,kq,kr,&
                                 bcoef,f,iflag,&
                                 inbvx,inbvy,inbvz,inbvq,inbvr,&
-                                iloy,iloz,iloq,ilor,extrap)
+                                iloy,iloz,iloq,ilor,&
+                                temp1,temp2,temp3,temp4,work,extrap)
 
     implicit none
 
@@ -1444,14 +1453,14 @@
     integer,intent(inout)                         :: ilor     !! initialization parameter which must be set
                                                               !! to 1 the first time this routine is called,
                                                               !! and must not be changed by the user.
+    real(wp),dimension(ky,kz,kq,kr),intent(inout) :: temp1  !! work array
+    real(wp),dimension(kz,kq,kr),intent(inout)    :: temp2  !! work array
+    real(wp),dimension(kq,kr),intent(inout)       :: temp3  !! work array
+    real(wp),dimension(kr),intent(inout)          :: temp4  !! work array
+    real(wp),dimension(3*max(kx,ky,kz,kq,kr)),intent(inout)  :: work  !! work array
     logical,intent(in),optional                   :: extrap   !! if extrapolation is allowed
                                                               !! (if not present, default is False)
 
-    real(wp),dimension(ky,kz,kq,kr)           :: temp1
-    real(wp),dimension(kz,kq,kr)              :: temp2
-    real(wp),dimension(kq,kr)                 :: temp3
-    real(wp),dimension(kr)                    :: temp4
-    real(wp),dimension(3*max(kx,ky,kz,kq,kr)) :: work
     integer :: lefty, leftz, leftq, leftr, &
                kcoly, kcolz, kcolq, kcolr, j, k, q, r
 
@@ -1696,17 +1705,12 @@
                                                                !! * 804 = `size(r) ` \( \ne \) `size(bcoef,5)`
                                                                !! * 805 = `size(s) ` \( \ne \) `size(bcoef,6)`
 
-    real(wp),dimension(nx*ny*nz*nq*nr*ns) :: temp
-    real(wp),dimension(max( 2*kx*(nx+1),&
-                            2*ky*(ny+1),&
-                            2*kz*(nz+1),&
-                            2*kq*(nq+1),&
-                            2*kr*(nr+1),&
-                            2*ks*(ns+1))) :: work
     logical :: status_ok
+    real(wp),dimension(:),allocatable :: temp !! work array of size `nx*ny*nz*nq*nr*ns`
+    real(wp),dimension(:),allocatable :: work !! work array of size `max(2*kx*(nx+1),
+                                              !! 2*ky*(ny+1),2*kz*(nz+1),2*kq*(nq+1),2*kr*(nr+1),2*ks*(ns+1))`
 
     ! check validity of input
-
     call check_inputs(  iknot,&
                         iflag,&
                         nx=nx,ny=ny,nz=nz,nq=nq,nr=nr,ns=ns,&
@@ -1720,7 +1724,6 @@
     if (status_ok) then
 
         ! choose knots
-
         if (iknot == 0) then
             call dbknot(x,nx,kx,tx)
             call dbknot(y,ny,ky,ty)
@@ -1730,14 +1733,19 @@
             call dbknot(s,ns,ks,ts)
         end if
 
-        ! construct b-spline coefficients
+        allocate(temp(nx*ny*nz*nq*nr*ns))
+        allocate(work(max(2*kx*(nx+1),2*ky*(ny+1),2*kz*(nz+1),2*kq*(nq+1),2*kr*(nr+1),2*ks*(ns+1))))
 
+        ! construct b-spline coefficients
                       call dbtpcf(x,nx,fcn,  nx,ny*nz*nq*nr*ns,tx,kx,temp, work,iflag)
         if (iflag==0) call dbtpcf(y,ny,temp, ny,nx*nz*nq*nr*ns,ty,ky,bcoef,work,iflag)
         if (iflag==0) call dbtpcf(z,nz,bcoef,nz,nx*ny*nq*nr*ns,tz,kz,temp, work,iflag)
         if (iflag==0) call dbtpcf(q,nq,temp, nq,nx*ny*nz*nr*ns,tq,kq,bcoef,work,iflag)
         if (iflag==0) call dbtpcf(r,nr,bcoef,nr,nx*ny*nz*nq*ns,tr,kr,temp, work,iflag)
         if (iflag==0) call dbtpcf(s,ns,temp, ns,nx*ny*nz*nq*nr,ts,ks,bcoef,work,iflag)
+
+        deallocate(temp)
+        deallocate(work)
 
      end if
 
@@ -1766,7 +1774,8 @@
                                 kx,ky,kz,kq,kr,ks,&
                                 bcoef,f,iflag,&
                                 inbvx,inbvy,inbvz,inbvq,inbvr,inbvs,&
-                                iloy,iloz,iloq,ilor,ilos,extrap)
+                                iloy,iloz,iloq,ilor,ilos,&
+                                temp1,temp2,temp3,temp4,temp5,work,extrap)
 
     implicit none
 
@@ -1863,15 +1872,15 @@
     integer,intent(inout)                            :: ilos     !! initialization parameter which must be set
                                                                  !! to 1 the first time this routine is called,
                                                                  !! and must not be changed by the user.
+    real(wp),dimension(ky,kz,kq,kr,ks),intent(inout)   :: temp1 !! work array
+    real(wp),dimension(kz,kq,kr,ks),intent(inout)      :: temp2 !! work array
+    real(wp),dimension(kq,kr,ks),intent(inout)         :: temp3 !! work array
+    real(wp),dimension(kr,ks),intent(inout)            :: temp4 !! work array
+    real(wp),dimension(ks),intent(inout)               :: temp5 !! work array
+    real(wp),dimension(3*max(kx,ky,kz,kq,kr,ks)),intent(inout) :: work !! work array
     logical,intent(in),optional                      :: extrap   !! if extrapolation is allowed
                                                                  !! (if not present, default is False)
 
-    real(wp),dimension(ky,kz,kq,kr,ks)            :: temp1
-    real(wp),dimension(kz,kq,kr,ks)               :: temp2
-    real(wp),dimension(kq,kr,ks)                  :: temp3
-    real(wp),dimension(kr,ks)                     :: temp4
-    real(wp),dimension(ks)                        :: temp5
-    real(wp),dimension(3*max(kx,ky,kz,kq,kr,ks))  :: work
 
     integer :: lefty,leftz,leftq,leftr,lefts,&
                kcoly,kcolz,kcolq,kcolr,kcols,&

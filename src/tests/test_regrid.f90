@@ -33,6 +33,8 @@
     integer  :: i,j
     integer  :: iflag  !! status flag
     integer  :: inbvx,inbvy,iloy
+    real(wp),dimension(ky)           :: w1 !! work array
+    real(wp),dimension(3*max(kx,ky)) :: w2 !! work array
 
     !function evaluations for original grid:
     do i=1,nx
@@ -69,7 +71,7 @@
         do j=1,ny_new
             y_new(j) = real(j-1,wp)
             call db2val(x_new(i),y_new(j),idx,idy,tx,ty,nx,ny,kx,ky,fcn_2d,val,iflag,&
-                        inbvx,inbvy,iloy)
+                        inbvx,inbvy,iloy,w1,w2)
             if (iflag/=0) error stop 'error calling db2val'
             fcn_new(i,j) = val
             tru    = test_func(x_new(i),y_new(j))  !truth value

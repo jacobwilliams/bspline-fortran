@@ -28,6 +28,7 @@
     logical :: extrap
     type(pyplot) :: plt
     integer :: istat  !! pyplot-fortran status flag
+    real(wp),dimension(3*kx) :: w1_1d !! work array
 
     real(wp),parameter :: rad2deg = 180.0_wp / acos(-1.0_wp)  !! deg. to radians conversion factor
 
@@ -65,7 +66,7 @@
 
         errmax = 0.0_wp
         do i=1,nxv
-            call db1val(xval(i),idx,tx,nx,kx,fcn_1d,val,iflag,inbvx,extrap=extrap)
+            call db1val(xval(i),idx,tx,nx,kx,fcn_1d,val,iflag,inbvx,w1_1d,extrap=extrap)
             fval(i) = val  ! save it for plot
             tru    = f1(xval(i))
             err    = abs(tru-val)

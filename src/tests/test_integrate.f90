@@ -40,6 +40,7 @@
     character(len=:),allocatable      :: meth   !! method string
     real(wp)                          :: f_true !! the true integral of
                                                 !! the analytic function
+    real(wp),dimension(:),allocatable :: w1_1d  !! work array
 
     do imeth = 1,2  ! the two methods
 
@@ -48,8 +49,10 @@
 
         do kx = 2, 15  ! spline orders
 
-            if (allocated(tx)) deallocate(tx)
+            if (allocated(tx))    deallocate(tx)
+            if (allocated(w1_1d)) deallocate(w1_1d)
             allocate(tx(nx+kx))
+            allocate(w1_1d(3*kx))
 
             ! x^2 * sin(x) function evaluations for original grid:
             do i=1,nx
@@ -73,10 +76,10 @@
             if (imeth==1) then
                 if (kx>20) cycle
                 meth = 'db1sqad'
-                call db1sqad(tx,fcn,nx,kx,x1,x2,f,iflag)
+                call db1sqad(tx,fcn,nx,kx,x1,x2,f,iflag,w1_1d)
             else
                 meth = 'db1fqad'
-                call db1fqad(test_function,tx,fcn,nx,kx,0,x1,x2,tol,f,iflag)
+                call db1fqad(test_function,tx,fcn,nx,kx,0,x1,x2,tol,f,iflag,w1_1d)
             end if
 
             ! display results:

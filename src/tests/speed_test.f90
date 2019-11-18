@@ -38,6 +38,28 @@
     real(wp),dimension(nx,ny,nz,nq,nr,ns) :: fcn_6d, bcoef_6d
     real(wp) :: tx(nx+kx),ty(ny+ky),tz(nz+kz),tq(nq+kq),tr(nr+kr),ts(ns+ks)
 
+    real(wp),dimension(3*kx)                     :: w1_1d
+    real(wp),dimension(ky)                       :: w1_2d
+    real(wp),dimension(3*max(kx,ky))             :: w2_2d
+    real(wp),dimension(ky,kz)                    :: w1_3d
+    real(wp),dimension(kz)                       :: w2_3d
+    real(wp),dimension(3*max(kx,ky,kz))          :: w3_3d
+    real(wp),dimension(ky,kz,kq)                 :: w1_4d
+    real(wp),dimension(kz,kq)                    :: w2_4d
+    real(wp),dimension(kq)                       :: w3_4d
+    real(wp),dimension(3*max(kx,ky,kz,kq))       :: w4_4d
+    real(wp),dimension(ky,kz,kq,kr)              :: w1_5d
+    real(wp),dimension(kz,kq,kr)                 :: w2_5d
+    real(wp),dimension(kq,kr)                    :: w3_5d
+    real(wp),dimension(kr)                       :: w4_5d
+    real(wp),dimension(3*max(kx,ky,kz,kq,kr))    :: w5_5d
+    real(wp),dimension(ky,kz,kq,kr,ks)           :: w1_6d
+    real(wp),dimension(kz,kq,kr,ks)              :: w2_6d
+    real(wp),dimension(kq,kr,ks)                 :: w3_6d
+    real(wp),dimension(kr,ks)                    :: w4_6d
+    real(wp),dimension(ks)                       :: w5_6d
+    real(wp),dimension(3*max(kx,ky,kz,kq,kr,ks)) :: w6_6d
+
     real(wp) :: val,sumval
     integer  :: i,j,k,l,m,n,idx,idy,idz,idq,idr,ids,iknot,iflag
     real :: tstart, tend
@@ -137,7 +159,7 @@
                 do l=1,nq
                     do m=1,nr
                         do n=1,ns
-                            call db1val(x(i),idx,tx,nx,kx,bcoef_1d,val,iflag,inbvx)
+                            call db1val(x(i),idx,tx,nx,kx,bcoef_1d,val,iflag,inbvx,w1_1d)
                             sumval = sumval + val
                         end do
                     end do
@@ -163,7 +185,7 @@
                         do n=1,ns
                             call db2val(x(i),y(j),idx,idy,tx,ty,&
                                         nx,ny,kx,ky,bcoef_2d,val,iflag,&
-                                        inbvx,inbvy,iloy)
+                                        inbvx,inbvy,iloy,w1_2d,w2_2d)
                            sumval = sumval + val
                        end do
                    end do
@@ -189,7 +211,7 @@
                         do n=1,ns
                             call db3val(x(i),y(j),z(k),idx,idy,idz,tx,ty,tz,&
                                         nx,ny,nz,kx,ky,kz,bcoef_3d,val,iflag,&
-                                        inbvx,inbvy,inbvz,iloy,iloz)
+                                        inbvx,inbvy,inbvz,iloy,iloz,w1_3d,w2_3d,w3_3d)
                             sumval = sumval + val
                         end do
                     end do
@@ -215,7 +237,8 @@
                         do n=1,ns
                             call db4val(x(i),y(j),z(k),q(l),idx,idy,idz,idq,tx,ty,tz,tq,&
                                         nx,ny,nz,nq,kx,ky,kz,kq,bcoef_4d,val,iflag,&
-                                        inbvx,inbvy,inbvz,inbvq,iloy,iloz,iloq)
+                                        inbvx,inbvy,inbvz,inbvq,iloy,iloz,iloq,&
+                                        w1_4d,w2_4d,w3_4d,w4_4d)
                             sumval = sumval + val
                         end do
                     end do
@@ -241,7 +264,8 @@
                         do n=1,ns
                             call db5val(x(i),y(j),z(k),q(l),r(m),idx,idy,idz,idq,idr,tx,ty,tz,tq,tr,&
                                         nx,ny,nz,nq,nr,kx,ky,kz,kq,kr,bcoef_5d,val,iflag,&
-                                        inbvx,inbvy,inbvz,inbvq,inbvr,iloy,iloz,iloq,ilor)
+                                        inbvx,inbvy,inbvz,inbvq,inbvr,iloy,iloz,iloq,ilor,&
+                                        w1_5d,w2_5d,w3_5d,w4_5d,w5_5d)
                             sumval = sumval + val
                         end do
                     end do
@@ -268,7 +292,8 @@
                             call db6val(x(i),y(j),z(k),q(l),r(m),s(n),idx,idy,idz,idq,idr,ids,&
                                         tx,ty,tz,tq,tr,ts,&
                                         nx,ny,nz,nq,nr,ns,kx,ky,kz,kq,kr,ks,bcoef_6d,val,iflag,&
-                                        inbvx,inbvy,inbvz,inbvq,inbvr,inbvs,iloy,iloz,iloq,ilor,ilos)
+                                        inbvx,inbvy,inbvz,inbvq,inbvr,inbvs,iloy,iloz,iloq,ilor,ilos,&
+                                        w1_6d,w2_6d,w3_6d,w4_6d,w5_6d,w6_6d)
                             sumval = sumval + val
                         end do
                     end do

@@ -28,6 +28,7 @@
 *.app
 
 # Directories
+archive
 build
 doc
 lib
