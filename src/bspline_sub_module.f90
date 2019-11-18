@@ -2160,12 +2160,16 @@
         integer,intent(out)                       :: iflag !! status return code
         logical,intent(out)                       :: error !! true if there was an error
 
+        integer,dimension(:),allocatable :: itmp !! temp integer array
+
         if (present(n) .and. present(k) .and. present(x) .and. present(t)) then
-            call check_n('n'//s,n,x,[ierrs(1),ierrs(5)],iflag,error); if (error) return
+            itmp = [ierrs(1),ierrs(5)]
+            call check_n('n'//s,n,x,itmp,iflag,error); if (error) return
             call check_k('k'//s,k,n,ierrs(2),iflag,error); if (error) return
             call check_x(s,n,x,ierrs(3),iflag,error); if (error) return
             if (iknot /= 0) then
-                call check_t('t'//s,n,k,t,[ierrs(4),ierrs(6)],iflag,error); if (error) return
+                itmp = [ierrs(4),ierrs(6)]
+                call check_t('t'//s,n,k,t,itmp,iflag,error); if (error) return
             end if
         end if
 
