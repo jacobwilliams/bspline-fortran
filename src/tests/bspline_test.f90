@@ -5,25 +5,25 @@
     program bspline_test
 
     use bspline_module
-    use bspline_kinds_module, only: wp
+    use bspline_kinds_module, only: wp, ip
 
     implicit none
 
-    integer,parameter :: nx = 6     !! number of points in x
-    integer,parameter :: ny = 6     !! number of points in y
-    integer,parameter :: nz = 6     !! number of points in z
-    integer,parameter :: nq = 6     !! number of points in q
-    integer,parameter :: nr = 6     !! number of points in r
-    integer,parameter :: ns = 6     !! number of points in s
+    integer(ip),parameter :: nx = 6     !! number of points in x
+    integer(ip),parameter :: ny = 6     !! number of points in y
+    integer(ip),parameter :: nz = 6     !! number of points in z
+    integer(ip),parameter :: nq = 6     !! number of points in q
+    integer(ip),parameter :: nr = 6     !! number of points in r
+    integer(ip),parameter :: ns = 6     !! number of points in s
 
-    integer,parameter :: kx = 4     !! order in x
-    integer,parameter :: ky = 4     !! order in y
-    integer,parameter :: kz = 4     !! order in z
-    integer,parameter :: kq = 4     !! order in q
-    integer,parameter :: kr = 4     !! order in r
-    integer,parameter :: ks = 4     !! order in s
+    integer(ip),parameter :: kx = 4     !! order in x
+    integer(ip),parameter :: ky = 4     !! order in y
+    integer(ip),parameter :: kz = 4     !! order in z
+    integer(ip),parameter :: kq = 4     !! order in q
+    integer(ip),parameter :: kr = 4     !! order in r
+    integer(ip),parameter :: ks = 4     !! order in s
 
-    integer,parameter :: iknot = 0  !! automatically select the knots
+    integer(ip),parameter :: iknot = 0  !! automatically select the knots
 
     real(wp) :: x(nx),y(ny),z(nz),q(nq),r(nr),s(ns)
     real(wp) :: tx(nx+kx),ty(ny+ky),tz(nz+kz),tq(nq+kq),tr(nr+kr),ts(ns+ks)
@@ -59,10 +59,10 @@
     real(wp) :: tol
     real(wp),dimension(6) :: val,tru,err,errmax
     logical :: fail
-    integer :: i,j,k,l,m,n,idx,idy,idz,idq,idr,ids
-    integer,dimension(6) :: iflag
-    integer :: inbvx,inbvy,inbvz,inbvq,inbvr,inbvs
-    integer :: iloy,iloz,iloq,ilor,ilos
+    integer(ip) :: i,j,k,l,m,n,idx,idy,idz,idq,idr,ids
+    integer(ip),dimension(6) :: iflag
+    integer(ip) :: inbvx,inbvy,inbvz,inbvq,inbvr,inbvs
+    integer(ip) :: iloy,iloz,iloq,ilor,ilos
 
     fail = .false.
     tol = 1.0e-14_wp
@@ -74,22 +74,22 @@
     ids = 0
 
      do i=1,nx
-        x(i) = dble(i-1)/dble(nx-1)
+        x(i) = real(i-1,wp)/real(nx-1,wp)
      end do
      do j=1,ny
-        y(j) = dble(j-1)/dble(ny-1)
+        y(j) = real(j-1,wp)/real(ny-1,wp)
      end do
      do k=1,nz
-        z(k) = dble(k-1)/dble(nz-1)
+        z(k) = real(k-1,wp)/real(nz-1,wp)
      end do
      do l=1,nq
-        q(l) = dble(l-1)/dble(nq-1)
+        q(l) = real(l-1,wp)/real(nq-1,wp)
      end do
      do m=1,nr
-        r(m) = dble(m-1)/dble(nr-1)
+        r(m) = real(m-1,wp)/real(nr-1,wp)
      end do
      do n=1,ns
-        s(n) = dble(n-1)/dble(ns-1)
+        s(n) = real(n-1,wp)/real(ns-1,wp)
      end do
      do i=1,nx
                         fcn_1d(i) = f1(x(i))

@@ -13,7 +13,8 @@
 
     private
 
-    integer,parameter,public :: wp = real64  !! Real precision
+    integer,parameter,public :: wp = real64  !! Real working precision
+    integer,parameter,public :: ip = int32   !! Integer working precision
 
 !*****************************************************************************************
     end module bspline_kinds_module

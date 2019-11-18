@@ -5,7 +5,7 @@
     program bspline_stack_size_oo_test
 
     use bspline_module
-    use bspline_kinds_module, only: wp
+    use bspline_kinds_module, only: wp, ip
 
     implicit none
 
@@ -31,19 +31,19 @@
 
     integer,intent(in) :: n
 
-    integer,parameter :: kx = 4    !order
-    integer,parameter :: ky = 4
-    integer,parameter :: kz = 4
+    integer(ip),parameter :: kx = 4    !order
+    integer(ip),parameter :: ky = 4
+    integer(ip),parameter :: kz = 4
     real(wp),parameter :: tol = 1.0e-14_wp
 
     type(bspline_3d) :: s3
-    integer :: nx,ny,nz
+    integer(ip) :: nx,ny,nz
     real(wp),allocatable :: x(:),y(:),z(:)
     real(wp),allocatable  :: fcn_3d(:,:,:)
     real(wp) :: val,tru,err,errmax
     logical  :: fail
-    integer  :: i,j,k,idx,idy,idz
-    integer  :: iflag
+    integer(ip) :: i,j,k,idx,idy,idz
+    integer(ip) :: iflag
 
     nx = n; ny = n; nz = n
     idx = 0; idy = 0; idz = 0
@@ -55,13 +55,13 @@
     allocate(fcn_3d(nx,ny,nz))
 
      do concurrent (i=1:nx)
-        x(i) = dble(i-1)/dble(nx-1)
+        x(i) = real(i-1,wp)/real(nx-1,wp)
      end do
      do concurrent (j=1:ny)
-        y(j) = dble(j-1)/dble(ny-1)
+        y(j) = real(j-1,wp)/real(ny-1,wp)
      end do
      do concurrent (k=1:nz)
-        z(k) = dble(k-1)/dble(nz-1)
+        z(k) = real(k-1,wp)/real(nz-1,wp)
      end do
 
      do i=1,nx

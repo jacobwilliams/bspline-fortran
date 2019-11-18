@@ -15,26 +15,26 @@
     program bspline_integrate_test
 
     use bspline_module
-    use bspline_kinds_module, only: wp
+    use bspline_kinds_module, only: wp, ip
 
     implicit none
 
-    real(wp),parameter :: pi      = acos(-1.0_wp)  !! \( \pi \)
-    real(wp),parameter :: deg2rad = pi/180.0_wp    !! degrees to radians
-    integer,parameter  :: iknot   = 0              !! automatically select the knots
-    real(wp),parameter :: x1      = 0.0_wp         !! left endpoint
-    real(wp),parameter :: x2      = pi             !! right endpoint
-    integer,parameter  :: nx      = 181            !! number of points in x dimension
-                                                   !! in original grid
+    real(wp),parameter     :: pi      = acos(-1.0_wp)  !! \( \pi \)
+    real(wp),parameter     :: deg2rad = pi/180.0_wp    !! degrees to radians
+    integer(ip),parameter  :: iknot   = 0              !! automatically select the knots
+    real(wp),parameter     :: x1      = 0.0_wp         !! left endpoint
+    real(wp),parameter     :: x2      = pi             !! right endpoint
+    integer(ip),parameter  :: nx      = 181            !! number of points in x dimension
+                                                       !! in original grid
     real(wp),parameter :: tol = 10.0_wp*epsilon(1.0_wp)  !! tolerance for [[db1fqad]]
 
     real(wp),dimension(:),allocatable :: tx     !! x knots
-    integer                           :: kx     !! x bspline order
+    integer(ip)                       :: kx     !! x bspline order
     real(wp),dimension(nx)            :: x      !! new grid x points
     real(wp),dimension(nx)            :: fcn    !! original grid
                                                 !! function evaluations
-    integer                           :: i      !! counter
-    integer                           :: iflag  !! status flag
+    integer(ip)                       :: i      !! counter
+    integer(ip)                       :: iflag  !! status flag
     real(wp)                          :: f      !! the evaluated integral
     integer                           :: imeth  !! method counter
     character(len=:),allocatable      :: meth   !! method string
@@ -79,7 +79,7 @@
                 call db1sqad(tx,fcn,nx,kx,x1,x2,f,iflag,w1_1d)
             else
                 meth = 'db1fqad'
-                call db1fqad(test_function,tx,fcn,nx,kx,0,x1,x2,tol,f,iflag,w1_1d)
+                call db1fqad(test_function,tx,fcn,nx,kx,0_ip,x1,x2,tol,f,iflag,w1_1d)
             end if
 
             ! display results:
