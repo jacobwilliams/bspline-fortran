@@ -670,6 +670,7 @@
     logical :: status_ok
     real(wp),dimension(:),allocatable :: temp !! work array of length `nx*ny*nz`
     real(wp),dimension(:),allocatable :: work !! work array of length `max(2*kx*(nx+1),2*ky*(ny+1),2*kz*(nz+1))`
+    integer :: i, j, k, ii !! counter
 
     ! check validity of input
 
@@ -696,7 +697,18 @@
         allocate(work(max(2*kx*(nx+1),2*ky*(ny+1),2*kz*(nz+1))))
 
         ! copy fcn to work in packed for dbtpcf
-        temp(1:nx*ny*nz) = reshape( fcn, [nx*ny*nz] )
+        !temp = reshape( fcn, [nx*ny*nz] )
+        ! replaced with loops to avoid stack
+        ! overflow for large data set:
+        ii = 0
+        do k = 1, nz
+            do j = 1, ny
+                do i = 1, nx
+                    ii = ii + 1
+                    temp(ii) = fcn(i,j,k)
+                end do
+            end do
+        end do
 
         ! construct b-spline coefficients
                       call dbtpcf(x,nx,temp, nx,ny*nz,tx,kx,bcoef,work,iflag)
@@ -1304,6 +1316,7 @@
     real(wp),dimension(:),allocatable :: temp !! work array of length `nx*ny*nz*nq*nr`
     real(wp),dimension(:),allocatable :: work !! work array of length `max(2*kx*(nx+1),
                                               !! 2*ky*(ny+1),2*kz*(nz+1),2*kq*(nq+1),2*kr*(nr+1))`
+    integer :: i, j, k, l, m, ii !! counter
 
     !  check validity of input
     call check_inputs(  iknot,&
@@ -1331,7 +1344,22 @@
         allocate(work(max(2*kx*(nx+1),2*ky*(ny+1),2*kz*(nz+1),2*kq*(nq+1),2*kr*(nr+1))))
 
         ! copy fcn to work in packed for dbtpcf
-        temp(1:nx*ny*nz*nq*nr) = reshape( fcn, [nx*ny*nz*nq*nr] )
+        !temp(1:nx*ny*nz*nq*nr) = reshape( fcn, [nx*ny*nz*nq*nr] )
+        ! replaced with loops to avoid stack
+        ! overflow for large data set:
+        ii = 0
+        do m = 1, nr
+            do l = 1, nq
+                do k = 1, nz
+                    do j = 1, ny
+                        do i = 1, nx
+                            ii = ii + 1
+                            temp(ii) = fcn(i,j,k,l,m)
+                        end do
+                    end do
+                end do
+            end do
+        end do
 
         !  construct b-spline coefficients
                       call dbtpcf(x,nx,temp,  nx,ny*nz*nq*nr,tx,kx,bcoef,work,iflag)
@@ -1343,7 +1371,7 @@
         deallocate(temp)
         deallocate(work)
 
-     end if
+    end if
 
     end subroutine db5ink
 !*****************************************************************************************
