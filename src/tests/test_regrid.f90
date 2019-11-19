@@ -7,19 +7,19 @@
     program bspline_regridding_test
 
     use bspline_module
-    use bspline_kinds_module, only: wp
+    use bspline_kinds_module, only: wp, ip
 
     implicit none
 
-    integer,parameter :: kx     = 4    !! x bspline order
-    integer,parameter :: ky     = 4    !! y bspline order
-    integer,parameter :: idx    = 0    !! [[db2val]] input
-    integer,parameter :: idy    = 0    !! [[db2val]] input
-    integer,parameter :: nx     = 6    !! number of points in x dimension in original grid
-    integer,parameter :: ny     = 5    !! number of points in y dimension in original grid
-    integer,parameter :: nx_new = 11   !! number of points in x dimension for new grid
-    integer,parameter :: ny_new = 9    !! number of points in y dimension for new grid
-    integer,parameter :: iknot  = 0    !! automatically select the knots
+    integer(ip),parameter :: kx     = 4    !! x bspline order
+    integer(ip),parameter :: ky     = 4    !! y bspline order
+    integer(ip),parameter :: idx    = 0    !! [[db2val]] input
+    integer(ip),parameter :: idy    = 0    !! [[db2val]] input
+    integer(ip),parameter :: nx     = 6    !! number of points in x dimension in original grid
+    integer(ip),parameter :: ny     = 5    !! number of points in y dimension in original grid
+    integer(ip),parameter :: nx_new = 11   !! number of points in x dimension for new grid
+    integer(ip),parameter :: ny_new = 9    !! number of points in y dimension for new grid
+    integer(ip),parameter :: iknot  = 0    !! automatically select the knots
     real(wp),dimension(nx),parameter :: x = [0.0_wp,2.0_wp,4.0_wp,6.0_wp,8.0_wp,10.0_wp]  !! x points in original grid
     real(wp),dimension(ny),parameter :: y = [0.0_wp,2.0_wp,4.0_wp,6.0_wp,8.0_wp]          !! y points in original grid
 
@@ -30,9 +30,11 @@
     real(wp),dimension(ny+ky)         :: ty       !! y knots
     real(wp),dimension(nx,ny)         :: fcn_2d   !! original grid function evaluations
     real(wp) :: val,tru,err,errmax
-    integer  :: i,j
-    integer  :: iflag  !! status flag
-    integer  :: inbvx,inbvy,iloy
+    integer(ip) :: i,j
+    integer(ip) :: iflag  !! status flag
+    integer(ip) :: inbvx,inbvy,iloy
+    real(wp),dimension(ky)           :: w1 !! work array
+    real(wp),dimension(3*max(kx,ky)) :: w2 !! work array
 
     !function evaluations for original grid:
     do i=1,nx
@@ -69,7 +71,7 @@
         do j=1,ny_new
             y_new(j) = real(j-1,wp)
             call db2val(x_new(i),y_new(j),idx,idy,tx,ty,nx,ny,kx,ky,fcn_2d,val,iflag,&
-                        inbvx,inbvy,iloy)
+                        inbvx,inbvy,iloy,w1,w2)
             if (iflag/=0) error stop 'error calling db2val'
             fcn_new(i,j) = val
             tru    = test_func(x_new(i),y_new(j))  !truth value

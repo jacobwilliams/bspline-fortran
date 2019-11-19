@@ -8,26 +8,27 @@
     program bspline_extrap_test
 
     use bspline_module
-    use bspline_kinds_module, only: wp
+    use bspline_kinds_module, only: wp, ip
     use pyplot_module
 
     implicit none
 
-    integer,parameter :: nx    = 400   !! number of points in x
-    integer,parameter :: nxv   = 800   !! number of points to evaluate interpolant
+    integer(ip),parameter :: nx    = 400   !! number of points in x
+    integer(ip),parameter :: nxv   = 800   !! number of points to evaluate interpolant
 
-    integer,parameter :: kx    = 4    !! order in x
-    integer,parameter :: iknot = 0    !! automatically select the knots
+    integer(ip),parameter :: kx    = 4    !! order in x
+    integer(ip),parameter :: iknot = 0    !! automatically select the knots
 
     real(wp) :: x(nx)
     real(wp) :: xval(nxv),fval(nxv)
     real(wp) :: tx(nx+kx)
     real(wp) :: fcn_1d(nx)
     real(wp) :: val,tru,err,errmax
-    integer  :: i,j,idx,iflag,inbvx,iloy
+    integer(ip) :: i,j,idx,iflag,inbvx,iloy
     logical :: extrap
     type(pyplot) :: plt
     integer :: istat  !! pyplot-fortran status flag
+    real(wp),dimension(3*kx) :: w1_1d !! work array
 
     real(wp),parameter :: rad2deg = 180.0_wp / acos(-1.0_wp)  !! deg. to radians conversion factor
 
@@ -65,7 +66,7 @@
 
         errmax = 0.0_wp
         do i=1,nxv
-            call db1val(xval(i),idx,tx,nx,kx,fcn_1d,val,iflag,inbvx,extrap=extrap)
+            call db1val(xval(i),idx,tx,nx,kx,fcn_1d,val,iflag,inbvx,w1_1d,extrap=extrap)
             fval(i) = val  ! save it for plot
             tru    = f1(xval(i))
             err    = abs(tru-val)

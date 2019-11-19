@@ -10,7 +10,7 @@
 
     module bspline_oo_module
 
-    use bspline_kinds_module, only: wp
+    use bspline_kinds_module, only: wp, ip
     use,intrinsic :: iso_fortran_env, only: error_unit
     use bspline_sub_module
 
@@ -18,15 +18,15 @@
 
     private
 
-    integer,parameter :: int_size     = storage_size(1)       !! size of a default integer [bits]
-    integer,parameter :: logical_size = storage_size(.true.)  !! size of a default logical [bits]
-    integer,parameter :: real_size    = storage_size(1.0_wp)  !! size of a `real(wp)` [bits]
+    integer(ip),parameter :: int_size     = storage_size(1_ip,kind=ip)   !! size of a default integer [bits]
+    integer(ip),parameter :: logical_size = storage_size(.true.,kind=ip) !! size of a default logical [bits]
+    integer(ip),parameter :: real_size    = storage_size(1.0_wp,kind=ip) !! size of a `real(wp)` [bits]
 
     type,public,abstract :: bspline_class
         !! Base class for the b-spline types
         private
-        integer :: inbvx = 1  !! internal variable used by [[dbvalu]] for efficient processing
-        integer :: iflag = 1  !! saved `iflag` from the list routine call.
+        integer(ip) :: inbvx = 1_ip  !! internal variable used by [[dbvalu]] for efficient processing
+        integer(ip) :: iflag = 1_ip  !! saved `iflag` from the list routine call.
         logical :: initialized = .false. !! true if the class is initialized and ready to use
         logical :: extrap = .false. !! if true, then extrapolation is allowed during evaluation
     contains
@@ -52,10 +52,10 @@
 
         pure function size_func(me) result(s)
         !! interface for size routines
-        import :: bspline_class
+        import :: bspline_class,ip
         implicit none
         class(bspline_class),intent(in) :: me
-        integer :: s !! size of the structure in bits
+        integer(ip) :: s !! size of the structure in bits
         end function size_func
 
     end interface
@@ -66,10 +66,11 @@
         !!@note The 1D class also contains two methods
         !!      for computing definite integrals.
         private
-        integer :: nx  = 0  !! Number of \(x\) abcissae
-        integer :: kx  = 0  !! The order of spline pieces in \(x\)
+        integer(ip) :: nx = 0_ip  !! Number of \(x\) abcissae
+        integer(ip) :: kx = 0_ip  !! The order of spline pieces in \(x\)
         real(wp),dimension(:),allocatable :: bcoef  !! array of coefficients of the b-spline interpolant
         real(wp),dimension(:),allocatable :: tx  !! The knots in the \(x\) direction for the spline interpolant
+        real(wp),dimension(:),allocatable :: work_val_1   !! [[db1val] work array of dimension `3*kx`
         contains
         private
         generic,public :: initialize => initialize_1d_auto_knots,initialize_1d_specify_knots
@@ -86,15 +87,17 @@
     type,extends(bspline_class),public :: bspline_2d
         !! Class for 2d b-spline interpolation.
         private
-        integer :: nx  = 0  !! Number of \(x\) abcissae
-        integer :: ny  = 0  !! Number of \(y\) abcissae
-        integer :: kx  = 0  !! The order of spline pieces in \(x\)
-        integer :: ky  = 0  !! The order of spline pieces in \(y\)
+        integer(ip) :: nx = 0_ip  !! Number of \(x\) abcissae
+        integer(ip) :: ny = 0_ip  !! Number of \(y\) abcissae
+        integer(ip) :: kx = 0_ip  !! The order of spline pieces in \(x\)
+        integer(ip) :: ky = 0_ip  !! The order of spline pieces in \(y\)
         real(wp),dimension(:,:),allocatable :: bcoef  !! array of coefficients of the b-spline interpolant
         real(wp),dimension(:),allocatable :: tx  !! The knots in the \(x\) direction for the spline interpolant
         real(wp),dimension(:),allocatable :: ty  !! The knots in the \(y\) direction for the spline interpolant
-        integer :: inbvy = 1  !! internal variable used for efficient processing
-        integer :: iloy = 1  !! internal variable used for efficient processing
+        integer(ip) :: inbvy = 1_ip  !! internal variable used for efficient processing
+        integer(ip) :: iloy = 1_ip  !! internal variable used for efficient processing
+        real(wp),dimension(:),allocatable :: work_val_1  !! [[db2val] work array of dimension `ky`
+        real(wp),dimension(:),allocatable :: work_val_2  !! [[db2val] work array of dimension `3_ip*max(kx,ky)`
         contains
         private
         generic,public :: initialize => initialize_2d_auto_knots,initialize_2d_specify_knots
@@ -109,20 +112,23 @@
     type,extends(bspline_class),public :: bspline_3d
         !! Class for 3d b-spline interpolation.
         private
-        integer :: nx  = 0  !! Number of \(x\) abcissae
-        integer :: ny  = 0  !! Number of \(y\) abcissae
-        integer :: nz  = 0  !! Number of \(z\) abcissae
-        integer :: kx  = 0  !! The order of spline pieces in \(x\)
-        integer :: ky  = 0  !! The order of spline pieces in \(y\)
-        integer :: kz  = 0  !! The order of spline pieces in \(z\)
+        integer(ip) :: nx = 0_ip  !! Number of \(x\) abcissae
+        integer(ip) :: ny = 0_ip  !! Number of \(y\) abcissae
+        integer(ip) :: nz = 0_ip  !! Number of \(z\) abcissae
+        integer(ip) :: kx = 0_ip  !! The order of spline pieces in \(x\)
+        integer(ip) :: ky = 0_ip  !! The order of spline pieces in \(y\)
+        integer(ip) :: kz = 0_ip  !! The order of spline pieces in \(z\)
         real(wp),dimension(:,:,:),allocatable :: bcoef  !! array of coefficients of the b-spline interpolant
         real(wp),dimension(:),allocatable :: tx  !! The knots in the \(x\) direction for the spline interpolant
         real(wp),dimension(:),allocatable :: ty  !! The knots in the \(y\) direction for the spline interpolant
         real(wp),dimension(:),allocatable :: tz  !! The knots in the \(z\) direction for the spline interpolant
-        integer :: inbvy = 1  !! internal variable used for efficient processing
-        integer :: inbvz = 1  !! internal variable used for efficient processing
-        integer :: iloy = 1  !! internal variable used for efficient processing
-        integer :: iloz = 1  !! internal variable used for efficient processing
+        integer(ip) :: inbvy = 1_ip  !! internal variable used for efficient processing
+        integer(ip) :: inbvz = 1_ip  !! internal variable used for efficient processing
+        integer(ip) :: iloy = 1_ip  !! internal variable used for efficient processing
+        integer(ip) :: iloz = 1_ip  !! internal variable used for efficient processing
+        real(wp),dimension(:,:),allocatable :: work_val_1  !! [[db3val] work array of dimension `ky,kz`
+        real(wp),dimension(:),allocatable   :: work_val_2  !! [[db3val] work array of dimension `kz`
+        real(wp),dimension(:),allocatable   :: work_val_3  !! [[db3val] work array of dimension `3_ip*max(kx,ky,kz)`
         contains
         private
         generic,public :: initialize => initialize_3d_auto_knots,initialize_3d_specify_knots
@@ -137,25 +143,29 @@
     type,extends(bspline_class),public :: bspline_4d
         !! Class for 4d b-spline interpolation.
         private
-        integer :: nx  = 0  !! Number of \(x\) abcissae
-        integer :: ny  = 0  !! Number of \(y\) abcissae
-        integer :: nz  = 0  !! Number of \(z\) abcissae
-        integer :: nq  = 0  !! Number of \(q\) abcissae
-        integer :: kx  = 0  !! The order of spline pieces in \(x\)
-        integer :: ky  = 0  !! The order of spline pieces in \(y\)
-        integer :: kz  = 0  !! The order of spline pieces in \(z\)
-        integer :: kq  = 0  !! The order of spline pieces in \(q\)
+        integer(ip) :: nx = 0_ip  !! Number of \(x\) abcissae
+        integer(ip) :: ny = 0_ip  !! Number of \(y\) abcissae
+        integer(ip) :: nz = 0_ip  !! Number of \(z\) abcissae
+        integer(ip) :: nq = 0_ip  !! Number of \(q\) abcissae
+        integer(ip) :: kx = 0_ip  !! The order of spline pieces in \(x\)
+        integer(ip) :: ky = 0_ip  !! The order of spline pieces in \(y\)
+        integer(ip) :: kz = 0_ip  !! The order of spline pieces in \(z\)
+        integer(ip) :: kq = 0_ip  !! The order of spline pieces in \(q\)
         real(wp),dimension(:,:,:,:),allocatable :: bcoef  !! array of coefficients of the b-spline interpolant
         real(wp),dimension(:),allocatable :: tx  !! The knots in the \(x\) direction for the spline interpolant
         real(wp),dimension(:),allocatable :: ty  !! The knots in the \(y\) direction for the spline interpolant
         real(wp),dimension(:),allocatable :: tz  !! The knots in the \(z\) direction for the spline interpolant
         real(wp),dimension(:),allocatable :: tq  !! The knots in the \(q\) direction for the spline interpolant
-        integer :: inbvy = 1  !! internal variable used for efficient processing
-        integer :: inbvz = 1  !! internal variable used for efficient processing
-        integer :: inbvq = 1  !! internal variable used for efficient processing
-        integer :: iloy  = 1  !! internal variable used for efficient processing
-        integer :: iloz  = 1  !! internal variable used for efficient processing
-        integer :: iloq  = 1  !! internal variable used for efficient processing
+        integer(ip) :: inbvy = 1_ip  !! internal variable used for efficient processing
+        integer(ip) :: inbvz = 1_ip  !! internal variable used for efficient processing
+        integer(ip) :: inbvq = 1_ip  !! internal variable used for efficient processing
+        integer(ip) :: iloy  = 1_ip  !! internal variable used for efficient processing
+        integer(ip) :: iloz  = 1_ip  !! internal variable used for efficient processing
+        integer(ip) :: iloq  = 1_ip  !! internal variable used for efficient processing
+        real(wp),dimension(:,:,:),allocatable :: work_val_1  !! [[db4val]] work array of dimension `ky,kz,kq`
+        real(wp),dimension(:,:),allocatable   :: work_val_2  !! [[db4val]] work array of dimension `kz,kq`
+        real(wp),dimension(:),allocatable     :: work_val_3  !! [[db4val]] work array of dimension `kq`
+        real(wp),dimension(:),allocatable     :: work_val_4  !! [[db4val]] work array of dimension `3_ip*max(kx,ky,kz,kq)`
         contains
         private
         generic,public :: initialize => initialize_4d_auto_knots,initialize_4d_specify_knots
@@ -170,30 +180,35 @@
     type,extends(bspline_class),public :: bspline_5d
         !! Class for 5d b-spline interpolation.
         private
-        integer :: nx  = 0  !! Number of \(x\) abcissae
-        integer :: ny  = 0  !! Number of \(y\) abcissae
-        integer :: nz  = 0  !! Number of \(z\) abcissae
-        integer :: nq  = 0  !! Number of \(q\) abcissae
-        integer :: nr  = 0  !! Number of \(r\) abcissae
-        integer :: kx  = 0  !! The order of spline pieces in \(x\)
-        integer :: ky  = 0  !! The order of spline pieces in \(y\)
-        integer :: kz  = 0  !! The order of spline pieces in \(z\)
-        integer :: kq  = 0  !! The order of spline pieces in \(q\)
-        integer :: kr  = 0  !! The order of spline pieces in \(r\)
+        integer(ip) :: nx = 0_ip  !! Number of \(x\) abcissae
+        integer(ip) :: ny = 0_ip  !! Number of \(y\) abcissae
+        integer(ip) :: nz = 0_ip  !! Number of \(z\) abcissae
+        integer(ip) :: nq = 0_ip  !! Number of \(q\) abcissae
+        integer(ip) :: nr = 0_ip  !! Number of \(r\) abcissae
+        integer(ip) :: kx = 0_ip  !! The order of spline pieces in \(x\)
+        integer(ip) :: ky = 0_ip  !! The order of spline pieces in \(y\)
+        integer(ip) :: kz = 0_ip  !! The order of spline pieces in \(z\)
+        integer(ip) :: kq = 0_ip  !! The order of spline pieces in \(q\)
+        integer(ip) :: kr = 0_ip  !! The order of spline pieces in \(r\)
         real(wp),dimension(:,:,:,:,:),allocatable :: bcoef  !! array of coefficients of the b-spline interpolant
         real(wp),dimension(:),allocatable :: tx  !! The knots in the \(x\) direction for the spline interpolant
         real(wp),dimension(:),allocatable :: ty  !! The knots in the \(y\) direction for the spline interpolant
         real(wp),dimension(:),allocatable :: tz  !! The knots in the \(z\) direction for the spline interpolant
         real(wp),dimension(:),allocatable :: tq  !! The knots in the \(q\) direction for the spline interpolant
         real(wp),dimension(:),allocatable :: tr  !! The knots in the \(r\) direction for the spline interpolant
-        integer :: inbvy = 1  !! internal variable used for efficient processing
-        integer :: inbvz = 1  !! internal variable used for efficient processing
-        integer :: inbvq = 1  !! internal variable used for efficient processing
-        integer :: inbvr = 1  !! internal variable used for efficient processing
-        integer :: iloy  = 1  !! internal variable used for efficient processing
-        integer :: iloz  = 1  !! internal variable used for efficient processing
-        integer :: iloq  = 1  !! internal variable used for efficient processing
-        integer :: ilor  = 1  !! internal variable used for efficient processing
+        integer(ip) :: inbvy = 1_ip  !! internal variable used for efficient processing
+        integer(ip) :: inbvz = 1_ip  !! internal variable used for efficient processing
+        integer(ip) :: inbvq = 1_ip  !! internal variable used for efficient processing
+        integer(ip) :: inbvr = 1_ip  !! internal variable used for efficient processing
+        integer(ip) :: iloy  = 1_ip  !! internal variable used for efficient processing
+        integer(ip) :: iloz  = 1_ip  !! internal variable used for efficient processing
+        integer(ip) :: iloq  = 1_ip  !! internal variable used for efficient processing
+        integer(ip) :: ilor  = 1_ip  !! internal variable used for efficient processing
+        real(wp),dimension(:,:,:,:),allocatable :: work_val_1  !! [[db5val]] work array of dimension `ky,kz,kq,kr`
+        real(wp),dimension(:,:,:),allocatable   :: work_val_2  !! [[db5val]] work array of dimension `kz,kq,kr`
+        real(wp),dimension(:,:),allocatable     :: work_val_3  !! [[db5val]] work array of dimension `kq,kr`
+        real(wp),dimension(:),allocatable       :: work_val_4  !! [[db5val]] work array of dimension `kr`
+        real(wp),dimension(:),allocatable       :: work_val_5  !! [[db5val]] work array of dimension `3_ip*max(kx,ky,kz,kq,kr)`
         contains
         private
         generic,public :: initialize => initialize_5d_auto_knots,initialize_5d_specify_knots
@@ -208,18 +223,18 @@
     type,extends(bspline_class),public :: bspline_6d
         !! Class for 6d b-spline interpolation.
         private
-        integer :: nx  = 0  !! Number of \(x\) abcissae
-        integer :: ny  = 0  !! Number of \(y\) abcissae
-        integer :: nz  = 0  !! Number of \(z\) abcissae
-        integer :: nq  = 0  !! Number of \(q\) abcissae
-        integer :: nr  = 0  !! Number of \(r\) abcissae
-        integer :: ns  = 0  !! Number of \(s\) abcissae
-        integer :: kx  = 0  !! The order of spline pieces in \(x\)
-        integer :: ky  = 0  !! The order of spline pieces in \(y\)
-        integer :: kz  = 0  !! The order of spline pieces in \(z\)
-        integer :: kq  = 0  !! The order of spline pieces in \(q\)
-        integer :: kr  = 0  !! The order of spline pieces in \(r\)
-        integer :: ks  = 0  !! The order of spline pieces in \(s\)
+        integer(ip) :: nx = 0_ip  !! Number of \(x\) abcissae
+        integer(ip) :: ny = 0_ip  !! Number of \(y\) abcissae
+        integer(ip) :: nz = 0_ip  !! Number of \(z\) abcissae
+        integer(ip) :: nq = 0_ip  !! Number of \(q\) abcissae
+        integer(ip) :: nr = 0_ip  !! Number of \(r\) abcissae
+        integer(ip) :: ns = 0_ip  !! Number of \(s\) abcissae
+        integer(ip) :: kx = 0_ip  !! The order of spline pieces in \(x\)
+        integer(ip) :: ky = 0_ip  !! The order of spline pieces in \(y\)
+        integer(ip) :: kz = 0_ip  !! The order of spline pieces in \(z\)
+        integer(ip) :: kq = 0_ip  !! The order of spline pieces in \(q\)
+        integer(ip) :: kr = 0_ip  !! The order of spline pieces in \(r\)
+        integer(ip) :: ks = 0_ip  !! The order of spline pieces in \(s\)
         real(wp),dimension(:,:,:,:,:,:),allocatable :: bcoef  !! array of coefficients of the b-spline interpolant
         real(wp),dimension(:),allocatable :: tx  !! The knots in the \(x\) direction for the spline interpolant
         real(wp),dimension(:),allocatable :: ty  !! The knots in the \(y\) direction for the spline interpolant
@@ -227,16 +242,22 @@
         real(wp),dimension(:),allocatable :: tq  !! The knots in the \(q\) direction for the spline interpolant
         real(wp),dimension(:),allocatable :: tr  !! The knots in the \(r\) direction for the spline interpolant
         real(wp),dimension(:),allocatable :: ts  !! The knots in the \(s\) direction for the spline interpolant
-        integer :: inbvy = 1  !! internal variable used for efficient processing
-        integer :: inbvz = 1  !! internal variable used for efficient processing
-        integer :: inbvq = 1  !! internal variable used for efficient processing
-        integer :: inbvr = 1  !! internal variable used for efficient processing
-        integer :: inbvs = 1  !! internal variable used for efficient processing
-        integer :: iloy  = 1  !! internal variable used for efficient processing
-        integer :: iloz  = 1  !! internal variable used for efficient processing
-        integer :: iloq  = 1  !! internal variable used for efficient processing
-        integer :: ilor  = 1  !! internal variable used for efficient processing
-        integer :: ilos  = 1  !! internal variable used for efficient processing
+        integer(ip) :: inbvy = 1_ip  !! internal variable used for efficient processing
+        integer(ip) :: inbvz = 1_ip  !! internal variable used for efficient processing
+        integer(ip) :: inbvq = 1_ip  !! internal variable used for efficient processing
+        integer(ip) :: inbvr = 1_ip  !! internal variable used for efficient processing
+        integer(ip) :: inbvs = 1_ip  !! internal variable used for efficient processing
+        integer(ip) :: iloy  = 1_ip  !! internal variable used for efficient processing
+        integer(ip) :: iloz  = 1_ip  !! internal variable used for efficient processing
+        integer(ip) :: iloq  = 1_ip  !! internal variable used for efficient processing
+        integer(ip) :: ilor  = 1_ip  !! internal variable used for efficient processing
+        integer(ip) :: ilos  = 1_ip  !! internal variable used for efficient processing
+        real(wp),dimension(:,:,:,:,:),allocatable :: work_val_1  !! [[db6val]] work array of dimension `ky,kz,kq,kr,ks`
+        real(wp),dimension(:,:,:,:),allocatable   :: work_val_2  !! [[db6val]] work array of dimension `kz,kq,kr,ks`
+        real(wp),dimension(:,:,:),allocatable     :: work_val_3  !! [[db6val]] work array of dimension `kq,kr,ks`
+        real(wp),dimension(:,:),allocatable       :: work_val_4  !! [[db6val]] work array of dimension `kr,ks`
+        real(wp),dimension(:),allocatable         :: work_val_5  !! [[db6val]] work array of dimension `ks`
+        real(wp),dimension(:),allocatable         :: work_val_6  !! [[db6val]] work array of dimension `3_ip*max(kx,ky,kz,kq,kr,ks)`
         contains
         private
         generic,public :: initialize => initialize_6d_auto_knots,initialize_6d_specify_knots
@@ -312,7 +333,7 @@
     class(bspline_class),intent(in) :: me
     logical                         :: ok
 
-    ok = ( me%iflag == 0 )
+    ok = ( me%iflag == 0_ip )
 
     end function status_ok
 !*****************************************************************************************
@@ -329,7 +350,7 @@
 
     class(bspline_class),intent(inout) :: me
 
-    me%iflag = 0
+    me%iflag = 0_ip
 
     end subroutine clear_bspline_flag
 !*****************************************************************************************
@@ -351,7 +372,7 @@
 
     class(bspline_class),intent(in) :: me
     character(len=:),allocatable    :: msg    !! status message associated with the flag
-    integer,intent(in),optional     :: iflag  !! the corresponding status code
+    integer(ip),intent(in),optional :: iflag  !! the corresponding status code
 
     if (present(iflag)) then
         msg = get_status_message(iflag)
@@ -371,12 +392,13 @@
     implicit none
 
     class(bspline_1d),intent(in) :: me
-    integer :: s !! size of the structure in bits
+    integer(ip) :: s !! size of the structure in bits
 
-    s = 2*int_size + logical_size + 2*int_size
+    s = 2_ip*int_size + logical_size + 2_ip*int_size
 
-    if (allocated(me%bcoef)) s = s + real_size*size(me%bcoef)
-    if (allocated(me%tx))    s = s + real_size*size(me%tx)
+    if (allocated(me%bcoef))      s = s + real_size*size(me%bcoef,kind=ip)
+    if (allocated(me%tx))         s = s + real_size*size(me%tx,kind=ip)
+    if (allocated(me%work_val_1)) s = s + real_size*size(me%work_val_1,kind=ip)
 
     end function size_1d
 !*****************************************************************************************
@@ -390,14 +412,16 @@
     implicit none
 
     class(bspline_2d),intent(in) :: me
-    integer :: s !! size of the structure in bits
+    integer(ip) :: s !! size of the structure in bits
 
-    s = 2*int_size + logical_size + 6*int_size
+    s = 2_ip*int_size + logical_size + 6_ip*int_size
 
-    if (allocated(me%bcoef)) s = s + real_size*size(me%bcoef,1)*&
-                                               size(me%bcoef,2)
-    if (allocated(me%tx)) s = s + real_size*size(me%tx)
-    if (allocated(me%ty)) s = s + real_size*size(me%ty)
+    if (allocated(me%bcoef))      s = s + real_size*size(me%bcoef,1_ip,kind=ip)*&
+                                                    size(me%bcoef,2_ip,kind=ip)
+    if (allocated(me%tx))         s = s + real_size*size(me%tx,kind=ip)
+    if (allocated(me%ty))         s = s + real_size*size(me%ty,kind=ip)
+    if (allocated(me%work_val_1)) s = s + real_size*size(me%work_val_1,kind=ip)
+    if (allocated(me%work_val_2)) s = s + real_size*size(me%work_val_2,kind=ip)
 
     end function size_2d
 !*****************************************************************************************
@@ -411,16 +435,20 @@
     implicit none
 
     class(bspline_3d),intent(in) :: me
-    integer :: s !! size of the structure in bits
+    integer(ip) :: s !! size of the structure in bits
 
-    s = 2*int_size + logical_size + 10*int_size
+    s = 2_ip*int_size + logical_size + 10_ip*int_size
 
-    if (allocated(me%bcoef)) s = s + real_size*size(me%bcoef,1)*&
-                                               size(me%bcoef,2)*&
-                                               size(me%bcoef,3)
-    if (allocated(me%tx)) s = s + real_size*size(me%tx)
-    if (allocated(me%ty)) s = s + real_size*size(me%ty)
-    if (allocated(me%tz)) s = s + real_size*size(me%tz)
+    if (allocated(me%bcoef))      s = s + real_size*size(me%bcoef,1_ip,kind=ip)*&
+                                                    size(me%bcoef,2_ip,kind=ip)*&
+                                                    size(me%bcoef,3_ip,kind=ip)
+    if (allocated(me%tx))         s = s + real_size*size(me%tx,kind=ip)
+    if (allocated(me%ty))         s = s + real_size*size(me%ty,kind=ip)
+    if (allocated(me%tz))         s = s + real_size*size(me%tz,kind=ip)
+    if (allocated(me%work_val_1)) s = s + real_size*size(me%work_val_1,1_ip,kind=ip)*&
+                                                    size(me%work_val_1,2_ip,kind=ip)
+    if (allocated(me%work_val_2)) s = s + real_size*size(me%work_val_2,kind=ip)
+    if (allocated(me%work_val_3)) s = s + real_size*size(me%work_val_3,kind=ip)
 
     end function size_3d
 !*****************************************************************************************
@@ -434,18 +462,25 @@
     implicit none
 
     class(bspline_4d),intent(in) :: me
-    integer :: s !! size of the structure in bits
+    integer(ip) :: s !! size of the structure in bits
 
-    s = 2*int_size + logical_size + 14*int_size
+    s = 2_ip*int_size + logical_size + 14_ip*int_size
 
-    if (allocated(me%bcoef)) s = s + real_size*size(me%bcoef,1)*&
-                                               size(me%bcoef,2)*&
-                                               size(me%bcoef,3)*&
-                                               size(me%bcoef,4)
-    if (allocated(me%tx)) s = s + real_size*size(me%tx)
-    if (allocated(me%ty)) s = s + real_size*size(me%ty)
-    if (allocated(me%tz)) s = s + real_size*size(me%tz)
-    if (allocated(me%tq)) s = s + real_size*size(me%tq)
+    if (allocated(me%bcoef))      s = s + real_size*size(me%bcoef,1_ip,kind=ip)*&
+                                                    size(me%bcoef,2_ip,kind=ip)*&
+                                                    size(me%bcoef,3_ip,kind=ip)*&
+                                                    size(me%bcoef,4_ip,kind=ip)
+    if (allocated(me%tx))         s = s + real_size*size(me%tx,kind=ip)
+    if (allocated(me%ty))         s = s + real_size*size(me%ty,kind=ip)
+    if (allocated(me%tz))         s = s + real_size*size(me%tz,kind=ip)
+    if (allocated(me%tq))         s = s + real_size*size(me%tq,kind=ip)
+    if (allocated(me%work_val_1)) s = s + real_size*size(me%work_val_1,1_ip,kind=ip)*&
+                                                    size(me%work_val_1,2_ip,kind=ip)*&
+                                                    size(me%work_val_1,3_ip,kind=ip)
+    if (allocated(me%work_val_2)) s = s + real_size*size(me%work_val_2,1_ip,kind=ip)*&
+                                                    size(me%work_val_2,2_ip,kind=ip)
+    if (allocated(me%work_val_3)) s = s + real_size*size(me%work_val_3,kind=ip)
+    if (allocated(me%work_val_4)) s = s + real_size*size(me%work_val_4,kind=ip)
 
     end function size_4d
 !*****************************************************************************************
@@ -459,20 +494,31 @@
     implicit none
 
     class(bspline_5d),intent(in) :: me
-    integer :: s !! size of the structure in bits
+    integer(ip) :: s !! size of the structure in bits
 
-    s = 2*int_size + logical_size + 18*int_size
+    s = 2_ip*int_size + logical_size + 18_ip*int_size
 
-    if (allocated(me%bcoef)) s = s + real_size*size(me%bcoef,1)*&
-                                               size(me%bcoef,2)*&
-                                               size(me%bcoef,3)*&
-                                               size(me%bcoef,4)*&
-                                               size(me%bcoef,5)
-    if (allocated(me%tx)) s = s + real_size*size(me%tx)
-    if (allocated(me%ty)) s = s + real_size*size(me%ty)
-    if (allocated(me%tz)) s = s + real_size*size(me%tz)
-    if (allocated(me%tq)) s = s + real_size*size(me%tq)
-    if (allocated(me%tr)) s = s + real_size*size(me%tr)
+    if (allocated(me%bcoef))      s = s + real_size*size(me%bcoef,1_ip,kind=ip)*&
+                                                    size(me%bcoef,2_ip,kind=ip)*&
+                                                    size(me%bcoef,3_ip,kind=ip)*&
+                                                    size(me%bcoef,4_ip,kind=ip)*&
+                                                    size(me%bcoef,5_ip,kind=ip)
+    if (allocated(me%tx))         s = s + real_size*size(me%tx,kind=ip)
+    if (allocated(me%ty))         s = s + real_size*size(me%ty,kind=ip)
+    if (allocated(me%tz))         s = s + real_size*size(me%tz,kind=ip)
+    if (allocated(me%tq))         s = s + real_size*size(me%tq,kind=ip)
+    if (allocated(me%tr))         s = s + real_size*size(me%tr,kind=ip)
+    if (allocated(me%work_val_1)) s = s + real_size*size(me%work_val_1,1_ip,kind=ip)*&
+                                                    size(me%work_val_1,2_ip,kind=ip)*&
+                                                    size(me%work_val_1,3_ip,kind=ip)*&
+                                                    size(me%work_val_1,4_ip,kind=ip)
+    if (allocated(me%work_val_2)) s = s + real_size*size(me%work_val_2,1_ip,kind=ip)*&
+                                                    size(me%work_val_2,2_ip,kind=ip)*&
+                                                    size(me%work_val_2,3_ip,kind=ip)
+    if (allocated(me%work_val_3)) s = s + real_size*size(me%work_val_3,1_ip,kind=ip)*&
+                                                    size(me%work_val_3,2_ip,kind=ip)
+    if (allocated(me%work_val_4)) s = s + real_size*size(me%work_val_4,kind=ip)
+    if (allocated(me%work_val_5)) s = s + real_size*size(me%work_val_5,kind=ip)
 
     end function size_5d
 !*****************************************************************************************
@@ -486,22 +532,38 @@
     implicit none
 
     class(bspline_6d),intent(in) :: me
-    integer :: s !! size of the structure in bits
+    integer(ip) :: s !! size of the structure in bits
 
-    s = 2*int_size + logical_size + 22*int_size
+    s = 2_ip*int_size + logical_size + 22_ip*int_size
 
-    if (allocated(me%bcoef)) s = s + real_size*size(me%bcoef,1)*&
-                                               size(me%bcoef,2)*&
-                                               size(me%bcoef,3)*&
-                                               size(me%bcoef,4)*&
-                                               size(me%bcoef,5)*&
-                                               size(me%bcoef,6)
-    if (allocated(me%tx)) s = s + real_size*size(me%tx)
-    if (allocated(me%ty)) s = s + real_size*size(me%ty)
-    if (allocated(me%tz)) s = s + real_size*size(me%tz)
-    if (allocated(me%tq)) s = s + real_size*size(me%tq)
-    if (allocated(me%tr)) s = s + real_size*size(me%tr)
-    if (allocated(me%ts)) s = s + real_size*size(me%ts)
+    if (allocated(me%bcoef))      s = s + real_size*size(me%bcoef,1_ip,kind=ip)*&
+                                                    size(me%bcoef,2_ip,kind=ip)*&
+                                                    size(me%bcoef,3_ip,kind=ip)*&
+                                                    size(me%bcoef,4_ip,kind=ip)*&
+                                                    size(me%bcoef,5_ip,kind=ip)*&
+                                                    size(me%bcoef,6,kind=ip)
+    if (allocated(me%tx))         s = s + real_size*size(me%tx,kind=ip)
+    if (allocated(me%ty))         s = s + real_size*size(me%ty,kind=ip)
+    if (allocated(me%tz))         s = s + real_size*size(me%tz,kind=ip)
+    if (allocated(me%tq))         s = s + real_size*size(me%tq,kind=ip)
+    if (allocated(me%tr))         s = s + real_size*size(me%tr,kind=ip)
+    if (allocated(me%ts))         s = s + real_size*size(me%ts,kind=ip)
+    if (allocated(me%work_val_1)) s = s + real_size*size(me%work_val_1,1_ip,kind=ip)*&
+                                                    size(me%work_val_1,2_ip,kind=ip)*&
+                                                    size(me%work_val_1,3_ip,kind=ip)*&
+                                                    size(me%work_val_1,4_ip,kind=ip)*&
+                                                    size(me%work_val_1,5_ip,kind=ip)
+    if (allocated(me%work_val_2)) s = s + real_size*size(me%work_val_2,1_ip,kind=ip)*&
+                                                    size(me%work_val_2,2_ip,kind=ip)*&
+                                                    size(me%work_val_2,3_ip,kind=ip)*&
+                                                    size(me%work_val_2,4_ip,kind=ip)
+    if (allocated(me%work_val_3)) s = s + real_size*size(me%work_val_3,1_ip,kind=ip)*&
+                                                    size(me%work_val_3,2_ip,kind=ip)*&
+                                                    size(me%work_val_3,3_ip,kind=ip)
+    if (allocated(me%work_val_4)) s = s + real_size*size(me%work_val_4,1_ip,kind=ip)*&
+                                                    size(me%work_val_4,2_ip,kind=ip)
+    if (allocated(me%work_val_5)) s = s + real_size*size(me%work_val_5,kind=ip)
+    if (allocated(me%work_val_6)) s = s + real_size*size(me%work_val_6,kind=ip)
 
     end function size_6d
 !*****************************************************************************************
@@ -517,8 +579,8 @@
 
     class(bspline_class),intent(inout) :: me
 
-    me%inbvx = 1
-    me%iflag = 1
+    me%inbvx = 1_ip
+    me%iflag = 1_ip
     me%initialized = .false.
     me%extrap = .false.
 
@@ -537,10 +599,11 @@
 
     call me%destroy_base()
 
-    me%nx  = 0
-    me%kx  = 0
-    if (allocated(me%bcoef))    deallocate(me%bcoef)
-    if (allocated(me%tx))       deallocate(me%tx)
+    me%nx = 0_ip
+    me%kx = 0_ip
+    if (allocated(me%bcoef))      deallocate(me%bcoef)
+    if (allocated(me%tx))         deallocate(me%tx)
+    if (allocated(me%work_val_1)) deallocate(me%work_val_1)
 
     end subroutine destroy_1d
 !*****************************************************************************************
@@ -557,15 +620,17 @@
 
     call me%destroy_base()
 
-    me%nx    = 0
-    me%ny    = 0
-    me%kx    = 0
-    me%ky    = 0
-    me%inbvy = 1
-    me%iloy  = 1
-    if (allocated(me%bcoef))    deallocate(me%bcoef)
-    if (allocated(me%tx))       deallocate(me%tx)
-    if (allocated(me%ty))       deallocate(me%ty)
+    me%nx    = 0_ip
+    me%ny    = 0_ip
+    me%kx    = 0_ip
+    me%ky    = 0_ip
+    me%inbvy = 1_ip
+    me%iloy  = 1_ip
+    if (allocated(me%bcoef))      deallocate(me%bcoef)
+    if (allocated(me%tx))         deallocate(me%tx)
+    if (allocated(me%ty))         deallocate(me%ty)
+    if (allocated(me%work_val_1)) deallocate(me%work_val_1)
+    if (allocated(me%work_val_2)) deallocate(me%work_val_2)
 
     end subroutine destroy_2d
 !*****************************************************************************************
@@ -582,20 +647,23 @@
 
     call me%destroy_base()
 
-    me%nx    = 0
-    me%ny    = 0
-    me%nz    = 0
-    me%kx    = 0
-    me%ky    = 0
-    me%kz    = 0
-    me%inbvy = 1
-    me%inbvz = 1
-    me%iloy  = 1
-    me%iloz  = 1
-    if (allocated(me%bcoef))    deallocate(me%bcoef)
-    if (allocated(me%tx))       deallocate(me%tx)
-    if (allocated(me%ty))       deallocate(me%ty)
-    if (allocated(me%tz))       deallocate(me%tz)
+    me%nx    = 0_ip
+    me%ny    = 0_ip
+    me%nz    = 0_ip
+    me%kx    = 0_ip
+    me%ky    = 0_ip
+    me%kz    = 0_ip
+    me%inbvy = 1_ip
+    me%inbvz = 1_ip
+    me%iloy  = 1_ip
+    me%iloz  = 1_ip
+    if (allocated(me%bcoef))      deallocate(me%bcoef)
+    if (allocated(me%tx))         deallocate(me%tx)
+    if (allocated(me%ty))         deallocate(me%ty)
+    if (allocated(me%tz))         deallocate(me%tz)
+    if (allocated(me%work_val_1)) deallocate(me%work_val_1)
+    if (allocated(me%work_val_2)) deallocate(me%work_val_2)
+    if (allocated(me%work_val_3)) deallocate(me%work_val_3)
 
     end subroutine destroy_3d
 !*****************************************************************************************
@@ -610,25 +678,29 @@
 
     class(bspline_4d),intent(inout) :: me
 
-    me%nx    = 0
-    me%ny    = 0
-    me%nz    = 0
-    me%nq    = 0
-    me%kx    = 0
-    me%ky    = 0
-    me%kz    = 0
-    me%kq    = 0
-    me%inbvy = 1
-    me%inbvz = 1
-    me%inbvq = 1
-    me%iloy  = 1
-    me%iloz  = 1
-    me%iloq  = 1
-    if (allocated(me%bcoef))   deallocate(me%bcoef)
-    if (allocated(me%tx))      deallocate(me%tx)
-    if (allocated(me%ty))      deallocate(me%ty)
-    if (allocated(me%tz))      deallocate(me%tz)
-    if (allocated(me%tq))      deallocate(me%tq)
+    me%nx    = 0_ip
+    me%ny    = 0_ip
+    me%nz    = 0_ip
+    me%nq    = 0_ip
+    me%kx    = 0_ip
+    me%ky    = 0_ip
+    me%kz    = 0_ip
+    me%kq    = 0_ip
+    me%inbvy = 1_ip
+    me%inbvz = 1_ip
+    me%inbvq = 1_ip
+    me%iloy  = 1_ip
+    me%iloz  = 1_ip
+    me%iloq  = 1_ip
+    if (allocated(me%bcoef))      deallocate(me%bcoef)
+    if (allocated(me%tx))         deallocate(me%tx)
+    if (allocated(me%ty))         deallocate(me%ty)
+    if (allocated(me%tz))         deallocate(me%tz)
+    if (allocated(me%tq))         deallocate(me%tq)
+    if (allocated(me%work_val_1)) deallocate(me%work_val_1)
+    if (allocated(me%work_val_2)) deallocate(me%work_val_2)
+    if (allocated(me%work_val_3)) deallocate(me%work_val_3)
+    if (allocated(me%work_val_4)) deallocate(me%work_val_4)
 
     end subroutine destroy_4d
 !*****************************************************************************************
@@ -643,30 +715,35 @@
 
     class(bspline_5d),intent(inout) :: me
 
-    me%nx    = 0
-    me%ny    = 0
-    me%nz    = 0
-    me%nq    = 0
-    me%nr    = 0
-    me%kx    = 0
-    me%ky    = 0
-    me%kz    = 0
-    me%kq    = 0
-    me%kr    = 0
-    me%inbvy = 1
-    me%inbvz = 1
-    me%inbvq = 1
-    me%inbvr = 1
-    me%iloy  = 1
-    me%iloz  = 1
-    me%iloq  = 1
-    me%ilor  = 1
-    if (allocated(me%bcoef))    deallocate(me%bcoef)
-    if (allocated(me%tx))       deallocate(me%tx)
-    if (allocated(me%ty))       deallocate(me%ty)
-    if (allocated(me%tz))       deallocate(me%tz)
-    if (allocated(me%tq))       deallocate(me%tq)
-    if (allocated(me%tr))       deallocate(me%tr)
+    me%nx    = 0_ip
+    me%ny    = 0_ip
+    me%nz    = 0_ip
+    me%nq    = 0_ip
+    me%nr    = 0_ip
+    me%kx    = 0_ip
+    me%ky    = 0_ip
+    me%kz    = 0_ip
+    me%kq    = 0_ip
+    me%kr    = 0_ip
+    me%inbvy = 1_ip
+    me%inbvz = 1_ip
+    me%inbvq = 1_ip
+    me%inbvr = 1_ip
+    me%iloy  = 1_ip
+    me%iloz  = 1_ip
+    me%iloq  = 1_ip
+    me%ilor  = 1_ip
+    if (allocated(me%bcoef))      deallocate(me%bcoef)
+    if (allocated(me%tx))         deallocate(me%tx)
+    if (allocated(me%ty))         deallocate(me%ty)
+    if (allocated(me%tz))         deallocate(me%tz)
+    if (allocated(me%tq))         deallocate(me%tq)
+    if (allocated(me%tr))         deallocate(me%tr)
+    if (allocated(me%work_val_1)) deallocate(me%work_val_1)
+    if (allocated(me%work_val_2)) deallocate(me%work_val_2)
+    if (allocated(me%work_val_3)) deallocate(me%work_val_3)
+    if (allocated(me%work_val_4)) deallocate(me%work_val_4)
+    if (allocated(me%work_val_5)) deallocate(me%work_val_5)
 
     end subroutine destroy_5d
 !*****************************************************************************************
@@ -681,35 +758,41 @@
 
     class(bspline_6d),intent(inout) :: me
 
-    me%nx    = 0
-    me%ny    = 0
-    me%nz    = 0
-    me%nq    = 0
-    me%nr    = 0
-    me%ns    = 0
-    me%kx    = 0
-    me%ky    = 0
-    me%kz    = 0
-    me%kq    = 0
-    me%kr    = 0
-    me%ks    = 0
-    me%inbvy = 1
-    me%inbvz = 1
-    me%inbvq = 1
-    me%inbvr = 1
-    me%inbvs = 1
-    me%iloy  = 1
-    me%iloz  = 1
-    me%iloq  = 1
-    me%ilor  = 1
-    me%ilos  = 1
-    if (allocated(me%bcoef))    deallocate(me%bcoef)
-    if (allocated(me%tx))       deallocate(me%tx)
-    if (allocated(me%ty))       deallocate(me%ty)
-    if (allocated(me%tz))       deallocate(me%tz)
-    if (allocated(me%tq))       deallocate(me%tq)
-    if (allocated(me%tr))       deallocate(me%tr)
-    if (allocated(me%ts))       deallocate(me%ts)
+    me%nx    = 0_ip
+    me%ny    = 0_ip
+    me%nz    = 0_ip
+    me%nq    = 0_ip
+    me%nr    = 0_ip
+    me%ns    = 0_ip
+    me%kx    = 0_ip
+    me%ky    = 0_ip
+    me%kz    = 0_ip
+    me%kq    = 0_ip
+    me%kr    = 0_ip
+    me%ks    = 0_ip
+    me%inbvy = 1_ip
+    me%inbvz = 1_ip
+    me%inbvq = 1_ip
+    me%inbvr = 1_ip
+    me%inbvs = 1_ip
+    me%iloy  = 1_ip
+    me%iloz  = 1_ip
+    me%iloq  = 1_ip
+    me%ilor  = 1_ip
+    me%ilos  = 1_ip
+    if (allocated(me%bcoef))      deallocate(me%bcoef)
+    if (allocated(me%tx))         deallocate(me%tx)
+    if (allocated(me%ty))         deallocate(me%ty)
+    if (allocated(me%tz))         deallocate(me%tz)
+    if (allocated(me%tq))         deallocate(me%tq)
+    if (allocated(me%tr))         deallocate(me%tr)
+    if (allocated(me%ts))         deallocate(me%ts)
+    if (allocated(me%work_val_1)) deallocate(me%work_val_1)
+    if (allocated(me%work_val_2)) deallocate(me%work_val_2)
+    if (allocated(me%work_val_3)) deallocate(me%work_val_3)
+    if (allocated(me%work_val_4)) deallocate(me%work_val_4)
+    if (allocated(me%work_val_5)) deallocate(me%work_val_5)
+    if (allocated(me%work_val_6)) deallocate(me%work_val_6)
 
     end subroutine destroy_6d
 !*****************************************************************************************
@@ -805,7 +888,7 @@
     real(wp),dimension(:),intent(in) :: x      !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
     real(wp),dimension(:),intent(in) :: fcn    !! `(nx)` array of function values to interpolate. `fcn(i)` should
                                                !! contain the function value at the point `x(i)`
-    integer,intent(in)               :: kx     !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)           :: kx     !! The order of spline pieces in \(x\)
                                                !! ( \( 2 \le k_x < n_x \) )
                                                !! (order = polynomial degree + 1)
     logical,intent(in),optional      :: extrap !! if true, then extrapolation is allowed
@@ -829,7 +912,7 @@
     real(wp),dimension(:),intent(in) :: x     !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
     real(wp),dimension(:),intent(in) :: fcn   !! `(nx)` array of function values to interpolate. `fcn(i)` should
                                               !! contain the function value at the point `x(i)`
-    integer,intent(in)               :: kx    !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)           :: kx    !! The order of spline pieces in \(x\)
                                               !! ( \( 2 \le k_x < n_x \) )
                                               !! (order = polynomial degree + 1)
     real(wp),dimension(:),intent(in) :: tx    !! The `(nx+kx)` knots in the \(x\) direction
@@ -856,35 +939,36 @@
     real(wp),dimension(:),intent(in) :: x     !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
     real(wp),dimension(:),intent(in) :: fcn   !! `(nx)` array of function values to interpolate. `fcn(i)` should
                                               !! contain the function value at the point `x(i)`
-    integer,intent(in)               :: kx    !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)           :: kx    !! The order of spline pieces in \(x\)
                                               !! ( \( 2 \le k_x < n_x \) )
                                               !! (order = polynomial degree + 1)
-    integer,intent(out)              :: iflag !! status flag (see [[db1ink]])
+    integer(ip),intent(out)          :: iflag !! status flag (see [[db1ink]])
     logical,intent(in),optional      :: extrap !! if true, then extrapolation is allowed
                                                !! (default is false)
 
-    integer :: iknot
-    integer :: nx
+    integer(ip) :: iknot
+    integer(ip) :: nx
 
     call me%destroy()
 
-    nx = size(x)
+    nx = size(x,kind=ip)
 
     me%nx = nx
     me%kx = kx
 
     allocate(me%tx(nx+kx))
     allocate(me%bcoef(nx))
+    allocate(me%work_val_1(3_ip*kx))
 
-    iknot = 0         !knot sequence chosen by db1ink
+    iknot = 0_ip         !knot sequence chosen by db1ink
 
     call db1ink(x,nx,fcn,kx,iknot,me%tx,me%bcoef,iflag)
 
-    if (iflag==0) then
+    if (iflag==0_ip) then
         call me%set_extrap_flag(extrap)
     end if
 
-    me%initialized = iflag==0
+    me%initialized = iflag==0_ip
     me%iflag = iflag
 
     end subroutine initialize_1d_auto_knots
@@ -903,41 +987,42 @@
     real(wp),dimension(:),intent(in) :: x     !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
     real(wp),dimension(:),intent(in) :: fcn   !! `(nx)` array of function values to interpolate. `fcn(i)` should
                                               !! contain the function value at the point `x(i)`
-    integer,intent(in)               :: kx    !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)           :: kx    !! The order of spline pieces in \(x\)
                                               !! ( \( 2 \le k_x < n_x \) )
                                               !! (order = polynomial degree + 1)
     real(wp),dimension(:),intent(in) :: tx    !! The `(nx+kx)` knots in the \(x\) direction
                                               !! for the spline interpolant.
                                               !! Must be non-decreasing.
-    integer,intent(out)              :: iflag !! status flag (see [[db1ink]])
+    integer(ip),intent(out)          :: iflag !! status flag (see [[db1ink]])
     logical,intent(in),optional      :: extrap !! if true, then extrapolation is allowed
                                                !! (default is false)
 
-    integer :: nx
+    integer(ip) :: nx
 
     call me%destroy()
 
-    nx = size(x)
+    nx = size(x,kind=ip)
 
     call check_knot_vectors_sizes(nx=nx,kx=kx,tx=tx,iflag=iflag)
 
-    if (iflag == 0) then
+    if (iflag == 0_ip) then
 
         me%nx = nx
         me%kx = kx
 
         allocate(me%tx(nx+kx))
         allocate(me%bcoef(nx))
+        allocate(me%work_val_1(3_ip*kx))
 
         me%tx = tx
 
-        call db1ink(x,nx,fcn,kx,1,me%tx,me%bcoef,iflag)
+        call db1ink(x,nx,fcn,kx,1_ip,me%tx,me%bcoef,iflag)
 
         call me%set_extrap_flag(extrap)
 
     end if
 
-    me%initialized = iflag==0
+    me%initialized = iflag==0_ip
     me%iflag = iflag
 
     end subroutine initialize_1d_specify_knots
@@ -953,14 +1038,15 @@
 
     class(bspline_1d),intent(inout) :: me
     real(wp),intent(in)             :: xval  !! \(x\) coordinate of evaluation point.
-    integer,intent(in)              :: idx   !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)          :: idx   !! \(x\) derivative of piecewise polynomial to evaluate.
     real(wp),intent(out)            :: f     !! interpolated value
-    integer,intent(out)             :: iflag !! status flag (see [[db1val]])
+    integer(ip),intent(out)         :: iflag !! status flag (see [[db1val]])
 
     if (me%initialized) then
-        call db1val(xval,idx,me%tx,me%nx,me%kx,me%bcoef,f,iflag,me%inbvx,me%extrap)
+        call db1val(xval,idx,me%tx,me%nx,me%kx,me%bcoef,f,iflag,&
+                    me%inbvx,me%work_val_1,extrap=me%extrap)
     else
-        iflag = 1
+        iflag = 1_ip
     end if
     me%iflag = iflag
 
@@ -979,12 +1065,12 @@
     real(wp),intent(in)             :: x1    !! left point of interval
     real(wp),intent(in)             :: x2    !! right point of interval
     real(wp),intent(out)            :: f     !! integral of the b-spline over \( [x_1, x_2] \)
-    integer,intent(out)             :: iflag !! status flag (see [[db1sqad]])
+    integer(ip),intent(out)         :: iflag !! status flag (see [[db1sqad]])
 
     if (me%initialized) then
-        call db1sqad(me%tx,me%bcoef,me%nx,me%kx,x1,x2,f,iflag)
+        call db1sqad(me%tx,me%bcoef,me%nx,me%kx,x1,x2,f,iflag,me%work_val_1)
     else
-        iflag = 1
+        iflag = 1_ip
     end if
     me%iflag = iflag
 
@@ -1002,18 +1088,18 @@
     class(bspline_1d),intent(inout) :: me
     procedure(b1fqad_func)          :: fun   !! external function of one argument for the
                                              !! integrand `bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,idx,x,inbv)`
-    integer,intent(in)              :: idx   !! order of the spline derivative, `0 <= idx <= k-1`
+    integer(ip),intent(in)          :: idx   !! order of the spline derivative, `0 <= idx <= k-1`
                                              !! `idx=0` gives the spline function
     real(wp),intent(in)             :: x1    !! left point of interval
     real(wp),intent(in)             :: x2    !! right point of interval
     real(wp),intent(in)             :: tol   !! desired accuracy for the quadrature
     real(wp),intent(out)            :: f     !! integral of `bf(x)` over \( [x_1, x_2] \)
-    integer,intent(out)             :: iflag !! status flag (see [[db1sqad]])
+    integer(ip),intent(out)         :: iflag !! status flag (see [[db1sqad]])
 
     if (me%initialized) then
-        call db1fqad(fun,me%tx,me%bcoef,me%nx,me%kx,idx,x1,x2,tol,f,iflag)
+        call db1fqad(fun,me%tx,me%bcoef,me%nx,me%kx,idx,x1,x2,tol,f,iflag,me%work_val_1)
     else
-        iflag = 1
+        iflag = 1_ip
     end if
     me%iflag = iflag
 
@@ -1050,14 +1136,14 @@
     real(wp),dimension(:,:),intent(in) :: fcn   !! `(nx,ny)` matrix of function values to interpolate.
                                                 !! `fcn(i,j)` should contain the function value at the
                                                 !! point (`x(i)`,`y(j)`)
-    integer,intent(in)                 :: kx    !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)             :: kx    !! The order of spline pieces in \(x\)
                                                 !! ( \( 2 \le k_x < n_x \) )
                                                 !! (order = polynomial degree + 1)
-    integer,intent(in)                 :: ky    !! The order of spline pieces in \(y\)
+    integer(ip),intent(in)             :: ky    !! The order of spline pieces in \(y\)
                                                 !! ( \( 2 \le k_y < n_y \) )
                                                 !! (order = polynomial degree + 1)
-    logical,intent(in),optional      :: extrap !! if true, then extrapolation is allowed
-                                               !! (default is false)
+    logical,intent(in),optional      :: extrap  !! if true, then extrapolation is allowed
+                                                !! (default is false)
 
     call initialize_2d_auto_knots(me,x,y,fcn,kx,ky,me%iflag,extrap)
 
@@ -1079,10 +1165,10 @@
     real(wp),dimension(:,:),intent(in) :: fcn   !! `(nx,ny)` matrix of function values to interpolate.
                                                 !! `fcn(i,j)` should contain the function value at the
                                                 !! point (`x(i)`,`y(j)`)
-    integer,intent(in)                 :: kx    !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)             :: kx    !! The order of spline pieces in \(x\)
                                                 !! ( \( 2 \le k_x < n_x \) )
                                                 !! (order = polynomial degree + 1)
-    integer,intent(in)                 :: ky    !! The order of spline pieces in \(y\)
+    integer(ip),intent(in)             :: ky    !! The order of spline pieces in \(y\)
                                                 !! ( \( 2 \le k_y < n_y \) )
                                                 !! (order = polynomial degree + 1)
     real(wp),dimension(:),intent(in)   :: tx    !! The `(nx+kx)` knots in the \(x\) direction
@@ -1114,23 +1200,23 @@
     real(wp),dimension(:,:),intent(in) :: fcn   !! `(nx,ny)` matrix of function values to interpolate.
                                                 !! `fcn(i,j)` should contain the function value at the
                                                 !! point (`x(i)`,`y(j)`)
-    integer,intent(in)                 :: kx    !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)             :: kx    !! The order of spline pieces in \(x\)
                                                 !! ( \( 2 \le k_x < n_x \) )
                                                 !! (order = polynomial degree + 1)
-    integer,intent(in)                 :: ky    !! The order of spline pieces in \(y\)
+    integer(ip),intent(in)             :: ky    !! The order of spline pieces in \(y\)
                                                 !! ( \( 2 \le k_y < n_y \) )
                                                 !! (order = polynomial degree + 1)
-    integer,intent(out)                :: iflag !! status flag (see [[db2ink]])
-    logical,intent(in),optional      :: extrap  !! if true, then extrapolation is allowed
-                                                !! (default is false)
+    integer(ip),intent(out)            :: iflag !! status flag (see [[db2ink]])
+    logical,intent(in),optional        :: extrap !! if true, then extrapolation is allowed
+                                                 !! (default is false)
 
-    integer :: iknot
-    integer :: nx,ny
+    integer(ip) :: iknot
+    integer(ip) :: nx,ny
 
     call me%destroy()
 
-    nx = size(x)
-    ny = size(y)
+    nx = size(x,kind=ip)
+    ny = size(y,kind=ip)
 
     me%nx = nx
     me%ny = ny
@@ -1141,16 +1227,18 @@
     allocate(me%tx(nx+kx))
     allocate(me%ty(ny+ky))
     allocate(me%bcoef(nx,ny))
+    allocate(me%work_val_1(ky))
+    allocate(me%work_val_2(3_ip*max(kx,ky)))
 
-    iknot = 0         !knot sequence chosen by db2ink
+    iknot = 0_ip         !knot sequence chosen by db2ink
 
     call db2ink(x,nx,y,ny,fcn,kx,ky,iknot,me%tx,me%ty,me%bcoef,iflag)
 
-    if (iflag==0) then
+    if (iflag==0_ip) then
         call me%set_extrap_flag(extrap)
     end if
 
-    me%initialized = iflag==0
+    me%initialized = iflag==0_ip
     me%iflag = iflag
 
     end subroutine initialize_2d_auto_knots
@@ -1171,10 +1259,10 @@
     real(wp),dimension(:,:),intent(in) :: fcn   !! `(nx,ny)` matrix of function values to interpolate.
                                                 !! `fcn(i,j)` should contain the function value at the
                                                 !! point (`x(i)`,`y(j)`)
-    integer,intent(in)                 :: kx    !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)             :: kx    !! The order of spline pieces in \(x\)
                                                 !! ( \( 2 \le k_x < n_x \) )
                                                 !! (order = polynomial degree + 1)
-    integer,intent(in)                 :: ky    !! The order of spline pieces in \(y\)
+    integer(ip),intent(in)             :: ky    !! The order of spline pieces in \(y\)
                                                 !! ( \( 2 \le k_y < n_y \) )
                                                 !! (order = polynomial degree + 1)
     real(wp),dimension(:),intent(in)   :: tx    !! The `(nx+kx)` knots in the \(x\) direction
@@ -1183,22 +1271,22 @@
     real(wp),dimension(:),intent(in)   :: ty    !! The `(ny+ky)` knots in the \(y\) direction
                                                 !! for the spline interpolant.
                                                 !! Must be non-decreasing.
-    integer,intent(out)                :: iflag !! status flag (see [[db2ink]])
+    integer(ip),intent(out)            :: iflag !! status flag (see [[db2ink]])
     logical,intent(in),optional      :: extrap  !! if true, then extrapolation is allowed
                                                 !! (default is false)
 
-    integer :: nx,ny
+    integer(ip) :: nx,ny
 
     call me%destroy()
 
-    nx = size(x)
-    ny = size(y)
+    nx = size(x,kind=ip)
+    ny = size(y,kind=ip)
 
     call check_knot_vectors_sizes(nx=nx,kx=kx,tx=tx,&
                                   ny=ny,ky=ky,ty=ty,&
                                   iflag=iflag)
 
-    if (iflag == 0) then
+    if (iflag == 0_ip) then
 
         me%nx = nx
         me%ny = ny
@@ -1209,17 +1297,19 @@
         allocate(me%tx(nx+kx))
         allocate(me%ty(ny+ky))
         allocate(me%bcoef(nx,ny))
+        allocate(me%work_val_1(ky))
+        allocate(me%work_val_2(3_ip*max(kx,ky)))
 
         me%tx = tx
         me%ty = ty
 
-        call db2ink(x,nx,y,ny,fcn,kx,ky,1,me%tx,me%ty,me%bcoef,iflag)
+        call db2ink(x,nx,y,ny,fcn,kx,ky,1_ip,me%tx,me%ty,me%bcoef,iflag)
 
         call me%set_extrap_flag(extrap)
 
     end if
 
-    me%initialized = iflag==0
+    me%initialized = iflag==0_ip
     me%iflag = iflag
 
     end subroutine initialize_2d_specify_knots
@@ -1236,10 +1326,10 @@
     class(bspline_2d),intent(inout) :: me
     real(wp),intent(in)             :: xval  !! \(x\) coordinate of evaluation point.
     real(wp),intent(in)             :: yval  !! \(y\) coordinate of evaluation point.
-    integer,intent(in)              :: idx   !! \(x\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)              :: idy   !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)           :: idx   !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)           :: idy   !! \(y\) derivative of piecewise polynomial to evaluate.
     real(wp),intent(out)            :: f     !! interpolated value
-    integer,intent(out)             :: iflag !! status flag (see [[db2val]])
+    integer(ip),intent(out)         :: iflag !! status flag (see [[db2val]])
 
     if (me%initialized) then
         call db2val(xval,yval,&
@@ -1249,9 +1339,10 @@
                     me%kx,me%ky,&
                     me%bcoef,f,iflag,&
                     me%inbvx,me%inbvy,me%iloy,&
-                    me%extrap)
+                    me%work_val_1,me%work_val_2,&
+                    extrap=me%extrap)
     else
-        iflag = 1
+        iflag = 1_ip
     end if
 
     me%iflag = iflag
@@ -1290,17 +1381,17 @@
     real(wp),dimension(:,:,:),intent(in) :: fcn !! `(nx,ny,nz)` matrix of function values to interpolate.
                                                 !! `fcn(i,j,k)` should contain the function value at the
                                                 !! point (`x(i)`,`y(j)`,`z(k)`)
-    integer,intent(in)                   :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)               :: kx  !! The order of spline pieces in \(x\)
                                                 !! ( \( 2 \le k_x < n_x \) )
                                                 !! (order = polynomial degree + 1)
-    integer,intent(in)                   :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in)               :: ky  !! The order of spline pieces in \(y\)
                                                 !! ( \( 2 \le k_y < n_y \) )
                                                 !! (order = polynomial degree + 1)
-    integer,intent(in)                   :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in)               :: kz  !! The order of spline pieces in \(z\)
                                                 !! ( \( 2 \le k_z < n_z \) )
                                                 !! (order = polynomial degree + 1)
-    logical,intent(in),optional      :: extrap !! if true, then extrapolation is allowed
-                                               !! (default is false)
+    logical,intent(in),optional       :: extrap !! if true, then extrapolation is allowed
+                                                !! (default is false)
 
     call initialize_3d_auto_knots(me,x,y,z,fcn,kx,ky,kz,me%iflag,extrap)
 
@@ -1323,13 +1414,13 @@
     real(wp),dimension(:,:,:),intent(in) :: fcn !! `(nx,ny,nz)` matrix of function values to interpolate.
                                                 !! `fcn(i,j,k)` should contain the function value at the
                                                 !! point (`x(i)`,`y(j)`,`z(k)`)
-    integer,intent(in)                   :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)               :: kx  !! The order of spline pieces in \(x\)
                                                 !! ( \( 2 \le k_x < n_x \) )
                                                 !! (order = polynomial degree + 1)
-    integer,intent(in)                   :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in)               :: ky  !! The order of spline pieces in \(y\)
                                                 !! ( \( 2 \le k_y < n_y \) )
                                                 !! (order = polynomial degree + 1)
-    integer,intent(in)                   :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in)               :: kz  !! The order of spline pieces in \(z\)
                                                 !! ( \( 2 \le k_z < n_z \) )
                                                 !! (order = polynomial degree + 1)
     real(wp),dimension(:),intent(in)     :: tx  !! The `(nx+kx)` knots in the \(x\) direction
@@ -1365,27 +1456,27 @@
     real(wp),dimension(:,:,:),intent(in) :: fcn !! `(nx,ny,nz)` matrix of function values to interpolate.
                                                 !! `fcn(i,j,k)` should contain the function value at the
                                                 !! point (`x(i)`,`y(j)`,`z(k)`)
-    integer,intent(in)                   :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)               :: kx  !! The order of spline pieces in \(x\)
                                                 !! ( \( 2 \le k_x < n_x \) )
                                                 !! (order = polynomial degree + 1)
-    integer,intent(in)                   :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in)               :: ky  !! The order of spline pieces in \(y\)
                                                 !! ( \( 2 \le k_y < n_y \) )
                                                 !! (order = polynomial degree + 1)
-    integer,intent(in)                   :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in)               :: kz  !! The order of spline pieces in \(z\)
                                                 !! ( \( 2 \le k_z < n_z \) )
                                                 !! (order = polynomial degree + 1)
-    integer,intent(out) :: iflag                !! status flag (see [[db3ink]])
+    integer(ip),intent(out) :: iflag            !! status flag (see [[db3ink]])
     logical,intent(in),optional :: extrap       !! if true, then extrapolation is allowed
                                                 !! (default is false)
 
-    integer :: iknot
-    integer :: nx,ny,nz
+    integer(ip) :: iknot
+    integer(ip) :: nx,ny,nz
 
     call me%destroy()
 
-    nx = size(x)
-    ny = size(y)
-    nz = size(z)
+    nx = size(x,kind=ip)
+    ny = size(y,kind=ip)
+    nz = size(z,kind=ip)
 
     me%nx = nx
     me%ny = ny
@@ -1399,8 +1490,11 @@
     allocate(me%ty(ny+ky))
     allocate(me%tz(nz+kz))
     allocate(me%bcoef(nx,ny,nz))
+    allocate(me%work_val_1(ky,kz))
+    allocate(me%work_val_2(kz))
+    allocate(me%work_val_3(3_ip*max(kx,ky,kz)))
 
-    iknot = 0         !knot sequence chosen by db3ink
+    iknot = 0_ip         !knot sequence chosen by db3ink
 
     call db3ink(x,nx,y,ny,z,nz,&
                 fcn,&
@@ -1409,11 +1503,11 @@
                 me%tx,me%ty,me%tz,&
                 me%bcoef,iflag)
 
-    if (iflag==0) then
+    if (iflag==0_ip) then
         call me%set_extrap_flag(extrap)
     end if
 
-    me%initialized = iflag==0
+    me%initialized = iflag==0_ip
     me%iflag = iflag
 
     end subroutine initialize_3d_auto_knots
@@ -1435,13 +1529,13 @@
     real(wp),dimension(:,:,:),intent(in) :: fcn !! `(nx,ny,nz)` matrix of function values to interpolate.
                                                 !! `fcn(i,j,k)` should contain the function value at the
                                                 !! point (`x(i)`,`y(j)`,`z(k)`)
-    integer,intent(in)                   :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)               :: kx  !! The order of spline pieces in \(x\)
                                                 !! ( \( 2 \le k_x < n_x \) )
                                                 !! (order = polynomial degree + 1)
-    integer,intent(in)                   :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in)               :: ky  !! The order of spline pieces in \(y\)
                                                 !! ( \( 2 \le k_y < n_y \) )
                                                 !! (order = polynomial degree + 1)
-    integer,intent(in)                   :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in)               :: kz  !! The order of spline pieces in \(z\)
                                                 !! ( \( 2 \le k_z < n_z \) )
                                                 !! (order = polynomial degree + 1)
     real(wp),dimension(:),intent(in)     :: tx  !! The `(nx+kx)` knots in the \(x\) direction
@@ -1453,24 +1547,24 @@
     real(wp),dimension(:),intent(in)     :: tz  !! The `(nz+kz)` knots in the \(z\) direction
                                                 !! for the spline interpolant.
                                                 !! Must be non-decreasing.
-    integer,intent(out)  :: iflag               !! status flag (see [[db3ink]])
+    integer(ip),intent(out)  :: iflag               !! status flag (see [[db3ink]])
     logical,intent(in),optional  :: extrap      !! if true, then extrapolation is allowed
                                                 !! (default is false)
 
-    integer :: nx,ny,nz
+    integer(ip) :: nx,ny,nz
 
     call me%destroy()
 
-    nx = size(x)
-    ny = size(y)
-    nz = size(z)
+    nx = size(x,kind=ip)
+    ny = size(y,kind=ip)
+    nz = size(z,kind=ip)
 
     call check_knot_vectors_sizes(nx=nx,kx=kx,tx=tx,&
                                   ny=ny,ky=ky,ty=ty,&
                                   nz=nz,kz=kz,tz=tz,&
                                   iflag=iflag)
 
-    if (iflag == 0) then
+    if (iflag == 0_ip) then
 
         me%nx = nx
         me%ny = ny
@@ -1484,6 +1578,9 @@
         allocate(me%ty(ny+ky))
         allocate(me%tz(nz+kz))
         allocate(me%bcoef(nx,ny,nz))
+        allocate(me%work_val_1(ky,kz))
+        allocate(me%work_val_2(kz))
+        allocate(me%work_val_3(3_ip*max(kx,ky,kz)))
 
         me%tx = tx
         me%ty = ty
@@ -1492,7 +1589,7 @@
         call db3ink(x,nx,y,ny,z,nz,&
                     fcn,&
                     kx,ky,kz,&
-                    1,&
+                    1_ip,&
                     me%tx,me%ty,me%tz,&
                     me%bcoef,iflag)
 
@@ -1500,7 +1597,7 @@
 
     end if
 
-    me%initialized = iflag==0
+    me%initialized = iflag==0_ip
     me%iflag = iflag
 
     end subroutine initialize_3d_specify_knots
@@ -1518,11 +1615,11 @@
     real(wp),intent(in)             :: xval  !! \(x\) coordinate of evaluation point.
     real(wp),intent(in)             :: yval  !! \(y\) coordinate of evaluation point.
     real(wp),intent(in)             :: zval  !! \(z\) coordinate of evaluation point.
-    integer,intent(in)              :: idx   !! \(x\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)              :: idy   !! \(y\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)              :: idz   !! \(z\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)          :: idx   !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)          :: idy   !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)          :: idz   !! \(z\) derivative of piecewise polynomial to evaluate.
     real(wp),intent(out)            :: f     !! interpolated value
-    integer,intent(out)             :: iflag !! status flag (see [[db3val]])
+    integer(ip),intent(out)         :: iflag !! status flag (see [[db3val]])
 
     if (me%initialized) then
         call db3val(xval,yval,zval,&
@@ -1533,9 +1630,10 @@
                     me%bcoef,f,iflag,&
                     me%inbvx,me%inbvy,me%inbvz,&
                     me%iloy,me%iloz,&
-                    me%extrap)
+                    me%work_val_1,me%work_val_2,me%work_val_3,&
+                    extrap=me%extrap)
     else
-        iflag = 1
+        iflag = 1_ip
     end if
 
     me%iflag = iflag
@@ -1575,16 +1673,16 @@
     real(wp),dimension(:,:,:,:),intent(in) :: fcn !! `(nx,ny,nz,nq)` matrix of function values to interpolate.
                                                   !! `fcn(i,j,k,l)` should contain the function value at the
                                                   !! point (`x(i)`,`y(j)`,`z(k)`,`q(l)`)
-    integer,intent(in)                     :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)                 :: kx  !! The order of spline pieces in \(x\)
                                                   !! ( \( 2 \le k_x < n_x \) )
                                                   !! (order = polynomial degree + 1)
-    integer,intent(in)                     :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in)                 :: ky  !! The order of spline pieces in \(y\)
                                                   !! ( \( 2 \le k_y < n_y \) )
                                                   !! (order = polynomial degree + 1)
-    integer,intent(in)                     :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in)                 :: kz  !! The order of spline pieces in \(z\)
                                                   !! ( \( 2 \le k_z < n_z \) )
                                                   !! (order = polynomial degree + 1)
-    integer,intent(in)                     :: kq  !! The order of spline pieces in \(q\)
+    integer(ip),intent(in)                 :: kq  !! The order of spline pieces in \(q\)
                                                   !! ( \( 2 \le k_q < n_q \) )
                                                   !! (order = polynomial degree + 1)
     logical,intent(in),optional      :: extrap    !! if true, then extrapolation is allowed
@@ -1613,16 +1711,16 @@
     real(wp),dimension(:,:,:,:),intent(in)     :: fcn !! `(nx,ny,nz,nq)` matrix of function values to interpolate.
                                                       !! `fcn(i,j,k,l)` should contain the function value at the
                                                       !! point (`x(i)`,`y(j)`,`z(k)`,`q(l)`)
-    integer,intent(in)                         :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)                     :: kx  !! The order of spline pieces in \(x\)
                                                       !! ( \( 2 \le k_x < n_x \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in)                     :: ky  !! The order of spline pieces in \(y\)
                                                       !! ( \( 2 \le k_y < n_y \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in)                     :: kz  !! The order of spline pieces in \(z\)
                                                       !! ( \( 2 \le k_z < n_z \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kq  !! The order of spline pieces in \(q\)
+    integer(ip),intent(in)                     :: kq  !! The order of spline pieces in \(q\)
                                                       !! ( \( 2 \le k_q < n_q \) )
                                                       !! (order = polynomial degree + 1)
     real(wp),dimension(:),intent(in)           :: tx  !! The `(nx+kx)` knots in the \(x\) direction
@@ -1662,31 +1760,31 @@
     real(wp),dimension(:,:,:,:),intent(in)     :: fcn !! `(nx,ny,nz,nq)` matrix of function values to interpolate.
                                                       !! `fcn(i,j,k,l)` should contain the function value at the
                                                       !! point (`x(i)`,`y(j)`,`z(k)`,`q(l)`)
-    integer,intent(in)                         :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)                     :: kx  !! The order of spline pieces in \(x\)
                                                       !! ( \( 2 \le k_x < n_x \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in)                     :: ky  !! The order of spline pieces in \(y\)
                                                       !! ( \( 2 \le k_y < n_y \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in)                     :: kz  !! The order of spline pieces in \(z\)
                                                       !! ( \( 2 \le k_z < n_z \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kq  !! The order of spline pieces in \(q\)
+    integer(ip),intent(in)                     :: kq  !! The order of spline pieces in \(q\)
                                                       !! ( \( 2 \le k_q < n_q \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(out)  :: iflag                     !! status flag (see [[db4ink]])
+    integer(ip),intent(out)  :: iflag                     !! status flag (see [[db4ink]])
     logical,intent(in),optional  :: extrap            !! if true, then extrapolation is allowed
                                                       !! (default is false)
 
-    integer :: iknot
-    integer :: nx,ny,nz,nq
+    integer(ip) :: iknot
+    integer(ip) :: nx,ny,nz,nq
 
     call me%destroy()
 
-    nx = size(x)
-    ny = size(y)
-    nz = size(z)
-    nq = size(q)
+    nx = size(x,kind=ip)
+    ny = size(y,kind=ip)
+    nz = size(z,kind=ip)
+    nq = size(q,kind=ip)
 
     me%nx = nx
     me%ny = ny
@@ -1703,8 +1801,12 @@
     allocate(me%tz(nz+kz))
     allocate(me%tq(nq+kq))
     allocate(me%bcoef(nx,ny,nz,nq))
+    allocate(me%work_val_1(ky,kz,kq))
+    allocate(me%work_val_2(kz,kq))
+    allocate(me%work_val_3(kq))
+    allocate(me%work_val_4(3_ip*max(kx,ky,kz,kq)))
 
-    iknot = 0         !knot sequence chosen by db4ink
+    iknot = 0_ip         !knot sequence chosen by db4ink
 
     call db4ink(x,nx,y,ny,z,nz,q,nq,&
                 fcn,&
@@ -1713,11 +1815,11 @@
                 me%tx,me%ty,me%tz,me%tq,&
                 me%bcoef,iflag)
 
-    if (iflag==0) then
+    if (iflag==0_ip) then
         call me%set_extrap_flag(extrap)
     end if
 
-    me%initialized = iflag==0
+    me%initialized = iflag==0_ip
     me%iflag = iflag
 
     end subroutine initialize_4d_auto_knots
@@ -1741,16 +1843,16 @@
     real(wp),dimension(:,:,:,:),intent(in)     :: fcn !! `(nx,ny,nz,nq)` matrix of function values to interpolate.
                                                       !! `fcn(i,j,k,l)` should contain the function value at the
                                                       !! point (`x(i)`,`y(j)`,`z(k)`,`q(l)`)
-    integer,intent(in)                         :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)                     :: kx  !! The order of spline pieces in \(x\)
                                                       !! ( \( 2 \le k_x < n_x \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in)                     :: ky  !! The order of spline pieces in \(y\)
                                                       !! ( \( 2 \le k_y < n_y \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in)                     :: kz  !! The order of spline pieces in \(z\)
                                                       !! ( \( 2 \le k_z < n_z \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kq  !! The order of spline pieces in \(q\)
+    integer(ip),intent(in)                     :: kq  !! The order of spline pieces in \(q\)
                                                       !! ( \( 2 \le k_q < n_q \) )
                                                       !! (order = polynomial degree + 1)
     real(wp),dimension(:),intent(in)           :: tx  !! The `(nx+kx)` knots in the \(x\) direction
@@ -1765,18 +1867,18 @@
     real(wp),dimension(:),intent(in)           :: tq  !! The `(nq+kq)` knots in the \(q\) direction
                                                       !! for the spline interpolant.
                                                       !! Must be non-decreasing.
-    integer,intent(out)  :: iflag                     !! status flag (see [[db4ink]])
+    integer(ip),intent(out)  :: iflag                     !! status flag (see [[db4ink]])
     logical,intent(in),optional  :: extrap            !! if true, then extrapolation is allowed
                                                       !! (default is false)
 
-    integer :: nx,ny,nz,nq
+    integer(ip) :: nx,ny,nz,nq
 
     call me%destroy()
 
-    nx = size(x)
-    ny = size(y)
-    nz = size(z)
-    nq = size(q)
+    nx = size(x,kind=ip)
+    ny = size(y,kind=ip)
+    nz = size(z,kind=ip)
+    nq = size(q,kind=ip)
 
     call check_knot_vectors_sizes(nx=nx,kx=kx,tx=tx,&
                                   ny=ny,ky=ky,ty=ty,&
@@ -1784,7 +1886,7 @@
                                   nq=nq,kq=kq,tq=tq,&
                                   iflag=iflag)
 
-    if (iflag == 0) then
+    if (iflag == 0_ip) then
 
         me%nx = nx
         me%ny = ny
@@ -1801,6 +1903,10 @@
         allocate(me%tz(nz+kz))
         allocate(me%tq(nq+kq))
         allocate(me%bcoef(nx,ny,nz,nq))
+        allocate(me%work_val_1(ky,kz,kq))
+        allocate(me%work_val_2(kz,kq))
+        allocate(me%work_val_3(kq))
+        allocate(me%work_val_4(3_ip*max(kx,ky,kz,kq)))
 
         me%tx = tx
         me%ty = ty
@@ -1810,7 +1916,7 @@
         call db4ink(x,nx,y,ny,z,nz,q,nq,&
                     fcn,&
                     kx,ky,kz,kq,&
-                    1,&
+                    1_ip,&
                     me%tx,me%ty,me%tz,me%tq,&
                     me%bcoef,iflag)
 
@@ -1818,7 +1924,7 @@
 
     end if
 
-    me%initialized = iflag==0
+    me%initialized = iflag==0_ip
     me%iflag = iflag
 
     end subroutine initialize_4d_specify_knots
@@ -1837,12 +1943,12 @@
     real(wp),intent(in)             :: yval  !! \(y\) coordinate of evaluation point.
     real(wp),intent(in)             :: zval  !! \(z\) coordinate of evaluation point.
     real(wp),intent(in)             :: qval  !! \(q\) coordinate of evaluation point.
-    integer,intent(in)              :: idx   !! \(x\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)              :: idy   !! \(y\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)              :: idz   !! \(z\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)              :: idq   !! \(q\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)          :: idx   !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)          :: idy   !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)          :: idz   !! \(z\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)          :: idq   !! \(q\) derivative of piecewise polynomial to evaluate.
     real(wp),intent(out)            :: f     !! interpolated value
-    integer,intent(out)             :: iflag !! status flag (see [[db4val]])
+    integer(ip),intent(out)         :: iflag !! status flag (see [[db4val]])
 
     if (me%initialized) then
         call db4val(xval,yval,zval,qval,&
@@ -1853,9 +1959,10 @@
                     me%bcoef,f,iflag,&
                     me%inbvx,me%inbvy,me%inbvz,me%inbvq,&
                     me%iloy,me%iloz,me%iloq,&
-                    me%extrap)
+                    me%work_val_1,me%work_val_2,me%work_val_3,me%work_val_4,&
+                    extrap=me%extrap)
     else
-        iflag = 1
+        iflag = 1_ip
     end if
 
     me%iflag = iflag
@@ -1896,19 +2003,19 @@
     real(wp),dimension(:,:,:,:,:),intent(in)   :: fcn !! `(nx,ny,nz,nq,nr)` matrix of function values to interpolate.
                                                       !! `fcn(i,j,k,l,m)` should contain the function value at the
                                                       !! point (`x(i)`,`y(j)`,`z(k)`,`q(l)`,`r(m)`)
-    integer,intent(in)                         :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)                     :: kx  !! The order of spline pieces in \(x\)
                                                       !! ( \( 2 \le k_x < n_x \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in)                     :: ky  !! The order of spline pieces in \(y\)
                                                       !! ( \( 2 \le k_y < n_y \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in)                     :: kz  !! The order of spline pieces in \(z\)
                                                       !! ( \( 2 \le k_z < n_z \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kq  !! The order of spline pieces in \(q\)
+    integer(ip),intent(in)                     :: kq  !! The order of spline pieces in \(q\)
                                                       !! ( \( 2 \le k_q < n_q \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kr  !! The order of spline pieces in \(r\)
+    integer(ip),intent(in)                     :: kr  !! The order of spline pieces in \(r\)
                                                       !! ( \( 2 \le k_r < n_r \) )
                                                       !! (order = polynomial degree + 1)
     logical,intent(in),optional      :: extrap        !! if true, then extrapolation is allowed
@@ -1939,19 +2046,19 @@
     real(wp),dimension(:,:,:,:,:),intent(in)   :: fcn !! `(nx,ny,nz,nq,nr)` matrix of function values to interpolate.
                                                       !! `fcn(i,j,k,l,m)` should contain the function value at the
                                                       !! point (`x(i)`,`y(j)`,`z(k)`,`q(l)`,`r(m)`)
-    integer,intent(in)                         :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)                     :: kx  !! The order of spline pieces in \(x\)
                                                       !! ( \( 2 \le k_x < n_x \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in)                     :: ky  !! The order of spline pieces in \(y\)
                                                       !! ( \( 2 \le k_y < n_y \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in)                     :: kz  !! The order of spline pieces in \(z\)
                                                       !! ( \( 2 \le k_z < n_z \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kq  !! The order of spline pieces in \(q\)
+    integer(ip),intent(in)                     :: kq  !! The order of spline pieces in \(q\)
                                                       !! ( \( 2 \le k_q < n_q \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kr  !! The order of spline pieces in \(r\)
+    integer(ip),intent(in)                     :: kr  !! The order of spline pieces in \(r\)
                                                       !! ( \( 2 \le k_r < n_r \) )
                                                       !! (order = polynomial degree + 1)
     real(wp),dimension(:),intent(in)           :: tx  !! The `(nx+kx)` knots in the \(x\) direction
@@ -1995,35 +2102,35 @@
     real(wp),dimension(:,:,:,:,:),intent(in)   :: fcn !! `(nx,ny,nz,nq,nr)` matrix of function values to interpolate.
                                                       !! `fcn(i,j,k,l,m)` should contain the function value at the
                                                       !! point (`x(i)`,`y(j)`,`z(k)`,`q(l)`,`r(m)`)
-    integer,intent(in)                         :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)                     :: kx  !! The order of spline pieces in \(x\)
                                                       !! ( \( 2 \le k_x < n_x \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in)                     :: ky  !! The order of spline pieces in \(y\)
                                                       !! ( \( 2 \le k_y < n_y \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in)                     :: kz  !! The order of spline pieces in \(z\)
                                                       !! ( \( 2 \le k_z < n_z \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kq  !! The order of spline pieces in \(q\)
+    integer(ip),intent(in)                     :: kq  !! The order of spline pieces in \(q\)
                                                       !! ( \( 2 \le k_q < n_q \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kr  !! The order of spline pieces in \(r\)
+    integer(ip),intent(in)                     :: kr  !! The order of spline pieces in \(r\)
                                                       !! ( \( 2 \le k_r < n_r \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(out)  :: iflag                     !! status flag (see [[db5ink]])
+    integer(ip),intent(out)  :: iflag                     !! status flag (see [[db5ink]])
     logical,intent(in),optional  :: extrap            !! if true, then extrapolation is allowed
                                                       !! (default is false)
 
-    integer :: iknot
-    integer :: nx,ny,nz,nq,nr
+    integer(ip) :: iknot
+    integer(ip) :: nx,ny,nz,nq,nr
 
     call me%destroy()
 
-    nx = size(x)
-    ny = size(y)
-    nz = size(z)
-    nq = size(q)
-    nr = size(r)
+    nx = size(x,kind=ip)
+    ny = size(y,kind=ip)
+    nz = size(z,kind=ip)
+    nq = size(q,kind=ip)
+    nr = size(r,kind=ip)
 
     me%nx = nx
     me%ny = ny
@@ -2043,8 +2150,13 @@
     allocate(me%tq(nq+kq))
     allocate(me%tr(nr+kr))
     allocate(me%bcoef(nx,ny,nz,nq,nr))
+    allocate(me%work_val_1(ky,kz,kq,kr))
+    allocate(me%work_val_2(kz,kq,kr))
+    allocate(me%work_val_3(kq,kr))
+    allocate(me%work_val_4(kr))
+    allocate(me%work_val_5(3_ip*max(kx,ky,kz,kq,kr)))
 
-    iknot = 0         !knot sequence chosen by db5ink
+    iknot = 0_ip         !knot sequence chosen by db5ink
 
     call db5ink(x,nx,y,ny,z,nz,q,nq,r,nr,&
                 fcn,&
@@ -2053,11 +2165,11 @@
                 me%tx,me%ty,me%tz,me%tq,me%tr,&
                 me%bcoef,iflag)
 
-    if (iflag==0) then
+    if (iflag==0_ip) then
         call me%set_extrap_flag(extrap)
     end if
 
-    me%initialized = iflag==0
+    me%initialized = iflag==0_ip
     me%iflag = iflag
 
     end subroutine initialize_5d_auto_knots
@@ -2083,19 +2195,19 @@
     real(wp),dimension(:,:,:,:,:),intent(in)   :: fcn !! `(nx,ny,nz,nq,nr)` matrix of function values to interpolate.
                                                       !! `fcn(i,j,k,l,m)` should contain the function value at the
                                                       !! point (`x(i)`,`y(j)`,`z(k)`,`q(l)`,`r(m)`)
-    integer,intent(in)                         :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)                     :: kx  !! The order of spline pieces in \(x\)
                                                       !! ( \( 2 \le k_x < n_x \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in)                     :: ky  !! The order of spline pieces in \(y\)
                                                       !! ( \( 2 \le k_y < n_y \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in)                     :: kz  !! The order of spline pieces in \(z\)
                                                       !! ( \( 2 \le k_z < n_z \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kq  !! The order of spline pieces in \(q\)
+    integer(ip),intent(in)                     :: kq  !! The order of spline pieces in \(q\)
                                                       !! ( \( 2 \le k_q < n_q \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kr  !! The order of spline pieces in \(r\)
+    integer(ip),intent(in)                     :: kr  !! The order of spline pieces in \(r\)
                                                       !! ( \( 2 \le k_r < n_r \) )
                                                       !! (order = polynomial degree + 1)
     real(wp),dimension(:),intent(in)           :: tx  !! The `(nx+kx)` knots in the \(x\) direction
@@ -2113,19 +2225,19 @@
     real(wp),dimension(:),intent(in)           :: tr  !! The `(nr+kr)` knots in the \(r\) direction
                                                       !! for the spline interpolant.
                                                       !! Must be non-decreasing.
-    integer,intent(out)  :: iflag                     !! status flag (see [[db5ink]])
+    integer(ip),intent(out)  :: iflag                     !! status flag (see [[db5ink]])
     logical,intent(in),optional  :: extrap            !! if true, then extrapolation is allowed
                                                       !! (default is false)
 
-    integer :: nx,ny,nz,nq,nr
+    integer(ip) :: nx,ny,nz,nq,nr
 
     call me%destroy()
 
-    nx = size(x)
-    ny = size(y)
-    nz = size(z)
-    nq = size(q)
-    nr = size(r)
+    nx = size(x,kind=ip)
+    ny = size(y,kind=ip)
+    nz = size(z,kind=ip)
+    nq = size(q,kind=ip)
+    nr = size(r,kind=ip)
 
     call check_knot_vectors_sizes(nx=nx,kx=kx,tx=tx,&
                                   ny=ny,ky=ky,ty=ty,&
@@ -2134,7 +2246,7 @@
                                   nr=nr,kr=kr,tr=tr,&
                                   iflag=iflag)
 
-    if (iflag == 0) then
+    if (iflag == 0_ip) then
 
         me%nx = nx
         me%ny = ny
@@ -2154,6 +2266,11 @@
         allocate(me%tq(nq+kq))
         allocate(me%tr(nr+kr))
         allocate(me%bcoef(nx,ny,nz,nq,nr))
+        allocate(me%work_val_1(ky,kz,kq,kr))
+        allocate(me%work_val_2(kz,kq,kr))
+        allocate(me%work_val_3(kq,kr))
+        allocate(me%work_val_4(kr))
+        allocate(me%work_val_5(3_ip*max(kx,ky,kz,kq,kr)))
 
         me%tx = tx
         me%ty = ty
@@ -2164,7 +2281,7 @@
         call db5ink(x,nx,y,ny,z,nz,q,nq,r,nr,&
                     fcn,&
                     kx,ky,kz,kq,kr,&
-                    1,&
+                    1_ip,&
                     me%tx,me%ty,me%tz,me%tq,me%tr,&
                     me%bcoef,iflag)
 
@@ -2172,7 +2289,7 @@
 
     end if
 
-    me%initialized = iflag==0
+    me%initialized = iflag==0_ip
     me%iflag = iflag
 
     end subroutine initialize_5d_specify_knots
@@ -2192,13 +2309,13 @@
     real(wp),intent(in)             :: zval  !! \(z\) coordinate of evaluation point.
     real(wp),intent(in)             :: qval  !! \(q\) coordinate of evaluation point.
     real(wp),intent(in)             :: rval  !! \(r\) coordinate of evaluation point.
-    integer,intent(in)              :: idx   !! \(x\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)              :: idy   !! \(y\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)              :: idz   !! \(z\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)              :: idq   !! \(q\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)              :: idr   !! \(r\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)          :: idx   !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)          :: idy   !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)          :: idz   !! \(z\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)          :: idq   !! \(q\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)          :: idr   !! \(r\) derivative of piecewise polynomial to evaluate.
     real(wp),intent(out)            :: f     !! interpolated value
-    integer,intent(out)             :: iflag !! status flag (see [[db5val]])
+    integer(ip),intent(out)         :: iflag !! status flag (see [[db5val]])
 
     if (me%initialized) then
         call db5val(xval,yval,zval,qval,rval,&
@@ -2209,9 +2326,10 @@
                     me%bcoef,f,iflag,&
                     me%inbvx,me%inbvy,me%inbvz,me%inbvq,me%inbvr,&
                     me%iloy,me%iloz,me%iloq,me%ilor,&
-                    me%extrap)
+                    me%work_val_1,me%work_val_2,me%work_val_3,me%work_val_4,me%work_val_5,&
+                    extrap=me%extrap)
     else
-        iflag = 1
+        iflag = 1_ip
     end if
 
     me%iflag = iflag
@@ -2254,22 +2372,22 @@
     real(wp),dimension(:,:,:,:,:,:),intent(in) :: fcn !! `(nx,ny,nz,nq,nr,ns)` matrix of function values to interpolate.
                                                       !! `fcn(i,j,k,l,m,n)` should contain the function value at the
                                                       !! point (`x(i)`,`y(j)`,`z(k)`,`q(l)`,`r(m)`,`s(n)`)
-    integer,intent(in)                         :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)                      :: kx  !! The order of spline pieces in \(x\)
                                                       !! ( \( 2 \le k_x < n_x \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in)                      :: ky  !! The order of spline pieces in \(y\)
                                                       !! ( \( 2 \le k_y < n_y \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in)                      :: kz  !! The order of spline pieces in \(z\)
                                                       !! ( \( 2 \le k_z < n_z \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kq  !! The order of spline pieces in \(q\)
+    integer(ip),intent(in)                      :: kq  !! The order of spline pieces in \(q\)
                                                       !! ( \( 2 \le k_q < n_q \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kr  !! The order of spline pieces in \(r\)
+    integer(ip),intent(in)                      :: kr  !! The order of spline pieces in \(r\)
                                                       !! ( \( 2 \le k_r < n_r \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: ks  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in)                      :: ks  !! The order of spline pieces in \(z\)
                                                       !! ( \( 2 \le k_z < n_z \) )
                                                       !! (order = polynomial degree + 1)
     logical,intent(in),optional      :: extrap        !! if true, then extrapolation is allowed
@@ -2301,22 +2419,22 @@
     real(wp),dimension(:,:,:,:,:,:),intent(in) :: fcn !! `(nx,ny,nz,nq,nr,ns)` matrix of function values to interpolate.
                                                       !! `fcn(i,j,k,l,m,n)` should contain the function value at the
                                                       !! point (`x(i)`,`y(j)`,`z(k)`,`q(l)`,`r(m)`,`s(n)`)
-    integer,intent(in)                         :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)                     :: kx  !! The order of spline pieces in \(x\)
                                                       !! ( \( 2 \le k_x < n_x \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in)                     :: ky  !! The order of spline pieces in \(y\)
                                                       !! ( \( 2 \le k_y < n_y \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in)                     :: kz  !! The order of spline pieces in \(z\)
                                                       !! ( \( 2 \le k_z < n_z \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kq  !! The order of spline pieces in \(q\)
+    integer(ip),intent(in)                     :: kq  !! The order of spline pieces in \(q\)
                                                       !! ( \( 2 \le k_q < n_q \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kr  !! The order of spline pieces in \(r\)
+    integer(ip),intent(in)                     :: kr  !! The order of spline pieces in \(r\)
                                                       !! ( \( 2 \le k_r < n_r \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: ks  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in)                     :: ks  !! The order of spline pieces in \(z\)
                                                       !! ( \( 2 \le k_z < n_z \) )
                                                       !! (order = polynomial degree + 1)
     real(wp),dimension(:),intent(in)           :: tx  !! The `(nx+kx)` knots in the \(x\) direction
@@ -2367,39 +2485,39 @@
     real(wp),dimension(:,:,:,:,:,:),intent(in) :: fcn !! `(nx,ny,nz,nq,nr,ns)` matrix of function values to interpolate.
                                                       !! `fcn(i,j,k,l,m,n)` should contain the function value at the
                                                       !! point (`x(i)`,`y(j)`,`z(k)`,`q(l)`,`r(m)`,`s(n)`)
-    integer,intent(in)                         :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)                     :: kx  !! The order of spline pieces in \(x\)
                                                       !! ( \( 2 \le k_x < n_x \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in)                     :: ky  !! The order of spline pieces in \(y\)
                                                       !! ( \( 2 \le k_y < n_y \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in)                     :: kz  !! The order of spline pieces in \(z\)
                                                       !! ( \( 2 \le k_z < n_z \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kq  !! The order of spline pieces in \(q\)
+    integer(ip),intent(in)                     :: kq  !! The order of spline pieces in \(q\)
                                                       !! ( \( 2 \le k_q < n_q \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kr  !! The order of spline pieces in \(r\)
+    integer(ip),intent(in)                     :: kr  !! The order of spline pieces in \(r\)
                                                       !! ( \( 2 \le k_r < n_r \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: ks  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in)                     :: ks  !! The order of spline pieces in \(z\)
                                                       !! ( \( 2 \le k_z < n_z \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(out)  :: iflag                     !! status flag (see [[db6ink]])
+    integer(ip),intent(out)  :: iflag                     !! status flag (see [[db6ink]])
     logical,intent(in),optional  :: extrap            !! if true, then extrapolation is allowed
                                                       !! (default is false)
 
-    integer :: iknot
-    integer :: nx,ny,nz,nq,nr,ns
+    integer(ip) :: iknot
+    integer(ip) :: nx,ny,nz,nq,nr,ns
 
     call me%destroy()
 
-    nx = size(x)
-    ny = size(y)
-    nz = size(z)
-    nq = size(q)
-    nr = size(r)
-    ns = size(s)
+    nx = size(x,kind=ip)
+    ny = size(y,kind=ip)
+    nz = size(z,kind=ip)
+    nq = size(q,kind=ip)
+    nr = size(r,kind=ip)
+    ns = size(s,kind=ip)
 
     me%nx = nx
     me%ny = ny
@@ -2422,8 +2540,14 @@
     allocate(me%tr(nr+kr))
     allocate(me%ts(ns+ks))
     allocate(me%bcoef(nx,ny,nz,nq,nr,ns))
+    allocate(me%work_val_1(ky,kz,kq,kr,ks))
+    allocate(me%work_val_2(kz,kq,kr,ks))
+    allocate(me%work_val_3(kq,kr,ks))
+    allocate(me%work_val_4(kr,ks))
+    allocate(me%work_val_5(ks))
+    allocate(me%work_val_6(3_ip*max(kx,ky,kz,kq,kr,ks)))
 
-    iknot = 0         !knot sequence chosen by db6ink
+    iknot = 0_ip         !knot sequence chosen by db6ink
 
     call db6ink(x,nx,y,ny,z,nz,q,nq,r,nr,s,ns,&
                 fcn,&
@@ -2432,11 +2556,11 @@
                 me%tx,me%ty,me%tz,me%tq,me%tr,me%ts,&
                 me%bcoef,iflag)
 
-    if (iflag==0) then
+    if (iflag==0_ip) then
         call me%set_extrap_flag(extrap)
     end if
 
-    me%initialized = iflag==0
+    me%initialized = iflag==0_ip
     me%iflag = iflag
 
     end subroutine initialize_6d_auto_knots
@@ -2463,22 +2587,22 @@
     real(wp),dimension(:,:,:,:,:,:),intent(in) :: fcn !! `(nx,ny,nz,nq,nr,ns)` matrix of function values to interpolate.
                                                       !! `fcn(i,j,k,l,m,n)` should contain the function value at the
                                                       !! point (`x(i)`,`y(j)`,`z(k)`,`q(l)`,`r(m)`,`s(n)`)
-    integer,intent(in)                         :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)                     :: kx  !! The order of spline pieces in \(x\)
                                                       !! ( \( 2 \le k_x < n_x \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in)                     :: ky  !! The order of spline pieces in \(y\)
                                                       !! ( \( 2 \le k_y < n_y \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in)                     :: kz  !! The order of spline pieces in \(z\)
                                                       !! ( \( 2 \le k_z < n_z \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kq  !! The order of spline pieces in \(q\)
+    integer(ip),intent(in)                     :: kq  !! The order of spline pieces in \(q\)
                                                       !! ( \( 2 \le k_q < n_q \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: kr  !! The order of spline pieces in \(r\)
+    integer(ip),intent(in)                     :: kr  !! The order of spline pieces in \(r\)
                                                       !! ( \( 2 \le k_r < n_r \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                         :: ks  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in)                     :: ks  !! The order of spline pieces in \(z\)
                                                       !! ( \( 2 \le k_z < n_z \) )
                                                       !! (order = polynomial degree + 1)
     real(wp),dimension(:),intent(in)           :: tx  !! The `(nx+kx)` knots in the \(x\) direction
@@ -2499,20 +2623,20 @@
     real(wp),dimension(:),intent(in)           :: ts  !! The `(ns+ks)` knots in the \(s\) direction
                                                       !! for the spline interpolant.
                                                       !! Must be non-decreasing.
-    integer,intent(out)  :: iflag                     !! status flag (see [[db6ink]])
+    integer(ip),intent(out)  :: iflag                     !! status flag (see [[db6ink]])
     logical,intent(in),optional  :: extrap            !! if true, then extrapolation is allowed
                                                       !! (default is false)
 
-    integer :: nx,ny,nz,nq,nr,ns
+    integer(ip) :: nx,ny,nz,nq,nr,ns
 
     call me%destroy()
 
-    nx = size(x)
-    ny = size(y)
-    nz = size(z)
-    nq = size(q)
-    nr = size(r)
-    ns = size(s)
+    nx = size(x,kind=ip)
+    ny = size(y,kind=ip)
+    nz = size(z,kind=ip)
+    nq = size(q,kind=ip)
+    nr = size(r,kind=ip)
+    ns = size(s,kind=ip)
 
     call check_knot_vectors_sizes(nx=nx,kx=kx,tx=tx,&
                                   ny=ny,ky=ky,ty=ty,&
@@ -2522,7 +2646,7 @@
                                   ns=ns,ks=ks,ts=ts,&
                                   iflag=iflag)
 
-    if (iflag == 0) then
+    if (iflag == 0_ip) then
 
         me%nx = nx
         me%ny = ny
@@ -2545,6 +2669,12 @@
         allocate(me%tr(nr+kr))
         allocate(me%ts(ns+ks))
         allocate(me%bcoef(nx,ny,nz,nq,nr,ns))
+        allocate(me%work_val_1(ky,kz,kq,kr,ks))
+        allocate(me%work_val_2(kz,kq,kr,ks))
+        allocate(me%work_val_3(kq,kr,ks))
+        allocate(me%work_val_4(kr,ks))
+        allocate(me%work_val_5(ks))
+        allocate(me%work_val_6(3_ip*max(kx,ky,kz,kq,kr,ks)))
 
         me%tx = tx
         me%ty = ty
@@ -2556,7 +2686,7 @@
         call db6ink(x,nx,y,ny,z,nz,q,nq,r,nr,s,ns,&
                     fcn,&
                     kx,ky,kz,kq,kr,ks,&
-                    1,&
+                    1_ip,&
                     me%tx,me%ty,me%tz,me%tq,me%tr,me%ts,&
                     me%bcoef,iflag)
 
@@ -2564,7 +2694,7 @@
 
     end if
 
-    me%initialized = iflag==0
+    me%initialized = iflag==0_ip
     me%iflag = iflag
 
     end subroutine initialize_6d_specify_knots
@@ -2585,14 +2715,14 @@
     real(wp),intent(in)             :: qval  !! \(q\) coordinate of evaluation point.
     real(wp),intent(in)             :: rval  !! \(r\) coordinate of evaluation point.
     real(wp),intent(in)             :: sval  !! \(s\) coordinate of evaluation point.
-    integer,intent(in)              :: idx   !! \(x\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)              :: idy   !! \(y\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)              :: idz   !! \(z\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)              :: idq   !! \(q\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)              :: idr   !! \(r\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)              :: ids   !! \(s\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)          :: idx   !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)          :: idy   !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)          :: idz   !! \(z\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)          :: idq   !! \(q\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)          :: idr   !! \(r\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)          :: ids   !! \(s\) derivative of piecewise polynomial to evaluate.
     real(wp),intent(out)            :: f     !! interpolated value
-    integer,intent(out)             :: iflag !! status flag (see [[db6val]])
+    integer(ip),intent(out)         :: iflag !! status flag (see [[db6val]])
 
     if (me%initialized) then
         call db6val(xval,yval,zval,qval,rval,sval,&
@@ -2603,9 +2733,10 @@
                     me%bcoef,f,iflag,&
                     me%inbvx,me%inbvy,me%inbvz,me%inbvq,me%inbvr,me%inbvs,&
                     me%iloy,me%iloz,me%iloq,me%ilor,me%ilos,&
-                    me%extrap)
+                    me%work_val_1,me%work_val_2,me%work_val_3,me%work_val_4,me%work_val_5,me%work_val_6,&
+                    extrap=me%extrap)
     else
-        iflag = 1
+        iflag = 1_ip
     end if
 
     me%iflag = iflag
@@ -2626,61 +2757,61 @@
 
     implicit none
 
-    integer,intent(in),optional               :: nx
-    integer,intent(in),optional               :: ny
-    integer,intent(in),optional               :: nz
-    integer,intent(in),optional               :: nq
-    integer,intent(in),optional               :: nr
-    integer,intent(in),optional               :: ns
-    integer,intent(in),optional               :: kx
-    integer,intent(in),optional               :: ky
-    integer,intent(in),optional               :: kz
-    integer,intent(in),optional               :: kq
-    integer,intent(in),optional               :: kr
-    integer,intent(in),optional               :: ks
+    integer(ip),intent(in),optional           :: nx
+    integer(ip),intent(in),optional           :: ny
+    integer(ip),intent(in),optional           :: nz
+    integer(ip),intent(in),optional           :: nq
+    integer(ip),intent(in),optional           :: nr
+    integer(ip),intent(in),optional           :: ns
+    integer(ip),intent(in),optional           :: kx
+    integer(ip),intent(in),optional           :: ky
+    integer(ip),intent(in),optional           :: kz
+    integer(ip),intent(in),optional           :: kq
+    integer(ip),intent(in),optional           :: kr
+    integer(ip),intent(in),optional           :: ks
     real(wp),dimension(:),intent(in),optional :: tx
     real(wp),dimension(:),intent(in),optional :: ty
     real(wp),dimension(:),intent(in),optional :: tz
     real(wp),dimension(:),intent(in),optional :: tq
     real(wp),dimension(:),intent(in),optional :: tr
     real(wp),dimension(:),intent(in),optional :: ts
-    integer,intent(out)                       :: iflag  !! 0 if everything is OK
+    integer(ip),intent(out)                   :: iflag  !! 0 if everything is OK
 
-    iflag = 0
+    iflag = 0_ip
 
     if (present(nx) .and. present(kx) .and. present(tx)) then
-        if (size(tx)/=(nx+kx)) then
-            iflag = 501  ! tx is not the correct size (nx+kx)
+        if (size(tx,kind=ip)/=(nx+kx)) then
+            iflag = 501_ip  ! tx is not the correct size (nx+kx)
         end if
     end if
 
     if (present(ny) .and. present(ky) .and. present(ty)) then
-        if (size(ty)/=(ny+ky)) then
-            iflag = 502  ! ty is not the correct size (ny+ky)
+        if (size(ty,kind=ip)/=(ny+ky)) then
+            iflag = 502_ip  ! ty is not the correct size (ny+ky)
         end if
     end if
 
     if (present(nz) .and. present(kz) .and. present(tz)) then
-        if (size(tz)/=(nz+kz)) then
-            iflag = 503  ! tz is not the correct size (nz+kz)
+        if (size(tz,kind=ip)/=(nz+kz)) then
+            iflag = 503_ip  ! tz is not the correct size (nz+kz)
         end if
     end if
 
     if (present(nq) .and. present(kq) .and. present(tq)) then
-        if (size(tq)/=(nq+kq)) then
-            iflag = 504  ! tq is not the correct size (nq+kq)
+        if (size(tq,kind=ip)/=(nq+kq)) then
+            iflag = 504_ip  ! tq is not the correct size (nq+kq)
         end if
     end if
 
     if (present(nr) .and. present(kr) .and. present(tr)) then
-        if (size(tr)/=(nr+kr)) then
-            iflag = 505  ! tr is not the correct size (nr+kr)
+        if (size(tr,kind=ip)/=(nr+kr)) then
+            iflag = 505_ip  ! tr is not the correct size (nr+kr)
         end if
     end if
 
     if (present(ns) .and. present(ks) .and. present(ts)) then
-        if (size(ts)/=(ns+ks)) then
-            iflag = 506  ! ts is not the correct size (ns+ks)
+        if (size(ts,kind=ip)/=(ns+ks)) then
+            iflag = 506_ip  ! ts is not the correct size (ns+ks)
         end if
     end if
 
