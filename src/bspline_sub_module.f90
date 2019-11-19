@@ -3078,29 +3078,29 @@
 
     implicit none
 
-    real(wp),dimension(*),intent(in)  :: t        !! knot vector of length n+k, where
-                                                  !! n = number of b-spline basis functions
-                                                  !! n = sum of knot multiplicities-k
-                                                  !! dimension t(ileft+jhigh)
-    integer(ip),intent(in)            :: jhigh    !! order of b-spline, 1 <= jhigh <= k
+    real(wp),dimension(*),intent(in)  :: t        !! knot vector of length `n+k`, where
+                                                  !! `n` = number of b-spline basis functions
+                                                  !! `n` = sum of knot multiplicities-`k`
+                                                  !! dimension `t(ileft+jhigh)`
+    integer(ip),intent(in)            :: jhigh    !! order of b-spline, `1 <= jhigh <= k`
     integer(ip),intent(in)            :: k        !! highest possible order
-    integer(ip),intent(in)            :: index    !! index = 1 gives basis functions of order jhigh
-                                                  !!       = 2 denotes previous entry with work, iwork
+    integer(ip),intent(in)            :: index    !! index = 1 gives basis functions of order `jhigh`
+                                                  !!       = 2 denotes previous entry with `work`, `iwork`
                                                   !!         values saved for subsequent calls to
                                                   !!         dbspvn.
-    real(wp),intent(in)               :: x        !! argument of basis functions, t(k) <= x <= t(n+1)
-    integer(ip),intent(in)            :: ileft    !! largest integer such that t(ileft) <= x < t(ileft+1)
-    real(wp),dimension(k),intent(out) :: vnikx    !! vector of length k for spline values.
-    real(wp),dimension(*),intent(out) :: work     !! a work vector of length 2*k
-    integer(ip),intent(out)           :: iwork    !! a work parameter.  both work and iwork contain
-                                                  !! information necessary to continue for index = 2.
-                                                  !! when index = 1 exclusively, these are scratch
+    real(wp),intent(in)               :: x        !! argument of basis functions, `t(k) <= x <= t(n+1)`
+    integer(ip),intent(in)            :: ileft    !! largest integer such that `t(ileft) <= x < t(ileft+1)`
+    real(wp),dimension(k),intent(out) :: vnikx    !! vector of length `k` for spline values.
+    real(wp),dimension(*),intent(out) :: work     !! a work vector of length `2*k`
+    integer(ip),intent(out)           :: iwork    !! a work parameter.  both `work` and `iwork` contain
+                                                  !! information necessary to continue for `index = 2`.
+                                                  !! when `index = 1` exclusively, these are scratch
                                                   !! variables and can be used for other purposes.
-    integer(ip),intent(out)           :: iflag    !!   0: no errors
-                                                  !! 201: k does not satisfy k>=1
-                                                  !! 202: jhigh does not satisfy 1<=jhigh<=k
-                                                  !! 203: index is not 1 or 2
-                                                  !! 204: x does not satisfy t(ileft)<=x<=t(ileft+1)
+    integer(ip),intent(out)           :: iflag    !! *   0: no errors
+                                                  !! * 201: `k` does not satisfy `k>=1`
+                                                  !! * 202: `jhigh` does not satisfy `1<=jhigh<=k`
+                                                  !! * 203: `index` is not 1 or 2
+                                                  !! * 204: `x` does not satisfy `t(ileft)<=x<=t(ileft+1)`
 
     integer(ip) :: imjp1, ipj, jp1, jp1ml, l
     real(wp) :: vm, vmprev
@@ -3477,31 +3477,31 @@
 
 !*****************************************************************************************
 !>
-!  DBINT4 computes the B representation (T,BCOEF,N,K) of a
-!  cubic spline (K=4) which interpolates data (X(I),Y(I)),I=1,NDATA.
+!  DBINT4 computes the B representation (`t`,`bcoef`,`n`,`k`) of a
+!  cubic spline (`k=4`) which interpolates data (`x(i)`,`y(i)`),`i=1,ndata`.
 !
-!  Parameters IBCL, IBCR, FBCL, FBCR allow the specification of the spline
-!  first or second derivative at both X(1) and X(NDATA).  When this data is not specified
+!  Parameters `ibcl`, `ibcr`, `fbcl`, `fbcr` allow the specification of the spline
+!  first or second derivative at both `x(1)` and `x(ndata)`.  When this data is not specified
 !  by the problem, it is common practice to use a natural spline by setting second
-!  derivatives at X(1) and X(NDATA) to zero (IBCL=IBCR=2,FBCL=FBCR=0.0).
+!  derivatives at `x(1)` and `x(ndata)` to zero (`ibcl=ibcr=2`,`fbcl=fbcr=0.0`).
 !
-!  The spline is defined on T(4) <= X <= T(N+1) with (ordered) interior knots at
-!  X(I) values where N=NDATA+2.  The knots T(1),T(2),T(3) lie to the left of
-!  T(4)=X(1) and the knots T(N+2), T(N+3), T(N+4) lie to the right of T(N+1)=X(NDATA)
+!  The spline is defined on `t(4) <= x <= t(n+1)` with (ordered) interior knots at
+!  `x(i)` values where n=ndata+2.  The knots `t(1)`,`t(2)`,`t(3)` lie to the left of
+!  `t(4)=x(1)` and the knots `t(n+2)`, `t(n+3)`, `t(n+4)` lie to the right of `t(n+1)=x(ndata)`
 !  in increasing order.
 !
-!  * If no extrapolation outside (X(1),X(NDATA)) is anticipated, the
-!    knots T(1)=T(2)=T(3)=T(4)=X(1) and T(N+2)=T(N+3)=T(N+4)=T(N+1)=X(NDATA)
-!    can be specified by KNTOPT=1.
-!  * KNTOPT=2 selects a knot placement for T(1), T(2), T(3) to make the
-!    first 7 knots symmetric about T(4)=X(1) and similarly for
-!    T(N+2), T(N+3), T(N+4) about T(N+1)=X(NDATA).
-!  * KNTOPT=3 allows the user to make his own selection, in increasing order,
-!    for T(1), T(2), T(3) to the left of X(1) and T(N+2), T(N+3), T(N+4) to
-!    the right of X(NDATA).
+!  * If no extrapolation outside (`x(1)`,`x(ndata)`) is anticipated, the
+!    knots `t(1)=t(2)=t(3)=t(4)=x(1)` and `t(n+2)=t(n+3)=t(n+4)=t(n+1)=x(ndata)`
+!    can be specified by `kntopt=1`.
+!  * `kntopt=2` selects a knot placement for `t(1)`, `t(2)`, `t(3)` to make the
+!    first 7 knots symmetric about `t(4)=x(1)` and similarly for
+!    `t(n+2)`, `t(n+3)`, `t(n+4)` about `t(n+1)=x(ndata)`.
+!  * `kntopt=3` allows the user to make his own selection, in increasing order,
+!    for `t(1)`, `t(2)`, `t(3)` to the left of `x(1)` and `t(n+2)`, `t(n+3)`, `t(n+4)` to
+!    the right of x(ndata).
 !
-!  In any case, the interpolation on T(4) <= X <= T(N+1)
-!  by using function DBVALU is unique for given boundary
+!  In any case, the interpolation on `t(4) <= x <= t(n+1)`
+!  by using function [[dbvalu]] is unique for given boundary
 !  conditions.
 !
 !### Error conditions
@@ -3525,50 +3525,50 @@
     real(wp),dimension(:),intent(in)   :: x       !! x vector of abscissae of length `ndata`, distinct
                                                   !! and in increasing order
     real(wp),dimension(:),intent(in)   :: y       !! y vector of ordinates of length ndata
-    integer(ip),intent(in)             :: ndata   !! number of data points, ndata >= 2
+    integer(ip),intent(in)             :: ndata   !! number of data points, `ndata >= 2`
     integer(ip),intent(in)             :: ibcl    !! selection parameter for left boundary condition:
                                                   !!
-                                                  !! * ibcl = 1 constrain the first derivative at x(1) to fbcl
-                                                  !! * ibcl = 2 constrain the second derivative at x(1) to fbcl
+                                                  !! * `ibcl = 1` constrain the first derivative at `x(1)` to `fbcl`
+                                                  !! * `ibcl = 2` constrain the second derivative at `x(1)` to `fbcl`
     integer(ip),intent(in)             :: ibcr    !! selection parameter for right boundary condition:
                                                   !!
-                                                  !! * ibcr = 1 constrain first derivative at x(ndata) to fbcr
-                                                  !! * ibcr = 2 constrain second derivative at x(ndata) to fbcr
-    real(wp),intent(in)                :: fbcl    !! left boundary values governed by ibcl
-    real(wp),intent(in)                :: fbcr    !! right boundary values governed by ibcr
+                                                  !! * `ibcr = 1` constrain first derivative at `x(ndata)` to `fbcr`
+                                                  !! * `ibcr = 2` constrain second derivative at `x(ndata)` to `fbcr`
+    real(wp),intent(in)                :: fbcl    !! left boundary values governed by `ibcl`
+    real(wp),intent(in)                :: fbcr    !! right boundary values governed by `ibcr`
     integer(ip),intent(in)             :: kntopt  !! knot selection parameter:
                                                   !!
-                                                  !! * kntopt = 1 sets knot multiplicity at t(4) and
-                                                  !!   t(n+1) to 4
-                                                  !! * kntopt = 2 sets a symmetric placement of knots
-                                                  !!   about t(4) and t(n+1)
-                                                  !! * kntopt = 3 sets t(i)=tleft(i) and
-                                                  !!   t(n+1+i)=tright(i),i=1,3
-    real(wp),dimension(3),intent(in)  :: tleft    !! when kntopt = 3: t(1:3) in increasing
+                                                  !! * `kntopt = 1` sets knot multiplicity at `t(4)` and
+                                                  !!   `t(n+1)` to 4
+                                                  !! * `kntopt = 2` sets a symmetric placement of knots
+                                                  !!   about `t(4)` and `t(n+1)`
+                                                  !! * `kntopt = 3` sets `t(i)=tleft(i)` and
+                                                  !!   `t(n+1+i)=tright(i)`,`i=1,3`
+    real(wp),dimension(3),intent(in)  :: tleft    !! when `kntopt = 3`: `t(1:3)` in increasing
                                                   !! order to be supplied by the user.
-    real(wp),dimension(3),intent(in)  :: tright   !! when kntopt = 3: t(n+2:n+4) in increasing
+    real(wp),dimension(3),intent(in)  :: tright   !! when `kntopt = 3`: `t(n+2:n+4)` in increasing
                                                   !! order to be supplied by the user.
-    real(wp),dimension(:),intent(out)  :: t       !! knot array of length n+4
-    real(wp),dimension(:),intent(out)  :: bcoef   !! b spline coefficient array of length n
-    integer(ip),intent(out)            :: n       !! number of coefficients, n=ndata+2
-    integer(ip),intent(out)            :: k       !! order of spline, k=4
-    real(wp),dimension(5,ndata+2),intent(inout) :: w    !! work array
+    real(wp),dimension(:),intent(out)  :: t       !! knot array of length `n+4`
+    real(wp),dimension(:),intent(out)  :: bcoef   !! b spline coefficient array of length `n`
+    integer(ip),intent(out)            :: n       !! number of coefficients, `n=ndata+2`
+    integer(ip),intent(out)            :: k       !! order of spline, `k=4`
+    real(wp),dimension(5,ndata+2),intent(inout) :: w  !! work array
     integer(ip),intent(out)            :: iflag   !! status flag:
                                                   !!
                                                   !! * 0: no errors
-                                                  !! * 2001: ndata is less than 2
-                                                  !! * 2002: x values are not distinct or not ordered
-                                                  !! * 2003: ibcl is not 1 or 2
-                                                  !! * 2004: ibcr is not 1 or 2
-                                                  !! * 2005: kntopt is not 1, 2, or 3
-                                                  !! * 2006: knot input through tleft, tright is
+                                                  !! * 2001: `ndata` is less than 2
+                                                  !! * 2002: `x` values are not distinct or not ordered
+                                                  !! * 2003: `ibcl` is not 1 or 2
+                                                  !! * 2004: `ibcr` is not 1 or 2
+                                                  !! * 2005: `kntopt` is not 1, 2, or 3
+                                                  !! * 2006: knot input through `tleft`, `tright` is
                                                   !!   not ordered properly
                                                   !! * 2007: the system of equations is singular
 
     integer(ip)  :: i, ilb, ileft, it, iub, iw, iwp, j, jw, ndm, np, nwrow
     real(wp) :: txn, tx1, xl
     real(wp),dimension(4,4) :: vnikx
-    real(wp),dimension(15) :: work  !! work array for [[dbspvd]] -- length (k+1)*(k+2)/2
+    real(wp),dimension(15) :: work  !! work array for [[dbspvd]] -- length `(k+1)*(k+2)/2`
 
     real(wp),parameter :: wdtol = radix(1.0_wp)**(1-digits(1.0_wp)) !! d1mach(4)
     real(wp),parameter :: tol = sqrt(wdtol)
@@ -3694,13 +3694,11 @@
     iwp = iw + 1
     call dbnfac(w(iwp,1), nwrow, n, ilb, iub, iflag)
     if (iflag==2_ip) then
-        iflag = 2007_ip ! the system of equations is singular
-        return
+        iflag = 2007_ip  ! the system of equations is singular
     else
-        ! success
-        iflag = 0_ip
+        iflag = 0_ip  ! success
+        call dbnslv(w(iwp,1), nwrow, n, ilb, iub, bcoef)
     end if
-    call dbnslv(w(iwp,1), nwrow, n, ilb, iub, bcoef)
 
     end subroutine dbint4
 !*****************************************************************************************
@@ -3708,23 +3706,23 @@
 !*****************************************************************************************
 !>
 !  DBSPVD calculates the value and all derivatives of order
-!  less than NDERIV of all basis functions which do not
-!  (possibly) vanish at X.  ILEFT is input such that
-!  T(ILEFT) <= X < T(ILEFT+1).  A call to INTRV(T,N+1,X,
-!  ILO,ILEFT,MFLAG) will produce the proper ILEFT.  The output of
-!  DBSPVD is a matrix VNIKX(I,J) of dimension at least (K,NDERIV)
-!  whose columns contain the K nonzero basis functions and
-!  their NDERIV-1 right derivatives at X, I=1,K, J=1,NDERIV.
-!  These basis functions have indices ILEFT-K+I, I=1,K,
-!  K <= ILEFT <= N.  The nonzero part of the I-th basis
-!  function lies in (T(I),T(I+K)), I=1,N).
+!  less than `nderiv` of all basis functions which do not
+!  (possibly) vanish at `x`.  `ileft` is input such that
+!  `t(ileft) <= x < t(ileft+1)`.  A call to [[dintrv]](`t`,`n+1`,`x`,
+!  `ilo`,`ileft`,`mflag`) will produce the proper `ileft`.  The output of
+!  dbspvd is a matrix `vnikx(i,j)` of dimension at least `(k,nderiv)`
+!  whose columns contain the `k` nonzero basis functions and
+!  their `nderiv-1` right derivatives at `x`, `i=1,k, j=1,nderiv`.
+!  These basis functions have indices `ileft-k+i`, `i=1,k,
+!  k <= ileft <= n`.  The nonzero part of the `i`-th basis
+!  function lies in `(t(i),t(i+k)), i=1,n)`.
 !
-!  If X=T(ILEFT+1) then VNIKX contains left limiting values
-!  (left derivatives) at T(ILEFT+1).  In particular, ILEFT = N
+!  If `x=t(ileft+1)` then `vnikx` contains left limiting values
+!  (left derivatives) at `t(ileft+1)`.  In particular, `ileft = n`
 !  produces left limiting values at the right end point
-!  X=T(N+1).  To obtain left limiting values at T(I), I=K+1,N+1,
-!  set X= next lower distinct knot, call INTRV to get ILEFT,
-!  set X=T(I), and then call DBSPVD.
+!  `x=t(n+1)`.  To obtain left limiting values at `t(i)`, `i=k+1,n+1`,
+!  set `x` = next lower distinct knot, call [[dintrv]] to get `ileft`,
+!  set `x=t(i)`, and then call dbspvd.
 !
 !### History
 !  * Written by Carl de Boor and modified by D. E. Amos
@@ -3739,27 +3737,27 @@
 
     implicit none
 
-    real(wp),dimension(:),intent(in)              :: t       !! knot vector of length N+K, where
-                                                             !! N = number of B-spline basis functions
-                                                             !! N = sum of knot multiplicities-K
-    integer(ip),intent(in)                        :: k       !! order of the B-spline, K >= 1
-    integer(ip),intent(in)                        :: nderiv  !! number of derivatives = NDERIV-1,
-                                                             !! 1 <= NDERIV <= K
+    real(wp),dimension(:),intent(in)              :: t       !! knot vector of length `n+k`, where
+                                                             !! `n` = number of b-spline basis functions
+                                                             !! `n` = sum of knot multiplicities-k
+    integer(ip),intent(in)                        :: k       !! order of the b-spline, `k >= 1`
+    integer(ip),intent(in)                        :: nderiv  !! number of derivatives = `nderiv-1`,
+                                                             !! `1 <= nderiv <= k`
     real(wp),intent(in)                           :: x       !! argument of basis functions,
-                                                             !! T(K) <= X <= T(N+1)
+                                                             !! `t(k) <= x <= t(n+1)`
     integer(ip),intent(in)                        :: ileft   !! largest integer such that
-                                                             !! T(ILEFT) <= X < T(ILEFT+1)
-    integer(ip),intent(in)                        :: ldvnik  !! leading dimension of matrix VNIKX
-    real(wp),dimension(ldvnik,nderiv),intent(out) :: vnikx   !! matrix of dimension at least (K,NDERIV)
+                                                             !! `t(ileft) <= x < t(ileft+1)`
+    integer(ip),intent(in)                        :: ldvnik  !! leading dimension of matrix `vnikx`
+    real(wp),dimension(ldvnik,nderiv),intent(out) :: vnikx   !! matrix of dimension at least `(k,nderiv)`
                                                              !! containing the nonzero basis functions
-                                                             !! at X and their derivatives columnwise.
-    real(wp),dimension(*),intent(out)             :: work    !! a work vector of length (K+1)*(K+2)/2
+                                                             !! at `x` and their derivatives columnwise.
+    real(wp),dimension(*),intent(out)             :: work    !! a work vector of length `(k+1)*(k+2)/2`
     integer(ip),intent(out)                       :: iflag   !! status flag:
                                                              !!
                                                              !! * 0: no errors
-                                                             !! * 3001: k does not satisfy k>=1
-                                                             !! * 3002: nderiv does not satisfy 1<=nderiv<=k
-                                                             !! * 3003: ldvnik does not satisfy ldvnik>=k
+                                                             !! * 3001: `k` does not satisfy `k>=1`
+                                                             !! * 3002: `nderiv` does not satisfy `1<=nderiv<=k`
+                                                             !! * 3003: `ldvnik` does not satisfy `ldvnik>=k`
 
     integer(ip) :: i,ideriv,ipkmd,j,jj,jlow,jm,jp1mid,kmd,kp1,l,ldummy,m,mhigh,iwork
     real(wp) :: factor, fkmd, v
