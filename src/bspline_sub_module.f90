@@ -2193,7 +2193,7 @@
         integer(ip),intent(out)                   :: iflag !! status return code
         logical,intent(out)                       :: error !! true if there was an error
 
-        integer(ip),dimension(:),allocatable :: itmp !! temp integer array
+        integer(ip),dimension(2) :: itmp !! temp integer array
 
         if (present(n) .and. present(k) .and. present(x) .and. present(t)) then
             itmp = [ierrs(1_ip),ierrs(5)]
@@ -2328,9 +2328,9 @@
 
     implicit none
 
-    integer(ip),intent(in)             :: n
+    integer(ip),intent(in)             :: n  !! dimension of `x`
     integer(ip),intent(in)             :: k
-    real(wp),dimension(n),intent(in)   :: x
+    real(wp),dimension(:),intent(in)   :: x
     real(wp),dimension(:),intent(out)  :: t
 
     integer(ip) :: i, j, ipj, npj, ip1, jstrt
@@ -2389,13 +2389,13 @@
 
     pure subroutine dbtpcf(x,n,fcn,ldf,nf,t,k,bcoef,work,iflag)
 
-    integer(ip),intent(in)                :: n
+    integer(ip),intent(in)                :: n  !! dimension of `x`
     integer(ip),intent(in)                :: nf
     integer(ip),intent(in)                :: ldf
     integer(ip),intent(in)                :: k
-    real(wp),dimension(n),intent(in)      :: x
+    real(wp),dimension(:),intent(in)      :: x
     real(wp),dimension(ldf,nf),intent(in) :: fcn
-    real(wp),dimension(*),intent(in)      :: t
+    real(wp),dimension(:),intent(in)      :: t
     real(wp),dimension(nf,n),intent(out)  :: bcoef
     real(wp),dimension(*),intent(out)     :: work   !! work array of size >= `2*k*(n+1)`
     integer(ip),intent(out)               :: iflag  !!   0: no errors
@@ -3183,7 +3183,7 @@
     implicit none
 
     integer(ip),intent(in)             :: lxt    !! length of the `xt` vector
-    real(wp),dimension(lxt),intent(in) :: xt     !! a knot or break point vector of length `lxt`
+    real(wp),dimension(:),intent(in)   :: xt     !! a knot or break point vector of length `lxt`
     real(wp),intent(in)                :: xx     !! argument
     integer(ip),intent(inout)          :: ilo    !! an initialization parameter which must be set
                                                  !! to 1 the first time the spline array `xt` is
