@@ -5,13 +5,13 @@
     program dbint4_test
 
     use bspline_module
-    use bspline_kinds_module, only: wp
+    use bspline_kinds_module, only: wp,ip
     use pyplot_module
 
     implicit none
 
-    integer,parameter :: nx = 7     !! number of points in x
-    integer,parameter :: kx = 4     !! order in x
+    integer(ip),parameter :: nx = 7     !! number of points in x
+    integer(ip),parameter :: kx = 4     !! order in x
 
     logical,parameter :: extrap = .true.
     real(wp),parameter :: rad2deg = 180.0_wp / acos(-1.0_wp)  !! deg. to radians conversion factor
@@ -23,12 +23,14 @@
     real(wp),dimension(:),allocatable :: bcoef   !(nx+2)
     real(wp) :: tol,val,tru,err,errmax,fbcr,fbcl
     logical  :: fail
-    integer  :: n,i,idx,iflag,inbvx,ibcl,ibcr,kntopt
+    integer(ip)  :: n,i,idx,iflag,inbvx,ibcl,ibcr,kntopt
     real(wp),dimension(5,nx+2) :: w
     type(pyplot) :: plt
     integer :: istat
     integer :: icase
     real(wp),dimension(3) :: tleft, tright
+    real(wp),dimension(3*kx) :: w1_1d
+
     character(len=*),dimension(7),parameter :: labels = ['not-a-knot [db1ink]          ', &
                                                          '2nd der=0, kntopt=1 [dbint4] ', &
                                                          '1st der=0, kntopt=1 [dbint4] ', &
@@ -152,9 +154,9 @@
         fval = 0.0_wp
         do i=1,size(xval)
             if (icase==1) then
-                call db1val(xval(i),idx,tx,nx,kx,bcoef,val,iflag,inbvx,extrap=extrap)
+                call db1val(xval(i),idx,tx,nx,kx,bcoef,val,iflag,inbvx,w1_1d,extrap=extrap)
             else
-                call db1val(xval(i),idx,tx,nx+2,kx,bcoef,val,iflag,inbvx,extrap=extrap)
+                call db1val(xval(i),idx,tx,nx+2,kx,bcoef,val,iflag,inbvx,w1_1d,extrap=extrap)
             end if
             fval(i) = val  ! save it for plot
             tru     = f1(xval(i))
