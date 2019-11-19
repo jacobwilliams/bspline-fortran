@@ -5,23 +5,23 @@
     program bspline_oo_test
 
     use bspline_module
-    use bspline_kinds_module, only: wp
+    use bspline_kinds_module, only: wp, ip
 
     implicit none
 
-    integer,parameter :: nx = 6    !number of points
-    integer,parameter :: ny = 6
-    integer,parameter :: nz = 6
-    integer,parameter :: nq = 6
-    integer,parameter :: nr = 6
-    integer,parameter :: ns = 6
+    integer(ip),parameter :: nx = 6    !number of points
+    integer(ip),parameter :: ny = 6
+    integer(ip),parameter :: nz = 6
+    integer(ip),parameter :: nq = 6
+    integer(ip),parameter :: nr = 6
+    integer(ip),parameter :: ns = 6
 
-    integer,parameter :: kx = 4    !order
-    integer,parameter :: ky = 4
-    integer,parameter :: kz = 4
-    integer,parameter :: kq = 4
-    integer,parameter :: kr = 4
-    integer,parameter :: ks = 4
+    integer(ip),parameter :: kx = 4    !order
+    integer(ip),parameter :: ky = 4
+    integer(ip),parameter :: kz = 4
+    integer(ip),parameter :: kq = 4
+    integer(ip),parameter :: kr = 4
+    integer(ip),parameter :: ks = 4
 
     real(wp) :: x(nx),y(ny),z(nz),q(nq),r(nr),s(ns)
     real(wp) :: fcn_1d(nx)
@@ -41,8 +41,8 @@
     real(wp) :: tol
     real(wp),dimension(6) :: val,tru,err,errmax
     logical  :: fail
-    integer  :: i,j,k,l,m,n,idx,idy,idz,idq,idr,ids
-    integer,dimension(6) :: iflag
+    integer(ip)  :: i,j,k,l,m,n,idx,idy,idz,idq,idr,ids
+    integer(ip),dimension(6) :: iflag
 
     fail = .false.
     tol = 1.0e-14_wp
@@ -54,22 +54,22 @@
     ids = 0
 
      do i=1,nx
-        x(i) = dble(i-1)/dble(nx-1)
+        x(i) = real(i-1,wp)/real(nx-1,wp)
      end do
      do j=1,ny
-        y(j) = dble(j-1)/dble(ny-1)
+        y(j) = real(j-1,wp)/real(ny-1,wp)
      end do
      do k=1,nz
-        z(k) = dble(k-1)/dble(nz-1)
+        z(k) = real(k-1,wp)/real(nz-1,wp)
      end do
      do l=1,nq
-        q(l) = dble(l-1)/dble(nq-1)
+        q(l) = real(l-1,wp)/real(nq-1,wp)
      end do
      do m=1,nr
-        r(m) = dble(m-1)/dble(nr-1)
+        r(m) = real(m-1,wp)/real(nr-1,wp)
      end do
      do n=1,ns
-        s(n) = dble(n-1)/dble(ns-1)
+        s(n) = real(n-1,wp)/real(ns-1,wp)
      end do
      do i=1,nx
                         fcn_1d(i) = f1(x(i))
@@ -108,12 +108,12 @@
      end if
 
      write(*,*) ''
-     write(*,*) 'size of 1d structure: ', s1%size_of()*8, 'bytes'
-     write(*,*) 'size of 2d structure: ', s2%size_of()*8, 'bytes'
-     write(*,*) 'size of 3d structure: ', s3%size_of()*8, 'bytes'
-     write(*,*) 'size of 4d structure: ', s4%size_of()*8, 'bytes'
-     write(*,*) 'size of 5d structure: ', s5%size_of()*8, 'bytes'
-     write(*,*) 'size of 6d structure: ', s6%size_of()*8, 'bytes'
+     write(*,*) 'size of 1d structure: ', s1%size_of()*8_ip, 'bytes'
+     write(*,*) 'size of 2d structure: ', s2%size_of()*8_ip, 'bytes'
+     write(*,*) 'size of 3d structure: ', s3%size_of()*8_ip, 'bytes'
+     write(*,*) 'size of 4d structure: ', s4%size_of()*8_ip, 'bytes'
+     write(*,*) 'size of 5d structure: ', s5%size_of()*8_ip, 'bytes'
+     write(*,*) 'size of 6d structure: ', s6%size_of()*8_ip, 'bytes'
      write(*,*) ''
 
     ! compute max error at interpolation points

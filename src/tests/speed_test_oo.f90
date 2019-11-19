@@ -8,26 +8,26 @@
     program bspline_speed_test_oo
 
     use bspline_module
-    use bspline_kinds_module, only: wp
+    use bspline_kinds_module, only: wp, ip
     use pyplot_module
 
     implicit none
 
-    integer,parameter :: nx = 8   !number of points
-    integer,parameter :: ny = 8
-    integer,parameter :: nz = 8
-    integer,parameter :: nq = 8
-    integer,parameter :: nr = 8
-    integer,parameter :: ns = 8
+    integer(ip),parameter :: nx = 8_ip   !number of points
+    integer(ip),parameter :: ny = 8_ip
+    integer(ip),parameter :: nz = 8_ip
+    integer(ip),parameter :: nq = 8_ip
+    integer(ip),parameter :: nr = 8_ip
+    integer(ip),parameter :: ns = 8_ip
 
-    integer,parameter :: kx = 4    !order
-    integer,parameter :: ky = 4
-    integer,parameter :: kz = 4
-    integer,parameter :: kq = 4
-    integer,parameter :: kr = 4
-    integer,parameter :: ks = 4
+    integer(ip),parameter :: kx = 4_ip    !order
+    integer(ip),parameter :: ky = 4_ip
+    integer(ip),parameter :: kz = 4_ip
+    integer(ip),parameter :: kq = 4_ip
+    integer(ip),parameter :: kr = 4_ip
+    integer(ip),parameter :: ks = 4_ip
 
-    integer,parameter :: n_cases = nx*ny*nz*nq*nr*ns
+    integer(ip),parameter :: n_cases = nx*ny*nz*nq*nr*ns
 
     real(wp) :: x(nx),y(ny),z(nz),q(nq),r(nr),s(ns)
     real(wp) :: fcn_1d(nx)
@@ -45,25 +45,25 @@
     type(bspline_6d) :: s6
 
     real(wp) :: val,sumval
-    integer  :: i,j,k,l,m,n,idx,idy,idz,idq,idr,ids,iflag
+    integer(ip)  :: i,j,k,l,m,n,idx,idy,idz,idq,idr,ids,iflag
     real :: tstart, tend
     type(pyplot) :: plt
     real(wp),dimension(6) :: cases_per_sec
     integer :: istat  !! pyplot-fortran status flag
 
-    idx = 0
-    idy = 0
-    idz = 0
-    idq = 0
-    idr = 0
-    ids = 0
+    idx = 0_ip
+    idy = 0_ip
+    idz = 0_ip
+    idq = 0_ip
+    idr = 0_ip
+    ids = 0_ip
 
-    x = [ (dble(i), i=1,nx) ]
-    y = [ (dble(i), i=1,ny) ]
-    z = [ (dble(i), i=1,nz) ]
-    q = [ (dble(i), i=1,nq) ]
-    r = [ (dble(i), i=1,nr) ]
-    s = [ (dble(i), i=1,ns) ]
+    x = [ (real(i,wp), i=1,nx) ]
+    y = [ (real(i,wp), i=1,ny) ]
+    z = [ (real(i,wp), i=1,nz) ]
+    q = [ (real(i,wp), i=1,nq) ]
+    r = [ (real(i,wp), i=1,nr) ]
+    s = [ (real(i,wp), i=1,ns) ]
 
     !evaluate the functions:
 

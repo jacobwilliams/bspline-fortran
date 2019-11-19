@@ -40,7 +40,7 @@
 
     module bspline_sub_module
 
-    use bspline_kinds_module, only: wp
+    use bspline_kinds_module, only: wp, ip
     use,intrinsic :: iso_fortran_env, only: error_unit
 
     implicit none
@@ -59,10 +59,10 @@
     public :: b1fqad_func
 
     !Spline function order (order = polynomial degree + 1)
-    integer,parameter,public :: bspline_order_quadratic = 3
-    integer,parameter,public :: bspline_order_cubic     = 4
-    integer,parameter,public :: bspline_order_quartic   = 5
-    integer,parameter,public :: bspline_order_quintic   = 6
+    integer(ip),parameter,public :: bspline_order_quadratic = 3_ip
+    integer(ip),parameter,public :: bspline_order_cubic     = 4_ip
+    integer(ip),parameter,public :: bspline_order_quartic   = 5_ip
+    integer(ip),parameter,public :: bspline_order_quintic   = 6_ip
 
     !main routines:
     public :: db1ink, db1val, db1sqad, db1fqad
@@ -92,14 +92,14 @@
 
     implicit none
 
-    integer,intent(in)                      :: nx     !! Number of \(x\) abcissae
-    integer,intent(in)                      :: kx     !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)                  :: nx     !! Number of \(x\) abcissae
+    integer(ip),intent(in)                  :: kx     !! The order of spline pieces in \(x\)
                                                       !! ( \( 2 \le k_x < n_x \) )
                                                       !! (order = polynomial degree + 1)
     real(wp),dimension(:),intent(in)        :: x      !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
     real(wp),dimension(:),intent(in)        :: fcn    !! `(nx)` array of function values to interpolate. `fcn(i)` should
                                                       !! contain the function value at the point `x(i)`
-    integer,intent(in)                      :: iknot  !! knot sequence flag:
+    integer(ip),intent(in)                  :: iknot  !! knot sequence flag:
                                                       !!
                                                       !! * 0 = knot sequence chosen by [[db1ink]].
                                                       !! * 1 = knot sequence chosen by user.
@@ -111,7 +111,7 @@
                                                       !!
                                                       !! Must be non-decreasing.
     real(wp),dimension(:),intent(out)       :: bcoef  !! `(nx)` array of coefficients of the b-spline interpolant.
-    integer,intent(out)                     :: iflag  !! status flag:
+    integer(ip),intent(out)                 :: iflag  !! status flag:
                                                       !!
                                                       !! * 0 = successful execution.
                                                       !! * 2 = `iknot` out of range.
@@ -124,8 +124,8 @@
                                                       !! * 712 = `size(tx)` \( \ne \) `nx+kx`.
                                                       !! * 800 = `size(x)` \( \ne \) `size(bcoef,1)`.
 
-    real(wp),dimension(2*kx*(nx+1)) :: work
     logical :: status_ok
+    real(wp),dimension(:),allocatable :: work   !! work array of dimension `2*kx*(nx+1)`
 
     !check validity of inputs
 
@@ -142,14 +142,16 @@
     if (status_ok) then
 
         !choose knots
-
-        if (iknot == 0) then
+        if (iknot == 0_ip) then
             call dbknot(x,nx,kx,tx)
         end if
 
-        !construct b-spline coefficients
+        allocate(work(2_ip*kx*(nx+1_ip)))
 
-        call dbtpcf(x,nx,fcn,nx,1,tx,kx,bcoef,work,iflag)
+        !construct b-spline coefficients
+        call dbtpcf(x,nx,fcn,nx,1_ip,tx,kx,bcoef,work,iflag)
+
+        deallocate(work)
 
     end if
 
@@ -184,37 +186,36 @@
 !### History
 !  * Jacob Williams, 10/30/2015 : Created 1D routine.
 
-    pure subroutine db1val(xval,idx,tx,nx,kx,bcoef,f,iflag,inbvx,extrap)
+    pure subroutine db1val(xval,idx,tx,nx,kx,bcoef,f,iflag,inbvx,w0,extrap)
 
     implicit none
 
-    integer,intent(in)                   :: idx      !! \(x\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                   :: nx       !! the number of interpolation points in \(x\).
+    integer(ip),intent(in)               :: idx      !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)               :: nx       !! the number of interpolation points in \(x\).
                                                      !! (same as in last call to [[db1ink]])
-    integer,intent(in)                   :: kx       !! order of polynomial pieces in \(x\).
+    integer(ip),intent(in)               :: kx       !! order of polynomial pieces in \(x\).
                                                      !! (same as in last call to [[db1ink]])
     real(wp),intent(in)                  :: xval     !! \(x\) coordinate of evaluation point.
     real(wp),dimension(nx+kx),intent(in) :: tx       !! sequence of knots defining the piecewise polynomial
                                                      !! in the \(x\) direction. (same as in last call to [[db1ink]])
     real(wp),dimension(nx),intent(in)    :: bcoef    !! the b-spline coefficients computed by [[db1ink]].
     real(wp),intent(out)                 :: f        !! interpolated value
-    integer,intent(out)                  :: iflag    !! status flag:
+    integer(ip),intent(out)              :: iflag    !! status flag:
                                                      !!
                                                      !! * \( = 0 \)   : no errors
                                                      !! * \( \ne 0 \) : error
-    integer,intent(inout)                :: inbvx    !! initialization parameter which must be set
+    integer(ip),intent(inout)            :: inbvx    !! initialization parameter which must be set
                                                      !! to 1 the first time this routine is called,
                                                      !! and must not be changed by the user.
+    real(wp),dimension(3_ip*kx),intent(inout) :: w0  !! work array
     logical,intent(in),optional          :: extrap   !! if extrapolation is allowed
                                                      !! (if not present, default is False)
 
-    real(wp),dimension(3*kx) :: work
-
     f = 0.0_wp
 
-    iflag = check_value(xval,tx,1,extrap); if (iflag/=0) return
+    iflag = check_value(xval,tx,1_ip,extrap); if (iflag/=0_ip) return
 
-    call dbvalu(tx,bcoef,nx,kx,idx,xval,inbvx,work,iflag,f,extrap)
+    call dbvalu(tx,bcoef,nx,kx,idx,xval,inbvx,w0,iflag,f,extrap)
 
     end subroutine db1val
 !*****************************************************************************************
@@ -229,25 +230,24 @@
 !### See also
 !  * [[dbsqad]] -- the core routine.
 
-    pure subroutine db1sqad(tx,bcoef,nx,kx,x1,x2,f,iflag)
+    pure subroutine db1sqad(tx,bcoef,nx,kx,x1,x2,f,iflag,w0)
 
     implicit none
 
-    integer,intent(in)                   :: nx      !! length of coefficient array
-    integer,intent(in)                   :: kx      !! order of b-spline, `1 <= k <= 20`
+    integer(ip),intent(in)               :: nx      !! length of coefficient array
+    integer(ip),intent(in)               :: kx      !! order of b-spline, `1 <= k <= 20`
     real(wp),dimension(nx+kx),intent(in) :: tx      !! knot array
     real(wp),dimension(nx),intent(in)    :: bcoef   !! b-spline coefficient array
     real(wp),intent(in)                  :: x1      !! left point of quadrature interval in `t(kx) <= x <= t(nx+1)`
     real(wp),intent(in)                  :: x2      !! right point of quadrature interval in `t(kx) <= x <= t(nx+1)`
     real(wp),intent(out)                 :: f       !! integral of the b-spline over (`x1`,`x2`)
-    integer,intent(out)                  :: iflag   !! status flag:
+    integer(ip),intent(out)              :: iflag   !! status flag:
                                                     !!
                                                     !! * \( = 0 \)   : no errors
                                                     !! * \( \ne 0 \) : error
+    real(wp),dimension(3*kx),intent(inout) :: w0    !! work array for [[dbsqad]]
 
-    real(wp),dimension(3*kx) :: work !! work array for [[dbsqad]]
-
-    call dbsqad(tx,bcoef,nx,kx,x1,x2,f,work,iflag)
+    call dbsqad(tx,bcoef,nx,kx,x1,x2,f,w0,iflag)
 
     end subroutine db1sqad
 !*****************************************************************************************
@@ -266,17 +266,17 @@
 !@note This one is not pure, because we are not enforcing
 !      that the user function `fun` be pure.
 
-    subroutine db1fqad(fun,tx,bcoef,nx,kx,idx,x1,x2,tol,f,iflag)
+    subroutine db1fqad(fun,tx,bcoef,nx,kx,idx,x1,x2,tol,f,iflag,w0)
 
     implicit none
 
     procedure(b1fqad_func)              :: fun    !! external function of one argument for the
                                                   !! integrand `bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,id,x,inbv,work)`
-    integer,intent(in)                  :: nx     !! length of coefficient array
-    integer,intent(in)                  :: kx     !! order of b-spline, `kx >= 1`
+    integer(ip),intent(in)              :: nx     !! length of coefficient array
+    integer(ip),intent(in)              :: kx     !! order of b-spline, `kx >= 1`
     real(wp),dimension(nx+kx),intent(in):: tx     !! knot array
     real(wp),dimension(nx),intent(in)   :: bcoef  !! b-spline coefficient array
-    integer,intent(in)                  :: idx    !! order of the spline derivative, `0 <= idx <= k-1`
+    integer(ip),intent(in)              :: idx    !! order of the spline derivative, `0 <= idx <= k-1`
                                                   !! `idx=0` gives the spline function
     real(wp),intent(in)                 :: x1     !! left point of quadrature interval in `t(k) <= x <= t(n+1)`
     real(wp),intent(in)                 :: x2     !! right point of quadrature interval in `t(k) <= x <= t(n+1)`
@@ -285,14 +285,13 @@
                                                   !! of `1.0e-300` and real(wp) unit roundoff for
                                                   !! the machine
     real(wp),intent(out)                :: f      !! integral of `bf(x)` on `(x1,x2)`
-    integer,intent(out)                 :: iflag  !! status flag:
+    integer(ip),intent(out)             :: iflag  !! status flag:
                                                   !!
                                                   !! * \( = 0 \)   : no errors
                                                   !! * \( \ne 0 \) : error
+    real(wp),dimension(3_ip*kx),intent(inout) :: w0  !! work array for [[dbfqad]]
 
-    real(wp),dimension(3*kx) :: work !! work array for [[dbfqad]]
-
-    call dbfqad(fun,tx,bcoef,nx,kx,idx,x1,x2,tol,f,iflag,work)
+    call dbfqad(fun,tx,bcoef,nx,kx,idx,x1,x2,tol,f,iflag,w0)
 
     end subroutine db1fqad
 !*****************************************************************************************
@@ -351,12 +350,12 @@
 
     implicit none
 
-    integer,intent(in)                      :: nx     !! Number of \(x\) abcissae
-    integer,intent(in)                      :: ny     !! Number of \(y\) abcissae
-    integer,intent(in)                      :: kx     !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)                  :: nx     !! Number of \(x\) abcissae
+    integer(ip),intent(in)                  :: ny     !! Number of \(y\) abcissae
+    integer(ip),intent(in)                  :: kx     !! The order of spline pieces in \(x\)
                                                       !! ( \( 2 \le k_x < n_x \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                      :: ky     !! The order of spline pieces in \(y\)
+    integer(ip),intent(in)                  :: ky     !! The order of spline pieces in \(y\)
                                                       !! ( \( 2 \le k_y < n_y \) )
                                                       !! (order = polynomial degree + 1)
     real(wp),dimension(:),intent(in)        :: x      !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
@@ -364,7 +363,7 @@
     real(wp),dimension(:,:),intent(in)      :: fcn    !! `(nx,ny)` matrix of function values to interpolate.
                                                       !! `fcn(i,j)` should contain the function value at the
                                                       !! point (`x(i)`,`y(j)`)
-    integer,intent(in)                      :: iknot  !! knot sequence flag:
+    integer(ip),intent(in)                  :: iknot  !! knot sequence flag:
                                                       !!
                                                       !! * 0 = knot sequence chosen by [[db1ink]].
                                                       !! * 1 = knot sequence chosen by user.
@@ -383,7 +382,7 @@
                                                       !!
                                                       !! Must be non-decreasing.
     real(wp),dimension(:,:),intent(out)     :: bcoef  !! `(nx,ny)` matrix of coefficients of the b-spline interpolant.
-    integer,intent(out)                     :: iflag  !! *  0 = successful execution.
+    integer(ip),intent(out)                 :: iflag  !! *  0 = successful execution.
                                                       !! *  2 = `iknot` out of range.
                                                       !! *  3 = `nx` out of range.
                                                       !! *  4 = `kx` out of range.
@@ -402,9 +401,9 @@
                                                       !! * 800 = `size(x)`  \( \ne \) `size(bcoef,1)`
                                                       !! * 801 = `size(y)`  \( \ne \) `size(bcoef,2)`
 
-    real(wp),dimension(nx*ny) :: temp
-    real(wp),dimension(max(2*kx*(nx+1),2*ky*(ny+1))) :: work
     logical :: status_ok
+    real(wp),dimension(:),allocatable :: temp !! work array of length `nx*ny`
+    real(wp),dimension(:),allocatable :: work !! work array of length `max(2*kx*(nx+1),2*ky*(ny+1))`
 
     !check validity of inputs
 
@@ -421,16 +420,20 @@
     if (status_ok) then
 
         !choose knots
-
-        if (iknot == 0) then
+        if (iknot == 0_ip) then
             call dbknot(x,nx,kx,tx)
             call dbknot(y,ny,ky,ty)
         end if
 
-        !construct b-spline coefficients
+        allocate(temp(nx*ny))
+        allocate(work(max(2_ip*kx*(nx+1_ip),2_ip*ky*(ny+1_ip))))
 
-                      call dbtpcf(x,nx,fcn, nx,ny,tx,kx,temp, work,iflag)
-        if (iflag==0) call dbtpcf(y,ny,temp,ny,nx,ty,ky,bcoef,work,iflag)
+        !construct b-spline coefficients
+                         call dbtpcf(x,nx,fcn, nx,ny,tx,kx,temp, work,iflag)
+        if (iflag==0_ip) call dbtpcf(y,ny,temp,ny,nx,ty,ky,bcoef,work,iflag)
+
+        deallocate(temp)
+        deallocate(work)
 
     end if
 
@@ -471,19 +474,19 @@
 !  * JEC : 000330 modified array declarations.
 !  * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
 
-    pure subroutine db2val(xval,yval,idx,idy,tx,ty,nx,ny,kx,ky,bcoef,f,iflag,inbvx,inbvy,iloy,extrap)
+    pure subroutine db2val(xval,yval,idx,idy,tx,ty,nx,ny,kx,ky,bcoef,f,iflag,inbvx,inbvy,iloy,w1,w0,extrap)
 
     implicit none
 
-    integer,intent(in)                   :: idx      !! \(x\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                   :: idy      !! \(y\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                   :: nx       !! the number of interpolation points in \(x\).
+    integer(ip),intent(in)               :: idx      !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)               :: idy      !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)               :: nx       !! the number of interpolation points in \(x\).
                                                      !! (same as in last call to [[db2ink]])
-    integer,intent(in)                   :: ny       !! the number of interpolation points in \(y\).
+    integer(ip),intent(in)               :: ny       !! the number of interpolation points in \(y\).
                                                      !! (same as in last call to [[db2ink]])
-    integer,intent(in)                   :: kx       !! order of polynomial pieces in \(x\).
+    integer(ip),intent(in)               :: kx       !! order of polynomial pieces in \(x\).
                                                      !! (same as in last call to [[db2ink]])
-    integer,intent(in)                   :: ky       !! order of polynomial pieces in \(y\).
+    integer(ip),intent(in)               :: ky       !! order of polynomial pieces in \(y\).
                                                      !! (same as in last call to [[db2ink]])
     real(wp),intent(in)                  :: xval     !! \(x\) coordinate of evaluation point.
     real(wp),intent(in)                  :: yval     !! \(y\) coordinate of evaluation point.
@@ -495,42 +498,42 @@
                                                      !! (same as in last call to [[db2ink]])
     real(wp),dimension(nx,ny),intent(in) :: bcoef    !! the b-spline coefficients computed by [[db2ink]].
     real(wp),intent(out)                 :: f        !! interpolated value
-    integer,intent(out)                  :: iflag    !! status flag:
+    integer(ip),intent(out)              :: iflag    !! status flag:
                                                      !!
                                                      !! * \( = 0 \)   : no errors
                                                      !! * \( \ne 0 \) : error
-    integer,intent(inout)                :: inbvx    !! initialization parameter which must be set to 1
+    integer(ip),intent(inout)            :: inbvx    !! initialization parameter which must be set to 1
                                                      !! the first time this routine is called,
                                                      !! and must not be changed by the user.
-    integer,intent(inout)                :: inbvy    !! initialization parameter which must be set to 1
+    integer(ip),intent(inout)            :: inbvy    !! initialization parameter which must be set to 1
                                                      !! the first time this routine is called,
                                                      !! and must not be changed by the user.
-    integer,intent(inout)                :: iloy     !! initialization parameter which must be set to 1
+    integer(ip),intent(inout)            :: iloy     !! initialization parameter which must be set to 1
                                                      !! the first time this routine is called,
                                                      !! and must not be changed by the user.
+    real(wp),dimension(ky),intent(inout)              :: w1 !! work array
+    real(wp),dimension(3_ip*max(kx,ky)),intent(inout) :: w0 !! work array
     logical,intent(in),optional          :: extrap   !! if extrapolation is allowed
                                                      !! (if not present, default is False)
 
-    integer :: k, lefty, kcol
-    real(wp),dimension(ky) :: temp
-    real(wp),dimension(3*max(kx,ky)) :: work
+    integer(ip) :: k, lefty, kcol
 
     f = 0.0_wp
 
-    iflag = check_value(xval,tx,1,extrap); if (iflag/=0) return
-    iflag = check_value(yval,ty,2,extrap); if (iflag/=0) return
+    iflag = check_value(xval,tx,1_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(yval,ty,2_ip,extrap); if (iflag/=0_ip) return
 
-    call dintrv(ty,ny+ky,yval,iloy,lefty,iflag,extrap); if (iflag/=0) return
+    call dintrv(ty,ny+ky,yval,iloy,lefty,iflag,extrap); if (iflag/=0_ip) return
 
     kcol = lefty - ky
-    do k=1,ky
-        kcol = kcol + 1
-        call dbvalu(tx,bcoef(:,kcol),nx,kx,idx,xval,inbvx,work,iflag,temp(k),extrap)
-        if (iflag/=0) return !error
+    do k=1_ip,ky
+        kcol = kcol + 1_ip
+        call dbvalu(tx,bcoef(:,kcol),nx,kx,idx,xval,inbvx,w0,iflag,w1(k),extrap)
+        if (iflag/=0_ip) return !error
     end do
 
-    kcol = lefty - ky + 1
-    call dbvalu(ty(kcol:),temp,ky,ky,idy,yval,inbvy,work,iflag,f,extrap)
+    kcol = lefty - ky + 1_ip
+    call dbvalu(ty(kcol:),w1,ky,ky,idy,yval,inbvy,w0,iflag,f,extrap)
 
     end subroutine db2val
 !*****************************************************************************************
@@ -594,16 +597,16 @@
 
     implicit none
 
-    integer,intent(in)                       :: nx    !! number of \(x\) abcissae ( \( \ge 3 \) )
-    integer,intent(in)                       :: ny    !! number of \(y\) abcissae ( \( \ge 3 \) )
-    integer,intent(in)                       :: nz    !! number of \(z\) abcissae ( \( \ge 3 \) )
-    integer,intent(in)                       :: kx    !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)                   :: nx    !! number of \(x\) abcissae ( \( \ge 3 \) )
+    integer(ip),intent(in)                   :: ny    !! number of \(y\) abcissae ( \( \ge 3 \) )
+    integer(ip),intent(in)                   :: nz    !! number of \(z\) abcissae ( \( \ge 3 \) )
+    integer(ip),intent(in)                   :: kx    !! The order of spline pieces in \(x\)
                                                       !! ( \( 2 \le k_x < n_x \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                       :: ky    !! The order of spline pieces in \(y\)
+    integer(ip),intent(in)                   :: ky    !! The order of spline pieces in \(y\)
                                                       !! ( \( 2 \le k_y < n_y \) )
                                                       !! (order = polynomial degree + 1)
-    integer,intent(in)                       :: kz    !! the order of spline pieces in \(z\)
+    integer(ip),intent(in)                   :: kz    !! the order of spline pieces in \(z\)
                                                       !! ( \( 2 \le k_z < n_z \) )
                                                       !! (order = polynomial degree + 1)
     real(wp),dimension(:),intent(in)         :: x     !! `(nx)` array of \(x\) abcissae. must be strictly increasing.
@@ -611,7 +614,7 @@
     real(wp),dimension(:),intent(in)         :: z     !! `(nz)` array of \(z\) abcissae. must be strictly increasing.
     real(wp),dimension(:,:,:),intent(in)     :: fcn   !! `(nx,ny,nz)` matrix of function values to interpolate. `fcn(i,j,k)` should
                                                       !! contain the function value at the point (`x(i)`,`y(j)`,`z(k)`)
-    integer,intent(in)                       :: iknot !! knot sequence flag:
+    integer(ip),intent(in)                   :: iknot !! knot sequence flag:
                                                       !!
                                                       !! * 0 = knot sequence chosen by [[db3ink]].
                                                       !! * 1 = knot sequence chosen by user.
@@ -637,7 +640,7 @@
                                                       !!
                                                       !! Must be non-decreasing.
     real(wp),dimension(:,:,:),intent(out)    :: bcoef !! `(nx,ny,nz)` matrix of coefficients of the b-spline interpolant.
-    integer,intent(out)                      :: iflag !! *  0 = successful execution.
+    integer(ip),intent(out)                  :: iflag !! *  0 = successful execution.
                                                       !! *  2 = `iknot` out of range.
                                                       !! *  3 = `nx` out of range.
                                                       !! *  4 = `kx` out of range.
@@ -664,9 +667,11 @@
                                                       !! * 801 = `size(y) ` \(\ne\) `size(bcoef,2)`
                                                       !! * 802 = `size(z) ` \(\ne\) `size(bcoef,3)`
 
-    real(wp),dimension(nx*ny*nz) :: temp
-    real(wp),dimension(max(2*kx*(nx+1),2*ky*(ny+1),2*kz*(nz+1))) :: work
     logical :: status_ok
+    real(wp),dimension(:),allocatable :: temp !! work array of length `nx*ny*nz`
+    real(wp),dimension(:),allocatable :: work !! work array of length `max(2*kx*(nx+1),
+                                              !! 2*ky*(ny+1),2*kz*(nz+1))`
+    integer(ip) :: i, j, k, ii !! counter
 
     ! check validity of input
 
@@ -683,21 +688,36 @@
     if (status_ok) then
 
         ! choose knots
-
-        if (iknot == 0) then
+        if (iknot == 0_ip) then
             call dbknot(x,nx,kx,tx)
             call dbknot(y,ny,ky,ty)
             call dbknot(z,nz,kz,tz)
         end if
 
+        allocate(temp(nx*ny*nz))
+        allocate(work(max(2_ip*kx*(nx+1_ip),2_ip*ky*(ny+1_ip),2_ip*kz*(nz+1_ip))))
+
         ! copy fcn to work in packed for dbtpcf
-        temp(1:nx*ny*nz) = reshape( fcn, [nx*ny*nz] )
+        !temp = reshape( fcn, [nx*ny*nz] )
+        ! replaced with loops to avoid stack
+        ! overflow for large data set:
+        ii = 0_ip
+        do k = 1_ip, nz
+            do j = 1_ip, ny
+                do i = 1_ip, nx
+                    ii = ii + 1_ip
+                    temp(ii) = fcn(i,j,k)
+                end do
+            end do
+        end do
 
         ! construct b-spline coefficients
+                         call dbtpcf(x,nx,temp, nx,ny*nz,tx,kx,bcoef,work,iflag)
+        if (iflag==0_ip) call dbtpcf(y,ny,bcoef,ny,nx*nz,ty,ky,temp, work,iflag)
+        if (iflag==0_ip) call dbtpcf(z,nz,temp, nz,nx*ny,tz,kz,bcoef,work,iflag)
 
-                      call dbtpcf(x,nx,temp, nx,ny*nz,tx,kx,bcoef,work,iflag)
-        if (iflag==0) call dbtpcf(y,ny,bcoef,ny,nx*nz,ty,ky,temp, work,iflag)
-        if (iflag==0) call dbtpcf(z,nz,temp, nz,nx*ny,tz,kz,bcoef,work,iflag)
+        deallocate(temp)
+        deallocate(work)
 
     end if
 
@@ -743,26 +763,26 @@
 !  * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
 
     pure subroutine db3val(xval,yval,zval,idx,idy,idz,&
-                                     tx,ty,tz,&
-                                     nx,ny,nz,kx,ky,kz,bcoef,f,iflag,&
-                                     inbvx,inbvy,inbvz,iloy,iloz,extrap)
+                           tx,ty,tz,&
+                           nx,ny,nz,kx,ky,kz,bcoef,f,iflag,&
+                           inbvx,inbvy,inbvz,iloy,iloz,w2,w1,w0,extrap)
 
     implicit none
 
-    integer,intent(in)                      :: idx      !! \(x\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                      :: idy      !! \(y\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                      :: idz      !! \(z\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                      :: nx       !! the number of interpolation points in \(x\).
+    integer(ip),intent(in)                  :: idx      !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)                  :: idy      !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)                  :: idz      !! \(z\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)                  :: nx       !! the number of interpolation points in \(x\).
                                                         !! (same as in last call to [[db3ink]])
-    integer,intent(in)                      :: ny       !! the number of interpolation points in \(y\).
+    integer(ip),intent(in)                  :: ny       !! the number of interpolation points in \(y\).
                                                         !! (same as in last call to [[db3ink]])
-    integer,intent(in)                      :: nz       !! the number of interpolation points in \(z\).
+    integer(ip),intent(in)                  :: nz       !! the number of interpolation points in \(z\).
                                                         !! (same as in last call to [[db3ink]])
-    integer,intent(in)                      :: kx       !! order of polynomial pieces in \(z\).
+    integer(ip),intent(in)                  :: kx       !! order of polynomial pieces in \(z\).
                                                         !! (same as in last call to [[db3ink]])
-    integer,intent(in)                      :: ky       !! order of polynomial pieces in \(y\).
+    integer(ip),intent(in)                  :: ky       !! order of polynomial pieces in \(y\).
                                                         !! (same as in last call to [[db3ink]])
-    integer,intent(in)                      :: kz       !! order of polynomial pieces in \(z\).
+    integer(ip),intent(in)                  :: kz       !! order of polynomial pieces in \(z\).
                                                         !! (same as in last call to [[db3ink]])
     real(wp),intent(in)                     :: xval     !! \(x\) coordinate of evaluation point.
     real(wp),intent(in)                     :: yval     !! \(y\) coordinate of evaluation point.
@@ -775,65 +795,63 @@
                                                         !! in the \(z\) direction. (same as in last call to [[db3ink]])
     real(wp),dimension(nx,ny,nz),intent(in) :: bcoef    !! the b-spline coefficients computed by [[db3ink]].
     real(wp),intent(out)                    :: f        !! interpolated value
-    integer,intent(out)                     :: iflag    !! status flag:
+    integer(ip),intent(out)                 :: iflag    !! status flag:
                                                         !!
                                                         !! * \( = 0 \)   : no errors
                                                         !! * \( \ne 0 \) : error
-    integer,intent(inout)                   :: inbvx    !! initialization parameter which must be
+    integer(ip),intent(inout)               :: inbvx    !! initialization parameter which must be
                                                         !! set to 1 the first time this routine is called,
                                                         !! and must not be changed by the user.
-    integer,intent(inout)                   :: inbvy    !! initialization parameter which must be
+    integer(ip),intent(inout)               :: inbvy    !! initialization parameter which must be
                                                         !! set to 1 the first time this routine is called,
                                                         !! and must not be changed by the user.
-    integer,intent(inout)                   :: inbvz    !! initialization parameter which must be
+    integer(ip),intent(inout)               :: inbvz    !! initialization parameter which must be
                                                         !! set to 1 the first time this routine is called,
                                                         !! and must not be changed by the user.
-    integer,intent(inout)                   :: iloy     !! initialization parameter which must be
+    integer(ip),intent(inout)               :: iloy     !! initialization parameter which must be
                                                         !! set to 1 the first time this routine is called,
                                                         !! and must not be changed by the user.
-    integer,intent(inout)                   :: iloz     !! initialization parameter which must be
+    integer(ip),intent(inout)               :: iloz     !! initialization parameter which must be
                                                         !! set to 1 the first time this routine is called,
                                                         !! and must not be changed by the user.
+    real(wp),dimension(ky,kz),intent(inout)              :: w2  !! work array
+    real(wp),dimension(kz),intent(inout)                 :: w1  !! work array
+    real(wp),dimension(3_ip*max(kx,ky,kz)),intent(inout) :: w0  !! work array
     logical,intent(in),optional             :: extrap   !! if extrapolation is allowed
                                                         !! (if not present, default is False)
 
-    real(wp),dimension(ky,kz)           :: temp1
-    real(wp),dimension(kz)              :: temp2
-    real(wp),dimension(3*max(kx,ky,kz)) :: work
-
-    integer :: lefty, leftz, &
-                kcoly, kcolz, j, k
+    integer(ip) :: lefty, leftz, kcoly, kcolz, j, k
 
     f = 0.0_wp
 
-    iflag = check_value(xval,tx,1,extrap); if (iflag/=0) return
-    iflag = check_value(yval,ty,2,extrap); if (iflag/=0) return
-    iflag = check_value(zval,tz,3,extrap); if (iflag/=0) return
+    iflag = check_value(xval,tx,1_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(yval,ty,2_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(zval,tz,3_ip,extrap); if (iflag/=0_ip) return
 
-    call dintrv(ty,ny+ky,yval,iloy,lefty,iflag,extrap); if (iflag/=0) return
-    call dintrv(tz,nz+kz,zval,iloz,leftz,iflag,extrap); if (iflag/=0) return
+    call dintrv(ty,ny+ky,yval,iloy,lefty,iflag,extrap); if (iflag/=0_ip) return
+    call dintrv(tz,nz+kz,zval,iloz,leftz,iflag,extrap); if (iflag/=0_ip) return
 
-    iflag = 0
+    iflag = 0_ip
 
     kcolz = leftz - kz
-    do k=1,kz
-        kcolz = kcolz + 1
+    do k=1_ip,kz
+        kcolz = kcolz + 1_ip
         kcoly = lefty - ky
-        do j=1,ky
-            kcoly = kcoly + 1
-            call dbvalu(tx,bcoef(:,kcoly,kcolz),nx,kx,idx,xval,inbvx,work,iflag,temp1(j,k),extrap)
-            if (iflag/=0) return
+        do j=1_ip,ky
+            kcoly = kcoly + 1_ip
+            call dbvalu(tx,bcoef(:,kcoly,kcolz),nx,kx,idx,xval,inbvx,w0,iflag,w2(j,k),extrap)
+            if (iflag/=0_ip) return
         end do
     end do
 
-    kcoly = lefty - ky + 1
-    do k=1,kz
-        call dbvalu(ty(kcoly:),temp1(:,k),ky,ky,idy,yval,inbvy,work,iflag,temp2(k),extrap)
-        if (iflag/=0) return
+    kcoly = lefty - ky + 1_ip
+    do k=1_ip,kz
+        call dbvalu(ty(kcoly:),w2(:,k),ky,ky,idy,yval,inbvy,w0,iflag,w1(k),extrap)
+        if (iflag/=0_ip) return
     end do
 
-    kcolz = leftz - kz + 1
-    call dbvalu(tz(kcolz:),temp2,kz,kz,idz,zval,inbvz,work,iflag,f,extrap)
+    kcolz = leftz - kz + 1_ip
+    call dbvalu(tz(kcolz:),w1,kz,kz,idz,zval,inbvz,w0,iflag,f,extrap)
 
     end subroutine db3val
 !*****************************************************************************************
@@ -854,28 +872,28 @@
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
     pure subroutine db4ink(x,nx,y,ny,z,nz,q,nq,&
-                        fcn,&
-                        kx,ky,kz,kq,&
-                        iknot,&
-                        tx,ty,tz,tq,&
-                        bcoef,iflag)
+                           fcn,&
+                           kx,ky,kz,kq,&
+                           iknot,&
+                           tx,ty,tz,tq,&
+                           bcoef,iflag)
 
     implicit none
 
-    integer,intent(in)                          :: nx    !! number of \(x\) abcissae ( \( \ge 3 \) )
-    integer,intent(in)                          :: ny    !! number of \(y\) abcissae ( \( \ge 3 \) )
-    integer,intent(in)                          :: nz    !! number of \(z\) abcissae ( \( \ge 3 \) )
-    integer,intent(in)                          :: nq    !! number of \(q\) abcissae ( \( \ge 3 \) )
-    integer,intent(in)                          :: kx    !! the order of spline pieces in \(x\)
+    integer(ip),intent(in)                      :: nx    !! number of \(x\) abcissae ( \( \ge 3 \) )
+    integer(ip),intent(in)                      :: ny    !! number of \(y\) abcissae ( \( \ge 3 \) )
+    integer(ip),intent(in)                      :: nz    !! number of \(z\) abcissae ( \( \ge 3 \) )
+    integer(ip),intent(in)                      :: nq    !! number of \(q\) abcissae ( \( \ge 3 \) )
+    integer(ip),intent(in)                      :: kx    !! the order of spline pieces in \(x\)
                                                          !! ( \( 2 \le k_x < n_x \) ).
                                                          !! (order = polynomial degree + 1)
-    integer,intent(in)                          :: ky    !! the order of spline pieces in \(y\)
+    integer(ip),intent(in)                      :: ky    !! the order of spline pieces in \(y\)
                                                          !! ( \( 2 \le k_y < n_y \) ).
                                                          !! (order = polynomial degree + 1)
-    integer,intent(in)                          :: kz    !! the order of spline pieces in \(z\)
+    integer(ip),intent(in)                      :: kz    !! the order of spline pieces in \(z\)
                                                          !! ( \( 2 \le k_z < n_z \) ).
                                                          !! (order = polynomial degree + 1)
-    integer,intent(in)                          :: kq    !! the order of spline pieces in \(q\)
+    integer(ip),intent(in)                      :: kq    !! the order of spline pieces in \(q\)
                                                          !! ( \( 2 \le k_q < n_q \) ).
                                                          !! (order = polynomial degree + 1)
     real(wp),dimension(:),intent(in)            :: x     !! `(nx)` array of \(x\) abcissae. must be strictly increasing.
@@ -885,7 +903,7 @@
     real(wp),dimension(:,:,:,:),intent(in)      :: fcn   !! `(nx,ny,nz,nq)` matrix of function values to interpolate.
                                                          !! `fcn(i,j,k,q)` should contain the function value at the
                                                          !!  point (`x(i)`,`y(j)`,`z(k)`,`q(l)`)
-    integer,intent(in)                          :: iknot !! knot sequence flag:
+    integer(ip),intent(in)                      :: iknot !! knot sequence flag:
                                                          !!
                                                          !! * 0 = knot sequence chosen by [[db4ink]].
                                                          !! * 1 = knot sequence chosen by user.
@@ -919,7 +937,7 @@
                                                          !! Must be non-decreasing.
     real(wp),dimension(:,:,:,:),intent(out)     :: bcoef !! `(nx,ny,nz,nq)` matrix of coefficients of the b-spline
                                                          !! interpolant.
-    integer,intent(out)                         :: iflag !! *  0 = successful execution.
+    integer(ip),intent(out)                     :: iflag !! *  0 = successful execution.
                                                          !! *  2 = `iknot` out of range.
                                                          !! *  3 = `nx` out of range.
                                                          !! *  4 = `kx` out of range.
@@ -954,9 +972,10 @@
                                                          !! * 802 = `size(z)`  \( \ne \) `size(bcoef,3)`
                                                          !! * 803 = `size(q)`  \( \ne \) `size(bcoef,4)`
 
-    real(wp),dimension(nx*ny*nz*nq) :: temp
-    real(wp),dimension(max(2*kx*(nx+1),2*ky*(ny+1),2*kz*(nz+1),2*kq*(nq+1))) :: work
     logical :: status_ok
+    real(wp),dimension(:),allocatable :: temp !! work array of dimension `nx*ny*nz*nq`
+    real(wp),dimension(:),allocatable :: work !! work array of dimension `max(2*kx*(nx+1),
+                                              !! 2*ky*(ny+1),2*kz*(nz+1),2*kq*(nq+1))`
 
     ! check validity of input
 
@@ -973,20 +992,24 @@
     if (status_ok) then
 
         ! choose knots
-
-        if (iknot == 0) then
+        if (iknot == 0_ip) then
             call dbknot(x,nx,kx,tx)
             call dbknot(y,ny,ky,ty)
             call dbknot(z,nz,kz,tz)
             call dbknot(q,nq,kq,tq)
         end if
 
-        ! construct b-spline coefficients
+        allocate(temp(nx*ny*nz*nq))
+        allocate(work(max(2_ip*kx*(nx+1_ip),2_ip*ky*(ny+1_ip),2_ip*kz*(nz+1_ip),2_ip*kq*(nq+1_ip))))
 
-                      call dbtpcf(x,nx,fcn,  nx,ny*nz*nq,tx,kx,temp, work,iflag)
-        if (iflag==0) call dbtpcf(y,ny,temp, ny,nx*nz*nq,ty,ky,bcoef,work,iflag)
-        if (iflag==0) call dbtpcf(z,nz,bcoef,nz,nx*ny*nq,tz,kz,temp, work,iflag)
-        if (iflag==0) call dbtpcf(q,nq,temp, nq,nx*ny*nz,tq,kq,bcoef,work,iflag)
+        ! construct b-spline coefficients
+                         call dbtpcf(x,nx,fcn,  nx,ny*nz*nq,tx,kx,temp, work,iflag)
+        if (iflag==0_ip) call dbtpcf(y,ny,temp, ny,nx*nz*nq,ty,ky,bcoef,work,iflag)
+        if (iflag==0_ip) call dbtpcf(z,nz,bcoef,nz,nx*ny*nq,tz,kz,temp, work,iflag)
+        if (iflag==0_ip) call dbtpcf(q,nq,temp, nq,nx*ny*nz,tq,kq,bcoef,work,iflag)
+
+        deallocate(temp)
+        deallocate(work)
 
      end if
 
@@ -1009,35 +1032,35 @@
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
     pure subroutine db4val(xval,yval,zval,qval,&
-                                idx,idy,idz,idq,&
-                                tx,ty,tz,tq,&
-                                nx,ny,nz,nq,&
-                                kx,ky,kz,kq,&
-                                bcoef,f,iflag,&
-                                inbvx,inbvy,inbvz,inbvq,&
-                                iloy,iloz,iloq,extrap)
+                           idx,idy,idz,idq,&
+                           tx,ty,tz,tq,&
+                           nx,ny,nz,nq,&
+                           kx,ky,kz,kq,&
+                           bcoef,f,iflag,&
+                           inbvx,inbvy,inbvz,inbvq,&
+                           iloy,iloz,iloq,w3,w2,w1,w0,extrap)
 
     implicit none
 
-    integer,intent(in)                         :: idx      !! \(x\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                         :: idy      !! \(y\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                         :: idz      !! \(z\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                         :: idq      !! \(q\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                         :: nx       !! the number of interpolation points in \(x\).
+    integer(ip),intent(in)                     :: idx      !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)                     :: idy      !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)                     :: idz      !! \(z\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)                     :: idq      !! \(q\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)                     :: nx       !! the number of interpolation points in \(x\).
                                                            !! (same as in last call to [[db4ink]])
-    integer,intent(in)                         :: ny       !! the number of interpolation points in \(y\).
+    integer(ip),intent(in)                     :: ny       !! the number of interpolation points in \(y\).
                                                            !! (same as in last call to [[db4ink]])
-    integer,intent(in)                         :: nz       !! the number of interpolation points in \(z\).
+    integer(ip),intent(in)                     :: nz       !! the number of interpolation points in \(z\).
                                                            !! (same as in last call to [[db4ink]])
-    integer,intent(in)                         :: nq       !! the number of interpolation points in \(q\).
+    integer(ip),intent(in)                     :: nq       !! the number of interpolation points in \(q\).
                                                            !! (same as in last call to [[db4ink]])
-    integer,intent(in)                         :: kx       !! order of polynomial pieces in \(x\).
+    integer(ip),intent(in)                     :: kx       !! order of polynomial pieces in \(x\).
                                                            !! (same as in last call to [[db4ink]])
-    integer,intent(in)                         :: ky       !! order of polynomial pieces in \(y\).
+    integer(ip),intent(in)                     :: ky       !! order of polynomial pieces in \(y\).
                                                            !! (same as in last call to [[db4ink]])
-    integer,intent(in)                         :: kz       !! order of polynomial pieces in \(z\).
+    integer(ip),intent(in)                     :: kz       !! order of polynomial pieces in \(z\).
                                                            !! (same as in last call to [[db4ink]])
-    integer,intent(in)                         :: kq       !! order of polynomial pieces in \(q\).
+    integer(ip),intent(in)                     :: kq       !! order of polynomial pieces in \(q\).
                                                            !! (same as in last call to [[db4ink]])
     real(wp),intent(in)                        :: xval     !! \(x\) coordinate of evaluation point.
     real(wp),intent(in)                        :: yval     !! \(y\) coordinate of evaluation point.
@@ -1057,95 +1080,95 @@
                                                            !! [[db4ink]])
     real(wp),dimension(nx,ny,nz,nq),intent(in) :: bcoef    !! the b-spline coefficients computed by [[db4ink]].
     real(wp),intent(out)                       :: f        !! interpolated value
-    integer,intent(out)                        :: iflag    !! status flag:
+    integer(ip),intent(out)                    :: iflag    !! status flag:
                                                            !!
                                                            !! * \( = 0 \)   : no errors
                                                            !! * \( \ne 0 \) : error
-    integer,intent(inout)                      :: inbvx    !! initialization parameter which must be set
+    integer(ip),intent(inout)                  :: inbvx    !! initialization parameter which must be set
                                                            !! to 1 the first time this routine is called,
                                                            !! and must not be changed by the user.
-    integer,intent(inout)                      :: inbvy    !! initialization parameter which must be set
+    integer(ip),intent(inout)                  :: inbvy    !! initialization parameter which must be set
                                                            !! to 1 the first time this routine is called,
                                                            !! and must not be changed by the user.
-    integer,intent(inout)                      :: inbvz    !! initialization parameter which must be set
+    integer(ip),intent(inout)                  :: inbvz    !! initialization parameter which must be set
                                                            !! to 1 the first time this routine is called,
                                                            !! and must not be changed by the user.
-    integer,intent(inout)                      :: inbvq    !! initialization parameter which must be set
+    integer(ip),intent(inout)                  :: inbvq    !! initialization parameter which must be set
                                                            !! to 1 the first time this routine is called,
                                                            !! and must not be changed by the user.
-    integer,intent(inout)                      :: iloy     !! initialization parameter which must be set
+    integer(ip),intent(inout)                  :: iloy     !! initialization parameter which must be set
                                                            !! to 1 the first time this routine is called,
                                                            !! and must not be changed by the user.
-    integer,intent(inout)                      :: iloz     !! initialization parameter which must be set
+    integer(ip),intent(inout)                  :: iloz     !! initialization parameter which must be set
                                                            !! to 1 the first time this routine is called,
                                                            !! and must not be changed by the user.
-    integer,intent(inout)                      :: iloq     !! initialization parameter which must be set
+    integer(ip),intent(inout)                  :: iloq     !! initialization parameter which must be set
                                                            !! to 1 the first time this routine is called,
                                                            !! and must not be changed by the user.
+    real(wp),dimension(ky,kz,kq),intent(inout)           :: w3 !! work array
+    real(wp),dimension(kz,kq),intent(inout)              :: w2 !! work array
+    real(wp),dimension(kq),intent(inout)                 :: w1 !! work array
+    real(wp),dimension(3_ip*max(kx,ky,kz,kq)),intent(inout) :: w0 !! work array
     logical,intent(in),optional                :: extrap   !! if extrapolation is allowed
                                                            !! (if not present, default is False)
 
-    real(wp),dimension(ky,kz,kq)             :: temp1
-    real(wp),dimension(kz,kq)                :: temp2
-    real(wp),dimension(kq)                   :: temp3
-    real(wp),dimension(3*max(kx,ky,kz,kq))   :: work
-    integer :: lefty, leftz, leftq, &
+    integer(ip) :: lefty, leftz, leftq, &
                kcoly, kcolz, kcolq, j, k, q
 
     f = 0.0_wp
 
-    iflag = check_value(xval,tx,1,extrap); if (iflag/=0) return
-    iflag = check_value(yval,ty,2,extrap); if (iflag/=0) return
-    iflag = check_value(zval,tz,3,extrap); if (iflag/=0) return
-    iflag = check_value(qval,tq,4,extrap); if (iflag/=0) return
+    iflag = check_value(xval,tx,1_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(yval,ty,2_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(zval,tz,3_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(qval,tq,4_ip,extrap); if (iflag/=0_ip) return
 
-    call dintrv(ty,ny+ky,yval,iloy,lefty,iflag,extrap); if (iflag/=0) return
-    call dintrv(tz,nz+kz,zval,iloz,leftz,iflag,extrap); if (iflag/=0) return
-    call dintrv(tq,nq+kq,qval,iloq,leftq,iflag,extrap); if (iflag/=0) return
+    call dintrv(ty,ny+ky,yval,iloy,lefty,iflag,extrap); if (iflag/=0_ip) return
+    call dintrv(tz,nz+kz,zval,iloz,leftz,iflag,extrap); if (iflag/=0_ip) return
+    call dintrv(tq,nq+kq,qval,iloq,leftq,iflag,extrap); if (iflag/=0_ip) return
 
-    iflag = 0
+    iflag = 0_ip
 
     ! x -> y, z, q
     kcolq = leftq - kq
-    do q=1,kq
-        kcolq = kcolq + 1
+    do q=1_ip,kq
+        kcolq = kcolq + 1_ip
         kcolz = leftz - kz
-        do k=1,kz
-            kcolz = kcolz + 1
+        do k=1_ip,kz
+            kcolz = kcolz + 1_ip
             kcoly = lefty - ky
-            do j=1,ky
-                kcoly = kcoly + 1
+            do j=1_ip,ky
+                kcoly = kcoly + 1_ip
                 call dbvalu(tx,bcoef(:,kcoly,kcolz,kcolq),&
-                                     nx,kx,idx,xval,inbvx,work,iflag,&
-                                     temp1(j,k,q),extrap)
-                if (iflag/=0) return
+                                     nx,kx,idx,xval,inbvx,w0,iflag,&
+                                     w3(j,k,q),extrap)
+                if (iflag/=0_ip) return
             end do
         end do
     end do
 
     ! y -> z, q
-    kcoly = lefty - ky + 1
-    do q=1,kq
-        do k=1,kz
-            call dbvalu(ty(kcoly:),temp1(:,k,q),&
-                        ky,ky,idy,yval,inbvy,work,iflag,&
-                        temp2(k,q),extrap)
-            if (iflag/=0) return
+    kcoly = lefty - ky + 1_ip
+    do q=1_ip,kq
+        do k=1_ip,kz
+            call dbvalu(ty(kcoly:),w3(:,k,q),&
+                        ky,ky,idy,yval,inbvy,w0,iflag,&
+                        w2(k,q),extrap)
+            if (iflag/=0_ip) return
         end do
     end do
 
     ! z -> q
-    kcolz = leftz - kz + 1
-    do q=1,kq
-        call dbvalu(tz(kcolz:),temp2(:,q),&
-                    kz,kz,idz,zval,inbvz,work,iflag,&
-                    temp3(q),extrap)
-        if (iflag/=0) return
+    kcolz = leftz - kz + 1_ip
+    do q=1_ip,kq
+        call dbvalu(tz(kcolz:),w2(:,q),&
+                    kz,kz,idz,zval,inbvz,w0,iflag,&
+                    w1(q),extrap)
+        if (iflag/=0_ip) return
     end do
 
     ! q
-    kcolq = leftq - kq + 1
-    call dbvalu(tq(kcolq:),temp3,kq,kq,idq,qval,inbvq,work,iflag,f,extrap)
+    kcolq = leftq - kq + 1_ip
+    call dbvalu(tq(kcolq:),w1,kq,kq,idq,qval,inbvq,w0,iflag,f,extrap)
 
     end subroutine db4val
 !*****************************************************************************************
@@ -1171,32 +1194,32 @@
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
     pure subroutine db5ink(x,nx,y,ny,z,nz,q,nq,r,nr,&
-                        fcn,&
-                        kx,ky,kz,kq,kr,&
-                        iknot,&
-                        tx,ty,tz,tq,tr,&
-                        bcoef,iflag)
+                           fcn,&
+                           kx,ky,kz,kq,kr,&
+                           iknot,&
+                           tx,ty,tz,tq,tr,&
+                           bcoef,iflag)
 
     implicit none
 
-    integer,intent(in)                             :: nx    !! number of \(x\) abcissae ( \( \ge 3 \) )
-    integer,intent(in)                             :: ny    !! number of \(y\) abcissae ( \( \ge 3 \) )
-    integer,intent(in)                             :: nz    !! number of \(z\) abcissae ( \( \ge 3 \) )
-    integer,intent(in)                             :: nq    !! number of \(q\) abcissae ( \( \ge 3 \) )
-    integer,intent(in)                             :: nr    !! number of \(r\) abcissae ( \( \ge 3 \) )
-    integer,intent(in)                             :: kx    !! the order of spline pieces in \(x\)
+    integer(ip),intent(in)                         :: nx    !! number of \(x\) abcissae ( \( \ge 3 \) )
+    integer(ip),intent(in)                         :: ny    !! number of \(y\) abcissae ( \( \ge 3 \) )
+    integer(ip),intent(in)                         :: nz    !! number of \(z\) abcissae ( \( \ge 3 \) )
+    integer(ip),intent(in)                         :: nq    !! number of \(q\) abcissae ( \( \ge 3 \) )
+    integer(ip),intent(in)                         :: nr    !! number of \(r\) abcissae ( \( \ge 3 \) )
+    integer(ip),intent(in)                         :: kx    !! the order of spline pieces in \(x\)
                                                             !! ( \( 2 \le k_x < n_x \) ).
                                                             !! (order = polynomial degree + 1)
-    integer,intent(in)                             :: ky    !! the order of spline pieces in \(y\)
+    integer(ip),intent(in)                         :: ky    !! the order of spline pieces in \(y\)
                                                             !! ( \( 2 \le k_y < n_y \) ).
                                                             !! (order = polynomial degree + 1)
-    integer,intent(in)                             :: kz    !! the order of spline pieces in \(z\)
+    integer(ip),intent(in)                         :: kz    !! the order of spline pieces in \(z\)
                                                             !! ( \( 2 \le k_z < n_z \) ).
                                                             !! (order = polynomial degree + 1)
-    integer,intent(in)                             :: kq    !! the order of spline pieces in \(q\)
+    integer(ip),intent(in)                         :: kq    !! the order of spline pieces in \(q\)
                                                             !! ( \( 2 \le k_q < n_q \) ).
                                                             !! (order = polynomial degree + 1)
-    integer,intent(in)                             :: kr    !! the order of spline pieces in \(r\)
+    integer(ip),intent(in)                         :: kr    !! the order of spline pieces in \(r\)
                                                             !! ( \( 2 \le k_r < n_r \) ).
                                                             !! (order = polynomial degree + 1)
     real(wp),dimension(:),intent(in)               :: x     !! `(nx)` array of \(x\) abcissae. must be strictly increasing.
@@ -1207,7 +1230,7 @@
     real(wp),dimension(:,:,:,:,:),intent(in)       :: fcn   !! `(nx,ny,nz,nq,nr)` matrix of function values to interpolate.
                                                             !! `fcn(i,j,k,q,r)` should contain the function value at the
                                                             !! point (`x(i)`,`y(j)`,`z(k)`,`q(l)`,`r(m)`)
-    integer,intent(in)                             :: iknot !! knot sequence flag:
+    integer(ip),intent(in)                         :: iknot !! knot sequence flag:
                                                             !!
                                                             !! * 0 = knot sequence chosen by [[db5ink]].
                                                             !! * 1 = knot sequence chosen by user.
@@ -1248,7 +1271,7 @@
                                                             !! Must be non-decreasing.
     real(wp),dimension(:,:,:,:,:),intent(out)      :: bcoef !! `(nx,ny,nz,nq,nr)` matrix of coefficients of the b-spline
                                                             !! interpolant.
-    integer,intent(out)                            :: iflag !! *  0 = successful execution.
+    integer(ip),intent(out)                        :: iflag !! *  0 = successful execution.
                                                             !! *  2 = `iknot` out of range.
                                                             !! *  3 = `nx` out of range.
                                                             !! *  4 = `kx` out of range.
@@ -1291,16 +1314,13 @@
                                                             !! * 803 = `size(q)`  \( \ne \) `size(bcoef,4)`
                                                             !! * 804 = `size(r)`  \( \ne \) `size(bcoef,5)`
 
-    real(wp),dimension(nx*ny*nz*nq*nr) :: temp
-    real(wp),dimension(max( 2*kx*(nx+1),&
-                            2*ky*(ny+1),&
-                            2*kz*(nz+1),&
-                            2*kq*(nq+1),&
-                            2*kr*(nr+1) )) :: work
     logical :: status_ok
+    real(wp),dimension(:),allocatable :: temp !! work array of length `nx*ny*nz*nq*nr`
+    real(wp),dimension(:),allocatable :: work !! work array of length `max(2*kx*(nx+1),
+                                              !! 2*ky*(ny+1),2*kz*(nz+1),2*kq*(nq+1),2*kr*(nr+1))`
+    integer(ip) :: i, j, k, l, m, ii !! counter
 
     !  check validity of input
-
     call check_inputs(  iknot,&
                         iflag,&
                         nx=nx,ny=ny,nz=nz,nq=nq,nr=nr,&
@@ -1314,8 +1334,7 @@
     if (status_ok) then
 
         !  choose knots
-
-        if (iknot == 0) then
+        if (iknot == 0_ip) then
             call dbknot(x,nx,kx,tx)
             call dbknot(y,ny,ky,ty)
             call dbknot(z,nz,kz,tz)
@@ -1323,19 +1342,38 @@
             call dbknot(r,nr,kr,tr)
         end if
 
-        ! copy fcn to work in packed for dbtpcf
+        allocate(temp(nx*ny*nz*nq*nr))
+        allocate(work(max(2_ip*kx*(nx+1_ip),2_ip*ky*(ny+1_ip),2_ip*kz*(nz+1_ip),2_ip*kq*(nq+1_ip),2_ip*kr*(nr+1_ip))))
 
-        temp(1:nx*ny*nz*nq*nr) = reshape( fcn, [nx*ny*nz*nq*nr] )
+        ! copy fcn to work in packed for dbtpcf
+        !temp(1:nx*ny*nz*nq*nr) = reshape( fcn, [nx*ny*nz*nq*nr] )
+        ! replaced with loops to avoid stack
+        ! overflow for large data set:
+        ii = 0_ip
+        do m = 1_ip, nr
+            do l = 1_ip, nq
+                do k = 1_ip, nz
+                    do j = 1_ip, ny
+                        do i = 1_ip, nx
+                            ii = ii + 1_ip
+                            temp(ii) = fcn(i,j,k,l,m)
+                        end do
+                    end do
+                end do
+            end do
+        end do
 
         !  construct b-spline coefficients
+                         call dbtpcf(x,nx,temp,  nx,ny*nz*nq*nr,tx,kx,bcoef,work,iflag)
+        if (iflag==0_ip) call dbtpcf(y,ny,bcoef, ny,nx*nz*nq*nr,ty,ky,temp, work,iflag)
+        if (iflag==0_ip) call dbtpcf(z,nz,temp,  nz,nx*ny*nq*nr,tz,kz,bcoef,work,iflag)
+        if (iflag==0_ip) call dbtpcf(q,nq,bcoef, nq,nx*ny*nz*nr,tq,kq,temp, work,iflag)
+        if (iflag==0_ip) call dbtpcf(r,nr,temp,  nr,nx*ny*nz*nq,tr,kr,bcoef,work,iflag)
 
-                      call dbtpcf(x,nx,temp,  nx,ny*nz*nq*nr,tx,kx,bcoef,work,iflag)
-        if (iflag==0) call dbtpcf(y,ny,bcoef, ny,nx*nz*nq*nr,ty,ky,temp, work,iflag)
-        if (iflag==0) call dbtpcf(z,nz,temp,  nz,nx*ny*nq*nr,tz,kz,bcoef,work,iflag)
-        if (iflag==0) call dbtpcf(q,nq,bcoef, nq,nx*ny*nz*nr,tq,kq,temp, work,iflag)
-        if (iflag==0) call dbtpcf(r,nr,temp,  nr,nx*ny*nz*nq,tr,kr,bcoef,work,iflag)
+        deallocate(temp)
+        deallocate(work)
 
-     end if
+    end if
 
     end subroutine db5ink
 !*****************************************************************************************
@@ -1356,40 +1394,41 @@
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
     pure subroutine db5val(xval,yval,zval,qval,rval,&
-                                idx,idy,idz,idq,idr,&
-                                tx,ty,tz,tq,tr,&
-                                nx,ny,nz,nq,nr,&
-                                kx,ky,kz,kq,kr,&
-                                bcoef,f,iflag,&
-                                inbvx,inbvy,inbvz,inbvq,inbvr,&
-                                iloy,iloz,iloq,ilor,extrap)
+                           idx,idy,idz,idq,idr,&
+                           tx,ty,tz,tq,tr,&
+                           nx,ny,nz,nq,nr,&
+                           kx,ky,kz,kq,kr,&
+                           bcoef,f,iflag,&
+                           inbvx,inbvy,inbvz,inbvq,inbvr,&
+                           iloy,iloz,iloq,ilor,&
+                           w4,w3,w2,w1,w0,extrap)
 
     implicit none
 
-    integer,intent(in)                            :: idx      !! \(x\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                            :: idy      !! \(y\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                            :: idz      !! \(z\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                            :: idq      !! \(q\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                            :: idr      !! \(r\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                            :: nx       !! the number of interpolation points in \(x\).
+    integer(ip),intent(in)                        :: idx      !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)                        :: idy      !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)                        :: idz      !! \(z\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)                        :: idq      !! \(q\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)                        :: idr      !! \(r\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)                        :: nx       !! the number of interpolation points in \(x\).
                                                               !! (same as in last call to [[db5ink]])
-    integer,intent(in)                            :: ny       !! the number of interpolation points in \(y\).
+    integer(ip),intent(in)                        :: ny       !! the number of interpolation points in \(y\).
                                                               !! (same as in last call to [[db5ink]])
-    integer,intent(in)                            :: nz       !! the number of interpolation points in \(z\).
+    integer(ip),intent(in)                        :: nz       !! the number of interpolation points in \(z\).
                                                               !! (same as in last call to [[db5ink]])
-    integer,intent(in)                            :: nq       !! the number of interpolation points in \(q\).
+    integer(ip),intent(in)                        :: nq       !! the number of interpolation points in \(q\).
                                                               !! (same as in last call to [[db5ink]])
-    integer,intent(in)                            :: nr       !! the number of interpolation points in \(r\).
+    integer(ip),intent(in)                        :: nr       !! the number of interpolation points in \(r\).
                                                               !! (same as in last call to [[db5ink]])
-    integer,intent(in)                            :: kx       !! order of polynomial pieces in \(x\).
+    integer(ip),intent(in)                        :: kx       !! order of polynomial pieces in \(x\).
                                                               !! (same as in last call to [[db5ink]])
-    integer,intent(in)                            :: ky       !! order of polynomial pieces in \(y\).
+    integer(ip),intent(in)                        :: ky       !! order of polynomial pieces in \(y\).
                                                               !! (same as in last call to [[db5ink]])
-    integer,intent(in)                            :: kz       !! order of polynomial pieces in \(z\).
+    integer(ip),intent(in)                        :: kz       !! order of polynomial pieces in \(z\).
                                                               !! (same as in last call to [[db5ink]])
-    integer,intent(in)                            :: kq       !! order of polynomial pieces in \(q\).
+    integer(ip),intent(in)                        :: kq       !! order of polynomial pieces in \(q\).
                                                               !! (same as in last call to [[db5ink]])
-    integer,intent(in)                            :: kr       !! order of polynomial pieces in \(r\).
+    integer(ip),intent(in)                        :: kr       !! order of polynomial pieces in \(r\).
                                                               !! (same as in last call to [[db5ink]])
     real(wp),intent(in)                           :: xval     !! \(x\) coordinate of evaluation point.
     real(wp),intent(in)                           :: yval     !! \(y\) coordinate of evaluation point.
@@ -1413,118 +1452,118 @@
                                                               !! (same as in last call to [[db5ink]])
     real(wp),dimension(nx,ny,nz,nq,nr),intent(in) :: bcoef    !! the b-spline coefficients computed by [[db5ink]].
     real(wp),intent(out)                          :: f        !! interpolated value
-    integer,intent(out)                           :: iflag    !! status flag:
+    integer(ip),intent(out)                       :: iflag    !! status flag:
                                                               !!
                                                               !! * \( = 0 \)   : no errors
                                                               !! * \( \ne 0 \) : error
-    integer,intent(inout)                         :: inbvx    !! initialization parameter which must be set
+    integer(ip),intent(inout)                     :: inbvx    !! initialization parameter which must be set
                                                               !! to 1 the first time this routine is called,
                                                               !! and must not be changed by the user.
-    integer,intent(inout)                         :: inbvy    !! initialization parameter which must be set
+    integer(ip),intent(inout)                     :: inbvy    !! initialization parameter which must be set
                                                               !! to 1 the first time this routine is called,
                                                               !! and must not be changed by the user.
-    integer,intent(inout)                         :: inbvz    !! initialization parameter which must be set
+    integer(ip),intent(inout)                     :: inbvz    !! initialization parameter which must be set
                                                               !! to 1 the first time this routine is called,
                                                               !! and must not be changed by the user.
-    integer,intent(inout)                         :: inbvq    !! initialization parameter which must be set
+    integer(ip),intent(inout)                     :: inbvq    !! initialization parameter which must be set
                                                               !! to 1 the first time this routine is called,
                                                               !! and must not be changed by the user.
-    integer,intent(inout)                         :: inbvr    !! initialization parameter which must be set
+    integer(ip),intent(inout)                     :: inbvr    !! initialization parameter which must be set
                                                               !! to 1 the first time this routine is called,
                                                               !! and must not be changed by the user.
-    integer,intent(inout)                         :: iloy     !! initialization parameter which must be set
+    integer(ip),intent(inout)                     :: iloy     !! initialization parameter which must be set
                                                               !! to 1 the first time this routine is called,
                                                               !! and must not be changed by the user.
-    integer,intent(inout)                         :: iloz     !! initialization parameter which must be set
+    integer(ip),intent(inout)                     :: iloz     !! initialization parameter which must be set
                                                               !! to 1 the first time this routine is called,
                                                               !! and must not be changed by the user.
-    integer,intent(inout)                         :: iloq     !! initialization parameter which must be set
+    integer(ip),intent(inout)                     :: iloq     !! initialization parameter which must be set
                                                               !! to 1 the first time this routine is called,
                                                               !! and must not be changed by the user.
-    integer,intent(inout)                         :: ilor     !! initialization parameter which must be set
+    integer(ip),intent(inout)                     :: ilor     !! initialization parameter which must be set
                                                               !! to 1 the first time this routine is called,
                                                               !! and must not be changed by the user.
+    real(wp),dimension(ky,kz,kq,kr),intent(inout)           :: w4  !! work array
+    real(wp),dimension(kz,kq,kr),intent(inout)              :: w3  !! work array
+    real(wp),dimension(kq,kr),intent(inout)                 :: w2  !! work array
+    real(wp),dimension(kr),intent(inout)                    :: w1  !! work array
+    real(wp),dimension(3_ip*max(kx,ky,kz,kq,kr)),intent(inout) :: w0  !! work array
     logical,intent(in),optional                   :: extrap   !! if extrapolation is allowed
                                                               !! (if not present, default is False)
 
-    real(wp),dimension(ky,kz,kq,kr)           :: temp1
-    real(wp),dimension(kz,kq,kr)              :: temp2
-    real(wp),dimension(kq,kr)                 :: temp3
-    real(wp),dimension(kr)                    :: temp4
-    real(wp),dimension(3*max(kx,ky,kz,kq,kr)) :: work
-    integer :: lefty, leftz, leftq, leftr, &
+    integer(ip) :: lefty, leftz, leftq, leftr, &
                kcoly, kcolz, kcolq, kcolr, j, k, q, r
 
     f = 0.0_wp
 
-    iflag = check_value(xval,tx,1,extrap); if (iflag/=0) return
-    iflag = check_value(yval,ty,2,extrap); if (iflag/=0) return
-    iflag = check_value(zval,tz,3,extrap); if (iflag/=0) return
-    iflag = check_value(qval,tq,4,extrap); if (iflag/=0) return
-    iflag = check_value(rval,tr,5,extrap); if (iflag/=0) return
+    iflag = check_value(xval,tx,1_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(yval,ty,2_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(zval,tz,3_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(qval,tq,4_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(rval,tr,5_ip,extrap); if (iflag/=0_ip) return
 
-    call dintrv(ty,ny+ky,yval,iloy,lefty,iflag,extrap); if (iflag/=0) return
-    call dintrv(tz,nz+kz,zval,iloz,leftz,iflag,extrap); if (iflag/=0) return
-    call dintrv(tq,nq+kq,qval,iloq,leftq,iflag,extrap); if (iflag/=0) return
-    call dintrv(tr,nr+kr,rval,ilor,leftr,iflag,extrap); if (iflag/=0) return
+    call dintrv(ty,ny+ky,yval,iloy,lefty,iflag,extrap); if (iflag/=0_ip) return
+    call dintrv(tz,nz+kz,zval,iloz,leftz,iflag,extrap); if (iflag/=0_ip) return
+    call dintrv(tq,nq+kq,qval,iloq,leftq,iflag,extrap); if (iflag/=0_ip) return
+    call dintrv(tr,nr+kr,rval,ilor,leftr,iflag,extrap); if (iflag/=0_ip) return
 
-    iflag = 0
+    iflag = 0_ip
 
     ! x -> y, z, q, r
     kcolr = leftr - kr
-    do r=1,kr
-        kcolr = kcolr + 1
+    do r=1_ip,kr
+        kcolr = kcolr + 1_ip
         kcolq = leftq - kq
-        do q=1,kq
-            kcolq = kcolq + 1
+        do q=1_ip,kq
+            kcolq = kcolq + 1_ip
             kcolz = leftz - kz
-            do k=1,kz
-                kcolz = kcolz + 1
+            do k=1_ip,kz
+                kcolz = kcolz + 1_ip
                 kcoly = lefty - ky
-                do j=1,ky
-                    kcoly = kcoly + 1
+                do j=1_ip,ky
+                    kcoly = kcoly + 1_ip
                     call dbvalu(tx,bcoef(:,kcoly,kcolz,kcolq,kcolr),&
-                                nx,kx,idx,xval,inbvx,work,iflag,temp1(j,k,q,r),&
+                                nx,kx,idx,xval,inbvx,w0,iflag,w4(j,k,q,r),&
                                 extrap)
-                    if (iflag/=0) return
+                    if (iflag/=0_ip) return
                 end do
             end do
         end do
     end do
 
     ! y -> z, q, r
-    kcoly = lefty - ky + 1
-    do r=1,kr
-        do q=1,kq
-            do k=1,kz
-                call dbvalu(ty(kcoly:),temp1(:,k,q,r),ky,ky,idy,yval,inbvy,&
-                            work,iflag,temp2(k,q,r),extrap)
-                if (iflag/=0) return
+    kcoly = lefty - ky + 1_ip
+    do r=1_ip,kr
+        do q=1_ip,kq
+            do k=1_ip,kz
+                call dbvalu(ty(kcoly:),w4(:,k,q,r),ky,ky,idy,yval,inbvy,&
+                            w0,iflag,w3(k,q,r),extrap)
+                if (iflag/=0_ip) return
             end do
         end do
     end do
 
     ! z -> q, r
-    kcolz = leftz - kz + 1
-    do r=1,kr
-        do q=1,kq
-            call dbvalu(tz(kcolz:),temp2(:,q,r),kz,kz,idz,zval,inbvz,&
-                        work,iflag,temp3(q,r),extrap)
-            if (iflag/=0) return
+    kcolz = leftz - kz + 1_ip
+    do r=1_ip,kr
+        do q=1_ip,kq
+            call dbvalu(tz(kcolz:),w3(:,q,r),kz,kz,idz,zval,inbvz,&
+                        w0,iflag,w2(q,r),extrap)
+            if (iflag/=0_ip) return
         end do
     end do
 
     ! q -> r
-    kcolq = leftq - kq + 1
-    do r=1,kr
-        call dbvalu(tq(kcolq:),temp3(:,r),kq,kq,idq,qval,inbvq,&
-                    work,iflag,temp4(r),extrap)
-        if (iflag/=0) return
+    kcolq = leftq - kq + 1_ip
+    do r=1_ip,kr
+        call dbvalu(tq(kcolq:),w2(:,r),kq,kq,idq,qval,inbvq,&
+                    w0,iflag,w1(r),extrap)
+        if (iflag/=0_ip) return
     end do
 
     ! r
-    kcolr = leftr - kr + 1
-    call dbvalu(tr(kcolr:),temp4,kr,kr,idr,rval,inbvr,work,iflag,f,extrap)
+    kcolr = leftr - kr + 1_ip
+    call dbvalu(tr(kcolr:),w1,kr,kr,idr,rval,inbvr,w0,iflag,f,extrap)
 
     end subroutine db5val
 !*****************************************************************************************
@@ -1549,36 +1588,36 @@
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
     pure subroutine db6ink(x,nx,y,ny,z,nz,q,nq,r,nr,s,ns,&
-                        fcn,&
-                        kx,ky,kz,kq,kr,ks,&
-                        iknot,&
-                        tx,ty,tz,tq,tr,ts,&
-                        bcoef,iflag)
+                           fcn,&
+                           kx,ky,kz,kq,kr,ks,&
+                           iknot,&
+                           tx,ty,tz,tq,tr,ts,&
+                           bcoef,iflag)
 
     implicit none
 
-    integer,intent(in)                                :: nx    !! number of \(x\) abcissae ( \( \ge 3 \) )
-    integer,intent(in)                                :: ny    !! number of \(y\) abcissae ( \( \ge 3 \) )
-    integer,intent(in)                                :: nz    !! number of \(z\) abcissae ( \( \ge 3 \) )
-    integer,intent(in)                                :: nq    !! number of \(q\) abcissae ( \( \ge 3 \) )
-    integer,intent(in)                                :: nr    !! number of \(r\) abcissae ( \( \ge 3 \) )
-    integer,intent(in)                                :: ns    !! number of \(s\) abcissae ( \( \ge 3 \) )
-    integer,intent(in)                                :: kx    !! the order of spline pieces in \(x\)
+    integer(ip),intent(in)                            :: nx    !! number of \(x\) abcissae ( \( \ge 3 \) )
+    integer(ip),intent(in)                            :: ny    !! number of \(y\) abcissae ( \( \ge 3 \) )
+    integer(ip),intent(in)                            :: nz    !! number of \(z\) abcissae ( \( \ge 3 \) )
+    integer(ip),intent(in)                            :: nq    !! number of \(q\) abcissae ( \( \ge 3 \) )
+    integer(ip),intent(in)                            :: nr    !! number of \(r\) abcissae ( \( \ge 3 \) )
+    integer(ip),intent(in)                            :: ns    !! number of \(s\) abcissae ( \( \ge 3 \) )
+    integer(ip),intent(in)                            :: kx    !! the order of spline pieces in \(x\)
                                                                !! ( \( 2 \le k_x < n_x \) )
                                                                !! (order = polynomial degree + 1)
-    integer,intent(in)                                :: ky    !! the order of spline pieces in \(y\)
+    integer(ip),intent(in)                            :: ky    !! the order of spline pieces in \(y\)
                                                                !! ( \( 2 \le k_y < n_y \) )
                                                                !! (order = polynomial degree + 1)
-    integer,intent(in)                                :: kz    !! the order of spline pieces in \(z\)
+    integer(ip),intent(in)                            :: kz    !! the order of spline pieces in \(z\)
                                                                !! ( \( 2 \le k_z < n_z \) )
                                                                !! (order = polynomial degree + 1)
-    integer,intent(in)                                :: kq    !! the order of spline pieces in \(q\)
+    integer(ip),intent(in)                            :: kq    !! the order of spline pieces in \(q\)
                                                                !! ( \( 2 \le k_q < n_q \) )
                                                                !! (order = polynomial degree + 1)
-    integer,intent(in)                                :: kr    !! the order of spline pieces in \(r\)
+    integer(ip),intent(in)                            :: kr    !! the order of spline pieces in \(r\)
                                                                !! ( \( 2 \le k_r < n_r \) )
                                                                !! (order = polynomial degree + 1)
-    integer,intent(in)                                :: ks    !! the order of spline pieces in \(s\)
+    integer(ip),intent(in)                            :: ks    !! the order of spline pieces in \(s\)
                                                                !! ( \( 2 \le k_s < n_s \) )
                                                                !! (order = polynomial degree + 1)
     real(wp),dimension(:),intent(in)                  :: x     !! `(nx)` array of \(x\) abcissae.
@@ -1597,7 +1636,7 @@
                                                                !! interpolate. `fcn(i,j,k,q,r,s)` should contain the
                                                                !! function value at the point
                                                                !! (`x(i)`,`y(j)`,`z(k)`,`q(l)`,`r(m)`,`s(n)`)
-    integer,intent(in)                                :: iknot !! knot sequence flag:
+    integer(ip),intent(in)                            :: iknot !! knot sequence flag:
                                                                !!
                                                                !! * 0 = knot sequence chosen by [[db6ink]].
                                                                !! * 1 = knot sequence chosen by user.
@@ -1645,7 +1684,7 @@
                                                                !! Must be non-decreasing.
     real(wp),dimension(:,:,:,:,:,:),intent(out)       :: bcoef !! `(nx,ny,nz,nq,nr,ns)` matrix of coefficients of the
                                                                !! b-spline interpolant.
-    integer,intent(out)                               :: iflag !! *  0 = successful execution.
+    integer(ip),intent(out)                           :: iflag !! *  0 = successful execution.
                                                                !! *  2 = `iknot` out of range.
                                                                !! *  3 = `nx` out of range.
                                                                !! *  4 = `kx` out of range.
@@ -1696,17 +1735,13 @@
                                                                !! * 804 = `size(r) ` \( \ne \) `size(bcoef,5)`
                                                                !! * 805 = `size(s) ` \( \ne \) `size(bcoef,6)`
 
-    real(wp),dimension(nx*ny*nz*nq*nr*ns) :: temp
-    real(wp),dimension(max( 2*kx*(nx+1),&
-                            2*ky*(ny+1),&
-                            2*kz*(nz+1),&
-                            2*kq*(nq+1),&
-                            2*kr*(nr+1),&
-                            2*ks*(ns+1))) :: work
     logical :: status_ok
+    real(wp),dimension(:),allocatable :: temp !! work array of size `nx*ny*nz*nq*nr*ns`
+    real(wp),dimension(:),allocatable :: work !! work array of size `max(2*kx*(nx+1),
+                                              !! 2*ky*(ny+1),2*kz*(nz+1),2*kq*(nq+1),
+                                              !! 2*kr*(nr+1),2*ks*(ns+1))`
 
     ! check validity of input
-
     call check_inputs(  iknot,&
                         iflag,&
                         nx=nx,ny=ny,nz=nz,nq=nq,nr=nr,ns=ns,&
@@ -1720,8 +1755,7 @@
     if (status_ok) then
 
         ! choose knots
-
-        if (iknot == 0) then
+        if (iknot == 0_ip) then
             call dbknot(x,nx,kx,tx)
             call dbknot(y,ny,ky,ty)
             call dbknot(z,nz,kz,tz)
@@ -1730,14 +1764,21 @@
             call dbknot(s,ns,ks,ts)
         end if
 
-        ! construct b-spline coefficients
+        allocate(temp(nx*ny*nz*nq*nr*ns))
+        allocate(work(max(2_ip*kx*(nx+1_ip),2_ip*ky*(ny+1_ip),&
+                          2_ip*kz*(nz+1_ip),2_ip*kq*(nq+1_ip),&
+                          2_ip*kr*(nr+1_ip),2_ip*ks*(ns+1_ip))))
 
-                      call dbtpcf(x,nx,fcn,  nx,ny*nz*nq*nr*ns,tx,kx,temp, work,iflag)
-        if (iflag==0) call dbtpcf(y,ny,temp, ny,nx*nz*nq*nr*ns,ty,ky,bcoef,work,iflag)
-        if (iflag==0) call dbtpcf(z,nz,bcoef,nz,nx*ny*nq*nr*ns,tz,kz,temp, work,iflag)
-        if (iflag==0) call dbtpcf(q,nq,temp, nq,nx*ny*nz*nr*ns,tq,kq,bcoef,work,iflag)
-        if (iflag==0) call dbtpcf(r,nr,bcoef,nr,nx*ny*nz*nq*ns,tr,kr,temp, work,iflag)
-        if (iflag==0) call dbtpcf(s,ns,temp, ns,nx*ny*nz*nq*nr,ts,ks,bcoef,work,iflag)
+        ! construct b-spline coefficients
+                         call dbtpcf(x,nx,fcn,  nx,ny*nz*nq*nr*ns,tx,kx,temp, work,iflag)
+        if (iflag==0_ip) call dbtpcf(y,ny,temp, ny,nx*nz*nq*nr*ns,ty,ky,bcoef,work,iflag)
+        if (iflag==0_ip) call dbtpcf(z,nz,bcoef,nz,nx*ny*nq*nr*ns,tz,kz,temp, work,iflag)
+        if (iflag==0_ip) call dbtpcf(q,nq,temp, nq,nx*ny*nz*nr*ns,tq,kq,bcoef,work,iflag)
+        if (iflag==0_ip) call dbtpcf(r,nr,bcoef,nr,nx*ny*nz*nq*ns,tr,kr,temp, work,iflag)
+        if (iflag==0_ip) call dbtpcf(s,ns,temp, ns,nx*ny*nz*nq*nr,ts,ks,bcoef,work,iflag)
+
+        deallocate(temp)
+        deallocate(work)
 
      end if
 
@@ -1760,45 +1801,46 @@
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
     pure subroutine db6val(xval,yval,zval,qval,rval,sval,&
-                                idx,idy,idz,idq,idr,ids,&
-                                tx,ty,tz,tq,tr,ts,&
-                                nx,ny,nz,nq,nr,ns,&
-                                kx,ky,kz,kq,kr,ks,&
-                                bcoef,f,iflag,&
-                                inbvx,inbvy,inbvz,inbvq,inbvr,inbvs,&
-                                iloy,iloz,iloq,ilor,ilos,extrap)
+                           idx,idy,idz,idq,idr,ids,&
+                           tx,ty,tz,tq,tr,ts,&
+                           nx,ny,nz,nq,nr,ns,&
+                           kx,ky,kz,kq,kr,ks,&
+                           bcoef,f,iflag,&
+                           inbvx,inbvy,inbvz,inbvq,inbvr,inbvs,&
+                           iloy,iloz,iloq,ilor,ilos,&
+                           w5,w4,w3,w2,w1,w0,extrap)
 
     implicit none
 
-    integer,intent(in)                               :: idx      !! \(x\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                               :: idy      !! \(y\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                               :: idz      !! \(z\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                               :: idq      !! \(q\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                               :: idr      !! \(r\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                               :: ids      !! \(s\) derivative of piecewise polynomial to evaluate.
-    integer,intent(in)                               :: nx       !! the number of interpolation points in \(x\).
+    integer(ip),intent(in)                           :: idx      !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)                           :: idy      !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)                           :: idz      !! \(z\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)                           :: idq      !! \(q\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)                           :: idr      !! \(r\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)                           :: ids      !! \(s\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)                           :: nx       !! the number of interpolation points in \(x\).
                                                                  !! (same as in last call to [[db6ink]])
-    integer,intent(in)                               :: ny       !! the number of interpolation points in \(y\).
+    integer(ip),intent(in)                           :: ny       !! the number of interpolation points in \(y\).
                                                                  !! (same as in last call to [[db6ink]])
-    integer,intent(in)                               :: nz       !! the number of interpolation points in \(z\).
+    integer(ip),intent(in)                           :: nz       !! the number of interpolation points in \(z\).
                                                                  !! (same as in last call to [[db6ink]])
-    integer,intent(in)                               :: nq       !! the number of interpolation points in \(q\).
+    integer(ip),intent(in)                           :: nq       !! the number of interpolation points in \(q\).
                                                                  !! (same as in last call to [[db6ink]])
-    integer,intent(in)                               :: nr       !! the number of interpolation points in \(r\).
+    integer(ip),intent(in)                           :: nr       !! the number of interpolation points in \(r\).
                                                                  !! (same as in last call to [[db6ink]])
-    integer,intent(in)                               :: ns       !! the number of interpolation points in \(s\).
+    integer(ip),intent(in)                           :: ns       !! the number of interpolation points in \(s\).
                                                                  !! (same as in last call to [[db6ink]])
-    integer,intent(in)                               :: kx       !! order of polynomial pieces in \(x\).
+    integer(ip),intent(in)                           :: kx       !! order of polynomial pieces in \(x\).
                                                                  !! (same as in last call to [[db6ink]])
-    integer,intent(in)                               :: ky       !! order of polynomial pieces in \(y\).
+    integer(ip),intent(in)                           :: ky       !! order of polynomial pieces in \(y\).
                                                                  !! (same as in last call to [[db6ink]])
-    integer,intent(in)                               :: kz       !! order of polynomial pieces in \(z\).
+    integer(ip),intent(in)                           :: kz       !! order of polynomial pieces in \(z\).
                                                                  !! (same as in last call to [[db6ink]])
-    integer,intent(in)                               :: kq       !! order of polynomial pieces in \(q\).
+    integer(ip),intent(in)                           :: kq       !! order of polynomial pieces in \(q\).
                                                                  !! (same as in last call to [[db6ink]])
-    integer,intent(in)                               :: kr       !! order of polynomial pieces in \(r\).
+    integer(ip),intent(in)                           :: kr       !! order of polynomial pieces in \(r\).
                                                                  !! (same as in last call to [[db6ink]])
-    integer,intent(in)                               :: ks       !! order of polynomial pieces in \(s\).
+    integer(ip),intent(in)                           :: ks       !! order of polynomial pieces in \(s\).
                                                                  !! (same as in last call to [[db6ink]])
     real(wp),intent(in)                              :: xval     !! \(x\) coordinate of evaluation point.
     real(wp),intent(in)                              :: yval     !! \(y\) coordinate of evaluation point.
@@ -1826,94 +1868,93 @@
                                                                  !! (same as in last call to [[db6ink]])
     real(wp),dimension(nx,ny,nz,nq,nr,ns),intent(in) :: bcoef    !! the b-spline coefficients computed by [[db6ink]].
     real(wp),intent(out)                             :: f        !! interpolated value
-    integer,intent(out)                              :: iflag    !! status flag:
+    integer(ip),intent(out)                          :: iflag    !! status flag:
                                                                  !!
                                                                  !! * \( = 0 \)   : no errors
                                                                  !! * \( \ne 0 \) : error
-    integer,intent(inout)                            :: inbvx    !! initialization parameter which must be set
+    integer(ip),intent(inout)                        :: inbvx    !! initialization parameter which must be set
                                                                  !! to 1 the first time this routine is called,
                                                                  !! and must not be changed by the user.
-    integer,intent(inout)                            :: inbvy    !! initialization parameter which must be set
+    integer(ip),intent(inout)                        :: inbvy    !! initialization parameter which must be set
                                                                  !! to 1 the first time this routine is called,
                                                                  !! and must not be changed by the user.
-    integer,intent(inout)                            :: inbvz    !! initialization parameter which must be set
+    integer(ip),intent(inout)                        :: inbvz    !! initialization parameter which must be set
                                                                  !! to 1 the first time this routine is called,
                                                                  !! and must not be changed by the user.
-    integer,intent(inout)                            :: inbvq    !! initialization parameter which must be set
+    integer(ip),intent(inout)                        :: inbvq    !! initialization parameter which must be set
                                                                  !! to 1 the first time this routine is called,
                                                                  !! and must not be changed by the user.
-    integer,intent(inout)                            :: inbvr    !! initialization parameter which must be set
+    integer(ip),intent(inout)                        :: inbvr    !! initialization parameter which must be set
                                                                  !! to 1 the first time this routine is called,
                                                                  !! and must not be changed by the user.
-    integer,intent(inout)                            :: inbvs    !! initialization parameter which must be set
+    integer(ip),intent(inout)                        :: inbvs    !! initialization parameter which must be set
                                                                  !! to 1 the first time this routine is called,
                                                                  !! and must not be changed by the user.
-    integer,intent(inout)                            :: iloy     !! initialization parameter which must be set
+    integer(ip),intent(inout)                        :: iloy     !! initialization parameter which must be set
                                                                  !! to 1 the first time this routine is called,
                                                                  !! and must not be changed by the user.
-    integer,intent(inout)                            :: iloz     !! initialization parameter which must be set
+    integer(ip),intent(inout)                        :: iloz     !! initialization parameter which must be set
                                                                  !! to 1 the first time this routine is called,
                                                                  !! and must not be changed by the user.
-    integer,intent(inout)                            :: iloq     !! initialization parameter which must be set
+    integer(ip),intent(inout)                        :: iloq     !! initialization parameter which must be set
                                                                  !! to 1 the first time this routine is called,
                                                                  !! and must not be changed by the user.
-    integer,intent(inout)                            :: ilor     !! initialization parameter which must be set
+    integer(ip),intent(inout)                        :: ilor     !! initialization parameter which must be set
                                                                  !! to 1 the first time this routine is called,
                                                                  !! and must not be changed by the user.
-    integer,intent(inout)                            :: ilos     !! initialization parameter which must be set
+    integer(ip),intent(inout)                        :: ilos     !! initialization parameter which must be set
                                                                  !! to 1 the first time this routine is called,
                                                                  !! and must not be changed by the user.
+    real(wp),dimension(ky,kz,kq,kr,ks),intent(inout)              :: w5 !! work array
+    real(wp),dimension(kz,kq,kr,ks),intent(inout)                 :: w4 !! work array
+    real(wp),dimension(kq,kr,ks),intent(inout)                    :: w3 !! work array
+    real(wp),dimension(kr,ks),intent(inout)                       :: w2 !! work array
+    real(wp),dimension(ks),intent(inout)                          :: w1 !! work array
+    real(wp),dimension(3_ip*max(kx,ky,kz,kq,kr,ks)),intent(inout) :: w0 !! work array
     logical,intent(in),optional                      :: extrap   !! if extrapolation is allowed
                                                                  !! (if not present, default is False)
 
-    real(wp),dimension(ky,kz,kq,kr,ks)            :: temp1
-    real(wp),dimension(kz,kq,kr,ks)               :: temp2
-    real(wp),dimension(kq,kr,ks)                  :: temp3
-    real(wp),dimension(kr,ks)                     :: temp4
-    real(wp),dimension(ks)                        :: temp5
-    real(wp),dimension(3*max(kx,ky,kz,kq,kr,ks))  :: work
-
-    integer :: lefty,leftz,leftq,leftr,lefts,&
-               kcoly,kcolz,kcolq,kcolr,kcols,&
-               j,k,q,r,s
+    integer(ip) :: lefty,leftz,leftq,leftr,lefts,&
+                   kcoly,kcolz,kcolq,kcolr,kcols,&
+                   j,k,q,r,s
 
     f = 0.0_wp
 
-    iflag = check_value(xval,tx,1,extrap); if (iflag/=0) return
-    iflag = check_value(yval,ty,2,extrap); if (iflag/=0) return
-    iflag = check_value(zval,tz,3,extrap); if (iflag/=0) return
-    iflag = check_value(qval,tq,4,extrap); if (iflag/=0) return
-    iflag = check_value(rval,tr,5,extrap); if (iflag/=0) return
-    iflag = check_value(sval,ts,6,extrap); if (iflag/=0) return
+    iflag = check_value(xval,tx,1_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(yval,ty,2_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(zval,tz,3_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(qval,tq,4_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(rval,tr,5_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(sval,ts,6_ip,extrap); if (iflag/=0_ip) return
 
-    call dintrv(ty,ny+ky,yval,iloy,lefty,iflag,extrap); if (iflag/=0) return
-    call dintrv(tz,nz+kz,zval,iloz,leftz,iflag,extrap); if (iflag/=0) return
-    call dintrv(tq,nq+kq,qval,iloq,leftq,iflag,extrap); if (iflag/=0) return
-    call dintrv(tr,nr+kr,rval,ilor,leftr,iflag,extrap); if (iflag/=0) return
-    call dintrv(ts,ns+ks,sval,ilos,lefts,iflag,extrap); if (iflag/=0) return
+    call dintrv(ty,ny+ky,yval,iloy,lefty,iflag,extrap); if (iflag/=0_ip) return
+    call dintrv(tz,nz+kz,zval,iloz,leftz,iflag,extrap); if (iflag/=0_ip) return
+    call dintrv(tq,nq+kq,qval,iloq,leftq,iflag,extrap); if (iflag/=0_ip) return
+    call dintrv(tr,nr+kr,rval,ilor,leftr,iflag,extrap); if (iflag/=0_ip) return
+    call dintrv(ts,ns+ks,sval,ilos,lefts,iflag,extrap); if (iflag/=0_ip) return
 
-    iflag = 0
+    iflag = 0_ip
 
     ! x -> y, z, q, r, s
     kcols = lefts - ks
-    do s=1,ks
-        kcols = kcols + 1
+    do s=1_ip,ks
+        kcols = kcols + 1_ip
         kcolr = leftr - kr
-        do r=1,kr
-            kcolr = kcolr + 1
+        do r=1_ip,kr
+            kcolr = kcolr + 1_ip
             kcolq = leftq - kq
-            do q=1,kq
-                kcolq = kcolq + 1
+            do q=1_ip,kq
+                kcolq = kcolq + 1_ip
                 kcolz = leftz - kz
-                do k=1,kz
-                    kcolz = kcolz + 1
+                do k=1_ip,kz
+                    kcolz = kcolz + 1_ip
                     kcoly = lefty - ky
-                    do j=1,ky
-                        kcoly = kcoly + 1
+                    do j=1_ip,ky
+                        kcoly = kcoly + 1_ip
                         call dbvalu(tx,bcoef(:,kcoly,kcolz,kcolq,kcolr,kcols),&
-                                             nx,kx,idx,xval,inbvx,work,iflag,&
-                                             temp1(j,k,q,r,s),extrap)
-                        if (iflag/=0) return
+                                             nx,kx,idx,xval,inbvx,w0,iflag,&
+                                             w5(j,k,q,r,s),extrap)
+                        if (iflag/=0_ip) return
                     end do
                 end do
             end do
@@ -1921,56 +1962,56 @@
     end do
 
     ! y -> z, q, r, s
-    kcoly = lefty - ky + 1
-    do s=1,ks
-        do r=1,kr
-            do q=1,kq
-                do k=1,kz
-                    call dbvalu(ty(kcoly:),temp1(:,k,q,r,s),&
-                                ky,ky,idy,yval,inbvy,work,iflag,&
-                                temp2(k,q,r,s),extrap)
-                    if (iflag/=0) return
+    kcoly = lefty - ky + 1_ip
+    do s=1_ip,ks
+        do r=1_ip,kr
+            do q=1_ip,kq
+                do k=1_ip,kz
+                    call dbvalu(ty(kcoly:),w5(:,k,q,r,s),&
+                                ky,ky,idy,yval,inbvy,w0,iflag,&
+                                w4(k,q,r,s),extrap)
+                    if (iflag/=0_ip) return
                 end do
             end do
         end do
     end do
 
     ! z -> q, r, s
-    kcolz = leftz - kz + 1
-    do s=1,ks
-        do r=1,kr
-            do q=1,kq
-                call dbvalu(tz(kcolz:),temp2(:,q,r,s),&
-                            kz,kz,idz,zval,inbvz,work,iflag,&
-                            temp3(q,r,s),extrap)
-                if (iflag/=0) return
+    kcolz = leftz - kz + 1_ip
+    do s=1_ip,ks
+        do r=1_ip,kr
+            do q=1_ip,kq
+                call dbvalu(tz(kcolz:),w4(:,q,r,s),&
+                            kz,kz,idz,zval,inbvz,w0,iflag,&
+                            w3(q,r,s),extrap)
+                if (iflag/=0_ip) return
             end do
         end do
     end do
 
     ! q -> r, s
-    kcolq = leftq - kq + 1
-    do s=1,ks
-        do r=1,kr
-            call dbvalu(tq(kcolq:),temp3(:,r,s),&
-                        kq,kq,idq,qval,inbvq,work,iflag,&
-                        temp4(r,s),extrap)
-            if (iflag/=0) return
+    kcolq = leftq - kq + 1_ip
+    do s=1_ip,ks
+        do r=1_ip,kr
+            call dbvalu(tq(kcolq:),w3(:,r,s),&
+                        kq,kq,idq,qval,inbvq,w0,iflag,&
+                        w2(r,s),extrap)
+            if (iflag/=0_ip) return
         end do
     end do
 
     ! r -> s
-    kcolr = leftr - kr + 1
-    do s=1,ks
-        call dbvalu(tr(kcolr:),temp4(:,s),&
-                    kr,kr,idr,rval,inbvr,work,iflag,&
-                    temp5(s),extrap)
-        if (iflag/=0) return
+    kcolr = leftr - kr + 1_ip
+    do s=1_ip,ks
+        call dbvalu(tr(kcolr:),w2(:,s),&
+                    kr,kr,idr,rval,inbvr,w0,iflag,&
+                    w1(s),extrap)
+        if (iflag/=0_ip) return
     end do
 
     ! s
-    kcols = lefts - ks + 1
-    call dbvalu(ts(kcols:),temp5,ks,ks,ids,sval,inbvs,work,iflag,f,extrap)
+    kcols = lefts - ks + 1_ip
+    call dbvalu(ts(kcols:),w1,ks,ks,ids,sval,inbvs,w0,iflag,f,extrap)
 
     end subroutine db6val
 !*****************************************************************************************
@@ -1984,12 +2025,12 @@
 
     implicit none
 
-    integer :: iflag  !! returns 0 if value is OK, otherwise returns `600+i`
-    real(wp),intent(in) :: x !! the value to check
-    integer,intent(in) :: i !! 1=x, 2=y, 3=z, 4=q, 5=r, 6=s
-    real(wp),dimension(:),intent(in) :: t  !! the knot vector
-    logical,intent(in),optional :: extrap  !! if extrapolation is allowed
-                                           !! (if not present, default is False)
+    integer(ip)                      :: iflag   !! returns 0 if value is OK, otherwise returns `600+i`
+    real(wp),intent(in)              :: x       !! the value to check
+    integer(ip),intent(in)           :: i       !! 1=x, 2=y, 3=z, 4=q, 5=r, 6=s
+    real(wp),dimension(:),intent(in) :: t       !! the knot vector
+    logical,intent(in),optional      :: extrap  !! if extrapolation is allowed
+                                                !! (if not present, default is False)
 
     logical :: allow_extrapolation  !! if extrapolation is allowed
 
@@ -2001,12 +2042,12 @@
 
     if (allow_extrapolation) then
         ! in this case all values are OK
-        iflag = 0
+        iflag = 0_ip
     else
-        if (x<t(1) .or. x>t(size(t))) then
-            iflag = 600 + i  ! value out of bounds (601, 602, etc.)
+        if (x<t(1_ip) .or. x>t(size(t,kind=ip))) then
+            iflag = 600_ip + i  ! value out of bounds (601, 602, etc.)
         else
-            iflag = 0
+            iflag = 0_ip
         end if
     end if
 
@@ -2041,10 +2082,10 @@
 
     implicit none
 
-    integer,intent(in)                                  :: iknot !! = 0 if the `INK` routine is computing the knots.
-    integer,intent(out)                                 :: iflag
-    integer,intent(in),optional                         :: nx,ny,nz,nq,nr,ns
-    integer,intent(in),optional                         :: kx,ky,kz,kq,kr,ks
+    integer(ip),intent(in)                              :: iknot !! = 0 if the `INK` routine is computing the knots.
+    integer(ip),intent(out)                             :: iflag
+    integer(ip),intent(in),optional                     :: nx,ny,nz,nq,nr,ns
+    integer(ip),intent(in),optional                     :: kx,ky,kz,kq,kr,ks
     real(wp),dimension(:),intent(in),optional           :: x,y,z,q,r,s
     real(wp),dimension(:),intent(in),optional           :: tx,ty,tz,tq,tr,ts
     real(wp),dimension(:),intent(in),optional           :: f1,bcoef1
@@ -2059,80 +2100,80 @@
 
     status_ok = .false.
 
-    if ((iknot < 0) .or. (iknot > 1)) then
+    if ((iknot < 0_ip) .or. (iknot > 1_ip)) then
 
-        iflag = 2 ! iknot is out of range
+        iflag = 2_ip ! iknot is out of range
 
     else
 
-        call check('x',nx,kx,x,tx,[3,  4, 5, 6,706,712],iflag,error); if (error) return
-        call check('y',ny,ky,y,ty,[7,  8, 9,10,707,713],iflag,error); if (error) return
-        call check('z',nz,kz,z,tz,[11,12,13,14,708,714],iflag,error); if (error) return
-        call check('q',nq,kq,q,tq,[15,16,17,18,709,715],iflag,error); if (error) return
-        call check('r',nr,kr,r,tr,[19,20,21,22,710,716],iflag,error); if (error) return
-        call check('s',ns,ks,s,ts,[23,24,25,26,711,717],iflag,error); if (error) return
+        call check('x',nx,kx,x,tx,[3_ip,  4_ip, 5_ip, 6_ip,706_ip,712_ip],iflag,error); if (error) return
+        call check('y',ny,ky,y,ty,[7_ip,  8_ip, 9_ip,10_ip,707_ip,713_ip],iflag,error); if (error) return
+        call check('z',nz,kz,z,tz,[11_ip,12_ip,13_ip,14_ip,708_ip,714_ip],iflag,error); if (error) return
+        call check('q',nq,kq,q,tq,[15_ip,16_ip,17_ip,18_ip,709_ip,715_ip],iflag,error); if (error) return
+        call check('r',nr,kr,r,tr,[19_ip,20_ip,21_ip,22_ip,710_ip,716_ip],iflag,error); if (error) return
+        call check('s',ns,ks,s,ts,[23_ip,24_ip,25_ip,26_ip,711_ip,717_ip],iflag,error); if (error) return
 
         if (present(x) .and. present(f1) .and. present(bcoef1)) then
-            if (size(x)/=size(f1,1))     then; iflag = 700; return; end if
-            if (size(x)/=size(bcoef1,1)) then; iflag = 800; return; end if
+            if (size(x,kind=ip)/=size(f1,1_ip,kind=ip))     then; iflag = 700_ip; return; end if
+            if (size(x,kind=ip)/=size(bcoef1,1_ip,kind=ip)) then; iflag = 800_ip; return; end if
         end if
         if (present(x) .and. present(y) .and. present(f2) .and. present(bcoef2)) then
-            if (size(x)/=size(f2,1))     then; iflag = 700; return; end if
-            if (size(y)/=size(f2,2))     then; iflag = 701; return; end if
-            if (size(x)/=size(bcoef2,1)) then; iflag = 800; return; end if
-            if (size(y)/=size(bcoef2,2)) then; iflag = 801; return; end if
+            if (size(x,kind=ip)/=size(f2,1_ip,kind=ip))     then; iflag = 700_ip; return; end if
+            if (size(y,kind=ip)/=size(f2,2_ip,kind=ip))     then; iflag = 701_ip; return; end if
+            if (size(x,kind=ip)/=size(bcoef2,1_ip,kind=ip)) then; iflag = 800_ip; return; end if
+            if (size(y,kind=ip)/=size(bcoef2,2_ip,kind=ip)) then; iflag = 801_ip; return; end if
         end if
         if (present(x) .and. present(y) .and. present(z) .and. present(f3) .and. &
             present(bcoef3)) then
-            if (size(x)/=size(f3,1))     then; iflag = 700; return; end if
-            if (size(y)/=size(f3,2))     then; iflag = 701; return; end if
-            if (size(z)/=size(f3,3))     then; iflag = 702; return; end if
-            if (size(x)/=size(bcoef3,1)) then; iflag = 800; return; end if
-            if (size(y)/=size(bcoef3,2)) then; iflag = 801; return; end if
-            if (size(z)/=size(bcoef3,3)) then; iflag = 802; return; end if
+            if (size(x,kind=ip)/=size(f3,1_ip,kind=ip))     then; iflag = 700_ip; return; end if
+            if (size(y,kind=ip)/=size(f3,2_ip,kind=ip))     then; iflag = 701_ip; return; end if
+            if (size(z,kind=ip)/=size(f3,3_ip,kind=ip))     then; iflag = 702_ip; return; end if
+            if (size(x,kind=ip)/=size(bcoef3,1_ip,kind=ip)) then; iflag = 800_ip; return; end if
+            if (size(y,kind=ip)/=size(bcoef3,2_ip,kind=ip)) then; iflag = 801_ip; return; end if
+            if (size(z,kind=ip)/=size(bcoef3,3_ip,kind=ip)) then; iflag = 802_ip; return; end if
         end if
         if (present(x) .and. present(y) .and. present(z) .and. present(q) .and. &
             present(f4) .and. present(bcoef4)) then
-            if (size(x)/=size(f4,1))     then; iflag = 700; return; end if
-            if (size(y)/=size(f4,2))     then; iflag = 701; return; end if
-            if (size(z)/=size(f4,3))     then; iflag = 702; return; end if
-            if (size(q)/=size(f4,4))     then; iflag = 703; return; end if
-            if (size(x)/=size(bcoef4,1)) then; iflag = 800; return; end if
-            if (size(y)/=size(bcoef4,2)) then; iflag = 801; return; end if
-            if (size(z)/=size(bcoef4,3)) then; iflag = 802; return; end if
-            if (size(q)/=size(bcoef4,4)) then; iflag = 803; return; end if
+            if (size(x,kind=ip)/=size(f4,1_ip,kind=ip))     then; iflag = 700_ip; return; end if
+            if (size(y,kind=ip)/=size(f4,2_ip,kind=ip))     then; iflag = 701_ip; return; end if
+            if (size(z,kind=ip)/=size(f4,3_ip,kind=ip))     then; iflag = 702_ip; return; end if
+            if (size(q,kind=ip)/=size(f4,4_ip,kind=ip))     then; iflag = 703_ip; return; end if
+            if (size(x,kind=ip)/=size(bcoef4,1_ip,kind=ip)) then; iflag = 800_ip; return; end if
+            if (size(y,kind=ip)/=size(bcoef4,2_ip,kind=ip)) then; iflag = 801_ip; return; end if
+            if (size(z,kind=ip)/=size(bcoef4,3_ip,kind=ip)) then; iflag = 802_ip; return; end if
+            if (size(q,kind=ip)/=size(bcoef4,4_ip,kind=ip)) then; iflag = 803_ip; return; end if
         end if
         if (present(x) .and. present(y) .and. present(z) .and. present(q) .and. &
             present(r) .and. present(f5) .and. present(bcoef5)) then
-            if (size(x)/=size(f5,1))     then; iflag = 700; return; end if
-            if (size(y)/=size(f5,2))     then; iflag = 701; return; end if
-            if (size(z)/=size(f5,3))     then; iflag = 702; return; end if
-            if (size(q)/=size(f5,4))     then; iflag = 703; return; end if
-            if (size(r)/=size(f5,5))     then; iflag = 704; return; end if
-            if (size(x)/=size(bcoef5,1)) then; iflag = 800; return; end if
-            if (size(y)/=size(bcoef5,2)) then; iflag = 801; return; end if
-            if (size(z)/=size(bcoef5,3)) then; iflag = 802; return; end if
-            if (size(q)/=size(bcoef5,4)) then; iflag = 803; return; end if
-            if (size(r)/=size(bcoef5,5)) then; iflag = 804; return; end if
+            if (size(x,kind=ip)/=size(f5,1_ip,kind=ip))     then; iflag = 700_ip; return; end if
+            if (size(y,kind=ip)/=size(f5,2_ip,kind=ip))     then; iflag = 701_ip; return; end if
+            if (size(z,kind=ip)/=size(f5,3_ip,kind=ip))     then; iflag = 702_ip; return; end if
+            if (size(q,kind=ip)/=size(f5,4_ip,kind=ip))     then; iflag = 703_ip; return; end if
+            if (size(r,kind=ip)/=size(f5,5_ip,kind=ip))     then; iflag = 704_ip; return; end if
+            if (size(x,kind=ip)/=size(bcoef5,1_ip,kind=ip)) then; iflag = 800_ip; return; end if
+            if (size(y,kind=ip)/=size(bcoef5,2_ip,kind=ip)) then; iflag = 801_ip; return; end if
+            if (size(z,kind=ip)/=size(bcoef5,3_ip,kind=ip)) then; iflag = 802_ip; return; end if
+            if (size(q,kind=ip)/=size(bcoef5,4_ip,kind=ip)) then; iflag = 803_ip; return; end if
+            if (size(r,kind=ip)/=size(bcoef5,5_ip,kind=ip)) then; iflag = 804_ip; return; end if
         end if
         if (present(x) .and. present(y) .and. present(z) .and. present(q) .and. &
             present(r) .and. present(s) .and. present(f6) .and. present(bcoef6)) then
-            if (size(x)/=size(f6,1))     then; iflag = 700; return; end if
-            if (size(y)/=size(f6,2))     then; iflag = 701; return; end if
-            if (size(z)/=size(f6,3))     then; iflag = 702; return; end if
-            if (size(q)/=size(f6,4))     then; iflag = 703; return; end if
-            if (size(r)/=size(f6,5))     then; iflag = 704; return; end if
-            if (size(s)/=size(f6,6))     then; iflag = 705; return; end if
-            if (size(x)/=size(bcoef6,1)) then; iflag = 800; return; end if
-            if (size(y)/=size(bcoef6,2)) then; iflag = 801; return; end if
-            if (size(z)/=size(bcoef6,3)) then; iflag = 802; return; end if
-            if (size(q)/=size(bcoef6,4)) then; iflag = 803; return; end if
-            if (size(r)/=size(bcoef6,5)) then; iflag = 804; return; end if
-            if (size(s)/=size(bcoef6,6)) then; iflag = 805; return; end if
+            if (size(x,kind=ip)/=size(f6,1_ip,kind=ip))     then; iflag = 700_ip; return; end if
+            if (size(y,kind=ip)/=size(f6,2_ip,kind=ip))     then; iflag = 701_ip; return; end if
+            if (size(z,kind=ip)/=size(f6,3_ip,kind=ip))     then; iflag = 702_ip; return; end if
+            if (size(q,kind=ip)/=size(f6,4_ip,kind=ip))     then; iflag = 703_ip; return; end if
+            if (size(r,kind=ip)/=size(f6,5_ip,kind=ip))     then; iflag = 704_ip; return; end if
+            if (size(s,kind=ip)/=size(f6,6_ip,kind=ip))     then; iflag = 705_ip; return; end if
+            if (size(x,kind=ip)/=size(bcoef6,1_ip,kind=ip)) then; iflag = 800_ip; return; end if
+            if (size(y,kind=ip)/=size(bcoef6,2_ip,kind=ip)) then; iflag = 801_ip; return; end if
+            if (size(z,kind=ip)/=size(bcoef6,3_ip,kind=ip)) then; iflag = 802_ip; return; end if
+            if (size(q,kind=ip)/=size(bcoef6,4_ip,kind=ip)) then; iflag = 803_ip; return; end if
+            if (size(r,kind=ip)/=size(bcoef6,5_ip,kind=ip)) then; iflag = 804_ip; return; end if
+            if (size(s,kind=ip)/=size(bcoef6,6_ip,kind=ip)) then; iflag = 805_ip; return; end if
         end if
 
         status_ok = .true.
-        iflag = 0
+        iflag = 0_ip
 
     end if
 
@@ -2143,21 +2184,25 @@
         implicit none
 
         character(len=1),intent(in)               :: s     !! coordinate string: 'x','y','z','q','r','s'
-        integer,intent(in)              ,optional :: n     !! size of `x`
-        integer,intent(in)              ,optional :: k     !! order
+        integer(ip),intent(in),optional           :: n     !! size of `x`
+        integer(ip),intent(in),optional           :: k     !! order
         real(wp),dimension(:),intent(in),optional :: x     !! abcissae vector
         real(wp),dimension(:),intent(in),optional :: t     !! knot vector `size(n+k)`
-        integer,dimension(:),intent(in)           :: ierrs !! int error codes for `n`,`k`,`x`,`t`,
+        integer(ip),dimension(:),intent(in)       :: ierrs !! int error codes for `n`,`k`,`x`,`t`,
                                                            !! `size(x)`,`size(t)` checks
-        integer,intent(out)                       :: iflag !! status return code
+        integer(ip),intent(out)                   :: iflag !! status return code
         logical,intent(out)                       :: error !! true if there was an error
 
+        integer(ip),dimension(2) :: itmp !! temp integer array
+
         if (present(n) .and. present(k) .and. present(x) .and. present(t)) then
-            call check_n('n'//s,n,x,[ierrs(1),ierrs(5)],iflag,error); if (error) return
+            itmp = [ierrs(1_ip),ierrs(5)]
+            call check_n('n'//s,n,x,itmp,iflag,error);     if (error) return
             call check_k('k'//s,k,n,ierrs(2),iflag,error); if (error) return
-            call check_x(s,n,x,ierrs(3),iflag,error); if (error) return
-            if (iknot /= 0) then
-                call check_t('t'//s,n,k,t,[ierrs(4),ierrs(6)],iflag,error); if (error) return
+            call check_x(s,n,x,ierrs(3),iflag,error);      if (error) return
+            if (iknot /= 0_ip) then
+                itmp = [ierrs(4),ierrs(6)]
+                call check_t('t'//s,n,k,t,itmp,iflag,error); if (error) return
             end if
         end if
 
@@ -2167,15 +2212,15 @@
 
         implicit none
 
-        character(len=*),intent(in)     :: s
-        integer,intent(in)              :: n
-        real(wp),dimension(:),intent(in):: x     !! abcissae vector
-        integer,dimension(2),intent(in) :: ierr  !! [n<3 check, size(x)==n check]
-        integer,intent(out)             :: iflag !! status return code
-        logical,intent(out)             :: error
+        character(len=*),intent(in)         :: s
+        integer(ip),intent(in)              :: n
+        real(wp),dimension(:),intent(in)    :: x     !! abcissae vector
+        integer(ip),dimension(2),intent(in) :: ierr  !! [n<3 check, size(x)==n check]
+        integer(ip),intent(out)             :: iflag !! status return code
+        logical,intent(out)                 :: error
 
-        if (n < 3) then
-            iflag = ierr(1)
+        if (n < 3_ip) then
+            iflag = ierr(1_ip)
             error = .true.
         else
             if (size(x)/=n) then
@@ -2193,13 +2238,13 @@
         implicit none
 
         character(len=*),intent(in) :: s
-        integer,intent(in)          :: k
-        integer,intent(in)          :: n
-        integer,intent(in)          :: ierr
-        integer,intent(out)         :: iflag !! status return code
+        integer(ip),intent(in)      :: k
+        integer(ip),intent(in)      :: n
+        integer(ip),intent(in)      :: ierr
+        integer(ip),intent(out)     :: iflag !! status return code
         logical,intent(out)         :: error
 
-        if ((k < 2) .or. (k >= n)) then
+        if ((k < 2_ip) .or. (k >= n)) then
             iflag = ierr
             error = .true.
         else
@@ -2213,17 +2258,17 @@
         implicit none
 
         character(len=*),intent(in)       :: s
-        integer,intent(in)                :: n
+        integer(ip),intent(in)            :: n
         real(wp),dimension(:),intent(in)  :: x
-        integer,intent(in)                :: ierr
-        integer,intent(out)               :: iflag !! status return code
+        integer(ip),intent(in)            :: ierr
+        integer(ip),intent(out)           :: iflag !! status return code
         logical,intent(out)               :: error
 
-        integer :: i
+        integer(ip) :: i
 
         error = .true.
-        do i=2,n
-            if (x(i) <= x(i-1)) then
+        do i=2_ip,n
+            if (x(i) <= x(i-1_ip)) then
                 iflag = ierr
                 return
             end if
@@ -2236,15 +2281,15 @@
 
         implicit none
 
-        character(len=*),intent(in)       :: s
-        integer,intent(in)                :: n
-        integer,intent(in)                :: k
-        real(wp),dimension(:),intent(in)  :: t
-        integer,dimension(2),intent(in)   :: ierr  !! [non-decreasing check, size check]
-        integer,intent(out)               :: iflag !! status return code
-        logical,intent(out)               :: error
+        character(len=*),intent(in)         :: s
+        integer(ip),intent(in)              :: n
+        integer(ip),intent(in)              :: k
+        real(wp),dimension(:),intent(in)    :: t
+        integer(ip),dimension(2),intent(in) :: ierr  !! [non-decreasing check, size check]
+        integer(ip),intent(out)             :: iflag !! status return code
+        logical,intent(out)                 :: error
 
-        integer :: i
+        integer(ip) :: i
 
         error = .true.
 
@@ -2253,9 +2298,9 @@
             return
         end if
 
-        do i=2,n + k
-            if (t(i) < t(i-1))  then
-                iflag = ierr(1)
+        do i=2_ip,n + k
+            if (t(i) < t(i-1_ip))  then
+                iflag = ierr(1_ip)
                 return
             end if
         end do
@@ -2283,43 +2328,43 @@
 
     implicit none
 
-    integer,intent(in)                 :: n
-    integer,intent(in)                 :: k
-    real(wp),dimension(n),intent(in)   :: x
+    integer(ip),intent(in)             :: n  !! dimension of `x`
+    integer(ip),intent(in)             :: k
+    real(wp),dimension(:),intent(in)   :: x
     real(wp),dimension(:),intent(out)  :: t
 
-    integer  :: i, j, ipj, npj, ip1, jstrt
+    integer(ip) :: i, j, ipj, npj, ip1, jstrt
     real(wp) :: rnot
 
     !put k knots at each endpoint
     !(shift right endpoints slightly -- see pg 350 of reference)
-    rnot = x(n) + 0.1_wp*( x(n)-x(n-1) )
-    do j=1,k
-        t(j)   = x(1)
+    rnot = x(n) + 0.1_wp*( x(n)-x(n-1_ip) )
+    do j=1_ip,k
+        t(j)   = x(1_ip)
         npj    = n + j
         t(npj) = rnot
     end do
 
     !distribute remaining knots
 
-    if (mod(k,2) == 1)  then
+    if (mod(k,2_ip) == 1_ip)  then
 
         !case of odd k --  knots between data points
 
-        i = (k-1)/2 - k
-        ip1 = i + 1
-        jstrt = k + 1
+        i = (k-1_ip)/2_ip - k
+        ip1 = i + 1_ip
+        jstrt = k + 1_ip
         do j=jstrt,n
             ipj = i + j
-            t(j) = 0.5_wp*( x(ipj) + x(ipj+1) )
+            t(j) = 0.5_wp*( x(ipj) + x(ipj+1_ip) )
         end do
 
     else
 
         !case of even k --  knots at data points
 
-        i = (k/2) - k
-        jstrt = k+1
+        i = (k/2_ip) - k
+        jstrt = k+1_ip
         do j=jstrt,n
             ipj = i + j
             t(j) = x(ipj)
@@ -2344,49 +2389,49 @@
 
     pure subroutine dbtpcf(x,n,fcn,ldf,nf,t,k,bcoef,work,iflag)
 
-    integer,intent(in)                    :: n
-    integer,intent(in)                    :: nf
-    integer,intent(in)                    :: ldf
-    integer,intent(in)                    :: k
-    real(wp),dimension(n),intent(in)      :: x
+    integer(ip),intent(in)                :: n  !! dimension of `x`
+    integer(ip),intent(in)                :: nf
+    integer(ip),intent(in)                :: ldf
+    integer(ip),intent(in)                :: k
+    real(wp),dimension(:),intent(in)      :: x
     real(wp),dimension(ldf,nf),intent(in) :: fcn
-    real(wp),dimension(*),intent(in)      :: t
+    real(wp),dimension(:),intent(in)      :: t
     real(wp),dimension(nf,n),intent(out)  :: bcoef
     real(wp),dimension(*),intent(out)     :: work   !! work array of size >= `2*k*(n+1)`
-    integer,intent(out)                   :: iflag  !!   0: no errors
+    integer(ip),intent(out)               :: iflag  !!   0: no errors
                                                     !! 301: n should be >0
 
-    integer :: i, j, m1, m2, iq, iw
+    integer(ip) :: i, j, m1, m2, iq, iw
 
     ! check for null input
 
-    if (nf > 0)  then
+    if (nf > 0_ip)  then
 
         ! partition work array
-        m1 = k - 1
+        m1 = k - 1_ip
         m2 = m1 + k
-        iq = 1 + n
-        iw = iq + m2*n+1
+        iq = 1_ip + n
+        iw = iq + m2*n+1_ip
 
         ! compute b-spline coefficients
 
         ! first data set
 
         call dbintk(x,fcn,t,n,k,work,work(iq),work(iw),iflag)
-        if (iflag == 0) then
-            do i=1,n
-                bcoef(1,i) = work(i)
+        if (iflag == 0_ip) then
+            do i=1_ip,n
+                bcoef(1_ip,i) = work(i)
             end do
 
             !  all remaining data sets by back-substitution
 
-            if (nf == 1)  return
-            do j=2,nf
-                do i=1,n
+            if (nf == 1_ip)  return
+            do j=2_ip,nf
+                do i=1_ip,n
                     work(i) = fcn(i,j)
                 end do
                 call dbnslv(work(iq),m2,n,m1,m1,work)
-                do i=1,n
+                do i=1_ip,n
                     bcoef(j,i) = work(i)
                 end do
             end do
@@ -2394,7 +2439,7 @@
 
     else
         !write(error_unit,'(A)') 'dbtpcf - n should be >0'
-        iflag = 301
+        iflag = 301_ip
     end if
 
     end subroutine dbtpcf
@@ -2441,7 +2486,7 @@
 
     implicit none
 
-    integer,intent(in)                :: n      !! number of data points, n >= k
+    integer(ip),intent(in)            :: n      !! number of data points, n >= k
     real(wp),dimension(n),intent(in)  :: x      !! vector of length n containing data point abscissa
                                                 !! in strictly increasing order.
     real(wp),dimension(n),intent(in)  :: y      !! corresponding vector of length n containing data
@@ -2450,7 +2495,7 @@
                                                 !! since t(1),..,t(k) <= x(1) and t(n+1),..,t(n+k)
                                                 !! >= x(n), this leaves only n-k knots (not
                                                 !! necessarily x(i) values) interior to (x(1),x(n))
-    integer,intent(in)                :: k      !! order of the spline, k >= 1
+    integer(ip),intent(in)            :: k      !! order of the spline, k >= 1
     real(wp),dimension(n),intent(out) :: bcoef  !! a vector of length n containing the b-spline coefficients
     real(wp),dimension(*),intent(out) :: q      !! a work vector of length (2*k-1)*n, containing
                                                 !! the triangular factorization of the coefficient
@@ -2461,7 +2506,7 @@
                                                 !! yy into bcoef and then executing
                                                 !! call dbnslv(q,2k-1,n,k-1,k-1,bcoef)
     real(wp),dimension(*),intent(out) :: work   !! work vector of length 2*k
-    integer,intent(out)               :: iflag  !! *   0: no errors.
+    integer(ip),intent(out)           :: iflag  !! *   0: no errors.
                                                 !! * 100: k does not satisfy k>=1.
                                                 !! * 101: n does not satisfy n>=k.
                                                 !! * 102: x(i) does not satisfy x(i)<x(i+1) for some i.
@@ -2470,71 +2515,71 @@
                                                 !! * 104: the system of solver detects a singular system.
                                                 !! although the theoretical conditions for a solution were satisfied.
 
-    integer :: iwork, i, ilp1mx, j, jj, km1, kpkm2, left,lenq, np1
+    integer(ip) :: iwork, i, ilp1mx, j, jj, km1, kpkm2, left,lenq, np1
     real(wp) :: xi
     logical :: found
 
-    if (k<1) then
+    if (k<1_ip) then
         !write(error_unit,'(A)') 'dbintk - k does not satisfy k>=1'
-        iflag = 100
+        iflag = 100_ip
         return
     end if
 
     if (n<k) then
         !write(error_unit,'(A)') 'dbintk - n does not satisfy n>=k'
-        iflag = 101
+        iflag = 101_ip
         return
     end if
 
-    jj = n - 1
-    if (jj/=0) then
-        do i=1,jj
-            if (x(i)>=x(i+1)) then
+    jj = n - 1_ip
+    if (jj/=0_ip) then
+        do i=1_ip,jj
+            if (x(i)>=x(i+1_ip)) then
                 !write(error_unit,'(A)') 'dbintk - x(i) does not satisfy x(i)<x(i+1) for some i'
-                iflag = 102
+                iflag = 102_ip
                 return
             end if
         end do
     end if
 
-    np1 = n + 1
-    km1 = k - 1
-    kpkm2 = 2*km1
+    np1 = n + 1_ip
+    km1 = k - 1_ip
+    kpkm2 = 2_ip*km1
     left = k
     ! zero out all entries of q
     lenq = n*(k+km1)
-    do i=1,lenq
+    do i=1_ip,lenq
         q(i) = 0.0_wp
     end do
 
     ! loop over i to construct the n interpolation equations
-    do i=1,n
+    do i=1_ip,n
 
         xi = x(i)
         ilp1mx = min(i+k,np1)
-        ! find left in the closed interval (i,i+k-1) such that
-        !         t(left) <= x(i) < t(left+1)
+        ! find left in the closed interval (i,i+k-1_ip) such that
+        !         t(left) <= x(i) < t(left+1_ip)
         ! matrix is singular if this is not possible
         left = max(left,i)
         if (xi<t(left)) then
             !write(error_unit,'(A)') 'dbintk - some abscissa was not in the support of the'//&
             !             ' corresponding basis function and the system is singular'
-            iflag = 103
+            iflag = 103_ip
             return
         end if
         found = .false.
         do
-            found = (xi<t(left+1))
+            found = (xi<t(left+1_ip))
             if (found) exit
-            left = left + 1
+            left = left + 1_ip
             if (left>=ilp1mx) exit
         end do
         if (.not. found) then
-            left = left - 1
-            if (xi>t(left+1)) then
+            left = left - 1_ip
+            if (xi>t(left+1_ip)) then
                 !write(error_unit,'(A)') 'dbintk - some abscissa was not in the support of the'//&
                 !             ' corresponding basis function and the system is singular'
-                iflag = 103
+                iflag = 103_ip
                 return
             end if
         end if
@@ -2543,8 +2588,8 @@
         ! left-k+1,...,left actually might be nonzero. these  k  numbers
         ! are returned, in  bcoef (used for temp.storage here), by the
         ! following
-        call dbspvn(t, k, k, 1, xi, left, bcoef, work, iwork, iflag)
-        if (iflag/=0) return
+        call dbspvn(t, k, k, 1_ip, xi, left, bcoef, work, iwork, iflag)
+        if (iflag/=0_ip) return
 
         ! we therefore want  bcoef(j) = b(left-k+j)(xi) to go into
         ! a(i,left-k+j), i.e., into  q(i-(left+j)+2*k,(left+j)-k) since
@@ -2557,8 +2602,8 @@
         !     i -(left+j) + 2*k + ((left+j) - k-1)*(2*k-1)
         !            = i-left+1 + (left -k)*(2*k-1) + (2*k-2)*j
         ! of q.
-        jj = i - left + 1 + (left-k)*(k+km1)
-        do j=1,k
+        jj = i - left + 1_ip + (left-k)*(k+km1)
+        do j=1_ip,k
             jj = jj + kpkm2
             q(jj) = bcoef(j)
         end do
@@ -2570,15 +2615,15 @@
 
     if (iflag==1) then !success
         ! solve  a*bcoef = y  by backsubstitution
-        do i=1,n
+        do i=1_ip,n
             bcoef(i) = y(i)
         end do
         call dbnslv(q, k+km1, n, km1, km1, bcoef)
-        iflag = 0
+        iflag = 0_ip
     else  !failure
         !write(error_unit,'(A)') 'dbintk - the system of solver detects a singular system'//&
         !             ' although the theoretical conditions for a solution were satisfied'
-        iflag = 104
+        iflag = 104_ip
     end if
 
     end subroutine dbintk
@@ -2645,51 +2690,51 @@
 
     pure subroutine dbnfac(w,nroww,nrow,nbandl,nbandu,iflag)
 
-    integer,intent(in) :: nroww   !! row dimension of the work array w. must be >= nbandl + 1 + nbandu.
-    integer,intent(in) :: nrow    !! matrix order
-    integer,intent(in) :: nbandl  !! number of bands of a below the main diagonal
-    integer,intent(in) :: nbandu  !! number of bands of a above the main diagonal
-    integer,intent(out) :: iflag  !! indicating success(=1) or failure (=2)
+    integer(ip),intent(in) :: nroww   !! row dimension of the work array w. must be >= nbandl + 1 + nbandu.
+    integer(ip),intent(in) :: nrow    !! matrix order
+    integer(ip),intent(in) :: nbandl  !! number of bands of a below the main diagonal
+    integer(ip),intent(in) :: nbandu  !! number of bands of a above the main diagonal
+    integer(ip),intent(out) :: iflag  !! indicating success(=1) or failure (=2)
     real(wp),dimension(nroww,nrow),intent(inout) :: w  !! work array. See header for details.
 
-    integer :: i, ipk, j, jmax, k, kmax, middle, midmk, nrowm1
+    integer(ip) :: i, ipk, j, jmax, k, kmax, middle, midmk, nrowm1
     real(wp) :: factor, pivot
 
-    iflag = 1
-    middle = nbandu + 1   ! w(middle,.) contains the main diagonal of a.
-    nrowm1 = nrow - 1
+    iflag = 1_ip
+    middle = nbandu + 1_ip   ! w(middle,.) contains the main diagonal of a.
+    nrowm1 = nrow - 1_ip
 
-    if (nrowm1 < 0) then
-        iflag = 2
+    if (nrowm1 < 0_ip) then
+        iflag = 2_ip
         return
-    else if (nrowm1 == 0) then
-        if (w(middle,nrow)==0.0_wp) iflag = 2
+    else if (nrowm1 == 0_ip) then
+        if (w(middle,nrow)==0.0_wp) iflag = 2_ip
         return
     end if
 
-    if (nbandl<=0) then
+    if (nbandl<=0_ip) then
         ! a is upper triangular. check that diagonal is nonzero .
-        do i=1,nrowm1
+        do i=1_ip,nrowm1
             if (w(middle,i)==0.0_wp) then
-                iflag = 2
+                iflag = 2_ip
                 return
             end if
         end do
-        if (w(middle,nrow)==0.0_wp) iflag = 2
+        if (w(middle,nrow)==0.0_wp) iflag = 2_ip
         return
     end if
 
-    if (nbandu<=0) then
+    if (nbandu<=0_ip) then
         ! a is lower triangular. check that diagonal is nonzero and
         ! divide each column by its diagonal.
-        do i=1,nrowm1
+        do i=1_ip,nrowm1
             pivot = w(middle,i)
             if (pivot==0.0_wp) then
-                iflag = 2
+                iflag = 2_ip
                 return
             end if
             jmax = min(nbandl,nrow-i)
-            do j=1,jmax
+            do j=1_ip,jmax
                 w(middle+j,i) = w(middle+j,i)/pivot
             end do
         end do
@@ -2697,18 +2742,18 @@
     end if
 
     ! a is not just a triangular matrix. construct lu factorization
-    do i=1,nrowm1
+    do i=1_ip,nrowm1
         ! w(middle,i)  is pivot for i-th step .
         pivot = w(middle,i)
         if (pivot==0.0_wp) then
-            iflag = 2
+            iflag = 2_ip
             return
         end if
         ! jmax is the number of (nonzero) entries in column i
         ! below the diagonal.
         jmax = min(nbandl,nrow-i)
         ! divide each entry in column i below diagonal by pivot.
-        do j=1,jmax
+        do j=1_ip,jmax
             w(middle+j,i) = w(middle+j,i)/pivot
         end do
         ! kmax is the number of (nonzero) entries in row i to
@@ -2716,18 +2761,18 @@
         kmax = min(nbandu,nrow-i)
         ! subtract a(i,i+k)*(i-th column) from (i+k)-th column
         ! (below row i).
-        do k=1,kmax
+        do k=1_ip,kmax
             ipk = i + k
             midmk = middle - k
             factor = w(midmk,ipk)
-            do j=1,jmax
+            do j=1_ip,jmax
                 w(midmk+j,ipk) = w(midmk+j,ipk) - w(middle+j,i)*factor
             end do
         end do
     end do
 
     ! check the last diagonal entry.
-    if (w(middle,nrow)==0.0_wp) iflag = 2
+    if (w(middle,nrow)==0.0_wp) iflag = 2_ip
 
     end subroutine dbnfac
 !*****************************************************************************************
@@ -2750,33 +2795,33 @@
 
     pure subroutine dbnslv(w,nroww,nrow,nbandl,nbandu,b)
 
-    integer,intent(in) :: nroww   !! describes the lu-factorization of a banded matrix a of order `nrow`
-                                  !! as constructed in [[dbnfac]].
-    integer,intent(in) :: nrow    !! describes the lu-factorization of a banded matrix a of order `nrow`
-                                  !! as constructed in [[dbnfac]].
-    integer,intent(in) :: nbandl  !! describes the lu-factorization of a banded matrix a of order `nrow`
-                                  !! as constructed in [[dbnfac]].
-    integer,intent(in) :: nbandu  !! describes the lu-factorization of a banded matrix a of order `nrow`
-                                  !! as constructed in [[dbnfac]].
+    integer(ip),intent(in) :: nroww   !! describes the lu-factorization of a banded matrix a of order `nrow`
+                                      !! as constructed in [[dbnfac]].
+    integer(ip),intent(in) :: nrow    !! describes the lu-factorization of a banded matrix a of order `nrow`
+                                      !! as constructed in [[dbnfac]].
+    integer(ip),intent(in) :: nbandl  !! describes the lu-factorization of a banded matrix a of order `nrow`
+                                      !! as constructed in [[dbnfac]].
+    integer(ip),intent(in) :: nbandu  !! describes the lu-factorization of a banded matrix a of order `nrow`
+                                      !! as constructed in [[dbnfac]].
     real(wp),dimension(nroww,nrow),intent(in) :: w !! describes the lu-factorization of a banded matrix a of
                                                    !! order `nrow` as constructed in [[dbnfac]].
     real(wp),dimension(nrow),intent(inout) :: b  !! * **in**: right side of the system to be solved
                                                  !! * **out**: the solution x, of order nrow
 
-    integer :: i, j, jmax, middle, nrowm1
+    integer(ip) :: i, j, jmax, middle, nrowm1
 
-    middle = nbandu + 1
-    if (nrow/=1) then
+    middle = nbandu + 1_ip
+    if (nrow/=1_ip) then
 
-        nrowm1 = nrow - 1
-        if (nbandl/=0) then
+        nrowm1 = nrow - 1_ip
+        if (nbandl/=0_ip) then
 
             ! forward pass
             ! for i=1,2,...,nrow-1, subtract right side(i)*(i-th column of l)
             !                       from right side (below i-th row).
-            do i=1,nrowm1
+            do i=1_ip,nrowm1
                 jmax = min(nbandl,nrow-i)
-                do j=1,jmax
+                do j=1_ip,jmax
                     b(i+j) = b(i+j) - b(i)*w(middle+j,i)
                 end do
             end do
@@ -2787,10 +2832,10 @@
         ! for i=nrow,nrow-1,...,1, divide right side(i) by i-th diagonal
         !                          entry of u, then subtract right side(i)*(i-th column
         !                          of u) from right side (above i-th row).
-        if (nbandu<=0) then
+        if (nbandu<=0_ip) then
             ! a is lower triangular.
-            do i=1,nrow
-                b(i) = b(i)/w(1,i)
+            do i=1_ip,nrow
+                b(i) = b(i)/w(1_ip,i)
             end do
             return
         end if
@@ -2798,17 +2843,17 @@
         i = nrow
         do
             b(i) = b(i)/w(middle,i)
-            jmax = min(nbandu,i-1)
-            do j=1,jmax
+            jmax = min(nbandu,i-1_ip)
+            do j=1_ip,jmax
                 b(i-j) = b(i-j) - b(i)*w(middle-j,i)
             end do
-            i = i - 1
-            if (i<=1) exit
+            i = i - 1_ip
+            if (i<=1_ip) exit
         end do
 
     end if
 
-    b(1) = b(1)/w(middle,1)
+    b(1_ip) = b(1_ip)/w(middle,1_ip)
 
     end subroutine dbnslv
 !*****************************************************************************************
@@ -2847,70 +2892,70 @@
                                                   !! n = number of b-spline basis functions
                                                   !! n = sum of knot multiplicities-k
                                                   !! dimension t(ileft+jhigh)
-    integer,intent(in)                :: jhigh    !! order of b-spline, 1 <= jhigh <= k
-    integer,intent(in)                :: k        !! highest possible order
-    integer,intent(in)                :: index    !! index = 1 gives basis functions of order jhigh
+    integer(ip),intent(in)            :: jhigh    !! order of b-spline, 1 <= jhigh <= k
+    integer(ip),intent(in)            :: k        !! highest possible order
+    integer(ip),intent(in)            :: index    !! index = 1 gives basis functions of order jhigh
                                                   !!       = 2 denotes previous entry with work, iwork
                                                   !!         values saved for subsequent calls to
                                                   !!         dbspvn.
     real(wp),intent(in)               :: x        !! argument of basis functions, t(k) <= x <= t(n+1)
-    integer,intent(in)                :: ileft    !! largest integer such that t(ileft) <= x < t(ileft+1)
+    integer(ip),intent(in)            :: ileft    !! largest integer such that t(ileft) <= x < t(ileft+1)
     real(wp),dimension(k),intent(out) :: vnikx    !! vector of length k for spline values.
     real(wp),dimension(*),intent(out) :: work     !! a work vector of length 2*k
-    integer,intent(out)               :: iwork    !! a work parameter.  both work and iwork contain
+    integer(ip),intent(out)           :: iwork    !! a work parameter.  both work and iwork contain
                                                   !! information necessary to continue for index = 2.
                                                   !! when index = 1 exclusively, these are scratch
                                                   !! variables and can be used for other purposes.
-    integer,intent(out)               :: iflag    !!   0: no errors
+    integer(ip),intent(out)           :: iflag    !!   0: no errors
                                                   !! 201: k does not satisfy k>=1
                                                   !! 202: jhigh does not satisfy 1<=jhigh<=k
                                                   !! 203: index is not 1 or 2
                                                   !! 204: x does not satisfy t(ileft)<=x<=t(ileft+1)
 
-    integer :: imjp1, ipj, jp1, jp1ml, l
+    integer(ip) :: imjp1, ipj, jp1, jp1ml, l
     real(wp) :: vm, vmprev
 
     ! content of j, deltam, deltap is expected unchanged between calls.
     ! work(i) = deltap(i),
     ! work(k+i) = deltam(i), i = 1,k
 
-    if (k<1) then
+    if (k<1_ip) then
         !write(error_unit,'(A)') 'dbspvn - k does not satisfy k>=1'
-        iflag = 201
+        iflag = 201_ip
         return
     end if
-    if (jhigh>k .or. jhigh<1) then
+    if (jhigh>k .or. jhigh<1_ip) then
         !write(error_unit,'(A)') 'dbspvn - jhigh does not satisfy 1<=jhigh<=k'
-        iflag = 202
+        iflag = 202_ip
         return
     end if
-    if (index<1 .or. index>2) then
+    if (index<1_ip .or. index>2_ip) then
         !write(error_unit,'(A)') 'dbspvn - index is not 1 or 2'
-        iflag = 203
+        iflag = 203_ip
         return
     end if
-    if (x<t(ileft) .or. x>t(ileft+1)) then
+    if (x<t(ileft) .or. x>t(ileft+1_ip)) then
         !write(error_unit,'(A)') 'dbspvn - x does not satisfy t(ileft)<=x<=t(ileft+1)'
-        iflag = 204
+        iflag = 204_ip
         return
     end if
 
-    iflag = 0
+    iflag = 0_ip
 
-    if (index==1) then
-        iwork = 1
-        vnikx(1) = 1.0_wp
+    if (index==1_ip) then
+        iwork = 1_ip
+        vnikx(1_ip) = 1.0_wp
         if (iwork>=jhigh) return
     end if
 
     do
         ipj = ileft + iwork
         work(iwork) = t(ipj) - x
-        imjp1 = ileft - iwork + 1
+        imjp1 = ileft - iwork + 1_ip
         work(k+iwork) = x - t(imjp1)
         vmprev = 0.0_wp
-        jp1 = iwork + 1
-        do l=1,iwork
+        jp1 = iwork + 1_ip
+        do l=1_ip,iwork
             jp1ml = jp1 - l
             vm = vnikx(l)/(work(l)+work(k+jp1ml))
             vnikx(l) = vm*work(l) + vmprev
@@ -2954,22 +2999,22 @@
     implicit none
 
     real(wp),intent(out)             :: val     !! the interpolated value
-    integer,intent(in)               :: n       !! number of b-spline coefficients.
+    integer(ip),intent(in)           :: n       !! number of b-spline coefficients.
                                                 !! (sum of knot multiplicities-`k`)
     real(wp),dimension(:),intent(in) :: t       !! knot vector of length `n+k`
     real(wp),dimension(n),intent(in) :: a       !! b-spline coefficient vector of length `n`
-    integer,intent(in)               :: k       !! order of the b-spline, `k >= 1`
-    integer,intent(in)               :: ideriv  !! order of the derivative, `0 <= ideriv <= k-1`.
+    integer(ip),intent(in)           :: k       !! order of the b-spline, `k >= 1`
+    integer(ip),intent(in)           :: ideriv  !! order of the derivative, `0 <= ideriv <= k-1`.
                                                 !! `ideriv = 0` returns the b-spline value
     real(wp),intent(in)              :: x       !! argument, `t(k) <= x <= t(n+1)`
-    integer,intent(inout)            :: inbv    !! an initialization parameter which must be set
+    integer(ip),intent(inout)        :: inbv    !! an initialization parameter which must be set
                                                 !! to 1 the first time [[dbvalu]] is called.
                                                 !! `inbv` contains information for efficient processing
                                                 !! after the initial call and `inbv` must not
                                                 !! be changed by the user.  distinct splines require
                                                 !! distinct `inbv` parameters.
     real(wp),dimension(:),intent(inout) :: work !! work vector of length at least `3*k`
-    integer,intent(out)              :: iflag   !! status flag:
+    integer(ip),intent(out)          :: iflag   !! status flag:
                                                 !!
                                                 !! * 0: no errors
                                                 !! * 401: `k` does not satisfy `k` \( \ge \) 1
@@ -2981,7 +3026,7 @@
     logical,intent(in),optional :: extrap   !! if extrapolation is allowed
                                             !! (if not present, default is False)
 
-    integer :: i,iderp1,ihi,ihmkmj,ilo,imk,imkpj,ipj,&
+    integer(ip) :: i,iderp1,ihi,ihmkmj,ilo,imk,imkpj,ipj,&
                ip1,ip1mj,j,jj,j1,j2,kmider,kmj,km1,kpk,mflag
     real(wp) :: fkmj
     real(wp) :: xt
@@ -2989,18 +3034,18 @@
 
     val = 0.0_wp
 
-    if (k<1) then
-        iflag = 401  ! dbvalu - k does not satisfy k>=1
+    if (k<1_ip) then
+        iflag = 401_ip  ! dbvalu - k does not satisfy k>=1
         return
     end if
 
     if (n<k) then
-        iflag = 402  ! dbvalu - n does not satisfy n>=k
+        iflag = 402_ip  ! dbvalu - n does not satisfy n>=k
         return
     end if
 
-    if (ideriv<0 .or. ideriv>=k) then
-        iflag = 403  ! dbvalu - ideriv does not satisfy 0<=ideriv<k
+    if (ideriv<0_ip .or. ideriv>=k) then
+        iflag = 403_ip  ! dbvalu - ideriv does not satisfy 0<=ideriv<k
         return
     end if
 
@@ -3013,8 +3058,8 @@
     ! make a temp copy of x (for computing the
     ! interval) in case extrapolation is allowed
     if (extrapolation_allowed) then
-        if (x<t(1)) then
-            xt = t(1)
+        if (x<t(1_ip)) then
+            xt = t(1_ip)
         else if(x>t(n+k)) then
             xt = t(n+k)
         else
@@ -3029,26 +3074,26 @@
     ! find *i* in (k,n) such that t(i) <= x < t(i+1)
     ! (or, <= t(i+1) if t(i) < t(i+1) = t(n+1)).
 
-    km1 = k - 1
+    km1 = k - 1_ip
     call dintrv(t, n+1, xt, inbv, i, mflag)
     if (xt<t(k)) then
-        iflag = 404  ! dbvalu - x is not greater than or equal to t(k)
+        iflag = 404_ip  ! dbvalu - x is not greater than or equal to t(k)
         return
     end if
 
-    if (mflag/=0) then
+    if (mflag/=0_ip) then
 
         if (xt>t(i)) then
-            iflag = 405  ! dbvalu - x is not less than or equal to t(n+1)
+            iflag = 405_ip  ! dbvalu - x is not less than or equal to t(n+1)
             return
         end if
 
         do
             if (i==k) then
-                iflag = 406  ! dbvalu - a left limiting value cannot be obtained at t(k)
+                iflag = 406_ip  ! dbvalu - a left limiting value cannot be obtained at t(k)
                 return
             end if
-            i = i - 1
+            i = i - 1_ip
             if (xt/=t(i)) exit
         end do
 
@@ -3058,19 +3103,19 @@
     ! work(i) = aj(i), work(k+i) = dp(i), work(k+k+i) = dm(i), i=1.k
 
     imk = i - k
-    do j=1,k
+    do j=1_ip,k
         imkpj = imk + j
         work(j) = a(imkpj)
     end do
 
-    if (ideriv/=0) then
-        do j=1,ideriv
+    if (ideriv/=0_ip) then
+        do j=1_ip,ideriv
             kmj = k - j
             fkmj = real(kmj,wp)
-            do jj=1,kmj
+            do jj=1_ip,kmj
                 ihi = i + jj
                 ihmkmj = ihi - kmj
-                work(jj) = (work(jj+1)-work(jj))/(t(ihi)-t(ihmkmj))*fkmj
+                work(jj) = (work(jj+1_ip)-work(jj))/(t(ihi)-t(ihmkmj))*fkmj
             end do
         end do
     end if
@@ -3079,32 +3124,32 @@
     ! given its relevant b-spline coeff. in aj(1),...,aj(k-ideriv).
 
     if (ideriv/=km1) then
-        ip1 = i + 1
+        ip1 = i + 1_ip
         kpk = k + k
-        j1 = k + 1
-        j2 = kpk + 1
-        do j=1,kmider
+        j1 = k + 1_ip
+        j2 = kpk + 1_ip
+        do j=1_ip,kmider
             ipj = i + j
             work(j1) = t(ipj) - x
             ip1mj = ip1 - j
             work(j2) = x - t(ip1mj)
-            j1 = j1 + 1
-            j2 = j2 + 1
+            j1 = j1 + 1_ip
+            j2 = j2 + 1_ip
         end do
-        iderp1 = ideriv + 1
+        iderp1 = ideriv + 1_ip
         do j=iderp1,km1
             kmj = k - j
             ilo = kmj
-            do jj=1,kmj
-                work(jj) = (work(jj+1)*work(kpk+ilo)+work(jj)*&
+            do jj=1_ip,kmj
+                work(jj) = (work(jj+1_ip)*work(kpk+ilo)+work(jj)*&
                             work(k+jj))/(work(kpk+ilo)+work(k+jj))
                 ilo = ilo - 1
             end do
         end do
     end if
 
-    iflag = 0
-    val = work(1)
+    iflag = 0_ip
+    val = work(1_ip)
 
     end subroutine dbvalu
 !*****************************************************************************************
@@ -3137,57 +3182,57 @@
 
     implicit none
 
-    integer,intent(in)                 :: lxt    !! length of the `xt` vector
-    real(wp),dimension(lxt),intent(in) :: xt     !! a knot or break point vector of length `lxt`
+    integer(ip),intent(in)             :: lxt    !! length of the `xt` vector
+    real(wp),dimension(:),intent(in)   :: xt     !! a knot or break point vector of length `lxt`
     real(wp),intent(in)                :: xx     !! argument
-    integer,intent(inout)              :: ilo    !! an initialization parameter which must be set
+    integer(ip),intent(inout)          :: ilo    !! an initialization parameter which must be set
                                                  !! to 1 the first time the spline array `xt` is
                                                  !! processed by dintrv. `ilo` contains information for
                                                  !! efficient processing after the initial call and `ilo`
                                                  !! must not be changed by the user.  distinct splines
                                                  !! require distinct `ilo` parameters.
-    integer,intent(out)                :: ileft  !! largest integer satisfying `xt(ileft)` \( \le \) `x`
-    integer,intent(out)                :: mflag  !! signals when `x` lies out of bounds
+    integer(ip),intent(out)            :: ileft  !! largest integer satisfying `xt(ileft)` \( \le \) `x`
+    integer(ip),intent(out)            :: mflag  !! signals when `x` lies out of bounds
     logical,intent(in),optional        :: extrap !! if extrapolation is allowed
                                                  !! (if not present, default is False)
 
-    integer :: ihi, istep, middle
+    integer(ip) :: ihi, istep, middle
     real(wp) :: x
 
-    x = get_temp_x_for_extrap(xx,xt(1),xt(lxt),extrap)
+    x = get_temp_x_for_extrap(xx,xt(1_ip),xt(lxt),extrap)
 
-    ihi = ilo + 1
+    ihi = ilo + 1_ip
     if ( ihi>=lxt ) then
         if ( x>=xt(lxt) ) then
-            mflag = -2
+            mflag = -2_ip
             ileft = lxt
             return
         end if
         if ( lxt<=1 ) then
-            mflag = -1
-            ileft = 1
+            mflag = -1_ip
+            ileft = 1_ip
             return
         end if
-        ilo = lxt - 1
+        ilo = lxt - 1_ip
         ihi = lxt
     end if
 
     if ( x>=xt(ihi) ) then
 
         ! now x >= xt(ilo). find upper bound
-        istep = 1
+        istep = 1_ip
         do
             ilo = ihi
             ihi = ilo + istep
             if ( ihi>=lxt ) then
                 if ( x>=xt(lxt) ) then
-                    mflag = -2
+                    mflag = -2_ip
                     ileft = lxt
                     return
                 end if
                 ihi = lxt
             else if ( x>=xt(ihi) ) then
-                istep = istep*2
+                istep = istep*2_ip
                 cycle
             end if
             exit
@@ -3196,24 +3241,24 @@
     else
 
         if ( x>=xt(ilo) ) then
-            mflag = 0
+            mflag = 0_ip
             ileft = ilo
             return
         end if
         ! now x <= xt(ihi). find lower bound
-        istep = 1
+        istep = 1_ip
         do
             ihi = ilo
             ilo = ihi - istep
-            if ( ilo<=1 ) then
-                ilo = 1
-                if ( x<xt(1) ) then
-                    mflag = -1
-                    ileft = 1
+            if ( ilo<=1_ip ) then
+                ilo = 1_ip
+                if ( x<xt(1_ip) ) then
+                    mflag = -1_ip
+                    ileft = 1_ip
                     return
                 end if
             else if ( x<xt(ilo) ) then
-                istep = istep*2
+                istep = istep*2_ip
                 cycle
             end if
             exit
@@ -3223,9 +3268,9 @@
 
     ! now xt(ilo) <= x < xt(ihi). narrow the interval
     do
-        middle = (ilo+ihi)/2
+        middle = (ilo+ihi)/2_ip
         if ( middle==ilo ) then
-            mflag = 0
+            mflag = 0_ip
             ileft = ilo
             return
         end if
@@ -3281,15 +3326,15 @@
 
     real(wp),dimension(:),intent(in)    :: t       !! knot array of length `n+k`
     real(wp),dimension(:),intent(in)    :: bcoef   !! b-spline coefficient array of length `n`
-    integer,intent(in)                  :: n       !! length of coefficient array
-    integer,intent(in)                  :: k       !! order of b-spline, `1 <= k <= 20`
+    integer(ip),intent(in)              :: n       !! length of coefficient array
+    integer(ip),intent(in)              :: k       !! order of b-spline, `1 <= k <= 20`
     real(wp),intent(in)                 :: x1      !! end point of quadrature interval
                                                    !! in `t(k) <= x <= t(n+1)`
     real(wp),intent(in)                 :: x2      !! end point of quadrature interval
                                                    !! in `t(k) <= x <= t(n+1)`
     real(wp),intent(out)                :: bquad   !! integral of the b-spline over (`x1`,`x2`)
     real(wp),dimension(:),intent(inout) :: work    !! work vector of length `3*k`
-    integer,intent(out)                 :: iflag   !! status flag:
+    integer(ip),intent(out)             :: iflag   !! status flag:
                                                    !!
                                                    !! * 0: no errors
                                                    !! * 901: `k` does not satisfy `1<=k<=20`
@@ -3297,7 +3342,7 @@
                                                    !! * 903: `x1` or `x2` or both do
                                                    !!   not satisfy `t(k)<=x<=t(n+1)`
 
-    integer :: i,il1,il2,ilo,inbv,jf,left,m,mf,mflag,npk,np1
+    integer(ip) :: i,il1,il2,ilo,inbv,jf,left,m,mf,mflag,npk,np1
     real(wp) :: a,aa,b,bb,bma,bpa,c1,gx,q,ta,tb,y1,y2
     real(wp),dimension(5) :: s  !! sum
 
@@ -3391,67 +3436,67 @@
         &18647480566044117862086478449236378557180717569208295026105115288152794&
         &421677_wp]
 
-    iflag = 0
+    iflag = 0_ip
     bquad = 0.0_wp
 
-    if ( k<1 .or. k>20 ) then
+    if ( k<1_ip .or. k>20_ip ) then
 
-        iflag = 901 ! error return
+        iflag = 901_ip ! error return
 
     else if ( n<k ) then
 
-        iflag = 902 ! error return
+        iflag = 902_ip ! error return
 
     else
 
         aa = min(x1,x2)
         bb = max(x1,x2)
         if ( aa>=t(k) ) then
-            np1 = n + 1
+            np1 = n + 1_ip
             if ( bb<=t(np1) ) then
             if ( aa==bb ) return
             npk = n + k
             ! selection of 2, 6, or 10 point gauss formula
-            jf = 0
-            mf = 1
-            if ( k>4 ) then
-                jf = 1
-                mf = 3
-                if ( k>12 ) then
-                    jf = 4
-                    mf = 5
+            jf = 0_ip
+            mf = 1_ip
+            if ( k>4_ip ) then
+                jf = 1_ip
+                mf = 3_ip
+                if ( k>12_ip ) then
+                    jf = 4_ip
+                    mf = 5_ip
                 end if
             end if
-            do i = 1 , mf
+            do i = 1_ip , mf
                 s(i) = 0.0_wp
             end do
-            ilo = 1
-            inbv = 1
+            ilo = 1_ip
+            inbv = 1_ip
             call dintrv(t,npk,aa,ilo,il1,mflag)
             call dintrv(t,npk,bb,ilo,il2,mflag)
             if ( il2>=np1 ) il2 = n
             do left = il1 , il2
                 ta = t(left)
-                tb = t(left+1)
+                tb = t(left+1_ip)
                 if ( ta/=tb ) then
                     a = max(aa,ta)
                     b = min(bb,tb)
                     bma = 0.5_wp*(b-a)
                     bpa = 0.5_wp*(b+a)
-                    do m = 1 , mf
+                    do m = 1_ip , mf
                         c1 = bma*gpts(jf+m)
                         gx = -c1 + bpa
-                        call dbvalu(t,bcoef,n,k,0,gx,inbv,work,iflag,y2)
-                        if (iflag/=0) return
+                        call dbvalu(t,bcoef,n,k,0_ip,gx,inbv,work,iflag,y2)
+                        if (iflag/=0_ip) return
                         gx = c1 + bpa
-                        call dbvalu(t,bcoef,n,k,0,gx,inbv,work,iflag,y1)
-                        if (iflag/=0) return
+                        call dbvalu(t,bcoef,n,k,0_ip,gx,inbv,work,iflag,y1)
+                        if (iflag/=0_ip) return
                         s(m) = s(m) + (y1+y2)*bma
                     end do
                 end if
             end do
             q = 0.0_wp
-            do m = 1 , mf
+            do m = 1_ip , mf
                 q = q + gwts(jf+m)*s(m)
             end do
             if ( x1>x2 ) q = -q
@@ -3460,7 +3505,7 @@
             end if
         end if
 
-        iflag = 903 ! error return
+        iflag = 903_ip ! error return
 
     end if
 
@@ -3503,11 +3548,11 @@
 
     procedure(b1fqad_func)              :: f      !! external function of one argument for the
                                                   !! integrand `bf(x)=f(x)*dbvalu(t,bcoef,n,k,id,x,inbv,work)`
-    integer,intent(in)                  :: n      !! length of coefficient array
-    integer,intent(in)                  :: k      !! order of b-spline, `k >= 1`
+    integer(ip),intent(in)              :: n      !! length of coefficient array
+    integer(ip),intent(in)              :: k      !! order of b-spline, `k >= 1`
     real(wp),dimension(n+k),intent(in)  :: t      !! knot array
     real(wp),dimension(n),intent(in)    :: bcoef  !! coefficient array
-    integer,intent(in)                  :: id     !! order of the spline derivative, `0 <= id <= k-1`
+    integer(ip),intent(in)              :: id     !! order of the spline derivative, `0 <= id <= k-1`
                                                   !! `id=0` gives the spline function
     real(wp),intent(in)                 :: x1     !! left point of quadrature interval in `t(k) <= x <= t(n+1)`
     real(wp),intent(in)                 :: x2     !! right point of quadrature interval in `t(k) <= x <= t(n+1)`
@@ -3517,7 +3562,7 @@
                                                   !! the machine
     real(wp),intent(out)                :: quad   !! integral of `bf(x)` on `(x1,x2)`
     real(wp),dimension(:),intent(inout) :: work   !! work vector of length `3*k`
-    integer,intent(out)                 :: iflag  !! status flag:
+    integer(ip),intent(out)             :: iflag  !! status flag:
                                                   !!
                                                   !! * 0: no errors
                                                   !! * 1001: `k` does not satisfy `k>=1`
@@ -3528,43 +3573,43 @@
                                                   !! * 1005: `tol` is less than `dtol`
                                                   !!   or greater than 0.1
 
-    integer :: inbv,ilo,il1,il2,left,mflag,npk,np1
+    integer(ip) :: inbv,ilo,il1,il2,left,mflag,npk,np1
     real(wp) :: a,aa,ans,b,bb,q,ta,tb,err
 
     real(wp),parameter :: min_tol = max(epsilon(1.0_wp),1.0e-300_wp) !! minimum allowed `tol`
 
-    iflag = 0
+    iflag = 0_ip
     quad = 0.0_wp
     err = tol
-    if ( k<1 ) then
-        iflag = 1001     ! error
+    if ( k<1_ip ) then
+        iflag = 1001_ip     ! error
     elseif ( n<k ) then
-        iflag = 1002     ! error
-    elseif ( id<0 .or. id>=k ) then
-        iflag = 1003     ! error
+        iflag = 1002_ip     ! error
+    elseif ( id<0_ip .or. id>=k ) then
+        iflag = 1003_ip     ! error
     else
         if ( tol>=min_tol .and. tol<=0.1_wp ) then
             aa = min(x1,x2)
             bb = max(x1,x2)
             if ( aa>=t(k) ) then
-                np1 = n + 1
+                np1 = n + 1_ip
                 if ( bb<=t(np1) ) then
                     if ( aa==bb ) return
                     npk = n + k
-                    ilo = 1
+                    ilo = 1_ip
                     call dintrv(t,npk,aa,ilo,il1,mflag)
                     call dintrv(t,npk,bb,ilo,il2,mflag)
                     if ( il2>=np1 ) il2 = n
-                    inbv = 1
+                    inbv = 1_ip
                     q = 0.0_wp
                     do left = il1 , il2
                         ta = t(left)
-                        tb = t(left+1)
+                        tb = t(left+1_ip)
                         if ( ta/=tb ) then
                             a = max(aa,ta)
                             b = min(bb,tb)
                             call dbsgq8(f,t,bcoef,n,k,id,a,b,inbv,err,ans,iflag,work)
-                            if ( iflag/=0 .and. iflag/=1101 ) return
+                            if ( iflag/=0_ip .and. iflag/=1101_ip ) return
                             q = q + ans
                         end if
                     end do
@@ -3572,10 +3617,10 @@
                     quad = q
                 end if
             else
-                iflag = 1004  ! error
+                iflag = 1004_ip  ! error
             end if
         else
-            iflag = 1005  ! error
+            iflag = 1005_ip  ! error
         end if
     end if
 
@@ -3610,14 +3655,14 @@
 
     procedure(b1fqad_func)              :: fun     !! name of external function of one
                                                    !! argument which multiplies [[dbvalu]].
-    integer,intent(in)                  :: n       !! number of b-coefficients for [[dbvalu]]
-    integer,intent(in)                  :: kk      !! order of the spline, `kk>=1`
+    integer(ip),intent(in)              :: n       !! number of b-coefficients for [[dbvalu]]
+    integer(ip),intent(in)              :: kk      !! order of the spline, `kk>=1`
     real(wp),dimension(:),intent(in)    :: xt      !! knot array for [[dbvalu]]
     real(wp),dimension(n),intent(in)    :: bc      !! b-coefficient array for [[dbvalu]]
-    integer,intent(in)                  :: id      !! Order of the spline derivative, `0<=id<=kk-1`
+    integer(ip),intent(in)              :: id      !! Order of the spline derivative, `0<=id<=kk-1`
     real(wp),intent(in)                 :: a       !! lower limit of integral
     real(wp),intent(in)                 :: b       !! upper limit of integral (may be less than `a`)
-    integer,intent(inout)               :: inbv    !! initialization parameter for [[dbvalu]]
+    integer(ip),intent(inout)           :: inbv    !! initialization parameter for [[dbvalu]]
     real(wp),intent(inout)              :: err     !! **IN:** is a requested pseudorelative error
                                                    !! tolerance.  normally pick a value of
                                                    !! `abs(err)<1e-3`.  `ans` will normally
@@ -3633,7 +3678,7 @@
                                                    !! to the user and should not be used as a
                                                    !! correction to the computed integral.
     real(wp),intent(out)                :: ans     !! computed value of integral
-    integer,intent(out)                 :: iflag   !! a status code:
+    integer(ip),intent(out)             :: iflag   !! a status code:
                                                    !!
                                                    !! * 0: `ans` most likely meets requested
                                                    !!   error tolerance, or `a=b`.
@@ -3644,26 +3689,26 @@
                                                    !!   requested error tolerance.
     real(wp),dimension(:),intent(inout) :: work    !! work vector of length `3*k` for [[dbvalu]]
 
-    integer :: k,l,lmn,lmx,mxl,nbits,nib,nlmx
+    integer(ip) :: k,l,lmn,lmx,mxl,nbits,nib,nlmx
     real(wp) :: ae,anib,area,c,ce,ee,ef,eps,est,gl,glr,tol,vr,x
-    integer,dimension(60)  :: lr
+    integer(ip),dimension(60)  :: lr
     real(wp),dimension(60) :: aa,hh,vl,gr
 
-    integer,parameter  :: i1mach14 = digits(1.0_wp)            !! i1mach(14)
-    real(wp),parameter :: d1mach5  = log10(real(radix(x),wp))  !! d1mach(5)
-    real(wp),parameter :: ln2      = log(2.0_wp)               !! 0.69314718d0
-    real(wp),parameter :: sq2      = sqrt(2.0_wp)
-    integer,parameter  :: nlmn     = 1
-    integer,parameter  :: kmx      = 5000
-    integer,parameter  :: kml      = 6
+    integer(ip),parameter  :: i1mach14 = digits(1.0_wp)            !! i1mach(14)
+    real(wp),parameter     :: d1mach5  = log10(real(radix(x),wp))  !! d1mach(5)
+    real(wp),parameter     :: ln2      = log(2.0_wp)               !! 0.69314718d0
+    real(wp),parameter     :: sq2      = sqrt(2.0_wp)
+    integer(ip),parameter  :: nlmn     = 1
+    integer(ip),parameter  :: kmx      = 5000
+    integer(ip),parameter  :: kml      = 6
 
     ! initialize
-    inbv  = 1
-    iflag = 0
+    inbv  = 1_ip
+    iflag = 0_ip
     k     = i1mach14
     anib  = d1mach5*k/0.30102000_wp
-    nbits = int(anib)
-    nlmx  = min((nbits*5)/8,60)
+    nbits = int(anib,ip)
+    nlmx  = min((nbits*5_ip)/8_ip,60_ip)
     ans   = 0.0_wp
     ce    = 0.0_wp
 
@@ -3681,12 +3726,12 @@
                         return
                     else
                         anib = 0.5_wp - log(c)/ln2
-                        nib = int(anib)
-                        lmx = min(nlmx,nbits-nib-7)
-                        if ( lmx<1 ) then
+                        nib = int(anib,ip)
+                        lmx = min(nlmx,nbits-nib-7_ip)
+                        if ( lmx<1_ip ) then
                             ! a and b are too nearly equal
                             ! to allow normal integration
-                            iflag = 1101
+                            iflag = 1101_ip
                             if ( err<0.0_wp ) err = ce
                             return
                         else
@@ -3699,25 +3744,25 @@
         tol = max(abs(err),2.0_wp**(5-nbits))/2.0_wp
         if ( err==0.0_wp ) tol = sqrt(epsilon(1.0_wp))
         eps = tol
-        hh(1) = (b-a)/4.0_wp
-        aa(1) = a
-        lr(1) = 1
-        l = 1
+        hh(1_ip) = (b-a)/4.0_wp
+        aa(1_ip) = a
+        lr(1_ip) = 1_ip
+        l = 1_ip
         call g8(aa(l)+2.0_wp*hh(l),2.0_wp*hh(l),est,iflag)
-        if (iflag/=0) return
-        k = 8
+        if (iflag/=0_ip) return
+        k = 8_ip
         area = abs(est)
         ef = 0.5_wp
-        mxl = 0
+        mxl = 0_ip
     end if
 
     do
         ! compute refined estimates, estimate the error, etc.
         call g8(aa(l)+hh(l),hh(l),gl,iflag)
-        if (iflag/=0) return
+        if (iflag/=0_ip) return
         call g8(aa(l)+3.0_wp*hh(l),hh(l),gr(l),iflag)
-        if (iflag/=0) return
-        k = k + 16
+        if (iflag/=0_ip) return
+        k = k + 16_ip
         area = area + (abs(gl)+abs(gr(l))-abs(est))
         glr = gl + gr(l)
         ee = abs(est-glr)*ef
@@ -3726,49 +3771,49 @@
             ! consider the left half of this level
             if ( k>kmx ) lmx = kml
             if ( l>=lmx ) then
-                mxl = 1
+                mxl = 1_ip
             else
-                l = l + 1
+                l = l + 1_ip
                 eps = eps*0.5_wp
                 ef = ef/sq2
                 hh(l) = hh(l-1)*0.5_wp
-                lr(l) = -1
-                aa(l) = aa(l-1)
+                lr(l) = -1_ip
+                aa(l) = aa(l-1_ip)
                 est = gl
                 cycle
             end if
         end if
         ce = ce + (est-glr)
-        if ( lr(l)<=0 ) then
+        if ( lr(l)<=0_ip ) then
             ! proceed to right half at this level
             vl(l) = glr
         else
             ! return one level
             vr = glr
             do
-                if ( l<=1 ) then
+                if ( l<=1_ip ) then
                     ! exit
                     ans = vr
-                    if ( (mxl/=0) .and. (abs(ce)>2.0_wp*tol*area) ) then
-                        iflag = 1102
+                    if ( (mxl/=0_ip) .and. (abs(ce)>2.0_wp*tol*area) ) then
+                        iflag = 1102_ip
                     end if
                     if ( err<0.0_wp ) err = ce
                     return
                 else
-                    l = l - 1
+                    l = l - 1_ip
                     eps = eps*2.0_wp
                     ef = ef*sq2
                     if ( lr(l)<=0 ) then
-                        vl(l) = vl(l+1) + vr
+                        vl(l) = vl(l+1_ip) + vr
                         exit
                     else
-                        vr = vl(l+1) + vr
+                        vr = vl(l+1_ip) + vr
                     end if
                 end if
             end do
         end if
-        est = gr(l-1)
-        lr(l) = 1
+        est = gr(l-1_ip)
+        lr(l) = 1_ip
         aa(l) = aa(l) + 4.0_wp*hh(l)
     end do
 
@@ -3786,10 +3831,10 @@
 
         implicit none
 
-        real(wp),intent(in)  :: x
-        real(wp),intent(in)  :: h
-        real(wp),intent(out) :: res
-        integer,intent(out)  :: iflag
+        real(wp),intent(in)     :: x
+        real(wp),intent(in)     :: h
+        real(wp),intent(out)    :: res
+        integer(ip),intent(out) :: iflag
 
         real(wp),dimension(8) :: f
         real(wp),dimension(8) :: v
@@ -3846,28 +3891,28 @@
 
         res = 0.0_wp
 
-        v(1) = x-x1*h
-        v(2) = x+x1*h
-        v(3) = x-x2*h
-        v(4) = x+x2*h
-        v(5) = x-x3*h
-        v(6) = x+x3*h
-        v(7) = x-x4*h
-        v(8) = x+x4*h
+        v(1_ip) = x-x1*h
+        v(2_ip) = x+x1*h
+        v(3_ip) = x-x2*h
+        v(4_ip) = x+x2*h
+        v(5_ip) = x-x3*h
+        v(6_ip) = x+x3*h
+        v(7_ip) = x-x4*h
+        v(8_ip) = x+x4*h
 
-        call dbvalu(xt,bc,n,kk,id,v(1),inbv,work,iflag,f(1)); if (iflag/=0) return
-        call dbvalu(xt,bc,n,kk,id,v(2),inbv,work,iflag,f(2)); if (iflag/=0) return
-        call dbvalu(xt,bc,n,kk,id,v(3),inbv,work,iflag,f(3)); if (iflag/=0) return
-        call dbvalu(xt,bc,n,kk,id,v(4),inbv,work,iflag,f(4)); if (iflag/=0) return
-        call dbvalu(xt,bc,n,kk,id,v(5),inbv,work,iflag,f(5)); if (iflag/=0) return
-        call dbvalu(xt,bc,n,kk,id,v(6),inbv,work,iflag,f(6)); if (iflag/=0) return
-        call dbvalu(xt,bc,n,kk,id,v(7),inbv,work,iflag,f(7)); if (iflag/=0) return
-        call dbvalu(xt,bc,n,kk,id,v(8),inbv,work,iflag,f(8)); if (iflag/=0) return
+        call dbvalu(xt,bc,n,kk,id,v(1_ip),inbv,work,iflag,f(1_ip)); if (iflag/=0_ip) return
+        call dbvalu(xt,bc,n,kk,id,v(2_ip),inbv,work,iflag,f(2_ip)); if (iflag/=0_ip) return
+        call dbvalu(xt,bc,n,kk,id,v(3_ip),inbv,work,iflag,f(3_ip)); if (iflag/=0_ip) return
+        call dbvalu(xt,bc,n,kk,id,v(4_ip),inbv,work,iflag,f(4_ip)); if (iflag/=0_ip) return
+        call dbvalu(xt,bc,n,kk,id,v(5_ip),inbv,work,iflag,f(5_ip)); if (iflag/=0_ip) return
+        call dbvalu(xt,bc,n,kk,id,v(6_ip),inbv,work,iflag,f(6_ip)); if (iflag/=0_ip) return
+        call dbvalu(xt,bc,n,kk,id,v(7_ip),inbv,work,iflag,f(7_ip)); if (iflag/=0_ip) return
+        call dbvalu(xt,bc,n,kk,id,v(8_ip),inbv,work,iflag,f(8_ip)); if (iflag/=0_ip) return
 
-        res = h*((w1*(fun(v(1))*f(1) + fun(v(2))*f(2))  + &
-                  w2*(fun(v(3))*f(3) + fun(v(4))*f(4))) + &
-                 (w3*(fun(v(5))*f(5) + fun(v(6))*f(6))  + &
-                  w4*(fun(v(7))*f(7) + fun(v(8))*f(8))))
+        res = h*((w1*(fun(v(1_ip))*f(1_ip) + fun(v(2_ip))*f(2_ip))  + &
+                  w2*(fun(v(3_ip))*f(3_ip) + fun(v(4_ip))*f(4_ip))) + &
+                 (w3*(fun(v(5_ip))*f(5_ip) + fun(v(6_ip))*f(6_ip))  + &
+                  w4*(fun(v(7_ip))*f(7_ip) + fun(v(8_ip))*f(8_ip))))
 
         end subroutine g8
 
@@ -3929,119 +3974,119 @@
 
     implicit none
 
-    integer,intent(in)           :: iflag  !! return code from one of the routines
+    integer(ip),intent(in)       :: iflag  !! return code from one of the routines
     character(len=:),allocatable :: msg    !! status message associated with the flag
 
     character(len=10) :: istr   !! for integer to string conversion
-    integer           :: istat  !! for write statement
+    integer(ip)       :: istat  !! for write statement
 
     select case (iflag)
 
-    case(  0); msg='Successful execution'
+    case(  0_ip); msg='Successful execution'
 
-    case( -1); msg='Error in dintrv: x < xt(1)'
-    case( -2); msg='Error in dintrv: x >= xt(lxt)'
+    case( -1_ip); msg='Error in dintrv: x < xt(1_ip)'
+    case( -2_ip); msg='Error in dintrv: x >= xt(lxt)'
 
-    case(  1); msg='Error in evaluate_*d: class is not initialized'
+    case(  1_ip); msg='Error in evaluate_*d: class is not initialized'
 
-    case(  2); msg='Error in db*ink: iknot out of range'
-    case(  3); msg='Error in db*ink: nx out of range'
-    case(  4); msg='Error in db*ink: kx out of range'
-    case(  5); msg='Error in db*ink: x not strictly increasing'
-    case(  6); msg='Error in db*ink: tx not non-decreasing'
-    case(  7); msg='Error in db*ink: ny out of range'
-    case(  8); msg='Error in db*ink: ky out of range'
-    case(  9); msg='Error in db*ink: y not strictly increasing'
-    case( 10); msg='Error in db*ink: ty not non-decreasing'
-    case( 11); msg='Error in db*ink: nz out of range'
-    case( 12); msg='Error in db*ink: kz out of range'
-    case( 13); msg='Error in db*ink: z not strictly increasing'
-    case( 14); msg='Error in db*ink: tz not non-decreasing'
-    case( 15); msg='Error in db*ink: nq out of range'
-    case( 16); msg='Error in db*ink: kq out of range'
-    case( 17); msg='Error in db*ink: q not strictly increasing'
-    case( 18); msg='Error in db*ink: tq not non-decreasing'
-    case( 19); msg='Error in db*ink: nr out of range'
-    case( 20); msg='Error in db*ink: kr out of range'
-    case( 21); msg='Error in db*ink: r not strictly increasing'
-    case( 22); msg='Error in db*ink: tr not non-decreasing'
-    case( 23); msg='Error in db*ink: ns out of range'
-    case( 24); msg='Error in db*ink: ks out of range'
-    case( 25); msg='Error in db*ink: s not strictly increasing'
-    case( 26); msg='Error in db*ink: ts not non-decreasing'
-    case(700); msg='Error in db*ink: size(x) /= size(fcn,1)'
-    case(701); msg='Error in db*ink: size(y) /= size(fcn,2)'
-    case(702); msg='Error in db*ink: size(z) /= size(fcn,3)'
-    case(703); msg='Error in db*ink: size(q) /= size(fcn,4)'
-    case(704); msg='Error in db*ink: size(r) /= size(fcn,5)'
-    case(705); msg='Error in db*ink: size(s) /= size(fcn,6)'
-    case(706); msg='Error in db*ink: size(x) /= nx'
-    case(707); msg='Error in db*ink: size(y) /= ny'
-    case(708); msg='Error in db*ink: size(z) /= nz'
-    case(709); msg='Error in db*ink: size(q) /= nq'
-    case(710); msg='Error in db*ink: size(r) /= nr'
-    case(711); msg='Error in db*ink: size(s) /= ns'
-    case(712); msg='Error in db*ink: size(tx) /= nx+kx'
-    case(713); msg='Error in db*ink: size(ty) /= ny+ky'
-    case(714); msg='Error in db*ink: size(tz) /= nz+kz'
-    case(715); msg='Error in db*ink: size(tq) /= nq+kq'
-    case(716); msg='Error in db*ink: size(tr) /= nr+kr'
-    case(717); msg='Error in db*ink: size(ts) /= ns+ks'
-    case(800); msg='Error in db*ink: size(x) /= size(bcoef,1)'
-    case(801); msg='Error in db*ink: size(y) /= size(bcoef,2)'
-    case(802); msg='Error in db*ink: size(z) /= size(bcoef,3)'
-    case(803); msg='Error in db*ink: size(q) /= size(bcoef,4)'
-    case(804); msg='Error in db*ink: size(r) /= size(bcoef,5)'
-    case(805); msg='Error in db*ink: size(s) /= size(bcoef,6)'
+    case(  2_ip); msg='Error in db*ink: iknot out of range'
+    case(  3_ip); msg='Error in db*ink: nx out of range'
+    case(  4_ip); msg='Error in db*ink: kx out of range'
+    case(  5_ip); msg='Error in db*ink: x not strictly increasing'
+    case(  6_ip); msg='Error in db*ink: tx not non-decreasing'
+    case(  7_ip); msg='Error in db*ink: ny out of range'
+    case(  8_ip); msg='Error in db*ink: ky out of range'
+    case(  9_ip); msg='Error in db*ink: y not strictly increasing'
+    case( 10_ip); msg='Error in db*ink: ty not non-decreasing'
+    case( 11_ip); msg='Error in db*ink: nz out of range'
+    case( 12_ip); msg='Error in db*ink: kz out of range'
+    case( 13_ip); msg='Error in db*ink: z not strictly increasing'
+    case( 14_ip); msg='Error in db*ink: tz not non-decreasing'
+    case( 15_ip); msg='Error in db*ink: nq out of range'
+    case( 16_ip); msg='Error in db*ink: kq out of range'
+    case( 17_ip); msg='Error in db*ink: q not strictly increasing'
+    case( 18_ip); msg='Error in db*ink: tq not non-decreasing'
+    case( 19_ip); msg='Error in db*ink: nr out of range'
+    case( 20_ip); msg='Error in db*ink: kr out of range'
+    case( 21_ip); msg='Error in db*ink: r not strictly increasing'
+    case( 22_ip); msg='Error in db*ink: tr not non-decreasing'
+    case( 23_ip); msg='Error in db*ink: ns out of range'
+    case( 24_ip); msg='Error in db*ink: ks out of range'
+    case( 25_ip); msg='Error in db*ink: s not strictly increasing'
+    case( 26_ip); msg='Error in db*ink: ts not non-decreasing'
+    case(700_ip); msg='Error in db*ink: size(x) /= size(fcn,1)'
+    case(701_ip); msg='Error in db*ink: size(y) /= size(fcn,2)'
+    case(702_ip); msg='Error in db*ink: size(z) /= size(fcn,3)'
+    case(703_ip); msg='Error in db*ink: size(q) /= size(fcn,4)'
+    case(704_ip); msg='Error in db*ink: size(r) /= size(fcn,5)'
+    case(705_ip); msg='Error in db*ink: size(s) /= size(fcn,6)'
+    case(706_ip); msg='Error in db*ink: size(x) /= nx'
+    case(707_ip); msg='Error in db*ink: size(y) /= ny'
+    case(708_ip); msg='Error in db*ink: size(z) /= nz'
+    case(709_ip); msg='Error in db*ink: size(q) /= nq'
+    case(710_ip); msg='Error in db*ink: size(r) /= nr'
+    case(711_ip); msg='Error in db*ink: size(s) /= ns'
+    case(712_ip); msg='Error in db*ink: size(tx) /= nx+kx'
+    case(713_ip); msg='Error in db*ink: size(ty) /= ny+ky'
+    case(714_ip); msg='Error in db*ink: size(tz) /= nz+kz'
+    case(715_ip); msg='Error in db*ink: size(tq) /= nq+kq'
+    case(716_ip); msg='Error in db*ink: size(tr) /= nr+kr'
+    case(717_ip); msg='Error in db*ink: size(ts) /= ns+ks'
+    case(800_ip); msg='Error in db*ink: size(x) /= size(bcoef,1)'
+    case(801_ip); msg='Error in db*ink: size(y) /= size(bcoef,2)'
+    case(802_ip); msg='Error in db*ink: size(z) /= size(bcoef,3)'
+    case(803_ip); msg='Error in db*ink: size(q) /= size(bcoef,4)'
+    case(804_ip); msg='Error in db*ink: size(r) /= size(bcoef,5)'
+    case(805_ip); msg='Error in db*ink: size(s) /= size(bcoef,6)'
 
-    case(100); msg='Error in dbintk: k does not satisfy k>=1'
-    case(101); msg='Error in dbintk: n does not satisfy n>=k'
-    case(102); msg='Error in dbintk: x(i) does not satisfy x(i)<x(i+1) for some i'
-    case(103); msg='Error in dbintk: some abscissa was not in the support of the '//&
-                    'corresponding basis function and the system is singular'
-    case(104); msg='Error in dbintk: the system of solver detects a singular system '//&
-                   'although the theoretical conditions for a solution were satisfied'
+    case(100_ip); msg='Error in dbintk: k does not satisfy k>=1'
+    case(101_ip); msg='Error in dbintk: n does not satisfy n>=k'
+    case(102_ip); msg='Error in dbintk: x(i) does not satisfy x(i)<x(i+1) for some i'
+    case(103_ip); msg='Error in dbintk: some abscissa was not in the support of the '//&
+                      'corresponding basis function and the system is singular'
+    case(104_ip); msg='Error in dbintk: the system of solver detects a singular system '//&
+                      'although the theoretical conditions for a solution were satisfied'
 
-    case(201); msg='Error in dbspvn: k does not satisfy k>=1'
-    case(202); msg='Error in dbspvn: jhigh does not satisfy 1<=jhigh<=k'
-    case(203); msg='Error in dbspvn: index is not 1 or 2'
-    case(204); msg='Error in dbspvn: x does not satisfy t(ileft)<=x<=t(ileft+1)'
+    case(201_ip); msg='Error in dbspvn: k does not satisfy k>=1'
+    case(202_ip); msg='Error in dbspvn: jhigh does not satisfy 1<=jhigh<=k'
+    case(203_ip); msg='Error in dbspvn: index is not 1 or 2'
+    case(204_ip); msg='Error in dbspvn: x does not satisfy t(ileft)<=x<=t(ileft+1)'
 
-    case(301); msg='Error in dbtpcf: n should be > 0'
+    case(301_ip); msg='Error in dbtpcf: n should be > 0'
 
-    case(401); msg='Error in dbvalu: k does not satisfy k>=1'
-    case(402); msg='Error in dbvalu: n does not satisfy n>=k'
-    case(403); msg='Error in dbvalu: ideriv does not satisfy 0<=ideriv<k'
-    case(404); msg='Error in dbvalu: x is not greater than or equal to t(k)'
-    case(405); msg='Error in dbvalu: x is not less than or equal to t(n+1)'
-    case(406); msg='Error in dbvalu: a left limiting value cannot be obtained at t(k)'
+    case(401_ip); msg='Error in dbvalu: k does not satisfy k>=1'
+    case(402_ip); msg='Error in dbvalu: n does not satisfy n>=k'
+    case(403_ip); msg='Error in dbvalu: ideriv does not satisfy 0<=ideriv<k'
+    case(404_ip); msg='Error in dbvalu: x is not greater than or equal to t(k)'
+    case(405_ip); msg='Error in dbvalu: x is not less than or equal to t(n+1)'
+    case(406_ip); msg='Error in dbvalu: a left limiting value cannot be obtained at t(k)'
 
-    case(501); msg='Error in initialize_*d_specify_knots: tx is not the correct size (kx+nx)'
-    case(502); msg='Error in initialize_*d_specify_knots: ty is not the correct size (ky+ny)'
-    case(503); msg='Error in initialize_*d_specify_knots: tz is not the correct size (kz+nz)'
-    case(504); msg='Error in initialize_*d_specify_knots: tq is not the correct size (kq+nq)'
-    case(505); msg='Error in initialize_*d_specify_knots: tr is not the correct size (kr+nr)'
-    case(506); msg='Error in initialize_*d_specify_knots: ts is not the correct size (ks+ns)'
+    case(501_ip); msg='Error in initialize_*d_specify_knots: tx is not the correct size (kx+nx)'
+    case(502_ip); msg='Error in initialize_*d_specify_knots: ty is not the correct size (ky+ny)'
+    case(503_ip); msg='Error in initialize_*d_specify_knots: tz is not the correct size (kz+nz)'
+    case(504_ip); msg='Error in initialize_*d_specify_knots: tq is not the correct size (kq+nq)'
+    case(505_ip); msg='Error in initialize_*d_specify_knots: tr is not the correct size (kr+nr)'
+    case(506_ip); msg='Error in initialize_*d_specify_knots: ts is not the correct size (ks+ns)'
 
-    case(601); msg='Error in db*val: x value out of bounds'
-    case(602); msg='Error in db*val: y value out of bounds'
-    case(603); msg='Error in db*val: z value out of bounds'
-    case(604); msg='Error in db*val: q value out of bounds'
-    case(605); msg='Error in db*val: r value out of bounds'
-    case(606); msg='Error in db*val: s value out of bounds'
+    case(601_ip); msg='Error in db*val: x value out of bounds'
+    case(602_ip); msg='Error in db*val: y value out of bounds'
+    case(603_ip); msg='Error in db*val: z value out of bounds'
+    case(604_ip); msg='Error in db*val: q value out of bounds'
+    case(605_ip); msg='Error in db*val: r value out of bounds'
+    case(606_ip); msg='Error in db*val: s value out of bounds'
 
-    case(901); msg='Error in dbsqad: k does not satisfy 1<=k<=20'
-    case(902); msg='Error in dbsqad: n does not satisfy n>=k'
-    case(903); msg='Error in dbsqad: x1 or x2 or both do not satisfy t(k)<=x<=t(n+1)'
+    case(901_ip); msg='Error in dbsqad: k does not satisfy 1<=k<=20'
+    case(902_ip); msg='Error in dbsqad: n does not satisfy n>=k'
+    case(903_ip); msg='Error in dbsqad: x1 or x2 or both do not satisfy t(k)<=x<=t(n+1)'
 
-    case(1001); msg='Error in dbfqad: k does not satisfy k>=1'
-    case(1002); msg='Error in dbfqad: n does not satisfy n>=k'
-    case(1003); msg='Error in dbfqad: d does not satisfy 0<=id<k'
-    case(1004); msg='Error in dbfqad: x1 or x2 or both do not satisfy t(k)<=x<=t(n+1)'
-    case(1005); msg='Error in dbfqad: tol is less than dtol or greater than 0.1'
+    case(1001_ip); msg='Error in dbfqad: k does not satisfy k>=1'
+    case(1002_ip); msg='Error in dbfqad: n does not satisfy n>=k'
+    case(1003_ip); msg='Error in dbfqad: d does not satisfy 0<=id<k'
+    case(1004_ip); msg='Error in dbfqad: x1 or x2 or both do not satisfy t(k)<=x<=t(n+1)'
+    case(1005_ip); msg='Error in dbfqad: tol is less than dtol or greater than 0.1'
 
-    case(1101); msg='Warning in dbsgq8: a and b are too nearly equal to allow normal integration.'
-    case(1102); msg='Error in dbsgq8: ans is probably insufficiently accurate.'
+    case(1101_ip); msg='Warning in dbsgq8: a and b are too nearly equal to allow normal integration.'
+    case(1102_ip); msg='Error in dbsgq8: ans is probably insufficiently accurate.'
 
     case default
         write(istr,fmt='(I10)',iostat=istat) iflag

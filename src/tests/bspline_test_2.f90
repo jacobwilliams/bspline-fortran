@@ -5,25 +5,25 @@
     program bspline_test_2
 
     use bspline_module
-    use bspline_kinds_module, only: wp
+    use bspline_kinds_module, only: wp, ip
 
     implicit none
 
-    integer,parameter :: nx = 6     !! number of points in x
-    integer,parameter :: ny = 6     !! number of points in y
-    integer,parameter :: nz = 6     !! number of points in z
-    integer,parameter :: nq = 6     !! number of points in q
-    integer,parameter :: nr = 6     !! number of points in r
-    integer,parameter :: ns = 6     !! number of points in s
+    integer(ip),parameter :: nx = 6     !! number of points in x
+    integer(ip),parameter :: ny = 6     !! number of points in y
+    integer(ip),parameter :: nz = 6     !! number of points in z
+    integer(ip),parameter :: nq = 6     !! number of points in q
+    integer(ip),parameter :: nr = 6     !! number of points in r
+    integer(ip),parameter :: ns = 6     !! number of points in s
 
-    integer,parameter :: kx = 4     !! order in x
-    integer,parameter :: ky = 4     !! order in y
-    integer,parameter :: kz = 4     !! order in z
-    integer,parameter :: kq = 4     !! order in q
-    integer,parameter :: kr = 4     !! order in r
-    integer,parameter :: ks = 4     !! order in s
+    integer(ip),parameter :: kx = 4     !! order in x
+    integer(ip),parameter :: ky = 4     !! order in y
+    integer(ip),parameter :: kz = 4     !! order in z
+    integer(ip),parameter :: kq = 4     !! order in q
+    integer(ip),parameter :: kr = 4     !! order in r
+    integer(ip),parameter :: ks = 4     !! order in s
 
-    integer,parameter :: iknot = 0  !! automatically select the knots
+    integer(ip),parameter :: iknot = 0  !! automatically select the knots
 
     real(wp),parameter :: tol = 1.0e-2_wp !! tolerance for interp/extrap failure
 
@@ -37,12 +37,34 @@
     real(wp) :: fcn_5d(nx,ny,nz,nq,nr)
     real(wp) :: fcn_6d(nx,ny,nz,nq,nr,ns)
 
+    real(wp),dimension(3*kx)                     :: w1_1d
+    real(wp),dimension(ky)                       :: w1_2d
+    real(wp),dimension(3*max(kx,ky))             :: w2_2d
+    real(wp),dimension(ky,kz)                    :: w1_3d
+    real(wp),dimension(kz)                       :: w2_3d
+    real(wp),dimension(3*max(kx,ky,kz))          :: w3_3d
+    real(wp),dimension(ky,kz,kq)                 :: w1_4d
+    real(wp),dimension(kz,kq)                    :: w2_4d
+    real(wp),dimension(kq)                       :: w3_4d
+    real(wp),dimension(3*max(kx,ky,kz,kq))       :: w4_4d
+    real(wp),dimension(ky,kz,kq,kr)              :: w1_5d
+    real(wp),dimension(kz,kq,kr)                 :: w2_5d
+    real(wp),dimension(kq,kr)                    :: w3_5d
+    real(wp),dimension(kr)                       :: w4_5d
+    real(wp),dimension(3*max(kx,ky,kz,kq,kr))    :: w5_5d
+    real(wp),dimension(ky,kz,kq,kr,ks)           :: w1_6d
+    real(wp),dimension(kz,kq,kr,ks)              :: w2_6d
+    real(wp),dimension(kq,kr,ks)                 :: w3_6d
+    real(wp),dimension(kr,ks)                    :: w4_6d
+    real(wp),dimension(ks)                       :: w5_6d
+    real(wp),dimension(3*max(kx,ky,kz,kq,kr,ks)) :: w6_6d
+
     real(wp),dimension(6) :: val,tru,err,errmax
     logical :: fail
-    integer :: i,j,k,l,m,n,idx,idy,idz,idq,idr,ids
-    integer,dimension(6) :: iflag
-    integer :: inbvx,inbvy,inbvz,inbvq,inbvr,inbvs
-    integer :: iloy,iloz,iloq,ilor,ilos
+    integer(ip) :: i,j,k,l,m,n,idx,idy,idz,idq,idr,ids
+    integer(ip),dimension(6) :: iflag
+    integer(ip) :: inbvx,inbvy,inbvz,inbvq,inbvr,inbvs
+    integer(ip) :: iloy,iloz,iloq,ilor,ilos
 
     fail = .false.
     idx = 0
@@ -53,22 +75,22 @@
     ids = 0
 
      do i=1,nx
-        x(i) = dble(i-1)/dble(nx-1)
+        x(i) = real(i-1,wp)/real(nx-1,wp)
      end do
      do j=1,ny
-        y(j) = dble(j-1)/dble(ny-1)
+        y(j) = real(j-1,wp)/real(ny-1,wp)
      end do
      do k=1,nz
-        z(k) = dble(k-1)/dble(nz-1)
+        z(k) = real(k-1,wp)/real(nz-1,wp)
      end do
      do l=1,nq
-        q(l) = dble(l-1)/dble(nq-1)
+        q(l) = real(l-1,wp)/real(nq-1,wp)
      end do
      do m=1,nr
-        r(m) = dble(m-1)/dble(nr-1)
+        r(m) = real(m-1,wp)/real(nr-1,wp)
      end do
      do n=1,ns
-        s(n) = dble(n-1)/dble(ns-1)
+        s(n) = real(n-1,wp)/real(ns-1,wp)
      end do
      do i=1,nx
                         fcn_1d(i) = f1(x(i))
@@ -91,22 +113,22 @@
 
      ! points to evaluate:
      do i=0,nx+1
-        xval(i+1) = dble(i-1)/dble(nx-1)
+        xval(i+1) = real(i-1,wp)/real(nx-1,wp)
      end do
      do j=0,ny+1
-        yval(j+1) = dble(j-1)/dble(ny-1)
+        yval(j+1) = real(j-1,wp)/real(ny-1,wp)
      end do
      do k=0,nz+1
-        zval(k+1) = dble(k-1)/dble(nz-1)
+        zval(k+1) = real(k-1,wp)/real(nz-1,wp)
      end do
      do l=0,nq+1
-        qval(l+1) = dble(l-1)/dble(nq-1)
+        qval(l+1) = real(l-1,wp)/real(nq-1,wp)
      end do
      do m=0,nr+1
-        rval(m+1) = dble(m-1)/dble(nr-1)
+        rval(m+1) = real(m-1,wp)/real(nr-1,wp)
      end do
      do n=0,ns+1
-        sval(n+1) = dble(n-1)/dble(ns-1)
+        sval(n+1) = real(n-1,wp)/real(ns-1,wp)
      end do
 
     !have to set these before the first evaluate call:
@@ -146,7 +168,7 @@
      err = -99999.9_wp
      do i=1,nx+2
                         call db1val(xval(i),idx,&
-                                            tx,nx,kx,fcn_1d,val(1),iflag(1),inbvx,extrap=.true.)
+                                            tx,nx,kx,fcn_1d,val(1),iflag(1),inbvx,w1_1d,extrap=.true.)
                         tru(1)    = f1(xval(i))
                         err(1)    = abs(tru(1)-val(1))
                         errmax(1) = max(err(1),errmax(1))
@@ -154,7 +176,7 @@
         do j=1,ny+2
                         call db2val(xval(i),yval(j),idx,idy,&
                                             tx,ty,nx,ny,kx,ky,fcn_2d,val(2),iflag(2),&
-                                            inbvx,inbvy,iloy,extrap=.true.)
+                                            inbvx,inbvy,iloy,w1_2d,w2_2d,extrap=.true.)
                         tru(2)    = f2(xval(i),yval(j))
                         err(2)    = abs(tru(2)-val(2))
                         errmax(2) = max(err(2),errmax(2))
@@ -162,7 +184,7 @@
            do k=1,nz+2
                         call db3val(xval(i),yval(j),zval(k),idx,idy,idz,&
                                             tx,ty,tz,nx,ny,nz,kx,ky,kz,fcn_3d,val(3),iflag(3),&
-                                            inbvx,inbvy,inbvz,iloy,iloz,extrap=.true.)
+                                            inbvx,inbvy,inbvz,iloy,iloz,w1_3d,w2_3d,w3_3d,extrap=.true.)
                         tru(3)    = f3(xval(i),yval(j),zval(k))
                         err(3)    = abs(tru(3)-val(3))
                         errmax(3) = max(err(3),errmax(3))
@@ -170,7 +192,8 @@
               do l=1,nq+2
                         call db4val(xval(i),yval(j),zval(k),qval(l),idx,idy,idz,idq,&
                                             tx,ty,tz,tq,nx,ny,nz,nq,kx,ky,kz,kq,fcn_4d,val(4),iflag(4),&
-                                            inbvx,inbvy,inbvz,inbvq,iloy,iloz,iloq,extrap=.true.)
+                                            inbvx,inbvy,inbvz,inbvq,iloy,iloz,iloq,&
+                                            w1_4d,w2_4d,w3_4d,w4_4d,extrap=.true.)
                         tru(4)    = f4(xval(i),yval(j),zval(k),qval(l))
                         err(4)    = abs(tru(4)-val(4))
                         errmax(4) = max(err(4),errmax(4))
@@ -178,7 +201,8 @@
                 do m=1,nr+2
                         call db5val(xval(i),yval(j),zval(k),qval(l),rval(m),idx,idy,idz,idq,idr,&
                                             tx,ty,tz,tq,tr,nx,ny,nz,nq,nr,kx,ky,kz,kq,kr,fcn_5d,val(5),iflag(5),&
-                                            inbvx,inbvy,inbvz,inbvq,inbvr,iloy,iloz,iloq,ilor,extrap=.true.)
+                                            inbvx,inbvy,inbvz,inbvq,inbvr,iloy,iloz,iloq,ilor,&
+                                            w1_5d,w2_5d,w3_5d,w4_5d,w5_5d,extrap=.true.)
                         tru(5)    = f5(xval(i),yval(j),zval(k),qval(l),rval(m))
                         err(5)    = abs(tru(5)-val(5))
                         errmax(5) = max(err(5),errmax(5))
@@ -186,7 +210,8 @@
                     do n=1,ns+2
                         call db6val(xval(i),yval(j),zval(k),qval(l),rval(m),sval(n),idx,idy,idz,idq,idr,ids,&
                                             tx,ty,tz,tq,tr,ts,nx,ny,nz,nq,nr,ns,kx,ky,kz,kq,kr,ks,fcn_6d,val(6),iflag(6),&
-                                            inbvx,inbvy,inbvz,inbvq,inbvr,inbvs,iloy,iloz,iloq,ilor,ilos,extrap=.true.)
+                                            inbvx,inbvy,inbvz,inbvq,inbvr,inbvs,iloy,iloz,iloq,ilor,ilos,&
+                                            w1_6d,w2_6d,w3_6d,w4_6d,w5_6d,w6_6d,extrap=.true.)
                         tru(6)    = f6(xval(i),yval(j),zval(k),qval(l),rval(m),sval(n))
                         err(6)    = abs(tru(6)-val(6))
                         errmax(6) = max(err(6),errmax(6))

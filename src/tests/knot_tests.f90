@@ -12,15 +12,15 @@
     program knot_tests
 
     use bspline_module
-    use bspline_kinds_module, only: wp
+    use bspline_kinds_module, only: wp, ip
     use pyplot_module
 
     implicit none
 
     integer :: i    !! counter
 
-    integer,parameter :: kx  = 4    !! x bspline order
-    integer,parameter :: nx  = 6    !! number of points in x dimension
+    integer(ip),parameter :: kx  = 4    !! x bspline order
+    integer(ip),parameter :: nx  = 6    !! number of points in x dimension
     real(wp),dimension(nx),parameter :: x = [(real(i*10,wp), i=0,11,(10+2)/nx)]    !! [0,20,40,60,80,100]
 
     real(wp),dimension(nx)    :: fcn
@@ -29,7 +29,7 @@
     real(wp),dimension(0:100) :: x_new,f_new_default,f1,f2 !,f_actual
     real(wp)                  :: xval
     type(pyplot)              :: plt
-    integer                   :: iflag
+    integer(ip)               :: iflag
     integer                   :: istat  !! pyplot-fortran status flag
 
     !function evaluations for original grid:
@@ -68,13 +68,13 @@
 
         !f_actual(i) = test_func(xval)
 
-        call s_default%evaluate(xval,0,f_new_default(i),iflag)
+        call s_default%evaluate(xval,0_ip,f_new_default(i),iflag)
         if (iflag/=0) error stop 'error evaluating s_default'
 
-        call s1%evaluate(xval,0,f1(i),iflag)
+        call s1%evaluate(xval,0_ip,f1(i),iflag)
         if (iflag/=0) error stop 'error evaluating s1'
 
-        call s2%evaluate(xval,0,f2(i),iflag)
+        call s2%evaluate(xval,0_ip,f2(i),iflag)
         if (iflag/=0) error stop 'error evaluating s2'
 
     end do
