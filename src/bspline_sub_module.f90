@@ -84,6 +84,10 @@
         !! 1D initialization routines.
         module procedure :: db1ink_default, db1ink_alt, db1ink_alt_2
     end interface
+    interface db1val
+        !! 1D evaluation routines.
+        module procedure :: db1val_default, db1val_alt
+    end interface
 
     !main routines:
     public :: db1ink, db1val, db1sqad, db1fqad
@@ -360,7 +364,7 @@
 !### History
 !  * Jacob Williams, 10/30/2015 : Created 1D routine.
 
-    pure subroutine db1val(xval,idx,tx,nx,kx,bcoef,f,iflag,inbvx,w0,extrap)
+    pure subroutine db1val_default(xval,idx,tx,nx,kx,bcoef,f,iflag,inbvx,w0,extrap)
 
     implicit none
 
@@ -391,7 +395,45 @@
 
     call dbvalu(tx,bcoef,nx,kx,idx,xval,inbvx,w0,iflag,f,extrap)
 
-    end subroutine db1val
+    end subroutine db1val_default
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Alternate version of [[db1val]] for use with [[db1ink_alt]] and [[db1ink_alt_2]].
+
+    pure subroutine db1val_alt(xval,idx,tx,nx,n,kx,bcoef,f,iflag,inbvx,w0,extrap)
+
+    implicit none
+
+    real(wp),intent(in)                  :: xval     !! \(x\) coordinate of evaluation point.
+    integer(ip),intent(in)               :: idx      !! \(x\) derivative of piecewise polynomial to evaluate.
+    real(wp),dimension(n+kx),intent(in)  :: tx       !! sequence of knots defining the piecewise polynomial
+                                                     !! in the \(x\) direction.
+    integer(ip),intent(in)               :: nx       !! the number of interpolation points in \(x\).
+    integer(ip),intent(in)               :: n        !! length of `bcoef`: `nx+2`
+    integer(ip),intent(in)               :: kx       !! order of polynomial pieces in \(x\).
+                                                     !! (same as in last call to [[db1ink]])
+    real(wp),dimension(n),intent(in)     :: bcoef    !! the b-spline coefficients computed by [[db1ink]].
+    real(wp),intent(out)                 :: f        !! interpolated value
+    integer(ip),intent(out)              :: iflag    !! status flag:
+                                                     !!
+                                                     !! * \( = 0 \)   : no errors
+                                                     !! * \( \ne 0 \) : error
+    integer(ip),intent(inout)            :: inbvx    !! initialization parameter which must be set
+                                                     !! to 1 the first time this routine is called,
+                                                     !! and must not be changed by the user.
+    real(wp),dimension(3_ip*kx),intent(inout) :: w0  !! work array
+    logical,intent(in),optional          :: extrap   !! if extrapolation is allowed
+                                                     !! (if not present, default is False)
+
+    f = 0.0_wp
+
+    iflag = check_value(xval,tx,1_ip,extrap); if (iflag/=0_ip) return
+
+    call dbvalu(tx,bcoef,n,kx,idx,xval,inbvx,w0,iflag,f,extrap)
+
+    end subroutine db1val_alt
 !*****************************************************************************************
 
 !*****************************************************************************************
