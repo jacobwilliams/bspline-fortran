@@ -400,7 +400,7 @@
 
 !*****************************************************************************************
 !>
-!  Alternate version of [[db1val]] for use with [[db1ink_alt]] and [[db1ink_alt_2]].
+!  Alternate version of [[db1val_default]] for use with [[db1ink_alt]] and [[db1ink_alt_2]].
 
     pure subroutine db1val_alt(xval,idx,tx,nx,n,kx,bcoef,f,iflag,inbvx,w0,extrap)
 
