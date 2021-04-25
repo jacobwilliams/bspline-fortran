@@ -16,6 +16,7 @@ source: true
 graph: true
 exclude: pyplot_module.f90
          test.f90
+exclude_dir: ./src/tests
 extra_mods: pyplot_module:https://github.com/jacobwilliams/pyplot-fortran
 
 ### Brief description
