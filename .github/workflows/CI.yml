@@ -9,6 +9,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         gcc_v: [9] # Version of GFortran we want to use.
+        python-version: [3.7]
     env:
       FC: gfortran-${{ matrix.gcc_v }}
       GCC_V: ${{ matrix.gcc_v }}
@@ -19,18 +20,17 @@ jobs:
       with:
         submodules: recursive
 
-    - name: Set up Python 3.x
+    - name: Install Python
       uses: actions/setup-python@v1 # Use pip to install latest CMake, & FORD/Jin2For, etc.
       with:
-        python-version: 3.x
+        python-version: ${{ matrix.python-version }}
 
-    - name: Install other tools
+    - name: Install Python dependencies
       if: contains( matrix.os, 'ubuntu')
       run: |
-        sudo -H pip install ford && ford --version
-        sudo -H pip install FoBiS.py && FoBiS.py --version
-        sudo -H pip install numpy
-        sudo -H pip install matplotlib
+        python -m pip install --upgrade pip
+        pip install ford FoBiS.py numpy matplotlib
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
     - name: Install GFortran Linux
       if: contains( matrix.os, 'ubuntu')
