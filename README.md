@@ -5,7 +5,7 @@ Multidimensional B-Spline Interpolation of Data on a Regular Grid
 
 # Status
 
-[![Build Status](https://img.shields.io/travis/jacobwilliams/bspline-fortran/master.svg?style=plastic)](https://travis-ci.org/jacobwilliams/bspline-fortran)
+![Build Status](https://github.com/jacobwilliams/bspline-fortran/actions/workflows/CI.yml/badge.svg)
 
 # Brief description
 
