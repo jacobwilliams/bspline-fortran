@@ -57,6 +57,7 @@ jobs:
         ./bin/speed_test
         ./bin/test_integrate
         ./bin/test_oo
+        ./bin/dbint4_test
 
     - name: Build documentation
       run: ford ./bspline-fortran.md
