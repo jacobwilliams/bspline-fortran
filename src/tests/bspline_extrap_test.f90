@@ -3,7 +3,7 @@
 !  Extrapolation test
 !
 !### Results
-!  ![Plot of results](https://raw.githubusercontent.com/jacobwilliams/bspline-fortran/master/src/tests/bspline_extrap_test.png)
+!  ![Plot of results](https://raw.githubusercontent.com/jacobwilliams/bspline-fortran/master/src/tests/results/bspline_extrap_test.png)
 
     program bspline_extrap_test
 
