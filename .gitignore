@@ -36,3 +36,6 @@ bin
 
 # mac
 *.DS_Store
+
+# vscode
+/.vscode
