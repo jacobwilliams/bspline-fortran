@@ -408,12 +408,12 @@
 
     real(wp),intent(in)                  :: xval     !! \(x\) coordinate of evaluation point.
     integer(ip),intent(in)               :: idx      !! \(x\) derivative of piecewise polynomial to evaluate.
-    real(wp),dimension(n+kx),intent(in)  :: tx       !! sequence of knots defining the piecewise polynomial
-                                                     !! in the \(x\) direction.
     integer(ip),intent(in)               :: nx       !! the number of interpolation points in \(x\).
     integer(ip),intent(in)               :: n        !! length of `bcoef`: `nx+2`
     integer(ip),intent(in)               :: kx       !! order of polynomial pieces in \(x\).
                                                      !! (same as in last call to [[db1ink]])
+    real(wp),dimension(n+kx),intent(in)  :: tx       !! sequence of knots defining the piecewise polynomial
+                                                     !! in the \(x\) direction.
     real(wp),dimension(n),intent(in)     :: bcoef    !! the b-spline coefficients computed by [[db1ink]].
     real(wp),intent(out)                 :: f        !! interpolated value
     integer(ip),intent(out)              :: iflag    !! status flag:
