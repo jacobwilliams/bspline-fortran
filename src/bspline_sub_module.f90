@@ -203,7 +203,7 @@
                                                   !! and in increasing order
     integer(ip),intent(in)             :: nx      !! number of data points, \( n_x \ge 2 \)
     real(wp),dimension(:),intent(in)   :: fcn     !! \(y\) vector of ordinates of length `nx`
-    integer(ip),intent(in)             :: kx      !! spline order
+    integer(ip),intent(in)             :: kx      !! spline order (Currently, this must be `4`)
     integer(ip),intent(in)             :: ibcl    !! selection parameter for left boundary condition:
                                                   !!
                                                   !! * `ibcl = 1` constrain the first derivative at `x(1)` to `fbcl`
@@ -283,7 +283,7 @@
                                                   !! and in increasing order
     integer(ip),intent(in)             :: nx      !! number of data points, \( n_x \ge 2 \)
     real(wp),dimension(:),intent(in)   :: fcn     !! \(y\) vector of ordinates of length `nx`
-    integer(ip),intent(in)             :: kx      !! spline order
+    integer(ip),intent(in)             :: kx      !! spline order (Currently, this must be `4`)
     integer(ip),intent(in)             :: ibcl    !! selection parameter for left boundary condition:
                                                   !!
                                                   !! * `ibcl = 1` constrain the first derivative at `x(1)` to `fbcl`
@@ -3643,10 +3643,10 @@
         return
     end if
 
-    iflag = 0
-    k = 4
-    n = ndata + 2
-    np = n + 1
+    iflag = 0_ip
+    k = 4_ip
+    n = ndata + 2_ip
+    np = n + 1_ip
     do i=1_ip,ndata
         t(i+3) = x(i)
     end do
@@ -3694,8 +3694,8 @@
     it = ibcl + 1
     call dbspvd(t, k, it, x(1), k, 4_ip, vnikx, work, iflag)
     if (iflag/=0_ip) return ! error check
-    iw = 0
-    if (abs(vnikx(3,1))<tol) iw = 1
+    iw = 0_ip
+    if (abs(vnikx(3,1))<tol) iw = 1_ip
     do j=1,3
         w(j+1,4-j) = vnikx(4-j,it)
         w(j,4-j) = vnikx(4-j,1)
@@ -3703,10 +3703,10 @@
     bcoef(1) = y(1)
     bcoef(2) = fbcl
     ! set up interpolation equations for points i=2 to i=ndata-1
-    ileft = 4
+    ileft = 4_ip
     if (ndm>=2) then
         do i=2,ndm
-            ileft = ileft + 1
+            ileft = ileft + 1_ip
             call dbspvd(t, k, 1_ip, x(i), ileft, 4_ip, vnikx, work, iflag)
             if (iflag/=0_ip) return ! error check
             do j=1,3
@@ -3718,11 +3718,11 @@
 
     ! set up right interpolation point and right boundary condition for
     ! left limits(ileft is associated with t(n)=x(ndata-1))
-    it = ibcr + 1
+    it = ibcr + 1_ip
     call dbspvd(t, k, it, x(ndata), ileft, 4_ip, vnikx, work, iflag)
     if (iflag/=0_ip) return ! error check
-    jw = 0
-    if (abs(vnikx(2,1))<tol) jw = 1
+    jw = 0_ip
+    if (abs(vnikx(2,1))<tol) jw = 1_ip
     do j=1,3
         w(j+1,3+ndata-j) = vnikx(5-j,it)
         w(j+2,3+ndata-j) = vnikx(5-j,1)
@@ -3730,10 +3730,10 @@
     bcoef(n-1) = fbcr
     bcoef(n) = y(ndata)
     ! solve system of equations
-    ilb = 2 - jw
-    iub = 2 - iw
-    nwrow = 5
-    iwp = iw + 1
+    ilb = 2_ip - jw
+    iub = 2_ip - iw
+    nwrow = 5_ip
+    iwp = iw + 1_ip
     call dbnfac(w(iwp,1), nwrow, n, ilb, iub, iflag)
     if (iflag==2_ip) then
         iflag = 2007_ip  ! the system of equations is singular
