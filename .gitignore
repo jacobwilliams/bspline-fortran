@@ -34,3 +34,6 @@ doc
 lib
 bin
 install
+
+# mac
+*.DS_Store
