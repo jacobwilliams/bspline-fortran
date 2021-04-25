@@ -1,0 +1,69 @@
+name: CI
+on: [push]
+jobs:
+
+  Build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        gcc_v: [9] # Version of GFortran we want to use.
+        python-version: [3.7]
+    env:
+      FC: gfortran-${{ matrix.gcc_v }}
+      GCC_V: ${{ matrix.gcc_v }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Install Python
+      uses: actions/setup-python@v1 # Use pip to install latest CMake, & FORD/Jin2For, etc.
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Python dependencies
+      if: contains( matrix.os, 'ubuntu')
+      run: |
+        python -m pip install --upgrade pip
+        pip install ford FoBiS.py numpy matplotlib
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: Install GFortran Linux
+      if: contains( matrix.os, 'ubuntu')
+      run: |
+        sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+        sudo apt-get update
+        sudo apt-get install -y gcc-${GCC_V} gfortran-${GCC_V}
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${GCC_V} 100 \
+        --slave /usr/bin/gfortran gfortran /usr/bin/gfortran-${GCC_V} \
+        --slave /usr/bingcov gcov /usr/bin/gcov-${GCC_V}
+
+    - name: Compile
+      run: |
+        FoBiS.py build -f bspline-fortran.fobis -mode tests-gnu
+
+    - name: Run tests
+      run: |
+        ./bin/bspline_test
+        ./bin/bspline_test_2
+        ./bin/bspline_extrap_test
+        ./bin/test_regrid
+        ./bin/knot_tests
+        ./bin/speed_test_oo
+        ./bin/speed_test
+        ./bin/test_integrate
+        ./bin/test_oo
+
+    - name: Build documentation
+      run: ford ./bspline-fortran.md
+
+    - name: Deploy Documentation
+      if: github.ref == 'refs/heads/master' 
+      uses: JamesIves/github-pages-deploy-action@4.1.0
+      with:
+        branch: gh-pages # The branch the action should deploy to.
+        folder: doc  # The folder the action should deploy.
