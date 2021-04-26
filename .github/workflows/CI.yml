@@ -24,6 +24,9 @@ jobs:
       uses: actions/setup-python@v1 # Use pip to install latest CMake, & FORD/Jin2For, etc.
       with:
         python-version: ${{ matrix.python-version }}
+        
+    - name: Setup Graphviz
+      uses: ts-graphviz/setup-graphviz@v1
 
     - name: Install Python dependencies
       if: contains( matrix.os, 'ubuntu')
