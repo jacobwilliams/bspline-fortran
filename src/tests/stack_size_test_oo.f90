@@ -34,7 +34,7 @@
     integer(ip),parameter :: kx = 4    !order
     integer(ip),parameter :: ky = 4
     integer(ip),parameter :: kz = 4
-    real(wp),parameter :: tol = 1.0e-14_wp
+    real(wp),parameter :: tol = 100 * epsilon(1.0_wp)
 
     type(bspline_3d) :: s3
     integer(ip) :: nx,ny,nz

@@ -14,6 +14,7 @@
     use bspline_module
     use bspline_kinds_module, only: wp, ip
     use pyplot_module
+    use, intrinsic :: iso_fortran_env
 
     implicit none
 
@@ -40,7 +41,8 @@
     !initialize the plot:
     call plt%initialize(grid=.true.,xlabel='x',ylabel='f(x)',&
                         title='Knot Test',legend=.true.)
-    call plt%add_plot(x,fcn,label='Function $f(x) = \sin(x \cdot \pi/18)$ : $x=[0,20,40,60,80,100]$',&
+    call plt%add_plot(real(x,real64),real(fcn,real64),&
+                        label='Function $f(x) = \sin(x \cdot \pi/18)$ : $x=[0,20,40,60,80,100]$',&
                         linestyle='ko--',markersize=5,linewidth=2,istat=istat)
 
     !initialize three with different knot sequences:
@@ -81,13 +83,13 @@
 
     !call plt%add_plot(x_new,f_actual,label='Actual function',linestyle='k--',linewidth=2)
 
-    call plt%add_plot(x_new,f_new_default,&
+    call plt%add_plot(real(x_new,real64),real(f_new_default,real64),&
             label='Interpolated : $t_x=[0,0,0,0,40,60,102,102,102,102]$ (Default)',&
             linestyle='b-',linewidth=1,istat=istat)
-    call plt%add_plot(x_new,f1,&
+    call plt%add_plot(real(x_new,real64),real(f1,real64),&
             label='Interpolated : $t_x=[0,0,0,0,20,40,101,101,101,101]$',&
             linestyle='r-',linewidth=1,istat=istat)
-    call plt%add_plot(x_new,f2,&
+    call plt%add_plot(real(x_new,real64),real(f2,real64),&
             label='Interpolated : $t_x=[0,0,0,0,60,80,101,101,101,101]$',&
             linestyle='g-',linewidth=1,istat=istat)
 

@@ -65,7 +65,7 @@
     integer(ip) :: iloy,iloz,iloq,ilor,ilos
 
     fail = .false.
-    tol = 1.0e-14_wp
+    tol = 100 * epsilon(1.0_wp)
     idx = 0
     idy = 0
     idz = 0
