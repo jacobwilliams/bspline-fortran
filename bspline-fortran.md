@@ -12,6 +12,7 @@ predocmark: <
 docmark_alt:
 docmark: !
 display: public
+         private
 source: true
 graph: true
 exclude: pyplot_module.f90

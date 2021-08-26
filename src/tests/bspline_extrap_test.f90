@@ -10,6 +10,7 @@
     use bspline_module
     use bspline_kinds_module, only: wp, ip
     use pyplot_module
+    use, intrinsic :: iso_fortran_env
 
     implicit none
 
@@ -56,7 +57,8 @@
     !initialize the plot:
     call plt%initialize(grid=.true.,xlabel='x (deg)',ylabel='f(x)',&
                         title='Extrapolation Test',legend=.true.)
-    call plt%add_plot(x*rad2deg,fcn_1d,label='Function $f(x) = \sin(x)$',&
+    call plt%add_plot(real(x*rad2deg,real64),real(fcn_1d,real64),&
+                        label='Function $f(x) = \sin(x)$',&
                         linestyle='ko',markersize=5,linewidth=2,istat=istat)
 
     do j=1,2
@@ -80,7 +82,7 @@
         write(*,*) ''
 
         if (extrap) then
-            call plt%add_plot(xval*rad2deg,fval,&
+            call plt%add_plot(real(xval*rad2deg,real64),real(fval,real64),&
                     label='Interpolated',&
                     linestyle='g.-',linewidth=1,istat=istat)
             call plt%savefig('bspline_extrap_test.png',istat=istat)

@@ -24,7 +24,7 @@ jobs:
       uses: actions/setup-python@v1 # Use pip to install latest CMake, & FORD/Jin2For, etc.
       with:
         python-version: ${{ matrix.python-version }}
-        
+
     - name: Setup Graphviz
       uses: ts-graphviz/setup-graphviz@v1
 
@@ -49,23 +49,41 @@ jobs:
       run: |
         FoBiS.py build -f bspline-fortran.fobis -mode tests-gnu
 
-    - name: Run tests
-      run: |
-        ./bin/bspline_test
-        ./bin/bspline_test_2
-        ./bin/bspline_extrap_test
-        ./bin/test_regrid
-        ./bin/knot_tests
-        ./bin/speed_test_oo
-        ./bin/speed_test
-        ./bin/test_integrate
-        ./bin/test_oo
+    - name: bspline_test
+      run: ./bin/bspline_test
+
+    - name: bspline_test_2
+      run: ./bin/bspline_test_2
+
+    - name: bspline_extrap_test
+      run: ./bin/bspline_extrap_test
+
+    - name: test_regrid
+      run: ./bin/test_regrid
+
+    - name: knot_tests
+      run: ./bin/knot_tests
+
+    - name: speed_test_oo
+      run: ./bin/speed_test_oo
+
+    - name: speed_test
+      run: ./bin/speed_test
+
+    - name: test_integrate
+      run: ./bin/test_integrate
+
+    - name: test_oo
+      run: ./bin/test_oo
+
+    - name: dbint4_test
+      run: ./bin/dbint4_test
 
     - name: Build documentation
       run: ford ./bspline-fortran.md
 
     - name: Deploy Documentation
-      if: github.ref == 'refs/heads/master' 
+      if: github.ref == 'refs/heads/master'
       uses: JamesIves/github-pages-deploy-action@4.1.0
       with:
         branch: gh-pages # The branch the action should deploy to.

@@ -117,11 +117,11 @@ A [FoBiS](https://github.com/szaghi/FoBiS) configuration file (`bspline-fortran.
 
   The full set of modes are: `static-gnu`, `static-gnu-debug`, `static-intel`, `static-intel-debug`, `shared-gnu`, `shared-gnu-debug`, `shared-intel`, `shared-intel-debug`, `tests-gnu`, `tests-gnu-debug`, `tests-intel`, `tests-intel-debug`
 
-  To generate the documentation using [ford](https://github.com/cmacmackin/ford), run: ```FoBis.py rule --execute makedoc -f bspline-fortran.fobis```
+  To generate the documentation using [ford](https://github.com/Fortran-FOSS-Programmers/ford), run: ```FoBis.py rule --execute makedoc -f bspline-fortran.fobis```
 
 # Documentation
 
-The latest API documentation can be found [here](http://jacobwilliams.github.io/bspline-fortran/). This was generated from the source code using [FORD](https://github.com/cmacmackin/ford) (note that the build script will also generate these files).
+The latest API documentation can be found [here](http://jacobwilliams.github.io/bspline-fortran/). This was generated from the source code using [FORD](https://github.com/Fortran-FOSS-Programmers/ford) (note that the build script will also generate these files).
 
 # License
 

@@ -34,7 +34,7 @@
     integer(ip),parameter :: kx = 4    !order
     integer(ip),parameter :: ky = 4
     integer(ip),parameter :: kz = 4
-    real(wp),parameter :: tol = 1.0e-14_wp
+    real(wp),parameter :: tol = 100 * epsilon(1.0_wp)
 
     type(bspline_3d) :: s3
     integer(ip) :: nx,ny,nz
@@ -97,7 +97,7 @@
      end do
 
     ! check max error against tolerance
-    write(*,'(I10,1X,I20,1X,E30.16)') n, s3%size_of()*8, errmax    ! n, size, error
+    write(*,'(I10,1X,I20,1X,E30.16)') n, s3%size_of()*8_ip, errmax    ! n, size, error
     if (errmax >= tol) error stop  ' ** test failed ** '
 
     end subroutine run_test

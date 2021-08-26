@@ -2,13 +2,152 @@
 # Basic CMake configuration file for bspline-fortran
 #
 
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required(VERSION 3.11)
 
-set(PROJECT_DESCRIPTION "Multidimensional B-Spline Interpolation of Data on a Regular Grid")
-set(PROJECT_URL "https://github.com/jacobwilliams/bspline-fortran")
+set( CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/install"
+  CACHE STRING "Select where to install the library and test programs." )
 
-project (bspline-fortran NONE)
-enable_language (Fortran)
+project(bspline-fortran NONE)
 
-file(GLOB SOURCES src/*.f90)
-add_library(${PROJECT_NAME} ${SOURCES})
+# Real and Integer kinds
+SET(BSPLINE_REAL_KIND "REAL64" CACHE STRING "Real kind parameter")
+SET_PROPERTY(CACHE BSPLINE_REAL_KIND PROPERTY STRINGS REAL32 REAL64 REAL128)
+if(${BSPLINE_REAL_KIND} MATCHES "REAL32")
+  add_definitions(-DREAL32)
+elseif(${BSPLINE_REAL_KIND} MATCHES "REAL64")
+  add_definitions(-DREAL64)
+elseif(${BSPLINE_REAL_KIND} MATCHES "REAL128")
+  add_definitions(-DREAL128)
+endif()
+SET(BSPLINE_INT_KIND "INT32" CACHE STRING "Integer kind parameter")
+SET_PROPERTY(CACHE BSPLINE_INT_KIND PROPERTY STRINGS INT8 INT16 INT32 INT64)
+if(${BSPLINE_INT_KIND} MATCHES "INT8")
+  add_definitions(-DINT8)
+elseif(${BSPLINE_INT_KIND} MATCHES "INT16")
+  add_definitions(-DINT16)
+elseif(${BSPLINE_INT_KIND} MATCHES "INT32")
+  add_definitions(-DINT32)
+elseif(${BSPLINE_INT_KIND} MATCHES "INT64")
+  add_definitions(-DINT64)
+endif()
+
+# Use MSVS folders to organize projects on windows
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+set( LIB_NAME ${CMAKE_PROJECT_NAME} )
+set( PROJECT_DESCRIPTION
+  "Multidimensional B-Spline Interpolation of Data on a Regular Grid" )
+set( PROJECT_URL "https://github.com/jacobwilliams/bspline-fortran" )
+set( CMAKE_CONFIGURATION_TYPES "Debug" "Release" "MinSizeRel" "RelWithDebInfo" )
+set( CMAKE_BUILD_TYPE "Release"
+  CACHE STRING "Select which configuration to build." )
+
+enable_language(Fortran)
+
+set( SOURCES
+  src/bspline_kinds_module.F90
+  src/bspline_module.f90
+  src/bspline_oo_module.f90
+  src/bspline_sub_module.f90 )
+
+set( PYPLOT_SOURCES
+  src/tests/pyplot-fortran/src/pyplot_module.f90 )
+
+set( TEST_SOURCES src/tests/bspline_extrap_test.f90
+  src/tests/bspline_test.f90
+  src/tests/bspline_test_2.f90
+  src/tests/dbint4_test.f90
+  src/tests/knot_tests.f90
+  src/tests/speed_test.f90
+  src/tests/speed_test_oo.f90
+  src/tests/test_integrate.f90
+  src/tests/test_oo.f90
+  src/tests/test_regrid.f90 )
+
+set(INSTALL_MOD_DIR "lib")
+set(INSTALL_LIB_DIR "${INSTALL_MOD_DIR}")
+set(ABS_LIB_INSTALL_DIR "\${CMAKE_INSTALL_PREFIX}/${INSTALL_LIB_DIR}")
+set(MODULE_DIR "${CMAKE_BINARY_DIR}/lib")
+
+if( "${CMAKE_SYSTEM_NAME}" MATCHES "Darwin" )
+  set( ENABLE_DYLIBS_USE_RPATH TRUE CACHE BOOL
+    "Enable @rpath install name for dylibs" )
+  mark_as_advanced( ENABLE_DYLIBS_USE_RPATH )
+endif()
+
+if( ENABLE_DYLIBS_USE_RPATH )
+  set( CMAKE_MACOSX_RPATH TRUE )
+else()
+  set( CMAKE_INSTALL_NAME_DIR
+    "${ABS_LIB_INSTALL_DIR}" )
+endif()
+
+add_library( ${LIB_NAME}        SHARED ${SOURCES} )
+add_library( ${LIB_NAME}-static STATIC ${SOURCES} )
+
+set_target_properties(${LIB_NAME}-static
+  PROPERTIES
+  OUTPUT_NAME "${LIB_NAME}"
+  if(NOT MSVC_IDE)
+    PREFIX lib
+  endif()
+  ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+  Fortran_MODULE_DIRECTORY ${MODULE_DIR})
+
+set_target_properties(${LIB_NAME}
+  PROPERTIES
+  OUTPUT_NAME "${LIB_NAME}"
+  if(NOT MSVC_IDE)
+    PREFIX lib
+  endif()
+  LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+  Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR})
+
+set( BSPLINE_TESTS TRUE CACHE BOOL "Enable the unit tests." )
+
+if( BSPLINE_TESTS )
+
+  # we also need to build the pyplot-fortran library,
+  # since that is needed by some of the tests:
+  set( PYPLOT_LIB_NAME "pyplot-fortran" )
+  add_library( ${PYPLOT_LIB_NAME} STATIC ${PYPLOT_SOURCES} )
+  set_target_properties(${PYPLOT_LIB_NAME}
+    PROPERTIES
+    OUTPUT_NAME ${PYPLOT_LIB_NAME}
+    if(NOT MSVC_IDE)
+      PREFIX lib
+    endif()
+    ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+    Fortran_MODULE_DIRECTORY ${MODULE_DIR})
+
+  # build each test program:
+  foreach( UNIT_TEST ${TEST_SOURCES} )
+    get_filename_component( TEST ${UNIT_TEST} NAME_WE )
+    if(MSVC_IDE)
+      link_directories(${CMAKE_BINARY_DIR}/lib)
+    endif()
+    add_executable( ${TEST} ${UNIT_TEST} )
+    target_link_libraries( ${TEST} ${LIB_NAME}-static ${PYPLOT_LIB_NAME} )
+    set_target_properties(${TEST}
+        PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+        Fortran_MODULE_DIRECTORY ${MODULE_DIR})
+    install(TARGETS ${TEST} ${TEST}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+  endforeach()
+
+endif()
+
+# install library:
+install( TARGETS ${LIB_NAME} ${LIB_NAME}-static
+          LIBRARY DESTINATION "${INSTALL_LIB_DIR}"
+          ARCHIVE DESTINATION "${INSTALL_LIB_DIR}" )
+install( DIRECTORY "${MODULE_DIR}/" DESTINATION "${INSTALL_MOD_DIR}" )
+
+# Windows settings:
+if(MSVC_IDE)
+   INCLUDE_DIRECTORIES("src")
+   SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fpp")
+endif()
