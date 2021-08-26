@@ -7,6 +7,7 @@
     use bspline_module
     use bspline_kinds_module, only: wp,ip
     use pyplot_module
+    use, intrinsic :: iso_fortran_env
 
     implicit none
 
@@ -47,7 +48,7 @@
                                                              'm:' ]
 
     fail   = .false.
-    tol    = 1.0e-14_wp
+    tol    = 100 * epsilon(1.0_wp)
     idx    = 0
     x      = real([1,2,3,4,5,6,7], wp)  ! nx points
     fcn_1d = f1(x)
@@ -55,7 +56,8 @@
     !initialize the plot:
     call plt%initialize(grid=.true.,xlabel='x (deg)',ylabel='f(x)',&
                         title='B-Spline End Conditions',legend=.true.)
-    call plt%add_plot(x*rad2deg,fcn_1d,label='Function $f(x) = \sin(x)$',&
+    call plt%add_plot(real(x*rad2deg,real64),real(fcn_1d,real64),&
+                        label='Function $f(x) = \sin(x)$',&
                         linestyle='ko',markersize=5,linewidth=2,istat=istat)
 
     if (extrap) then
@@ -92,7 +94,7 @@
             ! use the original init routine
             allocate(bcoef(nx))
             allocate(tx(nx+kx))
-            call db1ink(x,nx,fcn_1d,kx,0,tx,bcoef,iflag)
+            call db1ink(x,nx,fcn_1d,kx,0_ip,tx,bcoef,iflag)
         else
             ! use the dbint4 routine and specify the endpoint derivatives
             allocate(bcoef(nx+2))
@@ -181,7 +183,7 @@
         !write(*,*) ''
         !write(*,*) '==============================================='
 
-        call plt%add_plot(xval*rad2deg,fval,&
+        call plt%add_plot(real(xval*rad2deg,real64),real(fval,real64),&
                 label=trim(labels(icase)),&
                 linestyle=linestyles(icase),linewidth=2,istat=istat)
 

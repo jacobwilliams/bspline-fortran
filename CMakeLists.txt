@@ -9,6 +9,28 @@ set( CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/install"
 
 project(bspline-fortran NONE)
 
+# Real and Integer kinds
+SET(BSPLINE_REAL_KIND "REAL64" CACHE STRING "Real kind parameter")
+SET_PROPERTY(CACHE BSPLINE_REAL_KIND PROPERTY STRINGS REAL32 REAL64 REAL128)
+if(${BSPLINE_REAL_KIND} MATCHES "REAL32")
+  add_definitions(-DREAL32)
+elseif(${BSPLINE_REAL_KIND} MATCHES "REAL64")
+  add_definitions(-DREAL64)
+elseif(${BSPLINE_REAL_KIND} MATCHES "REAL128")
+  add_definitions(-DREAL128)
+endif()
+SET(BSPLINE_INT_KIND "INT32" CACHE STRING "Integer kind parameter")
+SET_PROPERTY(CACHE BSPLINE_INT_KIND PROPERTY STRINGS INT8 INT16 INT32 INT64)
+if(${BSPLINE_INT_KIND} MATCHES "INT8")
+  add_definitions(-DINT8)
+elseif(${BSPLINE_INT_KIND} MATCHES "INT16")
+  add_definitions(-DINT16)
+elseif(${BSPLINE_INT_KIND} MATCHES "INT32")
+  add_definitions(-DINT32)
+elseif(${BSPLINE_INT_KIND} MATCHES "INT64")
+  add_definitions(-DINT64)
+endif()
+
 # Use MSVS folders to organize projects on windows
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -23,7 +45,7 @@ set( CMAKE_BUILD_TYPE "Release"
 enable_language(Fortran)
 
 set( SOURCES
-  src/bspline_kinds_module.f90
+  src/bspline_kinds_module.F90
   src/bspline_module.f90
   src/bspline_oo_module.f90
   src/bspline_sub_module.f90 )
@@ -81,9 +103,9 @@ set_target_properties(${LIB_NAME}
   LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
   Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR})
 
-set( ENABLE_TESTS TRUE CACHE BOOL "Enable the unit tests." )
+set( BSPLINE_TESTS TRUE CACHE BOOL "Enable the unit tests." )
 
-if( ENABLE_TESTS )
+if( BSPLINE_TESTS )
 
   # we also need to build the pyplot-fortran library,
   # since that is needed by some of the tests:
@@ -123,3 +145,9 @@ install( TARGETS ${LIB_NAME} ${LIB_NAME}-static
           LIBRARY DESTINATION "${INSTALL_LIB_DIR}"
           ARCHIVE DESTINATION "${INSTALL_LIB_DIR}" )
 install( DIRECTORY "${MODULE_DIR}/" DESTINATION "${INSTALL_MOD_DIR}" )
+
+# Windows settings:
+if(MSVC_IDE)
+   INCLUDE_DIRECTORIES("src")
+   SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fpp")
+endif()
