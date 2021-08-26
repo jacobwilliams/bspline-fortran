@@ -4645,6 +4645,8 @@
     case(804_ip); msg='Error in db*ink: size(r) /= size(bcoef,5)'
     case(805_ip); msg='Error in db*ink: size(s) /= size(bcoef,6)'
 
+    case(806_ip); msg='Error in dbint4: currently, only k=4 can be used'
+
     case(100_ip); msg='Error in dbintk: k does not satisfy k>=1'
     case(101_ip); msg='Error in dbintk: n does not satisfy n>=k'
     case(102_ip); msg='Error in dbintk: x(i) does not satisfy x(i)<x(i+1) for some i'
