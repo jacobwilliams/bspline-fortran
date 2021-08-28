@@ -1,3 +1,6 @@
+![bspline-fortran](/media/bspline-fortran.png)
+============
+
 bspline-fortran [![GitHub release](https://img.shields.io/github/release/jacobwilliams/bspline-fortran.svg?style=plastic)](https://github.com/jacobwilliams/bspline-fortran/releases/latest) [![DOI](https://zenodo.org/badge/31299552.svg)](https://zenodo.org/badge/latestdoi/31299552)
 ============
 
