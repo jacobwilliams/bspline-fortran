@@ -1,5 +1,5 @@
 name = "bspline-fortran"
-version = "6.1.0"
+version = "7.0.0"
 author = "Jacob Williams"
 maintainer = "Jacob Williams"
 copyright = "Copyright (c) 2015-2022, Jacob Williams"
