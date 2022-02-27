@@ -1,74 +1,22 @@
 name = "bspline-fortran"
-version = "6.0.0"
+version = "6.1.0"
 author = "Jacob Williams"
 maintainer = "Jacob Williams"
-copyright = "Copyright (c) 2015-2021, Jacob Williams"
+copyright = "Copyright (c) 2015-2022, Jacob Williams"
 license = "BSD"
 description = "Multidimensional B-Spline Interpolation of Data on a Regular Grid"
 homepage = "https://github.com/jacobwilliams/bspline-fortran"
 
-[library]
-source-dir = "src"
-
-[[ test ]]
-name = "bspline_extrap_test"
-source-dir = "src/tests"
-main = "bspline_extrap_test.f90"
-
-[[ test ]]
-name = "bspline_test"
-source-dir = "src/tests"
-main = "bspline_test.f90"
-
-[[ test ]]
-name = "bspline_test_2"
-source-dir = "src/tests"
-main = "bspline_test_2.f90"
-
-[[ test ]]
-name = "dbint4_test"
-source-dir = "src/tests"
-main = "dbint4_test.f90"
-
-[[ test ]]
-name = "knot_tests"
-source-dir = "src/tests"
-main = "knot_tests.f90"
-
-[[ test ]]
-name = "speed_test"
-source-dir = "src/tests"
-main = "speed_test.f90"
-
-[[ test ]]
-name = "speed_test_oo"
-source-dir = "src/tests"
-main = "speed_test_oo.f90"
-
-[[ test ]]
-name = "stack_size_test_oo"
-source-dir = "src/tests"
-main = "stack_size_test_oo.f90"
-
-[[ test ]]
-name = "test_integrate"
-source-dir = "src/tests"
-main = "test_integrate.f90"
-
-[[ test ]]
-name = "test_oo"
-source-dir = "src/tests"
-main = "test_oo.f90"
-
-[[ test ]]
-name = "test_regrid"
-source-dir = "src/tests"
-main = "test_regrid.f90"
-
-[install]
-library = true
-
 [build]
 auto-executables = false
 auto-examples = false
-auto-tests = false
+auto-tests = true
+
+[dev-dependencies]
+pyplot-fortran = { git = "https://github.com/jacobwilliams/pyplot-fortran", tag = "3.2.0" }
+
+[library]
+source-dir = "src"
+
+[install]
+library = true

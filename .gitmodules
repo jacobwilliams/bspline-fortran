@@ -1,3 +1,0 @@
-[submodule "src/tests/pyplot-fortran"]
-	path = src/tests/pyplot-fortran
-	url = https://github.com/jacobwilliams/pyplot-fortran.git

@@ -13,8 +13,8 @@
 
     ! number of data points to test (n x n x n):
     integer,parameter :: n_start  = 90     !! initial size
-    integer,parameter :: n_stop   = 1000   !! final size
-    integer,parameter :: n_step   = 20     !! step size
+    integer,parameter :: n_stop   = 90     !! final size
+    integer,parameter :: n_step   = 90      !! step size
 
     write(*,*) ''
     write(*,'(A10,1X,A20,1X,A30)') 'num points','size (bytes)', 'error'
