@@ -8,8 +8,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        gcc_v: [9] # Version of GFortran we want to use.
-        python-version: [3.7]
+        gcc_v: [10] # Version of GFortran we want to use.
+        python-version: [3.9]
     env:
       FC: gfortran-${{ matrix.gcc_v }}
       GCC_V: ${{ matrix.gcc_v }}
@@ -28,56 +28,46 @@ jobs:
     - name: Setup Graphviz
       uses: ts-graphviz/setup-graphviz@v1
 
+    - name: Setup Fortran Package Manager
+      uses: fortran-lang/setup-fpm@v3
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Install Python dependencies
       if: contains( matrix.os, 'ubuntu')
       run: |
         python -m pip install --upgrade pip
-        pip install ford FoBiS.py numpy matplotlib
+        pip install ford numpy matplotlib
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
     - name: Install GFortran Linux
       if: contains( matrix.os, 'ubuntu')
       run: |
-        sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-        sudo apt-get update
-        sudo apt-get install -y gcc-${GCC_V} gfortran-${GCC_V}
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${GCC_V} 100 \
-        --slave /usr/bin/gfortran gfortran /usr/bin/gfortran-${GCC_V} \
-        --slave /usr/bingcov gcov /usr/bin/gcov-${GCC_V}
+        sudo apt-get install lcov
+        sudo update-alternatives \
+           --install /usr/bin/gcc gcc /usr/bin/gcc-${{ matrix.gcc_v }} 100 \
+           --slave /usr/bin/gfortran gfortran /usr/bin/gfortran-${{ matrix.gcc_v }} \
+           --slave /usr/bin/gcov gcov /usr/bin/gcov-${{ matrix.gcc_v }}
 
-    - name: Compile
+    # - name: Compile
+    #   run: fpm build --profile release
+
+    - name: Run tests
+      run: fpm test --profile debug --flag -coverage
+
+    - name: Create coverage report
       run: |
-        FoBiS.py build -f bspline-fortran.fobis -mode tests-gnu
+        mkdir -p ${{ env.COV_DIR }}
+        lcov --capture --initial --base-directory . --directory build/gfortran_*/ --output-file ${{ env.COV_DIR }}/coverage.base
+        lcov --capture --base-directory . --directory build/gfortran_*/ --output-file ${{ env.COV_DIR }}/coverage.capture
+        lcov --add-tracefile ${{ env.COV_DIR }}/coverage.base --add-tracefile ${{ env.COV_DIR }}/coverage.capture --output-file ${{ env.COV_DIR }}/coverage.info
+      env:
+        COV_DIR: build/coverage
 
-    - name: bspline_test
-      run: ./bin/bspline_test
-
-    - name: bspline_test_2
-      run: ./bin/bspline_test_2
-
-    - name: bspline_extrap_test
-      run: ./bin/bspline_extrap_test
-
-    - name: test_regrid
-      run: ./bin/test_regrid
-
-    - name: knot_tests
-      run: ./bin/knot_tests
-
-    - name: speed_test_oo
-      run: ./bin/speed_test_oo
-
-    - name: speed_test
-      run: ./bin/speed_test
-
-    - name: test_integrate
-      run: ./bin/test_integrate
-
-    - name: test_oo
-      run: ./bin/test_oo
-
-    - name: dbint4_test
-      run: ./bin/dbint4_test
+    - name: Upload coverage report
+      uses: codecov/codecov-action@v2
+      with:
+        files: build/coverage/coverage.info
 
     - name: Build documentation
       run: ford ./bspline-fortran.md

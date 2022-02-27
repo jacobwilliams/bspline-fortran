@@ -5,7 +5,7 @@
 cmake_minimum_required(VERSION 3.11)
 
 set( CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/install"
-  CACHE STRING "Select where to install the library and test programs." )
+  CACHE STRING "Select where to install the library." )
 
 project(bspline-fortran NONE)
 
@@ -50,20 +50,6 @@ set( SOURCES
   src/bspline_oo_module.f90
   src/bspline_sub_module.f90 )
 
-set( PYPLOT_SOURCES
-  src/tests/pyplot-fortran/src/pyplot_module.f90 )
-
-set( TEST_SOURCES src/tests/bspline_extrap_test.f90
-  src/tests/bspline_test.f90
-  src/tests/bspline_test_2.f90
-  src/tests/dbint4_test.f90
-  src/tests/knot_tests.f90
-  src/tests/speed_test.f90
-  src/tests/speed_test_oo.f90
-  src/tests/test_integrate.f90
-  src/tests/test_oo.f90
-  src/tests/test_regrid.f90 )
-
 set(INSTALL_MOD_DIR "lib")
 set(INSTALL_LIB_DIR "${INSTALL_MOD_DIR}")
 set(ABS_LIB_INSTALL_DIR "\${CMAKE_INSTALL_PREFIX}/${INSTALL_LIB_DIR}")
@@ -102,43 +88,6 @@ set_target_properties(${LIB_NAME}
   endif()
   LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
   Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR})
-
-set( BSPLINE_TESTS TRUE CACHE BOOL "Enable the unit tests." )
-
-if( BSPLINE_TESTS )
-
-  # we also need to build the pyplot-fortran library,
-  # since that is needed by some of the tests:
-  set( PYPLOT_LIB_NAME "pyplot-fortran" )
-  add_library( ${PYPLOT_LIB_NAME} STATIC ${PYPLOT_SOURCES} )
-  set_target_properties(${PYPLOT_LIB_NAME}
-    PROPERTIES
-    OUTPUT_NAME ${PYPLOT_LIB_NAME}
-    if(NOT MSVC_IDE)
-      PREFIX lib
-    endif()
-    ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-    Fortran_MODULE_DIRECTORY ${MODULE_DIR})
-
-  # build each test program:
-  foreach( UNIT_TEST ${TEST_SOURCES} )
-    get_filename_component( TEST ${UNIT_TEST} NAME_WE )
-    if(MSVC_IDE)
-      link_directories(${CMAKE_BINARY_DIR}/lib)
-    endif()
-    add_executable( ${TEST} ${UNIT_TEST} )
-    target_link_libraries( ${TEST} ${LIB_NAME}-static ${PYPLOT_LIB_NAME} )
-    set_target_properties(${TEST}
-        PROPERTIES
-        ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
-        Fortran_MODULE_DIRECTORY ${MODULE_DIR})
-    install(TARGETS ${TEST} ${TEST}
-            RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
-  endforeach()
-
-endif()
 
 # install library:
 install( TARGETS ${LIB_NAME} ${LIB_NAME}-static

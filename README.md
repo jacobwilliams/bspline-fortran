@@ -1,16 +1,16 @@
 ![bspline-fortran](/media/bspline-fortran.png)
 ============
 
-bspline-fortran [![GitHub release](https://img.shields.io/github/release/jacobwilliams/bspline-fortran.svg?style=plastic)](https://github.com/jacobwilliams/bspline-fortran/releases/latest) [![DOI](https://zenodo.org/badge/31299552.svg)](https://zenodo.org/badge/latestdoi/31299552)
-============
-
 Multidimensional B-Spline Interpolation of Data on a Regular Grid
 
-# Status
+## Status
 
+[![GitHub release](https://img.shields.io/github/release/jacobwilliams/bspline-fortran.svg?style=plastic)](https://github.com/jacobwilliams/bspline-fortran/releases/latest)
 ![Build Status](https://github.com/jacobwilliams/bspline-fortran/actions/workflows/CI.yml/badge.svg)
+[![codecov](https://codecov.io/gh/jacobwilliams/bspline-fortran/branch/master/graph/badge.svg?token=umusIZ8Ir8)](https://codecov.io/gh/jacobwilliams/bspline-fortran)
+[![DOI](https://zenodo.org/badge/31299552.svg)](https://zenodo.org/badge/latestdoi/31299552)
 
-# Brief description
+## Brief description
 
 The library provides subroutines for 1D-6D interpolation and extrapolation using B-splines. The code is written in modern Fortran (i.e., Fortran 2003+). There are two ways to use the module, via a basic subroutine interface and an object-oriented interface. Both are thread safe.
 
@@ -83,14 +83,62 @@ The library also contains routines for computing definite integrals of bsplines.
 
 Note that extrapolation is not currently supported for these.
 
-# Examples
+## Examples
 
 See the [examples](https://github.com/jacobwilliams/bspline-fortran/tree/master/src/tests) for more details. Note that, to compile and run some of the test programs, the [pyplot_module.f90](https://github.com/jacobwilliams/pyplot-fortran) file (which is used to generate plots) must be copied into the `src/tests` directory.
 
-# Compiling
+## Compiling
 
-A simple bash script ```build.sh``` is provided for building bspline-fortran with gfortran using [FoBiS](https://github.com/szaghi/FoBiS). It also builds the API documentation using [FORD](https://github.com/Fortran-FOSS-Programmers/ford). The library can also be compiled with the Intel Fortran Compiler (and presumably any other Fortran compiler that supports modern standards).
+The library can be compiled with recent versions the Intel Fortran Compiler and GFortran (and presumably any other Fortran compiler that supports modern standards).
 
+### FPM
+
+A `fmp.toml` file is provided for compiling bspline-fortran with the [Fortran Package Manager](https://github.com/fortran-lang/fpm). For example, to build:
+
+```
+fpm build --profile release
+```
+
+By default, the library is built with double precision (`real64`) real values and single precision (`int32`) integer values. Explicitly specifying the real or integer kinds can be done using the following processor flags:
+
+Preprocessor flag | Kind  | Number of bytes
+----------------- | ----- | ---------------
+`REAL32`  | `real(kind=real32)`  | 4
+`REAL64`  | `real(kind=real64)`  | 8
+`REAL128` | `real(kind=real128)` | 16
+
+Preprocessor flag | Kind  | Number of bytes
+----------------- | ----- | ---------------
+`INT8`  | `integer(kind=int8)`  | 1
+`INT16`  | `integer(kind=int16)`  | 2
+`INT32` | `integer(kind=int32)` | 4
+`INT64` | `integer(kind=int64)` | 8
+
+For example, to build a single precision version of the library, use:
+
+```
+fpm build --profile release --flag "-DREAL32"
+```
+
+To run the unit tests:
+
+```
+fpm test --profile release
+```
+
+To use `bspline-fortran` within your fpm project, add the following to your `fpm.toml` file:
+```toml
+[dependencies]
+bspline-fortran = { git="https://github.com/jacobwilliams/bspline-fortran.git" }
+```
+
+or, to use a specific version:
+```toml
+[dependencies]
+bspline-fortran = { git="https://github.com/jacobwilliams/bspline-fortran.git", tag = "6.1.0"  }
+```
+
+### CMake
 A basic CMake configuration file is also included. For example, to build a static library:
 
 ```bash
@@ -111,21 +159,10 @@ For a debug build:
  cmake -DCMAKE_BUILD_TYPE=DEBUG ..
 ```
 
-A [FoBiS](https://github.com/szaghi/FoBiS) configuration file (`bspline-fortran.fobis`) is also provided that can also build the library and examples. Use the `mode` flag to indicate what to build. For example:
+## Documentation
 
-  * To build all the examples using gfortran: `FoBiS.py build -f bspline-fortran.fobis -mode tests-gnu`
-  * To build all the examples using ifort: `FoBiS.py build -f bspline-fortran.fobis -mode tests-intel`
-  * To build a static library using gfortran: `FoBiS.py build -f bspline-fortran.fobis -mode static-gnu`
-  * To build a static library using ifort: `FoBiS.py build -f bspline-fortran.fobis -mode static-intel`
+The latest API documentation can be found [here](https://jacobwilliams.github.io/bspline-fortran/). This was generated from the source code using [FORD](https://github.com/Fortran-FOSS-Programmers/ford) (i.e. by running `ford bspline-fortran.md`).
 
-  The full set of modes are: `static-gnu`, `static-gnu-debug`, `static-intel`, `static-intel-debug`, `shared-gnu`, `shared-gnu-debug`, `shared-intel`, `shared-intel-debug`, `tests-gnu`, `tests-gnu-debug`, `tests-intel`, `tests-intel-debug`
-
-  To generate the documentation using [ford](https://github.com/Fortran-FOSS-Programmers/ford), run: ```FoBis.py rule --execute makedoc -f bspline-fortran.fobis```
-
-# Documentation
-
-The latest API documentation can be found [here](http://jacobwilliams.github.io/bspline-fortran/). This was generated from the source code using [FORD](https://github.com/Fortran-FOSS-Programmers/ford) (note that the build script will also generate these files).
-
-# License
+## License
 
 The bspline-fortran source code and related files and documentation are distributed under a permissive free software [license](https://github.com/jacobwilliams/bspline-fortran/blob/master/LICENSE) (BSD-style).
