@@ -5,9 +5,10 @@ Multidimensional B-Spline Interpolation of Data on a Regular Grid
 
 ## Status
 
-[![GitHub release](https://img.shields.io/github/release/jacobwilliams/bspline-fortran.svg?style=plastic)](https://github.com/jacobwilliams/bspline-fortran/releases/latest)
-[![CI Status](https://github.com/jacobwilliams/bspline-fortran/actions/workflows/CI.yml/badge.svg)](https://github.com/jacobwilliams/bspline-fortran/actions)
-[![codecov](https://codecov.io/gh/jacobwilliams/bspline-fortran/branch/master/graph/badge.svg?token=umusIZ8Ir8)](https://codecov.io/gh/jacobwilliams/bspline-fortran)
+[![GitHub release](https://img.shields.io/github/release/jacobwilliams/bspline-fortran.svg)](https://github.com/jacobwilliams/bspline-fortran/releases/latest)
+[![Build Status](https://github.com/jacobwilliams/bspline-fortran/actions/workflows/CI.yml/badge.svg)](https://github.com/jacobwilliams/bspline-fortran/actions)
+[![codecov](https://codecov.io/gh/jacobwilliams/bspline-fortran/branch/master/graph/badge.svg)](https://codecov.io/gh/jacobwilliams/bspline-fortran)
+[![last-commit](https://img.shields.io/github/last-commit/jacobwilliams/bspline-fortran)](https://github.com/jacobwilliams/bspline-fortran/commits/master)
 [![DOI](https://zenodo.org/badge/31299552.svg)](https://zenodo.org/badge/latestdoi/31299552)
 
 ## Brief description
