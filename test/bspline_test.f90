@@ -63,6 +63,111 @@
     integer(ip),dimension(6) :: iflag
     integer(ip) :: inbvx,inbvy,inbvz,inbvq,inbvr,inbvs
     integer(ip) :: iloy,iloz,iloq,ilor,ilos
+    character(len=:),allocatable :: msg    !! status message associated with `flag`
+
+    integer,dimension(*),parameter :: iflags = [   -1_ip, &
+                                                   -2_ip, &
+                                                    0_ip, &
+                                                    1_ip, &
+                                                    2_ip, &
+                                                    3_ip, &
+                                                    4_ip, &
+                                                    5_ip, &
+                                                    6_ip, &
+                                                    7_ip, &
+                                                    8_ip, &
+                                                    9_ip, &
+                                                    10_ip, &
+                                                    11_ip, &
+                                                    12_ip, &
+                                                    13_ip, &
+                                                    14_ip, &
+                                                    15_ip, &
+                                                    16_ip, &
+                                                    17_ip, &
+                                                    18_ip, &
+                                                    19_ip, &
+                                                    20_ip, &
+                                                    21_ip, &
+                                                    22_ip, &
+                                                    23_ip, &
+                                                    24_ip, &
+                                                    25_ip, &
+                                                    26_ip, &
+                                                    700_ip, &
+                                                    701_ip, &
+                                                    702_ip, &
+                                                    703_ip, &
+                                                    704_ip, &
+                                                    705_ip, &
+                                                    706_ip, &
+                                                    707_ip, &
+                                                    708_ip, &
+                                                    709_ip, &
+                                                    710_ip, &
+                                                    711_ip, &
+                                                    712_ip, &
+                                                    713_ip, &
+                                                    714_ip, &
+                                                    715_ip, &
+                                                    716_ip, &
+                                                    717_ip, &
+                                                    800_ip, &
+                                                    801_ip, &
+                                                    802_ip, &
+                                                    803_ip, &
+                                                    804_ip, &
+                                                    805_ip, &
+                                                    806_ip, &
+                                                    100_ip, &
+                                                    101_ip, &
+                                                    102_ip, &
+                                                    103_ip, &
+                                                    104_ip, &
+                                                    201_ip, &
+                                                    202_ip, &
+                                                    203_ip, &
+                                                    204_ip, &
+                                                    301_ip, &
+                                                    401_ip, &
+                                                    402_ip, &
+                                                    403_ip, &
+                                                    404_ip, &
+                                                    405_ip, &
+                                                    406_ip, &
+                                                    501_ip, &
+                                                    502_ip, &
+                                                    503_ip, &
+                                                    504_ip, &
+                                                    505_ip, &
+                                                    506_ip, &
+                                                    601_ip, &
+                                                    602_ip, &
+                                                    603_ip, &
+                                                    604_ip, &
+                                                    605_ip, &
+                                                    606_ip, &
+                                                    901_ip, &
+                                                    902_ip, &
+                                                    903_ip, &
+                                                    1001_ip, &
+                                                    1002_ip, &
+                                                    1003_ip, &
+                                                    1004_ip, &
+                                                    1005_ip, &
+                                                    1101_ip, &
+                                                    1102_ip, &
+                                                    2001_ip, &
+                                                    2002_ip, &
+                                                    2003_ip, &
+                                                    2004_ip, &
+                                                    2005_ip, &
+                                                    2006_ip, &
+                                                    2007_ip, &
+                                                    3001_ip, &
+                                                    3002_ip, &
+                                                    3003_ip, &
+                                                    -999999_ip ] ! an unknown code
 
     fail = .false.
     tol = 100 * epsilon(1.0_wp)
@@ -205,6 +310,12 @@
             write(*,*)  ' ** test passed ** '
         end if
         write(*,*) ''
+    end do
+
+    ! a test just to get all the status messages
+    ! [see get_status_message]
+    do i = 1, size(iflags)
+        msg = get_status_message(iflags(i))
     end do
 
     contains
