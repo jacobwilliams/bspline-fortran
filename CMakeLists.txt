@@ -100,3 +100,24 @@ if(MSVC_IDE)
    INCLUDE_DIRECTORIES("src")
    SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fpp")
 endif()
+
+# Add ctest commands, to build all test programs (that do not depend on pyplot_module)
+# Thus, tests can all be run with `make test`
+enable_testing()
+foreach(prog_name
+        # bspline_extrap_test
+        bspline_test_2
+        bspline_test
+        # dbint4_test
+        # knot_tests
+        # speed_test
+        # speed_test_oo
+        stack_size_test_oo
+        test_integrate
+        test_oo
+        test_regrid)
+    add_executable(${prog_name} test/${prog_name}.f90)
+    target_link_libraries(${prog_name} ${LIB_NAME})
+    add_test(NAME ${prog_name}
+             COMMAND ${prog_name})
+endforeach()
