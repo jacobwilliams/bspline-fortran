@@ -117,7 +117,7 @@ foreach(prog_name
         test_oo
         test_regrid)
     add_executable(${prog_name} test/${prog_name}.f90)
-    target_link_libraries(${prog_name} ${LIB_NAME})
+    target_link_libraries(${prog_name} ${LIB_NAME}-static)
     add_test(NAME ${prog_name}
              COMMAND ${prog_name})
 endforeach()
