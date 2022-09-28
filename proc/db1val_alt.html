@@ -135,28 +135,28 @@
 <thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
 <tbody>
 <tr>
-  <td><span class="anchor" id="variable-xval~2"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-xval~8"></span>real(kind=wp),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>xval</strong></td><td><p>
 <script type="math/tex">x</script> coordinate of evaluation point.</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-idx~2"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-idx~9"></span>integer(kind=ip),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>idx</strong></td><td><p>
 <script type="math/tex">x</script> derivative of piecewise polynomial to evaluate.</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-tx~11"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-tx~24"></span>real(kind=wp),</td>
 <td>intent(in),</td>
   <td></td>  <td>dimension(n+kx)</td><td>::</td>
   <td><strong>tx</strong></td><td><p>sequence of knots defining the piecewise polynomial
 in the <script type="math/tex">x</script> direction.</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-nx~11"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-nx~12"></span>integer(kind=ip),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>nx</strong></td><td><p>the number of interpolation points in <script type="math/tex">x</script>.</p></td>
@@ -168,7 +168,7 @@ in the <script type="math/tex">x</script> direction.</p></td>
   <td><strong>n</strong></td><td><p>length of <code>bcoef</code>: <code>nx+2</code></p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-kx~11"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-kx~36"></span>integer(kind=ip),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>kx</strong></td><td><p>order of polynomial pieces in <script type="math/tex">x</script>.
@@ -181,13 +181,13 @@ in the <script type="math/tex">x</script> direction.</p></td>
   <td><strong>bcoef</strong></td><td><p>the b-spline coefficients computed by <a href="../interface/db1ink.html">db1ink</a>.</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-f~3"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-f~11"></span>real(kind=wp),</td>
 <td>intent(out)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>f</strong></td><td><p>interpolated value</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-iflag~8"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-iflag~30"></span>integer(kind=ip),</td>
 <td>intent(out)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>iflag</strong></td><td><p>status flag:</p>
@@ -213,7 +213,7 @@ and must not be changed by the user.</p></td>
   <td><strong>w0</strong></td><td><p>work array</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-extrap~5"></span>logical,</td>
+  <td><span class="anchor" id="variable-extrap~30"></span>logical,</td>
 <td>intent(in),</td>
   <td>optional</td>  <td></td><td>::</td>
   <td><strong>extrap</strong></td><td><p>if extrapolation is allowed

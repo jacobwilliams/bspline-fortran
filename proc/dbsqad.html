@@ -191,14 +191,14 @@
   <td><strong>k</strong></td><td><p>order of b-spline, <code>1 &lt;= k &lt;= 20</code></p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-x1~3"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-x1~5"></span>real(kind=wp),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>x1</strong></td><td><p>end point of quadrature interval
 in <code>t(k) &lt;= x &lt;= t(n+1)</code></p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-x2~3"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-x2~5"></span>real(kind=wp),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>x2</strong></td><td><p>end point of quadrature interval
@@ -217,7 +217,7 @@ in <code>t(k) &lt;= x &lt;= t(n+1)</code></p></td>
   <td><strong>work</strong></td><td><p>work vector of length <code>3*k</code></p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-iflag~29"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-iflag~51"></span>integer(kind=ip),</td>
 <td>intent(out)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>iflag</strong></td><td><p>status flag:</p>
@@ -252,59 +252,59 @@ in <code>t(k) &lt;= x &lt;= t(n+1)</code></p></td>
 <!-- proc~dbsqad -->
 <g id="proc~~dbsqad~~CallsGraph_node1" class="node">
 <title>proc~dbsqad</title>
-<polygon fill="none" stroke="black" points="54,-24 0,-24 0,0 54,0 54,-24"/>
-<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">dbsqad</text>
-</g>
-<!-- proc~dbvalu -->
-<g id="proc~~dbsqad~~CallsGraph_node2" class="node">
-<title>proc~dbvalu</title>
-<g id="a_proc~~dbsqad~~CallsGraph_node2"><a xlink:href=".././proc/dbvalu.html" xlink:title="dbvalu">
-<polygon fill="#d9534f" stroke="#d9534f" points="144,-44 90,-44 90,-20 144,-20 144,-44"/>
-<text text-anchor="middle" x="117" y="-29.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbvalu</text>
-</a>
-</g>
-</g>
-<!-- proc~dbsqad&#45;&gt;proc~dbvalu -->
-<g id="proc~~dbsqad~~CallsGraph_edge1" class="edge">
-<title>proc~dbsqad&#45;&gt;proc~dbvalu</title>
-<path fill="none" stroke="#000000" d="M54.4,-18C62.48,-19.84 71.51,-21.89 80.1,-23.84"/>
-<polygon fill="#000000" stroke="#000000" points="79.39,-27.27 89.92,-26.07 80.94,-20.44 79.39,-27.27"/>
+<polygon fill="none" stroke="black" points="54,-44 0,-44 0,-20 54,-20 54,-44"/>
+<text text-anchor="middle" x="27" y="-29.6" font-family="Helvetica,sans-Serif" font-size="10.50">dbsqad</text>
 </g>
 <!-- proc~dintrv -->
-<g id="proc~~dbsqad~~CallsGraph_node3" class="node">
+<g id="proc~~dbsqad~~CallsGraph_node2" class="node">
 <title>proc~dintrv</title>
-<g id="a_proc~~dbsqad~~CallsGraph_node3"><a xlink:href=".././proc/dintrv.html" xlink:title="dintrv">
-<polygon fill="#d9534f" stroke="#d9534f" points="234,-24 180,-24 180,0 234,0 234,-24"/>
-<text text-anchor="middle" x="207" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dintrv</text>
+<g id="a_proc~~dbsqad~~CallsGraph_node2"><a xlink:href=".././proc/dintrv.html" xlink:title="dintrv">
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-44 180,-44 180,-20 234,-20 234,-44"/>
+<text text-anchor="middle" x="207" y="-29.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dintrv</text>
 </a>
 </g>
 </g>
 <!-- proc~dbsqad&#45;&gt;proc~dintrv -->
-<g id="proc~~dbsqad~~CallsGraph_edge2" class="edge">
+<g id="proc~~dbsqad~~CallsGraph_edge1" class="edge">
 <title>proc~dbsqad&#45;&gt;proc~dintrv</title>
-<path fill="none" stroke="#000000" d="M54.24,-11.48C65.28,-11.29 78.27,-11.09 90,-11 114,-10.81 120,-10.81 144,-11 152.25,-11.07 161.12,-11.18 169.49,-11.31"/>
-<polygon fill="#000000" stroke="#000000" points="169.7,-14.82 179.76,-11.48 169.81,-7.82 169.7,-14.82"/>
+<path fill="none" stroke="#000000" d="M54.24,-32.52C65.28,-32.71 78.27,-32.91 90,-33 114,-33.19 120,-33.19 144,-33 152.25,-32.93 161.12,-32.82 169.49,-32.69"/>
+<polygon fill="#000000" stroke="#000000" points="169.81,-36.18 179.76,-32.52 169.7,-29.18 169.81,-36.18"/>
 </g>
-<!-- proc~dbvalu&#45;&gt;proc~dintrv -->
-<g id="proc~~dbsqad~~CallsGraph_edge3" class="edge">
-<title>proc~dbvalu&#45;&gt;proc~dintrv</title>
-<path fill="none" stroke="#000000" d="M144.4,-26C152.48,-24.16 161.51,-22.11 170.1,-20.16"/>
-<polygon fill="#000000" stroke="#000000" points="170.94,-23.56 179.92,-17.93 169.39,-16.73 170.94,-23.56"/>
+<!-- proc~dbvalu -->
+<g id="proc~~dbsqad~~CallsGraph_node3" class="node">
+<title>proc~dbvalu</title>
+<g id="a_proc~~dbsqad~~CallsGraph_node3"><a xlink:href=".././proc/dbvalu.html" xlink:title="dbvalu">
+<polygon fill="#d9534f" stroke="#d9534f" points="144,-24 90,-24 90,0 144,0 144,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbvalu</text>
+</a>
+</g>
+</g>
+<!-- proc~dbsqad&#45;&gt;proc~dbvalu -->
+<g id="proc~~dbsqad~~CallsGraph_edge2" class="edge">
+<title>proc~dbsqad&#45;&gt;proc~dbvalu</title>
+<path fill="none" stroke="#000000" d="M54.4,-26C62.48,-24.16 71.51,-22.11 80.1,-20.16"/>
+<polygon fill="#000000" stroke="#000000" points="80.94,-23.56 89.92,-17.93 79.39,-16.73 80.94,-23.56"/>
 </g>
 <!-- proc~get_temp_x_for_extrap -->
 <g id="proc~~dbsqad~~CallsGraph_node4" class="node">
 <title>proc~get_temp_x_for_extrap</title>
 <g id="a_proc~~dbsqad~~CallsGraph_node4"><a xlink:href=".././proc/get_temp_x_for_extrap.html" xlink:title="get_temp_x_for_extrap">
-<polygon fill="#d94e8f" stroke="#d94e8f" points="403,-24 270,-24 270,0 403,0 403,-24"/>
-<text text-anchor="middle" x="336.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_temp_x_for_extrap</text>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="403,-44 270,-44 270,-20 403,-20 403,-44"/>
+<text text-anchor="middle" x="336.5" y="-29.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_temp_x_for_extrap</text>
 </a>
 </g>
 </g>
 <!-- proc~dintrv&#45;&gt;proc~get_temp_x_for_extrap -->
-<g id="proc~~dbsqad~~CallsGraph_edge4" class="edge">
+<g id="proc~~dbsqad~~CallsGraph_edge3" class="edge">
 <title>proc~dintrv&#45;&gt;proc~get_temp_x_for_extrap</title>
-<path fill="none" stroke="#000000" d="M234.11,-12C241.81,-12 250.66,-12 259.85,-12"/>
-<polygon fill="#000000" stroke="#000000" points="259.92,-15.5 269.92,-12 259.92,-8.5 259.92,-15.5"/>
+<path fill="none" stroke="#000000" d="M234.11,-32C241.81,-32 250.66,-32 259.85,-32"/>
+<polygon fill="#000000" stroke="#000000" points="259.92,-35.5 269.92,-32 259.92,-28.5 259.92,-35.5"/>
+</g>
+<!-- proc~dbvalu&#45;&gt;proc~dintrv -->
+<g id="proc~~dbsqad~~CallsGraph_edge4" class="edge">
+<title>proc~dbvalu&#45;&gt;proc~dintrv</title>
+<path fill="none" stroke="#000000" d="M144.4,-18C152.48,-19.84 161.51,-21.89 170.1,-23.84"/>
+<polygon fill="#000000" stroke="#000000" points="169.39,-27.27 179.92,-26.07 170.94,-20.44 169.39,-27.27"/>
 </g>
 </g>
 </svg>

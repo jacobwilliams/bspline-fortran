@@ -144,7 +144,7 @@
 <thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
 <tbody>
 <tr>
-  <td><span class="anchor" id="variable-x~5"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-x~29"></span>real(kind=wp),</td>
 <td>intent(in),</td>
   <td></td>  <td>dimension(:)</td><td>::</td>
   <td><strong>x</strong></td><td><p>
@@ -152,21 +152,21 @@
 and in increasing order</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-nx~8"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-nx~9"></span>integer(kind=ip),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>nx</strong></td><td><p>number of data points, <script type="math/tex"> n_x \ge 2 </script>
 </p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-fcn~2"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-fcn~26"></span>real(kind=wp),</td>
 <td>intent(in),</td>
   <td></td>  <td>dimension(:)</td><td>::</td>
   <td><strong>fcn</strong></td><td><p>
 <script type="math/tex">y</script> vector of ordinates of length <code>nx</code></p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-kx~8"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-kx~33"></span>integer(kind=ip),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>kx</strong></td><td><p>spline order (Currently, this must be <code>4</code>)</p></td>
@@ -216,7 +216,7 @@ and in increasing order</p></td>
 </ul></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-tx~8"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-tx~21"></span>real(kind=wp),</td>
 <td>intent(out),</td>
   <td></td>  <td>dimension(:)</td><td>::</td>
   <td><strong>tx</strong></td><td><p>knot array of length <code>nx+6</code></p></td>
@@ -228,7 +228,7 @@ and in increasing order</p></td>
   <td><strong>bcoef</strong></td><td><p>b spline coefficient array of length <code>nx+2</code></p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-iflag~5"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-iflag~27"></span>integer(kind=ip),</td>
 <td>intent(out)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>iflag</strong></td><td><p>status flag:</p>
@@ -260,38 +260,38 @@ and in increasing order</p></td>
 <!-- proc~db1ink_alt -->
 <g id="proc~~db1ink_alt~~CallsGraph_node1" class="node">
 <title>proc~db1ink_alt</title>
-<polygon fill="none" stroke="black" points="67,-45 0,-45 0,-21 67,-21 67,-45"/>
-<text text-anchor="middle" x="33.5" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50">db1ink_alt</text>
+<polygon fill="none" stroke="black" points="67,-87 0,-87 0,-63 67,-63 67,-87"/>
+<text text-anchor="middle" x="33.5" y="-72.6" font-family="Helvetica,sans-Serif" font-size="10.50">db1ink_alt</text>
+</g>
+<!-- proc~check_inputs -->
+<g id="proc~~db1ink_alt~~CallsGraph_node2" class="node">
+<title>proc~check_inputs</title>
+<g id="a_proc~~db1ink_alt~~CallsGraph_node2"><a xlink:href=".././proc/check_inputs.html" xlink:title="check_inputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="185,-108 103,-108 103,-84 185,-84 185,-108"/>
+<text text-anchor="middle" x="144" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">check_inputs</text>
+</a>
+</g>
+</g>
+<!-- proc~db1ink_alt&#45;&gt;proc~check_inputs -->
+<g id="proc~~db1ink_alt~~CallsGraph_edge1" class="edge">
+<title>proc~db1ink_alt&#45;&gt;proc~check_inputs</title>
+<path fill="none" stroke="#000000" d="M67.05,-81.3C75.22,-82.88 84.17,-84.61 92.96,-86.32"/>
+<polygon fill="#000000" stroke="#000000" points="92.3,-89.75 102.79,-88.22 93.63,-82.88 92.3,-89.75"/>
 </g>
 <!-- proc~dbint4 -->
-<g id="proc~~db1ink_alt~~CallsGraph_node2" class="node">
+<g id="proc~~db1ink_alt~~CallsGraph_node3" class="node">
 <title>proc~dbint4</title>
-<g id="a_proc~~db1ink_alt~~CallsGraph_node2"><a xlink:href=".././proc/dbint4.html" xlink:title="dbint4">
+<g id="a_proc~~db1ink_alt~~CallsGraph_node3"><a xlink:href=".././proc/dbint4.html" xlink:title="dbint4">
 <polygon fill="#d9534f" stroke="#d9534f" points="171,-66 117,-66 117,-42 171,-42 171,-66"/>
 <text text-anchor="middle" x="144" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbint4</text>
 </a>
 </g>
 </g>
 <!-- proc~db1ink_alt&#45;&gt;proc~dbint4 -->
-<g id="proc~~db1ink_alt~~CallsGraph_edge1" class="edge">
-<title>proc~db1ink_alt&#45;&gt;proc~dbint4</title>
-<path fill="none" stroke="#000000" d="M67.05,-39.3C79.56,-41.72 93.92,-44.5 106.75,-46.98"/>
-<polygon fill="#000000" stroke="#000000" points="106.18,-50.44 116.66,-48.9 107.51,-43.57 106.18,-50.44"/>
-</g>
-<!-- proc~check_inputs -->
-<g id="proc~~db1ink_alt~~CallsGraph_node3" class="node">
-<title>proc~check_inputs</title>
-<g id="a_proc~~db1ink_alt~~CallsGraph_node3"><a xlink:href=".././proc/check_inputs.html" xlink:title="check_inputs">
-<polygon fill="#d9534f" stroke="#d9534f" points="185,-24 103,-24 103,0 185,0 185,-24"/>
-<text text-anchor="middle" x="144" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">check_inputs</text>
-</a>
-</g>
-</g>
-<!-- proc~db1ink_alt&#45;&gt;proc~check_inputs -->
 <g id="proc~~db1ink_alt~~CallsGraph_edge2" class="edge">
-<title>proc~db1ink_alt&#45;&gt;proc~check_inputs</title>
-<path fill="none" stroke="#000000" d="M67.05,-26.7C75.22,-25.12 84.17,-23.39 92.96,-21.68"/>
-<polygon fill="#000000" stroke="#000000" points="93.63,-25.12 102.79,-19.78 92.3,-18.25 93.63,-25.12"/>
+<title>proc~db1ink_alt&#45;&gt;proc~dbint4</title>
+<path fill="none" stroke="#000000" d="M67.05,-68.7C79.56,-66.28 93.92,-63.5 106.75,-61.02"/>
+<polygon fill="#000000" stroke="#000000" points="107.51,-64.43 116.66,-59.1 106.18,-57.56 107.51,-64.43"/>
 </g>
 <!-- proc~dbspvd -->
 <g id="proc~~db1ink_alt~~CallsGraph_node4" class="node">
@@ -303,38 +303,38 @@ and in increasing order</p></td>
 </g>
 </g>
 <!-- proc~dbint4&#45;&gt;proc~dbspvd -->
-<g id="proc~~db1ink_alt~~CallsGraph_edge4" class="edge">
+<g id="proc~~db1ink_alt~~CallsGraph_edge3" class="edge">
 <title>proc~dbint4&#45;&gt;proc~dbspvd</title>
 <path fill="none" stroke="#000000" d="M171,-64.71C183.26,-69.75 198.07,-75.85 211.35,-81.32"/>
 <polygon fill="#000000" stroke="#000000" points="210.11,-84.6 220.69,-85.17 212.78,-78.12 210.11,-84.6"/>
 </g>
-<!-- proc~dbnfac -->
-<g id="proc~~db1ink_alt~~CallsGraph_node5" class="node">
-<title>proc~dbnfac</title>
-<g id="a_proc~~db1ink_alt~~CallsGraph_node5"><a xlink:href=".././proc/dbnfac.html" xlink:title="dbnfac">
-<polygon fill="#d9534f" stroke="#d9534f" points="275,-66 221,-66 221,-42 275,-42 275,-66"/>
-<text text-anchor="middle" x="248" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbnfac</text>
-</a>
-</g>
-</g>
-<!-- proc~dbint4&#45;&gt;proc~dbnfac -->
-<g id="proc~~db1ink_alt~~CallsGraph_edge3" class="edge">
-<title>proc~dbint4&#45;&gt;proc~dbnfac</title>
-<path fill="none" stroke="#000000" d="M171,-54C183.02,-54 197.49,-54 210.57,-54"/>
-<polygon fill="#000000" stroke="#000000" points="210.69,-57.5 220.69,-54 210.69,-50.5 210.69,-57.5"/>
-</g>
 <!-- proc~dbnslv -->
-<g id="proc~~db1ink_alt~~CallsGraph_node6" class="node">
+<g id="proc~~db1ink_alt~~CallsGraph_node5" class="node">
 <title>proc~dbnslv</title>
-<g id="a_proc~~db1ink_alt~~CallsGraph_node6"><a xlink:href=".././proc/dbnslv.html" xlink:title="dbnslv">
-<polygon fill="#d9534f" stroke="#d9534f" points="275,-24 221,-24 221,0 275,0 275,-24"/>
-<text text-anchor="middle" x="248" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbnslv</text>
+<g id="a_proc~~db1ink_alt~~CallsGraph_node5"><a xlink:href=".././proc/dbnslv.html" xlink:title="dbnslv">
+<polygon fill="#d9534f" stroke="#d9534f" points="275,-66 221,-66 221,-42 275,-42 275,-66"/>
+<text text-anchor="middle" x="248" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbnslv</text>
 </a>
 </g>
 </g>
 <!-- proc~dbint4&#45;&gt;proc~dbnslv -->
-<g id="proc~~db1ink_alt~~CallsGraph_edge5" class="edge">
+<g id="proc~~db1ink_alt~~CallsGraph_edge4" class="edge">
 <title>proc~dbint4&#45;&gt;proc~dbnslv</title>
+<path fill="none" stroke="#000000" d="M171,-54C183.02,-54 197.49,-54 210.57,-54"/>
+<polygon fill="#000000" stroke="#000000" points="210.69,-57.5 220.69,-54 210.69,-50.5 210.69,-57.5"/>
+</g>
+<!-- proc~dbnfac -->
+<g id="proc~~db1ink_alt~~CallsGraph_node6" class="node">
+<title>proc~dbnfac</title>
+<g id="a_proc~~db1ink_alt~~CallsGraph_node6"><a xlink:href=".././proc/dbnfac.html" xlink:title="dbnfac">
+<polygon fill="#d9534f" stroke="#d9534f" points="275,-24 221,-24 221,0 275,0 275,-24"/>
+<text text-anchor="middle" x="248" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbnfac</text>
+</a>
+</g>
+</g>
+<!-- proc~dbint4&#45;&gt;proc~dbnfac -->
+<g id="proc~~db1ink_alt~~CallsGraph_edge5" class="edge">
+<title>proc~dbint4&#45;&gt;proc~dbnfac</title>
 <path fill="none" stroke="#000000" d="M171,-43.29C183.26,-38.25 198.07,-32.15 211.35,-26.68"/>
 <polygon fill="#000000" stroke="#000000" points="212.78,-29.88 220.69,-22.83 210.11,-23.4 212.78,-29.88"/>
 </g>

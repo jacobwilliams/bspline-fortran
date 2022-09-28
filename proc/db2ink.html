@@ -179,31 +179,31 @@
 <thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
 <tbody>
 <tr>
-  <td><span class="anchor" id="variable-x~7"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-x~31"></span>real(kind=wp),</td>
 <td>intent(in),</td>
   <td></td>  <td>dimension(:)</td><td>::</td>
   <td><strong>x</strong></td><td><p><code>(nx)</code> array of <script type="math/tex">x</script> abcissae. Must be strictly increasing.</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-nx~14"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-nx~15"></span>integer(kind=ip),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>nx</strong></td><td><p>Number of <script type="math/tex">x</script> abcissae</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-y"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-y~21"></span>real(kind=wp),</td>
 <td>intent(in),</td>
   <td></td>  <td>dimension(:)</td><td>::</td>
   <td><strong>y</strong></td><td><p><code>(ny)</code> array of <script type="math/tex">y</script> abcissae. Must be strictly increasing.</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-ny~6"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-ny~7"></span>integer(kind=ip),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>ny</strong></td><td><p>Number of <script type="math/tex">y</script> abcissae</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-fcn~4"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-fcn~28"></span>real(kind=wp),</td>
 <td>intent(in),</td>
   <td></td>  <td>dimension(:,:)</td><td>::</td>
   <td><strong>fcn</strong></td><td><p><code>(nx,ny)</code> matrix of function values to interpolate.
@@ -211,7 +211,7 @@
 point (<code>x(i)</code>,<code>y(j)</code>)</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-kx~14"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-kx~39"></span>integer(kind=ip),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>kx</strong></td><td><p>The order of spline pieces in <script type="math/tex">x</script>
@@ -219,7 +219,7 @@ point (<code>x(i)</code>,<code>y(j)</code>)</p></td>
 (order = polynomial degree + 1)</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-ky~6"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-ky~27"></span>integer(kind=ip),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>ky</strong></td><td><p>The order of spline pieces in <script type="math/tex">y</script>
@@ -237,7 +237,7 @@ point (<code>x(i)</code>,<code>y(j)</code>)</p></td>
 </ul></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-tx~14"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-tx~27"></span>real(kind=wp),</td>
 <td>intent(inout),</td>
   <td></td>  <td>dimension(:)</td><td>::</td>
   <td><strong>tx</strong></td><td><p>The <code>(nx+kx)</code> knots in the <script type="math/tex">x</script> direction for the spline
@@ -249,7 +249,7 @@ interpolant.</p>
 <p>Must be non-decreasing.</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-ty~6"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-ty~17"></span>real(kind=wp),</td>
 <td>intent(inout),</td>
   <td></td>  <td>dimension(:)</td><td>::</td>
   <td><strong>ty</strong></td><td><p>The <code>(ny+ky)</code> knots in the <script type="math/tex">y</script> direction for the spline
@@ -267,7 +267,7 @@ interpolant.</p>
   <td><strong>bcoef</strong></td><td><p><code>(nx,ny)</code> matrix of coefficients of the b-spline interpolant.</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-iflag~11"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-iflag~33"></span>integer(kind=ip),</td>
 <td>intent(out)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>iflag</strong></td><td><ul>
@@ -335,7 +335,7 @@ interpolant.</p>
 </g>
 </g>
 <!-- proc~db2ink&#45;&gt;proc~check_inputs -->
-<g id="proc~~db2ink~~CallsGraph_edge2" class="edge">
+<g id="proc~~db2ink~~CallsGraph_edge1" class="edge">
 <title>proc~db2ink&#45;&gt;proc~check_inputs</title>
 <path fill="none" stroke="#000000" d="M54,-126.71C65.39,-131.39 78.97,-136.99 91.49,-142.14"/>
 <polygon fill="#000000" stroke="#000000" points="90.22,-145.41 100.8,-145.98 92.89,-138.93 90.22,-145.41"/>
@@ -350,7 +350,7 @@ interpolant.</p>
 </g>
 </g>
 <!-- proc~db2ink&#45;&gt;proc~dbknot -->
-<g id="proc~~db2ink~~CallsGraph_edge3" class="edge">
+<g id="proc~~db2ink~~CallsGraph_edge2" class="edge">
 <title>proc~db2ink&#45;&gt;proc~dbknot</title>
 <path fill="none" stroke="#000000" d="M54,-116C66.02,-116 80.49,-116 93.57,-116"/>
 <polygon fill="#000000" stroke="#000000" points="93.69,-119.5 103.69,-116 93.69,-112.5 93.69,-119.5"/>
@@ -365,7 +365,7 @@ interpolant.</p>
 </g>
 </g>
 <!-- proc~db2ink&#45;&gt;proc~dbtpcf -->
-<g id="proc~~db2ink~~CallsGraph_edge1" class="edge">
+<g id="proc~~db2ink~~CallsGraph_edge3" class="edge">
 <title>proc~db2ink&#45;&gt;proc~dbtpcf</title>
 <path fill="none" stroke="#000000" d="M54,-105.29C66.26,-100.25 81.07,-94.15 94.35,-88.68"/>
 <polygon fill="#000000" stroke="#000000" points="95.78,-91.88 103.69,-84.83 93.11,-85.4 95.78,-91.88"/>
@@ -401,7 +401,7 @@ interpolant.</p>
 <polygon fill="#000000" stroke="#000000" points="287.38,-95.33 297.72,-92.99 288.18,-88.37 287.38,-95.33"/>
 </g>
 <!-- proc~dbintk&#45;&gt;proc~dbnslv -->
-<g id="proc~~db2ink~~CallsGraph_edge8" class="edge">
+<g id="proc~~db2ink~~CallsGraph_edge7" class="edge">
 <title>proc~dbintk&#45;&gt;proc~dbnslv</title>
 <path fill="none" stroke="#000000" d="M261.45,-66.15C270.21,-70.33 280.17,-75.08 289.52,-79.54"/>
 <polygon fill="#000000" stroke="#000000" points="288.07,-82.73 298.6,-83.88 291.09,-76.41 288.07,-82.73"/>
@@ -431,7 +431,7 @@ interpolant.</p>
 </g>
 </g>
 <!-- proc~dbintk&#45;&gt;proc~dbnfac -->
-<g id="proc~~db2ink~~CallsGraph_edge7" class="edge">
+<g id="proc~~db2ink~~CallsGraph_edge8" class="edge">
 <title>proc~dbintk&#45;&gt;proc~dbnfac</title>
 <path fill="none" stroke="#000000" d="M261.45,-41.85C270.21,-37.67 280.17,-32.92 289.52,-28.46"/>
 <polygon fill="#000000" stroke="#000000" points="291.09,-31.59 298.6,-24.12 288.07,-25.27 291.09,-31.59"/>
@@ -521,65 +521,65 @@ interpolant.</p>
 <polygon fill="none" stroke="black" points="596,-45 542,-45 542,-21 596,-21 596,-45"/>
 <text text-anchor="middle" x="569" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50">db2ink</text>
 </g>
-<!-- proc~initialize_2d_specify_knots -->
-<g id="proc~~db2ink~~CalledByGraph_node2" class="node">
-<title>proc~initialize_2d_specify_knots</title>
-<g id="a_proc~~db2ink~~CalledByGraph_node2"><a xlink:href=".././proc/initialize_2d_specify_knots.html" xlink:title="initialize_2d_specify_knots">
-<polygon fill="#d9534f" stroke="#d9534f" points="506,-66 354,-66 354,-42 506,-42 506,-66"/>
-<text text-anchor="middle" x="430" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">initialize_2d_specify_knots</text>
-</a>
-</g>
-</g>
-<!-- proc~initialize_2d_specify_knots&#45;&gt;proc~db2ink -->
-<g id="proc~~db2ink~~CalledByGraph_edge1" class="edge">
-<title>proc~initialize_2d_specify_knots&#45;&gt;proc~db2ink</title>
-<path fill="none" stroke="#000000" d="M506.31,-42.46C515.22,-41.09 523.97,-39.75 531.96,-38.53"/>
-<polygon fill="#000000" stroke="#000000" points="532.61,-41.97 541.96,-36.99 531.55,-35.05 532.61,-41.97"/>
-</g>
 <!-- proc~initialize_2d_auto_knots -->
-<g id="proc~~db2ink~~CalledByGraph_node3" class="node">
+<g id="proc~~db2ink~~CalledByGraph_node2" class="node">
 <title>proc~initialize_2d_auto_knots</title>
-<g id="a_proc~~db2ink~~CalledByGraph_node3"><a xlink:href=".././proc/initialize_2d_auto_knots.html" xlink:title="initialize_2d_auto_knots">
-<polygon fill="#d9534f" stroke="#d9534f" points="499.5,-24 360.5,-24 360.5,0 499.5,0 499.5,-24"/>
-<text text-anchor="middle" x="430" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">initialize_2d_auto_knots</text>
+<g id="a_proc~~db2ink~~CalledByGraph_node2"><a xlink:href=".././proc/initialize_2d_auto_knots.html" xlink:title="initialize_2d_auto_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="499.5,-66 360.5,-66 360.5,-42 499.5,-42 499.5,-66"/>
+<text text-anchor="middle" x="430" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">initialize_2d_auto_knots</text>
 </a>
 </g>
 </g>
 <!-- proc~initialize_2d_auto_knots&#45;&gt;proc~db2ink -->
-<g id="proc~~db2ink~~CalledByGraph_edge2" class="edge">
+<g id="proc~~db2ink~~CalledByGraph_edge1" class="edge">
 <title>proc~initialize_2d_auto_knots&#45;&gt;proc~db2ink</title>
-<path fill="none" stroke="#000000" d="M499.9,-22.56C510.86,-24.24 521.81,-25.92 531.62,-27.42"/>
-<polygon fill="#000000" stroke="#000000" points="531.35,-30.92 541.77,-28.98 532.41,-24 531.35,-30.92"/>
+<path fill="none" stroke="#000000" d="M499.9,-43.44C510.86,-41.76 521.81,-40.08 531.62,-38.58"/>
+<polygon fill="#000000" stroke="#000000" points="532.41,-42 541.77,-37.02 531.35,-35.08 532.41,-42"/>
 </g>
-<!-- proc~bspline_2d_constructor_specify_knots -->
-<g id="proc~~db2ink~~CalledByGraph_node4" class="node">
-<title>proc~bspline_2d_constructor_specify_knots</title>
-<g id="a_proc~~db2ink~~CalledByGraph_node4"><a xlink:href=".././proc/bspline_2d_constructor_specify_knots.html" xlink:title="bspline_2d_constructor_specify_knots">
-<polygon fill="#d94e8f" stroke="#d94e8f" points="318,-66 106,-66 106,-42 318,-42 318,-66"/>
-<text text-anchor="middle" x="212" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_2d_constructor_specify_knots</text>
+<!-- proc~initialize_2d_specify_knots -->
+<g id="proc~~db2ink~~CalledByGraph_node3" class="node">
+<title>proc~initialize_2d_specify_knots</title>
+<g id="a_proc~~db2ink~~CalledByGraph_node3"><a xlink:href=".././proc/initialize_2d_specify_knots.html" xlink:title="initialize_2d_specify_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="506,-24 354,-24 354,0 506,0 506,-24"/>
+<text text-anchor="middle" x="430" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">initialize_2d_specify_knots</text>
 </a>
 </g>
 </g>
-<!-- proc~bspline_2d_constructor_specify_knots&#45;&gt;proc~initialize_2d_specify_knots -->
-<g id="proc~~db2ink~~CalledByGraph_edge3" class="edge">
-<title>proc~bspline_2d_constructor_specify_knots&#45;&gt;proc~initialize_2d_specify_knots</title>
-<path fill="none" stroke="#000000" d="M318.15,-54C326.7,-54 335.26,-54 343.64,-54"/>
-<polygon fill="#000000" stroke="#000000" points="343.75,-57.5 353.75,-54 343.75,-50.5 343.75,-57.5"/>
+<!-- proc~initialize_2d_specify_knots&#45;&gt;proc~db2ink -->
+<g id="proc~~db2ink~~CalledByGraph_edge2" class="edge">
+<title>proc~initialize_2d_specify_knots&#45;&gt;proc~db2ink</title>
+<path fill="none" stroke="#000000" d="M506.31,-23.54C515.22,-24.91 523.97,-26.25 531.96,-27.47"/>
+<polygon fill="#000000" stroke="#000000" points="531.55,-30.95 541.96,-29.01 532.61,-24.03 531.55,-30.95"/>
 </g>
 <!-- proc~bspline_2d_constructor_auto_knots -->
-<g id="proc~~db2ink~~CalledByGraph_node5" class="node">
+<g id="proc~~db2ink~~CalledByGraph_node4" class="node">
 <title>proc~bspline_2d_constructor_auto_knots</title>
-<g id="a_proc~~db2ink~~CalledByGraph_node5"><a xlink:href=".././proc/bspline_2d_constructor_auto_knots.html" xlink:title="bspline_2d_constructor_auto_knots">
-<polygon fill="#d94e8f" stroke="#d94e8f" points="311.5,-24 112.5,-24 112.5,0 311.5,0 311.5,-24"/>
-<text text-anchor="middle" x="212" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_2d_constructor_auto_knots</text>
+<g id="a_proc~~db2ink~~CalledByGraph_node4"><a xlink:href=".././proc/bspline_2d_constructor_auto_knots.html" xlink:title="bspline_2d_constructor_auto_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="311.5,-66 112.5,-66 112.5,-42 311.5,-42 311.5,-66"/>
+<text text-anchor="middle" x="212" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_2d_constructor_auto_knots</text>
 </a>
 </g>
 </g>
 <!-- proc~bspline_2d_constructor_auto_knots&#45;&gt;proc~initialize_2d_auto_knots -->
-<g id="proc~~db2ink~~CalledByGraph_edge4" class="edge">
+<g id="proc~~db2ink~~CalledByGraph_edge3" class="edge">
 <title>proc~bspline_2d_constructor_auto_knots&#45;&gt;proc~initialize_2d_auto_knots</title>
-<path fill="none" stroke="#000000" d="M311.52,-12C324.38,-12 337.43,-12 349.92,-12"/>
-<polygon fill="#000000" stroke="#000000" points="350.26,-15.5 360.26,-12 350.26,-8.5 350.26,-15.5"/>
+<path fill="none" stroke="#000000" d="M311.52,-54C324.38,-54 337.43,-54 349.92,-54"/>
+<polygon fill="#000000" stroke="#000000" points="350.26,-57.5 360.26,-54 350.26,-50.5 350.26,-57.5"/>
+</g>
+<!-- proc~bspline_2d_constructor_specify_knots -->
+<g id="proc~~db2ink~~CalledByGraph_node5" class="node">
+<title>proc~bspline_2d_constructor_specify_knots</title>
+<g id="a_proc~~db2ink~~CalledByGraph_node5"><a xlink:href=".././proc/bspline_2d_constructor_specify_knots.html" xlink:title="bspline_2d_constructor_specify_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="318,-24 106,-24 106,0 318,0 318,-24"/>
+<text text-anchor="middle" x="212" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_2d_constructor_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_2d_constructor_specify_knots&#45;&gt;proc~initialize_2d_specify_knots -->
+<g id="proc~~db2ink~~CalledByGraph_edge4" class="edge">
+<title>proc~bspline_2d_constructor_specify_knots&#45;&gt;proc~initialize_2d_specify_knots</title>
+<path fill="none" stroke="#000000" d="M318.15,-12C326.7,-12 335.26,-12 343.64,-12"/>
+<polygon fill="#000000" stroke="#000000" points="343.75,-15.5 353.75,-12 343.75,-8.5 343.75,-15.5"/>
 </g>
 <!-- interface~bspline_2d -->
 <g id="proc~~db2ink~~CalledByGraph_node6" class="node">
@@ -590,17 +590,17 @@ interpolant.</p>
 </a>
 </g>
 </g>
-<!-- interface~bspline_2d&#45;&gt;proc~bspline_2d_constructor_specify_knots -->
-<g id="proc~~db2ink~~CalledByGraph_edge5" class="edge">
-<title>interface~bspline_2d&#45;&gt;proc~bspline_2d_constructor_specify_knots</title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M70.16,-37.1C79.3,-38.2 89.69,-39.44 100.59,-40.75"/>
-<polygon fill="#000000" stroke="#000000" points="100.39,-44.25 110.73,-41.97 101.22,-37.3 100.39,-44.25"/>
-</g>
 <!-- interface~bspline_2d&#45;&gt;proc~bspline_2d_constructor_auto_knots -->
-<g id="proc~~db2ink~~CalledByGraph_edge6" class="edge">
+<g id="proc~~db2ink~~CalledByGraph_edge5" class="edge">
 <title>interface~bspline_2d&#45;&gt;proc~bspline_2d_constructor_auto_knots</title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M70.16,-28.9C79.7,-27.76 90.6,-26.45 102.03,-25.08"/>
-<polygon fill="#000000" stroke="#000000" points="102.68,-28.52 112.19,-23.86 101.84,-21.57 102.68,-28.52"/>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M70.16,-37.1C79.7,-38.24 90.6,-39.55 102.03,-40.92"/>
+<polygon fill="#000000" stroke="#000000" points="101.84,-44.43 112.19,-42.14 102.68,-37.48 101.84,-44.43"/>
+</g>
+<!-- interface~bspline_2d&#45;&gt;proc~bspline_2d_constructor_specify_knots -->
+<g id="proc~~db2ink~~CalledByGraph_edge6" class="edge">
+<title>interface~bspline_2d&#45;&gt;proc~bspline_2d_constructor_specify_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M70.16,-28.9C79.3,-27.8 89.69,-26.56 100.59,-25.25"/>
+<polygon fill="#000000" stroke="#000000" points="101.22,-28.7 110.73,-24.03 100.39,-21.75 101.22,-28.7"/>
 </g>
 </g>
 </svg>

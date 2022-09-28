@@ -145,14 +145,14 @@
 <thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
 <tbody>
 <tr>
-  <td><span class="anchor" id="variable-fun"></span>procedure(<a href='../interface/b1fqad_func.html'>b1fqad_func</a>)</td>
+  <td><span class="anchor" id="variable-fun~2"></span>procedure(<a href='../interface/b1fqad_func.html'>b1fqad_func</a>)</td>
 <td></td>
   <td></td>  <td></td><td>::</td>
   <td><strong>fun</strong></td><td><p>external function of one argument for the
 integrand <code>bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,id,x,inbv,work)</code></p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-tx~13"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-tx~26"></span>real(kind=wp),</td>
 <td>intent(in),</td>
   <td></td>  <td>dimension(nx+kx)</td><td>::</td>
   <td><strong>tx</strong></td><td><p>knot array</p></td>
@@ -164,38 +164,38 @@ integrand <code>bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,id,x,inbv,work)</code></p></t
   <td><strong>bcoef</strong></td><td><p>b-spline coefficient array</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-nx~13"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-nx~14"></span>integer(kind=ip),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>nx</strong></td><td><p>length of coefficient array</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-kx~13"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-kx~38"></span>integer(kind=ip),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>kx</strong></td><td><p>order of b-spline, <code>kx &gt;= 1</code></p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-idx~3"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-idx~10"></span>integer(kind=ip),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>idx</strong></td><td><p>order of the spline derivative, <code>0 &lt;= idx &lt;= k-1</code>
 <code>idx=0</code> gives the spline function</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-x1~2"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-x1~4"></span>real(kind=wp),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>x1</strong></td><td><p>left point of quadrature interval in <code>t(k) &lt;= x &lt;= t(n+1)</code></p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-x2~2"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-x2~4"></span>real(kind=wp),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>x2</strong></td><td><p>right point of quadrature interval in <code>t(k) &lt;= x &lt;= t(n+1)</code></p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-tol"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-tol~2"></span>real(kind=wp),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>tol</strong></td><td><p>desired accuracy for the quadrature, suggest
@@ -204,13 +204,13 @@ of <code>1.0e-300</code> and real(wp) unit roundoff for
 the machine</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-f~5"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-f~13"></span>real(kind=wp),</td>
 <td>intent(out)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>f</strong></td><td><p>integral of <code>bf(x)</code> on <code>(x1,x2)</code></p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-iflag~10"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-iflag~32"></span>integer(kind=ip),</td>
 <td>intent(out)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>iflag</strong></td><td><p>status flag:</p>
@@ -278,7 +278,7 @@ the machine</p></td>
 </g>
 </g>
 <!-- proc~dbfqad&#45;&gt;proc~dintrv -->
-<g id="proc~~db1fqad~~CallsGraph_edge3" class="edge">
+<g id="proc~~db1fqad~~CallsGraph_edge2" class="edge">
 <title>proc~dbfqad&#45;&gt;proc~dintrv</title>
 <path fill="none" stroke="#000000" d="M147.4,-39.3C155.48,-41.23 164.51,-43.38 173.1,-45.43"/>
 <polygon fill="#000000" stroke="#000000" points="172.38,-48.86 182.92,-47.78 174,-42.05 172.38,-48.86"/>
@@ -293,7 +293,7 @@ the machine</p></td>
 </g>
 </g>
 <!-- proc~dbfqad&#45;&gt;proc~dbsgq8 -->
-<g id="proc~~db1fqad~~CallsGraph_edge2" class="edge">
+<g id="proc~~db1fqad~~CallsGraph_edge3" class="edge">
 <title>proc~dbfqad&#45;&gt;proc~dbsgq8</title>
 <path fill="none" stroke="#000000" d="M147.4,-26.7C155.48,-24.77 164.51,-22.62 173.1,-20.57"/>
 <polygon fill="#000000" stroke="#000000" points="174,-23.95 182.92,-18.22 172.38,-17.14 174,-23.95"/>

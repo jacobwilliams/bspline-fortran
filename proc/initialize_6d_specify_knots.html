@@ -142,43 +142,43 @@ This is a wrapper for <a href="../proc/db6ink.html">db6ink</a>.</p>
   <td><strong>me</strong></td><td></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-x~43"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-x~25"></span>real(kind=wp),</td>
 <td>intent(in),</td>
   <td></td>  <td>dimension(:)</td><td>::</td>
   <td><strong>x</strong></td><td><p><code>(nx)</code> array of <script type="math/tex">x</script> abcissae. Must be strictly increasing.</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-y~28"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-y~20"></span>real(kind=wp),</td>
 <td>intent(in),</td>
   <td></td>  <td>dimension(:)</td><td>::</td>
   <td><strong>y</strong></td><td><p><code>(ny)</code> array of <script type="math/tex">y</script> abcissae. Must be strictly increasing.</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-z~21"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-z~16"></span>real(kind=wp),</td>
 <td>intent(in),</td>
   <td></td>  <td>dimension(:)</td><td>::</td>
   <td><strong>z</strong></td><td><p><code>(nz)</code> array of <script type="math/tex">z</script> abcissae. Must be strictly increasing.</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-q~17"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-q~12"></span>real(kind=wp),</td>
 <td>intent(in),</td>
   <td></td>  <td>dimension(:)</td><td>::</td>
   <td><strong>q</strong></td><td><p><code>(nq)</code> array of <script type="math/tex">q</script> abcissae. Must be strictly increasing.</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-r~11"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-r~8"></span>real(kind=wp),</td>
 <td>intent(in),</td>
   <td></td>  <td>dimension(:)</td><td>::</td>
   <td><strong>r</strong></td><td><p><code>(nr)</code> array of <script type="math/tex">r</script> abcissae. Must be strictly increasing.</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-s~13"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-s~11"></span>real(kind=wp),</td>
 <td>intent(in),</td>
   <td></td>  <td>dimension(:)</td><td>::</td>
   <td><strong>s</strong></td><td><p><code>(ns)</code> array of <script type="math/tex">s</script> abcissae. Must be strictly increasing.</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-fcn~33"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-fcn~24"></span>real(kind=wp),</td>
 <td>intent(in),</td>
   <td></td>  <td>dimension(:,:,:,:,:,:)</td><td>::</td>
   <td><strong>fcn</strong></td><td><p><code>(nx,ny,nz,nq,nr,ns)</code> matrix of function values to interpolate.
@@ -186,7 +186,7 @@ This is a wrapper for <a href="../proc/db6ink.html">db6ink</a>.</p>
 point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<code>r(m)</code>,<code>s(n)</code>)</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-kx~48"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-kx~30"></span>integer(kind=ip),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>kx</strong></td><td><p>The order of spline pieces in <script type="math/tex">x</script>
@@ -194,7 +194,7 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
 (order = polynomial degree + 1)</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-ky~36"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-ky~25"></span>integer(kind=ip),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>ky</strong></td><td><p>The order of spline pieces in <script type="math/tex">y</script>
@@ -202,7 +202,7 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
 (order = polynomial degree + 1)</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-kz~29"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-kz~20"></span>integer(kind=ip),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>kz</strong></td><td><p>The order of spline pieces in <script type="math/tex">z</script>
@@ -210,7 +210,7 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
 (order = polynomial degree + 1)</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-kq~22"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-kq~15"></span>integer(kind=ip),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>kq</strong></td><td><p>The order of spline pieces in <script type="math/tex">q</script>
@@ -218,7 +218,7 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
 (order = polynomial degree + 1)</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-kr~15"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-kr~10"></span>integer(kind=ip),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>kr</strong></td><td><p>The order of spline pieces in <script type="math/tex">r</script>
@@ -226,7 +226,7 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
 (order = polynomial degree + 1)</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-ks~8"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-ks~5"></span>integer(kind=ip),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>ks</strong></td><td><p>The order of spline pieces in <script type="math/tex">z</script>
@@ -234,7 +234,7 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
 (order = polynomial degree + 1)</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-tx~36"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-tx~18"></span>real(kind=wp),</td>
 <td>intent(in),</td>
   <td></td>  <td>dimension(:)</td><td>::</td>
   <td><strong>tx</strong></td><td><p>The <code>(nx+kx)</code> knots in the <script type="math/tex">x</script> direction
@@ -242,7 +242,7 @@ for the spline interpolant.
 Must be non-decreasing.</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-ty~26"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-ty~15"></span>real(kind=wp),</td>
 <td>intent(in),</td>
   <td></td>  <td>dimension(:)</td><td>::</td>
   <td><strong>ty</strong></td><td><p>The <code>(ny+ky)</code> knots in the <script type="math/tex">y</script> direction
@@ -250,7 +250,7 @@ for the spline interpolant.
 Must be non-decreasing.</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-tz~21"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-tz~12"></span>real(kind=wp),</td>
 <td>intent(in),</td>
   <td></td>  <td>dimension(:)</td><td>::</td>
   <td><strong>tz</strong></td><td><p>The <code>(nz+kz)</code> knots in the <script type="math/tex">z</script> direction
@@ -258,7 +258,7 @@ for the spline interpolant.
 Must be non-decreasing.</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-tq~16"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-tq~9"></span>real(kind=wp),</td>
 <td>intent(in),</td>
   <td></td>  <td>dimension(:)</td><td>::</td>
   <td><strong>tq</strong></td><td><p>The <code>(nq+kq)</code> knots in the <script type="math/tex">q</script> direction
@@ -266,7 +266,7 @@ for the spline interpolant.
 Must be non-decreasing.</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-tr~11"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-tr~6"></span>real(kind=wp),</td>
 <td>intent(in),</td>
   <td></td>  <td>dimension(:)</td><td>::</td>
   <td><strong>tr</strong></td><td><p>The <code>(nr+kr)</code> knots in the <script type="math/tex">r</script> direction
@@ -274,7 +274,7 @@ for the spline interpolant.
 Must be non-decreasing.</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-ts~6"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-ts~3"></span>real(kind=wp),</td>
 <td>intent(in),</td>
   <td></td>  <td>dimension(:)</td><td>::</td>
   <td><strong>ts</strong></td><td><p>The <code>(ns+ks)</code> knots in the <script type="math/tex">s</script> direction
@@ -282,13 +282,13 @@ for the spline interpolant.
 Must be non-decreasing.</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-iflag~51"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-iflag~21"></span>integer(kind=ip),</td>
 <td>intent(out)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>iflag</strong></td><td><p>status flag (see <a href="../proc/db6ink.html">db6ink</a>)</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-extrap~37"></span>logical,</td>
+  <td><span class="anchor" id="variable-extrap~26"></span>logical,</td>
 <td>intent(in),</td>
   <td>optional</td>  <td></td><td>::</td>
   <td><strong>extrap</strong></td><td><p>if true, then extrapolation is allowed
@@ -317,38 +317,38 @@ Must be non-decreasing.</p></td>
 <!-- proc~initialize_6d_specify_knots -->
 <g id="proc~~initialize_6d_specify_knots~~CallsGraph_node1" class="node">
 <title>proc~initialize_6d_specify_knots</title>
-<polygon fill="none" stroke="black" points="152,-107 0,-107 0,-83 152,-83 152,-107"/>
-<text text-anchor="middle" x="76" y="-92.6" font-family="Helvetica,sans-Serif" font-size="10.50">initialize_6d_specify_knots</text>
+<polygon fill="none" stroke="black" points="152,-149 0,-149 0,-125 152,-125 152,-149"/>
+<text text-anchor="middle" x="76" y="-134.6" font-family="Helvetica,sans-Serif" font-size="10.50">initialize_6d_specify_knots</text>
+</g>
+<!-- proc~check_knot_vectors_sizes -->
+<g id="proc~~initialize_6d_specify_knots~~CallsGraph_node2" class="node">
+<title>proc~check_knot_vectors_sizes</title>
+<g id="a_proc~~initialize_6d_specify_knots~~CallsGraph_node2"><a xlink:href=".././proc/check_knot_vectors_sizes.html" xlink:title="check_knot_vectors_sizes">
+<polygon fill="#d9534f" stroke="#d9534f" points="336,-170 188,-170 188,-146 336,-146 336,-170"/>
+<text text-anchor="middle" x="262" y="-155.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">check_knot_vectors_sizes</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_6d_specify_knots&#45;&gt;proc~check_knot_vectors_sizes -->
+<g id="proc~~initialize_6d_specify_knots~~CallsGraph_edge1" class="edge">
+<title>proc~initialize_6d_specify_knots&#45;&gt;proc~check_knot_vectors_sizes</title>
+<path fill="none" stroke="#000000" d="M152.11,-145.57C160.6,-146.54 169.3,-147.53 177.9,-148.52"/>
+<polygon fill="#000000" stroke="#000000" points="177.59,-152 187.92,-149.66 178.38,-145.05 177.59,-152"/>
 </g>
 <!-- proc~db6ink -->
-<g id="proc~~initialize_6d_specify_knots~~CallsGraph_node2" class="node">
+<g id="proc~~initialize_6d_specify_knots~~CallsGraph_node3" class="node">
 <title>proc~db6ink</title>
-<g id="a_proc~~initialize_6d_specify_knots~~CallsGraph_node2"><a xlink:href=".././proc/db6ink.html" xlink:title="db6ink">
+<g id="a_proc~~initialize_6d_specify_knots~~CallsGraph_node3"><a xlink:href=".././proc/db6ink.html" xlink:title="db6ink">
 <polygon fill="#d9534f" stroke="#d9534f" points="289,-128 235,-128 235,-104 289,-104 289,-128"/>
 <text text-anchor="middle" x="262" y="-113.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db6ink</text>
 </a>
 </g>
 </g>
 <!-- proc~initialize_6d_specify_knots&#45;&gt;proc~db6ink -->
-<g id="proc~~initialize_6d_specify_knots~~CallsGraph_edge1" class="edge">
-<title>proc~initialize_6d_specify_knots&#45;&gt;proc~db6ink</title>
-<path fill="none" stroke="#000000" d="M152.11,-103.57C177.27,-106.44 204.18,-109.51 224.95,-111.89"/>
-<polygon fill="#000000" stroke="#000000" points="224.58,-115.37 234.91,-113.02 225.38,-108.41 224.58,-115.37"/>
-</g>
-<!-- proc~check_knot_vectors_sizes -->
-<g id="proc~~initialize_6d_specify_knots~~CallsGraph_node3" class="node">
-<title>proc~check_knot_vectors_sizes</title>
-<g id="a_proc~~initialize_6d_specify_knots~~CallsGraph_node3"><a xlink:href=".././proc/check_knot_vectors_sizes.html" xlink:title="check_knot_vectors_sizes">
-<polygon fill="#d9534f" stroke="#d9534f" points="336,-86 188,-86 188,-62 336,-62 336,-86"/>
-<text text-anchor="middle" x="262" y="-71.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">check_knot_vectors_sizes</text>
-</a>
-</g>
-</g>
-<!-- proc~initialize_6d_specify_knots&#45;&gt;proc~check_knot_vectors_sizes -->
 <g id="proc~~initialize_6d_specify_knots~~CallsGraph_edge2" class="edge">
-<title>proc~initialize_6d_specify_knots&#45;&gt;proc~check_knot_vectors_sizes</title>
-<path fill="none" stroke="#000000" d="M152.11,-86.43C160.6,-85.46 169.3,-84.47 177.9,-83.48"/>
-<polygon fill="#000000" stroke="#000000" points="178.38,-86.95 187.92,-82.34 177.59,-80 178.38,-86.95"/>
+<title>proc~initialize_6d_specify_knots&#45;&gt;proc~db6ink</title>
+<path fill="none" stroke="#000000" d="M152.11,-128.43C177.27,-125.56 204.18,-122.49 224.95,-120.11"/>
+<polygon fill="#000000" stroke="#000000" points="225.38,-123.59 234.91,-118.98 224.58,-116.63 225.38,-123.59"/>
 </g>
 <!-- proc~check_inputs -->
 <g id="proc~~initialize_6d_specify_knots~~CallsGraph_node4" class="node">
@@ -360,7 +360,7 @@ Must be non-decreasing.</p></td>
 </g>
 </g>
 <!-- proc~db6ink&#45;&gt;proc~check_inputs -->
-<g id="proc~~initialize_6d_specify_knots~~CallsGraph_edge4" class="edge">
+<g id="proc~~initialize_6d_specify_knots~~CallsGraph_edge3" class="edge">
 <title>proc~db6ink&#45;&gt;proc~check_inputs</title>
 <path fill="none" stroke="#000000" d="M289.3,-123.41C309.41,-129.08 337.75,-137.07 362.13,-143.94"/>
 <polygon fill="#000000" stroke="#000000" points="361.37,-147.37 371.95,-146.71 363.27,-140.63 361.37,-147.37"/>
@@ -375,7 +375,7 @@ Must be non-decreasing.</p></td>
 </g>
 </g>
 <!-- proc~db6ink&#45;&gt;proc~dbknot -->
-<g id="proc~~initialize_6d_specify_knots~~CallsGraph_edge5" class="edge">
+<g id="proc~~initialize_6d_specify_knots~~CallsGraph_edge4" class="edge">
 <title>proc~db6ink&#45;&gt;proc~dbknot</title>
 <path fill="none" stroke="#000000" d="M289.3,-116C313.34,-116 349.12,-116 375.85,-116"/>
 <polygon fill="#000000" stroke="#000000" points="375.97,-119.5 385.97,-116 375.97,-112.5 375.97,-119.5"/>
@@ -390,7 +390,7 @@ Must be non-decreasing.</p></td>
 </g>
 </g>
 <!-- proc~db6ink&#45;&gt;proc~dbtpcf -->
-<g id="proc~~initialize_6d_specify_knots~~CallsGraph_edge3" class="edge">
+<g id="proc~~initialize_6d_specify_knots~~CallsGraph_edge5" class="edge">
 <title>proc~db6ink&#45;&gt;proc~dbtpcf</title>
 <path fill="none" stroke="#000000" d="M289.3,-108.59C313.45,-101.78 349.44,-91.63 376.21,-84.09"/>
 <polygon fill="#000000" stroke="#000000" points="377.29,-87.42 385.97,-81.34 375.39,-80.68 377.29,-87.42"/>
@@ -426,7 +426,7 @@ Must be non-decreasing.</p></td>
 <polygon fill="#000000" stroke="#000000" points="569.38,-95.33 579.72,-92.99 570.18,-88.37 569.38,-95.33"/>
 </g>
 <!-- proc~dbintk&#45;&gt;proc~dbnslv -->
-<g id="proc~~initialize_6d_specify_knots~~CallsGraph_edge10" class="edge">
+<g id="proc~~initialize_6d_specify_knots~~CallsGraph_edge9" class="edge">
 <title>proc~dbintk&#45;&gt;proc~dbnslv</title>
 <path fill="none" stroke="#000000" d="M543.45,-66.15C552.21,-70.33 562.17,-75.08 571.52,-79.54"/>
 <polygon fill="#000000" stroke="#000000" points="570.07,-82.73 580.6,-83.88 573.09,-76.41 570.07,-82.73"/>
@@ -456,7 +456,7 @@ Must be non-decreasing.</p></td>
 </g>
 </g>
 <!-- proc~dbintk&#45;&gt;proc~dbnfac -->
-<g id="proc~~initialize_6d_specify_knots~~CallsGraph_edge9" class="edge">
+<g id="proc~~initialize_6d_specify_knots~~CallsGraph_edge10" class="edge">
 <title>proc~dbintk&#45;&gt;proc~dbnfac</title>
 <path fill="none" stroke="#000000" d="M543.45,-41.85C552.21,-37.67 562.17,-32.92 571.52,-28.46"/>
 <polygon fill="#000000" stroke="#000000" points="573.09,-31.59 580.6,-24.12 570.07,-25.27 573.09,-31.59"/>

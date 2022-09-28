@@ -136,37 +136,37 @@ This is a wrapper for <a href="../proc/initialize_5d_auto_knots.html">initialize
 <thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
 <tbody>
 <tr>
-  <td><span class="anchor" id="variable-x~28"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-x~10"></span>real(kind=wp),</td>
 <td>intent(in),</td>
   <td></td>  <td>dimension(:)</td><td>::</td>
   <td><strong>x</strong></td><td><p><code>(nx)</code> array of <script type="math/tex">x</script> abcissae. Must be strictly increasing.</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-y~15"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-y~7"></span>real(kind=wp),</td>
 <td>intent(in),</td>
   <td></td>  <td>dimension(:)</td><td>::</td>
   <td><strong>y</strong></td><td><p><code>(ny)</code> array of <script type="math/tex">y</script> abcissae. Must be strictly increasing.</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-z~10"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-z~5"></span>real(kind=wp),</td>
 <td>intent(in),</td>
   <td></td>  <td>dimension(:)</td><td>::</td>
   <td><strong>z</strong></td><td><p><code>(nz)</code> array of <script type="math/tex">z</script> abcissae. Must be strictly increasing.</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-q~8"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-q~3"></span>real(kind=wp),</td>
 <td>intent(in),</td>
   <td></td>  <td>dimension(:)</td><td>::</td>
   <td><strong>q</strong></td><td><p><code>(nq)</code> array of <script type="math/tex">q</script> abcissae. Must be strictly increasing.</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-r~4"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-r"></span>real(kind=wp),</td>
 <td>intent(in),</td>
   <td></td>  <td>dimension(:)</td><td>::</td>
   <td><strong>r</strong></td><td><p><code>(nr)</code> array of <script type="math/tex">r</script> abcissae. Must be strictly increasing.</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-fcn~18"></span>real(kind=wp),</td>
+  <td><span class="anchor" id="variable-fcn~9"></span>real(kind=wp),</td>
 <td>intent(in),</td>
   <td></td>  <td>dimension(:,:,:,:,:)</td><td>::</td>
   <td><strong>fcn</strong></td><td><p><code>(nx,ny,nz,nq,nr)</code> matrix of function values to interpolate.
@@ -174,7 +174,7 @@ This is a wrapper for <a href="../proc/initialize_5d_auto_knots.html">initialize
 point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<code>r(m)</code>)</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-kx~33"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-kx~15"></span>integer(kind=ip),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>kx</strong></td><td><p>The order of spline pieces in <script type="math/tex">x</script>
@@ -182,7 +182,7 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
 (order = polynomial degree + 1)</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-ky~23"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-ky~12"></span>integer(kind=ip),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>ky</strong></td><td><p>The order of spline pieces in <script type="math/tex">y</script>
@@ -190,7 +190,7 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
 (order = polynomial degree + 1)</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-kz~18"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-kz~9"></span>integer(kind=ip),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>kz</strong></td><td><p>The order of spline pieces in <script type="math/tex">z</script>
@@ -198,7 +198,7 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
 (order = polynomial degree + 1)</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-kq~13"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-kq~6"></span>integer(kind=ip),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>kq</strong></td><td><p>The order of spline pieces in <script type="math/tex">q</script>
@@ -206,7 +206,7 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
 (order = polynomial degree + 1)</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-kr~8"></span>integer(kind=ip),</td>
+  <td><span class="anchor" id="variable-kr~3"></span>integer(kind=ip),</td>
 <td>intent(in)</td>
   <td></td>  <td></td><td>::</td>
   <td><strong>kr</strong></td><td><p>The order of spline pieces in <script type="math/tex">r</script>
@@ -214,7 +214,7 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
 (order = polynomial degree + 1)</p></td>
 </tr>
 <tr>
-  <td><span class="anchor" id="variable-extrap~21"></span>logical,</td>
+  <td><span class="anchor" id="variable-extrap~10"></span>logical,</td>
 <td>intent(in),</td>
   <td>optional</td>  <td></td><td>::</td>
   <td><strong>extrap</strong></td><td><p>if true, then extrapolation is allowed
@@ -288,7 +288,7 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
 </g>
 </g>
 <!-- proc~db5ink&#45;&gt;proc~check_inputs -->
-<g id="proc~~bspline_5d_constructor_auto_knots~~CallsGraph_edge4" class="edge">
+<g id="proc~~bspline_5d_constructor_auto_knots~~CallsGraph_edge3" class="edge">
 <title>proc~db5ink&#45;&gt;proc~check_inputs</title>
 <path fill="none" stroke="#000000" d="M464,-126.71C475.39,-131.39 488.97,-136.99 501.49,-142.14"/>
 <polygon fill="#000000" stroke="#000000" points="500.22,-145.41 510.8,-145.98 502.89,-138.93 500.22,-145.41"/>
@@ -303,7 +303,7 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
 </g>
 </g>
 <!-- proc~db5ink&#45;&gt;proc~dbknot -->
-<g id="proc~~bspline_5d_constructor_auto_knots~~CallsGraph_edge5" class="edge">
+<g id="proc~~bspline_5d_constructor_auto_knots~~CallsGraph_edge4" class="edge">
 <title>proc~db5ink&#45;&gt;proc~dbknot</title>
 <path fill="none" stroke="#000000" d="M464,-116C476.02,-116 490.49,-116 503.57,-116"/>
 <polygon fill="#000000" stroke="#000000" points="503.69,-119.5 513.69,-116 503.69,-112.5 503.69,-119.5"/>
@@ -318,7 +318,7 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
 </g>
 </g>
 <!-- proc~db5ink&#45;&gt;proc~dbtpcf -->
-<g id="proc~~bspline_5d_constructor_auto_knots~~CallsGraph_edge3" class="edge">
+<g id="proc~~bspline_5d_constructor_auto_knots~~CallsGraph_edge5" class="edge">
 <title>proc~db5ink&#45;&gt;proc~dbtpcf</title>
 <path fill="none" stroke="#000000" d="M464,-105.29C476.26,-100.25 491.07,-94.15 504.35,-88.68"/>
 <polygon fill="#000000" stroke="#000000" points="505.78,-91.88 513.69,-84.83 503.11,-85.4 505.78,-91.88"/>
@@ -354,7 +354,7 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
 <polygon fill="#000000" stroke="#000000" points="697.38,-95.33 707.72,-92.99 698.18,-88.37 697.38,-95.33"/>
 </g>
 <!-- proc~dbintk&#45;&gt;proc~dbnslv -->
-<g id="proc~~bspline_5d_constructor_auto_knots~~CallsGraph_edge10" class="edge">
+<g id="proc~~bspline_5d_constructor_auto_knots~~CallsGraph_edge9" class="edge">
 <title>proc~dbintk&#45;&gt;proc~dbnslv</title>
 <path fill="none" stroke="#000000" d="M671.45,-66.15C680.21,-70.33 690.17,-75.08 699.52,-79.54"/>
 <polygon fill="#000000" stroke="#000000" points="698.07,-82.73 708.6,-83.88 701.09,-76.41 698.07,-82.73"/>
@@ -384,7 +384,7 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
 </g>
 </g>
 <!-- proc~dbintk&#45;&gt;proc~dbnfac -->
-<g id="proc~~bspline_5d_constructor_auto_knots~~CallsGraph_edge9" class="edge">
+<g id="proc~~bspline_5d_constructor_auto_knots~~CallsGraph_edge10" class="edge">
 <title>proc~dbintk&#45;&gt;proc~dbnfac</title>
 <path fill="none" stroke="#000000" d="M671.45,-41.85C680.21,-37.67 690.17,-32.92 699.52,-28.46"/>
 <polygon fill="#000000" stroke="#000000" points="701.09,-31.59 708.6,-24.12 698.07,-25.27 701.09,-31.59"/>
