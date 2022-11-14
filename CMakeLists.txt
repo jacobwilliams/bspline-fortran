@@ -34,7 +34,7 @@ endif()
 # Use MSVS folders to organize projects on windows
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-set( LIB_NAME ${CMAKE_PROJECT_NAME} )
+set( LIB_NAME ${PROJECT_NAME} )
 set( PROJECT_DESCRIPTION
   "Multidimensional B-Spline Interpolation of Data on a Regular Grid" )
 set( PROJECT_URL "https://github.com/jacobwilliams/bspline-fortran" )
