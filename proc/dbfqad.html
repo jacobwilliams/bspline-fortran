@@ -80,52 +80,78 @@
   <div class="row">
     <h1>dbfqad
       <small>Subroutine</small>
+      
     </h1>
-    <div class="row">
-  <div class="col-lg-12">
-<div class="well well-sm">
-  <ul class="list-inline" style="margin-bottom:0px;display:inline">
-     <li><i class="fa fa-list-ol"></i>
-       <a data-toggle="tooltip"
-    data-placement="bottom" data-html="true"
-    title=" 1.7% of total for procedures.">63 statements</a>
-     </li> 
-    <li><i class="fa fa-code"></i><a href="../src/bspline_sub_module.f90"> Source File</a></li>
-  </ul>
-  <ol class="breadcrumb in-well text-right">
-     <li><a href='../sourcefile/bspline_sub_module.f90.html'>bspline_sub_module.f90</a></li>
-     <li><a href='../module/bspline_sub_module.html'>bspline_sub_module</a></li>
-     <li class="active">dbfqad</li>
-  </ol>
-</div>
-</div>
-</div>
-<script>
-  $(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-  })
-</script>
+      <div class="row" id="info-bar">
+    <div class="col-lg-12">
+      <div class="well well-sm">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+          <li id="statements"><i class="fa fa-list-ol"></i>
+            <a data-toggle="tooltip"
+               data-placement="bottom" data-html="true"
+               title=" 1.7% of total for procedures.">63 statements</a>
+          </li>
+
+            <li id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/bspline_sub_module.f90"> Source File</a>
+            </li>
+        </ul>
+        <ol class="breadcrumb in-well text-right">
+              <li><a href='../sourcefile/bspline_sub_module.f90.html'>bspline_sub_module.f90</a></li>
+              <li><a href='../module/bspline_sub_module.html'>bspline_sub_module</a></li>
+          <li class="active">dbfqad</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+    })
+  </script>
 
   </div>
   
   <div class="row">
     <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
-    <div id="sidebar">
-  <h3>Contents</h3>
- 
-<div class="panel panel-primary">
-  <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
-  <div class="list-group">
-    <a class="list-group-item" href="../proc/dbfqad.html#src">dbfqad</a>
-  </div>
-</div>
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="panel panel-primary">
+      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/dbfqad.html#src">dbfqad</a>
+      </div>
+    </div>
 
-</div>
+
+  </div>
 
     </div>
     
     <div class="col-md-9" id='text'>
-    <h2>private subroutine dbfqad(f, t, bcoef, n, k, id, x1, x2, tol, quad, iflag, work)</h2>
+    <h2>private  subroutine dbfqad(f, t, bcoef, n, k, id, x1, x2, tol, quad, iflag, work)  
+</h2>
     
 
     <p>dbfqad computes the integral on <code>(x1,x2)</code> of a product of a
@@ -157,79 +183,184 @@
 <p></p><div class="alert alert-info" role="alert"><h4>Note</h4><p>Extrapolation is not enabled for this routine.</p></div>
 
     <h3>Arguments</h3>
-      <table class="table table-striped varlist">
-<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
-<tbody>
-<tr>
-  <td><span class="anchor" id="variable-f~19"></span>procedure(<a href='../interface/b1fqad_func.html'>b1fqad_func</a>)</td>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-f~19"></span>
+              procedure(<a href='../interface/b1fqad_func.html'>b1fqad_func</a>)
+            </td>
 <td></td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>f</strong></td><td><p>external function of one argument for the
-integrand <code>bf(x)=f(x)*dbvalu(t,bcoef,n,k,id,x,inbv,work)</code></p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-t~10"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>f</strong></td>
+            <td>
+                <p>external function of one argument for the
+integrand <code>bf(x)=f(x)*dbvalu(t,bcoef,n,k,id,x,inbv,work)</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-t~8"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in),</td>
-  <td></td>  <td>dimension(n+k)</td><td>::</td>
-  <td><strong>t</strong></td><td><p>knot array</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-bcoef~28"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              dimension(n+k)
+            </td>
+            <td>::</td>
+            <td><strong>t</strong></td>
+            <td>
+                <p>knot array</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-bcoef~27"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in),</td>
-  <td></td>  <td>dimension(n)</td><td>::</td>
-  <td><strong>bcoef</strong></td><td><p>coefficient array</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-n~8"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              dimension(n)
+            </td>
+            <td>::</td>
+            <td><strong>bcoef</strong></td>
+            <td>
+                <p>coefficient array</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~10"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>n</strong></td><td><p>length of coefficient array</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-k~9"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+                <p>length of coefficient array</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-k~11"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>k</strong></td><td><p>order of b-spline, <code>k &gt;= 1</code></p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-id"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>k</strong></td>
+            <td>
+                <p>order of b-spline, <code>k &gt;= 1</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-id"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>id</strong></td><td><p>order of the spline derivative, <code>0 &lt;= id &lt;= k-1</code>
-<code>id=0</code> gives the spline function</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-x1~6"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>id</strong></td>
+            <td>
+                <p>order of the spline derivative, <code>0 &lt;= id &lt;= k-1</code>
+<code>id=0</code> gives the spline function</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x1~6"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>x1</strong></td><td><p>left point of quadrature interval in <code>t(k) &lt;= x &lt;= t(n+1)</code></p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-x2~6"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x1</strong></td>
+            <td>
+                <p>left point of quadrature interval in <code>t(k) &lt;= x &lt;= t(n+1)</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x2~6"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>x2</strong></td><td><p>right point of quadrature interval in <code>t(k) &lt;= x &lt;= t(n+1)</code></p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-tol~3"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x2</strong></td>
+            <td>
+                <p>right point of quadrature interval in <code>t(k) &lt;= x &lt;= t(n+1)</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tol~3"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>tol</strong></td><td><p>desired accuracy for the quadrature, suggest
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tol</strong></td>
+            <td>
+                <p>desired accuracy for the quadrature, suggest
 <code>10*dtol &lt; tol &lt;= 0.1</code> where <code>dtol</code> is the maximum
 of <code>1.0e-300</code> and real(wp) unit roundoff for
-the machine</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-quad"></span>real(kind=wp),</td>
+the machine</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-quad"></span>
+              real(kind=wp),
+            </td>
 <td>intent(out)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>quad</strong></td><td><p>integral of <code>bf(x)</code> on <code>(x1,x2)</code></p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-iflag~52"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>quad</strong></td>
+            <td>
+                <p>integral of <code>bf(x)</code> on <code>(x1,x2)</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-iflag~50"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(out)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>iflag</strong></td><td><p>status flag:</p>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iflag</strong></td>
+            <td>
+                <p>status flag:</p>
 <ul>
 <li>0: no errors</li>
 <li>1001: <code>k</code> does not satisfy <code>k&gt;=1</code></li>
@@ -239,16 +370,26 @@ the machine</p></td>
   satisfy <code>t(k)&lt;=x&lt;=t(n+1)</code></li>
 <li>1005: <code>tol</code> is less than <code>dtol</code>
   or greater than 0.1</li>
-</ul></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-work~7"></span>real(kind=wp),</td>
+</ul>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-work~14"></span>
+              real(kind=wp),
+            </td>
 <td>intent(inout),</td>
-  <td></td>  <td>dimension(:)</td><td>::</td>
-  <td><strong>work</strong></td><td><p>work vector of length <code>3*k</code></p></td>
-</tr>
-</tbody>
-</table>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>work</strong></td>
+            <td>
+                <p>work vector of length <code>3*k</code></p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
 
     <br>
     <div class="panel panel-default">
@@ -499,14 +640,33 @@ the machine</p></td>
     <br>
 
     <section class="visible-xs visible-sm hidden-md">
-      <h3>Contents</h3>
- 
-<div class="panel panel-primary">
-  <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
-  <div class="list-group">
-    <a class="list-group-item" href="../proc/dbfqad.html#src">dbfqad</a>
-  </div>
-</div>
+        <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="panel panel-primary">
+      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/dbfqad.html#src">dbfqad</a>
+      </div>
+    </div>
+
 
     </section>
     <br class="visible-xs visible-sm hidden-md">

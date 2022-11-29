@@ -80,52 +80,78 @@
   <div class="row">
     <h1>db1ink_alt
       <small>Subroutine</small>
+      
     </h1>
-    <div class="row">
-  <div class="col-lg-12">
-<div class="well well-sm">
-  <ul class="list-inline" style="margin-bottom:0px;display:inline">
-     <li><i class="fa fa-list-ol"></i>
-       <a data-toggle="tooltip"
-    data-placement="bottom" data-html="true"
-    title=" 0.8% of total for procedures.">31 statements</a>
-     </li> 
-    <li><i class="fa fa-code"></i><a href="../src/bspline_sub_module.f90"> Source File</a></li>
-  </ul>
-  <ol class="breadcrumb in-well text-right">
-     <li><a href='../sourcefile/bspline_sub_module.f90.html'>bspline_sub_module.f90</a></li>
-     <li><a href='../module/bspline_sub_module.html'>bspline_sub_module</a></li>
-     <li class="active">db1ink_alt</li>
-  </ol>
-</div>
-</div>
-</div>
-<script>
-  $(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-  })
-</script>
+      <div class="row" id="info-bar">
+    <div class="col-lg-12">
+      <div class="well well-sm">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+          <li id="statements"><i class="fa fa-list-ol"></i>
+            <a data-toggle="tooltip"
+               data-placement="bottom" data-html="true"
+               title=" 0.8% of total for procedures.">31 statements</a>
+          </li>
+
+            <li id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/bspline_sub_module.f90"> Source File</a>
+            </li>
+        </ul>
+        <ol class="breadcrumb in-well text-right">
+              <li><a href='../sourcefile/bspline_sub_module.f90.html'>bspline_sub_module.f90</a></li>
+              <li><a href='../module/bspline_sub_module.html'>bspline_sub_module</a></li>
+          <li class="active">db1ink_alt</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+    })
+  </script>
 
   </div>
   
   <div class="row">
     <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
-    <div id="sidebar">
-  <h3>Contents</h3>
- 
-<div class="panel panel-primary">
-  <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
-  <div class="list-group">
-    <a class="list-group-item" href="../proc/db1ink_alt.html#src">db1ink_alt</a>
-  </div>
-</div>
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="panel panel-primary">
+      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/db1ink_alt.html#src">db1ink_alt</a>
+      </div>
+    </div>
 
-</div>
+
+  </div>
 
     </div>
     
     <div class="col-md-9" id='text'>
-    <h2>private pure subroutine db1ink_alt(x, nx, fcn, kx, ibcl, ibcr, fbcl, fbcr, kntopt, tx, bcoef, iflag)</h2>
+    <h2>private pure subroutine db1ink_alt(x, nx, fcn, kx, ibcl, ibcr, fbcl, fbcr, kntopt, tx, bcoef, iflag)  
+</h2>
     
 
     <p>Alternate version of <a href="../proc/db1ink_default.html">db1ink_default</a>, where the boundary conditions can be specified.</p>
@@ -140,105 +166,220 @@
 <p></p><div class="alert alert-info" role="alert"><h4>Note</h4><p>Currently, this only works for 3rd order (k=4).</p></div>
 
     <h3>Arguments</h3>
-      <table class="table table-striped varlist">
-<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
-<tbody>
-<tr>
-  <td><span class="anchor" id="variable-x~29"></span>real(kind=wp),</td>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~28"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in),</td>
-  <td></td>  <td>dimension(:)</td><td>::</td>
-  <td><strong>x</strong></td><td><p>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p>
 <script type="math/tex">x</script> vector of abscissae of length <code>nx</code>, distinct
-and in increasing order</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-nx~9"></span>integer(kind=ip),</td>
+and in increasing order</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nx~8"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>nx</strong></td><td><p>number of data points, <script type="math/tex"> n_x \ge 2 </script>
-</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-fcn~26"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nx</strong></td>
+            <td>
+                <p>number of data points, <script type="math/tex"> n_x \ge 2 </script>
+</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fcn~26"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in),</td>
-  <td></td>  <td>dimension(:)</td><td>::</td>
-  <td><strong>fcn</strong></td><td><p>
-<script type="math/tex">y</script> vector of ordinates of length <code>nx</code></p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-kx~33"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>fcn</strong></td>
+            <td>
+                <p>
+<script type="math/tex">y</script> vector of ordinates of length <code>nx</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-kx~32"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>kx</strong></td><td><p>spline order (Currently, this must be <code>4</code>)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-ibcl"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>kx</strong></td>
+            <td>
+                <p>spline order (Currently, this must be <code>4</code>)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ibcl"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>ibcl</strong></td><td><p>selection parameter for left boundary condition:</p>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ibcl</strong></td>
+            <td>
+                <p>selection parameter for left boundary condition:</p>
 <ul>
 <li><code>ibcl = 1</code> constrain the first derivative at <code>x(1)</code> to <code>fbcl</code></li>
 <li><code>ibcl = 2</code> constrain the second derivative at <code>x(1)</code> to <code>fbcl</code></li>
-</ul></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-ibcr"></span>integer(kind=ip),</td>
+</ul>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ibcr"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>ibcr</strong></td><td><p>selection parameter for right boundary condition:</p>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ibcr</strong></td>
+            <td>
+                <p>selection parameter for right boundary condition:</p>
 <ul>
 <li><code>ibcr = 1</code> constrain first derivative at <code>x(nx)</code> to <code>fbcr</code></li>
 <li><code>ibcr = 2</code> constrain second derivative at <code>x(nx)</code> to <code>fbcr</code></li>
-</ul></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-fbcl"></span>real(kind=wp),</td>
+</ul>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fbcl"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>fbcl</strong></td><td><p>left boundary values governed by <code>ibcl</code></p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-fbcr"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fbcl</strong></td>
+            <td>
+                <p>left boundary values governed by <code>ibcl</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fbcr"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>fbcr</strong></td><td><p>right boundary values governed by <code>ibcr</code></p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-kntopt"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fbcr</strong></td>
+            <td>
+                <p>right boundary values governed by <code>ibcr</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-kntopt"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>kntopt</strong></td><td><p>knot selection parameter:</p>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>kntopt</strong></td>
+            <td>
+                <p>knot selection parameter:</p>
 <ul>
 <li><code>kntopt = 1</code> sets knot multiplicity at <code>t(4)</code> and
   <code>t(nx+3)</code> to 4</li>
 <li><code>kntopt = 2</code> sets a symmetric placement of knots
   about <code>t(4)</code> and <code>t(nx+3)</code></li>
-</ul></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-tx~21"></span>real(kind=wp),</td>
+</ul>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tx~20"></span>
+              real(kind=wp),
+            </td>
 <td>intent(out),</td>
-  <td></td>  <td>dimension(:)</td><td>::</td>
-  <td><strong>tx</strong></td><td><p>knot array of length <code>nx+6</code></p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-bcoef~8"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>tx</strong></td>
+            <td>
+                <p>knot array of length <code>nx+6</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-bcoef~8"></span>
+              real(kind=wp),
+            </td>
 <td>intent(out),</td>
-  <td></td>  <td>dimension(:)</td><td>::</td>
-  <td><strong>bcoef</strong></td><td><p>b spline coefficient array of length <code>nx+2</code></p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-iflag~27"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>bcoef</strong></td>
+            <td>
+                <p>b spline coefficient array of length <code>nx+2</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-iflag~27"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(out)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>iflag</strong></td><td><p>status flag:</p>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iflag</strong></td>
+            <td>
+                <p>status flag:</p>
 <ul>
 <li>0: no errors</li>
 <li>806: <a href="../proc/dbint4.html">dbint4</a> can only be used when <code>k=4</code></li>
-</ul></td>
-</tr>
-</tbody>
-</table>
+</ul>
+            </td>
+        </tr>
+    </tbody>
+  </table>
 
     <br>
     <div class="panel panel-default">
@@ -600,14 +741,33 @@ and in increasing order</p></td>
     <br>
 
     <section class="visible-xs visible-sm hidden-md">
-      <h3>Contents</h3>
- 
-<div class="panel panel-primary">
-  <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
-  <div class="list-group">
-    <a class="list-group-item" href="../proc/db1ink_alt.html#src">db1ink_alt</a>
-  </div>
-</div>
+        <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="panel panel-primary">
+      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/db1ink_alt.html#src">db1ink_alt</a>
+      </div>
+    </div>
+
 
     </section>
     <br class="visible-xs visible-sm hidden-md">

@@ -80,52 +80,78 @@
   <div class="row">
     <h1>dbspvd
       <small>Subroutine</small>
+      
     </h1>
-    <div class="row">
-  <div class="col-lg-12">
-<div class="well well-sm">
-  <ul class="list-inline" style="margin-bottom:0px;display:inline">
-     <li><i class="fa fa-list-ol"></i>
-       <a data-toggle="tooltip"
-    data-placement="bottom" data-html="true"
-    title=" 2.3% of total for procedures.">85 statements</a>
-     </li> 
-    <li><i class="fa fa-code"></i><a href="../src/bspline_sub_module.f90"> Source File</a></li>
-  </ul>
-  <ol class="breadcrumb in-well text-right">
-     <li><a href='../sourcefile/bspline_sub_module.f90.html'>bspline_sub_module.f90</a></li>
-     <li><a href='../module/bspline_sub_module.html'>bspline_sub_module</a></li>
-     <li class="active">dbspvd</li>
-  </ol>
-</div>
-</div>
-</div>
-<script>
-  $(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-  })
-</script>
+      <div class="row" id="info-bar">
+    <div class="col-lg-12">
+      <div class="well well-sm">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+          <li id="statements"><i class="fa fa-list-ol"></i>
+            <a data-toggle="tooltip"
+               data-placement="bottom" data-html="true"
+               title=" 2.3% of total for procedures.">85 statements</a>
+          </li>
+
+            <li id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/bspline_sub_module.f90"> Source File</a>
+            </li>
+        </ul>
+        <ol class="breadcrumb in-well text-right">
+              <li><a href='../sourcefile/bspline_sub_module.f90.html'>bspline_sub_module.f90</a></li>
+              <li><a href='../module/bspline_sub_module.html'>bspline_sub_module</a></li>
+          <li class="active">dbspvd</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+    })
+  </script>
 
   </div>
   
   <div class="row">
     <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
-    <div id="sidebar">
-  <h3>Contents</h3>
- 
-<div class="panel panel-primary">
-  <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
-  <div class="list-group">
-    <a class="list-group-item" href="../proc/dbspvd.html#src">dbspvd</a>
-  </div>
-</div>
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="panel panel-primary">
+      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/dbspvd.html#src">dbspvd</a>
+      </div>
+    </div>
 
-</div>
+
+  </div>
 
     </div>
     
     <div class="col-md-9" id='text'>
-    <h2>private pure subroutine dbspvd(t, k, nderiv, x, ileft, ldvnik, vnikx, work, iflag)</h2>
+    <h2>private pure subroutine dbspvd(t, k, nderiv, x, ileft, ldvnik, vnikx, work, iflag)  
+</h2>
     
 
     <p>DBSPVD calculates the value and all derivatives of order
@@ -156,78 +182,166 @@
 <p></p><div class="alert alert-info" role="alert"><h4>Note</h4><p><code>DBSPVD</code> is the <code>BSPLVD</code> routine of the reference.</p></div>
 
     <h3>Arguments</h3>
-      <table class="table table-striped varlist">
-<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
-<tbody>
-<tr>
-  <td><span class="anchor" id="variable-t~8"></span>real(kind=wp),</td>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-t~6"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in),</td>
-  <td></td>  <td>dimension(:)</td><td>::</td>
-  <td><strong>t</strong></td><td><p>knot vector of length <code>n+k</code>, where
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>t</strong></td>
+            <td>
+                <p>knot vector of length <code>n+k</code>, where
 <code>n</code> = number of b-spline basis functions
-<code>n</code> = sum of knot multiplicities-k</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-k~7"></span>integer(kind=ip),</td>
+<code>n</code> = sum of knot multiplicities-k</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-k~9"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>k</strong></td><td><p>order of the b-spline, <code>k &gt;= 1</code></p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-nderiv"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>k</strong></td>
+            <td>
+                <p>order of the b-spline, <code>k &gt;= 1</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nderiv"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>nderiv</strong></td><td><p>number of derivatives = <code>nderiv-1</code>,
-<code>1 &lt;= nderiv &lt;= k</code></p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-x~43"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nderiv</strong></td>
+            <td>
+                <p>number of derivatives = <code>nderiv-1</code>,
+<code>1 &lt;= nderiv &lt;= k</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~39"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>x</strong></td><td><p>argument of basis functions,
-<code>t(k) &lt;= x &lt;= t(n+1)</code></p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-ileft~3"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p>argument of basis functions,
+<code>t(k) &lt;= x &lt;= t(n+1)</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ileft~3"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>ileft</strong></td><td><p>largest integer such that
-<code>t(ileft) &lt;= x &lt; t(ileft+1)</code></p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-ldvnik"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ileft</strong></td>
+            <td>
+                <p>largest integer such that
+<code>t(ileft) &lt;= x &lt; t(ileft+1)</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ldvnik"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>ldvnik</strong></td><td><p>leading dimension of matrix <code>vnikx</code></p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-vnikx~2"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ldvnik</strong></td>
+            <td>
+                <p>leading dimension of matrix <code>vnikx</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-vnikx~2"></span>
+              real(kind=wp),
+            </td>
 <td>intent(out),</td>
-  <td></td>  <td>dimension(ldvnik,nderiv)</td><td>::</td>
-  <td><strong>vnikx</strong></td><td><p>matrix of dimension at least <code>(k,nderiv)</code>
+              <td></td>            <td>
+              dimension(ldvnik,nderiv)
+            </td>
+            <td>::</td>
+            <td><strong>vnikx</strong></td>
+            <td>
+                <p>matrix of dimension at least <code>(k,nderiv)</code>
 containing the nonzero basis functions
-at <code>x</code> and their derivatives columnwise.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-work~5"></span>real(kind=wp),</td>
+at <code>x</code> and their derivatives columnwise.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-work~12"></span>
+              real(kind=wp),
+            </td>
 <td>intent(out),</td>
-  <td></td>  <td>dimension(*)</td><td>::</td>
-  <td><strong>work</strong></td><td><p>a work vector of length <code>(k+1)*(k+2)/2</code></p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-iflag~50"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              dimension(*)
+            </td>
+            <td>::</td>
+            <td><strong>work</strong></td>
+            <td>
+                <p>a work vector of length <code>(k+1)*(k+2)/2</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-iflag~48"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(out)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>iflag</strong></td><td><p>status flag:</p>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iflag</strong></td>
+            <td>
+                <p>status flag:</p>
 <ul>
 <li>0: no errors</li>
 <li>3001: <code>k</code> does not satisfy <code>k&gt;=1</code></li>
 <li>3002: <code>nderiv</code> does not satisfy <code>1&lt;=nderiv&lt;=k</code></li>
 <li>3003: <code>ldvnik</code> does not satisfy <code>ldvnik&gt;=k</code></li>
-</ul></td>
-</tr>
-</tbody>
-</table>
+</ul>
+            </td>
+        </tr>
+    </tbody>
+  </table>
 
     <br>
     <div class="panel panel-default">
@@ -565,14 +679,33 @@ at <code>x</code> and their derivatives columnwise.</p></td>
     <br>
 
     <section class="visible-xs visible-sm hidden-md">
-      <h3>Contents</h3>
- 
-<div class="panel panel-primary">
-  <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
-  <div class="list-group">
-    <a class="list-group-item" href="../proc/dbspvd.html#src">dbspvd</a>
-  </div>
-</div>
+        <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="panel panel-primary">
+      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/dbspvd.html#src">dbspvd</a>
+      </div>
+    </div>
+
 
     </section>
     <br class="visible-xs visible-sm hidden-md">

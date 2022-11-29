@@ -80,122 +80,236 @@
   <div class="row">
     <h1>evaluate_3d
       <small>Subroutine</small>
+      
     </h1>
-    <div class="row">
-  <div class="col-lg-12">
-<div class="well well-sm">
-  <ul class="list-inline" style="margin-bottom:0px;display:inline">
-     <li><i class="fa fa-list-ol"></i>
-       <a data-toggle="tooltip"
-    data-placement="bottom" data-html="true"
-    title=" 0.5% of total for procedures.">18 statements</a>
-     </li> 
-    <li><i class="fa fa-code"></i><a href="../src/bspline_oo_module.f90"> Source File</a></li>
-  </ul>
-  <ol class="breadcrumb in-well text-right">
-     <li><a href='../sourcefile/bspline_oo_module.f90.html'>bspline_oo_module.f90</a></li>
-     <li><a href='../module/bspline_oo_module.html'>bspline_oo_module</a></li>
-     <li class="active">evaluate_3d</li>
-  </ol>
-</div>
-</div>
-</div>
-<script>
-  $(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-  })
-</script>
+      <div class="row" id="info-bar">
+    <div class="col-lg-12">
+      <div class="well well-sm">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+          <li id="statements"><i class="fa fa-list-ol"></i>
+            <a data-toggle="tooltip"
+               data-placement="bottom" data-html="true"
+               title=" 0.5% of total for procedures.">18 statements</a>
+          </li>
+
+            <li id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/bspline_oo_module.f90"> Source File</a>
+            </li>
+        </ul>
+        <ol class="breadcrumb in-well text-right">
+              <li><a href='../sourcefile/bspline_oo_module.f90.html'>bspline_oo_module.f90</a></li>
+              <li><a href='../module/bspline_oo_module.html'>bspline_oo_module</a></li>
+          <li class="active">evaluate_3d</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+    })
+  </script>
 
   </div>
   
   <div class="row">
     <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
-    <div id="sidebar">
-  <h3>Contents</h3>
- 
-<div class="panel panel-primary">
-  <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
-  <div class="list-group">
-    <a class="list-group-item" href="../proc/evaluate_3d.html#src">evaluate_3d</a>
-  </div>
-</div>
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="panel panel-primary">
+      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/evaluate_3d.html#src">evaluate_3d</a>
+      </div>
+    </div>
 
-</div>
+
+  </div>
 
     </div>
     
     <div class="col-md-9" id='text'>
-    <h2>private pure subroutine evaluate_3d(me, xval, yval, zval, idx, idy, idz, f, iflag)</h2>
+    <h2>private pure subroutine evaluate_3d(me, xval, yval, zval, idx, idy, idz, f, iflag)  
+</h2>
     
 
     <p>Evaluate a <a href="../type/bspline_3d.html">bspline_3d</a> interpolate.  This is a wrapper for <a href="../proc/db3val.html">db3val</a>.</p>
 
     <h3>Arguments</h3>
-      <table class="table table-striped varlist">
-<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
-<tbody>
-<tr>
-  <td><span class="anchor" id="variable-me~54"></span>class(<a href='../type/bspline_3d.html'>bspline_3d</a>),</td>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-me~25"></span>
+              class(<a href='../type/bspline_3d.html'>bspline_3d</a>),
+            </td>
 <td>intent(inout)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>me</strong></td><td></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-xval~3"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-xval~3"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>xval</strong></td><td><p>
-<script type="math/tex">x</script> coordinate of evaluation point.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-yval~2"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>xval</strong></td>
+            <td>
+                <p>
+<script type="math/tex">x</script> coordinate of evaluation point.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-yval~2"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>yval</strong></td><td><p>
-<script type="math/tex">y</script> coordinate of evaluation point.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-zval"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>yval</strong></td>
+            <td>
+                <p>
+<script type="math/tex">y</script> coordinate of evaluation point.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-zval"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>zval</strong></td><td><p>
-<script type="math/tex">z</script> coordinate of evaluation point.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-idx~4"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>zval</strong></td>
+            <td>
+                <p>
+<script type="math/tex">z</script> coordinate of evaluation point.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-idx~4"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>idx</strong></td><td><p>
-<script type="math/tex">x</script> derivative of piecewise polynomial to evaluate.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-idy~2"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>idx</strong></td>
+            <td>
+                <p>
+<script type="math/tex">x</script> derivative of piecewise polynomial to evaluate.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-idy~2"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>idy</strong></td><td><p>
-<script type="math/tex">y</script> derivative of piecewise polynomial to evaluate.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-idz"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>idy</strong></td>
+            <td>
+                <p>
+<script type="math/tex">y</script> derivative of piecewise polynomial to evaluate.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-idz"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>idz</strong></td><td><p>
-<script type="math/tex">z</script> derivative of piecewise polynomial to evaluate.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-f~6"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>idz</strong></td>
+            <td>
+                <p>
+<script type="math/tex">z</script> derivative of piecewise polynomial to evaluate.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-f~5"></span>
+              real(kind=wp),
+            </td>
 <td>intent(out)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>f</strong></td><td><p>interpolated value</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-iflag~13"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>f</strong></td>
+            <td>
+                <p>interpolated value</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-iflag~12"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(out)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>iflag</strong></td><td><p>status flag (see <a href="../proc/db3val.html">db3val</a>)</p></td>
-</tr>
-</tbody>
-</table>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iflag</strong></td>
+            <td>
+                <p>status flag (see <a href="../proc/db3val.html">db3val</a>)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
 
     <br>
     <div class="panel panel-default">
@@ -367,14 +481,33 @@
     <br>
 
     <section class="visible-xs visible-sm hidden-md">
-      <h3>Contents</h3>
- 
-<div class="panel panel-primary">
-  <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
-  <div class="list-group">
-    <a class="list-group-item" href="../proc/evaluate_3d.html#src">evaluate_3d</a>
-  </div>
-</div>
+        <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="panel panel-primary">
+      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/evaluate_3d.html#src">evaluate_3d</a>
+      </div>
+    </div>
+
 
     </section>
     <br class="visible-xs visible-sm hidden-md">

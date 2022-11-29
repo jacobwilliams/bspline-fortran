@@ -80,52 +80,78 @@
   <div class="row">
     <h1>db6ink
       <small>Subroutine</small>
+      
     </h1>
-    <div class="row">
-  <div class="col-lg-12">
-<div class="well well-sm">
-  <ul class="list-inline" style="margin-bottom:0px;display:inline">
-     <li><i class="fa fa-list-ol"></i>
-       <a data-toggle="tooltip"
-    data-placement="bottom" data-html="true"
-    title=" 1.5% of total for procedures.">55 statements</a>
-     </li> 
-    <li><i class="fa fa-code"></i><a href="../src/bspline_sub_module.f90"> Source File</a></li>
-  </ul>
-  <ol class="breadcrumb in-well text-right">
-     <li><a href='../sourcefile/bspline_sub_module.f90.html'>bspline_sub_module.f90</a></li>
-     <li><a href='../module/bspline_sub_module.html'>bspline_sub_module</a></li>
-     <li class="active">db6ink</li>
-  </ol>
-</div>
-</div>
-</div>
-<script>
-  $(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-  })
-</script>
+      <div class="row" id="info-bar">
+    <div class="col-lg-12">
+      <div class="well well-sm">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+          <li id="statements"><i class="fa fa-list-ol"></i>
+            <a data-toggle="tooltip"
+               data-placement="bottom" data-html="true"
+               title=" 1.5% of total for procedures.">55 statements</a>
+          </li>
+
+            <li id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/bspline_sub_module.f90"> Source File</a>
+            </li>
+        </ul>
+        <ol class="breadcrumb in-well text-right">
+              <li><a href='../sourcefile/bspline_sub_module.f90.html'>bspline_sub_module.f90</a></li>
+              <li><a href='../module/bspline_sub_module.html'>bspline_sub_module</a></li>
+          <li class="active">db6ink</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+    })
+  </script>
 
   </div>
   
   <div class="row">
     <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
-    <div id="sidebar">
-  <h3>Contents</h3>
- 
-<div class="panel panel-primary">
-  <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
-  <div class="list-group">
-    <a class="list-group-item" href="../proc/db6ink.html#src">db6ink</a>
-  </div>
-</div>
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="panel panel-primary">
+      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/db6ink.html#src">db6ink</a>
+      </div>
+    </div>
 
-</div>
+
+  </div>
 
     </div>
     
     <div class="col-md-9" id='text'>
-    <h2>public pure subroutine db6ink(x, nx, y, ny, z, nz, q, nq, r, nr, s, ns, fcn, kx, ky, kz, kq, kr, ks, iknot, tx, ty, tz, tq, tr, ts, bcoef, iflag)</h2>
+    <h2>public pure subroutine db6ink(x, nx, y, ny, z, nz, q, nq, r, nr, s, ns, fcn, kx, ky, kz, kq, kr, ks, iknot, tx, ty, tz, tq, tr, ts, bcoef, iflag)  
+</h2>
     
 
     <p>Determines the parameters of a function that interpolates
@@ -146,238 +172,496 @@
 </ul>
 
     <h3>Arguments</h3>
-      <table class="table table-striped varlist">
-<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
-<tbody>
-<tr>
-  <td><span class="anchor" id="variable-x~35"></span>real(kind=wp),</td>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~34"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in),</td>
-  <td></td>  <td>dimension(:)</td><td>::</td>
-  <td><strong>x</strong></td><td><p><code>(nx)</code> array of <script type="math/tex">x</script> abcissae.
-must be strictly increasing.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-nx~23"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p><code>(nx)</code> array of <script type="math/tex">x</script> abcissae.
+must be strictly increasing.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nx~22"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>nx</strong></td><td><p>number of <script type="math/tex">x</script> abcissae ( <script type="math/tex"> \ge 3 </script> )</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-y~25"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nx</strong></td>
+            <td>
+                <p>number of <script type="math/tex">x</script> abcissae ( <script type="math/tex"> \ge 3 </script> )</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-y~25"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in),</td>
-  <td></td>  <td>dimension(:)</td><td>::</td>
-  <td><strong>y</strong></td><td><p><code>(ny)</code> array of <script type="math/tex">y</script> abcissae.
-must be strictly increasing.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-ny~15"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>y</strong></td>
+            <td>
+                <p><code>(ny)</code> array of <script type="math/tex">y</script> abcissae.
+must be strictly increasing.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ny~14"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>ny</strong></td><td><p>number of <script type="math/tex">y</script> abcissae ( <script type="math/tex"> \ge 3 </script> )</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-z~20"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ny</strong></td>
+            <td>
+                <p>number of <script type="math/tex">y</script> abcissae ( <script type="math/tex"> \ge 3 </script> )</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-z~20"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in),</td>
-  <td></td>  <td>dimension(:)</td><td>::</td>
-  <td><strong>z</strong></td><td><p><code>(nz)</code> array of <script type="math/tex">z</script> abcissae.
-must be strictly increasing.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-nz~12"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>z</strong></td>
+            <td>
+                <p><code>(nz)</code> array of <script type="math/tex">z</script> abcissae.
+must be strictly increasing.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nz~11"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>nz</strong></td><td><p>number of <script type="math/tex">z</script> abcissae ( <script type="math/tex"> \ge 3 </script> )</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-q~15"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nz</strong></td>
+            <td>
+                <p>number of <script type="math/tex">z</script> abcissae ( <script type="math/tex"> \ge 3 </script> )</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-q~15"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in),</td>
-  <td></td>  <td>dimension(:)</td><td>::</td>
-  <td><strong>q</strong></td><td><p><code>(nq)</code> array of <script type="math/tex">q</script> abcissae.
-must be strictly increasing.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-nq~9"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>q</strong></td>
+            <td>
+                <p><code>(nq)</code> array of <script type="math/tex">q</script> abcissae.
+must be strictly increasing.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nq~8"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>nq</strong></td><td><p>number of <script type="math/tex">q</script> abcissae ( <script type="math/tex"> \ge 3 </script> )</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-r~10"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nq</strong></td>
+            <td>
+                <p>number of <script type="math/tex">q</script> abcissae ( <script type="math/tex"> \ge 3 </script> )</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-r~10"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in),</td>
-  <td></td>  <td>dimension(:)</td><td>::</td>
-  <td><strong>r</strong></td><td><p><code>(nr)</code> array of <script type="math/tex">r</script> abcissae.
-must be strictly increasing.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-nr~6"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>r</strong></td>
+            <td>
+                <p><code>(nr)</code> array of <script type="math/tex">r</script> abcissae.
+must be strictly increasing.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nr~5"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>nr</strong></td><td><p>number of <script type="math/tex">r</script> abcissae ( <script type="math/tex"> \ge 3 </script> )</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-s~12"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nr</strong></td>
+            <td>
+                <p>number of <script type="math/tex">r</script> abcissae ( <script type="math/tex"> \ge 3 </script> )</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-s~12"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in),</td>
-  <td></td>  <td>dimension(:)</td><td>::</td>
-  <td><strong>s</strong></td><td><p><code>(ns)</code> array of <script type="math/tex">s</script> abcissae.
-must be strictly increasing.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-ns~3"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>s</strong></td>
+            <td>
+                <p><code>(ns)</code> array of <script type="math/tex">s</script> abcissae.
+must be strictly increasing.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ns~2"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>ns</strong></td><td><p>number of <script type="math/tex">s</script> abcissae ( <script type="math/tex"> \ge 3 </script> )</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-fcn~32"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ns</strong></td>
+            <td>
+                <p>number of <script type="math/tex">s</script> abcissae ( <script type="math/tex"> \ge 3 </script> )</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fcn~32"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in),</td>
-  <td></td>  <td>dimension(:,:,:,:,:,:)</td><td>::</td>
-  <td><strong>fcn</strong></td><td><p><code>(nx,ny,nz,nq,nr,ns)</code> matrix of function values to
+              <td></td>            <td>
+              dimension(:,:,:,:,:,:)
+            </td>
+            <td>::</td>
+            <td><strong>fcn</strong></td>
+            <td>
+                <p><code>(nx,ny,nz,nq,nr,ns)</code> matrix of function values to
 interpolate. <code>fcn(i,j,k,q,r,s)</code> should contain the
 function value at the point
-(<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<code>r(m)</code>,<code>s(n)</code>)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-kx~47"></span>integer(kind=ip),</td>
+(<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<code>r(m)</code>,<code>s(n)</code>)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-kx~46"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>kx</strong></td><td><p>the order of spline pieces in <script type="math/tex">x</script>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>kx</strong></td>
+            <td>
+                <p>the order of spline pieces in <script type="math/tex">x</script>
 ( <script type="math/tex"> 2 \le k_x < n_x </script> )
-(order = polynomial degree + 1)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-ky~35"></span>integer(kind=ip),</td>
+(order = polynomial degree + 1)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ky~34"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>ky</strong></td><td><p>the order of spline pieces in <script type="math/tex">y</script>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ky</strong></td>
+            <td>
+                <p>the order of spline pieces in <script type="math/tex">y</script>
 ( <script type="math/tex"> 2 \le k_y < n_y </script> )
-(order = polynomial degree + 1)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-kz~28"></span>integer(kind=ip),</td>
+(order = polynomial degree + 1)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-kz~27"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>kz</strong></td><td><p>the order of spline pieces in <script type="math/tex">z</script>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>kz</strong></td>
+            <td>
+                <p>the order of spline pieces in <script type="math/tex">z</script>
 ( <script type="math/tex"> 2 \le k_z < n_z </script> )
-(order = polynomial degree + 1)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-kq~21"></span>integer(kind=ip),</td>
+(order = polynomial degree + 1)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-kq~20"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>kq</strong></td><td><p>the order of spline pieces in <script type="math/tex">q</script>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>kq</strong></td>
+            <td>
+                <p>the order of spline pieces in <script type="math/tex">q</script>
 ( <script type="math/tex"> 2 \le k_q < n_q </script> )
-(order = polynomial degree + 1)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-kr~14"></span>integer(kind=ip),</td>
+(order = polynomial degree + 1)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-kr~13"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>kr</strong></td><td><p>the order of spline pieces in <script type="math/tex">r</script>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>kr</strong></td>
+            <td>
+                <p>the order of spline pieces in <script type="math/tex">r</script>
 ( <script type="math/tex"> 2 \le k_r < n_r </script> )
-(order = polynomial degree + 1)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-ks~7"></span>integer(kind=ip),</td>
+(order = polynomial degree + 1)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ks~6"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>ks</strong></td><td><p>the order of spline pieces in <script type="math/tex">s</script>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ks</strong></td>
+            <td>
+                <p>the order of spline pieces in <script type="math/tex">s</script>
 ( <script type="math/tex"> 2 \le k_s < n_s </script> )
-(order = polynomial degree + 1)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-iknot~6"></span>integer(kind=ip),</td>
+(order = polynomial degree + 1)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-iknot~6"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>iknot</strong></td><td><p>knot sequence flag:</p>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iknot</strong></td>
+            <td>
+                <p>knot sequence flag:</p>
 <ul>
 <li>0 = knot sequence chosen by <a href="../proc/db6ink.html">db6ink</a>.</li>
 <li>1 = knot sequence chosen by user.</li>
-</ul></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-tx~35"></span>real(kind=wp),</td>
+</ul>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tx~34"></span>
+              real(kind=wp),
+            </td>
 <td>intent(inout),</td>
-  <td></td>  <td>dimension(:)</td><td>::</td>
-  <td><strong>tx</strong></td><td><p>The <code>(nx+kx)</code> knots in the <script type="math/tex">x</script> direction for the
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>tx</strong></td>
+            <td>
+                <p>The <code>(nx+kx)</code> knots in the <script type="math/tex">x</script> direction for the
 spline interpolant.</p>
 <ul>
 <li>f <code>iknot=0</code> these are chosen by <a href="../proc/db6ink.html">db6ink</a>.</li>
 <li>f <code>iknot=1</code> these are specified by the user.</li>
 </ul>
-<p>Must be non-decreasing.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-ty~25"></span>real(kind=wp),</td>
+<p>Must be non-decreasing.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ty~24"></span>
+              real(kind=wp),
+            </td>
 <td>intent(inout),</td>
-  <td></td>  <td>dimension(:)</td><td>::</td>
-  <td><strong>ty</strong></td><td><p>The <code>(ny+ky)</code> knots in the <script type="math/tex">y</script> direction for the
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>ty</strong></td>
+            <td>
+                <p>The <code>(ny+ky)</code> knots in the <script type="math/tex">y</script> direction for the
 spline interpolant.</p>
 <ul>
 <li>If <code>iknot=0</code> these are chosen by <a href="../proc/db6ink.html">db6ink</a>.</li>
 <li>If <code>iknot=1</code> these are specified by the user.</li>
 </ul>
-<p>Must be non-decreasing.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-tz~20"></span>real(kind=wp),</td>
+<p>Must be non-decreasing.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tz~19"></span>
+              real(kind=wp),
+            </td>
 <td>intent(inout),</td>
-  <td></td>  <td>dimension(:)</td><td>::</td>
-  <td><strong>tz</strong></td><td><p>The <code>(nz+kz)</code> knots in the <script type="math/tex">z</script> direction for the
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>tz</strong></td>
+            <td>
+                <p>The <code>(nz+kz)</code> knots in the <script type="math/tex">z</script> direction for the
 spline interpolant.</p>
 <ul>
 <li>If <code>iknot=0</code> these are chosen by <a href="../proc/db6ink.html">db6ink</a>.</li>
 <li>If <code>iknot=1</code> these are specified by the user.</li>
 </ul>
-<p>Must be non-decreasing.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-tq~15"></span>real(kind=wp),</td>
+<p>Must be non-decreasing.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tq~14"></span>
+              real(kind=wp),
+            </td>
 <td>intent(inout),</td>
-  <td></td>  <td>dimension(:)</td><td>::</td>
-  <td><strong>tq</strong></td><td><p>The <code>(nq+kq)</code> knots in the <script type="math/tex">q</script> direction for the
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>tq</strong></td>
+            <td>
+                <p>The <code>(nq+kq)</code> knots in the <script type="math/tex">q</script> direction for the
 spline interpolant.</p>
 <ul>
 <li>If <code>iknot=0</code> these are chosen by <a href="../proc/db6ink.html">db6ink</a>.</li>
 <li>If <code>iknot=1</code> these are specified by the user.</li>
 </ul>
-<p>Must be non-decreasing.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-tr~10"></span>real(kind=wp),</td>
+<p>Must be non-decreasing.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tr~9"></span>
+              real(kind=wp),
+            </td>
 <td>intent(inout),</td>
-  <td></td>  <td>dimension(:)</td><td>::</td>
-  <td><strong>tr</strong></td><td><p>The <code>(nr+kr)</code> knots in the <script type="math/tex">r</script> direction for the
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>tr</strong></td>
+            <td>
+                <p>The <code>(nr+kr)</code> knots in the <script type="math/tex">r</script> direction for the
 spline interpolant.</p>
 <ul>
 <li>If <code>iknot=0</code> these are chosen by <a href="../proc/db6ink.html">db6ink</a>.</li>
 <li>If <code>iknot=1</code> these are specified by the user.</li>
 </ul>
-<p>Must be non-decreasing.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-ts~5"></span>real(kind=wp),</td>
+<p>Must be non-decreasing.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ts~4"></span>
+              real(kind=wp),
+            </td>
 <td>intent(inout),</td>
-  <td></td>  <td>dimension(:)</td><td>::</td>
-  <td><strong>ts</strong></td><td><p>The <code>(ns+ks)</code> knots in the <script type="math/tex">s</script> direction for the
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>ts</strong></td>
+            <td>
+                <p>The <code>(ns+ks)</code> knots in the <script type="math/tex">s</script> direction for the
 spline interpolant.</p>
 <ul>
 <li>If <code>iknot=0</code> these are chosen by <a href="../proc/db6ink.html">db6ink</a>.</li>
 <li>If <code>iknot=1</code> these are specified by the user.</li>
 </ul>
-<p>Must be non-decreasing.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-bcoef~22"></span>real(kind=wp),</td>
+<p>Must be non-decreasing.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-bcoef~22"></span>
+              real(kind=wp),
+            </td>
 <td>intent(out),</td>
-  <td></td>  <td>dimension(:,:,:,:,:,:)</td><td>::</td>
-  <td><strong>bcoef</strong></td><td><p><code>(nx,ny,nz,nq,nr,ns)</code> matrix of coefficients of the
-b-spline interpolant.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-iflag~41"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              dimension(:,:,:,:,:,:)
+            </td>
+            <td>::</td>
+            <td><strong>bcoef</strong></td>
+            <td>
+                <p><code>(nx,ny,nz,nq,nr,ns)</code> matrix of coefficients of the
+b-spline interpolant.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-iflag~41"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(out)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>iflag</strong></td><td><ul>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iflag</strong></td>
+            <td>
+                <ul>
 <li>0 = successful execution.</li>
 <li>2 = <code>iknot</code> out of range.</li>
 <li>3 = <code>nx</code> out of range.</li>
@@ -452,10 +736,11 @@ b-spline interpolant.</p></td>
 <code>size(bcoef,5)</code></li>
 <li>805 = <code>size(s)</code> <script type="math/tex"> \ne </script>
 <code>size(bcoef,6)</code></li>
-</ul></td>
-</tr>
-</tbody>
-</table>
+</ul>
+            </td>
+        </tr>
+    </tbody>
+  </table>
 
     <br>
     <div class="panel panel-default">
@@ -469,61 +754,61 @@ b-spline interpolant.</p></td>
 <!-- Generated by graphviz version 2.43.0 (0)
  -->
 <!-- Title: proc~~db6ink~~CallsGraph Pages: 1 -->
-<svg id="procdb6inkCallsGraph" width="360pt" height="178pt"
- viewBox="0.00 0.00 360.00 178.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="proc~~db6ink~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 174)">
+<svg id="procdb6inkCallsGraph" width="360pt" height="137pt"
+ viewBox="0.00 0.00 360.00 137.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~db6ink~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 133)">
 <title>proc~~db6ink~~CallsGraph</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-174 356,-174 356,4 -4,4"/>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-133 356,-133 356,4 -4,4"/>
 <!-- proc~db6ink -->
 <g id="proc~~db6ink~~CallsGraph_node1" class="node">
 <title>proc~db6ink</title>
-<polygon fill="none" stroke="black" points="54,-128 0,-128 0,-104 54,-104 54,-128"/>
-<text text-anchor="middle" x="27" y="-113.6" font-family="Helvetica,sans-Serif" font-size="10.50">db6ink</text>
+<polygon fill="none" stroke="black" points="54,-87 0,-87 0,-63 54,-63 54,-87"/>
+<text text-anchor="middle" x="27" y="-72.6" font-family="Helvetica,sans-Serif" font-size="10.50">db6ink</text>
 </g>
 <!-- proc~check_inputs -->
 <g id="proc~~db6ink~~CallsGraph_node2" class="node">
 <title>proc~check_inputs</title>
 <g id="a_proc~~db6ink~~CallsGraph_node2"><a xlink:href=".././proc/check_inputs.html" xlink:title="check_inputs">
-<polygon fill="#d9534f" stroke="#d9534f" points="172,-170 90,-170 90,-146 172,-146 172,-170"/>
-<text text-anchor="middle" x="131" y="-155.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">check_inputs</text>
+<polygon fill="#d9534f" stroke="#d9534f" points="172,-129 90,-129 90,-105 172,-105 172,-129"/>
+<text text-anchor="middle" x="131" y="-114.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">check_inputs</text>
 </a>
 </g>
 </g>
 <!-- proc~db6ink&#45;&gt;proc~check_inputs -->
 <g id="proc~~db6ink~~CallsGraph_edge1" class="edge">
 <title>proc~db6ink&#45;&gt;proc~check_inputs</title>
-<path fill="none" stroke="#000000" d="M54,-126.71C65.39,-131.39 78.97,-136.99 91.49,-142.14"/>
-<polygon fill="#000000" stroke="#000000" points="90.22,-145.41 100.8,-145.98 92.89,-138.93 90.22,-145.41"/>
-</g>
-<!-- proc~dbknot -->
-<g id="proc~~db6ink~~CallsGraph_node3" class="node">
-<title>proc~dbknot</title>
-<g id="a_proc~~db6ink~~CallsGraph_node3"><a xlink:href=".././proc/dbknot.html" xlink:title="dbknot">
-<polygon fill="#d9534f" stroke="#d9534f" points="158,-128 104,-128 104,-104 158,-104 158,-128"/>
-<text text-anchor="middle" x="131" y="-113.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbknot</text>
-</a>
-</g>
-</g>
-<!-- proc~db6ink&#45;&gt;proc~dbknot -->
-<g id="proc~~db6ink~~CallsGraph_edge2" class="edge">
-<title>proc~db6ink&#45;&gt;proc~dbknot</title>
-<path fill="none" stroke="#000000" d="M54,-116C66.02,-116 80.49,-116 93.57,-116"/>
-<polygon fill="#000000" stroke="#000000" points="93.69,-119.5 103.69,-116 93.69,-112.5 93.69,-119.5"/>
+<path fill="none" stroke="#000000" d="M54,-85.71C65.39,-90.39 78.97,-95.99 91.49,-101.14"/>
+<polygon fill="#000000" stroke="#000000" points="90.22,-104.41 100.8,-104.98 92.89,-97.93 90.22,-104.41"/>
 </g>
 <!-- proc~dbtpcf -->
-<g id="proc~~db6ink~~CallsGraph_node4" class="node">
+<g id="proc~~db6ink~~CallsGraph_node3" class="node">
 <title>proc~dbtpcf</title>
-<g id="a_proc~~db6ink~~CallsGraph_node4"><a xlink:href=".././proc/dbtpcf.html" xlink:title="dbtpcf">
-<polygon fill="#d9534f" stroke="#d9534f" points="158,-86 104,-86 104,-62 158,-62 158,-86"/>
-<text text-anchor="middle" x="131" y="-71.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbtpcf</text>
+<g id="a_proc~~db6ink~~CallsGraph_node3"><a xlink:href=".././proc/dbtpcf.html" xlink:title="dbtpcf">
+<polygon fill="#d9534f" stroke="#d9534f" points="158,-87 104,-87 104,-63 158,-63 158,-87"/>
+<text text-anchor="middle" x="131" y="-72.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbtpcf</text>
 </a>
 </g>
 </g>
 <!-- proc~db6ink&#45;&gt;proc~dbtpcf -->
-<g id="proc~~db6ink~~CallsGraph_edge3" class="edge">
+<g id="proc~~db6ink~~CallsGraph_edge2" class="edge">
 <title>proc~db6ink&#45;&gt;proc~dbtpcf</title>
-<path fill="none" stroke="#000000" d="M54,-105.29C66.26,-100.25 81.07,-94.15 94.35,-88.68"/>
-<polygon fill="#000000" stroke="#000000" points="95.78,-91.88 103.69,-84.83 93.11,-85.4 95.78,-91.88"/>
+<path fill="none" stroke="#000000" d="M54,-75C66.02,-75 80.49,-75 93.57,-75"/>
+<polygon fill="#000000" stroke="#000000" points="93.69,-78.5 103.69,-75 93.69,-71.5 93.69,-78.5"/>
+</g>
+<!-- proc~dbknot -->
+<g id="proc~~db6ink~~CallsGraph_node4" class="node">
+<title>proc~dbknot</title>
+<g id="a_proc~~db6ink~~CallsGraph_node4"><a xlink:href=".././proc/dbknot.html" xlink:title="dbknot">
+<polygon fill="#d9534f" stroke="#d9534f" points="158,-45 104,-45 104,-21 158,-21 158,-45"/>
+<text text-anchor="middle" x="131" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbknot</text>
+</a>
+</g>
+</g>
+<!-- proc~db6ink&#45;&gt;proc~dbknot -->
+<g id="proc~~db6ink~~CallsGraph_edge3" class="edge">
+<title>proc~db6ink&#45;&gt;proc~dbknot</title>
+<path fill="none" stroke="#000000" d="M54,-64.29C66.26,-59.25 81.07,-53.15 94.35,-47.68"/>
+<polygon fill="#000000" stroke="#000000" points="95.78,-50.88 103.69,-43.83 93.11,-44.4 95.78,-50.88"/>
 </g>
 <!-- proc~dbintk -->
 <g id="proc~~db6ink~~CallsGraph_node5" class="node">
@@ -537,8 +822,8 @@ b-spline interpolant.</p></td>
 <!-- proc~dbtpcf&#45;&gt;proc~dbintk -->
 <g id="proc~~db6ink~~CallsGraph_edge4" class="edge">
 <title>proc~dbtpcf&#45;&gt;proc~dbintk</title>
-<path fill="none" stroke="#000000" d="M158,-68.9C170.02,-66.55 184.49,-63.71 197.57,-61.14"/>
-<polygon fill="#000000" stroke="#000000" points="198.55,-64.52 207.69,-59.16 197.2,-57.65 198.55,-64.52"/>
+<path fill="none" stroke="#000000" d="M158,-69.65C170.02,-67.17 184.49,-64.19 197.57,-61.5"/>
+<polygon fill="#000000" stroke="#000000" points="198.6,-64.86 207.69,-59.42 197.19,-58.01 198.6,-64.86"/>
 </g>
 <!-- proc~dbnslv -->
 <g id="proc~~db6ink~~CallsGraph_node6" class="node">
@@ -552,8 +837,8 @@ b-spline interpolant.</p></td>
 <!-- proc~dbtpcf&#45;&gt;proc~dbnslv -->
 <g id="proc~~db6ink~~CallsGraph_edge5" class="edge">
 <title>proc~dbtpcf&#45;&gt;proc~dbnslv</title>
-<path fill="none" stroke="#000000" d="M158.29,-77.01C191.81,-80.85 249.91,-87.51 287.65,-91.83"/>
-<polygon fill="#000000" stroke="#000000" points="287.38,-95.33 297.72,-92.99 288.18,-88.37 287.38,-95.33"/>
+<path fill="none" stroke="#000000" d="M158.29,-77.88C191.81,-81.54 249.91,-87.9 287.65,-92.02"/>
+<polygon fill="#000000" stroke="#000000" points="287.39,-95.52 297.72,-93.13 288.16,-88.56 287.39,-95.52"/>
 </g>
 <!-- proc~dbintk&#45;&gt;proc~dbnslv -->
 <g id="proc~~db6ink~~CallsGraph_edge7" class="edge">
@@ -823,14 +1108,33 @@ b-spline interpolant.</p></td>
     <br>
 
     <section class="visible-xs visible-sm hidden-md">
-      <h3>Contents</h3>
- 
-<div class="panel panel-primary">
-  <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
-  <div class="list-group">
-    <a class="list-group-item" href="../proc/db6ink.html#src">db6ink</a>
-  </div>
-</div>
+        <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="panel panel-primary">
+      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/db6ink.html#src">db6ink</a>
+      </div>
+    </div>
+
 
     </section>
     <br class="visible-xs visible-sm hidden-md">

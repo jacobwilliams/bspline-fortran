@@ -80,52 +80,78 @@
   <div class="row">
     <h1>db4val
       <small>Subroutine</small>
+      
     </h1>
-    <div class="row">
-  <div class="col-lg-12">
-<div class="well well-sm">
-  <ul class="list-inline" style="margin-bottom:0px;display:inline">
-     <li><i class="fa fa-list-ol"></i>
-       <a data-toggle="tooltip"
-    data-placement="bottom" data-html="true"
-    title=" 2.2% of total for procedures.">83 statements</a>
-     </li> 
-    <li><i class="fa fa-code"></i><a href="../src/bspline_sub_module.f90"> Source File</a></li>
-  </ul>
-  <ol class="breadcrumb in-well text-right">
-     <li><a href='../sourcefile/bspline_sub_module.f90.html'>bspline_sub_module.f90</a></li>
-     <li><a href='../module/bspline_sub_module.html'>bspline_sub_module</a></li>
-     <li class="active">db4val</li>
-  </ol>
-</div>
-</div>
-</div>
-<script>
-  $(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-  })
-</script>
+      <div class="row" id="info-bar">
+    <div class="col-lg-12">
+      <div class="well well-sm">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+          <li id="statements"><i class="fa fa-list-ol"></i>
+            <a data-toggle="tooltip"
+               data-placement="bottom" data-html="true"
+               title=" 2.2% of total for procedures.">83 statements</a>
+          </li>
+
+            <li id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/bspline_sub_module.f90"> Source File</a>
+            </li>
+        </ul>
+        <ol class="breadcrumb in-well text-right">
+              <li><a href='../sourcefile/bspline_sub_module.f90.html'>bspline_sub_module.f90</a></li>
+              <li><a href='../module/bspline_sub_module.html'>bspline_sub_module</a></li>
+          <li class="active">db4val</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+    })
+  </script>
 
   </div>
   
   <div class="row">
     <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
-    <div id="sidebar">
-  <h3>Contents</h3>
- 
-<div class="panel panel-primary">
-  <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
-  <div class="list-group">
-    <a class="list-group-item" href="../proc/db4val.html#src">db4val</a>
-  </div>
-</div>
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="panel panel-primary">
+      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/db4val.html#src">db4val</a>
+      </div>
+    </div>
 
-</div>
+
+  </div>
 
     </div>
     
     <div class="col-md-9" id='text'>
-    <h2>public pure subroutine db4val(xval, yval, zval, qval, idx, idy, idz, idq, tx, ty, tz, tq, nx, ny, nz, nq, kx, ky, kz, kq, bcoef, f, iflag, inbvx, inbvy, inbvz, inbvq, iloy, iloz, iloq, w3, w2, w1, w0, extrap)</h2>
+    <h2>public pure subroutine db4val(xval, yval, zval, qval, idx, idy, idz, idq, tx, ty, tz, tq, nx, ny, nz, nq, kx, ky, kz, kq, bcoef, f, iflag, inbvx, inbvy, inbvz, inbvq, iloy, iloz, iloq, w3, w2, w1, w0, extrap)  
+</h2>
     
 
     <p>Evaluates the tensor product piecewise polynomial
@@ -141,266 +167,588 @@
 </ul>
 
     <h3>Arguments</h3>
-      <table class="table table-striped varlist">
-<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
-<tbody>
-<tr>
-  <td><span class="anchor" id="variable-xval~11"></span>real(kind=wp),</td>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-xval~11"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>xval</strong></td><td><p>
-<script type="math/tex">x</script> coordinate of evaluation point.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-yval~8"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>xval</strong></td>
+            <td>
+                <p>
+<script type="math/tex">x</script> coordinate of evaluation point.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-yval~8"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>yval</strong></td><td><p>
-<script type="math/tex">y</script> coordinate of evaluation point.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-zval~6"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>yval</strong></td>
+            <td>
+                <p>
+<script type="math/tex">y</script> coordinate of evaluation point.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-zval~6"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>zval</strong></td><td><p>
-<script type="math/tex">z</script> coordinate of evaluation point.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-qval~4"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>zval</strong></td>
+            <td>
+                <p>
+<script type="math/tex">z</script> coordinate of evaluation point.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-qval~4"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>qval</strong></td><td><p>
-<script type="math/tex">q</script> coordinate of evaluation point.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-idx~13"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>qval</strong></td>
+            <td>
+                <p>
+<script type="math/tex">q</script> coordinate of evaluation point.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-idx~13"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>idx</strong></td><td><p>
-<script type="math/tex">x</script> derivative of piecewise polynomial to evaluate.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-idy~8"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>idx</strong></td>
+            <td>
+                <p>
+<script type="math/tex">x</script> derivative of piecewise polynomial to evaluate.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-idy~8"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>idy</strong></td><td><p>
-<script type="math/tex">y</script> derivative of piecewise polynomial to evaluate.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-idz~6"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>idy</strong></td>
+            <td>
+                <p>
+<script type="math/tex">y</script> derivative of piecewise polynomial to evaluate.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-idz~6"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>idz</strong></td><td><p>
-<script type="math/tex">z</script> derivative of piecewise polynomial to evaluate.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-idq~4"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>idz</strong></td>
+            <td>
+                <p>
+<script type="math/tex">z</script> derivative of piecewise polynomial to evaluate.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-idq~4"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>idq</strong></td><td><p>
-<script type="math/tex">q</script> derivative of piecewise polynomial to evaluate.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-tx~32"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>idq</strong></td>
+            <td>
+                <p>
+<script type="math/tex">q</script> derivative of piecewise polynomial to evaluate.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tx~31"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in),</td>
-  <td></td>  <td>dimension(nx+kx)</td><td>::</td>
-  <td><strong>tx</strong></td><td><p>sequence of knots defining the piecewise polynomial
+              <td></td>            <td>
+              dimension(nx+kx)
+            </td>
+            <td>::</td>
+            <td><strong>tx</strong></td>
+            <td>
+                <p>sequence of knots defining the piecewise polynomial
 in the <script type="math/tex">x</script> direction. (same as in last call to
-<a href="../proc/db4ink.html">db4ink</a>)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-ty~22"></span>real(kind=wp),</td>
+<a href="../proc/db4ink.html">db4ink</a>)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ty~21"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in),</td>
-  <td></td>  <td>dimension(ny+ky)</td><td>::</td>
-  <td><strong>ty</strong></td><td><p>sequence of knots defining the piecewise polynomial
+              <td></td>            <td>
+              dimension(ny+ky)
+            </td>
+            <td>::</td>
+            <td><strong>ty</strong></td>
+            <td>
+                <p>sequence of knots defining the piecewise polynomial
 in the <script type="math/tex">y</script> direction. (same as in last call to
-<a href="../proc/db4ink.html">db4ink</a>)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-tz~17"></span>real(kind=wp),</td>
+<a href="../proc/db4ink.html">db4ink</a>)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tz~16"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in),</td>
-  <td></td>  <td>dimension(nz+kz)</td><td>::</td>
-  <td><strong>tz</strong></td><td><p>sequence of knots defining the piecewise polynomial
+              <td></td>            <td>
+              dimension(nz+kz)
+            </td>
+            <td>::</td>
+            <td><strong>tz</strong></td>
+            <td>
+                <p>sequence of knots defining the piecewise polynomial
 in the <script type="math/tex">z</script> direction. (same as in last call to
-<a href="../proc/db4ink.html">db4ink</a>)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-tq~12"></span>real(kind=wp),</td>
+<a href="../proc/db4ink.html">db4ink</a>)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tq~11"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in),</td>
-  <td></td>  <td>dimension(nq+kq)</td><td>::</td>
-  <td><strong>tq</strong></td><td><p>sequence of knots defining the piecewise polynomial
+              <td></td>            <td>
+              dimension(nq+kq)
+            </td>
+            <td>::</td>
+            <td><strong>tq</strong></td>
+            <td>
+                <p>sequence of knots defining the piecewise polynomial
 in the <script type="math/tex">q</script> direction. (same as in last call to
-<a href="../proc/db4ink.html">db4ink</a>)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-nx~20"></span>integer(kind=ip),</td>
+<a href="../proc/db4ink.html">db4ink</a>)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nx~19"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>nx</strong></td><td><p>the number of interpolation points in <script type="math/tex">x</script>.
-(same as in last call to <a href="../proc/db4ink.html">db4ink</a>)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-ny~12"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nx</strong></td>
+            <td>
+                <p>the number of interpolation points in <script type="math/tex">x</script>.
+(same as in last call to <a href="../proc/db4ink.html">db4ink</a>)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ny~11"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>ny</strong></td><td><p>the number of interpolation points in <script type="math/tex">y</script>.
-(same as in last call to <a href="../proc/db4ink.html">db4ink</a>)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-nz~9"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ny</strong></td>
+            <td>
+                <p>the number of interpolation points in <script type="math/tex">y</script>.
+(same as in last call to <a href="../proc/db4ink.html">db4ink</a>)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nz~8"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>nz</strong></td><td><p>the number of interpolation points in <script type="math/tex">z</script>.
-(same as in last call to <a href="../proc/db4ink.html">db4ink</a>)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-nq~6"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nz</strong></td>
+            <td>
+                <p>the number of interpolation points in <script type="math/tex">z</script>.
+(same as in last call to <a href="../proc/db4ink.html">db4ink</a>)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nq~5"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>nq</strong></td><td><p>the number of interpolation points in <script type="math/tex">q</script>.
-(same as in last call to <a href="../proc/db4ink.html">db4ink</a>)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-kx~44"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nq</strong></td>
+            <td>
+                <p>the number of interpolation points in <script type="math/tex">q</script>.
+(same as in last call to <a href="../proc/db4ink.html">db4ink</a>)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-kx~43"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>kx</strong></td><td><p>order of polynomial pieces in <script type="math/tex">x</script>.
-(same as in last call to <a href="../proc/db4ink.html">db4ink</a>)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-ky~32"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>kx</strong></td>
+            <td>
+                <p>order of polynomial pieces in <script type="math/tex">x</script>.
+(same as in last call to <a href="../proc/db4ink.html">db4ink</a>)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ky~31"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>ky</strong></td><td><p>order of polynomial pieces in <script type="math/tex">y</script>.
-(same as in last call to <a href="../proc/db4ink.html">db4ink</a>)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-kz~25"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ky</strong></td>
+            <td>
+                <p>order of polynomial pieces in <script type="math/tex">y</script>.
+(same as in last call to <a href="../proc/db4ink.html">db4ink</a>)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-kz~24"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>kz</strong></td><td><p>order of polynomial pieces in <script type="math/tex">z</script>.
-(same as in last call to <a href="../proc/db4ink.html">db4ink</a>)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-kq~18"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>kz</strong></td>
+            <td>
+                <p>order of polynomial pieces in <script type="math/tex">z</script>.
+(same as in last call to <a href="../proc/db4ink.html">db4ink</a>)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-kq~17"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>kq</strong></td><td><p>order of polynomial pieces in <script type="math/tex">q</script>.
-(same as in last call to <a href="../proc/db4ink.html">db4ink</a>)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-bcoef~19"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>kq</strong></td>
+            <td>
+                <p>order of polynomial pieces in <script type="math/tex">q</script>.
+(same as in last call to <a href="../proc/db4ink.html">db4ink</a>)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-bcoef~19"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in),</td>
-  <td></td>  <td>dimension(nx,ny,nz,nq)</td><td>::</td>
-  <td><strong>bcoef</strong></td><td><p>the b-spline coefficients computed by <a href="../proc/db4ink.html">db4ink</a>.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-f~16"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              dimension(nx,ny,nz,nq)
+            </td>
+            <td>::</td>
+            <td><strong>bcoef</strong></td>
+            <td>
+                <p>the b-spline coefficients computed by <a href="../proc/db4ink.html">db4ink</a>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-f~16"></span>
+              real(kind=wp),
+            </td>
 <td>intent(out)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>f</strong></td><td><p>interpolated value</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-iflag~38"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>f</strong></td>
+            <td>
+                <p>interpolated value</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-iflag~38"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(out)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>iflag</strong></td><td><p>status flag:</p>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iflag</strong></td>
+            <td>
+                <p>status flag:</p>
 <ul>
 <li>
 <script type="math/tex"> = 0 </script>   : no errors</li>
 <li>
 <script type="math/tex"> \ne 0 </script> : error</li>
-</ul></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-inbvx~6"></span>integer(kind=ip),</td>
+</ul>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-inbvx~6"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(inout)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>inbvx</strong></td><td><p>initialization parameter which must be set
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>inbvx</strong></td>
+            <td>
+                <p>initialization parameter which must be set
 to 1 the first time this routine is called,
-and must not be changed by the user.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-inbvy~8"></span>integer(kind=ip),</td>
+and must not be changed by the user.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-inbvy~8"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(inout)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>inbvy</strong></td><td><p>initialization parameter which must be set
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>inbvy</strong></td>
+            <td>
+                <p>initialization parameter which must be set
 to 1 the first time this routine is called,
-and must not be changed by the user.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-inbvz~6"></span>integer(kind=ip),</td>
+and must not be changed by the user.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-inbvz~6"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(inout)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>inbvz</strong></td><td><p>initialization parameter which must be set
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>inbvz</strong></td>
+            <td>
+                <p>initialization parameter which must be set
 to 1 the first time this routine is called,
-and must not be changed by the user.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-inbvq~4"></span>integer(kind=ip),</td>
+and must not be changed by the user.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-inbvq~4"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(inout)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>inbvq</strong></td><td><p>initialization parameter which must be set
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>inbvq</strong></td>
+            <td>
+                <p>initialization parameter which must be set
 to 1 the first time this routine is called,
-and must not be changed by the user.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-iloy~8"></span>integer(kind=ip),</td>
+and must not be changed by the user.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-iloy~8"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(inout)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>iloy</strong></td><td><p>initialization parameter which must be set
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iloy</strong></td>
+            <td>
+                <p>initialization parameter which must be set
 to 1 the first time this routine is called,
-and must not be changed by the user.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-iloz~6"></span>integer(kind=ip),</td>
+and must not be changed by the user.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-iloz~6"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(inout)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>iloz</strong></td><td><p>initialization parameter which must be set
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iloz</strong></td>
+            <td>
+                <p>initialization parameter which must be set
 to 1 the first time this routine is called,
-and must not be changed by the user.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-iloq~4"></span>integer(kind=ip),</td>
+and must not be changed by the user.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-iloq~4"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(inout)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>iloq</strong></td><td><p>initialization parameter which must be set
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iloq</strong></td>
+            <td>
+                <p>initialization parameter which must be set
 to 1 the first time this routine is called,
-and must not be changed by the user.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-w3"></span>real(kind=wp),</td>
+and must not be changed by the user.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-w3"></span>
+              real(kind=wp),
+            </td>
 <td>intent(inout),</td>
-  <td></td>  <td>dimension(ky,kz,kq)</td><td>::</td>
-  <td><strong>w3</strong></td><td><p>work array</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-w2~2"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              dimension(ky,kz,kq)
+            </td>
+            <td>::</td>
+            <td><strong>w3</strong></td>
+            <td>
+                <p>work array</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-w2~2"></span>
+              real(kind=wp),
+            </td>
 <td>intent(inout),</td>
-  <td></td>  <td>dimension(kz,kq)</td><td>::</td>
-  <td><strong>w2</strong></td><td><p>work array</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-w1~3"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              dimension(kz,kq)
+            </td>
+            <td>::</td>
+            <td><strong>w2</strong></td>
+            <td>
+                <p>work array</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-w1~3"></span>
+              real(kind=wp),
+            </td>
 <td>intent(inout),</td>
-  <td></td>  <td>dimension(kq)</td><td>::</td>
-  <td><strong>w1</strong></td><td><p>work array</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-w0~7"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              dimension(kq)
+            </td>
+            <td>::</td>
+            <td><strong>w1</strong></td>
+            <td>
+                <p>work array</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-w0~7"></span>
+              real(kind=wp),
+            </td>
 <td>intent(inout),</td>
-  <td></td>  <td>dimension(3_ip*max(kx,ky,kz,kq))</td><td>::</td>
-  <td><strong>w0</strong></td><td><p>work array</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-extrap~33"></span>logical,</td>
+              <td></td>            <td>
+              dimension(3_ip*max(kx,ky,kz,kq))
+            </td>
+            <td>::</td>
+            <td><strong>w0</strong></td>
+            <td>
+                <p>work array</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-extrap~33"></span>
+              logical,
+            </td>
 <td>intent(in),</td>
-  <td>optional</td>  <td></td><td>::</td>
-  <td><strong>extrap</strong></td><td><p>if extrapolation is allowed
-(if not present, default is False)</p></td>
-</tr>
-</tbody>
-</table>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>extrap</strong></td>
+            <td>
+                <p>if extrapolation is allowed
+(if not present, default is False)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
 
     <br>
     <div class="panel panel-default">
@@ -657,14 +1005,33 @@ and must not be changed by the user.</p></td>
     <br>
 
     <section class="visible-xs visible-sm hidden-md">
-      <h3>Contents</h3>
- 
-<div class="panel panel-primary">
-  <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
-  <div class="list-group">
-    <a class="list-group-item" href="../proc/db4val.html#src">db4val</a>
-  </div>
-</div>
+        <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="panel panel-primary">
+      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/db4val.html#src">db4val</a>
+      </div>
+    </div>
+
 
     </section>
     <br class="visible-xs visible-sm hidden-md">

@@ -80,174 +80,351 @@
   <div class="row">
     <h1>initialize_6d_auto_knots
       <small>Subroutine</small>
+      
     </h1>
-    <div class="row">
-  <div class="col-lg-12">
-<div class="well well-sm">
-  <ul class="list-inline" style="margin-bottom:0px;display:inline">
-     <li><i class="fa fa-list-ol"></i>
-       <a data-toggle="tooltip"
-    data-placement="bottom" data-html="true"
-    title=" 1.6% of total for procedures.">60 statements</a>
-     </li> 
-    <li><i class="fa fa-code"></i><a href="../src/bspline_oo_module.f90"> Source File</a></li>
-  </ul>
-  <ol class="breadcrumb in-well text-right">
-     <li><a href='../sourcefile/bspline_oo_module.f90.html'>bspline_oo_module.f90</a></li>
-     <li><a href='../module/bspline_oo_module.html'>bspline_oo_module</a></li>
-     <li class="active">initialize_6d_auto_knots</li>
-  </ol>
-</div>
-</div>
-</div>
-<script>
-  $(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-  })
-</script>
+      <div class="row" id="info-bar">
+    <div class="col-lg-12">
+      <div class="well well-sm">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+          <li id="statements"><i class="fa fa-list-ol"></i>
+            <a data-toggle="tooltip"
+               data-placement="bottom" data-html="true"
+               title=" 1.6% of total for procedures.">60 statements</a>
+          </li>
+
+            <li id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/bspline_oo_module.f90"> Source File</a>
+            </li>
+        </ul>
+        <ol class="breadcrumb in-well text-right">
+              <li><a href='../sourcefile/bspline_oo_module.f90.html'>bspline_oo_module.f90</a></li>
+              <li><a href='../module/bspline_oo_module.html'>bspline_oo_module</a></li>
+          <li class="active">initialize_6d_auto_knots</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+    })
+  </script>
 
   </div>
   
   <div class="row">
     <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
-    <div id="sidebar">
-  <h3>Contents</h3>
- 
-<div class="panel panel-primary">
-  <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
-  <div class="list-group">
-    <a class="list-group-item" href="../proc/initialize_6d_auto_knots.html#src">initialize_6d_auto_knots</a>
-  </div>
-</div>
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="panel panel-primary">
+      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/initialize_6d_auto_knots.html#src">initialize_6d_auto_knots</a>
+      </div>
+    </div>
 
-</div>
+
+  </div>
 
     </div>
     
     <div class="col-md-9" id='text'>
-    <h2>private pure subroutine initialize_6d_auto_knots(me, x, y, z, q, r, s, fcn, kx, ky, kz, kq, kr, ks, iflag, extrap)</h2>
+    <h2>private pure subroutine initialize_6d_auto_knots(me, x, y, z, q, r, s, fcn, kx, ky, kz, kq, kr, ks, iflag, extrap)  
+</h2>
     
 
     <p>Initialize a <a href="../type/bspline_6d.html">bspline_6d</a> type (with automatically-computed knots).
 This is a wrapper for <a href="../proc/db6ink.html">db6ink</a>.</p>
 
     <h3>Arguments</h3>
-      <table class="table table-striped varlist">
-<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
-<tbody>
-<tr>
-  <td><span class="anchor" id="variable-me~61"></span>class(<a href='../type/bspline_6d.html'>bspline_6d</a>),</td>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-me~41"></span>
+              class(<a href='../type/bspline_6d.html'>bspline_6d</a>),
+            </td>
 <td>intent(inout)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>me</strong></td><td></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-x~24"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~23"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in),</td>
-  <td></td>  <td>dimension(:)</td><td>::</td>
-  <td><strong>x</strong></td><td><p><code>(nx)</code> array of <script type="math/tex">x</script> abcissae. Must be strictly increasing.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-y~19"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p><code>(nx)</code> array of <script type="math/tex">x</script> abcissae. Must be strictly increasing.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-y~19"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in),</td>
-  <td></td>  <td>dimension(:)</td><td>::</td>
-  <td><strong>y</strong></td><td><p><code>(ny)</code> array of <script type="math/tex">y</script> abcissae. Must be strictly increasing.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-z~15"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>y</strong></td>
+            <td>
+                <p><code>(ny)</code> array of <script type="math/tex">y</script> abcissae. Must be strictly increasing.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-z~15"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in),</td>
-  <td></td>  <td>dimension(:)</td><td>::</td>
-  <td><strong>z</strong></td><td><p><code>(nz)</code> array of <script type="math/tex">z</script> abcissae. Must be strictly increasing.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-q~11"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>z</strong></td>
+            <td>
+                <p><code>(nz)</code> array of <script type="math/tex">z</script> abcissae. Must be strictly increasing.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-q~11"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in),</td>
-  <td></td>  <td>dimension(:)</td><td>::</td>
-  <td><strong>q</strong></td><td><p><code>(nq)</code> array of <script type="math/tex">q</script> abcissae. Must be strictly increasing.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-r~7"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>q</strong></td>
+            <td>
+                <p><code>(nq)</code> array of <script type="math/tex">q</script> abcissae. Must be strictly increasing.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-r~7"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in),</td>
-  <td></td>  <td>dimension(:)</td><td>::</td>
-  <td><strong>r</strong></td><td><p><code>(nr)</code> array of <script type="math/tex">r</script> abcissae. Must be strictly increasing.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-s~10"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>r</strong></td>
+            <td>
+                <p><code>(nr)</code> array of <script type="math/tex">r</script> abcissae. Must be strictly increasing.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-s~10"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in),</td>
-  <td></td>  <td>dimension(:)</td><td>::</td>
-  <td><strong>s</strong></td><td><p><code>(ns)</code> array of <script type="math/tex">s</script> abcissae. Must be strictly increasing.</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-fcn~23"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>s</strong></td>
+            <td>
+                <p><code>(ns)</code> array of <script type="math/tex">s</script> abcissae. Must be strictly increasing.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fcn~23"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in),</td>
-  <td></td>  <td>dimension(:,:,:,:,:,:)</td><td>::</td>
-  <td><strong>fcn</strong></td><td><p><code>(nx,ny,nz,nq,nr,ns)</code> matrix of function values to interpolate.
+              <td></td>            <td>
+              dimension(:,:,:,:,:,:)
+            </td>
+            <td>::</td>
+            <td><strong>fcn</strong></td>
+            <td>
+                <p><code>(nx,ny,nz,nq,nr,ns)</code> matrix of function values to interpolate.
 <code>fcn(i,j,k,l,m,n)</code> should contain the function value at the
-point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<code>r(m)</code>,<code>s(n)</code>)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-kx~29"></span>integer(kind=ip),</td>
+point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<code>r(m)</code>,<code>s(n)</code>)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-kx~23"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>kx</strong></td><td><p>The order of spline pieces in <script type="math/tex">x</script>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>kx</strong></td>
+            <td>
+                <p>The order of spline pieces in <script type="math/tex">x</script>
 ( <script type="math/tex"> 2 \le k_x < n_x </script> )
-(order = polynomial degree + 1)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-ky~24"></span>integer(kind=ip),</td>
+(order = polynomial degree + 1)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ky~19"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>ky</strong></td><td><p>The order of spline pieces in <script type="math/tex">y</script>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ky</strong></td>
+            <td>
+                <p>The order of spline pieces in <script type="math/tex">y</script>
 ( <script type="math/tex"> 2 \le k_y < n_y </script> )
-(order = polynomial degree + 1)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-kz~19"></span>integer(kind=ip),</td>
+(order = polynomial degree + 1)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-kz~15"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>kz</strong></td><td><p>The order of spline pieces in <script type="math/tex">z</script>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>kz</strong></td>
+            <td>
+                <p>The order of spline pieces in <script type="math/tex">z</script>
 ( <script type="math/tex"> 2 \le k_z < n_z </script> )
-(order = polynomial degree + 1)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-kq~14"></span>integer(kind=ip),</td>
+(order = polynomial degree + 1)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-kq~11"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>kq</strong></td><td><p>The order of spline pieces in <script type="math/tex">q</script>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>kq</strong></td>
+            <td>
+                <p>The order of spline pieces in <script type="math/tex">q</script>
 ( <script type="math/tex"> 2 \le k_q < n_q </script> )
-(order = polynomial degree + 1)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-kr~9"></span>integer(kind=ip),</td>
+(order = polynomial degree + 1)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-kr~7"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>kr</strong></td><td><p>The order of spline pieces in <script type="math/tex">r</script>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>kr</strong></td>
+            <td>
+                <p>The order of spline pieces in <script type="math/tex">r</script>
 ( <script type="math/tex"> 2 \le k_r < n_r </script> )
-(order = polynomial degree + 1)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-ks~4"></span>integer(kind=ip),</td>
+(order = polynomial degree + 1)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ks~3"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>ks</strong></td><td><p>The order of spline pieces in <script type="math/tex">z</script>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ks</strong></td>
+            <td>
+                <p>The order of spline pieces in <script type="math/tex">z</script>
 ( <script type="math/tex"> 2 \le k_z < n_z </script> )
-(order = polynomial degree + 1)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-iflag~20"></span>integer(kind=ip),</td>
+(order = polynomial degree + 1)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-iflag~19"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(out)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>iflag</strong></td><td><p>status flag (see <a href="../proc/db6ink.html">db6ink</a>)</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-extrap~25"></span>logical,</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iflag</strong></td>
+            <td>
+                <p>status flag (see <a href="../proc/db6ink.html">db6ink</a>)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-extrap~24"></span>
+              logical,
+            </td>
 <td>intent(in),</td>
-  <td>optional</td>  <td></td><td>::</td>
-  <td><strong>extrap</strong></td><td><p>if true, then extrapolation is allowed
-(default is false)</p></td>
-</tr>
-</tbody>
-</table>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>extrap</strong></td>
+            <td>
+                <p>if true, then extrapolation is allowed
+(default is false)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
 
     <br>
     <div class="panel panel-default">
@@ -261,76 +438,76 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
 <!-- Generated by graphviz version 2.43.0 (0)
  -->
 <!-- Title: proc~~initialize_6d_auto_knots~~CallsGraph Pages: 1 -->
-<svg id="procinitialize_6d_auto_knotsCallsGraph" width="535pt" height="178pt"
- viewBox="0.00 0.00 535.00 178.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="proc~~initialize_6d_auto_knots~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 174)">
+<svg id="procinitialize_6d_auto_knotsCallsGraph" width="535pt" height="137pt"
+ viewBox="0.00 0.00 535.00 137.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~initialize_6d_auto_knots~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 133)">
 <title>proc~~initialize_6d_auto_knots~~CallsGraph</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-174 531,-174 531,4 -4,4"/>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-133 531,-133 531,4 -4,4"/>
 <!-- proc~initialize_6d_auto_knots -->
 <g id="proc~~initialize_6d_auto_knots~~CallsGraph_node1" class="node">
 <title>proc~initialize_6d_auto_knots</title>
-<polygon fill="none" stroke="black" points="139,-128 0,-128 0,-104 139,-104 139,-128"/>
-<text text-anchor="middle" x="69.5" y="-113.6" font-family="Helvetica,sans-Serif" font-size="10.50">initialize_6d_auto_knots</text>
+<polygon fill="none" stroke="black" points="139,-87 0,-87 0,-63 139,-63 139,-87"/>
+<text text-anchor="middle" x="69.5" y="-72.6" font-family="Helvetica,sans-Serif" font-size="10.50">initialize_6d_auto_knots</text>
 </g>
 <!-- proc~db6ink -->
 <g id="proc~~initialize_6d_auto_knots~~CallsGraph_node2" class="node">
 <title>proc~db6ink</title>
 <g id="a_proc~~initialize_6d_auto_knots~~CallsGraph_node2"><a xlink:href=".././proc/db6ink.html" xlink:title="db6ink">
-<polygon fill="#d9534f" stroke="#d9534f" points="229,-128 175,-128 175,-104 229,-104 229,-128"/>
-<text text-anchor="middle" x="202" y="-113.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db6ink</text>
+<polygon fill="#d9534f" stroke="#d9534f" points="229,-87 175,-87 175,-63 229,-63 229,-87"/>
+<text text-anchor="middle" x="202" y="-72.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db6ink</text>
 </a>
 </g>
 </g>
 <!-- proc~initialize_6d_auto_knots&#45;&gt;proc~db6ink -->
 <g id="proc~~initialize_6d_auto_knots~~CallsGraph_edge1" class="edge">
 <title>proc~initialize_6d_auto_knots&#45;&gt;proc~db6ink</title>
-<path fill="none" stroke="#000000" d="M139.19,-116C147.98,-116 156.7,-116 164.68,-116"/>
-<polygon fill="#000000" stroke="#000000" points="164.71,-119.5 174.71,-116 164.71,-112.5 164.71,-119.5"/>
+<path fill="none" stroke="#000000" d="M139.19,-75C147.98,-75 156.7,-75 164.68,-75"/>
+<polygon fill="#000000" stroke="#000000" points="164.71,-78.5 174.71,-75 164.71,-71.5 164.71,-78.5"/>
 </g>
 <!-- proc~check_inputs -->
 <g id="proc~~initialize_6d_auto_knots~~CallsGraph_node3" class="node">
 <title>proc~check_inputs</title>
 <g id="a_proc~~initialize_6d_auto_knots~~CallsGraph_node3"><a xlink:href=".././proc/check_inputs.html" xlink:title="check_inputs">
-<polygon fill="#d9534f" stroke="#d9534f" points="347,-170 265,-170 265,-146 347,-146 347,-170"/>
-<text text-anchor="middle" x="306" y="-155.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">check_inputs</text>
+<polygon fill="#d9534f" stroke="#d9534f" points="347,-129 265,-129 265,-105 347,-105 347,-129"/>
+<text text-anchor="middle" x="306" y="-114.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">check_inputs</text>
 </a>
 </g>
 </g>
 <!-- proc~db6ink&#45;&gt;proc~check_inputs -->
 <g id="proc~~initialize_6d_auto_knots~~CallsGraph_edge2" class="edge">
 <title>proc~db6ink&#45;&gt;proc~check_inputs</title>
-<path fill="none" stroke="#000000" d="M229,-126.71C240.39,-131.39 253.97,-136.99 266.49,-142.14"/>
-<polygon fill="#000000" stroke="#000000" points="265.22,-145.41 275.8,-145.98 267.89,-138.93 265.22,-145.41"/>
-</g>
-<!-- proc~dbknot -->
-<g id="proc~~initialize_6d_auto_knots~~CallsGraph_node4" class="node">
-<title>proc~dbknot</title>
-<g id="a_proc~~initialize_6d_auto_knots~~CallsGraph_node4"><a xlink:href=".././proc/dbknot.html" xlink:title="dbknot">
-<polygon fill="#d9534f" stroke="#d9534f" points="333,-128 279,-128 279,-104 333,-104 333,-128"/>
-<text text-anchor="middle" x="306" y="-113.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbknot</text>
-</a>
-</g>
-</g>
-<!-- proc~db6ink&#45;&gt;proc~dbknot -->
-<g id="proc~~initialize_6d_auto_knots~~CallsGraph_edge3" class="edge">
-<title>proc~db6ink&#45;&gt;proc~dbknot</title>
-<path fill="none" stroke="#000000" d="M229,-116C241.02,-116 255.49,-116 268.57,-116"/>
-<polygon fill="#000000" stroke="#000000" points="268.69,-119.5 278.69,-116 268.69,-112.5 268.69,-119.5"/>
+<path fill="none" stroke="#000000" d="M229,-85.71C240.39,-90.39 253.97,-95.99 266.49,-101.14"/>
+<polygon fill="#000000" stroke="#000000" points="265.22,-104.41 275.8,-104.98 267.89,-97.93 265.22,-104.41"/>
 </g>
 <!-- proc~dbtpcf -->
-<g id="proc~~initialize_6d_auto_knots~~CallsGraph_node5" class="node">
+<g id="proc~~initialize_6d_auto_knots~~CallsGraph_node4" class="node">
 <title>proc~dbtpcf</title>
-<g id="a_proc~~initialize_6d_auto_knots~~CallsGraph_node5"><a xlink:href=".././proc/dbtpcf.html" xlink:title="dbtpcf">
-<polygon fill="#d9534f" stroke="#d9534f" points="333,-86 279,-86 279,-62 333,-62 333,-86"/>
-<text text-anchor="middle" x="306" y="-71.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbtpcf</text>
+<g id="a_proc~~initialize_6d_auto_knots~~CallsGraph_node4"><a xlink:href=".././proc/dbtpcf.html" xlink:title="dbtpcf">
+<polygon fill="#d9534f" stroke="#d9534f" points="333,-87 279,-87 279,-63 333,-63 333,-87"/>
+<text text-anchor="middle" x="306" y="-72.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbtpcf</text>
 </a>
 </g>
 </g>
 <!-- proc~db6ink&#45;&gt;proc~dbtpcf -->
-<g id="proc~~initialize_6d_auto_knots~~CallsGraph_edge4" class="edge">
+<g id="proc~~initialize_6d_auto_knots~~CallsGraph_edge3" class="edge">
 <title>proc~db6ink&#45;&gt;proc~dbtpcf</title>
-<path fill="none" stroke="#000000" d="M229,-105.29C241.26,-100.25 256.07,-94.15 269.35,-88.68"/>
-<polygon fill="#000000" stroke="#000000" points="270.78,-91.88 278.69,-84.83 268.11,-85.4 270.78,-91.88"/>
+<path fill="none" stroke="#000000" d="M229,-75C241.02,-75 255.49,-75 268.57,-75"/>
+<polygon fill="#000000" stroke="#000000" points="268.69,-78.5 278.69,-75 268.69,-71.5 268.69,-78.5"/>
+</g>
+<!-- proc~dbknot -->
+<g id="proc~~initialize_6d_auto_knots~~CallsGraph_node5" class="node">
+<title>proc~dbknot</title>
+<g id="a_proc~~initialize_6d_auto_knots~~CallsGraph_node5"><a xlink:href=".././proc/dbknot.html" xlink:title="dbknot">
+<polygon fill="#d9534f" stroke="#d9534f" points="333,-45 279,-45 279,-21 333,-21 333,-45"/>
+<text text-anchor="middle" x="306" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbknot</text>
+</a>
+</g>
+</g>
+<!-- proc~db6ink&#45;&gt;proc~dbknot -->
+<g id="proc~~initialize_6d_auto_knots~~CallsGraph_edge4" class="edge">
+<title>proc~db6ink&#45;&gt;proc~dbknot</title>
+<path fill="none" stroke="#000000" d="M229,-64.29C241.26,-59.25 256.07,-53.15 269.35,-47.68"/>
+<polygon fill="#000000" stroke="#000000" points="270.78,-50.88 278.69,-43.83 268.11,-44.4 270.78,-50.88"/>
 </g>
 <!-- proc~dbintk -->
 <g id="proc~~initialize_6d_auto_knots~~CallsGraph_node6" class="node">
@@ -344,8 +521,8 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
 <!-- proc~dbtpcf&#45;&gt;proc~dbintk -->
 <g id="proc~~initialize_6d_auto_knots~~CallsGraph_edge5" class="edge">
 <title>proc~dbtpcf&#45;&gt;proc~dbintk</title>
-<path fill="none" stroke="#000000" d="M333,-68.9C345.02,-66.55 359.49,-63.71 372.57,-61.14"/>
-<polygon fill="#000000" stroke="#000000" points="373.55,-64.52 382.69,-59.16 372.2,-57.65 373.55,-64.52"/>
+<path fill="none" stroke="#000000" d="M333,-69.65C345.02,-67.17 359.49,-64.19 372.57,-61.5"/>
+<polygon fill="#000000" stroke="#000000" points="373.6,-64.86 382.69,-59.42 372.19,-58.01 373.6,-64.86"/>
 </g>
 <!-- proc~dbnslv -->
 <g id="proc~~initialize_6d_auto_knots~~CallsGraph_node7" class="node">
@@ -359,8 +536,8 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
 <!-- proc~dbtpcf&#45;&gt;proc~dbnslv -->
 <g id="proc~~initialize_6d_auto_knots~~CallsGraph_edge6" class="edge">
 <title>proc~dbtpcf&#45;&gt;proc~dbnslv</title>
-<path fill="none" stroke="#000000" d="M333.29,-77.01C366.81,-80.85 424.91,-87.51 462.65,-91.83"/>
-<polygon fill="#000000" stroke="#000000" points="462.38,-95.33 472.72,-92.99 463.18,-88.37 462.38,-95.33"/>
+<path fill="none" stroke="#000000" d="M333.29,-77.88C366.81,-81.54 424.91,-87.9 462.65,-92.02"/>
+<polygon fill="#000000" stroke="#000000" points="462.39,-95.52 472.72,-93.13 463.16,-88.56 462.39,-95.52"/>
 </g>
 <!-- proc~dbintk&#45;&gt;proc~dbnslv -->
 <g id="proc~~initialize_6d_auto_knots~~CallsGraph_edge8" class="edge">
@@ -579,14 +756,33 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
     <br>
 
     <section class="visible-xs visible-sm hidden-md">
-      <h3>Contents</h3>
- 
-<div class="panel panel-primary">
-  <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
-  <div class="list-group">
-    <a class="list-group-item" href="../proc/initialize_6d_auto_knots.html#src">initialize_6d_auto_knots</a>
-  </div>
-</div>
+        <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="panel panel-primary">
+      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/initialize_6d_auto_knots.html#src">initialize_6d_auto_knots</a>
+      </div>
+    </div>
+
 
     </section>
     <br class="visible-xs visible-sm hidden-md">

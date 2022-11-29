@@ -80,91 +80,165 @@
   <div class="row">
     <h1>check_value
       <small>Function</small>
+      
     </h1>
-    <div class="row">
-  <div class="col-lg-12">
-<div class="well well-sm">
-  <ul class="list-inline" style="margin-bottom:0px;display:inline">
-     <li><i class="fa fa-list-ol"></i>
-       <a data-toggle="tooltip"
-    data-placement="bottom" data-html="true"
-    title=" 0.6% of total for procedures.">23 statements</a>
-     </li> 
-    <li><i class="fa fa-code"></i><a href="../src/bspline_sub_module.f90"> Source File</a></li>
-  </ul>
-  <ol class="breadcrumb in-well text-right">
-     <li><a href='../sourcefile/bspline_sub_module.f90.html'>bspline_sub_module.f90</a></li>
-     <li><a href='../module/bspline_sub_module.html'>bspline_sub_module</a></li>
-     <li class="active">check_value</li>
-  </ol>
-</div>
-</div>
-</div>
-<script>
-  $(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-  })
-</script>
+      <div class="row" id="info-bar">
+    <div class="col-lg-12">
+      <div class="well well-sm">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+          <li id="statements"><i class="fa fa-list-ol"></i>
+            <a data-toggle="tooltip"
+               data-placement="bottom" data-html="true"
+               title=" 0.6% of total for procedures.">23 statements</a>
+          </li>
+
+            <li id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/bspline_sub_module.f90"> Source File</a>
+            </li>
+        </ul>
+        <ol class="breadcrumb in-well text-right">
+              <li><a href='../sourcefile/bspline_sub_module.f90.html'>bspline_sub_module.f90</a></li>
+              <li><a href='../module/bspline_sub_module.html'>bspline_sub_module</a></li>
+          <li class="active">check_value</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+    })
+  </script>
 
   </div>
   
   <div class="row">
     <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
-    <div id="sidebar">
-  <h3>Contents</h3>
- 
-<div class="panel panel-primary">
-  <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
-  <div class="list-group">
-    <a class="list-group-item" href="../proc/check_value.html#src">check_value</a>
-  </div>
-</div>
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="panel panel-primary">
+      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/check_value.html#src">check_value</a>
+      </div>
+    </div>
 
-</div>
+
+  </div>
 
     </div>
     
     <div class="col-md-9" id='text'>
-    <h2>private pure function check_value(x, t, i, extrap) result(iflag)</h2>
+    <h2>private pure function check_value(x, t, i, extrap) result(iflag)  
+</h2>
     
 
     <p>Checks if the value is withing the range of the knot vectors.
 This is called by the various <code>db*val</code> routines.</p>
 
     <h3>Arguments</h3>
-      <table class="table table-striped varlist">
-<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
-<tbody>
-<tr>
-  <td><span class="anchor" id="variable-x~26"></span>real(kind=wp),</td>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~25"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>x</strong></td><td><p>the value to check</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-t"></span>real(kind=wp),</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p>the value to check</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-t"></span>
+              real(kind=wp),
+            </td>
 <td>intent(in),</td>
-  <td></td>  <td>dimension(:)</td><td>::</td>
-  <td><strong>t</strong></td><td><p>the knot vector</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-i"></span>integer(kind=ip),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>t</strong></td>
+            <td>
+                <p>the knot vector</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-i"></span>
+              integer(kind=ip),
+            </td>
 <td>intent(in)</td>
-  <td></td>  <td></td><td>::</td>
-  <td><strong>i</strong></td><td><p>1=x, 2=y, 3=z, 4=q, 5=r, 6=s</p></td>
-</tr>
-<tr>
-  <td><span class="anchor" id="variable-extrap~27"></span>logical,</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>i</strong></td>
+            <td>
+                <p>1=x, 2=y, 3=z, 4=q, 5=r, 6=s</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-extrap~27"></span>
+              logical,
+            </td>
 <td>intent(in),</td>
-  <td>optional</td>  <td></td><td>::</td>
-  <td><strong>extrap</strong></td><td><p>if extrapolation is allowed
-(if not present, default is False)</p></td>
-</tr>
-</tbody>
-</table>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>extrap</strong></td>
+            <td>
+                <p>if extrapolation is allowed
+(if not present, default is False)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
 
-   <h3>Return Value <small><span class="anchor" id="variable-iflag~24"></span>integer(kind=ip)</small></h3>
-    <p>returns 0 if value is OK, otherwise returns <code>600+i</code></p>
+      <h3>Return Value
+        <small>
+          <span class="anchor" id="variable-iflag~24"></span>
+          integer(kind=ip)
+        </small>
+      </h3>
+      <p>returns 0 if value is OK, otherwise returns <code>600+i</code></p>
     <br>
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -188,55 +262,70 @@ This is called by the various <code>db*val</code> routines.</p>
 <polygon fill="none" stroke="black" points="434,-150 355,-150 355,-126 434,-126 434,-150"/>
 <text text-anchor="middle" x="394.5" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50">check_value</text>
 </g>
-<!-- proc~db2val -->
+<!-- proc~db1val_default -->
 <g id="proc~~check_value~~CalledByGraph_node2" class="node">
-<title>proc~db2val</title>
-<g id="a_proc~~check_value~~CalledByGraph_node2"><a xlink:href=".././proc/db2val.html" xlink:title="db2val">
-<polygon fill="#d9534f" stroke="#d9534f" points="300.5,-276 246.5,-276 246.5,-252 300.5,-252 300.5,-276"/>
-<text text-anchor="middle" x="273.5" y="-261.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db2val</text>
+<title>proc~db1val_default</title>
+<g id="a_proc~~check_value~~CalledByGraph_node2"><a xlink:href=".././proc/db1val_default.html" xlink:title="db1val_default">
+<polygon fill="#d9534f" stroke="#d9534f" points="319,-276 228,-276 228,-252 319,-252 319,-276"/>
+<text text-anchor="middle" x="273.5" y="-261.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1val_default</text>
 </a>
 </g>
 </g>
-<!-- proc~db2val&#45;&gt;proc~check_value -->
+<!-- proc~db1val_default&#45;&gt;proc~check_value -->
 <g id="proc~~check_value~~CalledByGraph_edge1" class="edge">
-<title>proc~db2val&#45;&gt;proc~check_value</title>
-<path fill="none" stroke="#000000" d="M300.79,-254.32C307.13,-251.27 313.63,-247.5 319,-243 347.34,-219.26 370.15,-182.38 382.75,-159.24"/>
+<title>proc~db1val_default&#45;&gt;proc~check_value</title>
+<path fill="none" stroke="#000000" d="M305.44,-251.96C310.24,-249.39 314.94,-246.4 319,-243 347.34,-219.26 370.15,-182.38 382.75,-159.24"/>
 <polygon fill="#000000" stroke="#000000" points="385.93,-160.71 387.52,-150.24 379.75,-157.44 385.93,-160.71"/>
 </g>
-<!-- proc~db5val -->
+<!-- proc~db3val -->
 <g id="proc~~check_value~~CalledByGraph_node3" class="node">
-<title>proc~db5val</title>
-<g id="a_proc~~check_value~~CalledByGraph_node3"><a xlink:href=".././proc/db5val.html" xlink:title="db5val">
-<polygon fill="#d9534f" stroke="#d9534f" points="300.5,-234 246.5,-234 246.5,-210 300.5,-210 300.5,-234"/>
-<text text-anchor="middle" x="273.5" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db5val</text>
+<title>proc~db3val</title>
+<g id="a_proc~~check_value~~CalledByGraph_node3"><a xlink:href=".././proc/db3val.html" xlink:title="db3val">
+<polygon fill="#d9534f" stroke="#d9534f" points="300.5,-192 246.5,-192 246.5,-168 300.5,-168 300.5,-192"/>
+<text text-anchor="middle" x="273.5" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db3val</text>
 </a>
 </g>
 </g>
-<!-- proc~db5val&#45;&gt;proc~check_value -->
+<!-- proc~db3val&#45;&gt;proc~check_value -->
 <g id="proc~~check_value~~CalledByGraph_edge2" class="edge">
-<title>proc~db5val&#45;&gt;proc~check_value</title>
-<path fill="none" stroke="#000000" d="M300.53,-211.11C306.75,-208.13 313.25,-204.7 319,-201 339.08,-188.09 359.62,-170.31 374.04,-156.92"/>
-<polygon fill="#000000" stroke="#000000" points="376.5,-159.41 381.37,-150 371.7,-154.32 376.5,-159.41"/>
+<title>proc~db3val&#45;&gt;proc~check_value</title>
+<path fill="none" stroke="#000000" d="M300.62,-170.78C315.03,-165.7 333.3,-159.25 349.83,-153.41"/>
+<polygon fill="#000000" stroke="#000000" points="351.04,-156.7 359.31,-150.07 348.71,-150.1 351.04,-156.7"/>
 </g>
 <!-- proc~db1val_alt -->
 <g id="proc~~check_value~~CalledByGraph_node4" class="node">
 <title>proc~db1val_alt</title>
 <g id="a_proc~~check_value~~CalledByGraph_node4"><a xlink:href=".././proc/db1val_alt.html" xlink:title="db1val_alt">
-<polygon fill="#d9534f" stroke="#d9534f" points="307,-192 240,-192 240,-168 307,-168 307,-192"/>
-<text text-anchor="middle" x="273.5" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1val_alt</text>
+<polygon fill="#d9534f" stroke="#d9534f" points="307,-234 240,-234 240,-210 307,-210 307,-234"/>
+<text text-anchor="middle" x="273.5" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1val_alt</text>
 </a>
 </g>
 </g>
 <!-- proc~db1val_alt&#45;&gt;proc~check_value -->
-<g id="proc~~check_value~~CalledByGraph_edge4" class="edge">
+<g id="proc~~check_value~~CalledByGraph_edge3" class="edge">
 <title>proc~db1val_alt&#45;&gt;proc~check_value</title>
-<path fill="none" stroke="#000000" d="M307.02,-168.52C320.21,-163.87 335.65,-158.42 349.81,-153.42"/>
-<polygon fill="#000000" stroke="#000000" points="351.09,-156.68 359.36,-150.05 348.76,-150.08 351.09,-156.68"/>
+<path fill="none" stroke="#000000" d="M302.87,-209.97C308.36,-207.27 313.97,-204.23 319,-201 339.08,-188.09 359.62,-170.31 374.04,-156.92"/>
+<polygon fill="#000000" stroke="#000000" points="376.5,-159.41 381.37,-150 371.7,-154.32 376.5,-159.41"/>
+</g>
+<!-- proc~db2val -->
+<g id="proc~~check_value~~CalledByGraph_node5" class="node">
+<title>proc~db2val</title>
+<g id="a_proc~~check_value~~CalledByGraph_node5"><a xlink:href=".././proc/db2val.html" xlink:title="db2val">
+<polygon fill="#d9534f" stroke="#d9534f" points="300.5,-150 246.5,-150 246.5,-126 300.5,-126 300.5,-150"/>
+<text text-anchor="middle" x="273.5" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db2val</text>
+</a>
+</g>
+</g>
+<!-- proc~db2val&#45;&gt;proc~check_value -->
+<g id="proc~~check_value~~CalledByGraph_edge4" class="edge">
+<title>proc~db2val&#45;&gt;proc~check_value</title>
+<path fill="none" stroke="#000000" d="M300.62,-138C313.51,-138 329.5,-138 344.56,-138"/>
+<polygon fill="#000000" stroke="#000000" points="344.79,-141.5 354.79,-138 344.79,-134.5 344.79,-141.5"/>
 </g>
 <!-- proc~db4val -->
-<g id="proc~~check_value~~CalledByGraph_node5" class="node">
+<g id="proc~~check_value~~CalledByGraph_node6" class="node">
 <title>proc~db4val</title>
-<g id="a_proc~~check_value~~CalledByGraph_node5"><a xlink:href=".././proc/db4val.html" xlink:title="db4val">
+<g id="a_proc~~check_value~~CalledByGraph_node6"><a xlink:href=".././proc/db4val.html" xlink:title="db4val">
 <polygon fill="#d9534f" stroke="#d9534f" points="300.5,-108 246.5,-108 246.5,-84 300.5,-84 300.5,-108"/>
 <text text-anchor="middle" x="273.5" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db4val</text>
 </a>
@@ -248,33 +337,18 @@ This is called by the various <code>db*val</code> routines.</p>
 <path fill="none" stroke="#000000" d="M300.62,-105.22C315.03,-110.3 333.3,-116.75 349.83,-122.59"/>
 <polygon fill="#000000" stroke="#000000" points="348.71,-125.9 359.31,-125.93 351.04,-119.3 348.71,-125.9"/>
 </g>
-<!-- proc~db1val_default -->
-<g id="proc~~check_value~~CalledByGraph_node6" class="node">
-<title>proc~db1val_default</title>
-<g id="a_proc~~check_value~~CalledByGraph_node6"><a xlink:href=".././proc/db1val_default.html" xlink:title="db1val_default">
-<polygon fill="#d9534f" stroke="#d9534f" points="319,-150 228,-150 228,-126 319,-126 319,-150"/>
-<text text-anchor="middle" x="273.5" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1val_default</text>
-</a>
-</g>
-</g>
-<!-- proc~db1val_default&#45;&gt;proc~check_value -->
-<g id="proc~~check_value~~CalledByGraph_edge3" class="edge">
-<title>proc~db1val_default&#45;&gt;proc~check_value</title>
-<path fill="none" stroke="#000000" d="M319.15,-138C327.5,-138 336.26,-138 344.72,-138"/>
-<polygon fill="#000000" stroke="#000000" points="344.85,-141.5 354.85,-138 344.85,-134.5 344.85,-141.5"/>
-</g>
-<!-- proc~db3val -->
+<!-- proc~db5val -->
 <g id="proc~~check_value~~CalledByGraph_node7" class="node">
-<title>proc~db3val</title>
-<g id="a_proc~~check_value~~CalledByGraph_node7"><a xlink:href=".././proc/db3val.html" xlink:title="db3val">
+<title>proc~db5val</title>
+<g id="a_proc~~check_value~~CalledByGraph_node7"><a xlink:href=".././proc/db5val.html" xlink:title="db5val">
 <polygon fill="#d9534f" stroke="#d9534f" points="300.5,-66 246.5,-66 246.5,-42 300.5,-42 300.5,-66"/>
-<text text-anchor="middle" x="273.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db3val</text>
+<text text-anchor="middle" x="273.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db5val</text>
 </a>
 </g>
 </g>
-<!-- proc~db3val&#45;&gt;proc~check_value -->
+<!-- proc~db5val&#45;&gt;proc~check_value -->
 <g id="proc~~check_value~~CalledByGraph_edge6" class="edge">
-<title>proc~db3val&#45;&gt;proc~check_value</title>
+<title>proc~db5val&#45;&gt;proc~check_value</title>
 <path fill="none" stroke="#000000" d="M300.53,-64.89C306.75,-67.87 313.25,-71.3 319,-75 339.08,-87.91 359.62,-105.69 374.04,-119.08"/>
 <polygon fill="#000000" stroke="#000000" points="371.7,-121.68 381.37,-126 376.5,-116.59 371.7,-121.68"/>
 </g>
@@ -297,87 +371,72 @@ This is called by the various <code>db*val</code> routines.</p>
 <g id="proc~~check_value~~CalledByGraph_node9" class="node">
 <title>interface~db1val</title>
 <g id="a_proc~~check_value~~CalledByGraph_node9"><a xlink:href=".././interface/db1val.html" xlink:title="db1val">
-<polygon fill="#a7506f" stroke="#a7506f" points="180,-171 126,-171 126,-147 180,-147 180,-171"/>
-<text text-anchor="middle" x="153" y="-156.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1val</text>
+<polygon fill="#a7506f" stroke="#a7506f" points="180,-255 126,-255 126,-231 180,-231 180,-255"/>
+<text text-anchor="middle" x="153" y="-240.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1val</text>
 </a>
 </g>
+</g>
+<!-- interface~db1val&#45;&gt;proc~db1val_default -->
+<g id="proc~~check_value~~CalledByGraph_edge8" class="edge">
+<title>interface~db1val&#45;&gt;proc~db1val_default</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M180.01,-247.61C191.19,-249.59 204.71,-251.99 217.92,-254.33"/>
+<polygon fill="#000000" stroke="#000000" points="217.46,-257.8 227.92,-256.1 218.68,-250.91 217.46,-257.8"/>
 </g>
 <!-- interface~db1val&#45;&gt;proc~db1val_alt -->
 <g id="proc~~check_value~~CalledByGraph_edge10" class="edge">
 <title>interface~db1val&#45;&gt;proc~db1val_alt</title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M180.01,-163.61C194.56,-166.19 213.08,-169.47 229.71,-172.42"/>
-<polygon fill="#000000" stroke="#000000" points="229.32,-175.9 239.77,-174.2 230.54,-169.01 229.32,-175.9"/>
-</g>
-<!-- interface~db1val&#45;&gt;proc~db1val_default -->
-<g id="proc~~check_value~~CalledByGraph_edge12" class="edge">
-<title>interface~db1val&#45;&gt;proc~db1val_default</title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M180.01,-154.39C191.19,-152.41 204.71,-150.01 217.92,-147.67"/>
-<polygon fill="#000000" stroke="#000000" points="218.68,-151.09 227.92,-145.9 217.46,-144.2 218.68,-151.09"/>
-</g>
-<!-- proc~evaluate_2d -->
-<g id="proc~~check_value~~CalledByGraph_node10" class="node">
-<title>proc~evaluate_2d</title>
-<g id="a_proc~~check_value~~CalledByGraph_node10"><a xlink:href=".././proc/evaluate_2d.html" xlink:title="evaluate_2d">
-<polygon fill="#d9534f" stroke="#d9534f" points="192,-276 114,-276 114,-252 192,-252 192,-276"/>
-<text text-anchor="middle" x="153" y="-261.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">evaluate_2d</text>
-</a>
-</g>
-</g>
-<!-- proc~evaluate_2d&#45;&gt;proc~db2val -->
-<g id="proc~~check_value~~CalledByGraph_edge8" class="edge">
-<title>proc~evaluate_2d&#45;&gt;proc~db2val</title>
-<path fill="none" stroke="#000000" d="M192.15,-264C206.27,-264 222.24,-264 236.2,-264"/>
-<polygon fill="#000000" stroke="#000000" points="236.41,-267.5 246.41,-264 236.41,-260.5 236.41,-267.5"/>
-</g>
-<!-- proc~evaluate_3d -->
-<g id="proc~~check_value~~CalledByGraph_node11" class="node">
-<title>proc~evaluate_3d</title>
-<g id="a_proc~~check_value~~CalledByGraph_node11"><a xlink:href=".././proc/evaluate_3d.html" xlink:title="evaluate_3d">
-<polygon fill="#d9534f" stroke="#d9534f" points="192,-66 114,-66 114,-42 192,-42 192,-66"/>
-<text text-anchor="middle" x="153" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">evaluate_3d</text>
-</a>
-</g>
-</g>
-<!-- proc~evaluate_3d&#45;&gt;proc~db3val -->
-<g id="proc~~check_value~~CalledByGraph_edge13" class="edge">
-<title>proc~evaluate_3d&#45;&gt;proc~db3val</title>
-<path fill="none" stroke="#000000" d="M192.15,-54C206.27,-54 222.24,-54 236.2,-54"/>
-<polygon fill="#000000" stroke="#000000" points="236.41,-57.5 246.41,-54 236.41,-50.5 236.41,-57.5"/>
-</g>
-<!-- proc~evaluate_5d -->
-<g id="proc~~check_value~~CalledByGraph_node12" class="node">
-<title>proc~evaluate_5d</title>
-<g id="a_proc~~check_value~~CalledByGraph_node12"><a xlink:href=".././proc/evaluate_5d.html" xlink:title="evaluate_5d">
-<polygon fill="#d9534f" stroke="#d9534f" points="192,-234 114,-234 114,-210 192,-210 192,-234"/>
-<text text-anchor="middle" x="153" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">evaluate_5d</text>
-</a>
-</g>
-</g>
-<!-- proc~evaluate_5d&#45;&gt;proc~db5val -->
-<g id="proc~~check_value~~CalledByGraph_edge9" class="edge">
-<title>proc~evaluate_5d&#45;&gt;proc~db5val</title>
-<path fill="none" stroke="#000000" d="M192.15,-222C206.27,-222 222.24,-222 236.2,-222"/>
-<polygon fill="#000000" stroke="#000000" points="236.41,-225.5 246.41,-222 236.41,-218.5 236.41,-225.5"/>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M180.01,-238.39C194.56,-235.81 213.08,-232.53 229.71,-229.58"/>
+<polygon fill="#000000" stroke="#000000" points="230.54,-232.99 239.77,-227.8 229.32,-226.1 230.54,-232.99"/>
 </g>
 <!-- proc~evaluate_4d -->
-<g id="proc~~check_value~~CalledByGraph_node13" class="node">
+<g id="proc~~check_value~~CalledByGraph_node10" class="node">
 <title>proc~evaluate_4d</title>
-<g id="a_proc~~check_value~~CalledByGraph_node13"><a xlink:href=".././proc/evaluate_4d.html" xlink:title="evaluate_4d">
+<g id="a_proc~~check_value~~CalledByGraph_node10"><a xlink:href=".././proc/evaluate_4d.html" xlink:title="evaluate_4d">
 <polygon fill="#d9534f" stroke="#d9534f" points="192,-108 114,-108 114,-84 192,-84 192,-108"/>
 <text text-anchor="middle" x="153" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">evaluate_4d</text>
 </a>
 </g>
 </g>
 <!-- proc~evaluate_4d&#45;&gt;proc~db4val -->
-<g id="proc~~check_value~~CalledByGraph_edge11" class="edge">
+<g id="proc~~check_value~~CalledByGraph_edge12" class="edge">
 <title>proc~evaluate_4d&#45;&gt;proc~db4val</title>
 <path fill="none" stroke="#000000" d="M192.15,-96C206.27,-96 222.24,-96 236.2,-96"/>
 <polygon fill="#000000" stroke="#000000" points="236.41,-99.5 246.41,-96 236.41,-92.5 236.41,-99.5"/>
 </g>
+<!-- proc~evaluate_5d -->
+<g id="proc~~check_value~~CalledByGraph_node11" class="node">
+<title>proc~evaluate_5d</title>
+<g id="a_proc~~check_value~~CalledByGraph_node11"><a xlink:href=".././proc/evaluate_5d.html" xlink:title="evaluate_5d">
+<polygon fill="#d9534f" stroke="#d9534f" points="192,-66 114,-66 114,-42 192,-42 192,-66"/>
+<text text-anchor="middle" x="153" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">evaluate_5d</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_5d&#45;&gt;proc~db5val -->
+<g id="proc~~check_value~~CalledByGraph_edge13" class="edge">
+<title>proc~evaluate_5d&#45;&gt;proc~db5val</title>
+<path fill="none" stroke="#000000" d="M192.15,-54C206.27,-54 222.24,-54 236.2,-54"/>
+<polygon fill="#000000" stroke="#000000" points="236.41,-57.5 246.41,-54 236.41,-50.5 236.41,-57.5"/>
+</g>
+<!-- proc~evaluate_3d -->
+<g id="proc~~check_value~~CalledByGraph_node12" class="node">
+<title>proc~evaluate_3d</title>
+<g id="a_proc~~check_value~~CalledByGraph_node12"><a xlink:href=".././proc/evaluate_3d.html" xlink:title="evaluate_3d">
+<polygon fill="#d9534f" stroke="#d9534f" points="192,-192 114,-192 114,-168 192,-168 192,-192"/>
+<text text-anchor="middle" x="153" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">evaluate_3d</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_3d&#45;&gt;proc~db3val -->
+<g id="proc~~check_value~~CalledByGraph_edge9" class="edge">
+<title>proc~evaluate_3d&#45;&gt;proc~db3val</title>
+<path fill="none" stroke="#000000" d="M192.15,-180C206.27,-180 222.24,-180 236.2,-180"/>
+<polygon fill="#000000" stroke="#000000" points="236.41,-183.5 246.41,-180 236.41,-176.5 236.41,-183.5"/>
+</g>
 <!-- proc~evaluate_6d -->
-<g id="proc~~check_value~~CalledByGraph_node14" class="node">
+<g id="proc~~check_value~~CalledByGraph_node13" class="node">
 <title>proc~evaluate_6d</title>
-<g id="a_proc~~check_value~~CalledByGraph_node14"><a xlink:href=".././proc/evaluate_6d.html" xlink:title="evaluate_6d">
+<g id="a_proc~~check_value~~CalledByGraph_node13"><a xlink:href=".././proc/evaluate_6d.html" xlink:title="evaluate_6d">
 <polygon fill="#d9534f" stroke="#d9534f" points="192,-24 114,-24 114,0 192,0 192,-24"/>
 <text text-anchor="middle" x="153" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">evaluate_6d</text>
 </a>
@@ -389,20 +448,35 @@ This is called by the various <code>db*val</code> routines.</p>
 <path fill="none" stroke="#000000" d="M192.15,-12C206.27,-12 222.24,-12 236.2,-12"/>
 <polygon fill="#000000" stroke="#000000" points="236.41,-15.5 246.41,-12 236.41,-8.5 236.41,-15.5"/>
 </g>
+<!-- proc~evaluate_2d -->
+<g id="proc~~check_value~~CalledByGraph_node14" class="node">
+<title>proc~evaluate_2d</title>
+<g id="a_proc~~check_value~~CalledByGraph_node14"><a xlink:href=".././proc/evaluate_2d.html" xlink:title="evaluate_2d">
+<polygon fill="#d9534f" stroke="#d9534f" points="192,-150 114,-150 114,-126 192,-126 192,-150"/>
+<text text-anchor="middle" x="153" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">evaluate_2d</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_2d&#45;&gt;proc~db2val -->
+<g id="proc~~check_value~~CalledByGraph_edge11" class="edge">
+<title>proc~evaluate_2d&#45;&gt;proc~db2val</title>
+<path fill="none" stroke="#000000" d="M192.15,-138C206.27,-138 222.24,-138 236.2,-138"/>
+<polygon fill="#000000" stroke="#000000" points="236.41,-141.5 246.41,-138 236.41,-134.5 236.41,-141.5"/>
+</g>
 <!-- proc~evaluate_1d -->
 <g id="proc~~check_value~~CalledByGraph_node15" class="node">
 <title>proc~evaluate_1d</title>
 <g id="a_proc~~check_value~~CalledByGraph_node15"><a xlink:href=".././proc/evaluate_1d.html" xlink:title="evaluate_1d">
-<polygon fill="#d9534f" stroke="#d9534f" points="78,-171 0,-171 0,-147 78,-147 78,-171"/>
-<text text-anchor="middle" x="39" y="-156.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">evaluate_1d</text>
+<polygon fill="#d9534f" stroke="#d9534f" points="78,-255 0,-255 0,-231 78,-231 78,-255"/>
+<text text-anchor="middle" x="39" y="-240.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">evaluate_1d</text>
 </a>
 </g>
 </g>
 <!-- proc~evaluate_1d&#45;&gt;interface~db1val -->
 <g id="proc~~check_value~~CalledByGraph_edge15" class="edge">
 <title>proc~evaluate_1d&#45;&gt;interface~db1val</title>
-<path fill="none" stroke="#000000" d="M78.23,-159C90.39,-159 103.79,-159 115.79,-159"/>
-<polygon fill="#000000" stroke="#000000" points="115.92,-162.5 125.92,-159 115.92,-155.5 115.92,-162.5"/>
+<path fill="none" stroke="#000000" d="M78.23,-243C90.39,-243 103.79,-243 115.79,-243"/>
+<polygon fill="#000000" stroke="#000000" points="115.92,-246.5 125.92,-243 115.92,-239.5 115.92,-246.5"/>
 </g>
 </g>
 </svg>
@@ -470,14 +544,33 @@ This is called by the various <code>db*val</code> routines.</p>
     <br>
 
     <section class="visible-xs visible-sm hidden-md">
-      <h3>Contents</h3>
- 
-<div class="panel panel-primary">
-  <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
-  <div class="list-group">
-    <a class="list-group-item" href="../proc/check_value.html#src">check_value</a>
-  </div>
-</div>
+        <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="panel panel-primary">
+      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/check_value.html#src">check_value</a>
+      </div>
+    </div>
+
 
     </section>
     <br class="visible-xs visible-sm hidden-md">
