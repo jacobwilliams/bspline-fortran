@@ -3612,7 +3612,7 @@
     real(wp),dimension(4,4) :: vnikx
     real(wp),dimension(15) :: work  !! work array for [[dbspvd]] -- length `(k+1)*(k+2)/2`
 
-    real(wp),parameter :: wdtol = radix(1.0_wp)**(1-digits(1.0_wp)) !! d1mach(4)
+    real(wp),parameter :: wdtol = real(radix(1.0_wp),wp)**(1-digits(1.0_wp)) !! d1mach(4)
     real(wp),parameter :: tol = sqrt(wdtol)
 
     if (ndata<2_ip) then
