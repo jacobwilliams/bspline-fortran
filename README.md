@@ -136,7 +136,7 @@ bspline-fortran = { git="https://github.com/jacobwilliams/bspline-fortran.git" }
 or, to use a specific version:
 ```toml
 [dependencies]
-bspline-fortran = { git="https://github.com/jacobwilliams/bspline-fortran.git", tag = "7.0.0"  }
+bspline-fortran = { git="https://github.com/jacobwilliams/bspline-fortran.git", tag = "7.1.0"  }
 ```
 
 ### CMake
