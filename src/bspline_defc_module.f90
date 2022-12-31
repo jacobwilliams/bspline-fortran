@@ -86,7 +86,6 @@ module bspline_defc_module
 !   * 920501  Reformatted the REFERENCES section.  (WRB)
 !   * Jacob Williams, 2022 : modernized
 
-
    subroutine defc(Ndata, Xdata, Ydata, Sddata, Nord, Nbkpt, Bkpt, Mdein, &
                    Mdeout, Coeff, Lw, w)
 
@@ -456,6 +455,7 @@ module bspline_defc_module
 !
       call dbndsl(1, g, Mdg, Nord, ip, ir, Coeff, n, rnorm)
       Mdeout = 1
+
    end subroutine defcmn
 !*****************************************************************************************
 
@@ -705,8 +705,8 @@ module bspline_defc_module
          nerr = 1
          iopt = 2
          write (*, *) 'MDG<IR, PROBABLE ERROR.'
-         return
       end if
+
    end subroutine dbndac
 !*****************************************************************************************
 
@@ -956,6 +956,7 @@ module bspline_defc_module
       nerr = 1
       iopt = 2
       write (*, *) 'A ZERO DIAGONAL TERM IS IN THE N BY N UPPER TRIANGULAR MATRIX.'
+
    end subroutine dbndsl
 !*****************************************************************************************
 
@@ -972,11 +973,11 @@ module bspline_defc_module
 
    subroutine dfspvn(t, Jhigh, Index, x, Ileft, Vnikx, j, deltam, deltap)
 
-      real(wp) :: t(*)
-      integer :: Jhigh
-      integer :: Index
-      real(wp) :: x
-      integer :: Ileft
+      real(wp),intent(in) :: t(*)
+      integer,intent(in) :: Jhigh
+      integer,intent(in) :: Index
+      real(wp),intent(in) :: x
+      integer,intent(in) :: Ileft
       real(wp) :: Vnikx(*)
       integer, intent(inout) :: j !! JW : added
       real(wp), dimension(20), intent(inout) :: deltam, deltap !! JW : added
@@ -1130,6 +1131,7 @@ module bspline_defc_module
             end if
          end if
       end if
+
    end subroutine dh12
 !*****************************************************************************************
 
@@ -1257,6 +1259,7 @@ module bspline_defc_module
       end subroutine partition
 
       subroutine swap(v1, v2)
+         !! swap two real values
          real(wp), intent(inout) :: v1
          real(wp), intent(inout) :: v2
          real(wp) :: tmp
