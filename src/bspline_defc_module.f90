@@ -1175,7 +1175,7 @@ module bspline_defc_module
 
 !*****************************************************************************************
 !>
-!  Recursive quicksoft. Based on the LAPACK routine.
+!  Recursive quicksoft.
 !  Modified to also carry along a second array.
 
    subroutine sort_ascending(n, dx, dy)
