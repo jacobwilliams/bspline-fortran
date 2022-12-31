@@ -84,6 +84,10 @@ The library also contains routines for computing definite integrals of bsplines.
 
 Note that extrapolation is not currently supported for these.
 
+## Least squares fitting
+
+The BSpline-Fortran library also exports the `defc` subroutine, which can be used to fit B-spline polynomials to 1D data using a weighted least squares method.
+
 ## Examples
 
 See the [examples](https://github.com/jacobwilliams/bspline-fortran/tree/master/src/tests) for more details. Note that, to compile and run some of the test programs, the [pyplot_module.f90](https://github.com/jacobwilliams/pyplot-fortran) file (which is used to generate plots) must be copied into the `src/tests` directory.
@@ -159,6 +163,16 @@ For a debug build:
 ```bash
  cmake -DCMAKE_BUILD_TYPE=DEBUG ..
 ```
+
+## Dependencies
+
+The library requires some [BLAS](https://netlib.org/blas/) routines, which are included. However, the user may also choose to link to an external BLAS library. This can be done by using the `HAS_BLAS` compiler directive. For example:
+
+```
+fpm build --compiler gfortran --flag "-DHAS_BLAS -lblas"
+```
+
+However, note that an external BLAS can only be used if the library is compiled with double precision (`real64`) reals.
 
 ## Documentation
 

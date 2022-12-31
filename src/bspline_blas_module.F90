@@ -16,19 +16,19 @@
 !  * [BLAS Sourcecode](https://github.com/Reference-LAPACK/lapack/tree/master/BLAS/SRC)
 
 module bspline_blas_module
+
 #ifndef HAS_BLAS
 
    use bspline_kinds_module, only: wp, ip
 
    implicit none
-
    private
 
    public :: daxpy,dcopy,dscal,dswap,ddot
 
 contains
 
-   subroutine daxpy(n, da, dx, incx, dy, incy)
+    subroutine daxpy(n, da, dx, incx, dy, incy)
          !! DAXPY constant times a vector plus a vector.
          !! uses unrolled loops for increments equal to one.
 

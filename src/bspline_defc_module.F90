@@ -8,11 +8,18 @@
 module bspline_defc_module
 
    use bspline_kinds_module, only: wp !, ip
+#ifndef HAS_BLAS
    use bspline_blas_module
+#endif
 
    implicit none
 
    private
+
+#ifdef HAS_BLAS
+   double precision,external :: ddot
+   external :: daxpy,dcopy,dscal,dswap
+#endif
 
    public :: defc
 
