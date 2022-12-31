@@ -8,7 +8,7 @@
 
 module bspline_defc_module
 
-   use bspline_kinds_module, only: wp, ip
+   use bspline_kinds_module, only: wp !, ip
    use bspline_blas_module
 
    implicit none
@@ -20,249 +20,198 @@ module bspline_defc_module
    contains
 !*****************************************************************************************
 
-!***PURPOSE  Fit a piecewise polynomial curve to discrete data.
-!            The piecewise polynomials are represented as B-splines.
-!            The fitting is done in a weighted least squares sense.
-!***AUTHOR  Hanson, R. J., (SNLA)
-!***DESCRIPTION
+!*****************************************************************************************
+!>
+!  This subprogram fits a piecewise polynomial curve
+!  to discrete data.  The piecewise polynomials are
+!  represented as B-splines.
+!  The fitting is done in a weighted least squares sense.
 !
-!      This subprogram fits a piecewise polynomial curve
-!      to discrete data.  The piecewise polynomials are
-!      represented as B-splines.
-!      The fitting is done in a weighted least squares sense.
+!  The data can be processed in groups of modest size.
+!  The size of the group is chosen by the user.  This feature
+!  may be necessary for purposes of using constrained curve fitting
+!  with subprogram DFC( ) on a very large data set.
 !
-!      The data can be processed in groups of modest size.
-!      The size of the group is chosen by the user.  This feature
-!      may be necessary for purposes of using constrained curve fitting
-!      with subprogram DFC( ) on a very large data set.
+!### References
 !
-!      For a description of the B-splines and usage instructions to
-!      evaluate them, see
+!  1. C. W. de Boor, Package for Calculating with B-Splines.
+!     SIAM J. Numer. Anal., p. 441, (June, 1977).
+!  2. R. J. Hanson, Constrained least squares curve fitting
+!     to discrete data using B-splines, a users guide,
+!     Report SAND78-1291, Sandia Laboratories, December
+!     1978.
 !
-!      C. W. de Boor, Package for Calculating with B-Splines.
-!                     SIAM J. Numer. Anal., p. 441, (June, 1977).
+!### Notes
 !
-!      For further discussion of (constrained) curve fitting using
-!      B-splines, see
+!  * For a description of the B-splines and usage instructions to
+!    evaluate them, see reference 1.
+!  * For further discussion of (constrained) curve fitting using
+!    B-splines, see reference 2.
 !
-!      R. J. Hanson, Constrained Least Squares Curve Fitting
-!                   to Discrete Data Using B-Splines, a User's
-!                   Guide. Sandia Labs. Tech. Rept. SAND-78-1291,
-!                   December, (1978).
+!### Evaluating the Fitted Curve
 !
-!  Input.. All TYPE REAL variables are real(wp)
-!      NDATA,XDATA(*),
-!      YDATA(*),
-!      SDDATA(*)
-!                         The NDATA discrete (X,Y) pairs and the Y value
-!                         standard deviation or uncertainty, SD, are in
-!                         the respective arrays XDATA(*), YDATA(*), and
-!                         SDDATA(*).  No sorting of XDATA(*) is
-!                         required.  Any non-negative value of NDATA is
-!                         allowed.  A negative value of NDATA is an
-!                         error.  A zero value for any entry of
-!                         SDDATA(*) will weight that data point as 1.
-!                         Otherwise the weight of that data point is
-!                         the reciprocal of this entry.
+!  To evaluate derivative number `IDER` at `XVAL`,
+!  use the function subprogram [[DBVALU]].
 !
-!      NORD,NBKPT,
-!      BKPT(*)
-!                         The NBKPT knots of the B-spline of order NORD
-!                         are in the array BKPT(*).  Normally the
-!                         problem data interval will be included between
-!                         the limits BKPT(NORD) and BKPT(NBKPT-NORD+1).
-!                         The additional end knots BKPT(I),I=1,...,
-!                         NORD-1 and I=NBKPT-NORD+2,...,NBKPT, are
-!                         required to compute the functions used to fit
-!                         the data.  No sorting of BKPT(*) is required.
-!                         Internal to DEFC( ) the extreme end knots may
-!                         be reduced and increased respectively to
-!                         accommodate any data values that are exterior
-!                         to the given knot values.  The contents of
-!                         BKPT(*) is not changed.
+!```fortran
+! f = dbvalu(bkpt,coeff,nbkpt-nord,nord,ider,xval,inbv,workb)
+!```
 !
-!                         NORD must be in the range 1 <= NORD <= 20.
-!                         The value of NBKPT must satisfy the condition
-!                         NBKPT >= 2*NORD.
-!                         Other values are considered errors.
+!  The output of this subprogram will not be
+!  defined unless an output value of `MDEOUT=1`
+!  was obtained from [[DEFC]], `XVAL` is in the data
+!  interval, and `IDER` is nonnegative and `< NORD`.
 !
-!                         (The order of the spline is one more than the
-!                         degree of the piecewise polynomial defined on
-!                         each interval.  This is consistent with the
-!                         B-spline package convention.  For example,
-!                         NORD=4 when we are using piecewise cubics.)
+!  The first time [[DBVALU]] is called, `INBV=1`
+!  must be specified.  This value of `INBV` is the
+!  overwritten by [[DBVALU]].  The array `WORKB(*)`
+!  must be of length at least `3*NORD`, and must
+!  not be the same as the `W(*)` array used in the
+!  call to [[DEFC]].
 !
-!        MDEIN
-!                         An integer flag, with one of two possible
-!                         values (1 or 2), that directs the subprogram
-!                         action with regard to new data points provided
-!                         by the user.
+!  [[DBVALU]] expects the breakpoint array `BKPT(*)`
+!  to be sorted.
 !
-!                         =1  The first time that DEFC( ) has been
-!                         entered.  There are NDATA points to process.
+!### Revision history
 !
-!                         =2  This is another entry to DEFC().  The sub-
-!                         program DEFC( ) has been entered with MDEIN=1
-!                         exactly once before for this problem.  There
-!                         are NDATA new additional points to merge and
-!                         process with any previous points.
-!                         (When using DEFC( ) with MDEIN=2 it is import-
-!                         ant that the set of knots remain fixed at the
-!                         same values for all entries to DEFC( ).)
-!       LW
-!                         The amount of working storage actually
-!                         allocated for the working array W(*).
-!                         This quantity is compared with the
-!                         actual amount of storage needed in DEFC( ).
-!                         Insufficient storage allocated for W(*) is
-!                         an error.  This feature was included in DEFC
-!                         because misreading the storage formula
-!                         for W(*) might very well lead to subtle
-!                         and hard-to-find programming bugs.
-!
-!                         The length of the array W(*) must satisfy
-!
-!                         LW >= (NBKPT-NORD+3)*(NORD+1)+
-!                                 (NBKPT+1)*(NORD+1)+
-!                               2*MAX(NDATA,NBKPT)+NBKPT+NORD**2
-!
-!  Output.. All TYPE REAL variables are real(wp)
-!      MDEOUT
-!                         An output flag that indicates the status
-!                         of the curve fit.
-!
-!                         =-1  A usage error of DEFC( ) occurred.  The
-!                         offending condition is noted with the SLATEC
-!                         library error processor, XERMSG( ).  In case
-!                         the working array W(*) is not long enough, the
-!                         minimal acceptable length is printed.
-!
-!                         =1  The B-spline coefficients for the fitted
-!                         curve have been returned in array COEFF(*).
-!
-!                         =2  Not enough data has been processed to
-!                         determine the B-spline coefficients.
-!                         The user has one of two options.  Continue
-!                         to process more data until a unique set
-!                         of coefficients is obtained, or use the
-!                         subprogram DFC( ) to obtain a specific
-!                         set of coefficients.  The user should read
-!                         the usage instructions for DFC( ) for further
-!                         details if this second option is chosen.
-!      COEFF(*)
-!                         If the output value of MDEOUT=1, this array
-!                         contains the unknowns obtained from the least
-!                         squares fitting process.  These N=NBKPT-NORD
-!                         parameters are the B-spline coefficients.
-!                         For MDEOUT=2, not enough data was processed to
-!                         uniquely determine the B-spline coefficients.
-!                         In this case, and also when MDEOUT=-1, all
-!                         values of COEFF(*) are set to zero.
-!
-!                         If the user is not satisfied with the fitted
-!                         curve returned by DEFC( ), the constrained
-!                         least squares curve fitting subprogram DFC( )
-!                         may be required.  The work done within DEFC( )
-!                         to accumulate the data can be utilized by
-!                         the user, if so desired.  This involves
-!                         saving the first (NBKPT-NORD+3)*(NORD+1)
-!                         entries of W(*) and providing this data
-!                         to DFC( ) with the "old problem" designation.
-!                         The user should read the usage instructions
-!                         for subprogram DFC( ) for further details.
-!
-!  Working Array.. All TYPE REAL variables are real(wp)
-!      W(*)
-!                         This array is typed real(wp).
-!                         Its length is  specified as an input parameter
-!                         in LW as noted above.  The contents of W(*)
-!                         must not be modified by the user between calls
-!                         to DEFC( ) with values of MDEIN=1,2,2,... .
-!                         The first (NBKPT-NORD+3)*(NORD+1) entries of
-!                         W(*) are acceptable as direct input to DFC( )
-!                         for an "old problem" only when MDEOUT=1 or 2.
-!
-!  Evaluating the
-!  Fitted Curve..
-!                         To evaluate derivative number IDER at XVAL,
-!                         use the function subprogram DBVALU( ).
-!
-!                         F = DBVALU(BKPT,COEFF,NBKPT-NORD,NORD,IDER,
-!                                      XVAL,INBV,WORKB)
-!
-!                         The output of this subprogram will not be
-!                         defined unless an output value of MDEOUT=1
-!                         was obtained from DEFC( ), XVAL is in the data
-!                         interval, and IDER is nonnegative and <
-!                         NORD.
-!
-!                         The first time DBVALU( ) is called, INBV=1
-!                         must be specified.  This value of INBV is the
-!                         overwritten by DBVALU( ).  The array WORKB(*)
-!                         must be of length at least 3*NORD, and must
-!                         not be the same as the W(*) array used in the
-!                         call to DEFC( ).
-!
-!                         DBVALU( ) expects the breakpoint array BKPT(*)
-!                         to be sorted.
-!
-!***REFERENCES  R. J. Hanson, Constrained least squares curve fitting
-!                 to discrete data using B-splines, a users guide,
-!                 Report SAND78-1291, Sandia Laboratories, December
-!                 1978.
-!***REVISION HISTORY  (YYMMDD)
-!   800801  DATE WRITTEN
-!   890531  Changed all specific intrinsics to generic.  (WRB)
-!   890531  REVISION DATE from Version 3.2
-!   891214  Prologue converted to Version 4.0 format.  (BAB)
-!   900510  Change Prologue comments to refer to XERMSG.  (RWC)
-!   900607  Editorial changes to Prologue to make Prologues for EFC,
-!           DEFC, FC, and DFC look as much the same as possible.  (RWC)
-!   920501  Reformatted the REFERENCES section.  (WRB)
+!   * 800801  DATE WRITTEN.
+!     WRITTEN BY R. HANSON, SANDIA NATL. LABS.,
+!     ALB., N. M., AUGUST-SEPTEMBER, 1980.
+!   * 890531  Changed all specific intrinsics to generic.  (WRB)
+!   * 890531  REVISION DATE from Version 3.2
+!   * 891214  Prologue converted to Version 4.0 format.  (BAB)
+!   * 900510  Change Prologue comments to refer to XERMSG.  (RWC)
+!   * 900607  Editorial changes to Prologue to make Prologues for EFC,
+!     DEFC, FC, and DFC look as much the same as possible.  (RWC)
+!   * 920501  Reformatted the REFERENCES section.  (WRB)
+!   * Jacob Williams, 2022 : modernized
 
-!
-!      SUBROUTINE           FUNCTION/REMARKS
-!
-!      DBSPVN( )          COMPUTE FUNCTION VALUES OF B-SPLINES.  FROM
-!                         THE B-SPLINE PACKAGE OF DE BOOR NOTED ABOVE.
-!
-!      DBNDAC( ),         BANDED LEAST SQUARES MATRIX PROCESSORS.
-!      DBNDSL( )          FROM LAWSON-HANSON, SOLVING LEAST
-!                         SQUARES PROBLEMS.
-!
-!      DSORT( )           DATA SORTING SUBROUTINE, FROM THE
-!                         SANDIA MATH. LIBRARY, SAND77-1441.
-!
-!      XERMSG( )          ERROR HANDLING ROUTINE
-!                         FOR THE SLATEC MATH. LIBRARY.
-!                         SEE SAND78-1189, BY R. E. JONES.
-!
-!      DCOPY( ),DSCAL( )  SUBROUTINES FROM THE BLAS PACKAGE.
-!
-!                         WRITTEN BY R. HANSON, SANDIA NATL. LABS.,
-!                         ALB., N. M., AUGUST-SEPTEMBER, 1980.
 
    subroutine defc(Ndata, Xdata, Ydata, Sddata, Nord, Nbkpt, Bkpt, Mdein, &
                    Mdeout, Coeff, Lw, w)
 
-      real(wp) :: Bkpt(*), Coeff(*), w(*), Sddata(*), Xdata(*), Ydata(*)
-      integer :: Lw, Mdein, Mdeout, Nbkpt, Ndata, Nord
+      integer,intent(in) :: Ndata !! number of points (size of `xdata` and `ydata`).
+                                  !! Any non-negative value of `NDATA` is allowed.
+                                  !! A negative value of `NDATA` is an error.
+      real(wp),dimension(ndata), intent(in) :: Xdata !! X data array. No sorting of `XDATA(*)` is required.
+      real(wp),dimension(ndata), intent(in) :: Ydata !! Y data array.
+      real(wp),dimension(ndata), intent(in) :: Sddata !! Y value standard deviation or uncertainty.
+                                                      !! A zero value for any entry of
+                                                      !! `SDDATA(*)` will weight that data point as 1.
+                                                      !! Otherwise the weight of that data point is
+                                                      !! the reciprocal of this entry.
+      integer,intent(in) :: Nord !! B-spline order.
+                                 !! (The order of the spline is one more than the
+                                 !! degree of the piecewise polynomial defined on
+                                 !! each interval.  This is consistent with the
+                                 !! B-spline package convention.  For example,
+                                 !! `NORD=4` when we are using piecewise cubics.)
+                                 !! `NORD` must be in the range `1 <= NORD <= 20`.
+      integer,intent(in) :: Nbkpt !! The value of `NBKPT` must satisfy the condition `NBKPT >= 2*NORD`.
+      real(wp),dimension(:),intent(in) :: Bkpt !! `NBKPT` knots of the B-spline.
+                                     !! Normally the
+                                     !! problem data interval will be included between
+                                     !! the limits `BKPT(NORD)` and `BKPT(NBKPT-NORD+1)`.
+                                     !! The additional end knots `BKPT(I),I=1,...,NORD-1`
+                                     !! and `I=NBKPT-NORD+2,...,NBKPT`, are
+                                     !! required to compute the functions used to fit
+                                     !! the data.  No sorting of `BKPT(*)` is required.
+                                     !! Internal to `DEFC( )` the extreme end knots may
+                                     !! be reduced and increased respectively to
+                                     !! accommodate any data values that are exterior
+                                     !! to the given knot values.  The contents of
+                                     !! `BKPT(*)` is not changed.
+      integer,intent(in) :: Mdein !! An integer flag, with one of two possible
+                                  !! values (1 or 2), that directs the subprogram
+                                  !! action with regard to new data points provided
+                                  !! by the user:
+                                  !!
+                                  !! * `= 1`  The first time that DEFC( ) has been
+                                  !!   entered.  There are NDATA points to process.
+                                  !! * `= 2`  This is another entry to DEFC().  The
+                                  !!   subprogram DEFC( ) has been entered with MDEIN=1
+                                  !!   exactly once before for this problem.  There
+                                  !!   are NDATA new additional points to merge and
+                                  !!   process with any previous points.
+                                  !!   (When using DEFC( ) with MDEIN=2 it is
+                                  !!   important that the set of knots remain fixed at the
+                                  !!   same values for all entries to DEFC( ).)
+      integer,intent(out) :: Mdeout !! An output flag that indicates the status
+                                    !! of the curve fit:
+                                    !!
+                                    !!  * `=-1`  A usage error of `DEFC( )` occurred.  The
+                                    !!    offending condition is noted with the SLATEC
+                                    !!    library error processor, `XERMSG( )`.  In case
+                                    !!    the working array `W(*)` is not long enough, the
+                                    !!    minimal acceptable length is printed.
+                                    !!
+                                    !!  * `=1`  The B-spline coefficients for the fitted
+                                    !!    curve have been returned in array `COEFF(*)`.
+                                    !!
+                                    !!  * `=2`  Not enough data has been processed to
+                                    !!    determine the B-spline coefficients.
+                                    !!    The user has one of two options.  Continue
+                                    !!    to process more data until a unique set
+                                    !!    of coefficients is obtained, or use the
+                                    !!    subprogram `DFC( )` to obtain a specific
+                                    !!    set of coefficients.  The user should read
+                                    !!    the usage instructions for `DFC( )` for further
+                                    !!    details if this second option is chosen.
+      real(wp),intent(out) :: Coeff(*) !! If the output value of `MDEOUT=1`, this array
+                                       !! contains the unknowns obtained from the least
+                                       !! squares fitting process.  These `N=NBKPT-NORD`
+                                       !! parameters are the B-spline coefficients.
+                                       !! For `MDEOUT=2`, not enough data was processed to
+                                       !! uniquely determine the B-spline coefficients.
+                                       !! In this case, and also when `MDEOUT=-1`, all
+                                       !! values of `COEFF(*)` are set to zero.
+                                       !!
+                                       !! If the user is not satisfied with the fitted
+                                       !! curve returned by `DEFC( )`, the constrained
+                                       !! least squares curve fitting subprogram `DFC( )`
+                                       !! may be required.  The work done within `DEFC( )`
+                                       !! to accumulate the data can be utilized by
+                                       !! the user, if so desired.  This involves
+                                       !! saving the first `(NBKPT-NORD+3)*(NORD+1)`
+                                       !! entries of `W(*)` and providing this data
+                                       !! to `DFC( )` with the "old problem" designation.
+                                       !! The user should read the usage instructions
+                                       !! for subprogram `DFC( )` for further details.
+      integer,intent(in) :: Lw !! The amount of working storage actually
+                               !! allocated for the working array `W(*)`.
+                               !! This quantity is compared with the
+                               !! actual amount of storage needed in `DEFC( )`.
+                               !! Insufficient storage allocated for `W(*)` is
+                               !! an error.  This feature was included in `DEFC`
+                               !! because misreading the storage formula
+                               !! for `W(*)` might very well lead to subtle
+                               !! and hard-to-find programming bugs.
+                               !!
+                               !! The length of the array `W(*)` must satisfy
+                               !!```
+                               !! LW >= (NBKPT-NORD+3)*(NORD+1)+
+                               !!         (NBKPT+1)*(NORD+1)+
+                               !!       2*MAX(NDATA,NBKPT)+NBKPT+NORD**2
+                               !!```
+      real(wp) :: w(*) !! Working Array.
+                       !! Its length is specified as an input parameter
+                       !! in `LW` as noted above. The contents of `W(*)`
+                       !! must not be modified by the user between calls
+                       !! to `DEFC( )` with values of `MDEIN=1,2,2,...` .
+                       !! The first `(NBKPT-NORD+3)*(NORD+1)` entries of
+                       !! `W(*)` are acceptable as direct input to `DFC( )`
+                       !! for an "old problem" only when `MDEOUT=1` or `2`.
 
       integer :: lbf, lbkpt, lg, lptemp, lww, lxtemp, mdg, mdw
 
-!     LWW=1               USAGE IN DEFCMN( ) OF W(*)..
-!     LWW,...,LG-1        W(*,*)
-!
-!     LG,...,LXTEMP-1     G(*,*)
-!
-!     LXTEMP,...,LPTEMP-1 XTEMP(*)
-!
-!     LPTEMP,...,LBKPT-1  PTEMP(*)
-!
-!     LBKPT,...,LBF       BKPT(*) (LOCAL TO DEFCMN( ))
-!
-!     LBF,...,LBF+NORD**2 BF(*,*)
-!
+      ! LWW=1               USAGE IN DEFCMN( ) OF W(*)..
+      ! LWW,...,LG-1        W(*,*)
+      ! LG,...,LXTEMP-1     G(*,*)
+      ! LXTEMP,...,LPTEMP-1 XTEMP(*)
+      ! LPTEMP,...,LBKPT-1  PTEMP(*)
+      ! LBKPT,...,LBF       BKPT(*) (LOCAL TO DEFCMN( ))
+      ! LBF,...,LBF+NORD**2 BF(*,*)
+
       mdg = Nbkpt + 1
       mdw = Nbkpt - Nord + 3
       lww = 1
@@ -271,28 +220,30 @@ module bspline_defc_module
       lptemp = lxtemp + max(Ndata, Nbkpt)
       lbkpt = lptemp + max(Ndata, Nbkpt)
       lbf = lbkpt + Nbkpt
+
       call defcmn(Ndata, Xdata, Ydata, Sddata, Nord, Nbkpt, Bkpt, Mdein, Mdeout, &
                   Coeff, w(lbf), w(lxtemp), w(lptemp), w(lbkpt), w(lg), mdg, &
                   w(lww), mdw, Lw)
-   end subroutine defc
 
-!***AUTHOR  Hanson, R. J., (SNLA)
-!***DESCRIPTION
+   end subroutine defc
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  This is a companion subprogram to [[DEFC]].
+!  This subprogram does weighted least squares fitting of data by
+!  B-spline curves.
+!  The documentation for [[DEFC]] has complete usage instructions.
 !
-!     This is a companion subprogram to DEFC( ).
-!     This subprogram does weighted least squares fitting of data by
-!     B-spline curves.
-!     The documentation for DEFC( ) has complete usage instructions.
-!
-!***REVISION HISTORY  (YYMMDD)
-!   800801  DATE WRITTEN
-!   890531  Changed all specific intrinsics to generic.  (WRB)
-!   890618  Completely restructured and extensively revised (WRB & RWC)
-!   891214  Prologue converted to Version 4.0 format.  (BAB)
-!   900315  CALLs to XERROR changed to CALLs to XERMSG.  (THJ)
-!   900328  Added TYPE section.  (WRB)
-!   900510  Convert XERRWV calls to XERMSG calls.  (RWC)
-!   900604  DP version created from SP version.  (RWC)
+!### Revision history
+!  * 800801  DATE WRITTEN. Hanson, R. J., (SNLA)
+!  * 890531  Changed all specific intrinsics to generic.  (WRB)
+!  * 890618  Completely restructured and extensively revised (WRB & RWC)
+!  * 891214  Prologue converted to Version 4.0 format.  (BAB)
+!  * 900315  CALLs to XERROR changed to CALLs to XERMSG.  (THJ)
+!  * 900328  Added TYPE section.  (WRB)
+!  * 900510  Convert XERRWV calls to XERMSG calls.  (RWC)
+!  * 900604  DP version created from SP version.  (RWC)
 
    subroutine defcmn(Ndata, Xdata, Ydata, Sddata, Nord, Nbkpt, Bkptin, &
                      Mdein, Mdeout, Coeff, Bf, Xtemp, Ptemp, Bkpt, g, Mdg, w, &
@@ -506,168 +457,161 @@ module bspline_defc_module
       call dbndsl(1, g, Mdg, Nord, ip, ir, Coeff, n, rnorm)
       Mdeout = 1
    end subroutine defcmn
+!*****************************************************************************************
 
-   subroutine dbndac(g, Mdg, Nb, Ip, Ir, Mt, Jt)
-
-!***PURPOSE  Compute the LU factorization of a  banded matrices using
-!            sequential accumulation of rows of the data matrix.
-!            Exactly one right-hand side vector is permitted.
+!*****************************************************************************************
+!>
+!  These subroutines solve the least squares problem Ax = b for
+!  banded matrices A using sequential accumulation of rows of the
+!  data matrix.  Exactly one right-hand side vector is permitted.
 !
-!***AUTHOR  Lawson, C. L., (JPL)
-!           Hanson, R. J., (SNLA)
-!***DESCRIPTION
+!  These subroutines are intended for the type of least squares
+!  systems that arise in applications such as curve or surface
+!  fitting of data.  The least squares equations are accumulated and
+!  processed using only part of the data.  This requires a certain
+!  user interaction during the solution of Ax = b.
 !
-!     These subroutines solve the least squares problem Ax = b for
-!     banded matrices A using sequential accumulation of rows of the
-!     data matrix.  Exactly one right-hand side vector is permitted.
+!  Specifically, suppose the data matrix (A B) is row partitioned
+!  into Q submatrices.  Let (E F) be the T-th one of these
+!  submatrices where E = (0 C 0).  Here the dimension of E is MT by N
+!  and the dimension of C is MT by NB.  The value of NB is the
+!  bandwidth of A.  The dimensions of the leading block of zeros in E
+!  are MT by JT-1.
 !
-!     These subroutines are intended for the type of least squares
-!     systems that arise in applications such as curve or surface
-!     fitting of data.  The least squares equations are accumulated and
-!     processed using only part of the data.  This requires a certain
-!     user interaction during the solution of Ax = b.
+!  The user of the subroutine DBNDAC provides MT,JT,C and F for
+!  T=1,...,Q.  Not all of this data must be supplied at once.
 !
-!     Specifically, suppose the data matrix (A B) is row partitioned
-!     into Q submatrices.  Let (E F) be the T-th one of these
-!     submatrices where E = (0 C 0).  Here the dimension of E is MT by N
-!     and the dimension of C is MT by NB.  The value of NB is the
-!     bandwidth of A.  The dimensions of the leading block of zeros in E
-!     are MT by JT-1.
+!  Following the processing of the various blocks (E F), the matrix
+!  (A B) has been transformed to the form (R D) where R is upper
+!  triangular and banded with bandwidth NB.  The least squares
+!  system Rx = d is then easily solved using back substitution by
+!  executing the statement CALL DBNDSL(1,...). The sequence of
+!  values for JT must be nondecreasing.  This may require some
+!  preliminary interchanges of rows and columns of the matrix A.
 !
-!     The user of the subroutine DBNDAC provides MT,JT,C and F for
-!     T=1,...,Q.  Not all of this data must be supplied at once.
+!  The primary reason for these subroutines is that the total
+!  processing can take place in a working array of dimension MU by
+!  NB+1.  An acceptable value for MU is
 !
-!     Following the processing of the various blocks (E F), the matrix
-!     (A B) has been transformed to the form (R D) where R is upper
-!     triangular and banded with bandwidth NB.  The least squares
-!     system Rx = d is then easily solved using back substitution by
-!     executing the statement CALL DBNDSL(1,...). The sequence of
-!     values for JT must be nondecreasing.  This may require some
-!     preliminary interchanges of rows and columns of the matrix A.
+!                    MU = MAX(MT + N + 1),
 !
-!     The primary reason for these subroutines is that the total
-!     processing can take place in a working array of dimension MU by
-!     NB+1.  An acceptable value for MU is
+!  where N is the number of unknowns.
 !
-!                       MU = MAX(MT + N + 1),
+!  Here the maximum is taken over all values of MT for T=1,...,Q.
+!  Notice that MT can be taken to be a small as one, showing that
+!  MU can be as small as N+2.  The subprogram DBNDAC processes the
+!  rows more efficiently if MU is large enough so that each new
+!  block (C F) has a distinct value of JT.
 !
-!     where N is the number of unknowns.
+!  The four principle parts of these algorithms are obtained by the
+!  following call statements
 !
-!     Here the maximum is taken over all values of MT for T=1,...,Q.
-!     Notice that MT can be taken to be a small as one, showing that
-!     MU can be as small as N+2.  The subprogram DBNDAC processes the
-!     rows more efficiently if MU is large enough so that each new
-!     block (C F) has a distinct value of JT.
+!  CALL DBNDAC(...)  Introduce new blocks of data.
 !
-!     The four principle parts of these algorithms are obtained by the
-!     following call statements
+!  CALL DBNDSL(1,...)Compute solution vector and length of
+!                    residual vector.
 !
-!     CALL DBNDAC(...)  Introduce new blocks of data.
+!  CALL DBNDSL(2,...)Given any row vector H solve YR = H for the
+!                    row vector Y.
 !
-!     CALL DBNDSL(1,...)Compute solution vector and length of
-!                       residual vector.
+!  CALL DBNDSL(3,...)Given any column vector W solve RZ = W for
+!                    the column vector Z.
 !
-!     CALL DBNDSL(2,...)Given any row vector H solve YR = H for the
-!                       row vector Y.
+!  The dots in the above call statements indicate additional
+!  arguments that will be specified in the following paragraphs.
 !
-!     CALL DBNDSL(3,...)Given any column vector W solve RZ = W for
-!                       the column vector Z.
+!  The user must dimension the array appearing in the call list..
+!  G(MDG,NB+1)
 !
-!     The dots in the above call statements indicate additional
-!     arguments that will be specified in the following paragraphs.
+!  Description of calling sequence for DBNDAC..
 !
-!     The user must dimension the array appearing in the call list..
-!     G(MDG,NB+1)
+!  The entire set of parameters for DBNDAC are
 !
-!     Description of calling sequence for DBNDAC..
+!  Input.. All Type REAL variables are real(wp)
 !
-!     The entire set of parameters for DBNDAC are
+!  G(*,*)            The working array into which the user will
+!                    place the MT by NB+1 block (C F) in rows IR
+!                    through IR+MT-1, columns 1 through NB+1.
+!                    See descriptions of IR and MT below.
 !
-!     Input.. All Type REAL variables are real(wp)
+!  MDG               The number of rows in the working array
+!                    G(*,*).  The value of MDG should be >= MU.
+!                    The value of MU is defined in the abstract
+!                    of these subprograms.
 !
-!     G(*,*)            The working array into which the user will
-!                       place the MT by NB+1 block (C F) in rows IR
-!                       through IR+MT-1, columns 1 through NB+1.
-!                       See descriptions of IR and MT below.
+!  NB                The bandwidth of the data matrix A.
 !
-!     MDG               The number of rows in the working array
-!                       G(*,*).  The value of MDG should be >= MU.
-!                       The value of MU is defined in the abstract
-!                       of these subprograms.
+!  IP                Set by the user to the value 1 before the
+!                    first call to DBNDAC.  Its subsequent value
+!                    is controlled by DBNDAC to set up for the
+!                    next call to DBNDAC.
 !
-!     NB                The bandwidth of the data matrix A.
+!  IR                Index of the row of G(*,*) where the user is
+!                    to place the new block of data (C F).  Set by
+!                    the user to the value 1 before the first call
+!                    to DBNDAC.  Its subsequent value is controlled
+!                    by DBNDAC. A value of IR .GT. MDG is considered
+!                    an error.
 !
-!     IP                Set by the user to the value 1 before the
-!                       first call to DBNDAC.  Its subsequent value
-!                       is controlled by DBNDAC to set up for the
-!                       next call to DBNDAC.
+!  MT,JT             Set by the user to indicate respectively the
+!                    number of new rows of data in the block and
+!                    the index of the first nonzero column in that
+!                    set of rows (E F) = (0 C 0 F) being processed.
 !
-!     IR                Index of the row of G(*,*) where the user is
-!                       to place the new block of data (C F).  Set by
-!                       the user to the value 1 before the first call
-!                       to DBNDAC.  Its subsequent value is controlled
-!                       by DBNDAC. A value of IR .GT. MDG is considered
-!                       an error.
+!  Output.. All Type REAL variables are real(wp)
 !
-!     MT,JT             Set by the user to indicate respectively the
-!                       number of new rows of data in the block and
-!                       the index of the first nonzero column in that
-!                       set of rows (E F) = (0 C 0 F) being processed.
+!  G(*,*)            The working array which will contain the
+!                    processed rows of that part of the data
+!                    matrix which has been passed to DBNDAC.
 !
-!     Output.. All Type REAL variables are real(wp)
+!  IP,IR             The values of these arguments are advanced by
+!                    DBNDAC to be ready for storing and processing
+!                    a new block of data in G(*,*).
 !
-!     G(*,*)            The working array which will contain the
-!                       processed rows of that part of the data
-!                       matrix which has been passed to DBNDAC.
+!  Description of calling sequence for DBNDSL..
 !
-!     IP,IR             The values of these arguments are advanced by
-!                       DBNDAC to be ready for storing and processing
-!                       a new block of data in G(*,*).
+!  The user must dimension the arrays appearing in the call list..
 !
-!     Description of calling sequence for DBNDSL..
+!  G(MDG,NB+1), X(N)
 !
-!     The user must dimension the arrays appearing in the call list..
+!  The entire set of parameters for DBNDSL are
 !
-!     G(MDG,NB+1), X(N)
+!  Input.. All Type REAL variables are real(wp)
 !
-!     The entire set of parameters for DBNDSL are
+!  MODE              Set by the user to one of the values 1, 2, or
+!                    3.  These values respectively indicate that
+!                    the solution of AX = B, YR = H or RZ = W is
+!                    required.
 !
-!     Input.. All Type REAL variables are real(wp)
+!  G(*,*),MDG,       These arguments all have the same meaning and
+!   NB,IP,IR         contents as following the last call to DBNDAC.
 !
-!     MODE              Set by the user to one of the values 1, 2, or
-!                       3.  These values respectively indicate that
-!                       the solution of AX = B, YR = H or RZ = W is
-!                       required.
+!  X(*)              With mode=2 or 3 this array contains,
+!                    respectively, the right-side vectors H or W of
+!                    the systems YR = H or RZ = W.
 !
-!     G(*,*),MDG,       These arguments all have the same meaning and
-!      NB,IP,IR         contents as following the last call to DBNDAC.
+!  N                 The number of variables in the solution
+!                    vector.  If any of the N diagonal terms are
+!                    zero the subroutine DBNDSL prints an
+!                    appropriate message.  This condition is
+!                    considered an error.
 !
-!     X(*)              With mode=2 or 3 this array contains,
-!                       respectively, the right-side vectors H or W of
-!                       the systems YR = H or RZ = W.
+!  Output.. All Type REAL variables are real(wp)
 !
-!     N                 The number of variables in the solution
-!                       vector.  If any of the N diagonal terms are
-!                       zero the subroutine DBNDSL prints an
-!                       appropriate message.  This condition is
-!                       considered an error.
+!  X(*)              This array contains the solution vectors X,
+!                    Y or Z of the systems AX = B, YR = H or
+!                    RZ = W depending on the value of MODE=1,
+!                    2 or 3.
 !
-!     Output.. All Type REAL variables are real(wp)
+!  RNORM             If MODE=1 RNORM is the Euclidean length of the
+!                    residual vector AX-B.  When MODE=2 or 3 RNORM
+!                    is set to zero.
 !
-!     X(*)              This array contains the solution vectors X,
-!                       Y or Z of the systems AX = B, YR = H or
-!                       RZ = W depending on the value of MODE=1,
-!                       2 or 3.
+!### Remarks
 !
-!     RNORM             If MODE=1 RNORM is the Euclidean length of the
-!                       residual vector AX-B.  When MODE=2 or 3 RNORM
-!                       is set to zero.
-!
-!     Remarks..
-!
-!     To obtain the upper triangular matrix and transformed right-hand
-!     side vector D so that the super diagonals of R form the columns
-!     of G(*,*), execute the following Fortran statements.
+!  To obtain the upper triangular matrix and transformed right-hand
+!  side vector D so that the super diagonals of R form the columns
+!  of G(*,*), execute the following Fortran statements.
 !
 !```fortran
 !     nbp1=nb+1
@@ -679,16 +623,21 @@ module bspline_defc_module
 !     call dbndac(g,mdg,nb,ip,ir,mt,jt)
 !```
 !
-!***REFERENCES  C. L. Lawson and R. J. Hanson, Solving Least Squares
-!                 Problems, Prentice-Hall, Inc., 1974, Chapter 27.
-!***REVISION HISTORY  (YYMMDD)
-!   790101  DATE WRITTEN
-!   890531  Changed all specific intrinsics to generic.  (WRB)
-!   891006  Cosmetic changes to prologue.  (WRB)
-!   891006  REVISION DATE from Version 3.2
-!   891214  Prologue converted to Version 4.0 format.  (BAB)
-!   900315  CALLs to XERROR changed to CALLs to XERMSG.  (THJ)
-!   920501  Reformatted the REFERENCES section.  (WRB)
+!### References
+!
+!  * C. L. Lawson and R. J. Hanson, Solving Least Squares
+!    Problems, Prentice-Hall, Inc., 1974, Chapter 27.
+!
+!### Revision history
+!  * 790101  DATE WRITTEN. Lawson, C. L., (JPL), Hanson, R. J., (SNLA)
+!  * 890531  Changed all specific intrinsics to generic.  (WRB)
+!  * 891006  Cosmetic changes to prologue.  (WRB)
+!  * 891006  REVISION DATE from Version 3.2
+!  * 891214  Prologue converted to Version 4.0 format.  (BAB)
+!  * 900315  CALLs to XERROR changed to CALLs to XERMSG.  (THJ)
+!  * 920501  Reformatted the REFERENCES section.  (WRB)
+
+   subroutine dbndac(g, Mdg, Nb, Ip, Ir, Mt, Jt)
 
       implicit none
 
@@ -759,163 +708,159 @@ module bspline_defc_module
          return
       end if
    end subroutine dbndac
+!*****************************************************************************************
 
-!***PURPOSE  Solve the least squares problem for a banded matrix using
-!            sequential accumulation of rows of the data matrix.
-!            Exactly one right-hand side vector is permitted.
-!***AUTHOR  Lawson, C. L., (JPL)
-!           Hanson, R. J., (SNLA)
-!***DESCRIPTION
+!*****************************************************************************************
+!>
+!  These subroutines solve the least squares problem Ax = b for
+!  banded matrices A using sequential accumulation of rows of the
+!  data matrix.  Exactly one right-hand side vector is permitted.
 !
-!     These subroutines solve the least squares problem Ax = b for
-!     banded matrices A using sequential accumulation of rows of the
-!     data matrix.  Exactly one right-hand side vector is permitted.
+!  These subroutines are intended for the type of least squares
+!  systems that arise in applications such as curve or surface
+!  fitting of data.  The least squares equations are accumulated and
+!  processed using only part of the data.  This requires a certain
+!  user interaction during the solution of Ax = b.
 !
-!     These subroutines are intended for the type of least squares
-!     systems that arise in applications such as curve or surface
-!     fitting of data.  The least squares equations are accumulated and
-!     processed using only part of the data.  This requires a certain
-!     user interaction during the solution of Ax = b.
+!  Specifically, suppose the data matrix (A B) is row partitioned
+!  into Q submatrices.  Let (E F) be the T-th one of these
+!  submatrices where E = (0 C 0).  Here the dimension of E is MT by N
+!  and the dimension of C is MT by NB.  The value of NB is the
+!  bandwidth of A.  The dimensions of the leading block of zeros in E
+!  are MT by JT-1.
 !
-!     Specifically, suppose the data matrix (A B) is row partitioned
-!     into Q submatrices.  Let (E F) be the T-th one of these
-!     submatrices where E = (0 C 0).  Here the dimension of E is MT by N
-!     and the dimension of C is MT by NB.  The value of NB is the
-!     bandwidth of A.  The dimensions of the leading block of zeros in E
-!     are MT by JT-1.
+!  The user of the subroutine DBNDAC provides MT,JT,C and F for
+!  T=1,...,Q.  Not all of this data must be supplied at once.
 !
-!     The user of the subroutine DBNDAC provides MT,JT,C and F for
-!     T=1,...,Q.  Not all of this data must be supplied at once.
+!  Following the processing of the various blocks (E F), the matrix
+!  (A B) has been transformed to the form (R D) where R is upper
+!  triangular and banded with bandwidth NB.  The least squares
+!  system Rx = d is then easily solved using back substitution by
+!  executing the statement CALL DBNDSL(1,...). The sequence of
+!  values for JT must be nondecreasing.  This may require some
+!  preliminary interchanges of rows and columns of the matrix A.
 !
-!     Following the processing of the various blocks (E F), the matrix
-!     (A B) has been transformed to the form (R D) where R is upper
-!     triangular and banded with bandwidth NB.  The least squares
-!     system Rx = d is then easily solved using back substitution by
-!     executing the statement CALL DBNDSL(1,...). The sequence of
-!     values for JT must be nondecreasing.  This may require some
-!     preliminary interchanges of rows and columns of the matrix A.
+!  The primary reason for these subroutines is that the total
+!  processing can take place in a working array of dimension MU by
+!  NB+1.  An acceptable value for MU is
 !
-!     The primary reason for these subroutines is that the total
-!     processing can take place in a working array of dimension MU by
-!     NB+1.  An acceptable value for MU is
+!                    MU = MAX(MT + N + 1),
 !
-!                       MU = MAX(MT + N + 1),
+!  where N is the number of unknowns.
 !
-!     where N is the number of unknowns.
+!  Here the maximum is taken over all values of MT for T=1,...,Q.
+!  Notice that MT can be taken to be a small as one, showing that
+!  MU can be as small as N+2.  The subprogram DBNDAC processes the
+!  rows more efficiently if MU is large enough so that each new
+!  block (C F) has a distinct value of JT.
 !
-!     Here the maximum is taken over all values of MT for T=1,...,Q.
-!     Notice that MT can be taken to be a small as one, showing that
-!     MU can be as small as N+2.  The subprogram DBNDAC processes the
-!     rows more efficiently if MU is large enough so that each new
-!     block (C F) has a distinct value of JT.
+!  The four principle parts of these algorithms are obtained by the
+!  following call statements
 !
-!     The four principle parts of these algorithms are obtained by the
-!     following call statements
+!  CALL DBNDAC(...)  Introduce new blocks of data.
 !
-!     CALL DBNDAC(...)  Introduce new blocks of data.
+!  CALL DBNDSL(1,...)Compute solution vector and length of
+!                    residual vector.
 !
-!     CALL DBNDSL(1,...)Compute solution vector and length of
-!                       residual vector.
+!  CALL DBNDSL(2,...)Given any row vector H solve YR = H for the
+!                    row vector Y.
 !
-!     CALL DBNDSL(2,...)Given any row vector H solve YR = H for the
-!                       row vector Y.
+!  CALL DBNDSL(3,...)Given any column vector W solve RZ = W for
+!                    the column vector Z.
 !
-!     CALL DBNDSL(3,...)Given any column vector W solve RZ = W for
-!                       the column vector Z.
+!  The dots in the above call statements indicate additional
+!  arguments that will be specified in the following paragraphs.
 !
-!     The dots in the above call statements indicate additional
-!     arguments that will be specified in the following paragraphs.
+!  The user must dimension the array appearing in the call list..
+!  G(MDG,NB+1)
 !
-!     The user must dimension the array appearing in the call list..
-!     G(MDG,NB+1)
+!  Description of calling sequence for DBNDAC..
 !
-!     Description of calling sequence for DBNDAC..
+!  The entire set of parameters for DBNDAC are
 !
-!     The entire set of parameters for DBNDAC are
+!  Input.. All Type REAL variables are real(wp)
 !
-!     Input.. All Type REAL variables are real(wp)
+!  G(*,*)            The working array into which the user will
+!                    place the MT by NB+1 block (C F) in rows IR
+!                    through IR+MT-1, columns 1 through NB+1.
+!                    See descriptions of IR and MT below.
 !
-!     G(*,*)            The working array into which the user will
-!                       place the MT by NB+1 block (C F) in rows IR
-!                       through IR+MT-1, columns 1 through NB+1.
-!                       See descriptions of IR and MT below.
+!  MDG               The number of rows in the working array
+!                    G(*,*).  The value of MDG should be >= MU.
+!                    The value of MU is defined in the abstract
+!                    of these subprograms.
 !
-!     MDG               The number of rows in the working array
-!                       G(*,*).  The value of MDG should be >= MU.
-!                       The value of MU is defined in the abstract
-!                       of these subprograms.
+!  NB                The bandwidth of the data matrix A.
 !
-!     NB                The bandwidth of the data matrix A.
+!  IP                Set by the user to the value 1 before the
+!                    first call to DBNDAC.  Its subsequent value
+!                    is controlled by DBNDAC to set up for the
+!                    next call to DBNDAC.
 !
-!     IP                Set by the user to the value 1 before the
-!                       first call to DBNDAC.  Its subsequent value
-!                       is controlled by DBNDAC to set up for the
-!                       next call to DBNDAC.
+!  IR                Index of the row of G(*,*) where the user is
+!                    the user to the value 1 before the first call
+!                    to DBNDAC.  Its subsequent value is controlled
+!                    by DBNDAC. A value of IR .GT. MDG is considered
+!                    an error.
 !
-!     IR                Index of the row of G(*,*) where the user is
-!                       the user to the value 1 before the first call
-!                       to DBNDAC.  Its subsequent value is controlled
-!                       by DBNDAC. A value of IR .GT. MDG is considered
-!                       an error.
+!  MT,JT             Set by the user to indicate respectively the
+!                    number of new rows of data in the block and
+!                    the index of the first nonzero column in that
+!                    set of rows (E F) = (0 C 0 F) being processed.
+!  Output.. All Type REAL variables are real(wp)
 !
-!     MT,JT             Set by the user to indicate respectively the
-!                       number of new rows of data in the block and
-!                       the index of the first nonzero column in that
-!                       set of rows (E F) = (0 C 0 F) being processed.
-!     Output.. All Type REAL variables are real(wp)
+!  G(*,*)            The working array which will contain the
+!                    processed rows of that part of the data
+!                    matrix which has been passed to DBNDAC.
 !
-!     G(*,*)            The working array which will contain the
-!                       processed rows of that part of the data
-!                       matrix which has been passed to DBNDAC.
+!  IP,IR             The values of these arguments are advanced by
+!                    DBNDAC to be ready for storing and processing
+!                    a new block of data in G(*,*).
 !
-!     IP,IR             The values of these arguments are advanced by
-!                       DBNDAC to be ready for storing and processing
-!                       a new block of data in G(*,*).
+!  Description of calling sequence for DBNDSL..
 !
-!     Description of calling sequence for DBNDSL..
+!  The user must dimension the arrays appearing in the call list..
 !
-!     The user must dimension the arrays appearing in the call list..
+!  G(MDG,NB+1), X(N)
 !
-!     G(MDG,NB+1), X(N)
+!  The entire set of parameters for DBNDSL are
 !
-!     The entire set of parameters for DBNDSL are
+!  Input..
 !
-!     Input..
+!  MODE              Set by the user to one of the values 1, 2, or
+!                    3.  These values respectively indicate that
+!                    the solution of AX = B, YR = H or RZ = W is
+!                    required.
 !
-!     MODE              Set by the user to one of the values 1, 2, or
-!                       3.  These values respectively indicate that
-!                       the solution of AX = B, YR = H or RZ = W is
-!                       required.
+!  G(*,*),MDG,       These arguments all have the same meaning and
+!   NB,IP,IR         contents as following the last call to DBNDAC.
 !
-!     G(*,*),MDG,       These arguments all have the same meaning and
-!      NB,IP,IR         contents as following the last call to DBNDAC.
+!  X(*)              With mode=2 or 3 this array contains,
+!                    respectively, the right-side vectors H or W of
+!                    the systems YR = H or RZ = W.
 !
-!     X(*)              With mode=2 or 3 this array contains,
-!                       respectively, the right-side vectors H or W of
-!                       the systems YR = H or RZ = W.
+!  N                 The number of variables in the solution
+!                    vector.  If any of the N diagonal terms are
+!                    zero the subroutine DBNDSL prints an
+!                    appropriate message.  This condition is
+!                    considered an error.
 !
-!     N                 The number of variables in the solution
-!                       vector.  If any of the N diagonal terms are
-!                       zero the subroutine DBNDSL prints an
-!                       appropriate message.  This condition is
-!                       considered an error.
+!  Output..
 !
-!     Output..
+!  X(*)              This array contains the solution vectors X,
+!                    Y or Z of the systems AX = B, YR = H or
+!                    RZ = W depending on the value of MODE=1,
+!                    2 or 3.
 !
-!     X(*)              This array contains the solution vectors X,
-!                       Y or Z of the systems AX = B, YR = H or
-!                       RZ = W depending on the value of MODE=1,
-!                       2 or 3.
+!  RNORM             If MODE=1 RNORM is the Euclidean length of the
+!                    residual vector AX-B.  When MODE=2 or 3 RNORM
+!                    is set to zero.
 !
-!     RNORM             If MODE=1 RNORM is the Euclidean length of the
-!                       residual vector AX-B.  When MODE=2 or 3 RNORM
-!                       is set to zero.
+!### Remarks
 !
-!     Remarks..
-!
-!     To obtain the upper triangular matrix and transformed right-hand
-!     side vector D so that the super diagonals of R form the columns
-!     of G(*,*), execute the following Fortran statements.
+!  To obtain the upper triangular matrix and transformed right-hand
+!  side vector D so that the super diagonals of R form the columns
+!  of G(*,*), execute the following Fortran statements.
 !
 !```fortran
 !     nbp1=nb+1
@@ -927,17 +872,20 @@ module bspline_defc_module
 !     call dbndac(g,mdg,nb,ip,ir,mt,jt)
 !```
 !
-!***REFERENCES  C. L. Lawson and R. J. Hanson, Solving Least Squares
-!                 Problems, Prentice-Hall, Inc., 1974, Chapter 27.
-!***REVISION HISTORY  (YYMMDD)
-!   790101  DATE WRITTEN
-!   890531  Changed all specific intrinsics to generic.  (WRB)
-!   890831  Modified array declarations.  (WRB)
-!   891006  Cosmetic changes to prologue.  (WRB)
-!   891006  REVISION DATE from Version 3.2
-!   891214  Prologue converted to Version 4.0 format.  (BAB)
-!   900315  CALLs to XERROR changed to CALLs to XERMSG.  (THJ)
-!   920501  Reformatted the REFERENCES section.  (WRB)
+!### References
+!
+!  * C. L. Lawson and R. J. Hanson, Solving Least Squares
+!    Problems, Prentice-Hall, Inc., 1974, Chapter 27.
+!
+!### Revision history
+!  * 790101  DATE WRITTEN. Lawson, C. L., (JPL), Hanson, R. J., (SNLA)
+!  * 890531  Changed all specific intrinsics to generic.  (WRB)
+!  * 890831  Modified array declarations.  (WRB)
+!  * 891006  Cosmetic changes to prologue.  (WRB)
+!  * 891006  REVISION DATE from Version 3.2
+!  * 891214  Prologue converted to Version 4.0 format.  (BAB)
+!  * 900315  CALLs to XERROR changed to CALLs to XERMSG.  (THJ)
+!  * 920501  Reformatted the REFERENCES section.  (WRB)
 
    subroutine dbndsl(Mode, g, Mdg, Nb, Ip, Ir, x, n, Rnorm)
 
@@ -1009,15 +957,18 @@ module bspline_defc_module
       iopt = 2
       write (*, *) 'A ZERO DIAGONAL TERM IS IN THE N BY N UPPER TRIANGULAR MATRIX.'
    end subroutine dbndsl
+!*****************************************************************************************
 
-! Calculates the value of all possibly nonzero B-splines at *X* of
-!  order MAX(JHIGH,(J+1)(INDEX-1)) on *T*.
+!*****************************************************************************************
+!>
+!  Calculates the value of all possibly nonzero B-splines at `X` of
+!  order `MAX(JHIGH,(J+1)(INDEX-1))` on `T`.
 !
-!***REVISION HISTORY  (YYMMDD)
-!   780801  DATE WRITTEN
-!   891214  Prologue converted to Version 4.0 format.  (BAB)
-!   900328  Added TYPE section.  (WRB)
-!   JW : made threadsafe. See also [[dbspvn]]
+!### Revision history
+!  * 780801  DATE WRITTEN
+!  * 891214  Prologue converted to Version 4.0 format.  (BAB)
+!  * 900328  Added TYPE section.  (WRB)
+!  * JW : made threadsafe. See also [[dbspvn]]
 
    subroutine dfspvn(t, Jhigh, Index, x, Ileft, Vnikx, j, deltam, deltap)
 
@@ -1027,7 +978,7 @@ module bspline_defc_module
       real(wp) :: x
       integer :: Ileft
       real(wp) :: Vnikx(*)
-      integer, intent(inout) :: j! ! JW : added
+      integer, intent(inout) :: j !! JW : added
       real(wp), dimension(20), intent(inout) :: deltam, deltap !! JW : added
 
       real(wp) :: vm, vmprev
@@ -1058,14 +1009,12 @@ module bspline_defc_module
       end do
 
    end subroutine dfspvn
+!*****************************************************************************************
 
-!***DESCRIPTION
-!
-!     C.L.Lawson and R.J.Hanson, Jet Propulsion Laboratory, 1973 Jun 12
-!     to appear in 'Solving Least Squares Problems', Prentice-Hall, 1974
-!
-!     Construction and/or application of a single
-!     Householder transformation..     Q = I + U*(U**T)/B
+!*****************************************************************************************
+!>
+!  Construction and/or application of a single
+!  Householder transformation. Q = I + U*(U**T)/B
 !
 !     MODE    = 1 or 2   to select algorithm  H1  or  H2 .
 !     LPIVOT is the index of the pivot element.
@@ -1088,13 +1037,18 @@ module bspline_defc_module
 !     NCV    Number of vectors in C() to be transformed. If NCV <= 0
 !            no operations will be done on C().
 !
-!***REVISION HISTORY  (YYMMDD)
-!   790101  DATE WRITTEN
-!   890531  Changed all specific intrinsics to generic.  (WRB)
-!   890831  Modified array declarations.  (WRB)
-!   891214  Prologue converted to Version 4.0 format.  (BAB)
-!   900328  Added TYPE section.  (WRB)
-!   900911  Added DDOT to real(wp) statement.  (WRB)
+!### Reference
+!
+!  * C.L.Lawson and R.J.Hanson, Jet Propulsion Laboratory, 1973 Jun 12
+!    to appear in 'Solving Least Squares Problems', Prentice-Hall, 1974
+!
+!### Revision history
+!  * 790101  DATE WRITTEN
+!  * 890531  Changed all specific intrinsics to generic.  (WRB)
+!  * 890831  Modified array declarations.  (WRB)
+!  * 891214  Prologue converted to Version 4.0 format.  (BAB)
+!  * 900328  Added TYPE section.  (WRB)
+!  * 900911  Added DDOT to real(wp) statement.  (WRB)
 
    subroutine dh12(Mode, Lpivot, l1, m, u, Iue, Up, c, Ice, Icv, Ncv)
 
@@ -1177,21 +1131,25 @@ module bspline_defc_module
          end if
       end if
    end subroutine dh12
+!*****************************************************************************************
 
-!
+!*****************************************************************************************
+!>
 !  Sort an array and optionally make the same interchanges in
 !  an auxiliary array.  The array may be sorted in increasing
 !  or decreasing order.
 !
-!  29-dec-2022 : now just a wraper for recursive quicksort (JW)
+!### History
+!  * 29-dec-2022 : Replaced original routines.
+!    Now just a wraper for recursive quicksort (JW)
 
    subroutine dsort(n, Kflag, Dx, Dy)
       implicit none
 
       integer, intent(in) :: n !! number of values in array DX to be sorted
       integer, intent(in) :: Kflag !! control parameter:
-                                  !!  * Kflag < 0 : sort DX in decreasing order and optionally carry DY along.
-                                  !!  * Kflag > 0 : sort DX in increasing order and optionally carry DY along.
+                                   !!  * Kflag < 0 : sort DX in decreasing order and optionally carry DY along.
+                                   !!  * Kflag > 0 : sort DX in increasing order and optionally carry DY along.
       real(wp), dimension(*), intent(inout) :: Dx !! array of values to be sorted   (usually abscissas)
       real(wp), dimension(*), intent(inout), optional :: Dy !! array to be (optionally) carried along
 
@@ -1211,17 +1169,23 @@ module bspline_defc_module
       if (Kflag < 0) Dx(1:n) = -Dx(1:n)
 
    end subroutine dsort
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Recursive quicksoft. Based on the LAPACK routine.
+!  Modified to also carry along a second array.
 
    subroutine sort_ascending(n, dx, dy)
 
       integer, intent(in) :: n
-      real(wp), dimension(*), intent(inout) :: dx
-      real(wp), dimension(*), intent(inout), optional :: dy
+      real(wp), dimension(*), intent(inout) :: dx !! array of values to be sorted
+      real(wp), dimension(*), intent(inout), optional :: dy !! array to be (optionally) carried along
 
       logical :: carry_dy !! if `dy` is to be also sorted
 
       integer, parameter :: max_size_for_insertion_sort = 20 !! max size for using insertion sort.
-                                                         !! (otherwise, use quicksort)
+                                                             !! (otherwise, use quicksort)
 
 
       carry_dy = present(dy)
@@ -1231,7 +1195,7 @@ module bspline_defc_module
 
       recursive subroutine quicksort(ilow, ihigh)
 
-       !! Sort the array (ascending order).
+         !! Sort the array (ascending order).
 
          integer, intent(in) :: ilow
          integer, intent(in) :: ihigh
@@ -1267,7 +1231,7 @@ module bspline_defc_module
 
       subroutine partition(ilow, ihigh, ipivot)
 
-       !! Partition the array
+         !! Partition the array
 
          integer, intent(in)  :: ilow
          integer, intent(in)  :: ihigh
@@ -1302,6 +1266,7 @@ module bspline_defc_module
       end subroutine swap
 
    end subroutine sort_ascending
+!*****************************************************************************************
 
 !*****************************************************************************************
    end module bspline_defc_module
