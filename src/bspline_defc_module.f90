@@ -2,9 +2,8 @@
 !> author: Jacob Williams
 !  license: BSD
 !
-!### Description
-!
 !  [[DEFC]] procedure and support routines from SLATEC.
+!  For fitting B-splines polynomials to discrete 1D data.
 
 module bspline_defc_module
 
@@ -260,33 +259,33 @@ module bspline_defc_module
       integer :: dfspvn_j
       real(wp), dimension(20) :: dfspvn_deltam, dfspvn_deltap
 
-!
-!     Initialize variables and analyze input.
-!
+      ! Initialize variables and analyze input.
+
       n = Nbkpt - Nord
       np1 = n + 1
-!
-!     Initially set all output coefficients to zero.
-!
+
+      ! Initially set all output coefficients to zero.
+
       call dcopy(n, [0.0_wp], 0, Coeff, 1)
 
-      !.... JW : add iflag outputs to be consistent with the rest of the library... start with 4000
+      !.... JW : TODO add iflag outputs to be consistent with
+      !          the rest of the library... start with 4000
       Mdeout = -1
       if (Nord < 1 .or. Nord > 20) then
          write (*, *) 'IN DEFC, THE ORDER OF THE B-SPLINE MUST BE 1 THRU 20.'
          return
       end if
-!
+
       if (Nbkpt < 2*Nord) then
          write (*, *) 'IN DEFC, THE NUMBER OF KNOTS MUST BE AT LEAST TWICE THE B-SPLINE ORDER.'
          return
       end if
-!
+
       if (Ndata < 0) then
          write (*, *) 'IN DEFC, THE NUMBER OF DATA POINTS MUST BE NONNEGATIVE.'
          return
       end if
-!
+
       nb = (Nbkpt - Nord + 3)*(Nord + 1) + (Nbkpt + 1)*(Nord + 1) &
            + 2*max(Nbkpt, Ndata) + Nbkpt + Nord**2
       if (Lw < nb) then
@@ -298,28 +297,28 @@ module bspline_defc_module
          Mdeout = -1
          return
       end if
-!
+
       if (Mdein /= 1 .and. Mdein /= 2) then
          write (*, *) 'IN DEFC, INPUT VALUE OF MDEIN MUST BE 1-2.'
          return
       end if
-!
-!     Sort the breakpoints.
-!
+
+      ! Sort the breakpoints.
+
       call dcopy(Nbkpt, Bkptin, 1, Bkpt, 1)
       call dsort(Nbkpt, 1, Bkpt)
-!
-!     Save interval containing knots.
-!
+
+      ! Save interval containing knots.
+
       xmin = Bkpt(Nord)
       xmax = Bkpt(np1)
       nordm1 = Nord - 1
       nordp1 = Nord + 1
-!
-!     Process least squares equations.
-!
-!     Sort data and an array of pointers.
-!
+
+      ! Process least squares equations.
+
+      ! Sort data and an array of pointers.
+
       call dcopy(Ndata, Xdata, 1, Xtemp, 1)
       do i = 1, Ndata
          Ptemp(i) = i
@@ -327,20 +326,20 @@ module bspline_defc_module
       ! JW : really Ptemp should be an integer array.
       !      it's real because they are stuffing it in
       !      a real work array and also using dsort on it.
-!
+
       if (Ndata > 0) then
          call dsort(Ndata, 2, Xtemp, Ptemp)
          xmin = min(xmin, Xtemp(1))
          xmax = max(xmax, Xtemp(Ndata))
       end if
-!
-!     Fix breakpoint array if needed. This should only involve very
-!     minor differences with the input array of breakpoints.
-!
+
+      ! Fix breakpoint array if needed. This should only involve very
+      ! minor differences with the input array of breakpoints.
+
       do i = 1, Nord
          Bkpt(i) = min(Bkpt(i), xmin)
       end do
-!
+
       do i = np1, Nbkpt
          Bkpt(i) = max(Bkpt(i), xmax)
       end do
@@ -350,109 +349,106 @@ module bspline_defc_module
       dfspvn_deltam = 0.0_wp
       dfspvn_deltap = 0.0_wp
 
-!
-!     Initialize parameters of banded matrix processor, DBNDAC( ).
-!
+      ! Initialize parameters of banded matrix processor, DBNDAC( ).
+
       mt = 0
       ip = 1
       ir = 1
       ileft = Nord
       intseq = 1
       do idata = 1, Ndata
-!
-!        Sorted indices are in PTEMP(*).
-!
+
+         ! Sorted indices are in PTEMP(*).
+
          l = int(Ptemp(idata))
          xval = Xdata(l)
-!
-!        When interval changes, process equations in the last block.
-!
+
+         ! When interval changes, process equations in the last block.
+
          if (xval >= Bkpt(ileft + 1)) then
             call dbndac(g, Mdg, Nord, ip, ir, mt, ileft - nordm1)
             mt = 0
-!
-!           Move pointer up to have BKPT(ILEFT)<=XVAL, ILEFT<=N.
-!
+
+            ! Move pointer up to have BKPT(ILEFT)<=XVAL, ILEFT<=N.
+
             do ileft = ileft, n
                if (xval < Bkpt(ileft + 1)) exit
                if (Mdein == 2) then
-!
-!                 Data is being sequentially accumulated.
-!                 Transfer previously accumulated rows from W(*,*) to
-!                 G(*,*) and process them.
-!
+                  !  Data is being sequentially accumulated.
+                  !  Transfer previously accumulated rows from W(*,*) to
+                  !  G(*,*) and process them.
                   call dcopy(nordp1, w(intseq, 1), Mdw, g(ir, 1), Mdg)
                   call dbndac(g, Mdg, Nord, ip, ir, 1, intseq)
                   intseq = intseq + 1
                end if
             end do
          end if
-!
-!        Obtain B-spline function value.
-!
+
+         ! Obtain B-spline function value.
+
          call dfspvn(Bkpt, Nord, 1, xval, ileft, Bf, &
                      dfspvn_j, dfspvn_deltam, dfspvn_deltap)
-!
-!        Move row into place.
-!
+
+         ! Move row into place.
+
          irow = ir + mt
          mt = mt + 1
          call dcopy(Nord, Bf, 1, g(irow, 1), Mdg)
          g(irow, nordp1) = Ydata(l)
-!
-!        Scale data if uncertainty is nonzero.
-!
+
+         ! Scale data if uncertainty is nonzero.
+
          if (Sddata(l) /= 0.0_wp) call dscal(nordp1, 1.0_wp/Sddata(l), g(irow, 1), Mdg)
-!
-!        When staging work area is exhausted, process rows.
-!
+
+         ! When staging work area is exhausted, process rows.
+
          if (irow == Mdg - 1) then
             call dbndac(g, Mdg, Nord, ip, ir, mt, ileft - nordm1)
             mt = 0
          end if
       end do
-!
-!     Process last block of equations.
-!
+
+      ! Process last block of equations.
+
       call dbndac(g, Mdg, Nord, ip, ir, mt, ileft - nordm1)
-!
-!     Finish processing any previously accumulated rows from W(*,*)
-!     to G(*,*).
-!
+
+      ! Finish processing any previously accumulated rows from W(*,*)
+      ! to G(*,*).
+
       if (Mdein == 2) then
          do i = intseq, np1
             call dcopy(nordp1, w(i, 1), Mdw, g(ir, 1), Mdg)
             call dbndac(g, Mdg, Nord, ip, ir, 1, min(n, i))
          end do
       end if
-!
-!     Last call to adjust block positioning.
-!
+
+      ! Last call to adjust block positioning.
+
       call dcopy(nordp1, [0.0_wp], 0, g(ir, 1), Mdg)
       call dbndac(g, Mdg, Nord, ip, ir, 1, np1)
-!
-!     Transfer accumulated rows from G(*,*) to W(*,*) for
-!     possible later sequential accumulation.
-!
+
+      ! Transfer accumulated rows from G(*,*) to W(*,*) for
+      ! possible later sequential accumulation.
+
       do i = 1, np1
          call dcopy(nordp1, g(i, 1), Mdg, w(i, 1), Mdw)
       end do
-!
-!     Solve for coefficients when possible.
-!
+
+     ! Solve for coefficients when possible.
+
       do i = 1, n
          if (g(i, 1) == 0.0_wp) then
             Mdeout = 2
             return
          end if
       end do
-!
-!     All the diagonal terms in the accumulated triangular
-!     matrix are nonzero.  The solution can be computed but
-!     it may be unsuitable for further use due to poor
-!     conditioning or the lack of constraints.  No checking
-!     for either of these is done here.
-!
+
+      ! All the diagonal terms in the accumulated triangular
+      ! matrix are nonzero.  The solution can be computed but
+      ! it may be unsuitable for further use due to poor
+      ! conditioning or the lack of constraints.  No checking
+      ! for either of these is done here.
+
       call dbndsl(1, g, Mdg, Nord, ip, ir, Coeff, n, rnorm)
       Mdeout = 1
 
@@ -461,7 +457,7 @@ module bspline_defc_module
 
 !*****************************************************************************************
 !>
-!  These subroutines solve the least squares problem Ax = b for
+!  These subroutines solve the least squares problem `Ax = b` for
 !  banded matrices A using sequential accumulation of rows of the
 !  data matrix.  Exactly one right-hand side vector is permitted.
 !
@@ -504,108 +500,15 @@ module bspline_defc_module
 !  block (C F) has a distinct value of JT.
 !
 !  The four principle parts of these algorithms are obtained by the
-!  following call statements
+!  following call statements:
 !
-!  CALL DBNDAC(...)  Introduce new blocks of data.
-!
-!  CALL DBNDSL(1,...)Compute solution vector and length of
-!                    residual vector.
-!
-!  CALL DBNDSL(2,...)Given any row vector H solve YR = H for the
-!                    row vector Y.
-!
-!  CALL DBNDSL(3,...)Given any column vector W solve RZ = W for
-!                    the column vector Z.
-!
-!  The dots in the above call statements indicate additional
-!  arguments that will be specified in the following paragraphs.
-!
-!  The user must dimension the array appearing in the call list..
-!  G(MDG,NB+1)
-!
-!  Description of calling sequence for DBNDAC..
-!
-!  The entire set of parameters for DBNDAC are
-!
-!  Input.. All Type REAL variables are real(wp)
-!
-!  G(*,*)            The working array into which the user will
-!                    place the MT by NB+1 block (C F) in rows IR
-!                    through IR+MT-1, columns 1 through NB+1.
-!                    See descriptions of IR and MT below.
-!
-!  MDG               The number of rows in the working array
-!                    G(*,*).  The value of MDG should be >= MU.
-!                    The value of MU is defined in the abstract
-!                    of these subprograms.
-!
-!  NB                The bandwidth of the data matrix A.
-!
-!  IP                Set by the user to the value 1 before the
-!                    first call to DBNDAC.  Its subsequent value
-!                    is controlled by DBNDAC to set up for the
-!                    next call to DBNDAC.
-!
-!  IR                Index of the row of G(*,*) where the user is
-!                    to place the new block of data (C F).  Set by
-!                    the user to the value 1 before the first call
-!                    to DBNDAC.  Its subsequent value is controlled
-!                    by DBNDAC. A value of IR .GT. MDG is considered
-!                    an error.
-!
-!  MT,JT             Set by the user to indicate respectively the
-!                    number of new rows of data in the block and
-!                    the index of the first nonzero column in that
-!                    set of rows (E F) = (0 C 0 F) being processed.
-!
-!  Output.. All Type REAL variables are real(wp)
-!
-!  G(*,*)            The working array which will contain the
-!                    processed rows of that part of the data
-!                    matrix which has been passed to DBNDAC.
-!
-!  IP,IR             The values of these arguments are advanced by
-!                    DBNDAC to be ready for storing and processing
-!                    a new block of data in G(*,*).
-!
-!  Description of calling sequence for DBNDSL..
-!
-!  The user must dimension the arrays appearing in the call list..
-!
-!  G(MDG,NB+1), X(N)
-!
-!  The entire set of parameters for DBNDSL are
-!
-!  Input.. All Type REAL variables are real(wp)
-!
-!  MODE              Set by the user to one of the values 1, 2, or
-!                    3.  These values respectively indicate that
-!                    the solution of AX = B, YR = H or RZ = W is
-!                    required.
-!
-!  G(*,*),MDG,       These arguments all have the same meaning and
-!   NB,IP,IR         contents as following the last call to DBNDAC.
-!
-!  X(*)              With mode=2 or 3 this array contains,
-!                    respectively, the right-side vectors H or W of
-!                    the systems YR = H or RZ = W.
-!
-!  N                 The number of variables in the solution
-!                    vector.  If any of the N diagonal terms are
-!                    zero the subroutine DBNDSL prints an
-!                    appropriate message.  This condition is
-!                    considered an error.
-!
-!  Output.. All Type REAL variables are real(wp)
-!
-!  X(*)              This array contains the solution vectors X,
-!                    Y or Z of the systems AX = B, YR = H or
-!                    RZ = W depending on the value of MODE=1,
-!                    2 or 3.
-!
-!  RNORM             If MODE=1 RNORM is the Euclidean length of the
-!                    residual vector AX-B.  When MODE=2 or 3 RNORM
-!                    is set to zero.
+!   * `CALL [[DBNDAC]](...)`  Introduce new blocks of data.
+!   * `CALL [[DBNDSL]](1,...)` Compute solution vector and length of
+!     residual vector.
+!   * `CALL [[DBNDSL]](2,...)` Given any row vector H solve YR = H for the
+!     row vector Y.
+!   * `CALL [[DBNDSL]](3,...)` Given any column vector W solve RZ = W for
+!     the column vector Z.
 !
 !### Remarks
 !
@@ -641,10 +544,54 @@ module bspline_defc_module
 
       implicit none
 
-      real(wp) :: g(Mdg, *), rho
-      integer :: i, ie, ig, ig1, ig2, iopt, Ip, Ir, j, jg, Jt, &
-                 k, kh, l, lp1, Mdg, mh, Mt, mu, Nb
-      integer :: nbp1, nerr
+      integer,intent(in) :: Mdg !! The number of rows in the working array
+                                !! `G(*,*)`.  The value of MDG should be `>= MU`.
+                                !! The value of `MU` is defined in the abstract
+                                !! of these subprograms.
+      real(wp),intent(inout) :: g(Mdg, *) !! `G(MDG,NB+1)`
+                                          !!
+                                          !! *Input*
+                                          !! The working array into which the user will
+                                          !! place the `MT` by `NB+1` block `(C F)` in rows `IR`
+                                          !! through `IR+MT-1`, columns 1 through `NB+1`.
+                                          !! See descriptions of `IR` and `MT` below.
+                                          !!
+                                          !! *Output*
+                                          !! The working array which will contain the
+                                          !! processed rows of that part of the data
+                                          !! matrix which has been passed to [[DBNDAC]].
+      integer,intent(in) :: Nb !! The bandwidth of the data matrix `A`.
+      integer,intent(inout) :: Ip !! *Input*
+                                  !! Set by the user to the value 1 before the
+                                  !! first call to [[DBNDAC]].  Its subsequent value
+                                  !! is controlled by [[DBNDAC]] to set up for the
+                                  !! next call to [[DBNDAC]].
+                                  !!
+                                  !! *Output*
+                                  !! The value of this argument is advanced by
+                                  !! [[DBNDAC]] to be ready for storing and processing
+                                  !! a new block of data in `G(*,*)`.
+      integer,intent(inout) :: Ir !! *Input*
+                                  !! Index of the row of `G(*,*)` where the user is
+                                  !! to place the new block of data `(C F)`.  Set by
+                                  !! the user to the value 1 before the first call
+                                  !! to [[DBNDAC]].  Its subsequent value is controlled
+                                  !! by [[DBNDAC]]. A value of `IR > MDG` is considered
+                                  !! an error.
+                                  !!
+                                  !! *Output*
+                                  !! The value of this argument is advanced by
+                                  !! [[DBNDAC]] to be ready for storing and processing
+                                  !! a new block of data in `G(*,*)`.
+      integer,intent(in) :: Mt !! Set by the user to indicate the
+                               !! number of new rows of data in the block
+      integer,intent(in) :: Jt !! Set by the user to indicate
+                               !! the index of the first nonzero column in that
+                               !! set of rows `(E F) = (0 C 0 F)` being processed.
+
+      real(wp) :: rho
+      integer :: i, ie, ig, ig1, ig2, iopt, j, jg, &
+                 k, kh, l, lp1, mh, mu, nbp1, nerr
 
       real(wp), parameter :: zero = 0.0_wp
 
@@ -704,7 +651,7 @@ module bspline_defc_module
       else
          nerr = 1
          iopt = 2
-         write (*, *) 'MDG<IR, PROBABLE ERROR.'
+         write (*, *) 'MDG<IR, Probable error.'
       end if
 
    end subroutine dbndac
@@ -712,165 +659,11 @@ module bspline_defc_module
 
 !*****************************************************************************************
 !>
-!  These subroutines solve the least squares problem Ax = b for
+!  These subroutines solve the least squares problem `Ax = b` for
 !  banded matrices A using sequential accumulation of rows of the
 !  data matrix.  Exactly one right-hand side vector is permitted.
 !
-!  These subroutines are intended for the type of least squares
-!  systems that arise in applications such as curve or surface
-!  fitting of data.  The least squares equations are accumulated and
-!  processed using only part of the data.  This requires a certain
-!  user interaction during the solution of Ax = b.
-!
-!  Specifically, suppose the data matrix (A B) is row partitioned
-!  into Q submatrices.  Let (E F) be the T-th one of these
-!  submatrices where E = (0 C 0).  Here the dimension of E is MT by N
-!  and the dimension of C is MT by NB.  The value of NB is the
-!  bandwidth of A.  The dimensions of the leading block of zeros in E
-!  are MT by JT-1.
-!
-!  The user of the subroutine DBNDAC provides MT,JT,C and F for
-!  T=1,...,Q.  Not all of this data must be supplied at once.
-!
-!  Following the processing of the various blocks (E F), the matrix
-!  (A B) has been transformed to the form (R D) where R is upper
-!  triangular and banded with bandwidth NB.  The least squares
-!  system Rx = d is then easily solved using back substitution by
-!  executing the statement CALL DBNDSL(1,...). The sequence of
-!  values for JT must be nondecreasing.  This may require some
-!  preliminary interchanges of rows and columns of the matrix A.
-!
-!  The primary reason for these subroutines is that the total
-!  processing can take place in a working array of dimension MU by
-!  NB+1.  An acceptable value for MU is
-!
-!                    MU = MAX(MT + N + 1),
-!
-!  where N is the number of unknowns.
-!
-!  Here the maximum is taken over all values of MT for T=1,...,Q.
-!  Notice that MT can be taken to be a small as one, showing that
-!  MU can be as small as N+2.  The subprogram DBNDAC processes the
-!  rows more efficiently if MU is large enough so that each new
-!  block (C F) has a distinct value of JT.
-!
-!  The four principle parts of these algorithms are obtained by the
-!  following call statements
-!
-!  CALL DBNDAC(...)  Introduce new blocks of data.
-!
-!  CALL DBNDSL(1,...)Compute solution vector and length of
-!                    residual vector.
-!
-!  CALL DBNDSL(2,...)Given any row vector H solve YR = H for the
-!                    row vector Y.
-!
-!  CALL DBNDSL(3,...)Given any column vector W solve RZ = W for
-!                    the column vector Z.
-!
-!  The dots in the above call statements indicate additional
-!  arguments that will be specified in the following paragraphs.
-!
-!  The user must dimension the array appearing in the call list..
-!  G(MDG,NB+1)
-!
-!  Description of calling sequence for DBNDAC..
-!
-!  The entire set of parameters for DBNDAC are
-!
-!  Input.. All Type REAL variables are real(wp)
-!
-!  G(*,*)            The working array into which the user will
-!                    place the MT by NB+1 block (C F) in rows IR
-!                    through IR+MT-1, columns 1 through NB+1.
-!                    See descriptions of IR and MT below.
-!
-!  MDG               The number of rows in the working array
-!                    G(*,*).  The value of MDG should be >= MU.
-!                    The value of MU is defined in the abstract
-!                    of these subprograms.
-!
-!  NB                The bandwidth of the data matrix A.
-!
-!  IP                Set by the user to the value 1 before the
-!                    first call to DBNDAC.  Its subsequent value
-!                    is controlled by DBNDAC to set up for the
-!                    next call to DBNDAC.
-!
-!  IR                Index of the row of G(*,*) where the user is
-!                    the user to the value 1 before the first call
-!                    to DBNDAC.  Its subsequent value is controlled
-!                    by DBNDAC. A value of IR .GT. MDG is considered
-!                    an error.
-!
-!  MT,JT             Set by the user to indicate respectively the
-!                    number of new rows of data in the block and
-!                    the index of the first nonzero column in that
-!                    set of rows (E F) = (0 C 0 F) being processed.
-!  Output.. All Type REAL variables are real(wp)
-!
-!  G(*,*)            The working array which will contain the
-!                    processed rows of that part of the data
-!                    matrix which has been passed to DBNDAC.
-!
-!  IP,IR             The values of these arguments are advanced by
-!                    DBNDAC to be ready for storing and processing
-!                    a new block of data in G(*,*).
-!
-!  Description of calling sequence for DBNDSL..
-!
-!  The user must dimension the arrays appearing in the call list..
-!
-!  G(MDG,NB+1), X(N)
-!
-!  The entire set of parameters for DBNDSL are
-!
-!  Input..
-!
-!  MODE              Set by the user to one of the values 1, 2, or
-!                    3.  These values respectively indicate that
-!                    the solution of AX = B, YR = H or RZ = W is
-!                    required.
-!
-!  G(*,*),MDG,       These arguments all have the same meaning and
-!   NB,IP,IR         contents as following the last call to DBNDAC.
-!
-!  X(*)              With mode=2 or 3 this array contains,
-!                    respectively, the right-side vectors H or W of
-!                    the systems YR = H or RZ = W.
-!
-!  N                 The number of variables in the solution
-!                    vector.  If any of the N diagonal terms are
-!                    zero the subroutine DBNDSL prints an
-!                    appropriate message.  This condition is
-!                    considered an error.
-!
-!  Output..
-!
-!  X(*)              This array contains the solution vectors X,
-!                    Y or Z of the systems AX = B, YR = H or
-!                    RZ = W depending on the value of MODE=1,
-!                    2 or 3.
-!
-!  RNORM             If MODE=1 RNORM is the Euclidean length of the
-!                    residual vector AX-B.  When MODE=2 or 3 RNORM
-!                    is set to zero.
-!
-!### Remarks
-!
-!  To obtain the upper triangular matrix and transformed right-hand
-!  side vector D so that the super diagonals of R form the columns
-!  of G(*,*), execute the following Fortran statements.
-!
-!```fortran
-!     nbp1=nb+1
-!     do j=1, nbp1
-!       g(ir,j) = 0.0
-!     end do
-!     mt=1
-!     jt=n+1
-!     call dbndac(g,mdg,nb,ip,ir,mt,jt)
-!```
+!  See [[dbndac]] for a full description of how to use them.
 !
 !### References
 !
@@ -887,11 +680,51 @@ module bspline_defc_module
 !  * 900315  CALLs to XERROR changed to CALLs to XERMSG.  (THJ)
 !  * 920501  Reformatted the REFERENCES section.  (WRB)
 
-   subroutine dbndsl(Mode, g, Mdg, Nb, Ip, Ir, x, n, Rnorm)
+    subroutine dbndsl(Mode, g, Mdg, Nb, Ip, Ir, x, n, Rnorm)
 
-      real(wp) :: g(Mdg, *), Rnorm, rsq, s, x(*)
-      integer :: i, i1, i2, ie, ii, iopt, Ip, Ir, irm1, ix, j, &
-                 jg, l, Mdg, Mode, n, Nb, nerr, np1
+      integer,intent(in) :: Mode !! Set by the user to one of the values 1, 2, or
+                                 !! 3. These values respectively indicate that
+                                 !! the solution of `AX = B`, `YR = H` or `RZ = W` is
+                                 !! required.
+      integer,intent(in) :: Mdg !! The number of rows in the working array
+                                !! `G(*,*)`.  The value of `MDG` should be `>= MU`.
+                                !! The value of `MU` is defined in the abstract
+                                !! of these subprograms.
+                                !!
+                                !! This argument has the same meaning and
+                                !! contents as following the last call to [[DBNDAC]].
+      real(wp),intent(in) :: g(Mdg, *) !! `G(MDG,NB+1)`
+                                       !!
+                                       !! This argument has the same meaning and
+                                       !! contents as following the last call to [[DBNDAC]].
+      integer,intent(in) :: Nb !! This argument has the same meaning and
+                               !! contents as following the last call to [[DBNDAC]].
+      integer,intent(in) :: Ip !! This argument has the same meaning and
+                               !! contents as following the last call to [[DBNDAC]].
+      integer,intent(in) :: Ir !! This argument has the same meaning and
+                               !! contents as following the last call to [[DBNDAC]].
+      real(wp),intent(inout) :: x(*) !! `X(N)`
+                                     !!
+                                     !! *Input* With mode=2 or 3 this array contains,
+                                     !! respectively, the right-side vectors H or W of
+                                     !! the systems YR = H or RZ = W.
+                                     !!
+                                     !! *Output* This array contains the solution vectors `X`,
+                                     !! `Y` or `Z` of the systems `AX = B`, `YR = H` or
+                                     !! `RZ = W` depending on the value of `MODE`=1,
+                                     !! 2 or 3.
+      integer,intent(in) :: n !! The number of variables in the solution
+                              !! vector.  If any of the `N` diagonal terms are
+                              !! zero the subroutine [[DBNDSL]] prints an
+                              !! appropriate message.  This condition is
+                              !! considered an error.
+      real(wp),intent(out) :: Rnorm !! If `MODE=1`, `RNORM` is the Euclidean length of the
+                                    !! residual vector `AX-B`.  When `MODE=2` or `3` RNORM`
+                                    !! is set to zero.
+
+      real(wp) :: rsq, s
+      integer :: i, i1, i2, ie, ii, iopt, irm1, ix, j, &
+                 jg, l, nerr, np1
 
       real(wp), parameter :: zero = 0.0_wp
 
@@ -955,7 +788,7 @@ module bspline_defc_module
       ! error handling
       nerr = 1
       iopt = 2
-      write (*, *) 'A ZERO DIAGONAL TERM IS IN THE N BY N UPPER TRIANGULAR MATRIX.'
+      write (*, *) 'A zero diagonal term is in the n by n upper triangular matrix.'
 
    end subroutine dbndsl
 !*****************************************************************************************
@@ -1015,28 +848,7 @@ module bspline_defc_module
 !*****************************************************************************************
 !>
 !  Construction and/or application of a single
-!  Householder transformation. Q = I + U*(U**T)/B
-!
-!     MODE    = 1 or 2   to select algorithm  H1  or  H2 .
-!     LPIVOT is the index of the pivot element.
-!     L1,M   If L1 <= M   the transformation will be constructed to
-!            zero elements indexed from L1 through M.   If L1 GT. M
-!            THE SUBROUTINE DOES AN IDENTITY TRANSFORMATION.
-!     U(),IUE,UP    On entry to H1 U() contains the pivot vector.
-!                   IUE is the storage increment between elements.
-!                                       On exit from H1 U() and UP
-!                   contain quantities defining the vector U of the
-!                   Householder transformation.   On entry to H2 U()
-!                   and UP should contain quantities previously computed
-!                   by H1.  These will not be modified by H2.
-!     C()    On entry to H1 or H2 C() contains a matrix which will be
-!            regarded as a set of vectors to which the Householder
-!            transformation is to be applied.  On exit C() contains the
-!            set of transformed vectors.
-!     ICE    Storage increment between elements of vectors in C().
-!     ICV    Storage increment between vectors in C().
-!     NCV    Number of vectors in C() to be transformed. If NCV <= 0
-!            no operations will be done on C().
+!  Householder transformation. `Q = I + U*(U**T)/B`
 !
 !### Reference
 !
@@ -1051,11 +863,34 @@ module bspline_defc_module
 !  * 900328  Added TYPE section.  (WRB)
 !  * 900911  Added DDOT to real(wp) statement.  (WRB)
 
-   subroutine dh12(Mode, Lpivot, l1, m, u, Iue, Up, c, Ice, Icv, Ncv)
+    subroutine dh12(Mode, Lpivot, l1, m, u, Iue, Up, c, Ice, Icv, Ncv)
 
-      integer :: i, i2, i3, i4, Ice, Icv, incr, Iue, j, kl1, &
-                 kl2, klp, l1, l1m1, Lpivot, m, mml1p2, Mode, Ncv
-      real(wp) :: b, c(*), cl, clinv, ul1m1, sm, u(Iue, *), Up
+    integer,intent(in) :: Mode !! 1 or 2   to select algorithm  H1  or  H2 .
+    integer,intent(in) :: Lpivot !! the index of the pivot element.
+    integer,intent(in) :: l1 !! If `L1 <= M` the transformation will be constructed to
+                             !! zero elements indexed from `L1` through `M`. If `L1 > M`
+                             !! the subroutine does an identity transformation.
+    integer,intent(in) :: m !! see `l1`
+    integer,intent(in) :: Iue !! the storage increment between elements of `U`.
+    real(wp),intent(inout) :: u(Iue, *) !! On entry to H1 `U()` contains the pivot vector.
+                                        !! On exit from H1 `U()` and `UP`
+                                        !! contain quantities defining the vector `U` of the
+                                        !! Householder transformation.   On entry to H2 `U()`
+                                        !! and `UP` should contain quantities previously computed
+                                        !! by H1.  These will not be modified by H2.
+    real(wp),intent(inout)  :: Up !! see `u`
+    real(wp),intent(inout) :: c(*) !! On entry to H1 or H2 `C()` contains a matrix which will be
+                                   !! regarded as a set of vectors to which the Householder
+                                   !! transformation is to be applied.  On exit `C()` contains the
+                                   !! set of transformed vectors.
+    integer,intent(in) :: Ice !! Storage increment between elements of vectors in `C()`.
+    integer,intent(in) :: Icv !! Storage increment between vectors in `C()`.
+    integer,intent(in) :: Ncv !! Number of vectors in `C()` to be transformed. If `NCV <= 0`
+                              !! no operations will be done on `C()`.
+
+      integer :: i, i2, i3, i4, incr, j, kl1, &
+                 kl2, klp, l1m1, mml1p2
+      real(wp) :: b, cl, clinv, ul1m1, sm
 
       real(wp), parameter :: one = 1.0_wp
 
