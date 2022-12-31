@@ -2742,7 +2742,7 @@
                                                 !! * 100: k does not satisfy k>=1.
                                                 !! * 101: n does not satisfy n>=k.
                                                 !! * 102: x(i) does not satisfy x(i)<x(i+1) for some i.
-                                                !! * 103: some abscissa was not in the support of the.
+                                                !! * 103: some abscissa was not in the support of the
                                                 !! corresponding basis function and the system is singular.
                                                 !! * 104: the system of solver detects a singular system.
                                                 !! although the theoretical conditions for a solution were satisfied.

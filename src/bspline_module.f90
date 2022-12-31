@@ -12,6 +12,7 @@
     use bspline_kinds_module, only: bspline_wp => wp
     use bspline_oo_module
     use bspline_sub_module
+    use bspline_defc_module
 
     implicit none
 
