@@ -13,7 +13,7 @@ auto-examples = false
 auto-tests = true
 
 [dev-dependencies]
-pyplot-fortran = { git = "https://github.com/jacobwilliams/pyplot-fortran", tag = "3.2.0" }
+pyplot-fortran = { git = "https://github.com/jacobwilliams/pyplot-fortran", tag = "3.3.0" }
 
 [library]
 source-dir = "src"

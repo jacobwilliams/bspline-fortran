@@ -3120,29 +3120,29 @@
 
     implicit none
 
-    real(wp),dimension(*),intent(in)  :: t        !! knot vector of length `n+k`, where
-                                                  !! `n` = number of b-spline basis functions
-                                                  !! `n` = sum of knot multiplicities-`k`
-                                                  !! dimension `t(ileft+jhigh)`
-    integer(ip),intent(in)            :: jhigh    !! order of b-spline, `1 <= jhigh <= k`
-    integer(ip),intent(in)            :: k        !! highest possible order
-    integer(ip),intent(in)            :: index    !! index = 1 gives basis functions of order `jhigh`
-                                                  !!       = 2 denotes previous entry with `work`, `iwork`
-                                                  !!         values saved for subsequent calls to
-                                                  !!         dbspvn.
-    real(wp),intent(in)               :: x        !! argument of basis functions, `t(k) <= x <= t(n+1)`
-    integer(ip),intent(in)            :: ileft    !! largest integer such that `t(ileft) <= x < t(ileft+1)`
-    real(wp),dimension(k),intent(out) :: vnikx    !! vector of length `k` for spline values.
-    real(wp),dimension(*),intent(out) :: work     !! a work vector of length `2*k`
-    integer(ip),intent(out)           :: iwork    !! a work parameter.  both `work` and `iwork` contain
-                                                  !! information necessary to continue for `index = 2`.
-                                                  !! when `index = 1` exclusively, these are scratch
-                                                  !! variables and can be used for other purposes.
-    integer(ip),intent(out)           :: iflag    !! *   0: no errors
-                                                  !! * 201: `k` does not satisfy `k>=1`
-                                                  !! * 202: `jhigh` does not satisfy `1<=jhigh<=k`
-                                                  !! * 203: `index` is not 1 or 2
-                                                  !! * 204: `x` does not satisfy `t(ileft)<=x<=t(ileft+1)`
+    real(wp),dimension(*),intent(in)    :: t        !! knot vector of length `n+k`, where
+                                                    !! `n` = number of b-spline basis functions
+                                                    !! `n` = sum of knot multiplicities-`k`
+                                                    !! dimension `t(ileft+jhigh)`
+    integer(ip),intent(in)              :: jhigh    !! order of b-spline, `1 <= jhigh <= k`
+    integer(ip),intent(in)              :: k        !! highest possible order
+    integer(ip),intent(in)              :: index    !! index = 1 gives basis functions of order `jhigh`
+                                                    !!       = 2 denotes previous entry with `work`, `iwork`
+                                                    !!         values saved for subsequent calls to
+                                                    !!         dbspvn.
+    real(wp),intent(in)                 :: x        !! argument of basis functions, `t(k) <= x <= t(n+1)`
+    integer(ip),intent(in)              :: ileft    !! largest integer such that `t(ileft) <= x < t(ileft+1)`
+    real(wp),dimension(k),intent(out)   :: vnikx    !! vector of length `k` for spline values.
+    real(wp),dimension(*),intent(inout) :: work     !! a work vector of length `2*k`
+    integer(ip),intent(inout)           :: iwork    !! a work parameter.  both `work` and `iwork` contain
+                                                    !! information necessary to continue for `index = 2`.
+                                                    !! when `index = 1` exclusively, these are scratch
+                                                    !! variables and can be used for other purposes.
+    integer(ip),intent(out)             :: iflag    !! *   0: no errors
+                                                    !! * 201: `k` does not satisfy `k>=1`
+                                                    !! * 202: `jhigh` does not satisfy `1<=jhigh<=k`
+                                                    !! * 203: `index` is not 1 or 2
+                                                    !! * 204: `x` does not satisfy `t(ileft)<=x<=t(ileft+1)`
 
     integer(ip) :: imjp1, ipj, jp1, jp1ml, l
     real(wp) :: vm, vmprev
