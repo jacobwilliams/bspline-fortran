@@ -4,6 +4,9 @@
 !
 !  [[DEFC]] procedure and support routines from SLATEC.
 !  For fitting B-splines polynomials to discrete 1D data.
+!
+!@note This modules does not support the user-defined `ip` integer kind.
+!      It only uses the default integer kind.
 
 module bspline_defc_module
 
@@ -17,6 +20,7 @@ module bspline_defc_module
    private
 
 #ifdef HAS_BLAS
+   ! user is linking against an external BLAS library
    double precision,external :: ddot
    external :: daxpy,dcopy,dscal,dswap
 #endif
