@@ -41,12 +41,8 @@ contains
       if (n <= 0_ip) return
       if (da == 0.0_wp) return
       if (incx == 1_ip .and. incy == 1_ip) then
-!
-!        code for both increments equal to 1
-!
-!
-!        clean-up loop
-!
+         ! code for both increments equal to 1
+         ! clean-up loop
          m = mod(n, 4_ip)
          if (m /= 0_ip) then
             do i = 1_ip, m
@@ -62,10 +58,8 @@ contains
             dy(i + 3_ip) = dy(i + 3_ip) + da*dx(i + 3_ip)
          end do
       else
-!
-!        code for unequal increments or equal increments
-!          not equal to 1
-!
+         ! code for unequal increments or equal increments
+         ! not equal to 1
          ix = 1_ip
          iy = 1_ip
          if (incx < 0_ip) ix = (-n + 1_ip)*incx + 1_ip
@@ -90,12 +84,8 @@ contains
 
       if (n <= 0_ip) return
       if (incx == 1_ip .and. incy == 1_ip) then
-!
-!        code for both increments equal to 1
-!
-!
-!        clean-up loop
-!
+         ! code for both increments equal to 1
+         ! clean-up loop
          m = mod(n, 7_ip)
          if (m /= 0_ip) then
             do i = 1_ip, m
@@ -114,10 +104,8 @@ contains
             dy(i + 6_ip) = dx(i + 6_ip)
          end do
       else
-!
-!        code for unequal increments or equal increments
-!          not equal to 1
-!
+         ! code for unequal increments or equal increments
+         ! not equal to 1
          ix = 1_ip
          iy = 1_ip
          if (incx < 0_ip) ix = (-n + 1_ip)*incx + 1_ip
@@ -143,12 +131,8 @@ contains
 
       if (n <= 0_ip .or. incx <= 0_ip) return
       if (incx == 1_ip) then
-!
-!        code for increment equal to 1
-!
-!
-!        clean-up loop
-!
+         ! code for increment equal to 1
+         ! clean-up loop
          m = mod(n, 5_ip)
          if (m /= 0_ip) then
             do i = 1_ip, m
@@ -165,9 +149,7 @@ contains
             dx(i + 4_ip) = da*dx(i + 4_ip)
          end do
       else
-!
-!        code for increment not equal to 1
-!
+         ! code for increment not equal to 1
          nincx = n*incx
          do i = 1_ip, nincx, incx
             dx(i) = da*dx(i)
@@ -188,12 +170,8 @@ contains
 
       if (n <= 0_ip) return
       if (incx == 1_ip .and. incy == 1_ip) then
-!
-!       code for both increments equal to 1
-!
-!
-!       clean-up loop
-!
+         ! code for both increments equal to 1
+         ! clean-up loop
          m = mod(n, 3_ip)
          if (m /= 0_ip) then
             do i = 1_ip, m
@@ -216,10 +194,8 @@ contains
             dy(i + 2_ip) = dtemp
          end do
       else
-!
-!       code for unequal increments or equal increments not equal
-!         to 1
-!
+         ! code for unequal increments or equal increments not equal
+         ! to 1
          ix = 1
          iy = 1
          if (incx < 0_ip) ix = (-n + 1_ip)*incx + 1_ip
