@@ -1143,7 +1143,7 @@ module bspline_defc_module
 !
 !### History
 !  * 29-dec-2022 : Replaced original routines.
-!    Now just a wraper for recursive quicksort (JW)
+!    Now just a wraper for [[sort_ascending]] recursive quicksort (JW)
 
    subroutine dsort(n, Kflag, Dx, Dy)
       implicit none
@@ -1177,6 +1177,9 @@ module bspline_defc_module
 !>
 !  Recursive quicksoft.
 !  Modified to also carry along a second array.
+!
+!### Author
+!  * Jacob Williams
 
    subroutine sort_ascending(n, dx, dy)
 
