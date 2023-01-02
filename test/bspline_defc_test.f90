@@ -26,6 +26,8 @@
     real(wp),dimension(n) :: coeff  !! computed B-spline coefficients
     real(wp),dimension(:),allocatable :: w !! workspace array
     real(wp),dimension(ndata) :: ydata_est  !! y data estimated
+    integer,dimension(:),allocatable :: iw !! integer workspace array
+    real(wp),dimension(ndata) :: ydata_est_constr  !! y data estimated & constrained
 
     real(wp) :: r !! random number
     real(wp) :: dx !! step size for knots
@@ -43,6 +45,12 @@
     real(wp),dimension(ndata+nord) :: tx
     real(wp),dimension(ndata) :: bcoef
     real(wp),dimension(ndata*10) :: x_int, y_int
+
+    integer,parameter :: nconst = 1 !! for [[dfc]]
+    real(wp),dimension(nconst) :: xconst
+    real(wp),dimension(nconst) :: yconst
+    integer ,dimension(nconst) :: nderiv
+    integer :: itype, mode, iw1, l, neqcon, nincon
 
     call random_seed(size=isize)
     allocate(iseed(isize)); iseed = 42_ip
@@ -85,8 +93,9 @@
                     inbvx = inbvx,&
                     w0    = w0)
     end do
-   ! write(*,*) 'x_int=',x_int
+    ! write(*,*) 'x_int=',x_int
 
+    !--------------------------------------------------------
     ! now, do the least squares splines:
 
     !    end knots : bkpt(i),i=1,...,nord-1
@@ -125,6 +134,50 @@
         if (iflag /= 0) error stop 'error calling db1val'
     end do
 
+    !--------------------------------------------------------
+    ! now, do the least squares splines with some constraints:
+    j     = 1 ! 1st derivative
+    itype = 2 ! (J-th deriv. at X) == Y
+    xconst(1) = xdata(1)
+    yconst(1) = 0.0_wp
+    nderiv(1) = itype+4*J
+    mode = 1 ! a new problem
+    neqcon = 1 ! num equality constraints
+    nincon = 0 ! num inequality constraints
+    l = nbkpt-nord+1
+    iw1 = nincon+2*l
+    lw = (nbkpt-nord+3)*(nord+1)+2*max(ndata,nbkpt)+nbkpt+nord**2 + &
+         (l+nconst)*l+2*(neqcon+l)+(nincon+l)+(nincon+2)*(l+6)
+    if (allocated(w)) deallocate(w)
+    if (allocated(iw)) deallocate(iw)
+    allocate(w(lw))  ; w = 0.0_wp
+    allocate(iw(iw1)); iw = 0
+    iw(1) = lw
+    iw(2) = iw1
+    call dfc (ndata, xdata, ydata, sddata, nord, nbkpt, bkpt, &
+              nconst, xconst, yconst, nderiv, mode, coeff, w, iw)
+    if (mode /= 0) then
+        write(*,*) 'error calling dfc. mode = ',mode
+        error stop
+    end if
+    ! use the splines to interpolate the data:
+    inbvx = 1
+    w0 = 0.0_wp
+    ydata_est_constr = huge(1.0_wp) ! test
+    do i = 1, ndata
+        call db1val(xval  = xdata(i),&
+                    idx   = 0_ip,&
+                    tx    = bkpt,&
+                    nx    = NBKPT-NORD,&
+                    kx    = NORD,&
+                    bcoef = COEFF,&
+                    f     = ydata_est_constr(i),&
+                    iflag = iflag,&
+                    inbvx = inbvx,&
+                    w0    = w0)
+        if (iflag /= 0) error stop 'error calling db1val'
+    end do
+
     ! make a plot:
     call plt%initialize(grid=.true.,xlabel='x',ylabel='y',&
                         figsize=[20,10],font_size=20,axes_labelsize=20,&
@@ -140,6 +193,9 @@
     call plt%add_plot(xdata,ydata_est,&
                         label='Least squares bspline',&
                         linestyle='r-',markersize=2,linewidth=2,istat=istat)
+    call plt%add_plot(xdata,ydata_est_constr,&
+                        label='Least squares bspline with constraint',&
+                        linestyle='g.-',markersize=4,linewidth=2,istat=istat)
     call plt%savefig(pyfile='bspline_defc_test.py', figfile='bspline_defc_test.png',istat=istat)
 
     end program bspline_defc_test
