@@ -50,7 +50,7 @@
     real(wp),dimension(nconst) :: xconst
     real(wp),dimension(nconst) :: yconst
     integer ,dimension(nconst) :: nderiv
-    integer :: itype, mode, iw1, l, neqcon, nincon
+    integer :: itype, mode, iw1, l, neqcon, nincon, imode
 
     call random_seed(size=isize)
     allocate(iseed(isize)); iseed = 42_ip
@@ -162,23 +162,28 @@
     neqcon = 2 ! num equality constraints
     nincon = 2 ! num inequality constraints
 
-    mode = 1 ! a new problem
-    l = nbkpt-nord+1
-    iw1 = nincon+2*l
-    lw = (nbkpt-nord+3)*(nord+1)+2*max(ndata,nbkpt)+nbkpt+nord**2 + &
-         (l+nconst)*l+2*(neqcon+l)+(nincon+l)+(nincon+2)*(l+6)
-    if (allocated(w)) deallocate(w)
-    if (allocated(iw)) deallocate(iw)
-    allocate(w(lw))  ; w = 0.0_wp
-    allocate(iw(iw1)); iw = 0
-    iw(1) = lw
-    iw(2) = iw1
-    call dfc (ndata, xdata, ydata, sddata, nord, nbkpt, bkpt, &
-              nconst, xconst, yconst, nderiv, mode, coeff, w, iw)
-    if (mode /= 0) then
-        write(*,*) 'error calling dfc. mode = ',mode
-        error stop
-    end if
+    do imode = 1, 2
+        ! run it twice just for testing, one with cov, one without
+        ! mode = 1 ! a new problem - no cov
+        ! mode = 2 ! a new problem - with cov
+        mode = imode
+        l = nbkpt-nord+1
+        iw1 = nincon+2*l
+        lw = (nbkpt-nord+3)*(nord+1)+2*max(ndata,nbkpt)+nbkpt+nord**2 + &
+            (l+nconst)*l+2*(neqcon+l)+(nincon+l)+(nincon+2)*(l+6)
+        if (allocated(w)) deallocate(w)
+        if (allocated(iw)) deallocate(iw)
+        allocate(w(lw))  ; w = 0.0_wp
+        allocate(iw(iw1)); iw = 0
+        iw(1) = lw
+        iw(2) = iw1
+        call dfc (ndata, xdata, ydata, sddata, nord, nbkpt, bkpt, &
+                nconst, xconst, yconst, nderiv, mode, coeff, w, iw)
+        if (mode /= 0) then
+            write(*,*) 'error calling dfc. mode = ',mode
+            error stop
+        end if
+    end do
     ! use the splines to interpolate the data:
     inbvx = 1
     w0 = 0.0_wp
@@ -213,7 +218,7 @@
                         label='Least squares bspline',&
                         linestyle='r-',markersize=2,linewidth=2,istat=istat)
     call plt%add_plot(xdata,ydata_est_constr,&
-                        label='Least squares bspline with constraint',&
+                        label='Least squares bspline with constraints',&
                         linestyle='g.-',markersize=4,linewidth=2,istat=istat)
     call plt%savefig(pyfile='bspline_defc_test.py', figfile='bspline_defc_test.png',istat=istat)
 
