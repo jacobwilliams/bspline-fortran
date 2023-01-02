@@ -3873,7 +3873,6 @@ module bspline_defc_module
 
    ! Set the solution vector X(*) to zero and the column interchange
    ! matrix to the identity.
-
    call dcopy (n, [0.0_wp], 0, x, 1)
    do i = 1,n
       ipivot(i) = i
@@ -3900,329 +3899,319 @@ module bspline_defc_module
    krank = idope(2)
    niv   = idope(3)
 
-   ! Perform WNNLS algorithm using the following steps.
-   !
-   ! Until(DONE)
-   !    compute search direction and feasible point
-   !    when (HITCON) add constraints
-   !    else perform multiplier test and drop a constraint
-   !    fin
-   ! Compute-Final-Solution
-   !
-   ! To compute search direction and feasible point,
-   ! solve the triangular system of currently non-active
-   ! variables and store the solution in Z(*).
-   !
-   ! To solve system
-   ! Copy right hand side into TEMP vector to use overwriting method.
+   main : do
 
-   160 if (done) go to 330
-   isol = l + 1
-   if (nsoln>=isol) then
-      call dcopy (niv, w(1,n+1), 1, temp, 1)
-      do j = nsoln,isol,-1
-         if (j>krank) then
-            i = niv - nsoln + j
-         else
-            i = j
-         endif
-         if (j>krank .and. j<=l) then
-            z(j) = 0.0_wp
-         else
-            z(j) = temp(i)/w(i,j)
-            call daxpy (i-1, -z(j), w(1,j), 1, temp, 1)
-         endif
-      end do
-   endif
+      ! Perform WNNLS algorithm using the following steps.
+      !
+      ! Until(DONE)
+      !    compute search direction and feasible point
+      !    when (HITCON) add constraints
+      !    else perform multiplier test and drop a constraint
+      !    fin
+      ! Compute-Final-Solution
+      !
+      ! To compute search direction and feasible point,
+      ! solve the triangular system of currently non-active
+      ! variables and store the solution in Z(*).
+      !
+      ! To solve system
+      ! Copy right hand side into TEMP vector to use overwriting method.
 
-   ! Increment iteration counter and check against maximum number
-   ! of iterations.
-   iter = iter + 1
-   if (iter>itmax) then
-      mode = 1
-      done = .true.
-   endif
-
-   ! Check to see if any constraints have become active.
-   ! If so, calculate an interpolation factor so that all
-   ! active constraints are removed from the basis.
-   alpha = 2.0_wp
-   hitcon = .false.
-   do j = l+1,nsoln
-      zz = z(j)
-      if (zz<=0.0_wp) then
-         t = x(j)/(x(j)-zz)
-         if (t<alpha) then
-            alpha = t
-            jcon = j
-         endif
-         hitcon = .true.
+      if (done) exit main
+      isol = l + 1
+      if (nsoln>=isol) then
+         call dcopy (niv, w(1,n+1), 1, temp, 1)
+         do j = nsoln,isol,-1
+            if (j>krank) then
+               i = niv - nsoln + j
+            else
+               i = j
+            endif
+            if (j>krank .and. j<=l) then
+               z(j) = 0.0_wp
+            else
+               z(j) = temp(i)/w(i,j)
+               call daxpy (i-1, -z(j), w(1,j), 1, temp, 1)
+            endif
+         end do
       endif
-   end do
 
-   ! Compute search direction and feasible point
+      ! Increment iteration counter and check against maximum number
+      ! of iterations.
+      iter = iter + 1
+      if (iter>itmax) then
+         mode = 1
+         done = .true.
+      endif
 
-   if (hitcon) then
-
-      ! To add constraints, use computed ALPHA to interpolate between
-      ! last feasible solution X(*) and current unconstrained (and
-      ! infeasible) solution Z(*).
+      ! Check to see if any constraints have become active.
+      ! If so, calculate an interpolation factor so that all
+      ! active constraints are removed from the basis.
+      alpha = 2.0_wp
+      hitcon = .false.
       do j = l+1,nsoln
-         x(j) = x(j) + alpha*(z(j)-x(j))
+         zz = z(j)
+         if (zz<=0.0_wp) then
+            t = x(j)/(x(j)-zz)
+            if (t<alpha) then
+               alpha = t
+               jcon = j
+            endif
+            hitcon = .true.
+         endif
       end do
-      feasbl = .false.
 
-      do
-         ! Remove column JCON and shift columns JCON+1 through N to the
-         ! left.  Swap column JCON into the N th position.  This achieves
-         ! upper Hessenberg form for the nonactive constraints and
-         ! leaves an upper Hessenberg matrix to retriangularize.
-          do i = 1,m
-            t = w(i,jcon)
-            call dcopy (n-jcon, w(i, jcon+1), mdw, w(i, jcon), mdw)
-            w(i,n) = t
+      ! Compute search direction and feasible point
+      if (hitcon) then
+
+         ! To add constraints, use computed ALPHA to interpolate between
+         ! last feasible solution X(*) and current unconstrained (and
+         ! infeasible) solution Z(*).
+         do j = l+1,nsoln
+            x(j) = x(j) + alpha*(z(j)-x(j))
          end do
+         feasbl = .false.
 
-         ! Update permuted index vector to reflect this shift and swap.
+         do
+            ! Remove column JCON and shift columns JCON+1 through N to the
+            ! left.  Swap column JCON into the N th position.  This achieves
+            ! upper Hessenberg form for the nonactive constraints and
+            ! leaves an upper Hessenberg matrix to retriangularize.
+            do i = 1,m
+               t = w(i,jcon)
+               call dcopy (n-jcon, w(i, jcon+1), mdw, w(i, jcon), mdw)
+               w(i,n) = t
+            end do
 
-         itemp = ipivot(jcon)
-         do i = jcon,n - 1
-            ipivot(i) = ipivot(i+1)
-         end do
-         ipivot(n) = itemp
+            ! Update permuted index vector to reflect this shift and swap.
+            itemp = ipivot(jcon)
+            do i = jcon,n - 1
+               ipivot(i) = ipivot(i+1)
+            end do
+            ipivot(n) = itemp
 
-         ! Similarly permute X(*) vector.
+            ! Similarly permute X(*) vector.
+            call dcopy (n-jcon, x(jcon+1), 1, x(jcon), 1)
+            x(n) = 0.0_wp
+            nsoln = nsoln - 1
+            niv = niv - 1
 
-         call dcopy (n-jcon, x(jcon+1), 1, x(jcon), 1)
-         x(n) = 0.0_wp
-         nsoln = nsoln - 1
-         niv = niv - 1
-
-         ! Retriangularize upper Hessenberg matrix after adding
-         ! constraints.
-
-         i = krank + jcon - l
-         do j = jcon,nsoln
-            if (itype(i)==0 .and. itype(i+1)==0) then
-               ! Zero IP1 to I in column J
-               if (w(i+1,j)/=0.0_wp) then
-                  call drotmg (scale(i), scale(i+1), w(i,j), w(i+1,j), &
-                               sparam)
-                  w(i+1,j) = 0.0_wp
-                  call drotm (n+1-j, w(i,j+1), mdw, w(i+1,j+1), mdw, &
-                              sparam)
-               endif
-            elseif (itype(i)==1 .and. itype(i+1)==1) then
-               ! Zero IP1 to I in column J
-               if (w(i+1,j)/=0.0_wp) then
-                  call drotmg (scale(i), scale(i+1), w(i,j), w(i+1,j), &
-                               sparam)
-                  w(i+1,j) = 0.0_wp
-                  call drotm (n+1-j, w(i,j+1), mdw, w(i+1,j+1), mdw, &
-                              sparam)
-               endif
-            elseif (itype(i)==1 .and. itype(i+1)==0) then
-               call dswap (n+1, w(i,1), mdw, w(i+1,1), mdw)
-               call dswap (1, scale(i), 1, scale(i+1), 1)
-               itemp = itype(i+1)
-               itype(i+1) = itype(i)
-               itype(i) = itemp
-               ! Swapped row was formerly a pivot element, so it will
-               ! be large enough to perform elimination.
-               ! Zero IP1 to I in column J.
-               if (w(i+1,j)/=0.0_wp) then
-                  call drotmg (scale(i), scale(i+1), w(i,j), w(i+1,j), &
-                               sparam)
-                  w(i+1,j) = 0.0_wp
-                  call drotm (n+1-j, w(i,j+1), mdw, w(i+1,j+1), mdw, &
-                              sparam)
-               endif
-            elseif (itype(i)==0 .and. itype(i+1)==1) then
-               if (scale(i)*w(i,j)**2/alsq>(tau*eanorm)**2) then
+            ! Retriangularize upper Hessenberg matrix after adding
+            ! constraints.
+            i = krank + jcon - l
+            do j = jcon,nsoln
+               if (itype(i)==0 .and. itype(i+1)==0) then
                   ! Zero IP1 to I in column J
                   if (w(i+1,j)/=0.0_wp) then
-                     call drotmg (scale(i), scale(i+1), w(i,j), &
-                                  w(i+1,j), sparam)
+                     call drotmg (scale(i), scale(i+1), w(i,j), w(i+1,j), &
+                                 sparam)
                      w(i+1,j) = 0.0_wp
                      call drotm (n+1-j, w(i,j+1), mdw, w(i+1,j+1), mdw, &
                                  sparam)
                   endif
-               else
+               elseif (itype(i)==1 .and. itype(i+1)==1) then
+                  ! Zero IP1 to I in column J
+                  if (w(i+1,j)/=0.0_wp) then
+                     call drotmg (scale(i), scale(i+1), w(i,j), w(i+1,j), &
+                                 sparam)
+                     w(i+1,j) = 0.0_wp
+                     call drotm (n+1-j, w(i,j+1), mdw, w(i+1,j+1), mdw, &
+                                 sparam)
+                  endif
+               elseif (itype(i)==1 .and. itype(i+1)==0) then
                   call dswap (n+1, w(i,1), mdw, w(i+1,1), mdw)
                   call dswap (1, scale(i), 1, scale(i+1), 1)
                   itemp = itype(i+1)
                   itype(i+1) = itype(i)
                   itype(i) = itemp
-                  w(i+1,j) = 0.0_wp
+                  ! Swapped row was formerly a pivot element, so it will
+                  ! be large enough to perform elimination.
+                  ! Zero IP1 to I in column J.
+                  if (w(i+1,j)/=0.0_wp) then
+                     call drotmg (scale(i), scale(i+1), w(i,j), w(i+1,j), &
+                                 sparam)
+                     w(i+1,j) = 0.0_wp
+                     call drotm (n+1-j, w(i,j+1), mdw, w(i+1,j+1), mdw, &
+                                 sparam)
+                  endif
+               elseif (itype(i)==0 .and. itype(i+1)==1) then
+                  if (scale(i)*w(i,j)**2/alsq>(tau*eanorm)**2) then
+                     ! Zero IP1 to I in column J
+                     if (w(i+1,j)/=0.0_wp) then
+                        call drotmg (scale(i), scale(i+1), w(i,j), &
+                                    w(i+1,j), sparam)
+                        w(i+1,j) = 0.0_wp
+                        call drotm (n+1-j, w(i,j+1), mdw, w(i+1,j+1), mdw, &
+                                    sparam)
+                     endif
+                  else
+                     call dswap (n+1, w(i,1), mdw, w(i+1,1), mdw)
+                     call dswap (1, scale(i), 1, scale(i+1), 1)
+                     itemp = itype(i+1)
+                     itype(i+1) = itype(i)
+                     itype(i) = itemp
+                     w(i+1,j) = 0.0_wp
+                  endif
                endif
-            endif
-            i = i + 1
+               i = i + 1
+            end do
+
+            ! See if the remaining coefficients in the solution set are
+            ! feasible.  They should be because of the way ALPHA was
+            ! determined.  If any are infeasible, it is due to roundoff
+            ! error.  Any that are non-positive will be set to zero and
+            ! removed from the solution set.
+            do jcon = l+1,nsoln
+               if (x(jcon)<=0.0_wp) then
+                  exit
+               else
+                  if (jcon==nsoln) feasbl = .true.
+               end if
+            end do
+            if (feasbl) exit
          end do
 
-         ! See if the remaining coefficients in the solution set are
-         ! feasible.  They should be because of the way ALPHA was
-         ! determined.  If any are infeasible, it is due to roundoff
-         ! error.  Any that are non-positive will be set to zero and
-         ! removed from the solution set.
+      else
 
-         do jcon = l+1,nsoln
-            if (x(jcon)<=0.0_wp) then
-               exit
+         ! To perform multiplier test and drop a constraint.
+         call dcopy (nsoln, z, 1, x, 1)
+         if (nsoln<n) call dcopy (n-nsoln, [0.0_wp], 0, x(nsoln+1), 1)
+
+         ! Reclassify least squares equations as equalities as necessary.
+         i = niv + 1
+         do
+            if (i>me) exit
+            if (itype(i)==0) then
+               i = i + 1
             else
-               if (jcon==nsoln) feasbl = .true.
-            end if
+               call dswap (n+1, w(i,1), mdw, w(me,1), mdw)
+               call dswap (1, scale(i), 1, scale(me), 1)
+               itemp = itype(i)
+               itype(i) = itype(me)
+               itype(me) = itemp
+               me = me - 1
+            endif
          end do
-         if (feasbl) exit
-      end do
 
-   else
-
-      ! To perform multiplier test and drop a constraint.
-
-      call dcopy (nsoln, z, 1, x, 1)
-      if (nsoln<n) call dcopy (n-nsoln, [0.0_wp], 0, x(nsoln+1), 1)
-
-      ! Reclassify least squares equations as equalities as necessary.
-
-      i = niv + 1
-      do
-         if (i>me) exit
-         if (itype(i)==0) then
-            i = i + 1
-         else
-            call dswap (n+1, w(i,1), mdw, w(me,1), mdw)
-            call dswap (1, scale(i), 1, scale(me), 1)
-            itemp = itype(i)
-            itype(i) = itype(me)
-            itype(me) = itemp
-            me = me - 1
-         endif
-      end do
-
-      ! Form inner product vector WD(*) of dual coefficients.
-      do j = nsoln+1,n
-         sm = 0.0_wp
-         do i = nsoln+1,m
-            sm = sm + scale(i)*w(i,j)*w(i,n+1)
+         ! Form inner product vector WD(*) of dual coefficients.
+         do j = nsoln+1,n
+            sm = 0.0_wp
+            do i = nsoln+1,m
+               sm = sm + scale(i)*w(i,j)*w(i,n+1)
+            end do
+            wd(j) = sm
          end do
-         wd(j) = sm
-      end do
 
-   ! Find J such that WD(J)=WMAX is maximum.  This determines
-   ! that the incoming column J will reduce the residual vector
-   ! and be positive.
-   290    wmax = 0.0_wp
-      iwmax = nsoln + 1
-      do j = nsoln+1,n
-         if (wd(j)>wmax) then
-            wmax = wd(j)
-            iwmax = j
-         endif
-      end do
-      if (wmax<=0.0_wp) go to 330
-
-      ! Set dual coefficients to zero for incoming column.
-
-      wd(iwmax) = 0.0_wp
-
-      ! WMAX > 0.0_wp, so okay to move column IWMAX to solution set.
-      ! Perform transformation to retriangularize, and test for near
-      ! linear dependence.
-      !
-      ! Swap column IWMAX into NSOLN-th position to maintain upper
-      ! Hessenberg form of adjacent columns, and add new column to
-      ! triangular decomposition.
-
-      nsoln = nsoln + 1
-      niv = niv + 1
-      if (nsoln/=iwmax) then
-         call dswap (m, w(1,nsoln), 1, w(1,iwmax), 1)
-         wd(iwmax) = wd(nsoln)
-         wd(nsoln) = 0.0_wp
-         itemp = ipivot(nsoln)
-         ipivot(nsoln) = ipivot(iwmax)
-         ipivot(iwmax) = itemp
-      endif
-
-      ! Reduce column NSOLN so that the matrix of nonactive constraints
-      ! variables is triangular.
-
-      do j = m,niv+1,-1
-         jp = j - 1
-
-         ! When operating near the ME line, test to see if the pivot
-         ! element is near zero.  If so, use the largest element above
-         ! it as the pivot.  This is to maintain the sharp interface
-         ! between weighted and non-weighted rows in all cases.
-
-         if (j==me+1) then
-            imax = me
-            amax = scale(me)*w(me,nsoln)**2
-            do jp = j - 1,niv,-1
-               t = scale(jp)*w(jp,nsoln)**2
-               if (t>amax) then
-                  imax = jp
-                  amax = t
+         do
+            ! Find J such that WD(J)=WMAX is maximum.  This determines
+            ! that the incoming column J will reduce the residual vector
+            ! and be positive.
+            wmax = 0.0_wp
+            iwmax = nsoln + 1
+            do j = nsoln+1,n
+               if (wd(j)>wmax) then
+                  wmax = wd(j)
+                  iwmax = j
                endif
             end do
-            jp = imax
-         endif
+            if (wmax<=0.0_wp) exit main
 
-         if (w(j,nsoln)/=0.0_wp) then
-            call drotmg (scale(jp), scale(j), w(jp,nsoln), &
-                         w(j,nsoln), sparam)
-            w(j,nsoln) = 0.0_wp
-            call drotm (n+1-nsoln, w(jp,nsoln+1), mdw, w(j,nsoln+1), &
-                        mdw, sparam)
-         endif
-      end do
+            ! Set dual coefficients to zero for incoming column.
+            wd(iwmax) = 0.0_wp
 
-      ! Solve for Z(NSOLN)=proposed new value for X(NSOLN).  Test if
-      ! this is nonpositive or too large.  If this was true or if the
-      ! pivot term was zero, reject the column as dependent.
+            ! WMAX > 0.0_wp, so okay to move column IWMAX to solution set.
+            ! Perform transformation to retriangularize, and test for near
+            ! linear dependence.
+            !
+            ! Swap column IWMAX into NSOLN-th position to maintain upper
+            ! Hessenberg form of adjacent columns, and add new column to
+            ! triangular decomposition.
+            nsoln = nsoln + 1
+            niv = niv + 1
+            if (nsoln/=iwmax) then
+               call dswap (m, w(1,nsoln), 1, w(1,iwmax), 1)
+               wd(iwmax) = wd(nsoln)
+               wd(nsoln) = 0.0_wp
+               itemp = ipivot(nsoln)
+               ipivot(nsoln) = ipivot(iwmax)
+               ipivot(iwmax) = itemp
+            endif
 
-      if (w(niv,nsoln)/=0.0_wp) then
-         isol = niv
-         z2 = w(isol,n+1)/w(isol,nsoln)
-         z(nsoln) = z2
-         pos = z2 > 0.0_wp
-         if (z2*eanorm>=bnorm .and. pos) then
-            pos = .not. (blowup*z2*eanorm>=bnorm)
-         endif
+            ! Reduce column NSOLN so that the matrix of nonactive constraints
+            ! variables is triangular.
+            do j = m,niv+1,-1
+               jp = j - 1
 
-         ! Try to add row ME+1 as an additional equality constraint.
-         ! Check size of proposed new solution component.
-         ! Reject it if it is too large.
+               ! When operating near the ME line, test to see if the pivot
+               ! element is near zero.  If so, use the largest element above
+               ! it as the pivot.  This is to maintain the sharp interface
+               ! between weighted and non-weighted rows in all cases.
+               if (j==me+1) then
+                  imax = me
+                  amax = scale(me)*w(me,nsoln)**2
+                  do jp = j - 1,niv,-1
+                     t = scale(jp)*w(jp,nsoln)**2
+                     if (t>amax) then
+                        imax = jp
+                        amax = t
+                     endif
+                  end do
+                  jp = imax
+               endif
 
-      elseif (niv<=me .and. w(me+1,nsoln)/=0.0_wp) then
-         isol = me + 1
-         if (pos) then
-            ! Swap rows ME+1 and NIV, and scale factors for these rows.
-            call dswap (n+1, w(me+1,1), mdw, w(niv,1), mdw)
-            call dswap (1, scale(me+1), 1, scale(niv), 1)
-            itemp = itype(me+1)
-            itype(me+1) = itype(niv)
-            itype(niv) = itemp
-            me = me + 1
-         endif
-      else
-         pos = .false.
+               if (w(j,nsoln)/=0.0_wp) then
+                  call drotmg (scale(jp), scale(j), w(jp,nsoln), w(j,nsoln), sparam)
+                  w(j,nsoln) = 0.0_wp
+                  call drotm (n+1-nsoln, w(jp,nsoln+1), mdw, w(j,nsoln+1), mdw, sparam)
+               endif
+            end do
+
+            ! Solve for Z(NSOLN)=proposed new value for X(NSOLN).  Test if
+            ! this is nonpositive or too large.  If this was true or if the
+            ! pivot term was zero, reject the column as dependent.
+            if (w(niv,nsoln)/=0.0_wp) then
+               isol = niv
+               z2 = w(isol,n+1)/w(isol,nsoln)
+               z(nsoln) = z2
+               pos = z2 > 0.0_wp
+               if (z2*eanorm>=bnorm .and. pos) then
+                  pos = .not. (blowup*z2*eanorm>=bnorm)
+               endif
+
+            elseif (niv<=me .and. w(me+1,nsoln)/=0.0_wp) then
+               ! Try to add row ME+1 as an additional equality constraint.
+               ! Check size of proposed new solution component.
+               ! Reject it if it is too large.
+               isol = me + 1
+               if (pos) then
+                  ! Swap rows ME+1 and NIV, and scale factors for these rows.
+                  call dswap (n+1, w(me+1,1), mdw, w(niv,1), mdw)
+                  call dswap (1, scale(me+1), 1, scale(niv), 1)
+                  itemp = itype(me+1)
+                  itype(me+1) = itype(niv)
+                  itype(niv) = itemp
+                  me = me + 1
+               endif
+            else
+               pos = .false.
+            endif
+
+            if (.not.pos) then
+               nsoln = nsoln - 1
+               niv = niv - 1
+            endif
+            if (pos.or.done) exit
+         end do
+
       endif
 
-      if (.not.pos) then
-         nsoln = nsoln - 1
-         niv = niv - 1
-      endif
-      if (.not.(pos.or.done)) go to 290
-   endif
-   go to 160
+   end do main
 
    ! Else perform multiplier test and drop a constraint.  To compute
    ! final solution.  Solve system, store results in X(*).
    !
    ! Copy right hand side into TEMP vector to use overwriting method.
-
-   330 isol = 1
+   isol = 1
    if (nsoln>=isol) then
       call dcopy (niv, w(1,n+1), 1, temp, 1)
       do j = nsoln,isol,-1
