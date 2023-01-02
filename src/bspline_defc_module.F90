@@ -2802,7 +2802,7 @@ module bspline_defc_module
    integer :: i, imax, j, jp1, k, key, kranke, last, lchk, link, m, &
               mapke1, mdeqc, mend, mep1, n1, n2, next, nlink, nopt, np1, &
               ntimes
-   logical :: cov
+   logical :: cov, done
    character(len=8) :: xern1, xern2, xern3, xern4
 
    ! Set the nominal tolerance used in the code for the equality
@@ -2817,11 +2817,11 @@ module bspline_defc_module
       write (xern3, '(I8)') ma
       write (xern4, '(I8)') mg
       write(*,*) 'ALL OF THE VARIABLES N, ME,' // &
-                 ' MA, MG MUST BE >= 0$$ENTERED ROUTINE WITH' // &
-                 '$$N  = ' // xern1 // &
-                 '$$ME = ' // xern2 // &
-                 '$$MA = ' // xern3 // &
-                 '$$MG = ' // xern4
+                 ' MA, MG MUST BE >= 0. ENTERED ROUTINE WITH: ' // &
+                    'N = ' // trim(adjustl(xern1)) // &
+                 ', ME = ' // trim(adjustl(xern2)) // &
+                 ', MA = ' // trim(adjustl(xern3)) // &
+                 ', MG = ' // trim(adjustl(xern4))
       return
    endif
 
@@ -2857,7 +2857,7 @@ module bspline_defc_module
    endif
 
    if (mdw<m) then
-      write(*,*) 'MDW<ME+MA+MG IS AN ERROR'
+      write(*,*) 'MDW < ME+MA+MG IS AN ERROR'
       return
    endif
 
@@ -2972,8 +2972,7 @@ module bspline_defc_module
       if (i/=imax) call dswap (np1, w(i,1), mdw, w(imax,1), mdw)
       if (snmax>rnmax*tau**2) then
          ! Eliminate elements I+1,...,N in row I.
-         call dh12 (1, i, i+1, n, w(i,1), mdw, ws(i), w(i+1,1), mdw, &
-                   1, m-i)
+         call dh12 (1, i, i+1, n, w(i,1), mdw, ws(i), w(i+1,1), mdw, 1, m-i)
       else
          kranke = i - 1
          exit
@@ -3033,6 +3032,7 @@ module bspline_defc_module
              x(kranke+1), rnorml, mode, ws(n2), ip(2))
 
    ! Test for consistency of equality constraints.
+   done = .false.
 
    if (me>0) then
       mdeqc = 0
@@ -3051,62 +3051,66 @@ module bspline_defc_module
             size = dasum(n,w(i,1),mdw)*xnorm + abs(w(i,np1))
             if (w(i,np1)>tau*size) then
                mode = mode + 2
-               go to 290
+               done = .true.
+               exit
             endif
          end do
       endif
    endif
 
-   ! Replace diagonal terms of lower trapezoidal matrix.
+   if (.not. done) then
+      ! Replace diagonal terms of lower trapezoidal matrix.
 
-   if (kranke>0) then
-      call dcopy (kranke, ws(kranke+1), 1, w, mdw+1)
-      ! Reapply transformation to put solution in original coordinates.
-      do i = kranke,1,-1
-         call dh12 (2, i, i+1, n, w(i,1), mdw, ws(i), x, 1, 1, 1)
-      end do
+      if (kranke>0) then
+         call dcopy (kranke, ws(kranke+1), 1, w, mdw+1)
+         ! Reapply transformation to put solution in original coordinates.
+         do i = kranke,1,-1
+            call dh12 (2, i, i+1, n, w(i,1), mdw, ws(i), x, 1, 1, 1)
+         end do
 
-      ! Compute covariance matrix of equality constrained problem.
+         ! Compute covariance matrix of equality constrained problem.
+
+         if (cov) then
+            do j = min(kranke,n-1),1,-1
+               rb = ws(j)*w(j,j)
+               if (rb/=0.0_wp) rb = 1.0_wp/rb
+               jp1 = j + 1
+               do i = jp1,n
+                  w(i,j) = rb*ddot(n-j,w(i,jp1),mdw,w(j,jp1),mdw)
+               end do
+               gam = 0.5_wp*rb*ddot(n-j,w(jp1,j),1,w(j,jp1),mdw)
+               call daxpy (n-j, gam, w(j,jp1), mdw, w(jp1,j), 1)
+               do i = jp1,n
+                  do k = i,n
+                     w(i,k) = w(i,k) + w(j,i)*w(k,j) + w(i,j)*w(j,k)
+                     w(k,i) = w(i,k)
+                  end do
+               end do
+               uj = ws(j)
+               vj = gam*uj
+               w(j,j) = uj*vj + uj*vj
+               do i = jp1,n
+                  w(j,i) = uj*w(i,j) + vj*w(j,i)
+               end do
+               call dcopy (n-j, w(j, jp1), mdw, w(jp1,j), 1)
+            end do
+         endif
+      endif
+
+      ! Apply the scaling to the covariance matrix.
 
       if (cov) then
-         do j = min(kranke,n-1),1,-1
-            rb = ws(j)*w(j,j)
-            if (rb/=0.0_wp) rb = 1.0_wp/rb
-            jp1 = j + 1
-            do i = jp1,n
-               w(i,j) = rb*ddot(n-j,w(i,jp1),mdw,w(j,jp1),mdw)
-            end do
-            gam = 0.5_wp*rb*ddot(n-j,w(jp1,j),1,w(j,jp1),mdw)
-            call daxpy (n-j, gam, w(j,jp1), mdw, w(jp1,j), 1)
-            do i = jp1,n
-               do k = i,n
-                  w(i,k) = w(i,k) + w(j,i)*w(k,j) + w(i,j)*w(j,k)
-                  w(k,i) = w(i,k)
-               end do
-            end do
-            uj = ws(j)
-            vj = gam*uj
-            w(j,j) = uj*vj + uj*vj
-            do i = jp1,n
-               w(j,i) = uj*w(i,j) + vj*w(j,i)
-            end do
-            call dcopy (n-j, w(j, jp1), mdw, w(jp1,j), 1)
+         do i = 1,n
+            call dscal (n, ws(i+n1-1), w(i,1), mdw)
+            call dscal (n, ws(i+n1-1), w(1,i), 1)
          end do
       endif
-   endif
 
-   ! Apply the scaling to the covariance matrix.
-
-   if (cov) then
-      do i = 1,n
-         call dscal (n, ws(i+n1-1), w(i,1), mdw)
-         call dscal (n, ws(i+n1-1), w(1,i), 1)
-      end do
-   endif
+   end if
 
    ! Rescale solution vector.
 
-290 if (mode<=1) then
+   if (mode<=1) then
       do j = 1,n
          x(j) = x(j)*ws(n1+j-1)
       end do
@@ -3891,7 +3895,7 @@ module bspline_defc_module
    dope(2) = eanorm
    dope(3) = tau
    call dwnlit (w, mdw, m, n, l, ipivot, itype, h, scale, rnorm, &
-               idope, dope, done)
+                idope, dope, done)
    me    = idope(1)
    krank = idope(2)
    niv   = idope(3)
