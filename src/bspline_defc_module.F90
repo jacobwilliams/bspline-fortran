@@ -3123,39 +3123,15 @@ module bspline_defc_module
 !  This is a companion subprogram to [[DLSEI]].  The documentation for
 !  [[DLSEI]] has complete usage instructions.
 !
-!  Solve..
-!           AX = B,  A  MA by N  (least squares equations)
-!  subject to..
+!  Solve:
+!```
+!    AX = B,  A  MA by N  (least squares equations)
+!```
 !
-!           GX>=H, G  MG by N  (inequality constraints)
-!
-!  Input..
-!
-!   W(*,*) contains  (A B) in rows 1,...,MA+MG, cols 1,...,N+1.
-!                    (G H)
-!
-!  MDW,MA,MG,N
-!           contain (resp) var. dimension of W(*,*),
-!           and matrix dimensions.
-!
-!  PRGOPT(*),
-!           Program option vector.
-!
-!  OUTPUT..
-!
-!   X(*),RNORM
-!
-!           Solution vector(unless MODE=2), length of AX-B.
-!
-!   MODE
-!           =0   Inequality constraints are compatible.
-!           =2   Inequality constraints contradictory.
-!
-!   WS(*),
-!           Working storage of dimension K+N+(MG+2)*(N+7),
-!           where K=MAX(MA+MG,N).
-!   IP(MG+2*N+1)
-!           Integer working storage
+!  subject to:
+!```
+!    GX>=H, G  MG by N  (inequality constraints)
+!```
 !
 !### Revision history
 !  * 790701  DATE WRITTEN. Hanson, R. J., (SNLA)
@@ -3166,17 +3142,35 @@ module bspline_defc_module
 !  * 900604  DP version created from SP version.  (RWC)
 !  * 920422  Changed CALL to DHFTI to include variable MA.  (WRB)
 
-   subroutine dlsi (w, mdw, ma, mg, n, prgopt, x, rnorm, mode, ws, &
-                    ip)
+   subroutine dlsi (w, mdw, ma, mg, n, prgopt, x, rnorm, mode, ws, ip)
 
-   integer :: ip(*), ma, mdw, mg, mode, n
-   real(wp) :: prgopt(*), rnorm, w(mdw,*), ws(*), x(*)
-   real(wp) :: rnorm_(1) !! JW added for call to [[dhfti]]
+   integer,intent(in) :: mdw !! contain (resp) var. dimension of `W(*,*)`, and matrix dimensions.
+   integer,intent(in) :: ma  !! contain (resp) var. dimension of `W(*,*)`, and matrix dimensions.
+   integer,intent(in) :: mg  !! contain (resp) var. dimension of `W(*,*)`, and matrix dimensions.
+   integer,intent(in) :: n   !! contain (resp) var. dimension of `W(*,*)`, and matrix dimensions.
+   real(wp) :: w(mdw,*) !! `W(*,*)` contains:
+                        !!
+                        !!```
+                        !! (A B)
+                        !! (G H)
+                        !!```
+                        !!
+                        !! in rows `1,...,MA+MG`,
+                        !! cols `1,...,N+1`.
+   real(wp),intent(in) :: prgopt(*) !! Program option vector.
+   real(wp),intent(out) :: x(*) !! Solution vector(unless MODE=2)
+   real(wp),intent(out) :: rnorm !! length of AX-B.
+   integer,intent(out) :: mode !! * `=0`   Inequality constraints are compatible.
+                               !! * `=2`   Inequality constraints contradictory.
+   real(wp) :: ws(*) !! Working storage of dimension `K+N+(MG+2)*(N+7)`,
+                     !! where `K=MAX(MA+MG,N)`.
+   integer :: ip(*) !! `IP(MG+2*N+1)` Integer working storage
 
    real(wp) :: anorm, fac, gam, rb, tau, tol, xnorm
    integer :: i, j, k, key, krank, krm1, krp1, l, last, link, m, map1, &
               mdlpdp, minman, n1, n2, n3, next, np1
    logical :: cov, sclcov
+   real(wp) :: rnorm_(1) !! JW added for call to [[dhfti]]
 
    ! Set the nominal tolerance used in the code.
    tol = sqrt(drelpr)
@@ -3450,10 +3444,10 @@ module bspline_defc_module
 !  This is a companion subprogram to [[DWNNLS]].
 !  The documentation for [[DWNNLS]] has complete usage instructions.
 !
-!  Note  The M by (N+1) matrix W( , ) contains the rt. hand side
-!        B as the (N+1)st col.
+!  Note: The `M` by `(N+1)` matrix `W( , )` contains the rt. hand side
+!        `B` as the `(N+1)`st col.
 !
-!  Triangularize L1 by L1 subsystem, where L1=MIN(M,L), with
+!  Triangularize `L1` by `L1` subsystem, where `L1=MIN(M,L)`, with
 !  col interchanges.
 !
 !### Revision history
@@ -4337,18 +4331,23 @@ module bspline_defc_module
 !  Test the column IC to determine if it is linearly independent
 !  of the columns already in the basis.  In the initial tri. step,
 !  we usually want the heavy weight ALAMDA to be included in the
-!  test for independence.  In this case, the value of FACTOR will
-!  have been set to 1.E0 before this procedure is invoked.
+!  test for independence.  In this case, the value of `FACTOR` will
+!  have been set to 1.0 before this procedure is invoked.
 !  In the potentially rank deficient problem, the value of FACTOR
-!  will have been set to ALSQ=ALAMDA**2 to remove the effect of the
+!  will have been set to `ALSQ=ALAMDA**2` to remove the effect of the
 !  heavy weight from the test for independence.
 !
 !  Write new column as partitioned vector
-!        (A1)  number of components in solution so far = NIV
-!        (A2)  M-NIV components
-!  And compute  SN = inverse weighted length of A1
-!               RN = inverse weighted length of A2
-!  Call the column independent when RN > TAU*SN
+!
+!   * `(A1)`  number of components in solution so far `= NIV`
+!   * `(A2)`  `M-NIV` components
+!
+!  And compute
+!
+!   * `SN` = inverse weighted length of `A1`
+!   * `RN` = inverse weighted length of `A2`
+!
+!  Call the column independent when `RN > TAU*SN`
 !
 !### Revision history
 !  * 790701  DATE WRITTEN. Hanson, R. J., (SNLA), Haskell, K. H., (SNLA)
@@ -4393,8 +4392,13 @@ module bspline_defc_module
 
    subroutine dwnlt3 (i, imax, m, mdw, ipivot, h, w)
 
-   integer :: i, imax, ipivot(*), m, mdw
-   real(wp) :: h(*), w(mdw,*)
+   integer,intent(in) :: i
+   integer,intent(in) :: imax
+   integer,intent(inout) :: ipivot(*)
+   integer ,intent(in):: m
+   integer,intent(in) :: mdw
+   real(wp),intent(inout) :: h(*)
+   real(wp),intent(inout) :: w(mdw,*)
 
    real(wp) :: t
    integer :: itemp
@@ -4415,30 +4419,31 @@ module bspline_defc_module
 !*****************************************************************************************
 !>
 !  This subprogram solves a linearly constrained least squares
-!  problem.  Suppose there are given matrices E and A of
-!  respective dimensions ME by N and MA by N, and vectors F
-!  and B of respective lengths ME and MA.  This subroutine
+!  problem.  Suppose there are given matrices `E` and `A` of
+!  respective dimensions `ME` by `N` and `MA` by `N`, and vectors `F`
+!  and `B` of respective lengths `ME` and `MA`.  This subroutine
 !  solves the problem
 !
-!            EX = F, (equations to be exactly satisfied)
+!   * `EX = F`, (equations to be exactly satisfied)
+!   * `AX = B`, (equations to be approximately satisfied, in the least squares sense)
 !
-!            AX = B, (equations to be approximately satisfied,
-!                     in the least squares sense)
+!  subject to components `L+1,...,N` nonnegative
 !
-!            subject to components L+1,...,N nonnegative
+!  Any values `ME>=0`, `MA>=0` and `0<= L <=N` are permitted.
 !
-!  Any values ME>=0, MA>=0 and 0<= L <=N are permitted.
+!  The problem is reposed as problem [[DWNNLS]]
 !
-!  The problem is reposed as problem DWNNLS
-!
+!```
 !            (WT*E)X = (WT*F)
 !            (   A)    (   B), (least squares)
 !            subject to components L+1,...,N nonnegative.
+!```
 !
-!  The subprogram chooses the heavy weight (or penalty parameter) WT.
+!  The subprogram chooses the heavy weight (or penalty parameter) `WT`.
 !
-!  The parameters for DWNNLS are
+!  The parameters for [[DWNNLS]] are
 !
+!```
 !  INPUT.. All TYPE REAL variables are DOUBLE PRECISION
 !
 !  W(*,*),MDW,  The array W(*,*) is double subscripted with first
@@ -4633,6 +4638,7 @@ module bspline_defc_module
 !
 !  IWORK(*)     An integer-valued working array of length at least
 !               M+N.
+!```
 !
 !### References
 !  * K. H. Haskell and R. J. Hanson, An algorithm for
