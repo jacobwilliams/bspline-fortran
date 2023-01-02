@@ -46,7 +46,7 @@
     real(wp),dimension(ndata) :: bcoef
     real(wp),dimension(ndata*10) :: x_int, y_int
 
-    integer,parameter :: nconst = 2 !! for [[dfc]]
+    integer,parameter :: nconst = 4 !! for [[dfc]]
     real(wp),dimension(nconst) :: xconst
     real(wp),dimension(nconst) :: yconst
     integer ,dimension(nconst) :: nderiv
@@ -137,20 +137,31 @@
     !--------------------------------------------------------
     ! now, do the least squares splines with some constraints:
 
-    j     = 1 ! 1st derivative
+    j = 1 ! 1st derivative constraints
+
     itype = 2 ! (J-th deriv. at X) == Y
     xconst(1) = xdata(1)
     yconst(1) = 0.0_wp  ! == constraint for derivative at initial point
     nderiv(1) = itype+4*J
 
-    j     = 1 ! 1st derivative
-    itype = 0 ! (J-th deriv. at X) <= Y.
-    xconst(2) = xdata(ndata)
-    yconst(2) = -2.0_wp  ! <= inequality constraint for derivative at final point
+    itype = 1 ! (J-th deriv. at X) >= Y.
+    xconst(2) = xdata(2)
+    yconst(2) = 0.0_wp  ! >= inequality constraint for derivative at seconmd point
     nderiv(2) = itype+4*J
 
-    neqcon = 1 ! num equality constraints
-    nincon = 1 ! num inequality constraints
+    itype = 0 ! (J-th deriv. at X) <= Y.
+    xconst(3) = xdata(ndata)
+    yconst(3) = -2.0_wp  ! <= inequality constraint for derivative at final point
+    nderiv(3) = itype+4*J
+
+    itype = 3 ! (J-th deriv. at X) == (J-th deriv. at Y).
+    xconst(4) = xdata(3)
+    yconst(4) = xdata(4) ! == constraint on 3rd and 4th derivatives
+    nderiv(4) = itype+4*J
+
+    neqcon = 2 ! num equality constraints
+    nincon = 2 ! num inequality constraints
+
     mode = 1 ! a new problem
     l = nbkpt-nord+1
     iw1 = nincon+2*l
