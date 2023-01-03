@@ -19,8 +19,7 @@ The library provides subroutines for 1D-6D interpolation and extrapolation using
 
 The core routines for the subroutine interface are:
 
-```Fortran
-
+```fortran
 !f(x)
 subroutine db1ink(x,nx,fcn,kx,iknot,tx,bcoef,iflag)
 subroutine db1val(xval,idx,tx,nx,kx,bcoef,f,iflag,inbvx,w0,extrap)
@@ -86,7 +85,7 @@ Note that extrapolation is not currently supported for these.
 
 ## Least squares fitting
 
-The BSpline-Fortran library also exports the `defc` subroutine, which can be used to fit B-spline polynomials to 1D data using a weighted least squares method.
+The BSpline-Fortran library also exports the `defc` subroutine, which can be used to fit B-spline polynomials to 1D data using a weighted least squares method. The `dfc` subroutine also allows for equality and inequality constraints to be imposed on the fitted curve. These procedures are not yet available in the object oriented interface.
 
 ## Examples
 

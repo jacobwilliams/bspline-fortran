@@ -49,8 +49,6 @@ module bspline_defc_module
 
    public :: defc, dfc, dcv
 
-   public :: dhfti
-
    contains
 !*****************************************************************************************
 
@@ -1197,23 +1195,23 @@ module bspline_defc_module
    subroutine dfc (ndata, xdata, ydata, sddata, nord, nbkpt, bkpt, &
                    nconst, xconst, yconst, nderiv, mode, coeff, w, iw)
 
-   integer , intent(in)    :: ndata !! number of points (size of `xdata` and `ydata`).
-                                    !! Any non-negative value of `NDATA` is allowed.
-                                    !! A negative value of `NDATA` is an error.
-   real(wp), intent(in)    :: xdata(*) !! X data array. No sorting of `XDATA(*)` is required.
-   real(wp), intent(in)    :: ydata(*) !! Y data array.
-   real(wp), intent(in)    :: sddata(*) !! Y value standard deviation or uncertainty.
-                                        !! A zero value for any entry of
-                                        !! `SDDATA(*)` will weight that data point as 1.
-                                        !! Otherwise the weight of that data point is
-                                        !! the reciprocal of this entry.
-   integer , intent(in)    :: nord !! B-spline order.
-                                   !! (The order of the spline is one more than the
-                                   !! degree of the piecewise polynomial defined on
-                                   !! each interval.  This is consistent with the
-                                   !! B-spline package convention.  For example,
-                                   !! `NORD=4` when we are using piecewise cubics.)
-                                   !! `NORD` must be in the range `1 <= NORD <= 20`.
+   integer, intent(in) :: ndata !! number of points (size of `xdata` and `ydata`).
+                                !! Any non-negative value of `NDATA` is allowed.
+                                !! A negative value of `NDATA` is an error.
+   real(wp), intent(in) :: xdata(*) !! X data array. No sorting of `XDATA(*)` is required.
+   real(wp), intent(in) :: ydata(*) !! Y data array.
+   real(wp), intent(in) :: sddata(*) !! Y value standard deviation or uncertainty.
+                                     !! A zero value for any entry of
+                                     !! `SDDATA(*)` will weight that data point as 1.
+                                     !! Otherwise the weight of that data point is
+                                     !! the reciprocal of this entry.
+   integer, intent(in) :: nord !! B-spline order.
+                               !! (The order of the spline is one more than the
+                               !! degree of the piecewise polynomial defined on
+                               !! each interval.  This is consistent with the
+                               !! B-spline package convention.  For example,
+                               !! `NORD=4` when we are using piecewise cubics.)
+                               !! `NORD` must be in the range `1 <= NORD <= 20`.
    integer,intent(in) :: Nbkpt !! The value of `NBKPT` must satisfy the condition `NBKPT >= 2*NORD`.
    real(wp),dimension(*),intent(in) :: Bkpt !! `NBKPT` knots of the B-spline.
                                             !! Normally the
@@ -1228,137 +1226,137 @@ module bspline_defc_module
                                             !! accommodate any data values that are exterior
                                             !! to the given knot values.  The contents of
                                             !! `BKPT(*)` is not changed.
-   integer , intent(in)    :: nconst !! The number of conditions that constrain the
-                                     !! B-spline is NCONST.  A constraint is specified
-                                     !! by an (X,Y) pair in the arrays XCONST(*) and
-                                     !! YCONST(*), and by the type of constraint and
-                                     !! derivative value encoded in the array
-                                     !! NDERIV(*).
-   real(wp), intent(in)    :: xconst(*) !! X value of constraint.
-                                        !! No sorting of XCONST(*) is required.
-   real(wp), intent(in)    :: yconst(*) !! Y value of constraint
-   integer , intent(in)    :: nderiv(*) !! The value of NDERIV(*) is
-                                        !! determined as follows.  Suppose the I-th
-                                        !! constraint applies to the J-th derivative
-                                        !! of the B-spline.  (Any non-negative value of
-                                        !! J < NORD is permitted.  In particular the
-                                        !! value J=0 refers to the B-spline itself.)
-                                        !! For this I-th constraint, set
-                                        !!```
-                                        !!  XCONST(I)=X,
-                                        !!  YCONST(I)=Y, and
-                                        !!  NDERIV(I)=ITYPE+4*J, where
-                                        !!
-                                        !!  ITYPE = 0,      if (J-th deriv. at X) <= Y.
-                                        !!        = 1,      if (J-th deriv. at X) >= Y.
-                                        !!        = 2,      if (J-th deriv. at X) == Y.
-                                        !!        = 3,      if (J-th deriv. at X) ==
-                                        !!                     (J-th deriv. at Y).
-                                        !!```
-                                        !! (A value of NDERIV(I)=-1 will cause this
-                                        !! constraint to be ignored.  This subprogram
-                                        !! feature is often useful when temporarily
-                                        !! suppressing a constraint while still
-                                        !! retaining the source code of the calling
-                                        !! program.)
-   integer , intent(inout) :: mode !! *Input*
-                                   !!
-                                   !! An input flag that directs the least squares
-                                   !! solution method used by [[DFC]].
-                                   !!
-                                   !! The variance function, referred to below,
-                                   !! defines the square of the probable error of
-                                   !! the fitted curve at any point, XVAL.
-                                   !! This feature of [[DFC]] allows one to use the
-                                   !! square root of this variance function to
-                                   !! determine a probable error band around the
-                                   !! fitted curve.
-                                   !!
-                                   !!  * `=1`  a new problem.  No variance function.
-                                   !!  * `=2`  a new problem.  Want variance function.
-                                   !!  * `=3`  an old problem.  No variance function.
-                                   !!  * `=4`  an old problem.  Want variance function.
-                                   !!
-                                   !! Any value of MODE other than 1-4 is an error.
-                                   !!
-                                   !! The user with a new problem can skip directly
-                                   !! to the description of the input parameters
-                                   !! IW(1), IW(2).
-                                   !!
-                                   !! If the user correctly specifies the new or old
-                                   !! problem status, the subprogram [[DFC]] will
-                                   !! perform more efficiently.
-                                   !! By an old problem it is meant that subprogram
-                                   !! [[DFC]] was last called with this same set of
-                                   !! knots, data points and weights.
-                                   !!
-                                   !! Another often useful deployment of this old
-                                   !! problem designation can occur when one has
-                                   !! previously obtained a Q-R orthogonal
-                                   !! decomposition of the matrix resulting from
-                                   !! B-spline fitting of data (without constraints)
-                                   !! at the breakpoints BKPT(I), I=1,...,NBKPT.
-                                   !! For example, this matrix could be the result
-                                   !! of sequential accumulation of the least
-                                   !! squares equations for a very large data set.
-                                   !! The user writes this code in a manner
-                                   !! convenient for the application.  For the
-                                   !! discussion here let
-                                   !!
-                                   !! `N=NBKPT-NORD, and K=N+3`
-                                   !!
-                                   !! Let us assume that an equivalent least squares
-                                   !! system
-                                   !!
-                                   !! `RC=D`
-                                   !!
-                                   !! has been obtained.  Here R is an N+1 by N
-                                   !! matrix and D is a vector with N+1 components.
-                                   !! The last row of R is zero.  The matrix R is
-                                   !! upper triangular and banded.  At most NORD of
-                                   !! the diagonals are nonzero.
-                                   !! The contents of R and D can be copied to the
-                                   !! working array W(*) as follows.
-                                   !!
-                                   !! The I-th diagonal of R, which has N-I+1
-                                   !! elements, is copied to W(*) starting at
-                                   !!
-                                   !! `W((I-1)*K+1),`
-                                   !!
-                                   !! for I=1,...,NORD.
-                                   !! The vector D is copied to W(*) starting at
-                                   !!
-                                   !! `W(NORD*K+1)`
-                                   !!
-                                   !! The input value used for NDATA is arbitrary
-                                   !! when an old problem is designated.  Because
-                                   !! of the feature of [[DFC]] that checks the
-                                   !! working storage array lengths, a value not
-                                   !! exceeding NBKPT should be used.  For example,
-                                   !! use NDATA=0.
-                                   !!
-                                   !! (The constraints or variance function request
-                                   !! can change in each call to [[DFC]].)  A new
-                                   !! problem is anything other than an old problem.
-                                   !!
-                                   !! *Output*
-                                   !!
-                                   !! An output flag that indicates the status
-                                   !! of the constrained curve fit.
-                                   !!
-                                   !!  * `=-1`  a usage error of [[DFC]] occurred.  The
-                                   !!    offending condition is noted with the
-                                   !!    SLATEC library error processor, XERMSG.
-                                   !!    In case the working arrays W(*) or IW(*)
-                                   !!    are not long enough, the minimal
-                                   !!    acceptable length is printed.
-                                   !! * `= 0`  successful constrained curve fit.
-                                   !! * `= 1`  the requested equality constraints
-                                   !!   are contradictory.
-                                   !! * `= 2`  the requested inequality constraints
-                                   !!    are contradictory.
-                                   !! * `= 3`  both equality and inequality constraints
-                                   !!   are contradictory.
+   integer, intent(in) :: nconst !! The number of conditions that constrain the
+                                 !! B-spline is NCONST.  A constraint is specified
+                                 !! by an (X,Y) pair in the arrays XCONST(*) and
+                                 !! YCONST(*), and by the type of constraint and
+                                 !! derivative value encoded in the array
+                                 !! NDERIV(*).
+   real(wp), intent(in) :: xconst(*) !! X value of constraint.
+                                     !! No sorting of XCONST(*) is required.
+   real(wp), intent(in) :: yconst(*) !! Y value of constraint
+   integer, intent(in) :: nderiv(*) !! The value of NDERIV(*) is
+                                    !! determined as follows.  Suppose the I-th
+                                    !! constraint applies to the J-th derivative
+                                    !! of the B-spline.  (Any non-negative value of
+                                    !! J < NORD is permitted.  In particular the
+                                    !! value J=0 refers to the B-spline itself.)
+                                    !! For this I-th constraint, set
+                                    !!```
+                                    !!  XCONST(I)=X,
+                                    !!  YCONST(I)=Y, and
+                                    !!  NDERIV(I)=ITYPE+4*J, where
+                                    !!
+                                    !!  ITYPE = 0,      if (J-th deriv. at X) <= Y.
+                                    !!        = 1,      if (J-th deriv. at X) >= Y.
+                                    !!        = 2,      if (J-th deriv. at X) == Y.
+                                    !!        = 3,      if (J-th deriv. at X) ==
+                                    !!                     (J-th deriv. at Y).
+                                    !!```
+                                    !! (A value of NDERIV(I)=-1 will cause this
+                                    !! constraint to be ignored.  This subprogram
+                                    !! feature is often useful when temporarily
+                                    !! suppressing a constraint while still
+                                    !! retaining the source code of the calling
+                                    !! program.)
+   integer, intent(inout) :: mode !! *Input*
+                                  !!
+                                  !! An input flag that directs the least squares
+                                  !! solution method used by [[DFC]].
+                                  !!
+                                  !! The variance function, referred to below,
+                                  !! defines the square of the probable error of
+                                  !! the fitted curve at any point, XVAL.
+                                  !! This feature of [[DFC]] allows one to use the
+                                  !! square root of this variance function to
+                                  !! determine a probable error band around the
+                                  !! fitted curve.
+                                  !!
+                                  !!  * `=1`  a new problem.  No variance function.
+                                  !!  * `=2`  a new problem.  Want variance function.
+                                  !!  * `=3`  an old problem.  No variance function.
+                                  !!  * `=4`  an old problem.  Want variance function.
+                                  !!
+                                  !! Any value of MODE other than 1-4 is an error.
+                                  !!
+                                  !! The user with a new problem can skip directly
+                                  !! to the description of the input parameters
+                                  !! IW(1), IW(2).
+                                  !!
+                                  !! If the user correctly specifies the new or old
+                                  !! problem status, the subprogram [[DFC]] will
+                                  !! perform more efficiently.
+                                  !! By an old problem it is meant that subprogram
+                                  !! [[DFC]] was last called with this same set of
+                                  !! knots, data points and weights.
+                                  !!
+                                  !! Another often useful deployment of this old
+                                  !! problem designation can occur when one has
+                                  !! previously obtained a Q-R orthogonal
+                                  !! decomposition of the matrix resulting from
+                                  !! B-spline fitting of data (without constraints)
+                                  !! at the breakpoints BKPT(I), I=1,...,NBKPT.
+                                  !! For example, this matrix could be the result
+                                  !! of sequential accumulation of the least
+                                  !! squares equations for a very large data set.
+                                  !! The user writes this code in a manner
+                                  !! convenient for the application.  For the
+                                  !! discussion here let
+                                  !!
+                                  !! `N=NBKPT-NORD, and K=N+3`
+                                  !!
+                                  !! Let us assume that an equivalent least squares
+                                  !! system
+                                  !!
+                                  !! `RC=D`
+                                  !!
+                                  !! has been obtained.  Here R is an N+1 by N
+                                  !! matrix and D is a vector with N+1 components.
+                                  !! The last row of R is zero.  The matrix R is
+                                  !! upper triangular and banded.  At most NORD of
+                                  !! the diagonals are nonzero.
+                                  !! The contents of R and D can be copied to the
+                                  !! working array W(*) as follows.
+                                  !!
+                                  !! The I-th diagonal of R, which has N-I+1
+                                  !! elements, is copied to W(*) starting at
+                                  !!
+                                  !! `W((I-1)*K+1),`
+                                  !!
+                                  !! for I=1,...,NORD.
+                                  !! The vector D is copied to W(*) starting at
+                                  !!
+                                  !! `W(NORD*K+1)`
+                                  !!
+                                  !! The input value used for NDATA is arbitrary
+                                  !! when an old problem is designated.  Because
+                                  !! of the feature of [[DFC]] that checks the
+                                  !! working storage array lengths, a value not
+                                  !! exceeding NBKPT should be used.  For example,
+                                  !! use NDATA=0.
+                                  !!
+                                  !! (The constraints or variance function request
+                                  !! can change in each call to [[DFC]].)  A new
+                                  !! problem is anything other than an old problem.
+                                  !!
+                                  !! *Output*
+                                  !!
+                                  !! An output flag that indicates the status
+                                  !! of the constrained curve fit.
+                                  !!
+                                  !!  * `=-1`  a usage error of [[DFC]] occurred.  The
+                                  !!    offending condition is noted with the
+                                  !!    SLATEC library error processor, XERMSG.
+                                  !!    In case the working arrays W(*) or IW(*)
+                                  !!    are not long enough, the minimal
+                                  !!    acceptable length is printed.
+                                  !! * `= 0`  successful constrained curve fit.
+                                  !! * `= 1`  the requested equality constraints
+                                  !!   are contradictory.
+                                  !! * `= 2`  the requested inequality constraints
+                                  !!    are contradictory.
+                                  !! * `= 3`  both equality and inequality constraints
+                                  !!   are contradictory.
    real(wp), intent(out) :: coeff(*) !! If the output value of MODE=0 or 1, this array
                                      !! contains the unknowns obtained from the least
                                      !! squares fitting process.  These N=NBKPT-NORD
@@ -1435,7 +1433,7 @@ module bspline_defc_module
    !     I1,...,I2-1      G(*,*)
    !     I2,...,I3-1      XTEMP(*)
    !     I3,...,I4-1      PTEMP(*)
-   !     I4,...,I5-1      BKPT(*) (LOCAL TO DFCMN( ))
+   !     I4,...,I5-1      BKPT(*) (LOCAL TO [[DFCMN]])
    !     I5,...,I6-1      BF(*,*)
    !     I6,...,I7-1      W(*,*)
    !     I7,...           WORK(*) FOR [[DLSEI]]
