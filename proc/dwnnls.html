@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta name="description" content="BSPLINE-FORTRAN -- Multidimensional B-Spline Interpolation of Data on a Regular Grid">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>dwnnls &ndash; bspline-fortran</title>
+
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/local.css" rel="stylesheet">
+    <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <script src="../js/jquery-2.1.3.min.js"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
+
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">bspline-fortran </a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
+              <a href="#" class="dropdown-toggle"
+              data-toggle="dropdown" role="button"
+              aria-haspopup="true"
+     aria-expanded="false">Contents <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <li><a href="../lists/files.html">Source Files</a></li>
+            <li><a href="../lists/modules.html">Modules</a></li>
+            <li><a href="../lists/procedures.html">Procedures</a></li>
+            <li><a href="../lists/absint.html">Abstract Interfaces</a></li>
+                   <li><a href="../lists/types.html">Derived Types</a></li>
+       
+            </ul>
+        
+            </li>
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/files.html">Source Files</a></li>
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/modules.html">Modules</a></li>
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/procedures.html">Procedures</a></li>
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/absint.html">Abstract Interfaces</a></li>
+                             <li class="visible-xs hidden-sm visible-lg"><a href="../lists/types.html">Derived Types</a></li>
+          </ul>
+        <form action="../search.html" class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+        </div>
+<!--
+        <button type="submit" class="btn btn-default">Submit</button>
+-->
+        </form>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+  <div class="row">
+    <h1>dwnnls
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="row" id="info-bar">
+    <div class="col-lg-12">
+      <div class="well well-sm">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+          <li id="statements"><i class="fa fa-list-ol"></i>
+            <a data-toggle="tooltip"
+               data-placement="bottom" data-html="true"
+               title=" 0.7% of total for procedures.">41 statements</a>
+          </li>
+
+            <li id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/bspline_defc_module.F90"> Source File</a>
+            </li>
+        </ul>
+        <ol class="breadcrumb in-well text-right">
+              <li><a href='../sourcefile/bspline_defc_module.f90.html'>bspline_defc_module.F90</a></li>
+              <li><a href='../module/bspline_defc_module.html'>bspline_defc_module</a></li>
+          <li class="active">dwnnls</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+    })
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="panel panel-primary">
+      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/dwnnls.html#src">dwnnls</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>private  subroutine dwnnls(w, mdw, me, ma, n, l, prgopt, x, rnorm, mode, iwork, work)  
+</h2>
+    
+
+    <p>This subprogram solves a linearly constrained least squares
+  problem.  Suppose there are given matrices <code>E</code> and <code>A</code> of
+  respective dimensions <code>ME</code> by <code>N</code> and <code>MA</code> by <code>N</code>, and vectors <code>F</code>
+  and <code>B</code> of respective lengths <code>ME</code> and <code>MA</code>.  This subroutine
+  solves the problem</p>
+<ul>
+<li><code>EX = F</code>, (equations to be exactly satisfied)</li>
+<li><code>AX = B</code>, (equations to be approximately satisfied, in the least squares sense)</li>
+</ul>
+<p>subject to components <code>L+1,...,N</code> nonnegative</p>
+<p>Any values <code>ME&gt;=0</code>, <code>MA&gt;=0</code> and <code>0&lt;= L &lt;=N</code> are permitted.</p>
+<p>The problem is reposed as problem <a href="../proc/dwnnls.html">dwnnls</a></p>
+<div class="codehilite"><pre><span></span><code>            (WT*E)X = (WT*F)
+            (   A)    (   B), (least squares)
+            subject to components L+1,...,N nonnegative.
+</code></pre></div>
+
+<p>The subprogram chooses the heavy weight (or penalty parameter) <code>WT</code>.</p>
+<p>The parameters for <a href="../proc/dwnnls.html">dwnnls</a> are</p>
+<div class="codehilite"><pre><span></span><code><span class="w">  </span><span class="n">INPUT</span><span class="o">..</span><span class="w"> </span><span class="n">All</span><span class="w"> </span><span class="n">TYPE</span><span class="w"> </span><span class="n">REAL</span><span class="w"> </span><span class="n">variables</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">DOUBLE</span><span class="w"> </span><span class="n">PRECISION</span><span class="w"></span>
+
+<span class="w">  </span><span class="n">W</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">),</span><span class="n">MDW</span><span class="p">,</span><span class="w">  </span><span class="n">The</span><span class="w"> </span><span class="n">array</span><span class="w"> </span><span class="n">W</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">double</span><span class="w"> </span><span class="n">subscripted</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">first</span><span class="w"></span>
+<span class="w">  </span><span class="n">ME</span><span class="p">,</span><span class="n">MA</span><span class="p">,</span><span class="n">N</span><span class="p">,</span><span class="n">L</span><span class="w">    </span><span class="n">dimensioning</span><span class="w"> </span><span class="n">parameter</span><span class="w"> </span><span class="n">equal</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">MDW</span><span class="o">.</span><span class="w">  </span><span class="n">For</span><span class="w"> </span><span class="n">this</span><span class="w"></span>
+<span class="w">               </span><span class="n">discussion</span><span class="w"> </span><span class="n">let</span><span class="w"> </span><span class="n">us</span><span class="w"> </span><span class="n">call</span><span class="w"> </span><span class="n">M</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ME</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">MA</span><span class="o">.</span><span class="w">  </span><span class="n">Then</span><span class="w"> </span><span class="n">MDW</span><span class="w"></span>
+<span class="w">               </span><span class="n">must</span><span class="w"> </span><span class="n">satisfy</span><span class="w"> </span><span class="n">MDW</span><span class="o">&gt;=</span><span class="n">M</span><span class="o">.</span><span class="w">  </span><span class="n">The</span><span class="w"> </span><span class="n">condition</span><span class="w"> </span><span class="n">MDW</span><span class="o">&lt;</span><span class="n">M</span><span class="w"></span>
+<span class="w">               </span><span class="k">is</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="n">error</span><span class="o">.</span><span class="w"></span>
+
+<span class="w">               </span><span class="n">The</span><span class="w"> </span><span class="n">array</span><span class="w"> </span><span class="n">W</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">contains</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">matrices</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">vectors</span><span class="w"></span>
+
+<span class="w">                    </span><span class="p">(</span><span class="n">E</span><span class="w">  </span><span class="n">F</span><span class="p">)</span><span class="w"></span>
+<span class="w">                    </span><span class="p">(</span><span class="n">A</span><span class="w">  </span><span class="n">B</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">               </span><span class="ow">in</span><span class="w"> </span><span class="n">rows</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">columns</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="o">...</span><span class="p">,</span><span class="n">M</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="o">...</span><span class="p">,</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="w"></span>
+<span class="w">               </span><span class="n">respectively</span><span class="o">.</span><span class="w">  </span><span class="n">Columns</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="o">...</span><span class="p">,</span><span class="n">L</span><span class="w"> </span><span class="n">correspond</span><span class="w"> </span><span class="n">to</span><span class="w"></span>
+<span class="w">               </span><span class="n">unconstrained</span><span class="w"> </span><span class="n">variables</span><span class="w"> </span><span class="n">X</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="o">...</span><span class="p">,</span><span class="n">X</span><span class="p">(</span><span class="n">L</span><span class="p">)</span><span class="o">.</span><span class="w">  </span><span class="n">The</span><span class="w"></span>
+<span class="w">               </span><span class="n">remaining</span><span class="w"> </span><span class="n">variables</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">constrained</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">be</span><span class="w"></span>
+<span class="w">               </span><span class="n">nonnegative</span><span class="o">.</span><span class="w"> </span><span class="n">The</span><span class="w"> </span><span class="n">condition</span><span class="w"> </span><span class="n">L</span><span class="o">&lt;</span><span class="mi">0</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">L</span><span class="o">&gt;</span><span class="n">N</span><span class="w"> </span><span class="k">is</span><span class="w"></span>
+<span class="w">               </span><span class="n">an</span><span class="w"> </span><span class="n">error</span><span class="o">.</span><span class="w"></span>
+
+<span class="w">  </span><span class="n">PRGOPT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">    </span><span class="n">This</span><span class="w"> </span><span class="n">double</span><span class="w"> </span><span class="n">precision</span><span class="w"> </span><span class="n">array</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">option</span><span class="w"> </span><span class="n">vector</span><span class="o">.</span><span class="w"></span>
+<span class="w">               </span><span class="n">If</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">user</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">satisfied</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">nominal</span><span class="w"></span>
+<span class="w">               </span><span class="n">subprogram</span><span class="w"> </span><span class="n">features</span><span class="w"> </span><span class="n">set</span><span class="w"></span>
+
+<span class="w">               </span><span class="n">PRGOPT</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">=</span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="ow">or</span><span class="w"> </span><span class="n">PRGOPT</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">               </span><span class="n">Otherwise</span><span class="w"> </span><span class="n">PRGOPT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">linked</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="n">consisting</span><span class="w"> </span><span class="n">of</span><span class="w"></span>
+<span class="w">               </span><span class="n">groups</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">following</span><span class="w"> </span><span class="n">form</span><span class="w"></span>
+
+<span class="w">               </span><span class="n">LINK</span><span class="w"></span>
+<span class="w">               </span><span class="n">KEY</span><span class="w"></span>
+<span class="w">               </span><span class="n">DATA</span><span class="w"> </span><span class="n">SET</span><span class="w"></span>
+
+<span class="w">               </span><span class="n">The</span><span class="w"> </span><span class="n">parameters</span><span class="w"> </span><span class="n">LINK</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">KEY</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">each</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="n">word</span><span class="o">.</span><span class="w"></span>
+<span class="w">               </span><span class="n">The</span><span class="w"> </span><span class="n">DATA</span><span class="w"> </span><span class="n">SET</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">comprised</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">several</span><span class="w"> </span><span class="n">words</span><span class="o">.</span><span class="w"></span>
+<span class="w">               </span><span class="n">The</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="n">depends</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">KEY</span><span class="o">.</span><span class="w"></span>
+<span class="w">               </span><span class="n">The</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">LINK</span><span class="w"> </span><span class="n">points</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">first</span><span class="w"></span>
+<span class="w">               </span><span class="n">entry</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">group</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="n">within</span><span class="w"></span>
+<span class="w">               </span><span class="n">PRGOPT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="o">.</span><span class="w">  </span><span class="n">The</span><span class="w"> </span><span class="n">exception</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">when</span><span class="w"> </span><span class="n">there</span><span class="w"> </span><span class="n">are</span><span class="w"></span>
+<span class="w">               </span><span class="n">no</span><span class="w"> </span><span class="n">more</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">change</span><span class="o">.</span><span class="w">  </span><span class="n">In</span><span class="w"> </span><span class="n">that</span><span class="w"></span>
+<span class="w">               </span><span class="n">case</span><span class="w"> </span><span class="n">LINK</span><span class="o">=</span><span class="mi">1</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">values</span><span class="w"> </span><span class="n">KEY</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">DATA</span><span class="w"> </span><span class="n">SET</span><span class="w"></span>
+<span class="w">               </span><span class="n">are</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">referenced</span><span class="o">.</span><span class="w"> </span><span class="n">The</span><span class="w"> </span><span class="n">general</span><span class="w"> </span><span class="n">layout</span><span class="w"> </span><span class="n">of</span><span class="w"></span>
+<span class="w">               </span><span class="n">PRGOPT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">follows</span><span class="o">.</span><span class="w"></span>
+
+<span class="w">            </span><span class="o">...</span><span class="n">PRGOPT</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">=</span><span class="n">LINK1</span><span class="w"> </span><span class="p">(</span><span class="n">link</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="n">entry</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">group</span><span class="p">)</span><span class="w"></span>
+<span class="w">            </span><span class="o">.</span><span class="w">  </span><span class="n">PRGOPT</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">=</span><span class="n">KEY1</span><span class="w"> </span><span class="p">(</span><span class="n">key</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">option</span><span class="w"> </span><span class="n">change</span><span class="p">)</span><span class="w"></span>
+<span class="w">            </span><span class="o">.</span><span class="w">  </span><span class="n">PRGOPT</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">=</span><span class="n">DATA</span><span class="w"> </span><span class="n">VALUE</span><span class="w"> </span><span class="p">(</span><span class="n">data</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">change</span><span class="p">)</span><span class="w"></span>
+<span class="w">            </span><span class="o">.</span><span class="w">       </span><span class="o">.</span><span class="w"></span>
+<span class="w">            </span><span class="o">.</span><span class="w">       </span><span class="o">.</span><span class="w"></span>
+<span class="w">            </span><span class="o">.</span><span class="w">       </span><span class="o">.</span><span class="w"></span>
+<span class="w">            </span><span class="o">...</span><span class="n">PRGOPT</span><span class="p">(</span><span class="n">LINK1</span><span class="p">)</span><span class="o">=</span><span class="n">LINK2</span><span class="w"> </span><span class="p">(</span><span class="n">link</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="n">entry</span><span class="w"> </span><span class="n">of</span><span class="w"></span>
+<span class="w">            </span><span class="o">.</span><span class="w">                       </span><span class="n">next</span><span class="w"> </span><span class="n">group</span><span class="p">)</span><span class="w"></span>
+<span class="w">            </span><span class="o">.</span><span class="w">  </span><span class="n">PRGOPT</span><span class="p">(</span><span class="n">LINK1</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">=</span><span class="n">KEY2</span><span class="w"> </span><span class="p">(</span><span class="n">key</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">option</span><span class="w"> </span><span class="n">change</span><span class="p">)</span><span class="w"></span>
+<span class="w">            </span><span class="o">.</span><span class="w">  </span><span class="n">PRGOPT</span><span class="p">(</span><span class="n">LINK1</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span><span class="o">=</span><span class="n">DATA</span><span class="w"> </span><span class="n">VALUE</span><span class="w"></span>
+<span class="w">            </span><span class="o">...</span><span class="w">     </span><span class="o">.</span><span class="w"></span>
+<span class="w">            </span><span class="o">.</span><span class="w">       </span><span class="o">.</span><span class="w"></span>
+<span class="w">            </span><span class="o">.</span><span class="w">       </span><span class="o">.</span><span class="w"></span>
+<span class="w">            </span><span class="o">...</span><span class="n">PRGOPT</span><span class="p">(</span><span class="n">LINK</span><span class="p">)</span><span class="o">=</span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="n">no</span><span class="w"> </span><span class="n">more</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">change</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">               </span><span class="n">Values</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">LINK</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">nonpositive</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">errors</span><span class="o">.</span><span class="w"></span>
+<span class="w">               </span><span class="n">A</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">LINK</span><span class="o">&gt;</span><span class="n">NLINK</span><span class="o">=</span><span class="mi">100000</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">also</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="n">error</span><span class="o">.</span><span class="w"></span>
+<span class="w">               </span><span class="n">This</span><span class="w"> </span><span class="n">helps</span><span class="w"> </span><span class="n">prevent</span><span class="w"> </span><span class="n">using</span><span class="w"> </span><span class="n">invalid</span><span class="w"> </span><span class="n">but</span><span class="w"> </span><span class="n">positive</span><span class="w"></span>
+<span class="w">               </span><span class="n">values</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">LINK</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">probably</span><span class="w"> </span><span class="n">extend</span><span class="w"></span>
+<span class="w">               </span><span class="n">beyond</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">program</span><span class="w"> </span><span class="n">limits</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">PRGOPT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="o">.</span><span class="w"></span>
+<span class="w">               </span><span class="n">Unrecognized</span><span class="w"> </span><span class="n">values</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">KEY</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">ignored</span><span class="o">.</span><span class="w">  </span><span class="n">The</span><span class="w"></span>
+<span class="w">               </span><span class="n">order</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">arbitrary</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">any</span><span class="w"> </span><span class="n">number</span><span class="w"></span>
+<span class="w">               </span><span class="n">of</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">changed</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">following</span><span class="w"></span>
+<span class="w">               </span><span class="n">restriction</span><span class="o">.</span><span class="w">  </span><span class="n">To</span><span class="w"> </span><span class="n">prevent</span><span class="w"> </span><span class="n">cycling</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">the</span><span class="w"></span>
+<span class="w">               </span><span class="n">processing</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">option</span><span class="w"> </span><span class="n">array</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"></span>
+<span class="w">               </span><span class="n">number</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="n">changed</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">maintained</span><span class="o">.</span><span class="w"></span>
+<span class="w">               </span><span class="n">Whenever</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="n">exceeds</span><span class="w"> </span><span class="n">NOPT</span><span class="o">=</span><span class="mi">1000</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="n">error</span><span class="w"></span>
+<span class="w">               </span><span class="n">message</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">printed</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">subprogram</span><span class="w"> </span><span class="n">returns</span><span class="o">.</span><span class="w"></span>
+
+<span class="w">               </span><span class="n">OPTIONS</span><span class="o">..</span><span class="w"></span>
+
+<span class="w">               </span><span class="n">KEY</span><span class="o">=</span><span class="mi">6</span><span class="w"></span>
+<span class="w">                      </span><span class="n">Scale</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">nonzero</span><span class="w"> </span><span class="n">columns</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"></span>
+<span class="w">               </span><span class="n">entire</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="n">matrix</span><span class="w"></span>
+<span class="w">               </span><span class="p">(</span><span class="n">E</span><span class="p">)</span><span class="w"></span>
+<span class="w">               </span><span class="p">(</span><span class="n">A</span><span class="p">)</span><span class="w"></span>
+<span class="w">               </span><span class="n">to</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="n">one</span><span class="o">.</span><span class="w"> </span><span class="n">The</span><span class="w"> </span><span class="n">DATA</span><span class="w"> </span><span class="n">SET</span><span class="w"> </span><span class="k">for</span><span class="w"></span>
+<span class="w">               </span><span class="n">this</span><span class="w"> </span><span class="n">option</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">single</span><span class="w"> </span><span class="n">value</span><span class="o">.</span><span class="w">  </span><span class="n">It</span><span class="w"> </span><span class="n">must</span><span class="w"></span>
+<span class="w">               </span><span class="n">be</span><span class="w"> </span><span class="n">nonzero</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">unit</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="n">column</span><span class="w"> </span><span class="n">scaling</span><span class="w"> </span><span class="k">is</span><span class="w"></span>
+<span class="w">               </span><span class="n">desired</span><span class="o">.</span><span class="w"></span>
+
+<span class="w">               </span><span class="n">KEY</span><span class="o">=</span><span class="mi">7</span><span class="w"></span>
+<span class="w">                      </span><span class="n">Scale</span><span class="w"> </span><span class="n">columns</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">entire</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="n">matrix</span><span class="w"></span>
+<span class="w">               </span><span class="p">(</span><span class="n">E</span><span class="p">)</span><span class="w"></span>
+<span class="w">               </span><span class="p">(</span><span class="n">A</span><span class="p">)</span><span class="w"></span>
+<span class="w">               </span><span class="n">with</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">user</span><span class="o">-</span><span class="n">provided</span><span class="w"> </span><span class="n">diagonal</span><span class="w"> </span><span class="n">matrix</span><span class="o">.</span><span class="w"></span>
+<span class="w">               </span><span class="n">The</span><span class="w"> </span><span class="n">DATA</span><span class="w"> </span><span class="n">SET</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">option</span><span class="w"> </span><span class="n">consists</span><span class="w"></span>
+<span class="w">               </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="n">diagonal</span><span class="w"> </span><span class="n">scaling</span><span class="w"> </span><span class="n">factors</span><span class="p">,</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="k">for</span><span class="w"></span>
+<span class="w">               </span><span class="n">each</span><span class="w"> </span><span class="n">matrix</span><span class="w"> </span><span class="n">column</span><span class="o">.</span><span class="w"></span>
+
+<span class="w">               </span><span class="n">KEY</span><span class="o">=</span><span class="mi">8</span><span class="w"></span>
+<span class="w">                      </span><span class="n">Change</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">rank</span><span class="w"> </span><span class="n">determination</span><span class="w"> </span><span class="n">tolerance</span><span class="w"> </span><span class="n">from</span><span class="w"></span>
+<span class="w">               </span><span class="n">the</span><span class="w"> </span><span class="n">nominal</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">SQRT</span><span class="p">(</span><span class="n">SRELPR</span><span class="p">)</span><span class="o">.</span><span class="w">  </span><span class="n">This</span><span class="w"> </span><span class="n">quantity</span><span class="w"></span>
+<span class="w">               </span><span class="n">can</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">no</span><span class="w"> </span><span class="n">smaller</span><span class="w"> </span><span class="n">than</span><span class="w"> </span><span class="n">SRELPR</span><span class="p">,</span><span class="w"> </span><span class="n">The</span><span class="w"> </span><span class="n">arithmetic</span><span class="o">-</span><span class="w"></span>
+<span class="w">               </span><span class="n">storage</span><span class="w"> </span><span class="n">precision</span><span class="o">.</span><span class="w">  </span><span class="n">The</span><span class="w"> </span><span class="n">quantity</span><span class="w"> </span><span class="n">used</span><span class="w"></span>
+<span class="w">               </span><span class="n">here</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">internally</span><span class="w"> </span><span class="n">restricted</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">at</span><span class="w"></span>
+<span class="w">               </span><span class="n">least</span><span class="w"> </span><span class="n">SRELPR</span><span class="o">.</span><span class="w">  </span><span class="n">The</span><span class="w"> </span><span class="n">DATA</span><span class="w"> </span><span class="n">SET</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">option</span><span class="w"></span>
+<span class="w">               </span><span class="k">is</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">tolerance</span><span class="o">.</span><span class="w"></span>
+
+<span class="w">               </span><span class="n">KEY</span><span class="o">=</span><span class="mi">9</span><span class="w"></span>
+<span class="w">                      </span><span class="n">Change</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">blow</span><span class="o">-</span><span class="n">up</span><span class="w"> </span><span class="n">parameter</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="n">the</span><span class="w"></span>
+<span class="w">               </span><span class="n">nominal</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">SQRT</span><span class="p">(</span><span class="n">SRELPR</span><span class="p">)</span><span class="o">.</span><span class="w">  </span><span class="n">The</span><span class="w"> </span><span class="n">reciprocal</span><span class="w"> </span><span class="n">of</span><span class="w"></span>
+<span class="w">               </span><span class="n">this</span><span class="w"> </span><span class="n">parameter</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">used</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">rejecting</span><span class="w"> </span><span class="n">solution</span><span class="w"></span>
+<span class="w">               </span><span class="n">components</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">too</span><span class="w"> </span><span class="n">large</span><span class="w"> </span><span class="n">when</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">variable</span><span class="w"> </span><span class="k">is</span><span class="w"></span>
+<span class="w">               </span><span class="n">first</span><span class="w"> </span><span class="n">brought</span><span class="w"> </span><span class="n">into</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">active</span><span class="w"> </span><span class="n">set</span><span class="o">.</span><span class="w">  </span><span class="n">Too</span><span class="w"> </span><span class="n">large</span><span class="w"></span>
+<span class="w">               </span><span class="n">means</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">proposed</span><span class="w"> </span><span class="n">component</span><span class="w"> </span><span class="n">times</span><span class="w"> </span><span class="n">the</span><span class="w"></span>
+<span class="w">               </span><span class="n">reciprocal</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">parameter</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">less</span><span class="w"> </span><span class="n">than</span><span class="w"></span>
+<span class="w">               </span><span class="n">the</span><span class="w"> </span><span class="n">ratio</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">norms</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">right</span><span class="o">-</span><span class="n">side</span><span class="w"></span>
+<span class="w">               </span><span class="n">vector</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="n">matrix</span><span class="o">.</span><span class="w"></span>
+<span class="w">               </span><span class="n">This</span><span class="w"> </span><span class="n">parameter</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">no</span><span class="w"> </span><span class="n">smaller</span><span class="w"> </span><span class="n">than</span><span class="w"> </span><span class="n">SRELPR</span><span class="p">,</span><span class="w"></span>
+<span class="w">               </span><span class="n">the</span><span class="w"> </span><span class="n">arithmetic</span><span class="o">-</span><span class="n">storage</span><span class="w"> </span><span class="n">precision</span><span class="o">.</span><span class="w"></span>
+
+<span class="w">               </span><span class="n">For</span><span class="w"> </span><span class="n">example</span><span class="p">,</span><span class="w"> </span><span class="n">suppose</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">want</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">provide</span><span class="w"></span>
+<span class="w">               </span><span class="n">a</span><span class="w"> </span><span class="n">diagonal</span><span class="w"> </span><span class="n">matrix</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">problem</span><span class="w"></span>
+<span class="w">               </span><span class="n">matrix</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">change</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">tolerance</span><span class="w"> </span><span class="n">used</span><span class="w"> </span><span class="k">for</span><span class="w"></span>
+<span class="w">               </span><span class="n">determining</span><span class="w"> </span><span class="n">linear</span><span class="w"> </span><span class="n">dependence</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">dropped</span><span class="w"> </span><span class="n">col</span><span class="w"></span>
+<span class="w">               </span><span class="n">vectors</span><span class="o">.</span><span class="w">  </span><span class="n">For</span><span class="w"> </span><span class="n">these</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">dimensions</span><span class="w"> </span><span class="n">of</span><span class="w"></span>
+<span class="w">               </span><span class="n">PRGOPT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">must</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">at</span><span class="w"> </span><span class="n">least</span><span class="w"> </span><span class="n">N</span><span class="o">+</span><span class="mf">6.</span><span class="w">  </span><span class="n">The</span><span class="w"> </span><span class="n">FORTRAN</span><span class="w"></span>
+<span class="w">               </span><span class="n">statements</span><span class="w"> </span><span class="n">defining</span><span class="w"> </span><span class="n">these</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="n">would</span><span class="w"></span>
+<span class="w">               </span><span class="n">be</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">follows</span><span class="o">.</span><span class="w"></span>
+
+<span class="w">               </span><span class="n">PRGOPT</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">=</span><span class="n">N</span><span class="o">+</span><span class="mi">3</span><span class="w"> </span><span class="p">(</span><span class="n">link</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">entry</span><span class="w"> </span><span class="n">N</span><span class="o">+</span><span class="mi">3</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">PRGOPT</span><span class="p">(</span><span class="o">*</span><span class="p">))</span><span class="w"></span>
+<span class="w">               </span><span class="n">PRGOPT</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">=</span><span class="mi">7</span><span class="w"> </span><span class="p">(</span><span class="n">user</span><span class="o">-</span><span class="n">provided</span><span class="w"> </span><span class="n">scaling</span><span class="w"> </span><span class="n">key</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">               </span><span class="n">CALL</span><span class="w"> </span><span class="n">DCOPY</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="n">D</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">PRGOPT</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">copy</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">N</span><span class="w"></span>
+<span class="w">               </span><span class="n">scaling</span><span class="w"> </span><span class="n">factors</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">user</span><span class="w"> </span><span class="n">array</span><span class="w"> </span><span class="n">called</span><span class="w"> </span><span class="n">D</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"></span>
+<span class="w">               </span><span class="n">into</span><span class="w"> </span><span class="n">PRGOPT</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">-</span><span class="n">PRGOPT</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">2</span><span class="p">))</span><span class="w"></span>
+
+<span class="w">               </span><span class="n">PRGOPT</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span><span class="o">=</span><span class="n">N</span><span class="o">+</span><span class="mi">6</span><span class="w"> </span><span class="p">(</span><span class="n">link</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">entry</span><span class="w"> </span><span class="n">N</span><span class="o">+</span><span class="mi">6</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">PRGOPT</span><span class="p">(</span><span class="o">*</span><span class="p">))</span><span class="w"></span>
+<span class="w">               </span><span class="n">PRGOPT</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">4</span><span class="p">)</span><span class="o">=</span><span class="mi">8</span><span class="w"> </span><span class="p">(</span><span class="n">linear</span><span class="w"> </span><span class="n">dependence</span><span class="w"> </span><span class="n">tolerance</span><span class="w"> </span><span class="n">key</span><span class="p">)</span><span class="w"></span>
+<span class="w">               </span><span class="n">PRGOPT</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">5</span><span class="p">)</span><span class="o">=...</span><span class="w"> </span><span class="p">(</span><span class="n">new</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">tolerance</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">               </span><span class="n">PRGOPT</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">6</span><span class="p">)</span><span class="o">=</span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="n">no</span><span class="w"> </span><span class="n">more</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">change</span><span class="p">)</span><span class="w"></span>
+
+
+<span class="w">  </span><span class="n">IWORK</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w">    </span><span class="n">The</span><span class="w"> </span><span class="n">amounts</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">working</span><span class="w"> </span><span class="n">storage</span><span class="w"> </span><span class="n">actually</span><span class="w"> </span><span class="n">allocated</span><span class="w"></span>
+<span class="w">  </span><span class="n">IWORK</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w">     </span><span class="k">for</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">working</span><span class="w"> </span><span class="n">arrays</span><span class="w"> </span><span class="n">WORK</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">IWORK</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"></span>
+<span class="w">               </span><span class="n">respectively</span><span class="o">.</span><span class="w">  </span><span class="n">These</span><span class="w"> </span><span class="n">quantities</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">compared</span><span class="w"> </span><span class="n">with</span><span class="w"></span>
+<span class="w">               </span><span class="n">the</span><span class="w"> </span><span class="n">actual</span><span class="w"> </span><span class="n">amounts</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">storage</span><span class="w"> </span><span class="n">needed</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">DWNNLS</span><span class="p">(</span><span class="w"> </span><span class="p">)</span><span class="o">.</span><span class="w"></span>
+<span class="w">               </span><span class="n">Insufficient</span><span class="w"> </span><span class="n">storage</span><span class="w"> </span><span class="n">allocated</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">either</span><span class="w"> </span><span class="n">WORK</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"></span>
+<span class="w">               </span><span class="ow">or</span><span class="w"> </span><span class="n">IWORK</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">considered</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="n">error</span><span class="o">.</span><span class="w">  </span><span class="n">This</span><span class="w"> </span><span class="n">feature</span><span class="w"></span>
+<span class="w">               </span><span class="n">was</span><span class="w"> </span><span class="n">included</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">DWNNLS</span><span class="p">(</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="n">because</span><span class="w"> </span><span class="n">miscalculating</span><span class="w"></span>
+<span class="w">               </span><span class="n">the</span><span class="w"> </span><span class="n">storage</span><span class="w"> </span><span class="n">formulas</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">WORK</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">IWORK</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"></span>
+<span class="w">               </span><span class="n">might</span><span class="w"> </span><span class="n">very</span><span class="w"> </span><span class="n">well</span><span class="w"> </span><span class="n">lead</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">subtle</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">hard</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">find</span><span class="w"></span>
+<span class="w">               </span><span class="n">execution</span><span class="w"> </span><span class="n">errors</span><span class="o">.</span><span class="w"></span>
+
+<span class="w">               </span><span class="n">The</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">WORK</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">must</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">at</span><span class="w"> </span><span class="n">least</span><span class="w"></span>
+
+<span class="w">               </span><span class="n">LW</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ME</span><span class="o">+</span><span class="n">MA</span><span class="o">+</span><span class="mi">5</span><span class="o">*</span><span class="n">N</span><span class="w"></span>
+<span class="w">               </span><span class="n">This</span><span class="w"> </span><span class="n">test</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">made</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">IWORK</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&lt;=</span><span class="mf">0.</span><span class="w"></span>
+
+<span class="w">               </span><span class="n">The</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">IWORK</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">must</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">at</span><span class="w"> </span><span class="n">least</span><span class="w"></span>
+
+<span class="w">               </span><span class="n">LIW</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ME</span><span class="o">+</span><span class="n">MA</span><span class="o">+</span><span class="n">N</span><span class="w"></span>
+<span class="w">               </span><span class="n">This</span><span class="w"> </span><span class="n">test</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">made</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">IWORK</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">&lt;=</span><span class="mf">0.</span><span class="w"></span>
+
+<span class="w">  </span><span class="n">OUTPUT</span><span class="o">..</span><span class="w"> </span><span class="n">All</span><span class="w"> </span><span class="n">TYPE</span><span class="w"> </span><span class="n">REAL</span><span class="w"> </span><span class="n">variables</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">DOUBLE</span><span class="w"> </span><span class="n">PRECISION</span><span class="w"></span>
+
+<span class="w">  </span><span class="n">X</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">         </span><span class="n">An</span><span class="w"> </span><span class="n">array</span><span class="w"> </span><span class="n">dimensioned</span><span class="w"> </span><span class="n">at</span><span class="w"> </span><span class="n">least</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="n">will</span><span class="w"></span>
+<span class="w">               </span><span class="n">contain</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="n">components</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">solution</span><span class="w"> </span><span class="n">vector</span><span class="w"></span>
+<span class="w">               </span><span class="n">on</span><span class="w"> </span><span class="n">output</span><span class="o">.</span><span class="w"></span>
+
+<span class="w">  </span><span class="n">RNORM</span><span class="w">        </span><span class="n">The</span><span class="w"> </span><span class="n">residual</span><span class="w"> </span><span class="n">norm</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">solution</span><span class="o">.</span><span class="w">  </span><span class="n">The</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="n">of</span><span class="w"></span>
+<span class="w">               </span><span class="n">RNORM</span><span class="w"> </span><span class="n">contains</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">residual</span><span class="w"> </span><span class="n">vector</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"></span>
+<span class="w">               </span><span class="n">equality</span><span class="w"> </span><span class="n">constraints</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">least</span><span class="w"> </span><span class="n">squares</span><span class="w"> </span><span class="n">equations</span><span class="o">.</span><span class="w"></span>
+
+<span class="w">  </span><span class="n">MODE</span><span class="w">         </span><span class="n">The</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">MODE</span><span class="w"> </span><span class="n">indicates</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">success</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">failure</span><span class="w"></span>
+<span class="w">               </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">subprogram</span><span class="o">.</span><span class="w"></span>
+
+<span class="w">               </span><span class="n">MODE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">  </span><span class="n">Subprogram</span><span class="w"> </span><span class="n">completed</span><span class="w"> </span><span class="n">successfully</span><span class="o">.</span><span class="w"></span>
+
+<span class="w">                    </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w">  </span><span class="n">Max</span><span class="o">.</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">iterations</span><span class="w"> </span><span class="p">(</span><span class="n">equal</span><span class="w"> </span><span class="n">to</span><span class="w"></span>
+<span class="w">                         </span><span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="n">L</span><span class="p">))</span><span class="w"> </span><span class="n">exceeded</span><span class="o">.</span><span class="w"> </span><span class="n">Nearly</span><span class="w"> </span><span class="n">all</span><span class="w"> </span><span class="n">problems</span><span class="w"></span>
+<span class="w">                         </span><span class="n">should</span><span class="w"> </span><span class="n">complete</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">fewer</span><span class="w"> </span><span class="n">than</span><span class="w"> </span><span class="n">this</span><span class="w"></span>
+<span class="w">                         </span><span class="n">number</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">iterations</span><span class="o">.</span><span class="w"> </span><span class="n">An</span><span class="w"> </span><span class="n">approximate</span><span class="w"></span>
+<span class="w">                         </span><span class="n">solution</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">its</span><span class="w"> </span><span class="n">corresponding</span><span class="w"> </span><span class="n">residual</span><span class="w"></span>
+<span class="w">                         </span><span class="n">vector</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">X</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">RNORM</span><span class="o">.</span><span class="w"></span>
+
+<span class="w">                    </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w">  </span><span class="n">Usage</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="n">occurred</span><span class="o">.</span><span class="w">  </span><span class="n">The</span><span class="w"> </span><span class="n">offending</span><span class="w"></span>
+<span class="w">                         </span><span class="n">condition</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">noted</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">error</span><span class="w"></span>
+<span class="w">                         </span><span class="n">processing</span><span class="w"> </span><span class="n">subprogram</span><span class="p">,</span><span class="w"> </span><span class="n">XERMSG</span><span class="p">(</span><span class="w"> </span><span class="p">)</span><span class="o">.</span><span class="w"></span>
+
+<span class="w">  </span><span class="n">User</span><span class="o">-</span><span class="n">designated</span><span class="w"></span>
+<span class="w">  </span><span class="n">Working</span><span class="w"> </span><span class="n">arrays</span><span class="o">..</span><span class="w"></span>
+
+<span class="w">  </span><span class="n">WORK</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">      </span><span class="n">A</span><span class="w"> </span><span class="n">double</span><span class="w"> </span><span class="n">precision</span><span class="w"> </span><span class="n">working</span><span class="w"> </span><span class="n">array</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="n">at</span><span class="w"> </span><span class="n">least</span><span class="w"></span>
+<span class="w">               </span><span class="n">M</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">5</span><span class="o">*</span><span class="n">N</span><span class="o">.</span><span class="w"></span>
+
+<span class="w">  </span><span class="n">IWORK</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">     </span><span class="n">An</span><span class="w"> </span><span class="n">integer</span><span class="o">-</span><span class="n">valued</span><span class="w"> </span><span class="n">working</span><span class="w"> </span><span class="n">array</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="n">at</span><span class="w"> </span><span class="n">least</span><span class="w"></span>
+<span class="w">               </span><span class="n">M</span><span class="o">+</span><span class="n">N</span><span class="o">.</span><span class="w"></span>
+</code></pre></div>
+
+<h3>References</h3>
+<ul>
+<li>K. H. Haskell and R. J. Hanson, An algorithm for
+    linear least squares problems with equality and
+    nonnegativity constraints, Report SAND77-0552, Sandia
+    Laboratories, June 1978.</li>
+<li>K. H. Haskell and R. J. Hanson, Selected algorithms for
+    the linearly constrained least squares problem - a
+    users guide, Report SAND78-1290, Sandia Laboratories,
+    August 1979.</li>
+<li>K. H. Haskell and R. J. Hanson, An algorithm for
+    linear least squares problems with equality and
+    nonnegativity constraints, Mathematical Programming
+    21 (1981), pp. 98-118.</li>
+<li>R. J. Hanson and K. H. Haskell, Two algorithms for the
+    linearly constrained least squares problem, ACM
+    Transactions on Mathematical Software, September 1982.</li>
+<li>C. L. Lawson and R. J. Hanson, Solving Least Squares
+    Problems, Prentice-Hall, Inc., 1974.</li>
+</ul>
+<h3>Revision history</h3>
+<ul>
+<li>790701  DATE WRITTEN. Hanson, R. J., (SNLA), Haskell, K. H., (SNLA)</li>
+<li>890531  Changed all specific intrinsics to generic.  (WRB)</li>
+<li>890618  Completely restructured and revised.  (WRB &amp; RWC)</li>
+<li>891006  REVISION DATE from Version 3.2</li>
+<li>891214  Prologue converted to Version 4.0 format.  (BAB)</li>
+<li>900315  CALLs to XERROR changed to CALLs to XERMSG.  (THJ)</li>
+<li>900510  Convert XERRWV calls to XERMSG calls, change Prologue
+           comments to agree with WNNLS.  (RWC)</li>
+<li>920501  Reformatted the REFERENCES section.  (WRB)</li>
+</ul>
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-w~17"></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>w</strong>(mdw,*)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mdw~8"></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mdw</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-me~48"></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ma~4"></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ma</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~29"></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-l~4"></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>l</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-prgopt~5"></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>prgopt</strong>(*)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~49"></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong>(*)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-rnorm~5"></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>rnorm</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mode~7"></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mode</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-iwork~3"></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iwork</strong>(*)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-work~17"></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>work</strong>(*)</td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+  <h3 class="panel-title">Calls</h3>
+      </div>
+      <div class="panel-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~dwnnls~~CallsGraph Pages: 1 -->
+<svg id="procdwnnlsCallsGraph" width="422pt" height="497pt"
+ viewBox="0.00 0.00 422.00 496.54" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~dwnnls~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 492.54)">
+<title>proc~~dwnnls~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-492.54 418,-492.54 418,4 -4,4"/>
+<!-- proc~dwnnls -->
+<g id="proc~~dwnnls~~CallsGraph_node1" class="node">
+<title>proc~dwnnls</title>
+<polygon fill="none" stroke="black" points="54,-288 0,-288 0,-264 54,-264 54,-288"/>
+<text text-anchor="middle" x="27" y="-273.6" font-family="Helvetica,sans-Serif" font-size="10.50">dwnnls</text>
+</g>
+<!-- proc~dwnlsm -->
+<g id="proc~~dwnnls~~CallsGraph_node2" class="node">
+<title>proc~dwnlsm</title>
+<g id="a_proc~~dwnnls~~CallsGraph_node2"><a xlink:href=".././proc/dwnlsm.html" xlink:title="dwnlsm">
+<polygon fill="#d9534f" stroke="#d9534f" points="144,-288 90,-288 90,-264 144,-264 144,-288"/>
+<text text-anchor="middle" x="117" y="-273.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dwnlsm</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnnls&#45;&gt;proc~dwnlsm -->
+<g id="proc~~dwnnls~~CallsGraph_edge1" class="edge">
+<title>proc~dwnnls&#45;&gt;proc~dwnlsm</title>
+<path fill="none" stroke="#000000" d="M54.4,-276C62.39,-276 71.31,-276 79.82,-276"/>
+<polygon fill="#000000" stroke="#000000" points="79.92,-279.5 89.92,-276 79.92,-272.5 79.92,-279.5"/>
+</g>
+<!-- proc~dcopy -->
+<g id="proc~~dwnnls~~CallsGraph_node3" class="node">
+<title>proc~dcopy</title>
+<g id="a_proc~~dwnnls~~CallsGraph_node3"><a xlink:href=".././proc/dcopy.html" xlink:title="dcopy">
+<polygon fill="#d9534f" stroke="#d9534f" points="324,-472 270,-472 270,-448 324,-448 324,-472"/>
+<text text-anchor="middle" x="297" y="-457.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dcopy</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~dcopy -->
+<g id="proc~~dwnnls~~CallsGraph_edge2" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~dcopy</title>
+<path fill="none" stroke="#000000" d="M120.98,-288.16C127.61,-312.94 145.76,-369.8 180,-404 202.35,-426.32 235.35,-441.06 260.45,-449.79"/>
+<polygon fill="#000000" stroke="#000000" points="259.38,-453.12 269.98,-452.95 261.59,-446.48 259.38,-453.12"/>
+</g>
+<!-- proc~idamax -->
+<g id="proc~~dwnnls~~CallsGraph_node4" class="node">
+<title>proc~idamax</title>
+<g id="a_proc~~dwnnls~~CallsGraph_node4"><a xlink:href=".././proc/idamax.html" xlink:title="idamax">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="414,-348 360,-348 360,-324 414,-324 414,-348"/>
+<text text-anchor="middle" x="387" y="-333.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">idamax</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~idamax -->
+<g id="proc~~dwnnls~~CallsGraph_edge3" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~idamax</title>
+<path fill="none" stroke="#000000" d="M119.75,-288.31C124.46,-317.27 139.86,-390.6 180,-435 210.13,-468.32 226.33,-470.49 270,-481 293.33,-486.62 303.97,-494.22 324,-481 365.67,-453.49 379.44,-391.58 383.91,-358.25"/>
+<polygon fill="#000000" stroke="#000000" points="387.4,-358.47 385.09,-348.13 380.45,-357.66 387.4,-358.47"/>
+</g>
+<!-- proc~dswap -->
+<g id="proc~~dwnnls~~CallsGraph_node5" class="node">
+<title>proc~dswap</title>
+<g id="a_proc~~dwnnls~~CallsGraph_node5"><a xlink:href=".././proc/dswap.html" xlink:title="dswap">
+<polygon fill="#d9534f" stroke="#d9534f" points="414,-146 360,-146 360,-122 414,-122 414,-146"/>
+<text text-anchor="middle" x="387" y="-131.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dswap</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~dswap -->
+<g id="proc~~dwnnls~~CallsGraph_edge6" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~dswap</title>
+<path fill="none" stroke="#000000" d="M122.76,-263.88C131.55,-242.69 151.99,-198.36 180,-169 212.84,-134.56 224.35,-124.44 270,-111 296.71,-103.14 327.68,-110.06 350.89,-118.31"/>
+<polygon fill="#000000" stroke="#000000" points="349.74,-121.62 360.33,-121.89 352.22,-115.07 349.74,-121.62"/>
+</g>
+<!-- proc~dnrm2 -->
+<g id="proc~~dwnnls~~CallsGraph_node6" class="node">
+<title>proc~dnrm2</title>
+<g id="a_proc~~dwnnls~~CallsGraph_node6"><a xlink:href=".././proc/dnrm2.html" xlink:title="dnrm2">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="234,-368 180,-368 180,-344 234,-344 234,-368"/>
+<text text-anchor="middle" x="207" y="-353.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dnrm2</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~dnrm2 -->
+<g id="proc~~dwnnls~~CallsGraph_edge4" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~dnrm2</title>
+<path fill="none" stroke="#000000" d="M131.37,-288.15C145.66,-301.15 168.53,-321.93 185.18,-337.08"/>
+<polygon fill="#000000" stroke="#000000" points="183.04,-339.86 192.8,-344 187.75,-334.68 183.04,-339.86"/>
+</g>
+<!-- proc~drotm -->
+<g id="proc~~dwnnls~~CallsGraph_node7" class="node">
+<title>proc~drotm</title>
+<g id="a_proc~~dwnnls~~CallsGraph_node7"><a xlink:href=".././proc/drotm.html" xlink:title="drotm">
+<polygon fill="#d9534f" stroke="#d9534f" points="324,-430 270,-430 270,-406 324,-406 324,-430"/>
+<text text-anchor="middle" x="297" y="-415.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">drotm</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~drotm -->
+<g id="proc~~dwnnls~~CallsGraph_edge5" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~drotm</title>
+<path fill="none" stroke="#000000" d="M122.3,-288.11C130.38,-309.15 149.76,-352.55 180,-377 202.96,-395.57 234.95,-406.04 259.53,-411.74"/>
+<polygon fill="#000000" stroke="#000000" points="259.04,-415.22 269.55,-413.9 260.52,-408.38 259.04,-415.22"/>
+</g>
+<!-- proc~dscal -->
+<g id="proc~~dwnnls~~CallsGraph_node8" class="node">
+<title>proc~dscal</title>
+<g id="a_proc~~dwnnls~~CallsGraph_node8"><a xlink:href=".././proc/dscal.html" xlink:title="dscal">
+<polygon fill="#d9534f" stroke="#d9534f" points="324,-388 270,-388 270,-364 324,-364 324,-388"/>
+<text text-anchor="middle" x="297" y="-373.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dscal</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~dscal -->
+<g id="proc~~dwnnls~~CallsGraph_edge7" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~dscal</title>
+<path fill="none" stroke="#000000" d="M143.79,-288.07C167.6,-299.46 203.74,-317.37 234,-335 246.32,-342.17 259.55,-350.79 270.61,-358.27"/>
+<polygon fill="#000000" stroke="#000000" points="268.73,-361.22 278.96,-363.98 272.68,-355.44 268.73,-361.22"/>
+</g>
+<!-- proc~dasum -->
+<g id="proc~~dwnnls~~CallsGraph_node9" class="node">
+<title>proc~dasum</title>
+<g id="a_proc~~dwnnls~~CallsGraph_node9"><a xlink:href=".././proc/dasum.html" xlink:title="dasum">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="234,-246 180,-246 180,-222 234,-222 234,-246"/>
+<text text-anchor="middle" x="207" y="-231.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dasum</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~dasum -->
+<g id="proc~~dwnnls~~CallsGraph_edge8" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~dasum</title>
+<path fill="none" stroke="#000000" d="M143.45,-263.85C152.21,-259.67 162.17,-254.92 171.52,-250.46"/>
+<polygon fill="#000000" stroke="#000000" points="173.09,-253.59 180.6,-246.12 170.07,-247.27 173.09,-253.59"/>
+</g>
+<!-- proc~dwnlit -->
+<g id="proc~~dwnnls~~CallsGraph_node10" class="node">
+<title>proc~dwnlit</title>
+<g id="a_proc~~dwnnls~~CallsGraph_node10"><a xlink:href=".././proc/dwnlit.html" xlink:title="dwnlit">
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-288 180,-288 180,-264 234,-264 234,-288"/>
+<text text-anchor="middle" x="207" y="-273.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dwnlit</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~dwnlit -->
+<g id="proc~~dwnnls~~CallsGraph_edge9" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~dwnlit</title>
+<path fill="none" stroke="#000000" d="M144.4,-276C152.39,-276 161.31,-276 169.82,-276"/>
+<polygon fill="#000000" stroke="#000000" points="169.92,-279.5 179.92,-276 169.92,-272.5 169.92,-279.5"/>
+</g>
+<!-- proc~daxpy -->
+<g id="proc~~dwnnls~~CallsGraph_node11" class="node">
+<title>proc~daxpy</title>
+<g id="a_proc~~dwnnls~~CallsGraph_node11"><a xlink:href=".././proc/daxpy.html" xlink:title="daxpy">
+<polygon fill="#d9534f" stroke="#d9534f" points="414,-24 360,-24 360,0 414,0 414,-24"/>
+<text text-anchor="middle" x="387" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">daxpy</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~daxpy -->
+<g id="proc~~dwnnls~~CallsGraph_edge10" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~daxpy</title>
+<path fill="none" stroke="#000000" d="M117.31,-263.78C115.89,-225.87 117.07,-109.28 180,-50 225.92,-6.74 304.21,-4.66 349.91,-7.82"/>
+<polygon fill="#000000" stroke="#000000" points="349.71,-11.31 359.96,-8.63 350.28,-4.33 349.71,-11.31"/>
+</g>
+<!-- proc~drotmg -->
+<g id="proc~~dwnnls~~CallsGraph_node12" class="node">
+<title>proc~drotmg</title>
+<g id="a_proc~~dwnnls~~CallsGraph_node12"><a xlink:href=".././proc/drotmg.html" xlink:title="drotmg">
+<polygon fill="#d9534f" stroke="#d9534f" points="324,-144 270,-144 270,-120 324,-120 324,-144"/>
+<text text-anchor="middle" x="297" y="-129.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">drotmg</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~drotmg -->
+<g id="proc~~dwnnls~~CallsGraph_edge11" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~drotmg</title>
+<path fill="none" stroke="#000000" d="M128.82,-263.73C140.74,-250.53 160.78,-229.24 180,-213 208.28,-189.1 243.48,-165.27 267.64,-149.7"/>
+<polygon fill="#000000" stroke="#000000" points="269.78,-152.49 276.32,-144.16 266.01,-146.59 269.78,-152.49"/>
+</g>
+<!-- proc~dh12 -->
+<g id="proc~~dwnnls~~CallsGraph_node13" class="node">
+<title>proc~dh12</title>
+<g id="a_proc~~dwnnls~~CallsGraph_node13"><a xlink:href=".././proc/dh12.html" xlink:title="dh12">
+<polygon fill="#d9534f" stroke="#d9534f" points="324,-64 270,-64 270,-40 324,-40 324,-64"/>
+<text text-anchor="middle" x="297" y="-49.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dh12</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~dh12 -->
+<g id="proc~~dwnnls~~CallsGraph_edge12" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~dh12</title>
+<path fill="none" stroke="#000000" d="M117.9,-263.58C118.34,-228.69 124.6,-128.98 180,-78 201.26,-58.43 233.96,-52.49 259.23,-51.13"/>
+<polygon fill="#000000" stroke="#000000" points="259.67,-54.61 269.55,-50.79 259.44,-47.62 259.67,-54.61"/>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~dcopy -->
+<g id="proc~~dwnnls~~CallsGraph_edge16" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~dcopy</title>
+<path fill="none" stroke="#000000" d="M213.67,-288.08C219.15,-299.92 227.54,-318.54 234,-335 251.88,-380.53 241.89,-398.97 270,-439 270.35,-439.5 270.72,-440 271.11,-440.5"/>
+<polygon fill="#000000" stroke="#000000" points="268.75,-443.09 278.2,-447.88 273.8,-438.24 268.75,-443.09"/>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~idamax -->
+<g id="proc~~dwnnls~~CallsGraph_edge15" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~idamax</title>
+<path fill="none" stroke="#000000" d="M222.3,-288.02C234.27,-297.42 252.22,-310.03 270,-317 295.54,-327 326.24,-331.74 349.64,-333.98"/>
+<polygon fill="#000000" stroke="#000000" points="349.57,-337.49 359.83,-334.85 350.16,-330.52 349.57,-337.49"/>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~dswap -->
+<g id="proc~~dwnnls~~CallsGraph_edge17" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~dswap</title>
+<path fill="none" stroke="#000000" d="M224.81,-263.99C228.07,-261.25 231.3,-258.19 234,-255 255.07,-230.08 246.29,-213.43 270,-191 292.88,-169.36 325.55,-154.31 350.39,-145.14"/>
+<polygon fill="#000000" stroke="#000000" points="351.57,-148.43 359.82,-141.79 349.23,-141.83 351.57,-148.43"/>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~drotm -->
+<g id="proc~~dwnnls~~CallsGraph_edge14" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~drotm</title>
+<path fill="none" stroke="#000000" d="M213.47,-288.21C225.65,-315.13 255.11,-378.68 270,-397 270.48,-397.59 270.98,-398.18 271.49,-398.76"/>
+<polygon fill="#000000" stroke="#000000" points="269.2,-401.41 278.83,-405.84 274.07,-396.38 269.2,-401.41"/>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~dscal -->
+<g id="proc~~dwnnls~~CallsGraph_edge21" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~dscal</title>
+<path fill="none" stroke="#000000" d="M220.8,-288.09C225.13,-292.36 229.9,-297.27 234,-302 251.47,-322.15 252.53,-329.85 270,-350 271.92,-352.22 273.99,-354.47 276.09,-356.69"/>
+<polygon fill="#000000" stroke="#000000" points="273.69,-359.24 283.2,-363.91 278.68,-354.33 273.69,-359.24"/>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~drotmg -->
+<g id="proc~~dwnnls~~CallsGraph_edge19" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~drotmg</title>
+<path fill="none" stroke="#000000" d="M225.74,-263.84C228.78,-261.19 231.7,-258.2 234,-255 260.84,-217.66 245.17,-196.7 270,-158 271.39,-155.84 272.98,-153.71 274.68,-151.67"/>
+<polygon fill="#000000" stroke="#000000" points="277.33,-153.96 281.56,-144.25 272.2,-149.2 277.33,-153.96"/>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~dh12 -->
+<g id="proc~~dwnnls~~CallsGraph_edge22" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~dh12</title>
+<path fill="none" stroke="#000000" d="M226.3,-263.8C229.21,-261.19 231.94,-258.23 234,-255 269.5,-199.4 248.62,-173.41 270,-111 274.33,-98.35 280.28,-84.66 285.4,-73.66"/>
+<polygon fill="#000000" stroke="#000000" points="288.66,-74.95 289.79,-64.41 282.34,-71.94 288.66,-74.95"/>
+</g>
+<!-- proc~dwnlt2 -->
+<g id="proc~~dwnnls~~CallsGraph_node14" class="node">
+<title>proc~dwnlt2</title>
+<g id="a_proc~~dwnnls~~CallsGraph_node14"><a xlink:href=".././proc/dwnlt2.html" xlink:title="dwnlt2">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="324,-308 270,-308 270,-284 324,-284 324,-308"/>
+<text text-anchor="middle" x="297" y="-293.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dwnlt2</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~dwnlt2 -->
+<g id="proc~~dwnnls~~CallsGraph_edge13" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~dwnlt2</title>
+<path fill="none" stroke="#000000" d="M234.4,-282C242.48,-283.84 251.51,-285.89 260.1,-287.84"/>
+<polygon fill="#000000" stroke="#000000" points="259.39,-291.27 269.92,-290.07 260.94,-284.44 259.39,-291.27"/>
+</g>
+<!-- proc~dwnlt1 -->
+<g id="proc~~dwnnls~~CallsGraph_node16" class="node">
+<title>proc~dwnlt1</title>
+<g id="a_proc~~dwnnls~~CallsGraph_node16"><a xlink:href=".././proc/dwnlt1.html" xlink:title="dwnlt1">
+<polygon fill="#d9534f" stroke="#d9534f" points="324,-266 270,-266 270,-242 324,-242 324,-266"/>
+<text text-anchor="middle" x="297" y="-251.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dwnlt1</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~dwnlt1 -->
+<g id="proc~~dwnnls~~CallsGraph_edge18" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~dwnlt1</title>
+<path fill="none" stroke="#000000" d="M234.4,-269.4C242.48,-267.38 251.51,-265.12 260.1,-262.97"/>
+<polygon fill="#000000" stroke="#000000" points="261.07,-266.34 269.92,-260.52 259.37,-259.55 261.07,-266.34"/>
+</g>
+<!-- proc~dwnlt3 -->
+<g id="proc~~dwnnls~~CallsGraph_node17" class="node">
+<title>proc~dwnlt3</title>
+<g id="a_proc~~dwnnls~~CallsGraph_node17"><a xlink:href=".././proc/dwnlt3.html" xlink:title="dwnlt3">
+<polygon fill="#d9534f" stroke="#d9534f" points="324,-224 270,-224 270,-200 324,-200 324,-224"/>
+<text text-anchor="middle" x="297" y="-209.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dwnlt3</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~dwnlt3 -->
+<g id="proc~~dwnnls~~CallsGraph_edge20" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~dwnlt3</title>
+<path fill="none" stroke="#000000" d="M224.55,-263.96C237.62,-254.46 256.07,-241.04 270.94,-230.22"/>
+<polygon fill="#000000" stroke="#000000" points="273.19,-232.91 279.22,-224.2 269.08,-227.25 273.19,-232.91"/>
+</g>
+<!-- proc~dh12&#45;&gt;proc~dswap -->
+<g id="proc~~dwnnls~~CallsGraph_edge23" class="edge">
+<title>proc~dh12&#45;&gt;proc~dswap</title>
+<path fill="none" stroke="#000000" d="M310.98,-64.1C325.28,-77.42 348.47,-99.03 365.29,-114.7"/>
+<polygon fill="#000000" stroke="#000000" points="363.26,-117.59 372.96,-121.85 368.03,-112.47 363.26,-117.59"/>
+</g>
+<!-- proc~dh12&#45;&gt;proc~daxpy -->
+<g id="proc~~dwnnls~~CallsGraph_edge25" class="edge">
+<title>proc~dh12&#45;&gt;proc~daxpy</title>
+<path fill="none" stroke="#000000" d="M324.4,-40C332.66,-36.25 341.9,-32.05 350.66,-28.06"/>
+<polygon fill="#000000" stroke="#000000" points="352.26,-31.18 359.92,-23.86 349.37,-24.81 352.26,-31.18"/>
+</g>
+<!-- proc~ddot -->
+<g id="proc~~dwnnls~~CallsGraph_node15" class="node">
+<title>proc~ddot</title>
+<g id="a_proc~~dwnnls~~CallsGraph_node15"><a xlink:href=".././proc/ddot.html" xlink:title="ddot">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="414,-66 360,-66 360,-42 414,-42 414,-66"/>
+<text text-anchor="middle" x="387" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">ddot</text>
+</a>
+</g>
+</g>
+<!-- proc~dh12&#45;&gt;proc~ddot -->
+<g id="proc~~dwnnls~~CallsGraph_edge24" class="edge">
+<title>proc~dh12&#45;&gt;proc~ddot</title>
+<path fill="none" stroke="#000000" d="M324.4,-52.6C332.39,-52.78 341.31,-52.98 349.82,-53.18"/>
+<polygon fill="#000000" stroke="#000000" points="349.84,-56.68 359.92,-53.41 350,-49.68 349.84,-56.68"/>
+</g>
+<!-- proc~dwnlt1&#45;&gt;proc~idamax -->
+<g id="proc~~dwnnls~~CallsGraph_edge26" class="edge">
+<title>proc~dwnlt1&#45;&gt;proc~idamax</title>
+<path fill="none" stroke="#000000" d="M313.61,-266.19C317.08,-269.02 320.71,-272.06 324,-275 338.98,-288.36 355.11,-304.28 367.17,-316.51"/>
+<polygon fill="#000000" stroke="#000000" points="364.95,-319.25 374.45,-323.95 369.95,-314.36 364.95,-319.25"/>
+</g>
+<!-- proc~dwnlt3&#45;&gt;proc~dswap -->
+<g id="proc~~dwnnls~~CallsGraph_edge27" class="edge">
+<title>proc~dwnlt3&#45;&gt;proc~dswap</title>
+<path fill="none" stroke="#000000" d="M311.75,-199.81C325.96,-187.22 348.32,-167.4 364.79,-152.8"/>
+<polygon fill="#000000" stroke="#000000" points="367.18,-155.35 372.35,-146.1 362.54,-150.12 367.18,-155.35"/>
+</g>
+</g>
+</svg>
+</div><div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div><div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="-graph-help-label">Graph Key</h4></div><div class="modal-body">
+    <p>Nodes of different colours represent the following: </p>
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="597pt" height="32pt"
+ viewBox="0.00 0.00 596.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 592.5,-28 592.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node4" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="388.5,-24 243.5,-24 243.5,0 388.5,0 388.5,-24"/>
+<text text-anchor="middle" x="316" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="465,-24 407,-24 407,0 465,0 465,-24"/>
+<text text-anchor="middle" x="436" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="588.5,-24 483.5,-24 483.5,0 588.5,0 588.5,-24"/>
+<text text-anchor="middle" x="536" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+    
+    <p>Solid arrows point from a procedure to one which it calls. Dashed 
+    arrows point from an interface to procedures which implement that interface.
+    This could include the module procedures in a generic interface or the
+    implementation in a submodule of an interface in a parent module.
+    </p>
+    </div></div></div></div>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+  <h3 class="panel-title">Called by</h3>
+      </div>
+      <div class="panel-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~dwnnls~~CalledByGraph Pages: 1 -->
+<svg id="procdwnnlsCalledByGraph" width="512pt" height="32pt"
+ viewBox="0.00 0.00 512.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~dwnnls~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>proc~~dwnnls~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 508,-28 508,4 -4,4"/>
+<!-- proc~dwnnls -->
+<g id="proc~~dwnnls~~CalledByGraph_node1" class="node">
+<title>proc~dwnnls</title>
+<polygon fill="none" stroke="black" points="504,-24 450,-24 450,0 504,0 504,-24"/>
+<text text-anchor="middle" x="477" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">dwnnls</text>
+</g>
+<!-- proc~dlpdp -->
+<g id="proc~~dwnnls~~CalledByGraph_node2" class="node">
+<title>proc~dlpdp</title>
+<g id="a_proc~~dwnnls~~CalledByGraph_node2"><a xlink:href=".././proc/dlpdp.html" xlink:title="dlpdp">
+<polygon fill="#d9534f" stroke="#d9534f" points="414,-24 360,-24 360,0 414,0 414,-24"/>
+<text text-anchor="middle" x="387" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dlpdp</text>
+</a>
+</g>
+</g>
+<!-- proc~dlpdp&#45;&gt;proc~dwnnls -->
+<g id="proc~~dwnnls~~CalledByGraph_edge1" class="edge">
+<title>proc~dlpdp&#45;&gt;proc~dwnnls</title>
+<path fill="none" stroke="#000000" d="M414.4,-12C422.39,-12 431.31,-12 439.82,-12"/>
+<polygon fill="#000000" stroke="#000000" points="439.92,-15.5 449.92,-12 439.92,-8.5 439.92,-15.5"/>
+</g>
+<!-- proc~dlsi -->
+<g id="proc~~dwnnls~~CalledByGraph_node3" class="node">
+<title>proc~dlsi</title>
+<g id="a_proc~~dwnnls~~CalledByGraph_node3"><a xlink:href=".././proc/dlsi.html" xlink:title="dlsi">
+<polygon fill="#d9534f" stroke="#d9534f" points="324,-24 270,-24 270,0 324,0 324,-24"/>
+<text text-anchor="middle" x="297" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dlsi</text>
+</a>
+</g>
+</g>
+<!-- proc~dlsi&#45;&gt;proc~dlpdp -->
+<g id="proc~~dwnnls~~CalledByGraph_edge2" class="edge">
+<title>proc~dlsi&#45;&gt;proc~dlpdp</title>
+<path fill="none" stroke="#000000" d="M324.4,-12C332.39,-12 341.31,-12 349.82,-12"/>
+<polygon fill="#000000" stroke="#000000" points="349.92,-15.5 359.92,-12 349.92,-8.5 349.92,-15.5"/>
+</g>
+<!-- proc~dlsei -->
+<g id="proc~~dwnnls~~CalledByGraph_node4" class="node">
+<title>proc~dlsei</title>
+<g id="a_proc~~dwnnls~~CalledByGraph_node4"><a xlink:href=".././proc/dlsei.html" xlink:title="dlsei">
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-24 180,-24 180,0 234,0 234,-24"/>
+<text text-anchor="middle" x="207" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dlsei</text>
+</a>
+</g>
+</g>
+<!-- proc~dlsei&#45;&gt;proc~dlsi -->
+<g id="proc~~dwnnls~~CalledByGraph_edge3" class="edge">
+<title>proc~dlsei&#45;&gt;proc~dlsi</title>
+<path fill="none" stroke="#000000" d="M234.4,-12C242.39,-12 251.31,-12 259.82,-12"/>
+<polygon fill="#000000" stroke="#000000" points="259.92,-15.5 269.92,-12 259.92,-8.5 259.92,-15.5"/>
+</g>
+<!-- proc~dfcmn -->
+<g id="proc~~dwnnls~~CalledByGraph_node5" class="node">
+<title>proc~dfcmn</title>
+<g id="a_proc~~dwnnls~~CalledByGraph_node5"><a xlink:href=".././proc/dfcmn.html" xlink:title="dfcmn">
+<polygon fill="#d9534f" stroke="#d9534f" points="144,-24 90,-24 90,0 144,0 144,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dfcmn</text>
+</a>
+</g>
+</g>
+<!-- proc~dfcmn&#45;&gt;proc~dlsei -->
+<g id="proc~~dwnnls~~CalledByGraph_edge4" class="edge">
+<title>proc~dfcmn&#45;&gt;proc~dlsei</title>
+<path fill="none" stroke="#000000" d="M144.4,-12C152.39,-12 161.31,-12 169.82,-12"/>
+<polygon fill="#000000" stroke="#000000" points="169.92,-15.5 179.92,-12 169.92,-8.5 169.92,-15.5"/>
+</g>
+<!-- proc~dfc -->
+<g id="proc~~dwnnls~~CalledByGraph_node6" class="node">
+<title>proc~dfc</title>
+<g id="a_proc~~dwnnls~~CalledByGraph_node6"><a xlink:href=".././proc/dfc.html" xlink:title="dfc">
+<polygon fill="#d9534f" stroke="#d9534f" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dfc</text>
+</a>
+</g>
+</g>
+<!-- proc~dfc&#45;&gt;proc~dfcmn -->
+<g id="proc~~dwnnls~~CalledByGraph_edge5" class="edge">
+<title>proc~dfc&#45;&gt;proc~dfcmn</title>
+<path fill="none" stroke="#000000" d="M54.4,-12C62.39,-12 71.31,-12 79.82,-12"/>
+<polygon fill="#000000" stroke="#000000" points="79.92,-15.5 89.92,-12 79.92,-8.5 79.92,-15.5"/>
+</g>
+</g>
+</svg>
+</div><div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div><div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="-graph-help-label">Graph Key</h4></div><div class="modal-body">
+    <p>Nodes of different colours represent the following: </p>
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="597pt" height="32pt"
+ viewBox="0.00 0.00 596.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 592.5,-28 592.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node4" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="388.5,-24 243.5,-24 243.5,0 388.5,0 388.5,-24"/>
+<text text-anchor="middle" x="316" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="465,-24 407,-24 407,0 465,0 465,-24"/>
+<text text-anchor="middle" x="436" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="588.5,-24 483.5,-24 483.5,0 588.5,0 588.5,-24"/>
+<text text-anchor="middle" x="536" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+    
+    <p>Solid arrows point from a procedure to one which it calls. Dashed 
+    arrows point from an interface to procedures which implement that interface.
+    This could include the module procedures in a generic interface or the
+    implementation in a submodule of an interface in a parent module.
+    </p>
+    </div></div></div></div>
+      </div>
+    </div>
+    <br>
+
+    <section class="visible-xs visible-sm hidden-md">
+        <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="panel panel-primary">
+      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/dwnnls.html#src">dwnnls</a>
+      </div>
+    </div>
+
+
+    </section>
+    <br class="visible-xs visible-sm hidden-md">
+
+
+    
+    
+
+    
+    
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="highlight"><pre><span></span><span class="w">   </span><span class="k">subroutine </span><span class="n">dwnnls</span><span class="w"> </span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="w"> </span><span class="n">mdw</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">,</span><span class="w"> </span><span class="n">ma</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">,</span><span class="w"> </span><span class="n">prgopt</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">rnorm</span><span class="p">,</span><span class="w"> </span><span class="n">mode</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span><span class="w"></span>
+<span class="w">                      </span><span class="n">iwork</span><span class="p">,</span><span class="w"> </span><span class="n">work</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">   </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iwork</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="n">l</span><span class="p">,</span><span class="w"> </span><span class="n">l1</span><span class="p">,</span><span class="w"> </span><span class="n">l2</span><span class="p">,</span><span class="w"> </span><span class="n">l3</span><span class="p">,</span><span class="w"> </span><span class="n">l4</span><span class="p">,</span><span class="w"> </span><span class="n">l5</span><span class="p">,</span><span class="w"> </span><span class="n">liw</span><span class="p">,</span><span class="w"> </span><span class="n">lw</span><span class="p">,</span><span class="w"> </span><span class="n">ma</span><span class="p">,</span><span class="w"> </span><span class="n">mdw</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span><span class="w"></span>
+<span class="w">              </span><span class="n">mode</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="w"></span>
+<span class="w">   </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">prgopt</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="n">rnorm</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">mdw</span><span class="p">,</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="n">work</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="n">x</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"></span>
+<span class="w">   </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">xern1</span><span class="w"></span>
+
+<span class="w">   </span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"></span>
+<span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ma</span><span class="o">+</span><span class="n">me</span><span class="o">&lt;=</span><span class="mi">0</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">n</span><span class="o">&lt;=</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+
+<span class="k">   if</span><span class="w"> </span><span class="p">(</span><span class="n">iwork</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">      </span><span class="n">lw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">ma</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">5</span><span class="o">*</span><span class="n">n</span><span class="w"></span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">iwork</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&lt;</span><span class="n">lw</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         write</span><span class="w"> </span><span class="p">(</span><span class="n">xern1</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;(I8)&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">lw</span><span class="w"></span>
+<span class="w">         </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;INSUFFICIENT STORAGE &#39;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="p">&amp;</span><span class="w"></span>
+<span class="w">                    </span><span class="s1">&#39;ALLOCATED FOR WORK(*), NEED LW = &#39;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">xern1</span><span class="w"></span>
+<span class="w">         </span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w"></span>
+<span class="w">         </span><span class="k">return</span>
+<span class="k">      endif</span>
+<span class="k">   endif</span>
+
+<span class="k">   if</span><span class="w"> </span><span class="p">(</span><span class="n">iwork</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">      </span><span class="n">liw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">ma</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n</span><span class="w"></span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">iwork</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">&lt;</span><span class="n">liw</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         write</span><span class="w"> </span><span class="p">(</span><span class="n">xern1</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;(I8)&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">liw</span><span class="w"></span>
+<span class="w">         </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;INSUFFICIENT STORAGE &#39;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="p">&amp;</span><span class="w"></span>
+<span class="w">                    </span><span class="s1">&#39;ALLOCATED FOR IWORK(*), NEED LIW = &#39;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">xern1</span><span class="w"></span>
+<span class="w">         </span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w"></span>
+<span class="w">         </span><span class="k">return</span>
+<span class="k">      endif</span>
+<span class="k">   endif</span>
+
+<span class="k">   if</span><span class="w"> </span><span class="p">(</span><span class="n">mdw</span><span class="o">&lt;</span><span class="n">me</span><span class="o">+</span><span class="n">ma</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">      write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;THE VALUE MDW&lt;ME+MA IS AN ERROR&#39;</span><span class="w"></span>
+<span class="w">      </span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w"></span>
+<span class="w">      </span><span class="k">return</span>
+<span class="k">   endif</span>
+
+<span class="k">   if</span><span class="w"> </span><span class="p">(</span><span class="n">l</span><span class="o">&lt;</span><span class="mi">0</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">l</span><span class="o">&gt;</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">      write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;L&gt;=0 .AND. L&lt;=N IS REQUIRED&#39;</span><span class="w"></span>
+<span class="w">      </span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w"></span>
+<span class="w">      </span><span class="k">return</span>
+<span class="k">   endif</span><span class="w"></span>
+
+<span class="w">   </span><span class="c">! THE PURPOSE OF THIS SUBROUTINE IS TO BREAK UP THE ARRAYS</span>
+<span class="w">   </span><span class="c">! WORK(*) AND IWORK(*) INTO SEPARATE WORK ARRAYS</span>
+<span class="w">   </span><span class="c">! REQUIRED BY THE MAIN SUBROUTINE DWNLSM( ).</span>
+
+<span class="w">   </span><span class="n">l1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
+<span class="w">   </span><span class="n">l2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n</span><span class="w"></span>
+<span class="w">   </span><span class="n">l3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">me</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">ma</span><span class="w"></span>
+<span class="w">   </span><span class="n">l4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l3</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n</span><span class="w"></span>
+<span class="w">   </span><span class="n">l5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l4</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n</span><span class="w"></span>
+
+<span class="w">   </span><span class="k">call </span><span class="n">dwnlsm</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="w"> </span><span class="n">mdw</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">,</span><span class="w"> </span><span class="n">ma</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">,</span><span class="w"> </span><span class="n">prgopt</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">rnorm</span><span class="p">,</span><span class="w"> </span><span class="n">mode</span><span class="p">,</span><span class="w"> </span><span class="n">iwork</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span><span class="w"></span>
+<span class="w">               </span><span class="n">iwork</span><span class="p">(</span><span class="n">l1</span><span class="p">),</span><span class="w"> </span><span class="n">work</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">work</span><span class="p">(</span><span class="n">l1</span><span class="p">),</span><span class="w"> </span><span class="n">work</span><span class="p">(</span><span class="n">l2</span><span class="p">),</span><span class="w"> </span><span class="n">work</span><span class="p">(</span><span class="n">l3</span><span class="p">),</span><span class="w"> </span><span class="p">&amp;</span><span class="w"></span>
+<span class="w">               </span><span class="n">work</span><span class="p">(</span><span class="n">l4</span><span class="p">),</span><span class="w"> </span><span class="n">work</span><span class="p">(</span><span class="n">l5</span><span class="p">))</span><span class="w"></span>
+
+<span class="w">   </span><span class="k">end subroutine </span><span class="n">dwnnls</span><span class="w"></span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+    <hr>    
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+      <div class="row">
+        <div class="col-xs-6 col-md-6"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2023 
+</p>
+        </div>
+        <div class="col-xs-6 col-md-6">
+          <p class="text-right">
+            Documentation generated by 
+            <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+          </p>
+        </div>
+      </div>
+      <br>
+      </div> <!-- /container -->    
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+<!--
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+-->
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../js/ie10-viewport-bug-workaround.js"></script>
+
+    <!-- MathJax JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
+        jax: ['input/TeX','input/MathML','output/HTML-CSS'],
+        extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
+      });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script src="../tipuesearch/tipuesearch_content.js"></script>
+    <script src="../tipuesearch/tipuesearch_set.js"></script>
+    <script src="../tipuesearch/tipuesearch.js"></script>
+    
+  </body>
+</html>

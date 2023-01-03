@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta name="description" content="BSPLINE-FORTRAN -- Multidimensional B-Spline Interpolation of Data on a Regular Grid">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>dfc &ndash; bspline-fortran</title>
+
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/local.css" rel="stylesheet">
+    <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <script src="../js/jquery-2.1.3.min.js"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
+
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">bspline-fortran </a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
+              <a href="#" class="dropdown-toggle"
+              data-toggle="dropdown" role="button"
+              aria-haspopup="true"
+     aria-expanded="false">Contents <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <li><a href="../lists/files.html">Source Files</a></li>
+            <li><a href="../lists/modules.html">Modules</a></li>
+            <li><a href="../lists/procedures.html">Procedures</a></li>
+            <li><a href="../lists/absint.html">Abstract Interfaces</a></li>
+                   <li><a href="../lists/types.html">Derived Types</a></li>
+       
+            </ul>
+        
+            </li>
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/files.html">Source Files</a></li>
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/modules.html">Modules</a></li>
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/procedures.html">Procedures</a></li>
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/absint.html">Abstract Interfaces</a></li>
+                             <li class="visible-xs hidden-sm visible-lg"><a href="../lists/types.html">Derived Types</a></li>
+          </ul>
+        <form action="../search.html" class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+        </div>
+<!--
+        <button type="submit" class="btn btn-default">Submit</button>
+-->
+        </form>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+  <div class="row">
+    <h1>dfc
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="row" id="info-bar">
+    <div class="col-lg-12">
+      <div class="well well-sm">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+          <li id="statements"><i class="fa fa-list-ol"></i>
+            <a data-toggle="tooltip"
+               data-placement="bottom" data-html="true"
+               title=" 0.4% of total for procedures.">28 statements</a>
+          </li>
+
+            <li id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/bspline_defc_module.F90"> Source File</a>
+            </li>
+        </ul>
+        <ol class="breadcrumb in-well text-right">
+              <li><a href='../sourcefile/bspline_defc_module.f90.html'>bspline_defc_module.F90</a></li>
+              <li><a href='../module/bspline_defc_module.html'>bspline_defc_module</a></li>
+          <li class="active">dfc</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+    })
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="panel panel-primary">
+      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/dfc.html#src">dfc</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>public  subroutine dfc(ndata, xdata, ydata, sddata, nord, Nbkpt, Bkpt, nconst, xconst, yconst, nderiv, mode, coeff, w, iw)  
+</h2>
+    
+
+    <p>This subprogram fits a piecewise polynomial curve
+  to discrete data.  The piecewise polynomials are
+  represented as B-splines.
+  The fitting is done in a weighted least squares sense.
+  Equality and inequality constraints can be imposed on the
+  fitted curve.</p>
+<h3>Evaluating the Variance Function</h3>
+<p>To evaluate the variance function (assuming
+  that the uncertainties of the Y values were
+  provided to <a href="../proc/dfc.html">dfc</a> and an input value of
+  MODE=2 or 4 was used), use the function
+  subprogram <a href="../proc/dcv.html">dcv</a></p>
+<div class="codehilite"><pre><span></span><code><span class="w">    </span><span class="n">var</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dcv</span><span class="p">(</span><span class="n">xval</span><span class="p">,</span><span class="n">ndata</span><span class="p">,</span><span class="n">nconst</span><span class="p">,</span><span class="n">nord</span><span class="p">,</span><span class="n">nbkpt</span><span class="p">,</span><span class="w"> </span><span class="n">bkpt</span><span class="p">,</span><span class="n">w</span><span class="p">)</span><span class="w"></span>
+</code></pre></div>
+
+<p>Here XVAL is the point where the variance is
+  desired.  The other arguments have the same
+  meaning as in the usage of <a href="../proc/dfc.html">dfc</a>.</p>
+<p>For those users employing the old problem
+  designation, let MDATA be the number of data
+  points in the problem.  (This may be different
+  from NDATA if the old problem designation
+  feature was used.)  The value, VAR, should be
+  multiplied by the quantity</p>
+<p><code>DBLE(MAX(NDATA-N,1))/DBLE(MAX(MDATA-N,1))</code></p>
+<p>The output of this subprogram is not defined
+  if an input value of MODE=1 or 3 was used in
+  FC( ) or if an output value of MODE=-1, 2, or
+  3 was obtained.  The variance function, except
+  for the scaling factor noted above, is given
+  by</p>
+<p><code>VAR=(transpose of B(XVAL))*C*B(XVAL)</code></p>
+<p>The vector B(XVAL) is the B-spline basis
+  function values at X=XVAL.
+  The covariance matrix, C, of the solution
+  coefficients accounts only for the least
+  squares equations and the explicitly stated
+  equality constraints.  This fact must be
+  considered when interpreting the variance
+  function from a data fitting problem that has
+  inequality constraints on the fitted curve.</p>
+<h3>Evaluating the Fitted Curve</h3>
+<ul>
+<li>Refer to the <a href="../proc/defc.html">defc</a> header</li>
+</ul>
+<h3>Revision history</h3>
+<ul>
+<li>780801  DATE WRITTEN. Hanson, R. J., (SNLA)</li>
+<li>890531  Changed all specific intrinsics to generic.  (WRB)</li>
+<li>891006  Cosmetic changes to prologue.  (WRB)</li>
+<li>891006  REVISION DATE from Version 3.2</li>
+<li>891214  Prologue converted to Version 4.0 format.  (BAB)</li>
+<li>900510  Convert references to XERRWV to references to XERMSG.  (RWC)</li>
+<li>900607  Editorial changes to Prologue to make Prologues for EFC,
+    DEFC, FC, and DFC look as much the same as possible.  (RWC)</li>
+<li>920501  Reformatted the REFERENCES section.  (WRB)</li>
+</ul>
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ndata~2"></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ndata</strong></td>
+            <td>
+                <p>number of points (size of <code>xdata</code> and <code>ydata</code>).
+Any non-negative value of <code>NDATA</code> is allowed.
+A negative value of <code>NDATA</code> is an error.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-xdata"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>xdata</strong>(*)</td>
+            <td>
+                <p>X data array. No sorting of <code>XDATA(*)</code> is required.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ydata"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ydata</strong>(*)</td>
+            <td>
+                <p>Y data array.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sddata"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sddata</strong>(*)</td>
+            <td>
+                <p>Y value standard deviation or uncertainty.
+A zero value for any entry of
+<code>SDDATA(*)</code> will weight that data point as 1.
+Otherwise the weight of that data point is
+the reciprocal of this entry.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nord~2"></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nord</strong></td>
+            <td>
+                <p>B-spline order.
+(The order of the spline is one more than the
+degree of the piecewise polynomial defined on
+each interval.  This is consistent with the
+B-spline package convention.  For example,
+<code>NORD=4</code> when we are using piecewise cubics.)
+<code>NORD</code> must be in the range <code>1 &lt;= NORD &lt;= 20</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nbkpt~2"></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>Nbkpt</strong></td>
+            <td>
+                <p>The value of <code>NBKPT</code> must satisfy the condition <code>NBKPT &gt;= 2*NORD</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-bkpt~2"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(*)
+            </td>
+            <td>::</td>
+            <td><strong>Bkpt</strong></td>
+            <td>
+                <p><code>NBKPT</code> knots of the B-spline.
+Normally the
+problem data interval will be included between
+the limits <code>BKPT(NORD)</code> and <code>BKPT(NBKPT-NORD+1)</code>.
+The additional end knots <code>BKPT(I),I=1,...,NORD-1</code>
+and <code>I=NBKPT-NORD+2,...,NBKPT</code>, are
+required to compute the functions used to fit
+the data.  No sorting of <code>BKPT(*)</code> is required.
+Internal to <a href="../proc/defc.html">defc</a> the extreme end knots may
+be reduced and increased respectively to
+accommodate any data values that are exterior
+to the given knot values.  The contents of
+<code>BKPT(*)</code> is not changed.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nconst~2"></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nconst</strong></td>
+            <td>
+                <p>The number of conditions that constrain the
+B-spline is NCONST.  A constraint is specified
+by an (X,Y) pair in the arrays XCONST(<em>) and
+YCONST(</em>), and by the type of constraint and
+derivative value encoded in the array
+NDERIV(*).</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-xconst"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>xconst</strong>(*)</td>
+            <td>
+                <p>X value of constraint.
+No sorting of XCONST(*) is required.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-yconst"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>yconst</strong>(*)</td>
+            <td>
+                <p>Y value of constraint</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nderiv"></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nderiv</strong>(*)</td>
+            <td>
+                <p>The value of NDERIV(*) is
+ determined as follows.  Suppose the I-th
+ constraint applies to the J-th derivative
+ of the B-spline.  (Any non-negative value of
+ J &lt; NORD is permitted.  In particular the
+ value J=0 refers to the B-spline itself.)
+ For this I-th constraint, set</p>
+<div class="codehilite"><pre><span></span><code>  <span class="nv">XCONST</span><span class="ss">(</span><span class="nv">I</span><span class="ss">)</span><span class="o">=</span><span class="nv">X</span>,
+  <span class="nv">YCONST</span><span class="ss">(</span><span class="nv">I</span><span class="ss">)</span><span class="o">=</span><span class="nv">Y</span>, <span class="nv">and</span>
+  <span class="nv">NDERIV</span><span class="ss">(</span><span class="nv">I</span><span class="ss">)</span><span class="o">=</span><span class="nv">ITYPE</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="nv">J</span>, <span class="nv">where</span>
+
+  <span class="nv">ITYPE</span> <span class="o">=</span> <span class="mi">0</span>,      <span class="k">if</span> <span class="ss">(</span><span class="nv">J</span><span class="o">-</span><span class="nv">th</span> <span class="nv">deriv</span>. <span class="nv">at</span> <span class="nv">X</span><span class="ss">)</span> <span class="o">&lt;=</span> <span class="nv">Y</span>.
+        <span class="o">=</span> <span class="mi">1</span>,      <span class="k">if</span> <span class="ss">(</span><span class="nv">J</span><span class="o">-</span><span class="nv">th</span> <span class="nv">deriv</span>. <span class="nv">at</span> <span class="nv">X</span><span class="ss">)</span> <span class="o">&gt;=</span> <span class="nv">Y</span>.
+        <span class="o">=</span> <span class="mi">2</span>,      <span class="k">if</span> <span class="ss">(</span><span class="nv">J</span><span class="o">-</span><span class="nv">th</span> <span class="nv">deriv</span>. <span class="nv">at</span> <span class="nv">X</span><span class="ss">)</span> <span class="o">==</span> <span class="nv">Y</span>.
+        <span class="o">=</span> <span class="mi">3</span>,      <span class="k">if</span> <span class="ss">(</span><span class="nv">J</span><span class="o">-</span><span class="nv">th</span> <span class="nv">deriv</span>. <span class="nv">at</span> <span class="nv">X</span><span class="ss">)</span> <span class="o">==</span>
+                     <span class="ss">(</span><span class="nv">J</span><span class="o">-</span><span class="nv">th</span> <span class="nv">deriv</span>. <span class="nv">at</span> <span class="nv">Y</span><span class="ss">)</span>.
+</code></pre></div>
+
+<p>(A value of NDERIV(I)=-1 will cause this
+ constraint to be ignored.  This subprogram
+ feature is often useful when temporarily
+ suppressing a constraint while still
+ retaining the source code of the calling
+ program.)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mode"></span>
+              integer,
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mode</strong></td>
+            <td>
+                <p><em>Input</em></p>
+<p>An input flag that directs the least squares
+solution method used by <a href="../proc/dfc.html">dfc</a>.</p>
+<p>The variance function, referred to below,
+defines the square of the probable error of
+the fitted curve at any point, XVAL.
+This feature of <a href="../proc/dfc.html">dfc</a> allows one to use the
+square root of this variance function to
+determine a probable error band around the
+fitted curve.</p>
+<ul>
+<li><code>=1</code>  a new problem.  No variance function.</li>
+<li><code>=2</code>  a new problem.  Want variance function.</li>
+<li><code>=3</code>  an old problem.  No variance function.</li>
+<li><code>=4</code>  an old problem.  Want variance function.</li>
+</ul>
+<p>Any value of MODE other than 1-4 is an error.</p>
+<p>The user with a new problem can skip directly
+to the description of the input parameters
+IW(1), IW(2).</p>
+<p>If the user correctly specifies the new or old
+problem status, the subprogram <a href="../proc/dfc.html">dfc</a> will
+perform more efficiently.
+By an old problem it is meant that subprogram
+<a href="../proc/dfc.html">dfc</a> was last called with this same set of
+knots, data points and weights.</p>
+<p>Another often useful deployment of this old
+problem designation can occur when one has
+previously obtained a Q-R orthogonal
+decomposition of the matrix resulting from
+B-spline fitting of data (without constraints)
+at the breakpoints BKPT(I), I=1,...,NBKPT.
+For example, this matrix could be the result
+of sequential accumulation of the least
+squares equations for a very large data set.
+The user writes this code in a manner
+convenient for the application.  For the
+discussion here let</p>
+<p><code>N=NBKPT-NORD, and K=N+3</code></p>
+<p>Let us assume that an equivalent least squares
+system</p>
+<p><code>RC=D</code></p>
+<p>has been obtained.  Here R is an N+1 by N
+matrix and D is a vector with N+1 components.
+The last row of R is zero.  The matrix R is
+upper triangular and banded.  At most NORD of
+the diagonals are nonzero.
+The contents of R and D can be copied to the
+working array W(*) as follows.</p>
+<p>The I-th diagonal of R, which has N-I+1
+elements, is copied to W(*) starting at</p>
+<p><code>W((I-1)*K+1),</code></p>
+<p>for I=1,...,NORD.
+The vector D is copied to W(*) starting at</p>
+<p><code>W(NORD*K+1)</code></p>
+<p>The input value used for NDATA is arbitrary
+when an old problem is designated.  Because
+of the feature of <a href="../proc/dfc.html">dfc</a> that checks the
+working storage array lengths, a value not
+exceeding NBKPT should be used.  For example,
+use NDATA=0.</p>
+<p>(The constraints or variance function request
+can change in each call to <a href="../proc/dfc.html">dfc</a>.)  A new
+problem is anything other than an old problem.</p>
+<p><em>Output</em></p>
+<p>An output flag that indicates the status
+of the constrained curve fit.</p>
+<ul>
+<li><code>=-1</code>  a usage error of <a href="../proc/dfc.html">dfc</a> occurred.  The
+   offending condition is noted with the
+   SLATEC library error processor, XERMSG.
+   In case the working arrays W(<em>) or IW(</em>)
+   are not long enough, the minimal
+   acceptable length is printed.</li>
+<li><code>= 0</code>  successful constrained curve fit.</li>
+<li><code>= 1</code>  the requested equality constraints
+  are contradictory.</li>
+<li><code>= 2</code>  the requested inequality constraints
+   are contradictory.</li>
+<li><code>= 3</code>  both equality and inequality constraints
+  are contradictory.</li>
+</ul>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-coeff"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>coeff</strong>(*)</td>
+            <td>
+                <p>If the output value of MODE=0 or 1, this array
+contains the unknowns obtained from the least
+squares fitting process.  These N=NBKPT-NORD
+parameters are the B-spline coefficients.
+For MODE=1, the equality constraints are
+contradictory.  To make the fitting process
+more robust, the equality constraints are
+satisfied in a least squares sense.  In this
+case the array COEFF(<em>) contains B-spline
+coefficients for this extended concept of a
+solution.  If MODE=-1,2 or 3 on output, the
+array COEFF(</em>) is undefined.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-w~3"></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>w</strong>(*)</td>
+            <td>
+                <p>real work array of length <code>IW(1)</code>. The
+ contents of <code>W(*)</code> must not be modified by the
+ user if the variance function is desired.</p>
+<p>The length of W(*) must be at least</p>
+<div class="codehilite"><pre><span></span><code>   NB=(NBKPT-NORD+3)*(NORD+1)+
+       2*MAX(NDATA,NBKPT)+NBKPT+NORD**2
+</code></pre></div>
+
+<p>Whenever possible the code uses banded matrix
+ processors DBNDAC( ) and DBNDSL( ).  These
+ are utilized if there are no constraints,
+ no variance function is required, and there
+ is sufficient data to uniquely determine the
+ B-spline coefficients.  If the band processors
+ cannot be used to determine the solution,
+ then the constrained least squares code DLSEI
+ is used.  In this case the subprogram requires
+ an additional block of storage in W(*).  For
+ the discussion here define the integers NEQCON
+ and NINCON respectively as the number of
+ equality (ITYPE=2,3) and inequality
+ (ITYPE=0,1) constraints imposed on the fitted
+ curve.  Define</p>
+<p><code>L = NBKPT-NORD+1</code></p>
+<p>and note that</p>
+<p><code>NCONST = NEQCON+NINCON</code></p>
+<p>When the subprogram <a href="../proc/dfc.html">dfc</a> uses <a href="../proc/dlsei.html">dlsei</a> the
+ length of the working array W(*) must be at
+ least</p>
+<p><code>LW = NB+(L+NCONST)*L+2*(NEQCON+L)+(NINCON+L)+(NINCON+2)*(L+6)</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-iw"></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iw</strong>(*)</td>
+            <td>
+                <p>integer work array of length <code>IW(2)</code></p>
+<p><code>IW(1),IW(2)</code> are the amounts of working storage actually
+allocated for the working arrays W(<em>) and
+IW(</em>).  These quantities are compared with the
+actual amounts of storage needed in <a href="../proc/dfc.html">dfc</a>.
+Insufficient storage allocated for either
+W(<em>) or IW(</em>) is an error.  This feature was
+included in <a href="../proc/dfc.html">dfc</a> because misreading the
+storage formulas for W(<em>) and IW(</em>) might very
+well lead to subtle and hard-to-find
+programming bugs.</p>
+<p>The length of the array IW(*) must be at least</p>
+<p><code>IW1 = NINCON+2*L</code></p>
+<p>in any case.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+  <h3 class="panel-title">Calls</h3>
+      </div>
+      <div class="panel-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~dfc~~CallsGraph Pages: 1 -->
+<svg id="procdfcCallsGraph" width="641pt" height="875pt"
+ viewBox="0.00 0.00 641.00 875.31" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~dfc~~CallsGraph" class="graph" transform="scale(1.42 1.42) rotate(0) translate(4 1240)">
+<title>proc~~dfc~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-1240 907,-1240 907,4 -4,4"/>
+<!-- proc~dfc -->
+<g id="proc~~dfc~~CallsGraph_node1" class="node">
+<title>proc~dfc</title>
+<polygon fill="none" stroke="black" points="54,-864 0,-864 0,-840 54,-840 54,-864"/>
+<text text-anchor="middle" x="27" y="-849.6" font-family="Helvetica,sans-Serif" font-size="10.50">dfc</text>
+</g>
+<!-- proc~dfcmn -->
+<g id="proc~~dfc~~CallsGraph_node2" class="node">
+<title>proc~dfcmn</title>
+<g id="a_proc~~dfc~~CallsGraph_node2"><a xlink:href=".././proc/dfcmn.html" xlink:title="dfcmn">
+<polygon fill="#d9534f" stroke="#d9534f" points="144,-864 90,-864 90,-840 144,-840 144,-864"/>
+<text text-anchor="middle" x="117" y="-849.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dfcmn</text>
+</a>
+</g>
+</g>
+<!-- proc~dfc&#45;&gt;proc~dfcmn -->
+<g id="proc~~dfc~~CallsGraph_edge1" class="edge">
+<title>proc~dfc&#45;&gt;proc~dfcmn</title>
+<path fill="none" stroke="#000000" d="M54.4,-852C62.39,-852 71.31,-852 79.82,-852"/>
+<polygon fill="#000000" stroke="#000000" points="79.92,-855.5 89.92,-852 79.92,-848.5 79.92,-855.5"/>
+</g>
+<!-- proc~dcopy -->
+<g id="proc~~dfc~~CallsGraph_node3" class="node">
+<title>proc~dcopy</title>
+<g id="a_proc~~dfc~~CallsGraph_node3"><a xlink:href=".././proc/dcopy.html" xlink:title="dcopy">
+<polygon fill="#d9534f" stroke="#d9534f" points="813,-300 759,-300 759,-276 813,-276 813,-300"/>
+<text text-anchor="middle" x="786" y="-285.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dcopy</text>
+</a>
+</g>
+</g>
+<!-- proc~dfcmn&#45;&gt;proc~dcopy -->
+<g id="proc~~dfc~~CallsGraph_edge2" class="edge">
+<title>proc~dfcmn&#45;&gt;proc~dcopy</title>
+<path fill="none" stroke="#000000" d="M118.45,-839.96C121.88,-751.45 144.42,-202.83 180,-139 216.57,-73.39 240.39,-38 315.5,-38 315.5,-38 315.5,-38 517,-38 650.53,-38 745.23,-206 775.03,-266.56"/>
+<polygon fill="#000000" stroke="#000000" points="772.06,-268.45 779.55,-275.94 778.36,-265.41 772.06,-268.45"/>
+</g>
+<!-- proc~dbndac -->
+<g id="proc~~dfc~~CallsGraph_node4" class="node">
+<title>proc~dbndac</title>
+<g id="a_proc~~dfc~~CallsGraph_node4"><a xlink:href=".././proc/dbndac.html" xlink:title="dbndac">
+<polygon fill="#d9534f" stroke="#d9534f" points="543,-1128 489,-1128 489,-1104 543,-1104 543,-1128"/>
+<text text-anchor="middle" x="516" y="-1113.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbndac</text>
+</a>
+</g>
+</g>
+<!-- proc~dfcmn&#45;&gt;proc~dbndac -->
+<g id="proc~~dfc~~CallsGraph_edge3" class="edge">
+<title>proc~dfcmn&#45;&gt;proc~dbndac</title>
+<path fill="none" stroke="#000000" d="M121.55,-864.09C134.08,-904.36 180.36,-1034.54 270,-1090 334.69,-1130.03 427.74,-1126.99 478.53,-1121.4"/>
+<polygon fill="#000000" stroke="#000000" points="479.19,-1124.85 488.7,-1120.18 478.35,-1117.9 479.19,-1124.85"/>
+</g>
+<!-- proc~dsort -->
+<g id="proc~~dfc~~CallsGraph_node5" class="node">
+<title>proc~dsort</title>
+<g id="a_proc~~dfc~~CallsGraph_node5"><a xlink:href=".././proc/dsort.html" xlink:title="dsort">
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-1236 180,-1236 180,-1212 234,-1212 234,-1236"/>
+<text text-anchor="middle" x="207" y="-1221.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dsort</text>
+</a>
+</g>
+</g>
+<!-- proc~dfcmn&#45;&gt;proc~dsort -->
+<g id="proc~~dfc~~CallsGraph_edge4" class="edge">
+<title>proc~dfcmn&#45;&gt;proc~dsort</title>
+<path fill="none" stroke="#000000" d="M117.63,-864.17C116.74,-910.55 118.12,-1079.54 180,-1198 181.08,-1200.07 182.38,-1202.08 183.82,-1204"/>
+<polygon fill="#000000" stroke="#000000" points="181.49,-1206.64 190.74,-1211.8 186.72,-1202 181.49,-1206.64"/>
+</g>
+<!-- proc~dscal -->
+<g id="proc~~dfc~~CallsGraph_node6" class="node">
+<title>proc~dscal</title>
+<g id="a_proc~~dfc~~CallsGraph_node6"><a xlink:href=".././proc/dscal.html" xlink:title="dscal">
+<polygon fill="#d9534f" stroke="#d9534f" points="813,-446 759,-446 759,-422 813,-422 813,-446"/>
+<text text-anchor="middle" x="786" y="-431.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dscal</text>
+</a>
+</g>
+</g>
+<!-- proc~dfcmn&#45;&gt;proc~dscal -->
+<g id="proc~~dfc~~CallsGraph_edge5" class="edge">
+<title>proc~dfcmn&#45;&gt;proc~dscal</title>
+<path fill="none" stroke="#000000" d="M118.38,-839.81C121.78,-741.09 150.76,-76 315.5,-76 315.5,-76 315.5,-76 427,-76 589.08,-76 621.65,-162.52 723,-289 753.34,-326.87 771.39,-381.8 779.62,-412.02"/>
+<polygon fill="#000000" stroke="#000000" points="776.3,-413.17 782.21,-421.96 783.08,-411.4 776.3,-413.17"/>
+</g>
+<!-- proc~dfspvn -->
+<g id="proc~~dfc~~CallsGraph_node7" class="node">
+<title>proc~dfspvn</title>
+<g id="a_proc~~dfc~~CallsGraph_node7"><a xlink:href=".././proc/dfspvn.html" xlink:title="dfspvn">
+<polygon fill="#d9534f" stroke="#d9534f" points="343.5,-1185 289.5,-1185 289.5,-1161 343.5,-1161 343.5,-1185"/>
+<text text-anchor="middle" x="316.5" y="-1170.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dfspvn</text>
+</a>
+</g>
+</g>
+<!-- proc~dfcmn&#45;&gt;proc~dfspvn -->
+<g id="proc~~dfc~~CallsGraph_edge6" class="edge">
+<title>proc~dfcmn&#45;&gt;proc~dfspvn</title>
+<path fill="none" stroke="#000000" d="M118.5,-864.24C120.95,-917.03 133.45,-1124.41 180,-1165 206.77,-1188.34 248.99,-1186.97 279.19,-1181.9"/>
+<polygon fill="#000000" stroke="#000000" points="280.14,-1185.28 289.32,-1179.98 278.84,-1178.4 280.14,-1185.28"/>
+</g>
+<!-- proc~dbndsl -->
+<g id="proc~~dfc~~CallsGraph_node8" class="node">
+<title>proc~dbndsl</title>
+<g id="a_proc~~dfc~~CallsGraph_node8"><a xlink:href=".././proc/dbndsl.html" xlink:title="dbndsl">
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-822 180,-822 180,-798 234,-798 234,-822"/>
+<text text-anchor="middle" x="207" y="-807.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbndsl</text>
+</a>
+</g>
+</g>
+<!-- proc~dfcmn&#45;&gt;proc~dbndsl -->
+<g id="proc~~dfc~~CallsGraph_edge7" class="edge">
+<title>proc~dfcmn&#45;&gt;proc~dbndsl</title>
+<path fill="none" stroke="#000000" d="M143.45,-839.85C152.21,-835.67 162.17,-830.92 171.52,-826.46"/>
+<polygon fill="#000000" stroke="#000000" points="173.09,-829.59 180.6,-822.12 170.07,-823.27 173.09,-829.59"/>
+</g>
+<!-- proc~dfspvd -->
+<g id="proc~~dfc~~CallsGraph_node9" class="node">
+<title>proc~dfspvd</title>
+<g id="a_proc~~dfc~~CallsGraph_node9"><a xlink:href=".././proc/dfspvd.html" xlink:title="dfspvd">
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-1156 180,-1156 180,-1132 234,-1132 234,-1156"/>
+<text text-anchor="middle" x="207" y="-1141.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dfspvd</text>
+</a>
+</g>
+</g>
+<!-- proc~dfcmn&#45;&gt;proc~dfspvd -->
+<g id="proc~~dfc~~CallsGraph_edge8" class="edge">
+<title>proc~dfcmn&#45;&gt;proc~dfspvd</title>
+<path fill="none" stroke="#000000" d="M118.49,-864.24C120.55,-903.61 130.83,-1029.51 180,-1118 181.25,-1120.25 182.75,-1122.43 184.39,-1124.51"/>
+<polygon fill="#000000" stroke="#000000" points="181.86,-1126.93 191.17,-1131.98 187.04,-1122.23 181.86,-1126.93"/>
+</g>
+<!-- proc~daxpy -->
+<g id="proc~~dfc~~CallsGraph_node10" class="node">
+<title>proc~daxpy</title>
+<g id="a_proc~~dfc~~CallsGraph_node10"><a xlink:href=".././proc/daxpy.html" xlink:title="daxpy">
+<polygon fill="#d9534f" stroke="#d9534f" points="903,-164 849,-164 849,-140 903,-140 903,-164"/>
+<text text-anchor="middle" x="876" y="-149.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">daxpy</text>
+</a>
+</g>
+</g>
+<!-- proc~dfcmn&#45;&gt;proc~daxpy -->
+<g id="proc~~dfc~~CallsGraph_edge9" class="edge">
+<title>proc~dfcmn&#45;&gt;proc~daxpy</title>
+<path fill="none" stroke="#000000" d="M118.21,-839.77C119.94,-744.77 132.93,-126.49 180,-60 218.06,-6.24 249.64,0 315.5,0 315.5,0 315.5,0 697,0 776.74,0 838.81,-89.3 863.46,-131"/>
+<polygon fill="#000000" stroke="#000000" points="860.51,-132.89 868.53,-139.82 866.58,-129.4 860.51,-132.89"/>
+</g>
+<!-- proc~dlsei -->
+<g id="proc~~dfc~~CallsGraph_node11" class="node">
+<title>proc~dlsei</title>
+<g id="a_proc~~dfc~~CallsGraph_node11"><a xlink:href=".././proc/dlsei.html" xlink:title="dlsei">
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-864 180,-864 180,-840 234,-840 234,-864"/>
+<text text-anchor="middle" x="207" y="-849.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dlsei</text>
+</a>
+</g>
+</g>
+<!-- proc~dfcmn&#45;&gt;proc~dlsei -->
+<g id="proc~~dfc~~CallsGraph_edge10" class="edge">
+<title>proc~dfcmn&#45;&gt;proc~dlsei</title>
+<path fill="none" stroke="#000000" d="M144.4,-852C152.39,-852 161.31,-852 169.82,-852"/>
+<polygon fill="#000000" stroke="#000000" points="169.92,-855.5 179.92,-852 169.92,-848.5 169.92,-855.5"/>
+</g>
+<!-- proc~dh12 -->
+<g id="proc~~dfc~~CallsGraph_node15" class="node">
+<title>proc~dh12</title>
+<g id="a_proc~~dfc~~CallsGraph_node15"><a xlink:href=".././proc/dh12.html" xlink:title="dh12">
+<polygon fill="#d9534f" stroke="#d9534f" points="813,-896 759,-896 759,-872 813,-872 813,-896"/>
+<text text-anchor="middle" x="786" y="-881.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dh12</text>
+</a>
+</g>
+</g>
+<!-- proc~dbndac&#45;&gt;proc~dh12 -->
+<g id="proc~~dfc~~CallsGraph_edge11" class="edge">
+<title>proc~dbndac&#45;&gt;proc~dh12</title>
+<path fill="none" stroke="#000000" d="M540.42,-1103.98C580.98,-1082.36 665.48,-1033.75 723,-976 744.38,-954.54 762.89,-924.73 773.99,-904.92"/>
+<polygon fill="#000000" stroke="#000000" points="777.09,-906.54 778.82,-896.08 770.95,-903.18 777.09,-906.54"/>
+</g>
+<!-- proc~sort_ascending -->
+<g id="proc~~dfc~~CallsGraph_node16" class="node">
+<title>proc~sort_ascending</title>
+<g id="a_proc~~dfc~~CallsGraph_node16"><a xlink:href=".././proc/sort_ascending.html" xlink:title="sort_ascending">
+<polygon fill="#d9534f" stroke="#d9534f" points="363,-1236 270,-1236 270,-1212 363,-1212 363,-1236"/>
+<text text-anchor="middle" x="316.5" y="-1221.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">sort_ascending</text>
+</a>
+</g>
+</g>
+<!-- proc~dsort&#45;&gt;proc~sort_ascending -->
+<g id="proc~~dfc~~CallsGraph_edge12" class="edge">
+<title>proc~dsort&#45;&gt;proc~sort_ascending</title>
+<path fill="none" stroke="#000000" d="M234.02,-1224C241.88,-1224 250.82,-1224 259.84,-1224"/>
+<polygon fill="#000000" stroke="#000000" points="259.99,-1227.5 269.99,-1224 259.99,-1220.5 259.99,-1227.5"/>
+</g>
+<!-- proc~dfspvd&#45;&gt;proc~dfspvn -->
+<g id="proc~~dfc~~CallsGraph_edge13" class="edge">
+<title>proc~dfspvd&#45;&gt;proc~dfspvn</title>
+<path fill="none" stroke="#000000" d="M234.02,-1151.02C247.65,-1154.7 264.56,-1159.26 279.44,-1163.27"/>
+<polygon fill="#000000" stroke="#000000" points="278.78,-1166.72 289.34,-1165.94 280.6,-1159.96 278.78,-1166.72"/>
+</g>
+<!-- proc~dlsei&#45;&gt;proc~dcopy -->
+<g id="proc~~dfc~~CallsGraph_edge14" class="edge">
+<title>proc~dlsei&#45;&gt;proc~dcopy</title>
+<path fill="none" stroke="#000000" d="M226.97,-839.8C229.74,-837.22 232.24,-834.27 234,-831 274.33,-755.88 220.71,-518.58 270,-449 382.34,-290.41 650.85,-283.13 748.61,-286.07"/>
+<polygon fill="#000000" stroke="#000000" points="748.75,-289.57 758.87,-286.43 749,-282.58 748.75,-289.57"/>
+</g>
+<!-- proc~dlsei&#45;&gt;proc~dscal -->
+<g id="proc~~dfc~~CallsGraph_edge18" class="edge">
+<title>proc~dlsei&#45;&gt;proc~dscal</title>
+<path fill="none" stroke="#000000" d="M226.6,-839.98C229.48,-837.35 232.12,-834.33 234,-831 291.79,-728.65 210.83,-670.56 270,-569 356.99,-419.69 424.28,-409.96 579,-333 637.16,-304.07 667.85,-273.67 723,-308 759.52,-330.73 775.15,-381.99 781.34,-411.65"/>
+<polygon fill="#000000" stroke="#000000" points="777.97,-412.68 783.27,-421.86 784.85,-411.38 777.97,-412.68"/>
+</g>
+<!-- proc~dlsei&#45;&gt;proc~daxpy -->
+<g id="proc~~dfc~~CallsGraph_edge22" class="edge">
+<title>proc~dlsei&#45;&gt;proc~daxpy</title>
+<path fill="none" stroke="#000000" d="M227.02,-839.83C229.78,-837.24 232.27,-834.29 234,-831 282.64,-738.48 208.53,-446.54 270,-362 408.11,-172.07 730.16,-152.59 838.61,-151.59"/>
+<polygon fill="#000000" stroke="#000000" points="838.74,-155.09 848.72,-151.55 838.71,-148.09 838.74,-155.09"/>
+</g>
+<!-- proc~ddot -->
+<g id="proc~~dfc~~CallsGraph_node12" class="node">
+<title>proc~ddot</title>
+<g id="a_proc~~dfc~~CallsGraph_node12"><a xlink:href=".././proc/ddot.html" xlink:title="ddot">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="903,-1097 849,-1097 849,-1073 903,-1073 903,-1097"/>
+<text text-anchor="middle" x="876" y="-1082.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">ddot</text>
+</a>
+</g>
+</g>
+<!-- proc~dlsei&#45;&gt;proc~ddot -->
+<g id="proc~~dfc~~CallsGraph_edge15" class="edge">
+<title>proc~dlsei&#45;&gt;proc~ddot</title>
+<path fill="none" stroke="#000000" d="M209.82,-864.13C214.59,-891.92 230.01,-960.81 270,-1000 314.03,-1043.15 338.89,-1037.31 399,-1051 559.81,-1087.62 758.34,-1087.85 838.7,-1086.14"/>
+<polygon fill="#000000" stroke="#000000" points="838.88,-1089.63 848.79,-1085.9 838.71,-1082.64 838.88,-1089.63"/>
+</g>
+<!-- proc~dswap -->
+<g id="proc~~dfc~~CallsGraph_node13" class="node">
+<title>proc~dswap</title>
+<g id="a_proc~~dfc~~CallsGraph_node13"><a xlink:href=".././proc/dswap.html" xlink:title="dswap">
+<polygon fill="#d9534f" stroke="#d9534f" points="903,-876 849,-876 849,-852 903,-852 903,-876"/>
+<text text-anchor="middle" x="876" y="-861.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dswap</text>
+</a>
+</g>
+</g>
+<!-- proc~dlsei&#45;&gt;proc~dswap -->
+<g id="proc~~dfc~~CallsGraph_edge17" class="edge">
+<title>proc~dlsei&#45;&gt;proc~dswap</title>
+<path fill="none" stroke="#000000" d="M214.39,-864.2C237.02,-905.58 317.82,-1038 425,-1038 425,-1038 425,-1038 607,-1038 719.02,-1038 821.07,-929.74 859.18,-884.01"/>
+<polygon fill="#000000" stroke="#000000" points="861.91,-886.19 865.54,-876.24 856.49,-881.76 861.91,-886.19"/>
+</g>
+<!-- proc~dnrm2 -->
+<g id="proc~~dfc~~CallsGraph_node14" class="node">
+<title>proc~dnrm2</title>
+<g id="a_proc~~dfc~~CallsGraph_node14"><a xlink:href=".././proc/dnrm2.html" xlink:title="dnrm2">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="723,-820 669,-820 669,-796 723,-796 723,-820"/>
+<text text-anchor="middle" x="696" y="-805.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dnrm2</text>
+</a>
+</g>
+</g>
+<!-- proc~dlsei&#45;&gt;proc~dnrm2 -->
+<g id="proc~~dfc~~CallsGraph_edge16" class="edge">
+<title>proc~dlsei&#45;&gt;proc~dnrm2</title>
+<path fill="none" stroke="#000000" d="M234.25,-853.09C271.07,-854.55 340.12,-857.08 399,-858 503.78,-859.65 531.29,-854.23 633,-829 641.56,-826.88 650.63,-824.11 659.12,-821.28"/>
+<polygon fill="#000000" stroke="#000000" points="660.42,-824.54 668.74,-817.98 658.14,-817.92 660.42,-824.54"/>
+</g>
+<!-- proc~dlsei&#45;&gt;proc~dh12 -->
+<g id="proc~~dfc~~CallsGraph_edge20" class="edge">
+<title>proc~dlsei&#45;&gt;proc~dh12</title>
+<path fill="none" stroke="#000000" d="M234.21,-861.22C245.14,-864.64 258.04,-868.13 270,-870 447.76,-897.75 664.12,-890.54 748.68,-886.17"/>
+<polygon fill="#000000" stroke="#000000" points="749,-889.66 758.8,-885.63 748.62,-882.67 749,-889.66"/>
+</g>
+<!-- proc~dasum -->
+<g id="proc~~dfc~~CallsGraph_node17" class="node">
+<title>proc~dasum</title>
+<g id="a_proc~~dfc~~CallsGraph_node17"><a xlink:href=".././proc/dasum.html" xlink:title="dasum">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="723,-356 669,-356 669,-332 723,-332 723,-356"/>
+<text text-anchor="middle" x="696" y="-341.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dasum</text>
+</a>
+</g>
+</g>
+<!-- proc~dlsei&#45;&gt;proc~dasum -->
+<g id="proc~~dfc~~CallsGraph_edge19" class="edge">
+<title>proc~dlsei&#45;&gt;proc~dasum</title>
+<path fill="none" stroke="#000000" d="M225.81,-839.89C228.84,-837.23 231.74,-834.23 234,-831 262.3,-790.59 247.62,-769.96 270,-726 341.67,-585.21 370.77,-550.79 489,-446 526.12,-413.1 534.7,-402.32 579,-380 604.42,-367.19 635.3,-357.87 658.8,-351.94"/>
+<polygon fill="#000000" stroke="#000000" points="659.82,-355.29 668.71,-349.52 658.16,-348.49 659.82,-355.29"/>
+</g>
+<!-- proc~dlsi -->
+<g id="proc~~dfc~~CallsGraph_node18" class="node">
+<title>proc~dlsi</title>
+<g id="a_proc~~dfc~~CallsGraph_node18"><a xlink:href=".././proc/dlsi.html" xlink:title="dlsi">
+<polygon fill="#d9534f" stroke="#d9534f" points="343.5,-759 289.5,-759 289.5,-735 343.5,-735 343.5,-759"/>
+<text text-anchor="middle" x="316.5" y="-744.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dlsi</text>
+</a>
+</g>
+</g>
+<!-- proc~dlsei&#45;&gt;proc~dlsi -->
+<g id="proc~~dfc~~CallsGraph_edge21" class="edge">
+<title>proc~dlsei&#45;&gt;proc~dlsi</title>
+<path fill="none" stroke="#000000" d="M223.66,-839.86C227.13,-837.03 230.74,-833.97 234,-831 256.83,-810.16 281.3,-784.43 297.4,-766.98"/>
+<polygon fill="#000000" stroke="#000000" points="300.42,-768.87 304.59,-759.13 295.26,-764.14 300.42,-768.87"/>
+</g>
+<!-- proc~dh12&#45;&gt;proc~daxpy -->
+<g id="proc~~dfc~~CallsGraph_edge25" class="edge">
+<title>proc~dh12&#45;&gt;proc~daxpy</title>
+<path fill="none" stroke="#000000" d="M793.8,-871.76C799.92,-860.12 808.62,-841.9 813,-825 846.04,-697.45 868.83,-275.75 873.92,-174.16"/>
+<polygon fill="#000000" stroke="#000000" points="877.42,-174.28 874.42,-164.12 870.43,-173.93 877.42,-174.28"/>
+</g>
+<!-- proc~dh12&#45;&gt;proc~ddot -->
+<g id="proc~~dfc~~CallsGraph_edge24" class="edge">
+<title>proc~dh12&#45;&gt;proc~ddot</title>
+<path fill="none" stroke="#000000" d="M792.37,-896.27C806.92,-929.5 847.22,-1021.55 865.62,-1063.58"/>
+<polygon fill="#000000" stroke="#000000" points="862.48,-1065.13 869.7,-1072.89 868.89,-1062.33 862.48,-1065.13"/>
+</g>
+<!-- proc~dh12&#45;&gt;proc~dswap -->
+<g id="proc~~dfc~~CallsGraph_edge23" class="edge">
+<title>proc~dh12&#45;&gt;proc~dswap</title>
+<path fill="none" stroke="#000000" d="M813.4,-878C821.48,-876.16 830.51,-874.11 839.1,-872.16"/>
+<polygon fill="#000000" stroke="#000000" points="839.94,-875.56 848.92,-869.93 838.39,-868.73 839.94,-875.56"/>
+</g>
+<!-- proc~dlsi&#45;&gt;proc~dcopy -->
+<g id="proc~~dfc~~CallsGraph_edge26" class="edge">
+<title>proc~dlsi&#45;&gt;proc~dcopy</title>
+<path fill="none" stroke="#000000" d="M318.37,-734.74C321.83,-693.58 337.54,-557.97 399,-469 478.4,-354.04 532.68,-338.6 669,-308 695.46,-302.06 725.65,-296.91 748.6,-293.32"/>
+<polygon fill="#000000" stroke="#000000" points="749.24,-296.76 758.59,-291.78 748.18,-289.84 749.24,-296.76"/>
+</g>
+<!-- proc~dlsi&#45;&gt;proc~dscal -->
+<g id="proc~~dfc~~CallsGraph_edge34" class="edge">
+<title>proc~dlsi&#45;&gt;proc~dscal</title>
+<path fill="none" stroke="#000000" d="M320.64,-734.7C329.44,-701.65 356.5,-608.93 399,-542 456.7,-451.14 490.09,-440.65 579,-380 635.86,-341.21 663.64,-288.16 723,-323 755.63,-342.15 772.36,-385.41 779.85,-411.91"/>
+<polygon fill="#000000" stroke="#000000" points="776.52,-413.02 782.44,-421.81 783.29,-411.25 776.52,-413.02"/>
+</g>
+<!-- proc~dlsi&#45;&gt;proc~daxpy -->
+<g id="proc~~dfc~~CallsGraph_edge33" class="edge">
+<title>proc~dlsi&#45;&gt;proc~daxpy</title>
+<path fill="none" stroke="#000000" d="M320.1,-734.78C332.89,-674.74 388.99,-413.44 399,-399 507.83,-242.1 747.8,-178.07 838.93,-158.8"/>
+<polygon fill="#000000" stroke="#000000" points="839.7,-162.22 848.79,-156.77 838.29,-155.36 839.7,-162.22"/>
+</g>
+<!-- proc~dlsi&#45;&gt;proc~ddot -->
+<g id="proc~~dfc~~CallsGraph_edge27" class="edge">
+<title>proc~dlsi&#45;&gt;proc~ddot</title>
+<path fill="none" stroke="#000000" d="M326.75,-759.02C340.89,-776.81 369.35,-810.48 399,-833 548.73,-946.72 756.91,-1037.27 839.35,-1070.88"/>
+<polygon fill="#000000" stroke="#000000" points="838.18,-1074.19 848.76,-1074.7 840.81,-1067.7 838.18,-1074.19"/>
+</g>
+<!-- proc~dlsi&#45;&gt;proc~dswap -->
+<g id="proc~~dfc~~CallsGraph_edge28" class="edge">
+<title>proc~dlsi&#45;&gt;proc~dswap</title>
+<path fill="none" stroke="#000000" d="M331.01,-759.1C346.48,-772.43 373.04,-793.71 399,-807 474.32,-845.56 680.6,-895.14 759,-905 782.81,-907.99 790.02,-911.91 813,-905 827.97,-900.5 842.65,-891.08 853.97,-882.4"/>
+<polygon fill="#000000" stroke="#000000" points="856.32,-885 861.92,-876 851.93,-879.55 856.32,-885"/>
+</g>
+<!-- proc~dlsi&#45;&gt;proc~dh12 -->
+<g id="proc~~dfc~~CallsGraph_edge31" class="edge">
+<title>proc~dlsi&#45;&gt;proc~dh12</title>
+<path fill="none" stroke="#000000" d="M341.7,-759.16C357.71,-766.91 379.3,-776.8 399,-784 524.24,-829.76 679.53,-863.27 748.76,-877.06"/>
+<polygon fill="#000000" stroke="#000000" points="748.23,-880.52 758.72,-879.03 749.59,-873.66 748.23,-880.52"/>
+</g>
+<!-- proc~dlsi&#45;&gt;proc~dasum -->
+<g id="proc~~dfc~~CallsGraph_edge29" class="edge">
+<title>proc~dlsi&#45;&gt;proc~dasum</title>
+<path fill="none" stroke="#000000" d="M324.4,-734.92C345.96,-697.69 415.05,-582.34 489,-500 524.37,-460.62 537.02,-454.24 579,-422 607.84,-399.85 642.67,-376.9 666.59,-361.68"/>
+<polygon fill="#000000" stroke="#000000" points="668.6,-364.55 675.18,-356.25 664.86,-358.63 668.6,-364.55"/>
+</g>
+<!-- proc~dhfti -->
+<g id="proc~~dfc~~CallsGraph_node19" class="node">
+<title>proc~dhfti</title>
+<g id="a_proc~~dfc~~CallsGraph_node19"><a xlink:href=".././proc/dhfti.html" xlink:title="dhfti">
+<polygon fill="#d9534f" stroke="#d9534f" points="633,-820 579,-820 579,-796 633,-796 633,-820"/>
+<text text-anchor="middle" x="606" y="-805.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dhfti</text>
+</a>
+</g>
+</g>
+<!-- proc~dlsi&#45;&gt;proc~dhfti -->
+<g id="proc~~dfc~~CallsGraph_edge30" class="edge">
+<title>proc~dlsi&#45;&gt;proc~dhfti</title>
+<path fill="none" stroke="#000000" d="M343.52,-752.52C395.03,-763.45 510.06,-787.86 568.87,-800.33"/>
+<polygon fill="#000000" stroke="#000000" points="568.32,-803.8 578.83,-802.45 569.78,-796.95 568.32,-803.8"/>
+</g>
+<!-- proc~dlpdp -->
+<g id="proc~~dfc~~CallsGraph_node20" class="node">
+<title>proc~dlpdp</title>
+<g id="a_proc~~dfc~~CallsGraph_node20"><a xlink:href=".././proc/dlpdp.html" xlink:title="dlpdp">
+<polygon fill="#d9534f" stroke="#d9534f" points="453,-700 399,-700 399,-676 453,-676 453,-700"/>
+<text text-anchor="middle" x="426" y="-685.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dlpdp</text>
+</a>
+</g>
+</g>
+<!-- proc~dlsi&#45;&gt;proc~dlpdp -->
+<g id="proc~~dfc~~CallsGraph_edge32" class="edge">
+<title>proc~dlsi&#45;&gt;proc~dlpdp</title>
+<path fill="none" stroke="#000000" d="M339.51,-734.92C355.17,-726.33 376.41,-714.67 393.81,-705.12"/>
+<polygon fill="#000000" stroke="#000000" points="395.93,-707.95 403.02,-700.07 392.57,-701.81 395.93,-707.95"/>
+</g>
+<!-- proc~dhfti&#45;&gt;proc~dh12 -->
+<g id="proc~~dfc~~CallsGraph_edge35" class="edge">
+<title>proc~dhfti&#45;&gt;proc~dh12</title>
+<path fill="none" stroke="#000000" d="M633.26,-819.21C663.98,-832.33 714.99,-854.11 749.29,-868.75"/>
+<polygon fill="#000000" stroke="#000000" points="748.35,-872.16 758.92,-872.86 751.1,-865.72 748.35,-872.16"/>
+</g>
+<!-- proc~dlpdp&#45;&gt;proc~dcopy -->
+<g id="proc~~dfc~~CallsGraph_edge36" class="edge">
+<title>proc~dlpdp&#45;&gt;proc~dcopy</title>
+<path fill="none" stroke="#000000" d="M431.61,-675.99C440.58,-653.48 461.92,-603.97 489,-568 555.19,-480.1 581.58,-464.83 669,-398 691.35,-380.92 701.87,-383.56 723,-365 742.15,-348.18 759.94,-324.96 771.51,-308.43"/>
+<polygon fill="#000000" stroke="#000000" points="774.51,-310.25 777.27,-300.02 768.73,-306.3 774.51,-310.25"/>
+</g>
+<!-- proc~dlpdp&#45;&gt;proc~dscal -->
+<g id="proc~~dfc~~CallsGraph_edge39" class="edge">
+<title>proc~dlpdp&#45;&gt;proc~dscal</title>
+<path fill="none" stroke="#000000" d="M437.59,-675.86C469.26,-640.21 567.39,-534.64 669,-475 694.15,-460.24 725.45,-449.57 749.21,-442.81"/>
+<polygon fill="#000000" stroke="#000000" points="750.16,-446.18 758.88,-440.16 748.31,-439.43 750.16,-446.18"/>
+</g>
+<!-- proc~dlpdp&#45;&gt;proc~ddot -->
+<g id="proc~~dfc~~CallsGraph_edge37" class="edge">
+<title>proc~dlpdp&#45;&gt;proc~ddot</title>
+<path fill="none" stroke="#000000" d="M447.12,-700C459.12,-707 474.76,-715.83 489,-723 551.57,-754.47 577.39,-744.42 633,-787 640.11,-792.44 805.74,-998.65 858.81,-1064.8"/>
+<polygon fill="#000000" stroke="#000000" points="856.26,-1067.22 865.25,-1072.83 861.72,-1062.84 856.26,-1067.22"/>
+</g>
+<!-- proc~dlpdp&#45;&gt;proc~dnrm2 -->
+<g id="proc~~dfc~~CallsGraph_edge38" class="edge">
+<title>proc~dlpdp&#45;&gt;proc~dnrm2</title>
+<path fill="none" stroke="#000000" d="M453.09,-692.81C493.59,-701.03 573.13,-720.25 633,-754 649.17,-763.11 664.9,-776.89 676.47,-788.26"/>
+<polygon fill="#000000" stroke="#000000" points="674.26,-790.99 683.78,-795.65 679.24,-786.07 674.26,-790.99"/>
+</g>
+<!-- proc~dwnnls -->
+<g id="proc~~dfc~~CallsGraph_node21" class="node">
+<title>proc~dwnnls</title>
+<g id="a_proc~~dfc~~CallsGraph_node21"><a xlink:href=".././proc/dwnnls.html" xlink:title="dwnnls">
+<polygon fill="#d9534f" stroke="#d9534f" points="543,-673 489,-673 489,-649 543,-649 543,-673"/>
+<text text-anchor="middle" x="516" y="-658.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dwnnls</text>
+</a>
+</g>
+</g>
+<!-- proc~dlpdp&#45;&gt;proc~dwnnls -->
+<g id="proc~~dfc~~CallsGraph_edge40" class="edge">
+<title>proc~dlpdp&#45;&gt;proc~dwnnls</title>
+<path fill="none" stroke="#000000" d="M453.4,-679.9C461.48,-677.42 470.51,-674.65 479.1,-672.01"/>
+<polygon fill="#000000" stroke="#000000" points="480.39,-675.28 488.92,-669 478.33,-668.59 480.39,-675.28"/>
+</g>
+<!-- proc~dwnlsm -->
+<g id="proc~~dfc~~CallsGraph_node22" class="node">
+<title>proc~dwnlsm</title>
+<g id="a_proc~~dfc~~CallsGraph_node22"><a xlink:href=".././proc/dwnlsm.html" xlink:title="dwnlsm">
+<polygon fill="#d9534f" stroke="#d9534f" points="633,-644 579,-644 579,-620 633,-620 633,-644"/>
+<text text-anchor="middle" x="606" y="-629.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dwnlsm</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnnls&#45;&gt;proc~dwnlsm -->
+<g id="proc~~dfc~~CallsGraph_edge41" class="edge">
+<title>proc~dwnnls&#45;&gt;proc~dwnlsm</title>
+<path fill="none" stroke="#000000" d="M543.4,-652.3C551.57,-649.61 560.7,-646.6 569.38,-643.74"/>
+<polygon fill="#000000" stroke="#000000" points="570.52,-647.05 578.92,-640.59 568.33,-640.4 570.52,-647.05"/>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~dcopy -->
+<g id="proc~~dfc~~CallsGraph_edge42" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~dcopy</title>
+<path fill="none" stroke="#000000" d="M610.74,-619.75C619.23,-592.74 641.36,-526.35 669,-475 688.81,-438.2 700.71,-433.36 723,-398 742.04,-367.79 761.95,-331.49 773.92,-309.08"/>
+<polygon fill="#000000" stroke="#000000" points="777.08,-310.58 778.68,-300.11 770.9,-307.3 777.08,-310.58"/>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~dscal -->
+<g id="proc~~dfc~~CallsGraph_edge47" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~dscal</title>
+<path fill="none" stroke="#000000" d="M611.92,-619.75C620.95,-598.3 641.76,-553.22 669,-522 683.07,-505.88 729.26,-472.6 758.93,-451.9"/>
+<polygon fill="#000000" stroke="#000000" points="760.97,-454.75 767.19,-446.17 756.98,-448.99 760.97,-454.75"/>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~daxpy -->
+<g id="proc~~dfc~~CallsGraph_edge50" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~daxpy</title>
+<path fill="none" stroke="#000000" d="M614.28,-619.83C624.85,-602.83 645.74,-571.64 669,-550 725.14,-497.78 770.19,-518.61 813,-455 844.25,-408.55 865.73,-236.74 872.62,-174.61"/>
+<polygon fill="#000000" stroke="#000000" points="876.13,-174.66 873.73,-164.34 869.17,-173.9 876.13,-174.66"/>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~dswap -->
+<g id="proc~~dfc~~CallsGraph_edge46" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~dswap</title>
+<path fill="none" stroke="#000000" d="M615,-644.21C625.91,-660.29 646.7,-688.88 669,-709 690.24,-728.16 704.42,-722.25 723,-744 748.59,-773.95 729.87,-798.48 759,-825 781.1,-845.11 813.92,-854.9 839.02,-859.63"/>
+<polygon fill="#000000" stroke="#000000" points="838.46,-863.09 848.9,-861.31 839.63,-856.19 838.46,-863.09"/>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~dnrm2 -->
+<g id="proc~~dfc~~CallsGraph_edge44" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~dnrm2</title>
+<path fill="none" stroke="#000000" d="M611.68,-644.07C624.67,-677.53 660.82,-769.75 669,-782 670.46,-784.18 672.12,-786.34 673.88,-788.41"/>
+<polygon fill="#000000" stroke="#000000" points="671.55,-791.04 680.94,-795.94 676.65,-786.25 671.55,-791.04"/>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~dh12 -->
+<g id="proc~~dfc~~CallsGraph_edge52" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~dh12</title>
+<path fill="none" stroke="#000000" d="M611.8,-644.06C620.79,-665.68 641.73,-711.76 669,-744 688.81,-767.43 703.62,-763.22 723,-787 745.35,-814.43 738.23,-829.36 759,-858 760.54,-860.13 762.26,-862.24 764.05,-864.29"/>
+<polygon fill="#000000" stroke="#000000" points="761.75,-866.94 771.17,-871.78 766.82,-862.12 761.75,-866.94"/>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~dasum -->
+<g id="proc~~dfc~~CallsGraph_edge48" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~dasum</title>
+<path fill="none" stroke="#000000" d="M609.87,-619.71C617.93,-585.67 641.97,-487.46 669,-408 673.89,-393.63 680.3,-377.83 685.53,-365.52"/>
+<polygon fill="#000000" stroke="#000000" points="688.84,-366.68 689.59,-356.11 682.41,-363.91 688.84,-366.68"/>
+</g>
+<!-- proc~idamax -->
+<g id="proc~~dfc~~CallsGraph_node23" class="node">
+<title>proc~idamax</title>
+<g id="a_proc~~dfc~~CallsGraph_node23"><a xlink:href=".././proc/idamax.html" xlink:title="idamax">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="903,-614 849,-614 849,-590 903,-590 903,-614"/>
+<text text-anchor="middle" x="876" y="-599.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">idamax</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~idamax -->
+<g id="proc~~dfc~~CallsGraph_edge43" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~idamax</title>
+<path fill="none" stroke="#000000" d="M620.35,-619.88C645.31,-598.17 701.74,-553.58 759,-539 782.26,-533.08 790.86,-529.73 813,-539 833.59,-547.62 850.8,-566.79 861.82,-581.73"/>
+<polygon fill="#000000" stroke="#000000" points="858.96,-583.75 867.57,-589.92 864.69,-579.73 858.96,-583.75"/>
+</g>
+<!-- proc~dwnlit -->
+<g id="proc~~dfc~~CallsGraph_node24" class="node">
+<title>proc~dwnlit</title>
+<g id="a_proc~~dfc~~CallsGraph_node24"><a xlink:href=".././proc/dwnlit.html" xlink:title="dwnlit">
+<polygon fill="#d9534f" stroke="#d9534f" points="723,-664 669,-664 669,-640 723,-640 723,-664"/>
+<text text-anchor="middle" x="696" y="-649.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dwnlit</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~dwnlit -->
+<g id="proc~~dfc~~CallsGraph_edge49" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~dwnlit</title>
+<path fill="none" stroke="#000000" d="M633.4,-638C641.48,-639.84 650.51,-641.89 659.1,-643.84"/>
+<polygon fill="#000000" stroke="#000000" points="658.39,-647.27 668.92,-646.07 659.94,-640.44 658.39,-647.27"/>
+</g>
+<!-- proc~drotmg -->
+<g id="proc~~dfc~~CallsGraph_node25" class="node">
+<title>proc~drotmg</title>
+<g id="a_proc~~dfc~~CallsGraph_node25"><a xlink:href=".././proc/drotmg.html" xlink:title="drotmg">
+<polygon fill="#d9534f" stroke="#d9534f" points="813,-816 759,-816 759,-792 813,-792 813,-816"/>
+<text text-anchor="middle" x="786" y="-801.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">drotmg</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~drotmg -->
+<g id="proc~~dfc~~CallsGraph_edge51" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~drotmg</title>
+<path fill="none" stroke="#000000" d="M625.79,-644.11C654.6,-662.92 707.94,-698.78 723,-716 745.25,-741.45 737.42,-756.98 759,-783 759.49,-783.59 759.99,-784.17 760.51,-784.74"/>
+<polygon fill="#000000" stroke="#000000" points="758.23,-787.41 767.87,-791.8 763.08,-782.36 758.23,-787.41"/>
+</g>
+<!-- proc~drotm -->
+<g id="proc~~dfc~~CallsGraph_node26" class="node">
+<title>proc~drotm</title>
+<g id="a_proc~~dfc~~CallsGraph_node26"><a xlink:href=".././proc/drotm.html" xlink:title="drotm">
+<polygon fill="#d9534f" stroke="#d9534f" points="813,-572 759,-572 759,-548 813,-548 813,-572"/>
+<text text-anchor="middle" x="786" y="-557.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">drotm</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~drotm -->
+<g id="proc~~dfc~~CallsGraph_edge45" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~drotm</title>
+<path fill="none" stroke="#000000" d="M633.44,-622.5C657.07,-613.88 692.56,-600.63 723,-588 731.81,-584.34 741.24,-580.21 750.01,-576.26"/>
+<polygon fill="#000000" stroke="#000000" points="751.56,-579.4 759.21,-572.07 748.66,-573.02 751.56,-579.4"/>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~dcopy -->
+<g id="proc~~dfc~~CallsGraph_edge56" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~dcopy</title>
+<path fill="none" stroke="#000000" d="M699.93,-639.89C712.64,-587.31 763.14,-378.44 779.7,-309.9"/>
+<polygon fill="#000000" stroke="#000000" points="783.11,-310.7 782.06,-300.16 776.31,-309.05 783.11,-310.7"/>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~dscal -->
+<g id="proc~~dfc~~CallsGraph_edge61" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~dscal</title>
+<path fill="none" stroke="#000000" d="M701.86,-639.97C716.1,-604.69 757.89,-501.15 776.22,-455.75"/>
+<polygon fill="#000000" stroke="#000000" points="779.55,-456.85 780.05,-446.26 773.06,-454.23 779.55,-456.85"/>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~dswap -->
+<g id="proc~~dfc~~CallsGraph_edge57" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~dswap</title>
+<path fill="none" stroke="#000000" d="M723.47,-656.37C749.49,-661.97 788.73,-674.1 813,-699 852.32,-739.34 867.15,-806.98 872.38,-841.8"/>
+<polygon fill="#000000" stroke="#000000" points="868.93,-842.44 873.76,-851.88 875.87,-841.49 868.93,-842.44"/>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~dh12 -->
+<g id="proc~~dfc~~CallsGraph_edge62" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~dh12</title>
+<path fill="none" stroke="#000000" d="M701.07,-664.28C710.57,-692.76 735.24,-765.44 759,-825 764.02,-837.58 770.1,-851.44 775.12,-862.57"/>
+<polygon fill="#000000" stroke="#000000" points="772.04,-864.25 779.37,-871.9 778.41,-861.35 772.04,-864.25"/>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~idamax -->
+<g id="proc~~dfc~~CallsGraph_edge55" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~idamax</title>
+<path fill="none" stroke="#000000" d="M723.43,-646.04C747.04,-640.56 782.53,-631.95 813,-623 821.54,-620.49 830.66,-617.55 839.21,-614.68"/>
+<polygon fill="#000000" stroke="#000000" points="840.57,-617.91 848.9,-611.37 838.31,-611.29 840.57,-617.91"/>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~drotmg -->
+<g id="proc~~dfc~~CallsGraph_edge59" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~drotmg</title>
+<path fill="none" stroke="#000000" d="M711.51,-664.21C715.66,-668.26 719.89,-673.02 723,-678 749.12,-719.85 730.7,-742.59 759,-783 759.35,-783.51 759.72,-784 760.11,-784.5"/>
+<polygon fill="#000000" stroke="#000000" points="757.74,-787.09 767.19,-791.89 762.8,-782.25 757.74,-787.09"/>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~drotm -->
+<g id="proc~~dfc~~CallsGraph_edge54" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~drotm</title>
+<path fill="none" stroke="#000000" d="M709.72,-639.84C714.04,-635.56 718.83,-630.66 723,-626 740.08,-606.92 740.93,-599.15 759,-581 759.66,-580.33 760.35,-579.67 761.04,-579.01"/>
+<polygon fill="#000000" stroke="#000000" points="763.66,-581.37 768.85,-572.14 759.03,-576.11 763.66,-581.37"/>
+</g>
+<!-- proc~dwnlt2 -->
+<g id="proc~~dfc~~CallsGraph_node27" class="node">
+<title>proc~dwnlt2</title>
+<g id="a_proc~~dfc~~CallsGraph_node27"><a xlink:href=".././proc/dwnlt2.html" xlink:title="dwnlt2">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="813,-774 759,-774 759,-750 813,-750 813,-774"/>
+<text text-anchor="middle" x="786" y="-759.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dwnlt2</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~dwnlt2 -->
+<g id="proc~~dfc~~CallsGraph_edge53" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~dwnlt2</title>
+<path fill="none" stroke="#000000" d="M710.41,-664.07C714.69,-668.26 719.28,-673.13 723,-678 742.57,-703.63 738.1,-716.44 759,-741 759.59,-741.7 760.21,-742.39 760.85,-743.07"/>
+<polygon fill="#000000" stroke="#000000" points="758.52,-745.69 768.21,-749.98 763.32,-740.58 758.52,-745.69"/>
+</g>
+<!-- proc~dwnlt1 -->
+<g id="proc~~dfc~~CallsGraph_node28" class="node">
+<title>proc~dwnlt1</title>
+<g id="a_proc~~dfc~~CallsGraph_node28"><a xlink:href=".././proc/dwnlt1.html" xlink:title="dwnlt1">
+<polygon fill="#d9534f" stroke="#d9534f" points="813,-614 759,-614 759,-590 813,-590 813,-614"/>
+<text text-anchor="middle" x="786" y="-599.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dwnlt1</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~dwnlt1 -->
+<g id="proc~~dfc~~CallsGraph_edge58" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~dwnlt1</title>
+<path fill="none" stroke="#000000" d="M718.3,-639.9C729.25,-633.68 742.77,-625.99 754.77,-619.17"/>
+<polygon fill="#000000" stroke="#000000" points="756.62,-622.15 763.59,-614.17 753.17,-616.06 756.62,-622.15"/>
+</g>
+<!-- proc~dwnlt3 -->
+<g id="proc~~dfc~~CallsGraph_node29" class="node">
+<title>proc~dwnlt3</title>
+<g id="a_proc~~dfc~~CallsGraph_node29"><a xlink:href=".././proc/dwnlt3.html" xlink:title="dwnlt3">
+<polygon fill="#d9534f" stroke="#d9534f" points="813,-732 759,-732 759,-708 813,-708 813,-732"/>
+<text text-anchor="middle" x="786" y="-717.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dwnlt3</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~dwnlt3 -->
+<g id="proc~~dfc~~CallsGraph_edge60" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~dwnlt3</title>
+<path fill="none" stroke="#000000" d="M712.73,-664.16C726.25,-674.6 745.93,-689.81 761.35,-701.72"/>
+<polygon fill="#000000" stroke="#000000" points="759.35,-704.6 769.4,-707.95 763.63,-699.06 759.35,-704.6"/>
+</g>
+<!-- proc~dwnlt1&#45;&gt;proc~idamax -->
+<g id="proc~~dfc~~CallsGraph_edge63" class="edge">
+<title>proc~dwnlt1&#45;&gt;proc~idamax</title>
+<path fill="none" stroke="#000000" d="M813.4,-602C821.39,-602 830.31,-602 838.82,-602"/>
+<polygon fill="#000000" stroke="#000000" points="838.92,-605.5 848.92,-602 838.92,-598.5 838.92,-605.5"/>
+</g>
+<!-- proc~dwnlt3&#45;&gt;proc~dswap -->
+<g id="proc~~dfc~~CallsGraph_edge64" class="edge">
+<title>proc~dwnlt3&#45;&gt;proc~dswap</title>
+<path fill="none" stroke="#000000" d="M804.19,-732.14C807.35,-734.84 810.45,-737.84 813,-741 838.48,-772.56 857.41,-816.3 867.29,-842.22"/>
+<polygon fill="#000000" stroke="#000000" points="864.1,-843.68 870.85,-851.84 870.66,-841.25 864.1,-843.68"/>
+</g>
+</g>
+</svg>
+</div><script>var panprocdfcCallsGraph = svgPanZoom('#procdfcCallsGraph', {zoomEnabled: true,controlIconsEnabled: true, fit: true, center: true,}); </script><div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div><div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="-graph-help-label">Graph Key</h4></div><div class="modal-body">
+    <p>Nodes of different colours represent the following: </p>
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="597pt" height="32pt"
+ viewBox="0.00 0.00 596.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 592.5,-28 592.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node4" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="388.5,-24 243.5,-24 243.5,0 388.5,0 388.5,-24"/>
+<text text-anchor="middle" x="316" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="465,-24 407,-24 407,0 465,0 465,-24"/>
+<text text-anchor="middle" x="436" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="588.5,-24 483.5,-24 483.5,0 588.5,0 588.5,-24"/>
+<text text-anchor="middle" x="536" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+    
+    <p>Solid arrows point from a procedure to one which it calls. Dashed 
+    arrows point from an interface to procedures which implement that interface.
+    This could include the module procedures in a generic interface or the
+    implementation in a submodule of an interface in a parent module.
+    </p>
+    </div></div></div></div>
+      </div>
+    </div>
+    <br>
+
+    <section class="visible-xs visible-sm hidden-md">
+        <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="panel panel-primary">
+      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/dfc.html#src">dfc</a>
+      </div>
+    </div>
+
+
+    </section>
+    <br class="visible-xs visible-sm hidden-md">
+
+
+    
+    
+
+    
+    
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="highlight"><pre><span></span><span class="w">   </span><span class="k">subroutine </span><span class="n">dfc</span><span class="w"> </span><span class="p">(</span><span class="n">ndata</span><span class="p">,</span><span class="w"> </span><span class="n">xdata</span><span class="p">,</span><span class="w"> </span><span class="n">ydata</span><span class="p">,</span><span class="w"> </span><span class="n">sddata</span><span class="p">,</span><span class="w"> </span><span class="n">nord</span><span class="p">,</span><span class="w"> </span><span class="n">nbkpt</span><span class="p">,</span><span class="w"> </span><span class="n">bkpt</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span><span class="w"></span>
+<span class="w">                   </span><span class="n">nconst</span><span class="p">,</span><span class="w"> </span><span class="n">xconst</span><span class="p">,</span><span class="w"> </span><span class="n">yconst</span><span class="p">,</span><span class="w"> </span><span class="n">nderiv</span><span class="p">,</span><span class="w"> </span><span class="n">mode</span><span class="p">,</span><span class="w"> </span><span class="n">coeff</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">,</span><span class="w"> </span><span class="n">iw</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">   </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ndata</span><span class="w"> </span><span class="c">!! number of points (size of `xdata` and `ydata`).</span>
+<span class="w">                                </span><span class="c">!! Any non-negative value of `NDATA` is allowed.</span>
+<span class="w">                                </span><span class="c">!! A negative value of `NDATA` is an error.</span>
+<span class="w">   </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">xdata</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="c">!! X data array. No sorting of `XDATA(*)` is required.</span>
+<span class="w">   </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ydata</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="c">!! Y data array.</span>
+<span class="w">   </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">sddata</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="c">!! Y value standard deviation or uncertainty.</span>
+<span class="w">                                     </span><span class="c">!! A zero value for any entry of</span>
+<span class="w">                                     </span><span class="c">!! `SDDATA(*)` will weight that data point as 1.</span>
+<span class="w">                                     </span><span class="c">!! Otherwise the weight of that data point is</span>
+<span class="w">                                     </span><span class="c">!! the reciprocal of this entry.</span>
+<span class="w">   </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">nord</span><span class="w"> </span><span class="c">!! B-spline order.</span>
+<span class="w">                               </span><span class="c">!! (The order of the spline is one more than the</span>
+<span class="w">                               </span><span class="c">!! degree of the piecewise polynomial defined on</span>
+<span class="w">                               </span><span class="c">!! each interval.  This is consistent with the</span>
+<span class="w">                               </span><span class="c">!! B-spline package convention.  For example,</span>
+<span class="w">                               </span><span class="c">!! `NORD=4` when we are using piecewise cubics.)</span>
+<span class="w">                               </span><span class="c">!! `NORD` must be in the range `1 &lt;= NORD &lt;= 20`.</span>
+<span class="w">   </span><span class="kt">integer</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">Nbkpt</span><span class="w"> </span><span class="c">!! The value of `NBKPT` must satisfy the condition `NBKPT &gt;= 2*NORD`.</span>
+<span class="w">   </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">Bkpt</span><span class="w"> </span><span class="c">!! `NBKPT` knots of the B-spline.</span>
+<span class="w">                                            </span><span class="c">!! Normally the</span>
+<span class="w">                                            </span><span class="c">!! problem data interval will be included between</span>
+<span class="w">                                            </span><span class="c">!! the limits `BKPT(NORD)` and `BKPT(NBKPT-NORD+1)`.</span>
+<span class="w">                                            </span><span class="c">!! The additional end knots `BKPT(I),I=1,...,NORD-1`</span>
+<span class="w">                                            </span><span class="c">!! and `I=NBKPT-NORD+2,...,NBKPT`, are</span>
+<span class="w">                                            </span><span class="c">!! required to compute the functions used to fit</span>
+<span class="w">                                            </span><span class="c">!! the data.  No sorting of `BKPT(*)` is required.</span>
+<span class="w">                                            </span><span class="c">!! Internal to [[DEFC]] the extreme end knots may</span>
+<span class="w">                                            </span><span class="c">!! be reduced and increased respectively to</span>
+<span class="w">                                            </span><span class="c">!! accommodate any data values that are exterior</span>
+<span class="w">                                            </span><span class="c">!! to the given knot values.  The contents of</span>
+<span class="w">                                            </span><span class="c">!! `BKPT(*)` is not changed.</span>
+<span class="w">   </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">nconst</span><span class="w"> </span><span class="c">!! The number of conditions that constrain the</span>
+<span class="w">                                 </span><span class="c">!! B-spline is NCONST.  A constraint is specified</span>
+<span class="w">                                 </span><span class="c">!! by an (X,Y) pair in the arrays XCONST(*) and</span>
+<span class="w">                                 </span><span class="c">!! YCONST(*), and by the type of constraint and</span>
+<span class="w">                                 </span><span class="c">!! derivative value encoded in the array</span>
+<span class="w">                                 </span><span class="c">!! NDERIV(*).</span>
+<span class="w">   </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">xconst</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="c">!! X value of constraint.</span>
+<span class="w">                                     </span><span class="c">!! No sorting of XCONST(*) is required.</span>
+<span class="w">   </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">yconst</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="c">!! Y value of constraint</span>
+<span class="w">   </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">nderiv</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="c">!! The value of NDERIV(*) is</span>
+<span class="w">                                    </span><span class="c">!! determined as follows.  Suppose the I-th</span>
+<span class="w">                                    </span><span class="c">!! constraint applies to the J-th derivative</span>
+<span class="w">                                    </span><span class="c">!! of the B-spline.  (Any non-negative value of</span>
+<span class="w">                                    </span><span class="c">!! J &lt; NORD is permitted.  In particular the</span>
+<span class="w">                                    </span><span class="c">!! value J=0 refers to the B-spline itself.)</span>
+<span class="w">                                    </span><span class="c">!! For this I-th constraint, set</span>
+<span class="w">                                    </span><span class="c">!!```</span>
+<span class="w">                                    </span><span class="c">!!  XCONST(I)=X,</span>
+<span class="w">                                    </span><span class="c">!!  YCONST(I)=Y, and</span>
+<span class="w">                                    </span><span class="c">!!  NDERIV(I)=ITYPE+4*J, where</span>
+<span class="w">                                    </span><span class="c">!!</span>
+<span class="w">                                    </span><span class="c">!!  ITYPE = 0,      if (J-th deriv. at X) &lt;= Y.</span>
+<span class="w">                                    </span><span class="c">!!        = 1,      if (J-th deriv. at X) &gt;= Y.</span>
+<span class="w">                                    </span><span class="c">!!        = 2,      if (J-th deriv. at X) == Y.</span>
+<span class="w">                                    </span><span class="c">!!        = 3,      if (J-th deriv. at X) ==</span>
+<span class="w">                                    </span><span class="c">!!                     (J-th deriv. at Y).</span>
+<span class="w">                                    </span><span class="c">!!```</span>
+<span class="w">                                    </span><span class="c">!! (A value of NDERIV(I)=-1 will cause this</span>
+<span class="w">                                    </span><span class="c">!! constraint to be ignored.  This subprogram</span>
+<span class="w">                                    </span><span class="c">!! feature is often useful when temporarily</span>
+<span class="w">                                    </span><span class="c">!! suppressing a constraint while still</span>
+<span class="w">                                    </span><span class="c">!! retaining the source code of the calling</span>
+<span class="w">                                    </span><span class="c">!! program.)</span>
+<span class="w">   </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">mode</span><span class="w"> </span><span class="c">!! *Input*</span>
+<span class="w">                                  </span><span class="c">!!</span>
+<span class="w">                                  </span><span class="c">!! An input flag that directs the least squares</span>
+<span class="w">                                  </span><span class="c">!! solution method used by [[DFC]].</span>
+<span class="w">                                  </span><span class="c">!!</span>
+<span class="w">                                  </span><span class="c">!! The variance function, referred to below,</span>
+<span class="w">                                  </span><span class="c">!! defines the square of the probable error of</span>
+<span class="w">                                  </span><span class="c">!! the fitted curve at any point, XVAL.</span>
+<span class="w">                                  </span><span class="c">!! This feature of [[DFC]] allows one to use the</span>
+<span class="w">                                  </span><span class="c">!! square root of this variance function to</span>
+<span class="w">                                  </span><span class="c">!! determine a probable error band around the</span>
+<span class="w">                                  </span><span class="c">!! fitted curve.</span>
+<span class="w">                                  </span><span class="c">!!</span>
+<span class="w">                                  </span><span class="c">!!  * `=1`  a new problem.  No variance function.</span>
+<span class="w">                                  </span><span class="c">!!  * `=2`  a new problem.  Want variance function.</span>
+<span class="w">                                  </span><span class="c">!!  * `=3`  an old problem.  No variance function.</span>
+<span class="w">                                  </span><span class="c">!!  * `=4`  an old problem.  Want variance function.</span>
+<span class="w">                                  </span><span class="c">!!</span>
+<span class="w">                                  </span><span class="c">!! Any value of MODE other than 1-4 is an error.</span>
+<span class="w">                                  </span><span class="c">!!</span>
+<span class="w">                                  </span><span class="c">!! The user with a new problem can skip directly</span>
+<span class="w">                                  </span><span class="c">!! to the description of the input parameters</span>
+<span class="w">                                  </span><span class="c">!! IW(1), IW(2).</span>
+<span class="w">                                  </span><span class="c">!!</span>
+<span class="w">                                  </span><span class="c">!! If the user correctly specifies the new or old</span>
+<span class="w">                                  </span><span class="c">!! problem status, the subprogram [[DFC]] will</span>
+<span class="w">                                  </span><span class="c">!! perform more efficiently.</span>
+<span class="w">                                  </span><span class="c">!! By an old problem it is meant that subprogram</span>
+<span class="w">                                  </span><span class="c">!! [[DFC]] was last called with this same set of</span>
+<span class="w">                                  </span><span class="c">!! knots, data points and weights.</span>
+<span class="w">                                  </span><span class="c">!!</span>
+<span class="w">                                  </span><span class="c">!! Another often useful deployment of this old</span>
+<span class="w">                                  </span><span class="c">!! problem designation can occur when one has</span>
+<span class="w">                                  </span><span class="c">!! previously obtained a Q-R orthogonal</span>
+<span class="w">                                  </span><span class="c">!! decomposition of the matrix resulting from</span>
+<span class="w">                                  </span><span class="c">!! B-spline fitting of data (without constraints)</span>
+<span class="w">                                  </span><span class="c">!! at the breakpoints BKPT(I), I=1,...,NBKPT.</span>
+<span class="w">                                  </span><span class="c">!! For example, this matrix could be the result</span>
+<span class="w">                                  </span><span class="c">!! of sequential accumulation of the least</span>
+<span class="w">                                  </span><span class="c">!! squares equations for a very large data set.</span>
+<span class="w">                                  </span><span class="c">!! The user writes this code in a manner</span>
+<span class="w">                                  </span><span class="c">!! convenient for the application.  For the</span>
+<span class="w">                                  </span><span class="c">!! discussion here let</span>
+<span class="w">                                  </span><span class="c">!!</span>
+<span class="w">                                  </span><span class="c">!! `N=NBKPT-NORD, and K=N+3`</span>
+<span class="w">                                  </span><span class="c">!!</span>
+<span class="w">                                  </span><span class="c">!! Let us assume that an equivalent least squares</span>
+<span class="w">                                  </span><span class="c">!! system</span>
+<span class="w">                                  </span><span class="c">!!</span>
+<span class="w">                                  </span><span class="c">!! `RC=D`</span>
+<span class="w">                                  </span><span class="c">!!</span>
+<span class="w">                                  </span><span class="c">!! has been obtained.  Here R is an N+1 by N</span>
+<span class="w">                                  </span><span class="c">!! matrix and D is a vector with N+1 components.</span>
+<span class="w">                                  </span><span class="c">!! The last row of R is zero.  The matrix R is</span>
+<span class="w">                                  </span><span class="c">!! upper triangular and banded.  At most NORD of</span>
+<span class="w">                                  </span><span class="c">!! the diagonals are nonzero.</span>
+<span class="w">                                  </span><span class="c">!! The contents of R and D can be copied to the</span>
+<span class="w">                                  </span><span class="c">!! working array W(*) as follows.</span>
+<span class="w">                                  </span><span class="c">!!</span>
+<span class="w">                                  </span><span class="c">!! The I-th diagonal of R, which has N-I+1</span>
+<span class="w">                                  </span><span class="c">!! elements, is copied to W(*) starting at</span>
+<span class="w">                                  </span><span class="c">!!</span>
+<span class="w">                                  </span><span class="c">!! `W((I-1)*K+1),`</span>
+<span class="w">                                  </span><span class="c">!!</span>
+<span class="w">                                  </span><span class="c">!! for I=1,...,NORD.</span>
+<span class="w">                                  </span><span class="c">!! The vector D is copied to W(*) starting at</span>
+<span class="w">                                  </span><span class="c">!!</span>
+<span class="w">                                  </span><span class="c">!! `W(NORD*K+1)`</span>
+<span class="w">                                  </span><span class="c">!!</span>
+<span class="w">                                  </span><span class="c">!! The input value used for NDATA is arbitrary</span>
+<span class="w">                                  </span><span class="c">!! when an old problem is designated.  Because</span>
+<span class="w">                                  </span><span class="c">!! of the feature of [[DFC]] that checks the</span>
+<span class="w">                                  </span><span class="c">!! working storage array lengths, a value not</span>
+<span class="w">                                  </span><span class="c">!! exceeding NBKPT should be used.  For example,</span>
+<span class="w">                                  </span><span class="c">!! use NDATA=0.</span>
+<span class="w">                                  </span><span class="c">!!</span>
+<span class="w">                                  </span><span class="c">!! (The constraints or variance function request</span>
+<span class="w">                                  </span><span class="c">!! can change in each call to [[DFC]].)  A new</span>
+<span class="w">                                  </span><span class="c">!! problem is anything other than an old problem.</span>
+<span class="w">                                  </span><span class="c">!!</span>
+<span class="w">                                  </span><span class="c">!! *Output*</span>
+<span class="w">                                  </span><span class="c">!!</span>
+<span class="w">                                  </span><span class="c">!! An output flag that indicates the status</span>
+<span class="w">                                  </span><span class="c">!! of the constrained curve fit.</span>
+<span class="w">                                  </span><span class="c">!!</span>
+<span class="w">                                  </span><span class="c">!!  * `=-1`  a usage error of [[DFC]] occurred.  The</span>
+<span class="w">                                  </span><span class="c">!!    offending condition is noted with the</span>
+<span class="w">                                  </span><span class="c">!!    SLATEC library error processor, XERMSG.</span>
+<span class="w">                                  </span><span class="c">!!    In case the working arrays W(*) or IW(*)</span>
+<span class="w">                                  </span><span class="c">!!    are not long enough, the minimal</span>
+<span class="w">                                  </span><span class="c">!!    acceptable length is printed.</span>
+<span class="w">                                  </span><span class="c">!! * `= 0`  successful constrained curve fit.</span>
+<span class="w">                                  </span><span class="c">!! * `= 1`  the requested equality constraints</span>
+<span class="w">                                  </span><span class="c">!!   are contradictory.</span>
+<span class="w">                                  </span><span class="c">!! * `= 2`  the requested inequality constraints</span>
+<span class="w">                                  </span><span class="c">!!    are contradictory.</span>
+<span class="w">                                  </span><span class="c">!! * `= 3`  both equality and inequality constraints</span>
+<span class="w">                                  </span><span class="c">!!   are contradictory.</span>
+<span class="w">   </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">coeff</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="c">!! If the output value of MODE=0 or 1, this array</span>
+<span class="w">                                     </span><span class="c">!! contains the unknowns obtained from the least</span>
+<span class="w">                                     </span><span class="c">!! squares fitting process.  These N=NBKPT-NORD</span>
+<span class="w">                                     </span><span class="c">!! parameters are the B-spline coefficients.</span>
+<span class="w">                                     </span><span class="c">!! For MODE=1, the equality constraints are</span>
+<span class="w">                                     </span><span class="c">!! contradictory.  To make the fitting process</span>
+<span class="w">                                     </span><span class="c">!! more robust, the equality constraints are</span>
+<span class="w">                                     </span><span class="c">!! satisfied in a least squares sense.  In this</span>
+<span class="w">                                     </span><span class="c">!! case the array COEFF(*) contains B-spline</span>
+<span class="w">                                     </span><span class="c">!! coefficients for this extended concept of a</span>
+<span class="w">                                     </span><span class="c">!! solution.  If MODE=-1,2 or 3 on output, the</span>
+<span class="w">                                     </span><span class="c">!! array COEFF(*) is undefined.</span>
+<span class="w">   </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="c">!! real work array of length `IW(1)`. The</span>
+<span class="w">                    </span><span class="c">!! contents of `W(*)` must not be modified by the</span>
+<span class="w">                    </span><span class="c">!! user if the variance function is desired.</span>
+<span class="w">                    </span><span class="c">!!</span>
+<span class="w">                    </span><span class="c">!! The length of W(*) must be at least</span>
+<span class="w">                    </span><span class="c">!!```</span>
+<span class="w">                    </span><span class="c">!!   NB=(NBKPT-NORD+3)*(NORD+1)+</span>
+<span class="w">                    </span><span class="c">!!       2*MAX(NDATA,NBKPT)+NBKPT+NORD**2</span>
+<span class="w">                    </span><span class="c">!!```</span>
+<span class="w">                    </span><span class="c">!! Whenever possible the code uses banded matrix</span>
+<span class="w">                    </span><span class="c">!! processors DBNDAC( ) and DBNDSL( ).  These</span>
+<span class="w">                    </span><span class="c">!! are utilized if there are no constraints,</span>
+<span class="w">                    </span><span class="c">!! no variance function is required, and there</span>
+<span class="w">                    </span><span class="c">!! is sufficient data to uniquely determine the</span>
+<span class="w">                    </span><span class="c">!! B-spline coefficients.  If the band processors</span>
+<span class="w">                    </span><span class="c">!! cannot be used to determine the solution,</span>
+<span class="w">                    </span><span class="c">!! then the constrained least squares code DLSEI</span>
+<span class="w">                    </span><span class="c">!! is used.  In this case the subprogram requires</span>
+<span class="w">                    </span><span class="c">!! an additional block of storage in W(*).  For</span>
+<span class="w">                    </span><span class="c">!! the discussion here define the integers NEQCON</span>
+<span class="w">                    </span><span class="c">!! and NINCON respectively as the number of</span>
+<span class="w">                    </span><span class="c">!! equality (ITYPE=2,3) and inequality</span>
+<span class="w">                    </span><span class="c">!! (ITYPE=0,1) constraints imposed on the fitted</span>
+<span class="w">                    </span><span class="c">!! curve.  Define</span>
+<span class="w">                    </span><span class="c">!!</span>
+<span class="w">                    </span><span class="c">!! `L = NBKPT-NORD+1`</span>
+<span class="w">                    </span><span class="c">!!</span>
+<span class="w">                    </span><span class="c">!! and note that</span>
+<span class="w">                    </span><span class="c">!!</span>
+<span class="w">                    </span><span class="c">!! `NCONST = NEQCON+NINCON`</span>
+<span class="w">                    </span><span class="c">!!</span>
+<span class="w">                    </span><span class="c">!! When the subprogram [[DFC]] uses [[DLSEI]] the</span>
+<span class="w">                    </span><span class="c">!! length of the working array W(*) must be at</span>
+<span class="w">                    </span><span class="c">!! least</span>
+<span class="w">                    </span><span class="c">!!</span>
+<span class="w">                    </span><span class="c">!! `LW = NB+(L+NCONST)*L+2*(NEQCON+L)+(NINCON+L)+(NINCON+2)*(L+6)`</span>
+<span class="w">   </span><span class="kt">integer</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">iw</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="c">!! integer work array of length `IW(2)`</span>
+<span class="w">                     </span><span class="c">!!</span>
+<span class="w">                     </span><span class="c">!! `IW(1),IW(2)` are the amounts of working storage actually</span>
+<span class="w">                     </span><span class="c">!! allocated for the working arrays W(*) and</span>
+<span class="w">                     </span><span class="c">!! IW(*).  These quantities are compared with the</span>
+<span class="w">                     </span><span class="c">!! actual amounts of storage needed in [[DFC]].</span>
+<span class="w">                     </span><span class="c">!! Insufficient storage allocated for either</span>
+<span class="w">                     </span><span class="c">!! W(*) or IW(*) is an error.  This feature was</span>
+<span class="w">                     </span><span class="c">!! included in [[DFC]] because misreading the</span>
+<span class="w">                     </span><span class="c">!! storage formulas for W(*) and IW(*) might very</span>
+<span class="w">                     </span><span class="c">!! well lead to subtle and hard-to-find</span>
+<span class="w">                     </span><span class="c">!! programming bugs.</span>
+<span class="w">                     </span><span class="c">!!</span>
+<span class="w">                     </span><span class="c">!! The length of the array IW(*) must be at least</span>
+<span class="w">                     </span><span class="c">!!</span>
+<span class="w">                     </span><span class="c">!! `IW1 = NINCON+2*L`</span>
+<span class="w">                     </span><span class="c">!!</span>
+<span class="w">                     </span><span class="c">!! in any case.</span>
+
+<span class="w">   </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i1</span><span class="p">,</span><span class="w"> </span><span class="n">i2</span><span class="p">,</span><span class="w"> </span><span class="n">i3</span><span class="p">,</span><span class="w"> </span><span class="n">i4</span><span class="p">,</span><span class="w"> </span><span class="n">i5</span><span class="p">,</span><span class="w"> </span><span class="n">i6</span><span class="p">,</span><span class="w"> </span><span class="n">i7</span><span class="p">,</span><span class="w"> </span><span class="n">mdg</span><span class="p">,</span><span class="w"> </span><span class="n">mdw</span><span class="w"></span>
+
+<span class="w">   </span><span class="n">mdg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nbkpt</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">nord</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">3</span><span class="w"></span>
+<span class="w">   </span><span class="n">mdw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nbkpt</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">nord</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">nconst</span><span class="w"></span>
+
+<span class="w">   </span><span class="c">! USAGE IN DFCMN( ) OF W(*)..</span>
+<span class="w">   </span><span class="c">!     I1,...,I2-1      G(*,*)</span>
+<span class="w">   </span><span class="c">!     I2,...,I3-1      XTEMP(*)</span>
+<span class="w">   </span><span class="c">!     I3,...,I4-1      PTEMP(*)</span>
+<span class="w">   </span><span class="c">!     I4,...,I5-1      BKPT(*) (LOCAL TO [[DFCMN]])</span>
+<span class="w">   </span><span class="c">!     I5,...,I6-1      BF(*,*)</span>
+<span class="w">   </span><span class="c">!     I6,...,I7-1      W(*,*)</span>
+<span class="w">   </span><span class="c">!     I7,...           WORK(*) FOR [[DLSEI]]</span>
+
+<span class="w">   </span><span class="n">i1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
+<span class="w">   </span><span class="n">i2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">mdg</span><span class="o">*</span><span class="p">(</span><span class="n">nord</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
+<span class="w">   </span><span class="n">i3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">max</span><span class="p">(</span><span class="n">ndata</span><span class="p">,</span><span class="n">nbkpt</span><span class="p">)</span><span class="w"></span>
+<span class="w">   </span><span class="n">i4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i3</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">max</span><span class="p">(</span><span class="n">ndata</span><span class="p">,</span><span class="n">nbkpt</span><span class="p">)</span><span class="w"></span>
+<span class="w">   </span><span class="n">i5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i4</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">nbkpt</span><span class="w"></span>
+<span class="w">   </span><span class="n">i6</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i5</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">nord</span><span class="o">*</span><span class="n">nord</span><span class="w"></span>
+<span class="w">   </span><span class="n">i7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i6</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">mdw</span><span class="o">*</span><span class="p">(</span><span class="n">nbkpt</span><span class="o">-</span><span class="n">nord</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
+<span class="w">   </span><span class="k">call </span><span class="n">dfcmn</span><span class="p">(</span><span class="n">ndata</span><span class="p">,</span><span class="w"> </span><span class="n">xdata</span><span class="p">,</span><span class="w"> </span><span class="n">ydata</span><span class="p">,</span><span class="w"> </span><span class="n">sddata</span><span class="p">,</span><span class="w"> </span><span class="n">nord</span><span class="p">,</span><span class="w"> </span><span class="n">nbkpt</span><span class="p">,</span><span class="w"> </span><span class="n">bkpt</span><span class="p">,</span><span class="w"> </span><span class="n">nconst</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span><span class="w"></span>
+<span class="w">              </span><span class="n">xconst</span><span class="p">,</span><span class="w"> </span><span class="n">yconst</span><span class="p">,</span><span class="w"> </span><span class="n">nderiv</span><span class="p">,</span><span class="w"> </span><span class="n">mode</span><span class="p">,</span><span class="w"> </span><span class="n">coeff</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">i5</span><span class="p">),</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">i2</span><span class="p">),</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">i3</span><span class="p">),</span><span class="w"> </span><span class="p">&amp;</span><span class="w"></span>
+<span class="w">              </span><span class="n">w</span><span class="p">(</span><span class="n">i4</span><span class="p">),</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">i1</span><span class="p">),</span><span class="w"> </span><span class="n">mdg</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">i6</span><span class="p">),</span><span class="w"> </span><span class="n">mdw</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">i7</span><span class="p">),</span><span class="w"> </span><span class="n">iw</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">   </span><span class="k">end subroutine </span><span class="n">dfc</span><span class="w"></span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+    <hr>    
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+      <div class="row">
+        <div class="col-xs-6 col-md-6"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2023 
+</p>
+        </div>
+        <div class="col-xs-6 col-md-6">
+          <p class="text-right">
+            Documentation generated by 
+            <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+          </p>
+        </div>
+      </div>
+      <br>
+      </div> <!-- /container -->    
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+<!--
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+-->
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../js/ie10-viewport-bug-workaround.js"></script>
+
+    <!-- MathJax JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
+        jax: ['input/TeX','input/MathML','output/HTML-CSS'],
+        extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
+      });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script src="../tipuesearch/tipuesearch_content.js"></script>
+    <script src="../tipuesearch/tipuesearch_set.js"></script>
+    <script src="../tipuesearch/tipuesearch.js"></script>
+    
+  </body>
+</html>

@@ -86,13 +86,11 @@
     <div class="col-lg-12">
       <div class="well well-sm">
         <ul class="list-inline" style="margin-bottom:0px;display:inline">
-            <li id="meta-author"><i class="fa fa-pencil"></i> Jacob Williams</li>
-            <li id="meta-license"><i class="fa fa-legal"></i> BSD</li>
 
           <li id="statements"><i class="fa fa-list-ol"></i>
             <a data-toggle="tooltip"
                data-placement="bottom" data-html="true"
-               title="10.2% of total for modules and submodules.">476 statements</a>
+               title="31.5% of total for modules and submodules.">2081 statements</a>
           </li>
 
             <li id="source-file">
@@ -120,6 +118,19 @@
       <div id="sidebar">
       <h3>Contents</h3>
   
+      <div class="panel panel-primary">
+      <div class="panel-heading text-left">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" href="#vars-0">Variables</a>
+        </h3>
+      </div>
+      <div id="vars-0" class="panel-collapse collapse">
+        <div class="list-group">
+            <a class="list-group-item" href="../module/bspline_defc_module.html#variable-drelpr">drelpr</a>
+        </div>
+      </div>
+    </div>
+
   
   
   
@@ -129,8 +140,20 @@
   
   
   
-  
-  
+      <div class="panel panel-primary">
+      <div class="panel-heading text-left">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" href="#funcs-0">Functions</a>
+        </h3>
+      </div>
+      <div id="funcs-0" class="panel-collapse collapse">
+        <div class="list-group">
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dwnlt2">dwnlt2</a>
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dcv">dcv</a>
+        </div>
+      </div>
+    </div>
+
       <div class="panel panel-primary">
       <div class="panel-heading text-left">
         <h3 class="panel-title">
@@ -147,6 +170,18 @@
             <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dh12">dh12</a>
             <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dsort">dsort</a>
             <a class="list-group-item" href="../module/bspline_defc_module.html#proc-sort_ascending">sort_ascending</a>
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dfc">dfc</a>
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dfcmn">dfcmn</a>
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dfspvd">dfspvd</a>
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dhfti">dhfti</a>
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dlpdp">dlpdp</a>
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dlsei">dlsei</a>
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dlsi">dlsi</a>
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dwnlit">dwnlit</a>
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dwnlsm">dwnlsm</a>
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dwnlt1">dwnlt1</a>
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dwnlt3">dwnlt3</a>
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dwnnls">dwnnls</a>
         </div>
       </div>
     </div>
@@ -164,10 +199,30 @@
     </div>
     
     <div class="col-md-9" id='text'>
-    <p><a href="../proc/defc.html">defc</a> procedure and support routines from SLATEC.
+    <p><a href="../proc/defc.html">defc</a> and <a href="../proc/dfc.html">dfc</a> procedures and support routines from <a href="https://netlib.org/slatec/src/">SLATEC</a>.
   For fitting B-splines polynomials to discrete 1D data.</p>
-<p></p><div class="alert alert-info" role="alert"><h4>Note</h4><p>This modules does not support the user-defined <code>ip</code> integer kind.
+<h3>References</h3>
+<p>For a description of the B-splines and usage instructions to
+  evaluate them, see:</p>
+<ul>
+<li>C. W. de Boor, Package for Calculating with B-Splines.
+     SIAM J. Numer. Anal., p. 441, (June, 1977).</li>
+</ul>
+<p>For further discussion of (constrained) curve fitting using
+    B-splines, see reference 2.</p>
+<ul>
+<li>R. J. Hanson, Constrained least squares curve fitting
+     to discrete data using B-splines, a users guide,
+     Report SAND78-1291, Sandia Laboratories, December
+     1978.</li>
+</ul>
+<h3>History</h3>
+<ul>
+<li>Dec 2022 (Jacob Williams) : Cleanup and modernization of the SLATEC routines.</li>
+</ul>
+<p></p><div class="alert alert-info" role="alert"><h4>Note</h4><p>This module does not support the user-defined <code>ip</code> integer kind.
       It only uses the default integer kind.</p></div>
+<p></p><div class="alert alert-success" role="alert"><h4>Todo</h4><p>add <code>iflag</code> outputs to be consistent with the rest of the library.</p></div>
 <br>        <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title">Uses</h3>
@@ -419,6 +474,19 @@
     <section class="visible-xs visible-sm hidden-md">
         <h3>Contents</h3>
   
+      <div class="panel panel-primary">
+      <div class="panel-heading text-left">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" href="#vars-1">Variables</a>
+        </h3>
+      </div>
+      <div id="vars-1" class="panel-collapse collapse">
+        <div class="list-group">
+            <a class="list-group-item" href="../module/bspline_defc_module.html#variable-drelpr">drelpr</a>
+        </div>
+      </div>
+    </div>
+
   
   
   
@@ -428,8 +496,20 @@
   
   
   
-  
-  
+      <div class="panel panel-primary">
+      <div class="panel-heading text-left">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" href="#funcs-1">Functions</a>
+        </h3>
+      </div>
+      <div id="funcs-1" class="panel-collapse collapse">
+        <div class="list-group">
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dwnlt2">dwnlt2</a>
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dcv">dcv</a>
+        </div>
+      </div>
+    </div>
+
       <div class="panel panel-primary">
       <div class="panel-heading text-left">
         <h3 class="panel-title">
@@ -446,6 +526,18 @@
             <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dh12">dh12</a>
             <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dsort">dsort</a>
             <a class="list-group-item" href="../module/bspline_defc_module.html#proc-sort_ascending">sort_ascending</a>
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dfc">dfc</a>
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dfcmn">dfcmn</a>
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dfspvd">dfspvd</a>
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dhfti">dhfti</a>
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dlpdp">dlpdp</a>
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dlsei">dlsei</a>
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dlsi">dlsi</a>
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dwnlit">dwnlit</a>
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dwnlsm">dwnlsm</a>
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dwnlt1">dwnlt1</a>
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dwnlt3">dwnlt3</a>
+            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dwnnls">dwnnls</a>
         </div>
       </div>
     </div>
@@ -462,11 +554,333 @@
     <br class="visible-xs visible-sm hidden-md">
 
 
+    <section>
+    <h2>Variables</h2>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Visibility</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+<th></th><th>Initial</th>        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-drelpr"></span>
+              real(kind=wp),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>drelpr</strong></td>
+<td> =</td>
+                <td>epsilon(1.0_wp)</td>
+            <td>
+                <p>machine precision (<code>d1mach(4)</code>)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    </section>
+    <br>
     
     
 
     
     
+ 
+    <section>
+    <h2>Functions</h2>
+      <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="proc-dwnlt2"></span><h3>private  function <a href='../proc/dwnlt2.html'>dwnlt2</a>(me, mend, ir, factor, tau, scale, wic)  
+</h3></div>
+    <div class="panel-body">
+          
+  <p>To test independence of incoming column.</p><a href="../proc/dwnlt2.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mend</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ir</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>factor</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tau</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>scale</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>wic</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+      <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="proc-dcv"></span><h3>public  function <a href='../proc/dcv.html'>dcv</a>(xval, ndata, nconst, nord, nbkpt, bkpt, w)  
+</h3></div>
+    <div class="panel-body">
+          
+  <p><a href="../proc/dcv.html">dcv</a> is a companion function subprogram for <a href="../proc/dfc.html">dfc</a>.  The
+  documentation for <a href="../proc/dfc.html">dfc</a> has complete usage instructions.</p><a href="../proc/dcv.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>xval</strong></td>
+            <td>
+<p>The point where the variance is desired</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ndata</strong></td>
+            <td>
+<p>The number of discrete (X,Y) pairs for which <a href="../proc/dfc.html">dfc</a>
+calculated a piece-wise polynomial curve.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nconst</strong></td>
+            <td>
+<p>The number of conditions that constrained the B-spline in
+<a href="../proc/dfc.html">dfc</a>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nord</strong></td>
+            <td>
+<p>The order of the B-spline used in <a href="../proc/dfc.html">dfc</a>.
+The value of NORD must satisfy 1 &lt; NORD &lt; 20 .</p><a href="../proc/dcv.html#variable-nord" class="pull-right"><emph>Read more&hellip;</emph></a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nbkpt</strong></td>
+            <td>
+<p>The number of knots in the array BKPT(<em>).
+The value of NBKPT must satisfy NBKPT .GE. 2</em>NORD.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>bkpt</strong>(*)</td>
+            <td>
+<p>The array of knots.  Normally the problem
+data interval will be included between the limits
+BKPT(NORD) and BKPT(NBKPT-NORD+1).  The additional end
+knots BKPT(I),I=1,...,NORD-1 and I=NBKPT-NORD+2,...,NBKPT,
+are required by <a href="../proc/dfc.html">dfc</a> to compute the functions used to
+fit the data.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>w</strong>(*)</td>
+            <td>
+<p>Real work array as used in <a href="../proc/dfc.html">dfc</a>.  See <a href="../proc/dfc.html">dfc</a>
+for the required length of W(<em>).  The contents of W(</em>)
+must not be modified by the user if the variance function
+is desired.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=wp)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+    </section>
+    <br>
 
     <section>
     <h2>Subroutines</h2>
@@ -613,7 +1027,7 @@ The additional end knots <code>BKPT(I),I=1,...,NORD-1</code>
 and <code>I=NBKPT-NORD+2,...,NBKPT</code>, are
 required to compute the functions used to fit
 the data.  No sorting of <code>BKPT(*)</code> is required.
-Internal to <code>DEFC( )</code> the extreme end knots may
+Internal to <a href="../proc/defc.html">defc</a> the extreme end knots may
 be reduced and increased respectively to
 accommodate any data values that are exterior
 to the given knot values.  The contents of
@@ -691,9 +1105,9 @@ values of <code>COEFF(*)</code> are set to zero.</p><a href="../proc/defc.html#v
 <p>The amount of working storage actually
  allocated for the working array <code>W(*)</code>.
  This quantity is compared with the
- actual amount of storage needed in <code>DEFC( )</code>.
+ actual amount of storage needed in <a href="../proc/defc.html">defc</a>.
  Insufficient storage allocated for <code>W(*)</code> is
- an error.  This feature was included in <code>DEFC</code>
+ an error.  This feature was included in <a href="../proc/defc.html">defc</a>
  because misreading the storage formula
  for <code>W(*)</code> might very well lead to subtle
  and hard-to-find programming bugs.</p><a href="../proc/defc.html#variable-lw" class="pull-right"><emph>Read more&hellip;</emph></a>
@@ -715,9 +1129,9 @@ values of <code>COEFF(*)</code> are set to zero.</p><a href="../proc/defc.html#v
 Its length is specified as an input parameter
 in <code>LW</code> as noted above. The contents of <code>W(*)</code>
 must not be modified by the user between calls
-to <code>DEFC( )</code> with values of <code>MDEIN=1,2,2,...</code> .
+to <a href="../proc/defc.html">defc</a> with values of <code>MDEIN=1,2,2,...</code> .
 The first <code>(NBKPT-NORD+3)*(NORD+1)</code> entries of
-<code>W(*)</code> are acceptable as direct input to <code>DFC( )</code>
+<code>W(*)</code> are acceptable as direct input to <a href="../proc/dfc.html">dfc</a>
 for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
             </td>
         </tr>
@@ -1889,6 +2303,2718 @@ no operations will be done on <code>C()</code>.</p>
     </div>
   </div>
 
+      <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="proc-dfc"></span><h3>public  subroutine <a href='../proc/dfc.html'>dfc</a>(ndata, xdata, ydata, sddata, nord, Nbkpt, Bkpt, nconst, xconst, yconst, nderiv, mode, coeff, w, iw)  
+</h3></div>
+    <div class="panel-body">
+          
+  <p>This subprogram fits a piecewise polynomial curve
+  to discrete data.  The piecewise polynomials are
+  represented as B-splines.
+  The fitting is done in a weighted least squares sense.
+  Equality and inequality constraints can be imposed on the
+  fitted curve.</p><a href="../proc/dfc.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ndata</strong></td>
+            <td>
+<p>number of points (size of <code>xdata</code> and <code>ydata</code>).
+Any non-negative value of <code>NDATA</code> is allowed.
+A negative value of <code>NDATA</code> is an error.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>xdata</strong>(*)</td>
+            <td>
+<p>X data array. No sorting of <code>XDATA(*)</code> is required.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ydata</strong>(*)</td>
+            <td>
+<p>Y data array.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sddata</strong>(*)</td>
+            <td>
+<p>Y value standard deviation or uncertainty.
+A zero value for any entry of
+<code>SDDATA(*)</code> will weight that data point as 1.
+Otherwise the weight of that data point is
+the reciprocal of this entry.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nord</strong></td>
+            <td>
+<p>B-spline order.
+(The order of the spline is one more than the
+degree of the piecewise polynomial defined on
+each interval.  This is consistent with the
+B-spline package convention.  For example,
+<code>NORD=4</code> when we are using piecewise cubics.)
+<code>NORD</code> must be in the range <code>1 &lt;= NORD &lt;= 20</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>Nbkpt</strong></td>
+            <td>
+<p>The value of <code>NBKPT</code> must satisfy the condition <code>NBKPT &gt;= 2*NORD</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(*)
+            </td>
+            <td>::</td>
+            <td><strong>Bkpt</strong></td>
+            <td>
+<p><code>NBKPT</code> knots of the B-spline.
+Normally the
+problem data interval will be included between
+the limits <code>BKPT(NORD)</code> and <code>BKPT(NBKPT-NORD+1)</code>.
+The additional end knots <code>BKPT(I),I=1,...,NORD-1</code>
+and <code>I=NBKPT-NORD+2,...,NBKPT</code>, are
+required to compute the functions used to fit
+the data.  No sorting of <code>BKPT(*)</code> is required.
+Internal to <a href="../proc/defc.html">defc</a> the extreme end knots may
+be reduced and increased respectively to
+accommodate any data values that are exterior
+to the given knot values.  The contents of
+<code>BKPT(*)</code> is not changed.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nconst</strong></td>
+            <td>
+<p>The number of conditions that constrain the
+B-spline is NCONST.  A constraint is specified
+by an (X,Y) pair in the arrays XCONST(<em>) and
+YCONST(</em>), and by the type of constraint and
+derivative value encoded in the array
+NDERIV(*).</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>xconst</strong>(*)</td>
+            <td>
+<p>X value of constraint.
+No sorting of XCONST(*) is required.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>yconst</strong>(*)</td>
+            <td>
+<p>Y value of constraint</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nderiv</strong>(*)</td>
+            <td>
+<p>The value of NDERIV(*) is
+ determined as follows.  Suppose the I-th
+ constraint applies to the J-th derivative
+ of the B-spline.  (Any non-negative value of
+ J &lt; NORD is permitted.  In particular the
+ value J=0 refers to the B-spline itself.)
+ For this I-th constraint, set</p><a href="../proc/dfc.html#variable-nderiv" class="pull-right"><emph>Read more&hellip;</emph></a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mode</strong></td>
+            <td>
+<p><em>Input</em></p><a href="../proc/dfc.html#variable-mode" class="pull-right"><emph>Read more&hellip;</emph></a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>coeff</strong>(*)</td>
+            <td>
+<p>If the output value of MODE=0 or 1, this array
+contains the unknowns obtained from the least
+squares fitting process.  These N=NBKPT-NORD
+parameters are the B-spline coefficients.
+For MODE=1, the equality constraints are
+contradictory.  To make the fitting process
+more robust, the equality constraints are
+satisfied in a least squares sense.  In this
+case the array COEFF(<em>) contains B-spline
+coefficients for this extended concept of a
+solution.  If MODE=-1,2 or 3 on output, the
+array COEFF(</em>) is undefined.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>w</strong>(*)</td>
+            <td>
+<p>real work array of length <code>IW(1)</code>. The
+ contents of <code>W(*)</code> must not be modified by the
+ user if the variance function is desired.</p><a href="../proc/dfc.html#variable-w~3" class="pull-right"><emph>Read more&hellip;</emph></a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iw</strong>(*)</td>
+            <td>
+<p>integer work array of length <code>IW(2)</code></p><a href="../proc/dfc.html#variable-iw" class="pull-right"><emph>Read more&hellip;</emph></a>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+      <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="proc-dfcmn"></span><h3>private  subroutine <a href='../proc/dfcmn.html'>dfcmn</a>(ndata, xdata, ydata, sddata, nord, nbkpt, bkptin, nconst, xconst, yconst, nderiv, mode, coeff, bf, xtemp, ptemp, bkpt, g, mdg, w, mdw, work, iwork)  
+</h3></div>
+    <div class="panel-body">
+          
+  <p>This is a companion subprogram to <a href="../proc/dfc.html">dfc</a>.
+  The documentation for <a href="../proc/dfc.html">dfc</a> has complete usage instructions.</p><a href="../proc/dfcmn.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ndata</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>xdata</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ydata</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sddata</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nord</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nbkpt</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>bkptin</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nconst</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>xconst</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>yconst</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nderiv</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mode</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>coeff</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>bf</strong>(nord,*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>xtemp</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ptemp</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>bkpt</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>g</strong>(mdg,*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mdg</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>w</strong>(mdw,*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mdw</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>work</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iwork</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+      <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="proc-dfspvd"></span><h3>private  subroutine <a href='../proc/dfspvd.html'>dfspvd</a>(t, k, x, ileft, vnikx, nderiv)  
+</h3></div>
+    <div class="panel-body">
+          
+  <p>Calculates value and derivs of all B-splines which do not vanish at <code>X</code></p><a href="../proc/dfspvd.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>t</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>k</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ileft</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>vnikx</strong>(k,*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nderiv</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+      <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="proc-dhfti"></span><h3>private  subroutine <a href='../proc/dhfti.html'>dhfti</a>(a, mda, m, n, b, mdb, nb, tau, krank, rnorm, h, g, ip)  
+</h3></div>
+    <div class="panel-body">
+          
+  <p>Solve a least squares problem for banded matrices using
+  sequential accumulation of rows of the data matrix.
+  Exactly one right-hand side vector is permitted.</p><a href="../proc/dhfti.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>a</strong>(mda,*)</td>
+            <td>
+<p><code>A(MDA,N)</code>.
+The array A(<em>,</em>) initially contains the M by N
+matrix A of the least squares problem AX = B.
+The first dimensioning parameter of the array
+A(<em>,</em>) is MDA, which must satisfy MDA&gt;=M
+Either M&gt;=N or M&lt;N is permitted.  There
+is no restriction on the rank of A.  The
+condition MDA&lt;M is considered an error.</p><a href="../proc/dhfti.html#variable-a" class="pull-right"><emph>Read more&hellip;</emph></a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mda</strong></td>
+            <td>
+<p>actual leading dimension of <code>a</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>m</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>b</strong>(mdb,*)</td>
+            <td>
+<p><code>(B(MDB,NB) or B(M))</code>.
+If NB = 0 the subroutine will perform the
+orthogonal decomposition but will make no
+references to the array B(<em>).  If NB&gt;0
+the array B(</em>) must initially contain the M by
+NB matrix B of the least squares problem AX =
+B.  If NB&gt;=2 the array B(<em>) must be doubly
+subscripted with first dimensioning parameter
+MDB&gt;=MAX(M,N).  If NB = 1 the array B(</em>) may
+be either doubly or singly subscripted.  In
+the latter case the value of MDB is arbitrary
+but it should be set to some valid integer
+value such as MDB = M.</p><a href="../proc/dhfti.html#variable-b" class="pull-right"><emph>Read more&hellip;</emph></a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mdb</strong></td>
+            <td>
+<p>actual leading dimension of <code>b</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nb</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tau</strong></td>
+            <td>
+<p>Absolute tolerance parameter provided by user
+for pseudorank determination.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>krank</strong></td>
+            <td>
+<p>Set by the subroutine to indicate the
+pseudorank of A.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>rnorm</strong>(*)</td>
+            <td>
+<p><code>RNORM(NB)</code>.
+On return, RNORM(J) will contain the Euclidean
+norm of the residual vector for the problem
+defined by the J-th column vector of the array
+B(<em>,</em>) for J = 1,...,NB.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>h</strong>(*)</td>
+            <td>
+<p><code>H(N)</code>. Array of working space used by DHFTI.
+On return, contains
+elements of the pre-multiplying
+Householder transformations used to compute
+the minimum Euclidean length solution.
+not generally required by the user.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>g</strong>(*)</td>
+            <td>
+<p><code>G(N)</code>. Array of working space used by DHFTI.
+On return, contain
+elements of the post-multiplying
+Householder transformations used to compute
+the minimum Euclidean length solution.
+not generally required by the user.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ip</strong>(*)</td>
+            <td>
+<p><code>IP(N)</code>. Array of working space used by DHFTI.
+Array in which the subroutine records indices
+describing the permutation of column vectors.
+not generally required by the user.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+      <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="proc-dlpdp"></span><h3>private  subroutine <a href='../proc/dlpdp.html'>dlpdp</a>(a, mda, m, n1, n2, prgopt, x, wnorm, mode, ws, is)  
+</h3></div>
+    <div class="panel-body">
+          
+  <p>Determine an N1-vector W, and
+            an N2-vector Z
+  which minimizes the Euclidean length of W
+  subject to G<em>W+H</em>Z &gt;= Y.
+  This is the least projected distance problem, LPDP.
+  The matrices G and H are of respective
+  dimensions M by N1 and M by N2.</p><a href="../proc/dlpdp.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>a</strong>(mda,*)</td>
+            <td>
+<p><code>A(MDA,N+1)</code>, where <code>N=N1+N2</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mda</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>m</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n1</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n2</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>prgopt</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong>(*)</td>
+            <td>
+<p><code>X(N)</code>, where <code>N=N1+N2</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>wnorm</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mode</strong></td>
+            <td>
+<p>The value of MODE indicates the status of
+the computation after returning to the user.</p><a href="../proc/dlpdp.html#variable-mode~2" class="pull-right"><emph>Read more&hellip;</emph></a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ws</strong>(*)</td>
+            <td>
+<p><code>WS((M+2)*(N+7))</code>, where <code>N=N1+N2</code>. This is a slight overestimate for WS(*).</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>is</strong>(*)</td>
+            <td>
+<p><code>IS(M+N+1)</code>, where <code>N=N1+N2</code>.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+      <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="proc-dlsei"></span><h3>private  subroutine <a href='../proc/dlsei.html'>dlsei</a>(w, mdw, me, ma, mg, n, prgopt, x, rnorme, rnorml, mode, ws, ip)  
+</h3></div>
+    <div class="panel-body">
+          
+  <p>This subprogram solves a linearly constrained least squares
+  problem with both equality and inequality constraints, and, if the
+  user requests, obtains a covariance matrix of the solution
+  parameters.</p><a href="../proc/dlsei.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>w</strong>(mdw,*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mdw</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ma</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mg</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>prgopt</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>rnorme</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>rnorml</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mode</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ws</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ip</strong>(3)</td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+      <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="proc-dlsi"></span><h3>private  subroutine <a href='../proc/dlsi.html'>dlsi</a>(w, mdw, ma, mg, n, prgopt, x, rnorm, mode, ws, ip)  
+</h3></div>
+    <div class="panel-body">
+          
+  <p>This is a companion subprogram to <a href="../proc/dlsei.html">dlsei</a>.  The documentation for
+  <a href="../proc/dlsei.html">dlsei</a> has complete usage instructions.</p><a href="../proc/dlsi.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>w</strong>(mdw,*)</td>
+            <td>
+<p><code>W(*,*)</code> contains:</p><a href="../proc/dlsi.html#variable-w~4" class="pull-right"><emph>Read more&hellip;</emph></a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mdw</strong></td>
+            <td>
+<p>contain (resp) var. dimension of <code>W(*,*)</code>, and matrix dimensions.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ma</strong></td>
+            <td>
+<p>contain (resp) var. dimension of <code>W(*,*)</code>, and matrix dimensions.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mg</strong></td>
+            <td>
+<p>contain (resp) var. dimension of <code>W(*,*)</code>, and matrix dimensions.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+<p>contain (resp) var. dimension of <code>W(*,*)</code>, and matrix dimensions.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>prgopt</strong>(*)</td>
+            <td>
+<p>Program option vector.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong>(*)</td>
+            <td>
+<p>Solution vector(unless MODE=2)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>rnorm</strong></td>
+            <td>
+<p>length of AX-B.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mode</strong></td>
+            <td>
+<a href="../proc/dlsi.html#variable-mode~3" class="pull-right"><emph>Read more&hellip;</emph></a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ws</strong>(*)</td>
+            <td>
+<p>Working storage of dimension <code>K+N+(MG+2)*(N+7)</code>,
+where <code>K=MAX(MA+MG,N)</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ip</strong>(*)</td>
+            <td>
+<p><code>IP(MG+2*N+1)</code> Integer working storage</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+      <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="proc-dwnlit"></span><h3>private  subroutine <a href='../proc/dwnlit.html'>dwnlit</a>(w, mdw, m, n, l, ipivot, itype, h, scale, rnorm, idope, dope, done)  
+</h3></div>
+    <div class="panel-body">
+          
+  <p>This is a companion subprogram to <a href="../proc/dwnnls.html">dwnnls</a>.
+  The documentation for <a href="../proc/dwnnls.html">dwnnls</a> has complete usage instructions.</p><a href="../proc/dwnlit.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>w</strong>(mdw,*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mdw</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>m</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>l</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ipivot</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>itype</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>h</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>scale</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>rnorm</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>idope</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dope</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              logical
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>done</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+      <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="proc-dwnlsm"></span><h3>private  subroutine <a href='../proc/dwnlsm.html'>dwnlsm</a>(w, mdw, mme, ma, n, l, prgopt, x, rnorm, mode, ipivot, itype, wd, h, scale, z, temp, d)  
+</h3></div>
+    <div class="panel-body">
+          
+  <p>This is a companion subprogram to <a href="../proc/dwnnls.html">dwnnls</a>.
+  The documentation for <a href="../proc/dwnnls.html">dwnnls</a> has complete usage instructions.</p><a href="../proc/dwnlsm.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>w</strong>(mdw,*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mdw</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mme</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ma</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>l</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>prgopt</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>rnorm</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mode</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ipivot</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>itype</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>wd</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>h</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>scale</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>z</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>temp</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>d</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+      <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="proc-dwnlt1"></span><h3>private  subroutine <a href='../proc/dwnlt1.html'>dwnlt1</a>(i, lend, mend, ir, mdw, recalc, imax, hbar, h, scale, w)  
+</h3></div>
+    <div class="panel-body">
+          
+  <p>To update the column Sum Of Squares and find the pivot column.
+  The column Sum of Squares Vector will be updated at each step.
+  When numerically necessary, these values will be recomputed.</p><a href="../proc/dwnlt1.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>i</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>lend</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mend</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ir</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mdw</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              logical
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>recalc</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>imax</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>hbar</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>h</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>scale</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>w</strong>(mdw,*)</td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+      <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="proc-dwnlt3"></span><h3>private  subroutine <a href='../proc/dwnlt3.html'>dwnlt3</a>(i, imax, m, mdw, ipivot, h, w)  
+</h3></div>
+    <div class="panel-body">
+          
+  <p>Perform column interchange.
+  Exchange elements of permuted index vector and perform column
+  interchanges.</p><a href="../proc/dwnlt3.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>i</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>imax</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>m</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mdw</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ipivot</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>h</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>w</strong>(mdw,*)</td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+      <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="proc-dwnnls"></span><h3>private  subroutine <a href='../proc/dwnnls.html'>dwnnls</a>(w, mdw, me, ma, n, l, prgopt, x, rnorm, mode, iwork, work)  
+</h3></div>
+    <div class="panel-body">
+          
+  <p>This subprogram solves a linearly constrained least squares
+  problem.  Suppose there are given matrices <code>E</code> and <code>A</code> of
+  respective dimensions <code>ME</code> by <code>N</code> and <code>MA</code> by <code>N</code>, and vectors <code>F</code>
+  and <code>B</code> of respective lengths <code>ME</code> and <code>MA</code>.  This subroutine
+  solves the problem</p><a href="../proc/dwnnls.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>w</strong>(mdw,*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mdw</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ma</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>l</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>prgopt</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>rnorm</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mode</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iwork</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>work</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
     </section>
     <br>
 
@@ -1902,7 +5028,7 @@ no operations will be done on <code>C()</code>.</p>
     <footer>
       <div class="container">
       <div class="row">
-        <div class="col-xs-6 col-md-6"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2022 
+        <div class="col-xs-6 col-md-6"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2023 
 </p>
         </div>
         <div class="col-xs-6 col-md-6">

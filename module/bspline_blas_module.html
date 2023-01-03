@@ -90,7 +90,7 @@
           <li id="statements"><i class="fa fa-list-ol"></i>
             <a data-toggle="tooltip"
                data-placement="bottom" data-html="true"
-               title=" 3.9% of total for modules and submodules.">183 statements</a>
+               title=" 7.9% of total for modules and submodules.">524 statements</a>
           </li>
 
             <li id="source-file">
@@ -137,6 +137,9 @@
       <div id="funcs-0" class="panel-collapse collapse">
         <div class="list-group">
             <a class="list-group-item" href="../module/bspline_blas_module.html#proc-ddot">ddot</a>
+            <a class="list-group-item" href="../module/bspline_blas_module.html#proc-dnrm2">dnrm2</a>
+            <a class="list-group-item" href="../module/bspline_blas_module.html#proc-dasum">dasum</a>
+            <a class="list-group-item" href="../module/bspline_blas_module.html#proc-idamax">idamax</a>
         </div>
       </div>
     </div>
@@ -153,6 +156,8 @@
             <a class="list-group-item" href="../module/bspline_blas_module.html#proc-dcopy">dcopy</a>
             <a class="list-group-item" href="../module/bspline_blas_module.html#proc-dscal">dscal</a>
             <a class="list-group-item" href="../module/bspline_blas_module.html#proc-dswap">dswap</a>
+            <a class="list-group-item" href="../module/bspline_blas_module.html#proc-drotm">drotm</a>
+            <a class="list-group-item" href="../module/bspline_blas_module.html#proc-drotmg">drotmg</a>
         </div>
       </div>
     </div>
@@ -176,7 +181,7 @@
 <h3>Notes</h3>
 <div class="codehilite"><pre><span></span><code>  reference blas level1 routines
   reference blas is a software package provided by univ. of tennessee,
-  univ. of california berkeley, univ. of colorado denver and nag ltd..
+  univ. of california berkeley, univ. of colorado denver and nag ltd.
 </code></pre></div>
 
 <h3>See also</h3>
@@ -446,6 +451,9 @@
       <div id="funcs-1" class="panel-collapse collapse">
         <div class="list-group">
             <a class="list-group-item" href="../module/bspline_blas_module.html#proc-ddot">ddot</a>
+            <a class="list-group-item" href="../module/bspline_blas_module.html#proc-dnrm2">dnrm2</a>
+            <a class="list-group-item" href="../module/bspline_blas_module.html#proc-dasum">dasum</a>
+            <a class="list-group-item" href="../module/bspline_blas_module.html#proc-idamax">idamax</a>
         </div>
       </div>
     </div>
@@ -462,6 +470,8 @@
             <a class="list-group-item" href="../module/bspline_blas_module.html#proc-dcopy">dcopy</a>
             <a class="list-group-item" href="../module/bspline_blas_module.html#proc-dscal">dscal</a>
             <a class="list-group-item" href="../module/bspline_blas_module.html#proc-dswap">dswap</a>
+            <a class="list-group-item" href="../module/bspline_blas_module.html#proc-drotm">drotm</a>
+            <a class="list-group-item" href="../module/bspline_blas_module.html#proc-drotmg">drotmg</a>
         </div>
       </div>
     </div>
@@ -586,6 +596,231 @@ uses unrolled loops for increments equal to one.</p>
     <h4>
     Return Value
     <small>real(kind=wp)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+      <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="proc-dnrm2"></span><h3>public  function <a href='../proc/dnrm2.html'>dnrm2</a>(n, x, incx)  
+</h3></div>
+    <div class="panel-body">
+          
+  <p>returns the euclidean norm of a vector</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer(kind=ip)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer(kind=ip)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>incx</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=wp)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+      <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="proc-dasum"></span><h3>public  function <a href='../proc/dasum.html'>dasum</a>(n, dx, incx)  
+</h3></div>
+    <div class="panel-body">
+          
+  <p>dasum takes the sum of the absolute values.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer(kind=ip)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dx</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer(kind=ip)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>incx</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=wp)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+      <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="proc-idamax"></span><h3>public  function <a href='../proc/idamax.html'>idamax</a>(n, dx, incx)  
+</h3></div>
+    <div class="panel-body">
+          
+  <p>idamax finds the index of the first element having maximum absolute value.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer(kind=ip)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dx</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer(kind=ip)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>incx</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer</small>
     </h4>
     
 
@@ -1001,6 +1236,221 @@ uses unrolled loops for increments equal to 1.</p>
     </div>
   </div>
 
+      <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="proc-drotm"></span><h3>public  subroutine <a href='../proc/drotm.html'>drotm</a>(n, dx, incx, dy, incy, dparam)  
+</h3></div>
+    <div class="panel-body">
+          
+  <p>apply the modified givens transformation, H, to the 2 by n matrix</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer(kind=ip)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dx</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer(kind=ip)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>incx</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dy</strong>(*)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer(kind=ip)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>incy</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dparam</strong>(5)</td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+      <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="proc-drotmg"></span><h3>public  subroutine <a href='../proc/drotmg.html'>drotmg</a>(dd1, dd2, dx1, dy1, dparam)  
+</h3></div>
+    <div class="panel-body">
+          
+  <p>construct the modified givens transformation matrix H</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dd1</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dd2</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dx1</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dy1</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dparam</strong>(5)</td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
     </section>
     <br>
 
@@ -1014,7 +1464,7 @@ uses unrolled loops for increments equal to 1.</p>
     <footer>
       <div class="container">
       <div class="row">
-        <div class="col-xs-6 col-md-6"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2022 
+        <div class="col-xs-6 col-md-6"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2023 
 </p>
         </div>
         <div class="col-xs-6 col-md-6">

@@ -90,7 +90,7 @@
           <li id="statements"><i class="fa fa-list-ol"></i>
             <a data-toggle="tooltip"
                data-placement="bottom" data-html="true"
-               title=" 0.6% of total for procedures.">24 statements</a>
+               title=" 0.4% of total for procedures.">24 statements</a>
           </li>
 
             <li id="source-file">
@@ -161,23 +161,7 @@
 <p>The data can be processed in groups of modest size.
   The size of the group is chosen by the user.  This feature
   may be necessary for purposes of using constrained curve fitting
-  with subprogram DFC( ) on a very large data set.</p>
-<h3>References</h3>
-<ol>
-<li>C. W. de Boor, Package for Calculating with B-Splines.
-     SIAM J. Numer. Anal., p. 441, (June, 1977).</li>
-<li>R. J. Hanson, Constrained least squares curve fitting
-     to discrete data using B-splines, a users guide,
-     Report SAND78-1291, Sandia Laboratories, December
-     1978.</li>
-</ol>
-<h3>Notes</h3>
-<ul>
-<li>For a description of the B-splines and usage instructions to
-    evaluate them, see reference 1.</li>
-<li>For further discussion of (constrained) curve fitting using
-    B-splines, see reference 2.</li>
-</ul>
+  with subprogram <a href="../proc/dfc.html">dfc</a> on a very large data set.</p>
 <h3>Evaluating the Fitted Curve</h3>
 <p>To evaluate derivative number <code>IDER</code> at <code>XVAL</code>,
   use the function subprogram <a href="../proc/dbvalu.html">dbvalu</a>.</p>
@@ -344,7 +328,7 @@ The additional end knots <code>BKPT(I),I=1,...,NORD-1</code>
 and <code>I=NBKPT-NORD+2,...,NBKPT</code>, are
 required to compute the functions used to fit
 the data.  No sorting of <code>BKPT(*)</code> is required.
-Internal to <code>DEFC( )</code> the extreme end knots may
+Internal to <a href="../proc/defc.html">defc</a> the extreme end knots may
 be reduced and increased respectively to
 accommodate any data values that are exterior
 to the given knot values.  The contents of
@@ -368,16 +352,16 @@ values (1 or 2), that directs the subprogram
 action with regard to new data points provided
 by the user:</p>
 <ul>
-<li><code>= 1</code>  The first time that DEFC( ) has been
+<li><code>= 1</code>  The first time that <a href="../proc/defc.html">defc</a> has been
   entered.  There are NDATA points to process.</li>
 <li><code>= 2</code>  This is another entry to DEFC().  The
-  subprogram DEFC( ) has been entered with MDEIN=1
+  subprogram <a href="../proc/defc.html">defc</a> has been entered with MDEIN=1
   exactly once before for this problem.  There
   are NDATA new additional points to merge and
   process with any previous points.
-  (When using DEFC( ) with MDEIN=2 it is
+  (When using <a href="../proc/defc.html">defc</a> with MDEIN=2 it is
   important that the set of knots remain fixed at the
-  same values for all entries to DEFC( ).)</li>
+  same values for all entries to <a href="../proc/defc.html">defc</a>.)</li>
 </ul>
             </td>
         </tr>
@@ -397,7 +381,7 @@ by the user:</p>
 of the curve fit:</p>
 <ul>
 <li>
-<p><code>=-1</code>  A usage error of <code>DEFC( )</code> occurred.  The
+<p><code>=-1</code>  A usage error of <a href="../proc/defc.html">defc</a> occurred.  The
    offending condition is noted with the SLATEC
    library error processor, <code>XERMSG( )</code>.  In case
    the working array <code>W(*)</code> is not long enough, the
@@ -413,9 +397,9 @@ of the curve fit:</p>
    The user has one of two options.  Continue
    to process more data until a unique set
    of coefficients is obtained, or use the
-   subprogram <code>DFC( )</code> to obtain a specific
+   subprogram <a href="../proc/dfc.html">dfc</a> to obtain a specific
    set of coefficients.  The user should read
-   the usage instructions for <code>DFC( )</code> for further
+   the usage instructions for <a href="../proc/dfc.html">dfc</a> for further
    details if this second option is chosen.</p>
 </li>
 </ul>
@@ -442,16 +426,16 @@ uniquely determine the B-spline coefficients.
 In this case, and also when <code>MDEOUT=-1</code>, all
 values of <code>COEFF(*)</code> are set to zero.</p>
 <p>If the user is not satisfied with the fitted
-curve returned by <code>DEFC( )</code>, the constrained
-least squares curve fitting subprogram <code>DFC( )</code>
-may be required.  The work done within <code>DEFC( )</code>
+curve returned by <a href="../proc/defc.html">defc</a>, the constrained
+least squares curve fitting subprogram <a href="../proc/dfc.html">dfc</a>
+may be required.  The work done within <a href="../proc/defc.html">defc</a>
 to accumulate the data can be utilized by
 the user, if so desired.  This involves
 saving the first <code>(NBKPT-NORD+3)*(NORD+1)</code>
 entries of <code>W(*)</code> and providing this data
-to <code>DFC( )</code> with the "old problem" designation.
+to <a href="../proc/dfc.html">dfc</a> with the "old problem" designation.
 The user should read the usage instructions
-for subprogram <code>DFC( )</code> for further details.</p>
+for subprogram <a href="../proc/dfc.html">dfc</a> for further details.</p>
             </td>
         </tr>
         <tr>
@@ -469,9 +453,9 @@ for subprogram <code>DFC( )</code> for further details.</p>
                 <p>The amount of working storage actually
  allocated for the working array <code>W(*)</code>.
  This quantity is compared with the
- actual amount of storage needed in <code>DEFC( )</code>.
+ actual amount of storage needed in <a href="../proc/defc.html">defc</a>.
  Insufficient storage allocated for <code>W(*)</code> is
- an error.  This feature was included in <code>DEFC</code>
+ an error.  This feature was included in <a href="../proc/defc.html">defc</a>
  because misreading the storage formula
  for <code>W(*)</code> might very well lead to subtle
  and hard-to-find programming bugs.</p>
@@ -484,7 +468,7 @@ for subprogram <code>DFC( )</code> for further details.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-w"></span>
+              <span class="anchor" id="variable-w~2"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -498,9 +482,9 @@ for subprogram <code>DFC( )</code> for further details.</p>
 Its length is specified as an input parameter
 in <code>LW</code> as noted above. The contents of <code>W(*)</code>
 must not be modified by the user between calls
-to <code>DEFC( )</code> with values of <code>MDEIN=1,2,2,...</code> .
+to <a href="../proc/defc.html">defc</a> with values of <code>MDEIN=1,2,2,...</code> .
 The first <code>(NBKPT-NORD+3)*(NORD+1)</code> entries of
-<code>W(*)</code> are acceptable as direct input to <code>DFC( )</code>
+<code>W(*)</code> are acceptable as direct input to <a href="../proc/dfc.html">dfc</a>
 for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
             </td>
         </tr>
@@ -575,18 +559,18 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
 <path fill="none" stroke="#000000" d="M134.97,-129.15C147.99,-138.47 166.18,-151.49 180.89,-162.02"/>
 <polygon fill="#000000" stroke="#000000" points="178.92,-164.91 189.08,-167.89 182.99,-159.22 178.92,-164.91"/>
 </g>
-<!-- proc~dbndsl -->
+<!-- proc~dsort -->
 <g id="proc~~defc~~CallsGraph_node5" class="node">
-<title>proc~dbndsl</title>
-<g id="a_proc~~defc~~CallsGraph_node5"><a xlink:href=".././proc/dbndsl.html" xlink:title="dbndsl">
+<title>proc~dsort</title>
+<g id="a_proc~~defc~~CallsGraph_node5"><a xlink:href=".././proc/dsort.html" xlink:title="dsort">
 <polygon fill="#d9534f" stroke="#d9534f" points="234,-150 180,-150 180,-126 234,-126 234,-150"/>
-<text text-anchor="middle" x="207" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbndsl</text>
+<text text-anchor="middle" x="207" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dsort</text>
 </a>
 </g>
 </g>
-<!-- proc~defcmn&#45;&gt;proc~dbndsl -->
-<g id="proc~~defc~~CallsGraph_edge5" class="edge">
-<title>proc~defcmn&#45;&gt;proc~dbndsl</title>
+<!-- proc~defcmn&#45;&gt;proc~dsort -->
+<g id="proc~~defc~~CallsGraph_edge4" class="edge">
+<title>proc~defcmn&#45;&gt;proc~dsort</title>
 <path fill="none" stroke="#000000" d="M144.4,-123.3C152.48,-125.23 161.51,-127.38 170.1,-129.43"/>
 <polygon fill="#000000" stroke="#000000" points="169.38,-132.86 179.92,-131.78 171,-126.05 169.38,-132.86"/>
 </g>
@@ -600,7 +584,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
 </g>
 </g>
 <!-- proc~defcmn&#45;&gt;proc~dscal -->
-<g id="proc~~defc~~CallsGraph_edge4" class="edge">
+<g id="proc~~defc~~CallsGraph_edge5" class="edge">
 <title>proc~defcmn&#45;&gt;proc~dscal</title>
 <path fill="none" stroke="#000000" d="M144.4,-110.7C152.48,-108.77 161.51,-106.62 170.1,-104.57"/>
 <polygon fill="#000000" stroke="#000000" points="171,-107.95 179.92,-102.22 169.38,-101.14 171,-107.95"/>
@@ -620,18 +604,18 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
 <path fill="none" stroke="#000000" d="M134.97,-104.85C147.99,-95.53 166.18,-82.51 180.89,-71.98"/>
 <polygon fill="#000000" stroke="#000000" points="182.99,-74.78 189.08,-66.11 178.92,-69.09 182.99,-74.78"/>
 </g>
-<!-- proc~dsort -->
+<!-- proc~dbndsl -->
 <g id="proc~~defc~~CallsGraph_node8" class="node">
-<title>proc~dsort</title>
-<g id="a_proc~~defc~~CallsGraph_node8"><a xlink:href=".././proc/dsort.html" xlink:title="dsort">
+<title>proc~dbndsl</title>
+<g id="a_proc~~defc~~CallsGraph_node8"><a xlink:href=".././proc/dbndsl.html" xlink:title="dbndsl">
 <polygon fill="#d9534f" stroke="#d9534f" points="234,-24 180,-24 180,0 234,0 234,-24"/>
-<text text-anchor="middle" x="207" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dsort</text>
+<text text-anchor="middle" x="207" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbndsl</text>
 </a>
 </g>
 </g>
-<!-- proc~defcmn&#45;&gt;proc~dsort -->
+<!-- proc~defcmn&#45;&gt;proc~dbndsl -->
 <g id="proc~~defc~~CallsGraph_edge7" class="edge">
-<title>proc~defcmn&#45;&gt;proc~dsort</title>
+<title>proc~defcmn&#45;&gt;proc~dbndsl</title>
 <path fill="none" stroke="#000000" d="M125.55,-104.85C136.43,-87.81 157.69,-56.31 180,-33 180.65,-32.32 181.32,-31.64 182.01,-30.97"/>
 <polygon fill="#000000" stroke="#000000" points="184.64,-33.32 189.76,-24.05 179.97,-28.1 184.64,-33.32"/>
 </g>
@@ -654,16 +638,16 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
 <g id="proc~~defc~~CallsGraph_node10" class="node">
 <title>proc~sort_ascending</title>
 <g id="a_proc~~defc~~CallsGraph_node10"><a xlink:href=".././proc/sort_ascending.html" xlink:title="sort_ascending">
-<polygon fill="#d9534f" stroke="#d9534f" points="363,-24 270,-24 270,0 363,0 363,-24"/>
-<text text-anchor="middle" x="316.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">sort_ascending</text>
+<polygon fill="#d9534f" stroke="#d9534f" points="363,-150 270,-150 270,-126 363,-126 363,-150"/>
+<text text-anchor="middle" x="316.5" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">sort_ascending</text>
 </a>
 </g>
 </g>
 <!-- proc~dsort&#45;&gt;proc~sort_ascending -->
 <g id="proc~~defc~~CallsGraph_edge9" class="edge">
 <title>proc~dsort&#45;&gt;proc~sort_ascending</title>
-<path fill="none" stroke="#000000" d="M234.02,-12C241.88,-12 250.82,-12 259.84,-12"/>
-<polygon fill="#000000" stroke="#000000" points="259.99,-15.5 269.99,-12 259.99,-8.5 259.99,-15.5"/>
+<path fill="none" stroke="#000000" d="M234.02,-138C241.88,-138 250.82,-138 259.84,-138"/>
+<polygon fill="#000000" stroke="#000000" points="259.99,-141.5 269.99,-138 259.99,-134.5 259.99,-141.5"/>
 </g>
 <!-- proc~dswap -->
 <g id="proc~~defc~~CallsGraph_node11" class="node">
@@ -680,33 +664,33 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
 <path fill="none" stroke="#000000" d="M343.52,-190.17C357.29,-195.54 374.39,-202.23 389.37,-208.08"/>
 <polygon fill="#000000" stroke="#000000" points="388.26,-211.4 398.84,-211.78 390.8,-204.88 388.26,-211.4"/>
 </g>
-<!-- proc~daxpy -->
-<g id="proc~~defc~~CallsGraph_node12" class="node">
-<title>proc~daxpy</title>
-<g id="a_proc~~defc~~CallsGraph_node12"><a xlink:href=".././proc/daxpy.html" xlink:title="daxpy">
-<polygon fill="#d9534f" stroke="#d9534f" points="453,-192 399,-192 399,-168 453,-168 453,-192"/>
-<text text-anchor="middle" x="426" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">daxpy</text>
-</a>
-</g>
-</g>
-<!-- proc~dh12&#45;&gt;proc~daxpy -->
-<g id="proc~~defc~~CallsGraph_edge11" class="edge">
-<title>proc~dh12&#45;&gt;proc~daxpy</title>
-<path fill="none" stroke="#000000" d="M343.52,-180C357.02,-180 373.74,-180 388.51,-180"/>
-<polygon fill="#000000" stroke="#000000" points="388.84,-183.5 398.84,-180 388.84,-176.5 388.84,-183.5"/>
-</g>
 <!-- proc~ddot -->
-<g id="proc~~defc~~CallsGraph_node13" class="node">
+<g id="proc~~defc~~CallsGraph_node12" class="node">
 <title>proc~ddot</title>
-<g id="a_proc~~defc~~CallsGraph_node13"><a xlink:href=".././proc/ddot.html" xlink:title="ddot">
-<polygon fill="#d94e8f" stroke="#d94e8f" points="453,-150 399,-150 399,-126 453,-126 453,-150"/>
-<text text-anchor="middle" x="426" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">ddot</text>
+<g id="a_proc~~defc~~CallsGraph_node12"><a xlink:href=".././proc/ddot.html" xlink:title="ddot">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="453,-192 399,-192 399,-168 453,-168 453,-192"/>
+<text text-anchor="middle" x="426" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">ddot</text>
 </a>
 </g>
 </g>
 <!-- proc~dh12&#45;&gt;proc~ddot -->
-<g id="proc~~defc~~CallsGraph_edge12" class="edge">
+<g id="proc~~defc~~CallsGraph_edge11" class="edge">
 <title>proc~dh12&#45;&gt;proc~ddot</title>
+<path fill="none" stroke="#000000" d="M343.52,-180C357.02,-180 373.74,-180 388.51,-180"/>
+<polygon fill="#000000" stroke="#000000" points="388.84,-183.5 398.84,-180 388.84,-176.5 388.84,-183.5"/>
+</g>
+<!-- proc~daxpy -->
+<g id="proc~~defc~~CallsGraph_node13" class="node">
+<title>proc~daxpy</title>
+<g id="a_proc~~defc~~CallsGraph_node13"><a xlink:href=".././proc/daxpy.html" xlink:title="daxpy">
+<polygon fill="#d9534f" stroke="#d9534f" points="453,-150 399,-150 399,-126 453,-126 453,-150"/>
+<text text-anchor="middle" x="426" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">daxpy</text>
+</a>
+</g>
+</g>
+<!-- proc~dh12&#45;&gt;proc~daxpy -->
+<g id="proc~~defc~~CallsGraph_edge12" class="edge">
+<title>proc~dh12&#45;&gt;proc~daxpy</title>
 <path fill="none" stroke="#000000" d="M343.52,-169.83C357.29,-164.46 374.39,-157.77 389.37,-151.92"/>
 <polygon fill="#000000" stroke="#000000" points="390.8,-155.12 398.84,-148.22 388.26,-148.6 390.8,-155.12"/>
 </g>
@@ -847,7 +831,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
 <span class="w">                                     </span><span class="c">!! and `I=NBKPT-NORD+2,...,NBKPT`, are</span>
 <span class="w">                                     </span><span class="c">!! required to compute the functions used to fit</span>
 <span class="w">                                     </span><span class="c">!! the data.  No sorting of `BKPT(*)` is required.</span>
-<span class="w">                                     </span><span class="c">!! Internal to `DEFC( )` the extreme end knots may</span>
+<span class="w">                                     </span><span class="c">!! Internal to [[DEFC]] the extreme end knots may</span>
 <span class="w">                                     </span><span class="c">!! be reduced and increased respectively to</span>
 <span class="w">                                     </span><span class="c">!! accommodate any data values that are exterior</span>
 <span class="w">                                     </span><span class="c">!! to the given knot values.  The contents of</span>
@@ -857,20 +841,20 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
 <span class="w">                                  </span><span class="c">!! action with regard to new data points provided</span>
 <span class="w">                                  </span><span class="c">!! by the user:</span>
 <span class="w">                                  </span><span class="c">!!</span>
-<span class="w">                                  </span><span class="c">!! * `= 1`  The first time that DEFC( ) has been</span>
+<span class="w">                                  </span><span class="c">!! * `= 1`  The first time that [[DEFC]] has been</span>
 <span class="w">                                  </span><span class="c">!!   entered.  There are NDATA points to process.</span>
 <span class="w">                                  </span><span class="c">!! * `= 2`  This is another entry to DEFC().  The</span>
-<span class="w">                                  </span><span class="c">!!   subprogram DEFC( ) has been entered with MDEIN=1</span>
+<span class="w">                                  </span><span class="c">!!   subprogram [[DEFC]] has been entered with MDEIN=1</span>
 <span class="w">                                  </span><span class="c">!!   exactly once before for this problem.  There</span>
 <span class="w">                                  </span><span class="c">!!   are NDATA new additional points to merge and</span>
 <span class="w">                                  </span><span class="c">!!   process with any previous points.</span>
-<span class="w">                                  </span><span class="c">!!   (When using DEFC( ) with MDEIN=2 it is</span>
+<span class="w">                                  </span><span class="c">!!   (When using [[DEFC]] with MDEIN=2 it is</span>
 <span class="w">                                  </span><span class="c">!!   important that the set of knots remain fixed at the</span>
-<span class="w">                                  </span><span class="c">!!   same values for all entries to DEFC( ).)</span>
+<span class="w">                                  </span><span class="c">!!   same values for all entries to [[DEFC]].)</span>
 <span class="w">      </span><span class="kt">integer</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">Mdeout</span><span class="w"> </span><span class="c">!! An output flag that indicates the status</span>
 <span class="w">                                    </span><span class="c">!! of the curve fit:</span>
 <span class="w">                                    </span><span class="c">!!</span>
-<span class="w">                                    </span><span class="c">!!  * `=-1`  A usage error of `DEFC( )` occurred.  The</span>
+<span class="w">                                    </span><span class="c">!!  * `=-1`  A usage error of [[DEFC]] occurred.  The</span>
 <span class="w">                                    </span><span class="c">!!    offending condition is noted with the SLATEC</span>
 <span class="w">                                    </span><span class="c">!!    library error processor, `XERMSG( )`.  In case</span>
 <span class="w">                                    </span><span class="c">!!    the working array `W(*)` is not long enough, the</span>
@@ -884,9 +868,9 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
 <span class="w">                                    </span><span class="c">!!    The user has one of two options.  Continue</span>
 <span class="w">                                    </span><span class="c">!!    to process more data until a unique set</span>
 <span class="w">                                    </span><span class="c">!!    of coefficients is obtained, or use the</span>
-<span class="w">                                    </span><span class="c">!!    subprogram `DFC( )` to obtain a specific</span>
+<span class="w">                                    </span><span class="c">!!    subprogram [[DFC]] to obtain a specific</span>
 <span class="w">                                    </span><span class="c">!!    set of coefficients.  The user should read</span>
-<span class="w">                                    </span><span class="c">!!    the usage instructions for `DFC( )` for further</span>
+<span class="w">                                    </span><span class="c">!!    the usage instructions for [[DFC]] for further</span>
 <span class="w">                                    </span><span class="c">!!    details if this second option is chosen.</span>
 <span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">Coeff</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="c">!! If the output value of `MDEOUT=1`, this array</span>
 <span class="w">                                       </span><span class="c">!! contains the unknowns obtained from the least</span>
@@ -898,22 +882,22 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
 <span class="w">                                       </span><span class="c">!! values of `COEFF(*)` are set to zero.</span>
 <span class="w">                                       </span><span class="c">!!</span>
 <span class="w">                                       </span><span class="c">!! If the user is not satisfied with the fitted</span>
-<span class="w">                                       </span><span class="c">!! curve returned by `DEFC( )`, the constrained</span>
-<span class="w">                                       </span><span class="c">!! least squares curve fitting subprogram `DFC( )`</span>
-<span class="w">                                       </span><span class="c">!! may be required.  The work done within `DEFC( )`</span>
+<span class="w">                                       </span><span class="c">!! curve returned by [[DEFC]], the constrained</span>
+<span class="w">                                       </span><span class="c">!! least squares curve fitting subprogram [[DFC]]</span>
+<span class="w">                                       </span><span class="c">!! may be required.  The work done within [[DEFC]]</span>
 <span class="w">                                       </span><span class="c">!! to accumulate the data can be utilized by</span>
 <span class="w">                                       </span><span class="c">!! the user, if so desired.  This involves</span>
 <span class="w">                                       </span><span class="c">!! saving the first `(NBKPT-NORD+3)*(NORD+1)`</span>
 <span class="w">                                       </span><span class="c">!! entries of `W(*)` and providing this data</span>
-<span class="w">                                       </span><span class="c">!! to `DFC( )` with the &quot;old problem&quot; designation.</span>
+<span class="w">                                       </span><span class="c">!! to [[DFC]] with the &quot;old problem&quot; designation.</span>
 <span class="w">                                       </span><span class="c">!! The user should read the usage instructions</span>
-<span class="w">                                       </span><span class="c">!! for subprogram `DFC( )` for further details.</span>
+<span class="w">                                       </span><span class="c">!! for subprogram [[DFC]] for further details.</span>
 <span class="w">      </span><span class="kt">integer</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">Lw</span><span class="w"> </span><span class="c">!! The amount of working storage actually</span>
 <span class="w">                               </span><span class="c">!! allocated for the working array `W(*)`.</span>
 <span class="w">                               </span><span class="c">!! This quantity is compared with the</span>
-<span class="w">                               </span><span class="c">!! actual amount of storage needed in `DEFC( )`.</span>
+<span class="w">                               </span><span class="c">!! actual amount of storage needed in [[DEFC]].</span>
 <span class="w">                               </span><span class="c">!! Insufficient storage allocated for `W(*)` is</span>
-<span class="w">                               </span><span class="c">!! an error.  This feature was included in `DEFC`</span>
+<span class="w">                               </span><span class="c">!! an error.  This feature was included in [[DEFC]]</span>
 <span class="w">                               </span><span class="c">!! because misreading the storage formula</span>
 <span class="w">                               </span><span class="c">!! for `W(*)` might very well lead to subtle</span>
 <span class="w">                               </span><span class="c">!! and hard-to-find programming bugs.</span>
@@ -928,9 +912,9 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
 <span class="w">                       </span><span class="c">!! Its length is specified as an input parameter</span>
 <span class="w">                       </span><span class="c">!! in `LW` as noted above. The contents of `W(*)`</span>
 <span class="w">                       </span><span class="c">!! must not be modified by the user between calls</span>
-<span class="w">                       </span><span class="c">!! to `DEFC( )` with values of `MDEIN=1,2,2,...` .</span>
+<span class="w">                       </span><span class="c">!! to [[DEFC]] with values of `MDEIN=1,2,2,...` .</span>
 <span class="w">                       </span><span class="c">!! The first `(NBKPT-NORD+3)*(NORD+1)` entries of</span>
-<span class="w">                       </span><span class="c">!! `W(*)` are acceptable as direct input to `DFC( )`</span>
+<span class="w">                       </span><span class="c">!! `W(*)` are acceptable as direct input to [[DFC]]</span>
 <span class="w">                       </span><span class="c">!! for an &quot;old problem&quot; only when `MDEOUT=1` or `2`.</span>
 
 <span class="w">      </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">lbf</span><span class="p">,</span><span class="w"> </span><span class="n">lbkpt</span><span class="p">,</span><span class="w"> </span><span class="n">lg</span><span class="p">,</span><span class="w"> </span><span class="n">lptemp</span><span class="p">,</span><span class="w"> </span><span class="n">lww</span><span class="p">,</span><span class="w"> </span><span class="n">lxtemp</span><span class="p">,</span><span class="w"> </span><span class="n">mdg</span><span class="p">,</span><span class="w"> </span><span class="n">mdw</span><span class="w"></span>
@@ -970,7 +954,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
     <footer>
       <div class="container">
       <div class="row">
-        <div class="col-xs-6 col-md-6"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2022 
+        <div class="col-xs-6 col-md-6"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2023 
 </p>
         </div>
         <div class="col-xs-6 col-md-6">
