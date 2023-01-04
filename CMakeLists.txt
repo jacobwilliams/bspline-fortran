@@ -45,6 +45,8 @@ set( CMAKE_BUILD_TYPE "Release"
 enable_language(Fortran)
 
 set( SOURCES
+  src/bspline_blas_module.F90
+  src/bspline_defc_module.F90
   src/bspline_kinds_module.F90
   src/bspline_module.f90
   src/bspline_oo_module.f90
