@@ -26,7 +26,7 @@
     real(wp),dimension(n) :: coeff  !! computed B-spline coefficients
     real(wp),dimension(:),allocatable :: w !! workspace array
     real(wp),dimension(ndata) :: ydata_est  !! y data estimated
-    integer,dimension(:),allocatable :: iw !! integer workspace array
+    integer(ip),dimension(:),allocatable :: iw !! integer workspace array
     real(wp),dimension(ndata) :: ydata_est_constr  !! y data estimated & constrained
 
     real(wp) :: r !! random number
@@ -34,7 +34,7 @@
     integer(ip) :: i,j !! counter
     integer(ip) :: lw
     integer(ip) :: mdeout
-    integer(ip) :: istat    !! pyplot-fortran status flag
+    integer :: istat    !! pyplot-fortran status flag
     integer(ip) :: iflag    !! status flag
     integer(ip) :: inbvx
     integer(ip) :: mdein
@@ -46,11 +46,11 @@
     real(wp),dimension(ndata) :: bcoef
     real(wp),dimension(ndata*10) :: x_int, y_int
 
-    integer,parameter :: nconst = 4 !! for [[dfc]]
+    integer(ip),parameter :: nconst = 4 !! for [[dfc]]
     real(wp),dimension(nconst) :: xconst
     real(wp),dimension(nconst) :: yconst
-    integer ,dimension(nconst) :: nderiv
-    integer :: itype, mode, iw1, l, neqcon, nincon, imode
+    integer(ip) ,dimension(nconst) :: nderiv
+    integer(ip) :: itype, mode, iw1, l, neqcon, nincon, imode
 
     call random_seed(size=isize)
     allocate(iseed(isize)); iseed = 42_ip
@@ -73,7 +73,7 @@
 
     ! first compute the interpolating spline
     call db1ink(xdata,ndata,ydata,&
-                kx=nord,iknot=0,tx=tx,bcoef=bcoef,iflag=iflag)
+                kx=nord,iknot=0_ip,tx=tx,bcoef=bcoef,iflag=iflag)
     if (iflag /= 0) then
         write(*,*) 'db1ink iflag = ', iflag
         error stop 'error calling db1ink'
