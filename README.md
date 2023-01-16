@@ -89,7 +89,7 @@ The BSpline-Fortran library also exports the `defc` subroutine, which can be use
 
 ## Examples
 
-See the [examples](https://github.com/jacobwilliams/bspline-fortran/tree/master/src/tests) for more details. Note that, to compile and run some of the test programs, the [pyplot_module.f90](https://github.com/jacobwilliams/pyplot-fortran) file (which is used to generate plots) must be copied into the `src/tests` directory.
+See the [examples](https://github.com/jacobwilliams/bspline-fortran/tree/master/test) for more details. Note that, to compile and run some of the test programs, the [pyplot-fortran](https://github.com/jacobwilliams/pyplot-fortran) library  (which is used to generate plots) is required. This will automatically be downloaded by `FPM`.
 
 ## Compiling
 
