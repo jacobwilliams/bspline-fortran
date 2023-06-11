@@ -1,7 +1,7 @@
 ![bspline-fortran](/media/bspline-fortran.png)
 ============
 
-Multidimensional B-Spline Interpolation of Data on a Regular Grid
+Multidimensional B-Spline Interpolation of Data on a Regular Grid.
 
 ## Status
 
