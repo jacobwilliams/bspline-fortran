@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-   <meta name="description" content="BSPLINE-FORTRAN -- Multidimensional B-Spline Interpolation of Data on a Regular Grid">
+      <meta name="description" content="BSPLINE-FORTRAN -- Multidimensional B-Spline Interpolation of Data on a Regular Grid">
     <meta name="author" content="Jacob Williams" >
     <link rel="icon" href="../favicon.png">
 
@@ -14,16 +14,16 @@
     <link href="../css/pygments.css" rel="stylesheet">
     <link href="../css/font-awesome.min.css" rel="stylesheet">
     <link href="../css/local.css" rel="stylesheet">
-    <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
+      <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-    
-    <script src="../js/jquery-2.1.3.min.js"></script>
-    <script src="../js/svg-pan-zoom.min.js"></script>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+         <script src="../js/jquery-2.1.3.min.js"></script>
+         <script src="../js/svg-pan-zoom.min.js"></script>
 
   </head>
 
@@ -45,42 +45,52 @@
           <ul class="nav navbar-nav">
             <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
               <a href="#" class="dropdown-toggle"
-              data-toggle="dropdown" role="button"
-              aria-haspopup="true"
-     aria-expanded="false">Contents <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-            <li><a href="../lists/files.html">Source Files</a></li>
-            <li><a href="../lists/modules.html">Modules</a></li>
-            <li><a href="../lists/procedures.html">Procedures</a></li>
-            <li><a href="../lists/absint.html">Abstract Interfaces</a></li>
-                   <li><a href="../lists/types.html">Derived Types</a></li>
-       
-            </ul>
-        
+                 data-toggle="dropdown" role="button"
+                 aria-haspopup="true"
+                 aria-expanded="false">
+                 Contents <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                    <li><a href="../lists/files.html">Source Files</a></li>
+                  <li><a href="../lists/modules.html">Modules</a></li>
+                  <li><a href="../lists/procedures.html">Procedures</a></li>
+                  <li><a href="../lists/absint.html">Abstract Interfaces</a></li>
+                  <li><a href="../lists/types.html">Derived Types</a></li>
+              </ul>
             </li>
-<li class="visible-xs hidden-sm visible-lg"><a href="../lists/files.html">Source Files</a></li>
-<li class="visible-xs hidden-sm visible-lg"><a href="../lists/modules.html">Modules</a></li>
-<li class="visible-xs hidden-sm visible-lg"><a href="../lists/procedures.html">Procedures</a></li>
-<li class="visible-xs hidden-sm visible-lg"><a href="../lists/absint.html">Abstract Interfaces</a></li>
-                             <li class="visible-xs hidden-sm visible-lg"><a href="../lists/types.html">Derived Types</a></li>
+                <li class="visible-xs hidden-sm visible-lg">
+                  <a href="../lists/files.html">Source Files</a>
+                </li>
+              <li class="visible-xs hidden-sm visible-lg">
+                <a href="../lists/modules.html">Modules</a>
+              </li>
+              <li class="visible-xs hidden-sm visible-lg">
+                <a href="../lists/procedures.html">Procedures</a>
+              </li>
+              <li class="visible-xs hidden-sm visible-lg">
+                <a href="../lists/absint.html">Abstract Interfaces</a>
+              </li>
+              <li class="visible-xs hidden-sm visible-lg">
+                <a href="../lists/types.html">Derived Types</a>
+              </li>
           </ul>
-        <form action="../search.html" class="navbar-form navbar-right" role="search">
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
-        </div>
-<!--
-        <button type="submit" class="btn btn-default">Submit</button>
--->
-        </form>
+            <form action="../search.html" class="navbar-form navbar-right" role="search">
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+              </div>
+              <!--
+                  <button type="submit" class="btn btn-default">Submit</button>
+                  -->
+            </form>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
 
     <div class="container">
   <div class="row">
-    <h1>bspline_sub_module 
-    <small>Module</small>
-    
+    <h1>bspline_sub_module
+      <small>Module</small>
+      
     </h1>
       <div class="row" id="info-bar">
     <div class="col-lg-12">
@@ -114,10 +124,10 @@
   </script>
 
   </div>
-  
+
   <div class="row">
     <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
-      <div id="sidebar">
+        <div id="sidebar">
       <h3>Contents</h3>
   
       <div class="panel panel-primary">
@@ -242,9 +252,9 @@
   </div>
 
     </div>
-    
+
     <div class="col-md-9" id='text'>
-    <h3>Description</h3>
+      <h3>Description</h3>
 <p>Multidimensional (1D-6D) B-spline interpolation of data on a regular grid.
   Basic pure subroutine interface.</p>
 <h3>Notes</h3>
@@ -277,15 +287,15 @@
 <li>D.E. Amos, "Quadrature subroutines for splines and B-splines",
      Report SAND79-1825, Sandia Laboratories, December 1979.</li>
 </ol>
-<br>        <div class="panel panel-default">
+<br>          <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title">Uses</h3>
       </div>
       <ul class="list-group">
           <li class="list-group-item">
             <ul class="list-inline">
+                <li><a href='<a href="http://fortranwiki.org/fortran/show/iso_fortran_env">iso_fortran_env</a>'>iso_fortran_env</a></li>
                 <li><a href='../module/bspline_kinds_module.html'>bspline_kinds_module</a></li>
-                <li><a href="http://fortranwiki.org/fortran/show/iso_fortran_env">iso_fortran_env</a></li>
             </ul>
           </li>
           <li class="list-group-item">
@@ -303,50 +313,57 @@
 <!-- module~bspline_sub_module -->
 <g id="module~~bspline_sub_module~~UsesGraph_node1" class="node">
 <title>module~bspline_sub_module</title>
-<polygon fill="none" stroke="black" points="417,-24 296,-24 296,0 417,0 417,-24"/>
-<text text-anchor="middle" x="356.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">bspline_sub_module</text>
+<polygon fill="none" stroke="black" points="417,-44 296,-44 296,-20 417,-20 417,-44"/>
+<text text-anchor="middle" x="356.5" y="-29.6" font-family="Helvetica,sans-Serif" font-size="10.50">bspline_sub_module</text>
+</g>
+<!-- iso_fortran_env -->
+<g id="module~~bspline_sub_module~~UsesGraph_node2" class="node">
+<title>iso_fortran_env</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="94,-44 0,-44 0,-20 94,-20 94,-44"/>
+<text text-anchor="middle" x="47" y="-29.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_fortran_env</text>
+</g>
+<!-- module~bspline_sub_module&#45;&gt;iso_fortran_env -->
+<g id="module~~bspline_sub_module~~UsesGraph_edge1" class="edge">
+<title>module~bspline_sub_module&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M295.9,-32.72C284.01,-32.84 271.61,-32.94 260,-33 202.22,-33.3 187.78,-33.35 130,-33 121.8,-32.95 113.14,-32.87 104.64,-32.78"/>
+<polygon fill="#000000" stroke="#000000" points="104.44,-29.28 94.4,-32.66 104.36,-36.28 104.44,-29.28"/>
 </g>
 <!-- module~bspline_kinds_module -->
-<g id="module~~bspline_sub_module~~UsesGraph_node2" class="node">
+<g id="module~~bspline_sub_module~~UsesGraph_node3" class="node">
 <title>module~bspline_kinds_module</title>
-<g id="a_module~~bspline_sub_module~~UsesGraph_node2"><a xlink:href=".././module/bspline_kinds_module.html" xlink:title="bspline_kinds_module">
-<polygon fill="#337ab7" stroke="#337ab7" points="260,-44 130,-44 130,-20 260,-20 260,-44"/>
-<text text-anchor="middle" x="195" y="-29.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_kinds_module</text>
+<g id="a_module~~bspline_sub_module~~UsesGraph_node3"><a xlink:href=".././module/bspline_kinds_module.html" xlink:title="bspline_kinds_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="260,-24 130,-24 130,0 260,0 260,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_kinds_module</text>
 </a>
 </g>
 </g>
 <!-- module~bspline_sub_module&#45;&gt;module~bspline_kinds_module -->
-<g id="module~~bspline_sub_module~~UsesGraph_edge1" class="edge">
-<title>module~bspline_sub_module&#45;&gt;module~bspline_kinds_module</title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M295.65,-19.5C287.33,-20.55 278.7,-21.63 270.15,-22.7"/>
-<polygon fill="#000000" stroke="#000000" points="269.67,-19.23 260.18,-23.95 270.54,-26.18 269.67,-19.23"/>
-</g>
-<!-- iso_fortran_env -->
-<g id="module~~bspline_sub_module~~UsesGraph_node3" class="node">
-<title>iso_fortran_env</title>
-<g id="a_module~~bspline_sub_module~~UsesGraph_node3"><a xlink:href="http://fortranwiki.org/fortran/show/iso_fortran_env" xlink:title="iso_fortran_env">
-<polygon fill="#337ab7" stroke="#337ab7" points="94,-24 0,-24 0,0 94,0 94,-24"/>
-<text text-anchor="middle" x="47" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_fortran_env</text>
-</a>
-</g>
-</g>
-<!-- module~bspline_sub_module&#45;&gt;iso_fortran_env -->
 <g id="module~~bspline_sub_module~~UsesGraph_edge2" class="edge">
-<title>module~bspline_sub_module&#45;&gt;iso_fortran_env</title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M295.9,-11.28C284.01,-11.16 271.61,-11.06 260,-11 202.22,-10.7 187.78,-10.65 130,-11 121.8,-11.05 113.14,-11.13 104.64,-11.22"/>
-<polygon fill="#000000" stroke="#000000" points="104.36,-7.72 94.4,-11.34 104.44,-14.72 104.36,-7.72"/>
+<title>module~bspline_sub_module&#45;&gt;module~bspline_kinds_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M295.65,-24.5C287.33,-23.45 278.7,-22.37 270.15,-21.3"/>
+<polygon fill="#000000" stroke="#000000" points="270.54,-17.82 260.18,-20.05 269.67,-24.77 270.54,-17.82"/>
 </g>
 <!-- module~bspline_kinds_module&#45;&gt;iso_fortran_env -->
 <g id="module~~bspline_sub_module~~UsesGraph_edge3" class="edge">
 <title>module~bspline_kinds_module&#45;&gt;iso_fortran_env</title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M129.96,-23.23C121.36,-22.05 112.58,-20.85 104.13,-19.69"/>
-<polygon fill="#000000" stroke="#000000" points="104.39,-16.19 94,-18.3 103.44,-23.13 104.39,-16.19"/>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M129.96,-20.77C121.36,-21.95 112.58,-23.15 104.13,-24.31"/>
+<polygon fill="#000000" stroke="#000000" points="103.44,-20.87 94,-25.7 104.39,-27.81 103.44,-20.87"/>
 </g>
 </g>
 </svg>
-</div><div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div><div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="-graph-help-label">Graph Key</h4></div><div class="modal-body">
-    <p>Nodes of different colours represent the following: </p>
-    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+</div>        <div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div>
+          <div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                </div>
+              <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Generated by graphviz version 2.43.0 (0)
@@ -396,17 +413,19 @@
 </g>
 </svg>
 
-    
-    <p>Solid arrows point from a submodule to the (sub)module which it is
-    descended from. Dashed arrows point from a module or program unit to 
-    modules which it uses.
-    </p>
-    </div></div></div></div>
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
           </li>
       </ul>
     </div>
 
-        <div class="panel panel-default">
+          <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title">Used by</h3>
       </div>
@@ -429,35 +448,29 @@
 <polygon fill="none" stroke="black" points="121,-44 0,-44 0,-20 121,-20 121,-44"/>
 <text text-anchor="middle" x="60.5" y="-29.6" font-family="Helvetica,sans-Serif" font-size="10.50">bspline_sub_module</text>
 </g>
-<!-- module~bspline_oo_module -->
-<g id="module~~bspline_sub_module~~UsedByGraph_node2" class="node">
-<title>module~bspline_oo_module</title>
-<g id="a_module~~bspline_sub_module~~UsedByGraph_node2"><a xlink:href=".././module/bspline_oo_module.html" xlink:title="bspline_oo_module">
-<polygon fill="#337ab7" stroke="#337ab7" points="272,-24 157,-24 157,0 272,0 272,-24"/>
-<text text-anchor="middle" x="214.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module</text>
-</a>
-</g>
-</g>
-<!-- module~bspline_oo_module&#45;&gt;module~bspline_sub_module -->
-<g id="module~~bspline_sub_module~~UsedByGraph_edge1" class="edge">
-<title>module~bspline_oo_module&#45;&gt;module~bspline_sub_module</title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M156.9,-19.45C148.53,-20.55 139.82,-21.69 131.22,-22.83"/>
-<polygon fill="#000000" stroke="#000000" points="130.66,-19.37 121.2,-24.14 131.57,-26.31 130.66,-19.37"/>
-</g>
 <!-- module~bspline_module -->
-<g id="module~~bspline_sub_module~~UsedByGraph_node3" class="node">
+<g id="module~~bspline_sub_module~~UsedByGraph_node2" class="node">
 <title>module~bspline_module</title>
-<g id="a_module~~bspline_sub_module~~UsedByGraph_node3"><a xlink:href=".././module/bspline_module.html" xlink:title="bspline_module">
+<g id="a_module~~bspline_sub_module~~UsedByGraph_node2"><a xlink:href=".././module/bspline_module.html" xlink:title="bspline_module">
 <polygon fill="#337ab7" stroke="#337ab7" points="405,-44 308,-44 308,-20 405,-20 405,-44"/>
 <text text-anchor="middle" x="356.5" y="-29.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_module</text>
 </a>
 </g>
 </g>
 <!-- module~bspline_module&#45;&gt;module~bspline_sub_module -->
-<g id="module~~bspline_sub_module~~UsedByGraph_edge2" class="edge">
+<g id="module~~bspline_sub_module~~UsedByGraph_edge1" class="edge">
 <title>module~bspline_module&#45;&gt;module~bspline_sub_module</title>
 <path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M307.81,-32.67C296.1,-32.81 283.6,-32.93 272,-33 220.89,-33.31 208.11,-33.27 157,-33 148.66,-32.96 139.91,-32.89 131.23,-32.81"/>
 <polygon fill="#000000" stroke="#000000" points="131.14,-29.31 121.1,-32.72 131.07,-36.31 131.14,-29.31"/>
+</g>
+<!-- module~bspline_oo_module -->
+<g id="module~~bspline_sub_module~~UsedByGraph_node3" class="node">
+<title>module~bspline_oo_module</title>
+<g id="a_module~~bspline_sub_module~~UsedByGraph_node3"><a xlink:href=".././module/bspline_oo_module.html" xlink:title="bspline_oo_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="272,-24 157,-24 157,0 272,0 272,-24"/>
+<text text-anchor="middle" x="214.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module</text>
+</a>
+</g>
 </g>
 <!-- module~bspline_module&#45;&gt;module~bspline_oo_module -->
 <g id="module~~bspline_sub_module~~UsedByGraph_edge3" class="edge">
@@ -465,11 +478,27 @@
 <path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M307.71,-25.17C299.51,-24 290.86,-22.77 282.27,-21.54"/>
 <polygon fill="#000000" stroke="#000000" points="282.65,-18.06 272.25,-20.11 281.66,-24.99 282.65,-18.06"/>
 </g>
+<!-- module~bspline_oo_module&#45;&gt;module~bspline_sub_module -->
+<g id="module~~bspline_sub_module~~UsedByGraph_edge2" class="edge">
+<title>module~bspline_oo_module&#45;&gt;module~bspline_sub_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M156.9,-19.45C148.53,-20.55 139.82,-21.69 131.22,-22.83"/>
+<polygon fill="#000000" stroke="#000000" points="130.66,-19.37 121.2,-24.14 131.57,-26.31 130.66,-19.37"/>
+</g>
 </g>
 </svg>
-</div><div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div><div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="-graph-help-label">Graph Key</h4></div><div class="modal-body">
-    <p>Nodes of different colours represent the following: </p>
-    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+</div>        <div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div>
+          <div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                </div>
+              <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Generated by graphviz version 2.43.0 (0)
@@ -519,20 +548,22 @@
 </g>
 </svg>
 
-    
-    <p>Solid arrows point from a submodule to the (sub)module which it is
-    descended from. Dashed arrows point from a module or program unit to 
-    modules which it uses.
-    </p>
-    </div></div></div></div>
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
           </li>
       </ul>
     </div>
 
-    <br>
+      <br>
 
-    <section class="visible-xs visible-sm hidden-md">
-        <h3>Contents</h3>
+      <section class="visible-xs visible-sm hidden-md">
+          <h3>Contents</h3>
   
       <div class="panel panel-primary">
       <div class="panel-heading text-left">
@@ -653,13 +684,13 @@
   
 
 
-    </section>
-    <br class="visible-xs visible-sm hidden-md">
+      </section>
+      <br class="visible-xs visible-sm hidden-md">
 
 
-    <section>
-    <h2>Variables</h2>
-      <table class="table table-striped varlist">
+        <section>
+          <h2>Variables</h2>
+            <table class="table table-striped varlist">
     <thead>
       <tr>
         <th>Type</th>
@@ -805,13 +836,13 @@ parameter
     </tbody>
   </table>
 
-    </section>
-    <br>
-    
-    
-    <section>
-   <h2>Interfaces</h2>
-       <div class="panel panel-default">
+        </section>
+        <br>
+
+
+        <section>
+          <h2>Interfaces</h2>
+              <div class="panel panel-default">
     <div class="panel-heading codesum">
       <span class="anchor" id="interface-db1ink"></span>
       <h3>public        interface <a href='../interface/db1ink.html'>db1ink</a> 
@@ -939,7 +970,7 @@ contain the function value at the point <code>x(i)</code></p>
             <td><strong>tx</strong></td>
             <td>
 <p>The <code>(nx+kx)</code> knots in the <script type="math/tex">x</script> direction
-for the spline interpolant:</p><a href="../proc/db1ink_default.html#variable-tx~19" class="pull-right"><emph>Read more&hellip;</emph></a>
+for the spline interpolant:</p><a href="../proc/db1ink_default.html#variable-tx" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -969,7 +1000,7 @@ for the spline interpolant:</p><a href="../proc/db1ink_default.html#variable-tx~
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db1ink_default.html#variable-iflag~26" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db1ink_default.html#variable-iflag~3" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -1186,7 +1217,7 @@ and in increasing order</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db1ink_alt.html#variable-iflag~27" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db1ink_alt.html#variable-iflag~4" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -1419,7 +1450,7 @@ and in increasing order</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db1ink_alt_2.html#variable-iflag~28" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db1ink_alt_2.html#variable-iflag~5" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -1430,7 +1461,7 @@ and in increasing order</p>
     </ul>
   </div>
 
-       <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum">
       <span class="anchor" id="interface-db1val"></span>
       <h3>public        interface <a href='../interface/db1val.html'>db1val</a> 
@@ -1603,7 +1634,7 @@ in the <script type="math/tex">x</script> direction. (same as in last call to <a
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db1val_default.html#variable-iflag~29" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db1val_default.html#variable-iflag~6" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -1814,7 +1845,7 @@ in the <script type="math/tex">x</script> direction.</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db1val_alt.html#variable-iflag~30" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db1val_alt.html#variable-iflag~7" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -1873,12 +1904,12 @@ and must not be changed by the user.</p>
     </ul>
   </div>
 
-    </section>
-  <br>
+        </section>
+        <br>
 
-    <section>
-     <h2>Abstract Interfaces</h2>
-       <div class="panel panel-default">
+        <section>
+          <h2>Abstract Interfaces</h2>
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="interface-b1fqad_func"></span><h3>abstract interface
         
     </h3></div>
@@ -1929,14 +1960,13 @@ and must not be changed by the user.</p>
     </ul>
   </div>
 
-    </section>
-  <br>
-    
-    
- 
-    <section>
-    <h2>Functions</h2>
-      <div class="panel panel-default">
+        </section>
+        <br>
+
+
+        <section>
+          <h2>Functions</h2>
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-check_value"></span><h3>private pure function <a href='../proc/check_value.html'>check_value</a>(x, t, i, extrap) result(iflag)  
 </h3></div>
     <div class="panel-body">
@@ -2028,7 +2058,7 @@ This is called by the various <code>db*val</code> routines.</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-get_temp_x_for_extrap"></span><h3>private pure function <a href='../proc/get_temp_x_for_extrap.html'>get_temp_x_for_extrap</a>(x, tmin, tmax, extrap) result(xt)  
 </h3></div>
     <div class="panel-body">
@@ -2121,7 +2151,7 @@ be <code>tmin</code>, <code>x</code>, or <code>tmax</code>)</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-get_status_message"></span><h3>public pure function <a href='../proc/get_status_message.html'>get_status_message</a>(iflag) result(msg)  
 </h3></div>
     <div class="panel-body">
@@ -2166,12 +2196,12 @@ be <code>tmin</code>, <code>x</code>, or <code>tmax</code>)</p>
     </div>
   </div>
 
-    </section>
-    <br>
+        </section>
+        <br>
 
-    <section>
-    <h2>Subroutines</h2>
-      <div class="panel panel-default">
+        <section>
+          <h2>Subroutines</h2>
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-db1ink_default"></span><h3>private pure subroutine <a href='../proc/db1ink_default.html'>db1ink_default</a>(x, nx, fcn, kx, iknot, tx, bcoef, iflag)  
 </h3></div>
     <div class="panel-body">
@@ -2284,7 +2314,7 @@ contain the function value at the point <code>x(i)</code></p>
             <td><strong>tx</strong></td>
             <td>
 <p>The <code>(nx+kx)</code> knots in the <script type="math/tex">x</script> direction
-for the spline interpolant:</p><a href="../proc/db1ink_default.html#variable-tx~19" class="pull-right"><emph>Read more&hellip;</emph></a>
+for the spline interpolant:</p><a href="../proc/db1ink_default.html#variable-tx" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -2314,7 +2344,7 @@ for the spline interpolant:</p><a href="../proc/db1ink_default.html#variable-tx~
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db1ink_default.html#variable-iflag~26" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db1ink_default.html#variable-iflag~3" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -2324,7 +2354,7 @@ for the spline interpolant:</p><a href="../proc/db1ink_default.html#variable-tx~
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-db1ink_alt"></span><h3>private pure subroutine <a href='../proc/db1ink_alt.html'>db1ink_alt</a>(x, nx, fcn, kx, ibcl, ibcr, fbcl, fbcr, kntopt, tx, bcoef, iflag)  
 </h3></div>
     <div class="panel-body">
@@ -2523,7 +2553,7 @@ and in increasing order</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db1ink_alt.html#variable-iflag~27" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db1ink_alt.html#variable-iflag~4" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -2533,7 +2563,7 @@ and in increasing order</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-db1ink_alt_2"></span><h3>private pure subroutine <a href='../proc/db1ink_alt_2.html'>db1ink_alt_2</a>(x, nx, fcn, kx, ibcl, ibcr, fbcl, fbcr, tleft, tright, tx, bcoef, iflag)  
 </h3></div>
     <div class="panel-body">
@@ -2748,7 +2778,7 @@ and in increasing order</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db1ink_alt_2.html#variable-iflag~28" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db1ink_alt_2.html#variable-iflag~5" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -2758,7 +2788,7 @@ and in increasing order</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-db1val_default"></span><h3>private pure subroutine <a href='../proc/db1val_default.html'>db1val_default</a>(xval, idx, tx, nx, kx, bcoef, f, iflag, inbvx, w0, extrap)  
 </h3></div>
     <div class="panel-body">
@@ -2900,7 +2930,7 @@ in the <script type="math/tex">x</script> direction. (same as in last call to <a
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db1val_default.html#variable-iflag~29" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db1val_default.html#variable-iflag~6" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -2958,7 +2988,7 @@ and must not be changed by the user.</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-db1val_alt"></span><h3>private pure subroutine <a href='../proc/db1val_alt.html'>db1val_alt</a>(xval, idx, tx, nx, n, kx, bcoef, f, iflag, inbvx, w0, extrap)  
 </h3></div>
     <div class="panel-body">
@@ -3112,7 +3142,7 @@ in the <script type="math/tex">x</script> direction.</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db1val_alt.html#variable-iflag~30" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db1val_alt.html#variable-iflag~7" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -3170,7 +3200,7 @@ and must not be changed by the user.</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-db1sqad"></span><h3>public pure subroutine <a href='../proc/db1sqad.html'>db1sqad</a>(tx, bcoef, nx, kx, x1, x2, f, iflag, w0)  
 </h3></div>
     <div class="panel-body">
@@ -3308,7 +3338,7 @@ and must not be changed by the user.</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db1sqad.html#variable-iflag~31" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db1sqad.html#variable-iflag~8" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -3333,7 +3363,7 @@ and must not be changed by the user.</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-db1fqad"></span><h3>public  subroutine <a href='../proc/db1fqad.html'>db1fqad</a>(fun, tx, bcoef, nx, kx, idx, x1, x2, tol, f, iflag, w0)  
 </h3></div>
     <div class="panel-body">
@@ -3522,7 +3552,7 @@ the machine</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db1fqad.html#variable-iflag~32" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db1fqad.html#variable-iflag~9" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -3547,7 +3577,7 @@ the machine</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-db2ink"></span><h3>public pure subroutine <a href='../proc/db2ink.html'>db2ink</a>(x, nx, y, ny, fcn, kx, ky, iknot, tx, ty, bcoef, iflag)  
 </h3></div>
     <div class="panel-body">
@@ -3708,7 +3738,7 @@ point (<code>x(i)</code>,<code>y(j)</code>)</p>
             <td><strong>tx</strong></td>
             <td>
 <p>The <code>(nx+kx)</code> knots in the <script type="math/tex">x</script> direction for the spline
-interpolant.</p><a href="../proc/db2ink.html#variable-tx~26" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db2ink.html#variable-tx~8" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -3724,7 +3754,7 @@ interpolant.</p><a href="../proc/db2ink.html#variable-tx~26" class="pull-right">
             <td><strong>ty</strong></td>
             <td>
 <p>The <code>(ny+ky)</code> knots in the <script type="math/tex">y</script> direction for the spline
-interpolant.</p><a href="../proc/db2ink.html#variable-ty~16" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db2ink.html#variable-ty" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -3754,7 +3784,7 @@ interpolant.</p><a href="../proc/db2ink.html#variable-ty~16" class="pull-right">
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<a href="../proc/db2ink.html#variable-iflag~33" class="pull-right"><emph>Read more&hellip;</emph></a>
+<a href="../proc/db2ink.html#variable-iflag~10" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -3764,7 +3794,7 @@ interpolant.</p><a href="../proc/db2ink.html#variable-ty~16" class="pull-right">
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-db2val"></span><h3>public pure subroutine <a href='../proc/db2val.html'>db2val</a>(xval, yval, idx, idy, tx, ty, nx, ny, kx, ky, bcoef, f, iflag, inbvx, inbvy, iloy, w1, w0, extrap)  
 </h3></div>
     <div class="panel-body">
@@ -3988,7 +4018,7 @@ polynomial in the <script type="math/tex">y</script> direction.
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db2val.html#variable-iflag~34" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db2val.html#variable-iflag~11" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -4095,7 +4125,7 @@ and must not be changed by the user.</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-db3ink"></span><h3>public pure subroutine <a href='../proc/db3ink.html'>db3ink</a>(x, nx, y, ny, z, nz, fcn, kx, ky, kz, iknot, tx, ty, tz, bcoef, iflag)  
 </h3></div>
     <div class="panel-body">
@@ -4304,7 +4334,7 @@ contain the function value at the point (<code>x(i)</code>,<code>y(j)</code>,<co
             <td><strong>tx</strong></td>
             <td>
 <p>The <code>(nx+kx)</code> knots in the <script type="math/tex">x</script> direction for the spline
-interpolant.</p><a href="../proc/db3ink.html#variable-tx~28" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db3ink.html#variable-tx~10" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -4320,7 +4350,7 @@ interpolant.</p><a href="../proc/db3ink.html#variable-tx~28" class="pull-right">
             <td><strong>ty</strong></td>
             <td>
 <p>The <code>(ny+ky)</code> knots in the <script type="math/tex">y</script> direction for the spline
-interpolant.</p><a href="../proc/db3ink.html#variable-ty~18" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db3ink.html#variable-ty~3" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -4336,7 +4366,7 @@ interpolant.</p><a href="../proc/db3ink.html#variable-ty~18" class="pull-right">
             <td><strong>tz</strong></td>
             <td>
 <p>The <code>(nz+kz)</code> knots in the <script type="math/tex">z</script> direction for the spline
-interpolant.</p><a href="../proc/db3ink.html#variable-tz~13" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db3ink.html#variable-tz" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -4366,7 +4396,7 @@ interpolant.</p><a href="../proc/db3ink.html#variable-tz~13" class="pull-right">
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<a href="../proc/db3ink.html#variable-iflag~35" class="pull-right"><emph>Read more&hellip;</emph></a>
+<a href="../proc/db3ink.html#variable-iflag~12" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -4376,7 +4406,7 @@ interpolant.</p><a href="../proc/db3ink.html#variable-tz~13" class="pull-right">
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-db3val"></span><h3>public pure subroutine <a href='../proc/db3val.html'>db3val</a>(xval, yval, zval, idx, idy, idz, tx, ty, tz, nx, ny, nz, kx, ky, kz, bcoef, f, iflag, inbvx, inbvy, inbvz, iloy, iloz, w2, w1, w0, extrap)  
 </h3></div>
     <div class="panel-body">
@@ -4678,7 +4708,7 @@ in the <script type="math/tex">z</script> direction. (same as in last call to <a
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db3val.html#variable-iflag~36" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db3val.html#variable-iflag~13" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -4834,7 +4864,7 @@ and must not be changed by the user.</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-db4ink"></span><h3>public pure subroutine <a href='../proc/db4ink.html'>db4ink</a>(x, nx, y, ny, z, nz, q, nq, fcn, kx, ky, kz, kq, iknot, tx, ty, tz, tq, bcoef, iflag)  
 </h3></div>
     <div class="panel-body">
@@ -5091,7 +5121,7 @@ and must not be changed by the user.</p>
             <td><strong>tx</strong></td>
             <td>
 <p>The <code>(nx+kx)</code> knots in the x direction for the spline
-interpolant.</p><a href="../proc/db4ink.html#variable-tx~30" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db4ink.html#variable-tx~12" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -5107,7 +5137,7 @@ interpolant.</p><a href="../proc/db4ink.html#variable-tx~30" class="pull-right">
             <td><strong>ty</strong></td>
             <td>
 <p>The <code>(ny+ky)</code> knots in the y direction for the spline
-interpolant.</p><a href="../proc/db4ink.html#variable-ty~20" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db4ink.html#variable-ty~5" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -5123,7 +5153,7 @@ interpolant.</p><a href="../proc/db4ink.html#variable-ty~20" class="pull-right">
             <td><strong>tz</strong></td>
             <td>
 <p>The <code>(nz+kz)</code> knots in the z direction for the spline
-interpolant.</p><a href="../proc/db4ink.html#variable-tz~15" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db4ink.html#variable-tz~3" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -5139,7 +5169,7 @@ interpolant.</p><a href="../proc/db4ink.html#variable-tz~15" class="pull-right">
             <td><strong>tq</strong></td>
             <td>
 <p>The <code>(nq+kq)</code> knots in the q direction for the spline
-interpolant.</p><a href="../proc/db4ink.html#variable-tq~10" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db4ink.html#variable-tq" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -5170,7 +5200,7 @@ interpolant.</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<a href="../proc/db4ink.html#variable-iflag~37" class="pull-right"><emph>Read more&hellip;</emph></a>
+<a href="../proc/db4ink.html#variable-iflag~14" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -5180,7 +5210,7 @@ interpolant.</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-db4val"></span><h3>public pure subroutine <a href='../proc/db4val.html'>db4val</a>(xval, yval, zval, qval, idx, idy, idz, idq, tx, ty, tz, tq, nx, ny, nz, nq, kx, ky, kz, kq, bcoef, f, iflag, inbvx, inbvy, inbvz, inbvq, iloy, iloz, iloq, w3, w2, w1, w0, extrap)  
 </h3></div>
     <div class="panel-body">
@@ -5566,7 +5596,7 @@ in the <script type="math/tex">q</script> direction. (same as in last call to
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db4val.html#variable-iflag~38" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db4val.html#variable-iflag~15" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -5771,7 +5801,7 @@ and must not be changed by the user.</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-db5ink"></span><h3>public pure subroutine <a href='../proc/db5ink.html'>db5ink</a>(x, nx, y, ny, z, nz, q, nq, r, nr, fcn, kx, ky, kz, kq, kr, iknot, tx, ty, tz, tq, tr, bcoef, iflag)  
 </h3></div>
     <div class="panel-body">
@@ -6070,7 +6100,7 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
             <td><strong>tx</strong></td>
             <td>
 <p>The <code>(nx+kx)</code> knots in the <script type="math/tex">x</script> direction for the spline
-interpolant.</p><a href="../proc/db5ink.html#variable-tx~32" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db5ink.html#variable-tx~14" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -6086,7 +6116,7 @@ interpolant.</p><a href="../proc/db5ink.html#variable-tx~32" class="pull-right">
             <td><strong>ty</strong></td>
             <td>
 <p>The <code>(ny+ky)</code> knots in the <script type="math/tex">y</script> direction for the spline
-interpolant.</p><a href="../proc/db5ink.html#variable-ty~22" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db5ink.html#variable-ty~7" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -6102,7 +6132,7 @@ interpolant.</p><a href="../proc/db5ink.html#variable-ty~22" class="pull-right">
             <td><strong>tz</strong></td>
             <td>
 <p>The <code>(nz+kz)</code> knots in the <script type="math/tex">z</script> direction for the spline
-interpolant.</p><a href="../proc/db5ink.html#variable-tz~17" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db5ink.html#variable-tz~5" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -6118,7 +6148,7 @@ interpolant.</p><a href="../proc/db5ink.html#variable-tz~17" class="pull-right">
             <td><strong>tq</strong></td>
             <td>
 <p>The <code>(nq+kq)</code> knots in the <script type="math/tex">q</script> direction for the spline
-interpolant.</p><a href="../proc/db5ink.html#variable-tq~12" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db5ink.html#variable-tq~3" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -6134,7 +6164,7 @@ interpolant.</p><a href="../proc/db5ink.html#variable-tq~12" class="pull-right">
             <td><strong>tr</strong></td>
             <td>
 <p>The <code>(nr+kr)</code> knots in the <script type="math/tex">r</script> direction for the spline
-interpolant.</p><a href="../proc/db5ink.html#variable-tr~7" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db5ink.html#variable-tr" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -6165,7 +6195,7 @@ interpolant.</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<a href="../proc/db5ink.html#variable-iflag~39" class="pull-right"><emph>Read more&hellip;</emph></a>
+<a href="../proc/db5ink.html#variable-iflag~16" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -6175,7 +6205,7 @@ interpolant.</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-db5val"></span><h3>public pure subroutine <a href='../proc/db5val.html'>db5val</a>(xval, yval, zval, qval, rval, idx, idy, idz, idq, idr, tx, ty, tz, tq, tr, nx, ny, nz, nq, nr, kx, ky, kz, kq, kr, bcoef, f, iflag, inbvx, inbvy, inbvz, inbvq, inbvr, iloy, iloz, iloq, ilor, w4, w3, w2, w1, w0, extrap)  
 </h3></div>
     <div class="panel-body">
@@ -6642,7 +6672,7 @@ in the <script type="math/tex">r</script> direction.
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db5val.html#variable-iflag~40" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db5val.html#variable-iflag~17" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -6896,7 +6926,7 @@ and must not be changed by the user.</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-db6ink"></span><h3>public pure subroutine <a href='../proc/db6ink.html'>db6ink</a>(x, nx, y, ny, z, nz, q, nq, r, nr, s, ns, fcn, kx, ky, kz, kq, kr, ks, iknot, tx, ty, tz, tq, tr, ts, bcoef, iflag)  
 </h3></div>
     <div class="panel-body">
@@ -7249,7 +7279,7 @@ function value at the point
             <td><strong>tx</strong></td>
             <td>
 <p>The <code>(nx+kx)</code> knots in the <script type="math/tex">x</script> direction for the
-spline interpolant.</p><a href="../proc/db6ink.html#variable-tx~34" class="pull-right"><emph>Read more&hellip;</emph></a>
+spline interpolant.</p><a href="../proc/db6ink.html#variable-tx~16" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -7265,7 +7295,7 @@ spline interpolant.</p><a href="../proc/db6ink.html#variable-tx~34" class="pull-
             <td><strong>ty</strong></td>
             <td>
 <p>The <code>(ny+ky)</code> knots in the <script type="math/tex">y</script> direction for the
-spline interpolant.</p><a href="../proc/db6ink.html#variable-ty~24" class="pull-right"><emph>Read more&hellip;</emph></a>
+spline interpolant.</p><a href="../proc/db6ink.html#variable-ty~9" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -7281,7 +7311,7 @@ spline interpolant.</p><a href="../proc/db6ink.html#variable-ty~24" class="pull-
             <td><strong>tz</strong></td>
             <td>
 <p>The <code>(nz+kz)</code> knots in the <script type="math/tex">z</script> direction for the
-spline interpolant.</p><a href="../proc/db6ink.html#variable-tz~19" class="pull-right"><emph>Read more&hellip;</emph></a>
+spline interpolant.</p><a href="../proc/db6ink.html#variable-tz~7" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -7297,7 +7327,7 @@ spline interpolant.</p><a href="../proc/db6ink.html#variable-tz~19" class="pull-
             <td><strong>tq</strong></td>
             <td>
 <p>The <code>(nq+kq)</code> knots in the <script type="math/tex">q</script> direction for the
-spline interpolant.</p><a href="../proc/db6ink.html#variable-tq~14" class="pull-right"><emph>Read more&hellip;</emph></a>
+spline interpolant.</p><a href="../proc/db6ink.html#variable-tq~5" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -7313,7 +7343,7 @@ spline interpolant.</p><a href="../proc/db6ink.html#variable-tq~14" class="pull-
             <td><strong>tr</strong></td>
             <td>
 <p>The <code>(nr+kr)</code> knots in the <script type="math/tex">r</script> direction for the
-spline interpolant.</p><a href="../proc/db6ink.html#variable-tr~9" class="pull-right"><emph>Read more&hellip;</emph></a>
+spline interpolant.</p><a href="../proc/db6ink.html#variable-tr~3" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -7329,7 +7359,7 @@ spline interpolant.</p><a href="../proc/db6ink.html#variable-tr~9" class="pull-r
             <td><strong>ts</strong></td>
             <td>
 <p>The <code>(ns+ks)</code> knots in the <script type="math/tex">s</script> direction for the
-spline interpolant.</p><a href="../proc/db6ink.html#variable-ts~4" class="pull-right"><emph>Read more&hellip;</emph></a>
+spline interpolant.</p><a href="../proc/db6ink.html#variable-ts" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -7360,7 +7390,7 @@ b-spline interpolant.</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<a href="../proc/db6ink.html#variable-iflag~41" class="pull-right"><emph>Read more&hellip;</emph></a>
+<a href="../proc/db6ink.html#variable-iflag~18" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -7370,7 +7400,7 @@ b-spline interpolant.</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-db6val"></span><h3>public pure subroutine <a href='../proc/db6val.html'>db6val</a>(xval, yval, zval, qval, rval, sval, idx, idy, idz, idq, idr, ids, tx, ty, tz, tq, tr, ts, nx, ny, nz, nq, nr, ns, kx, ky, kz, kq, kr, ks, bcoef, f, iflag, inbvx, inbvy, inbvz, inbvq, inbvr, inbvs, iloy, iloz, iloq, ilor, ilos, w5, w4, w3, w2, w1, w0, extrap)  
 </h3></div>
     <div class="panel-body">
@@ -7918,7 +7948,7 @@ in the <script type="math/tex">s</script> direction.
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db6val.html#variable-iflag~42" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db6val.html#variable-iflag~19" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -8221,7 +8251,7 @@ and must not be changed by the user.</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-check_inputs"></span><h3>private pure subroutine <a href='../proc/check_inputs.html'>check_inputs</a>(iknot, iflag, nx, ny, nz, nq, nr, ns, kx, ky, kz, kq, kr, ks, x, y, z, q, r, s, tx, ty, tz, tq, tr, ts, f1, f2, f3, f4, f5, f6, bcoef1, bcoef2, bcoef3, bcoef4, bcoef5, bcoef6, alt, status_ok)  
 </h3></div>
     <div class="panel-body">
@@ -8850,7 +8880,7 @@ and must not be changed by the user.</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-dbknot"></span><h3>private pure subroutine <a href='../proc/dbknot.html'>dbknot</a>(x, n, k, t)  
 </h3></div>
     <div class="panel-body">
@@ -8941,7 +8971,7 @@ and must not be changed by the user.</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-dbtpcf"></span><h3>private pure subroutine <a href='../proc/dbtpcf.html'>dbtpcf</a>(x, n, fcn, ldf, nf, t, k, bcoef, work, iflag)  
 </h3></div>
     <div class="panel-body">
@@ -9121,7 +9151,7 @@ and must not be changed by the user.</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-dbintk"></span><h3>private pure subroutine <a href='../proc/dbintk.html'>dbintk</a>(x, y, t, n, k, bcoef, q, work, iflag)  
 </h3></div>
     <div class="panel-body">
@@ -9284,7 +9314,7 @@ call dbnslv(q,2k-1,n,k-1,k-1,bcoef)</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<a href="../proc/dbintk.html#variable-iflag~43" class="pull-right"><emph>Read more&hellip;</emph></a>
+<a href="../proc/dbintk.html#variable-iflag~20" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -9294,7 +9324,7 @@ call dbnslv(q,2k-1,n,k-1,k-1,bcoef)</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-dbnfac"></span><h3>private pure subroutine <a href='../proc/dbnfac.html'>dbnfac</a>(w, nroww, nrow, nbandl, nbandu, iflag)  
 </h3></div>
     <div class="panel-body">
@@ -9411,7 +9441,7 @@ call dbnslv(q,2k-1,n,k-1,k-1,bcoef)</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-dbnslv"></span><h3>private pure subroutine <a href='../proc/dbnslv.html'>dbnslv</a>(w, nroww, nrow, nbandl, nbandu, b)  
 </h3></div>
     <div class="panel-body">
@@ -9533,7 +9563,7 @@ as constructed in <a href="../proc/dbnfac.html">dbnfac</a>.</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-dbspvn"></span><h3>private pure subroutine <a href='../proc/dbspvn.html'>dbspvn</a>(t, jhigh, k, index, x, ileft, vnikx, work, iwork, iflag)  
 </h3></div>
     <div class="panel-body">
@@ -9716,7 +9746,7 @@ variables and can be used for other purposes.</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<a href="../proc/dbspvn.html#variable-iflag~45" class="pull-right"><emph>Read more&hellip;</emph></a>
+<a href="../proc/dbspvn.html#variable-iflag~22" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -9726,7 +9756,7 @@ variables and can be used for other purposes.</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-dbvalu"></span><h3>private pure subroutine <a href='../proc/dbvalu.html'>dbvalu</a>(t, a, n, k, ideriv, x, inbv, work, iflag, val, extrap)  
 </h3></div>
     <div class="panel-body">
@@ -9892,7 +9922,7 @@ distinct <code>inbv</code> parameters.</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/dbvalu.html#variable-iflag~46" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/dbvalu.html#variable-iflag~23" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -9933,7 +9963,7 @@ distinct <code>inbv</code> parameters.</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-dintrv"></span><h3>private pure subroutine <a href='../proc/dintrv.html'>dintrv</a>(xt, lxt, xx, ilo, ileft, mflag, extrap)  
 </h3></div>
     <div class="panel-body">
@@ -10076,7 +10106,7 @@ require distinct <code>ilo</code> parameters.</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-dbint4"></span><h3>private pure subroutine <a href='../proc/dbint4.html'>dbint4</a>(x, y, ndata, ibcl, ibcr, fbcl, fbcr, kntopt, tleft, tright, t, bcoef, n, k, w, iflag)  
 </h3></div>
     <div class="panel-body">
@@ -10335,7 +10365,7 @@ order to be supplied by the user.</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/dbint4.html#variable-iflag~47" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/dbint4.html#variable-iflag~24" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -10345,7 +10375,7 @@ order to be supplied by the user.</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-dbspvd"></span><h3>private pure subroutine <a href='../proc/dbspvd.html'>dbspvd</a>(t, k, nderiv, x, ileft, ldvnik, vnikx, work, iflag)  
 </h3></div>
     <div class="panel-body">
@@ -10512,7 +10542,7 @@ at <code>x</code> and their derivatives columnwise.</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/dbspvd.html#variable-iflag~48" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/dbspvd.html#variable-iflag~25" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -10522,7 +10552,7 @@ at <code>x</code> and their derivatives columnwise.</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-dbsqad"></span><h3>private pure subroutine <a href='../proc/dbsqad.html'>dbsqad</a>(t, bcoef, n, k, x1, x2, bquad, work, iflag)  
 </h3></div>
     <div class="panel-body">
@@ -10678,7 +10708,7 @@ in <code>t(k) &lt;= x &lt;= t(n+1)</code></p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/dbsqad.html#variable-iflag~49" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/dbsqad.html#variable-iflag~26" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -10688,7 +10718,7 @@ in <code>t(k) &lt;= x &lt;= t(n+1)</code></p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-dbfqad"></span><h3>private  subroutine <a href='../proc/dbfqad.html'>dbfqad</a>(f, t, bcoef, n, k, id, x1, x2, tol, quad, iflag, work)  
 </h3></div>
     <div class="panel-body">
@@ -10878,7 +10908,7 @@ the machine</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/dbfqad.html#variable-iflag~50" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/dbfqad.html#variable-iflag~27" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -10903,7 +10933,7 @@ the machine</p>
     </div>
   </div>
 
-      <div class="panel panel-default">
+              <div class="panel panel-default">
     <div class="panel-heading codesum"><span class="anchor" id="proc-dbsgq8"></span><h3>private  subroutine <a href='../proc/dbsgq8.html'>dbsgq8</a>(fun, xt, bc, n, kk, id, a, b, inbv, err, ans, iflag, work)  
 </h3></div>
     <div class="panel-body">
@@ -11107,7 +11137,7 @@ the integral of the absolute value of
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>a status code:</p><a href="../proc/dbsgq8.html#variable-iflag~51" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>a status code:</p><a href="../proc/dbsgq8.html#variable-iflag~28" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -11132,58 +11162,58 @@ the integral of the absolute value of
     </div>
   </div>
 
-    </section>
-    <br>
+        </section>
+        <br>
 
 
 
     </div>
   </div>
 
-    <hr>    
+      <hr>
     </div> <!-- /container -->
     <footer>
       <div class="container">
-      <div class="row">
-        <div class="col-xs-6 col-md-6"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2023 
+        <div class="row">
+          <div class="col-xs-6 col-md-6"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2023 
 </p>
+          </div>
+          <div class="col-xs-6 col-md-6">
+            <p class="text-right">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
         </div>
-        <div class="col-xs-6 col-md-6">
-          <p class="text-right">
-            Documentation generated by 
-            <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
-          </p>
-        </div>
-      </div>
-      <br>
-      </div> <!-- /container -->    
+        <br>
+      </div> <!-- /container -->
     </footer>
 
     <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-<!--
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
--->
-    <script src="../js/bootstrap.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../js/ie10-viewport-bug-workaround.js"></script>
+         ================================================== -->
+         <!-- Placed at the end of the document so the pages load faster -->
+    <!--
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        -->
+        <script src="../js/bootstrap.min.js"></script>
+        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <script src="../js/ie10-viewport-bug-workaround.js"></script>
 
-    <!-- MathJax JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
-        jax: ['input/TeX','input/MathML','output/HTML-CSS'],
-        extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
-      });
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    
-    <script src="../tipuesearch/tipuesearch_content.js"></script>
-    <script src="../tipuesearch/tipuesearch_set.js"></script>
-    <script src="../tipuesearch/tipuesearch.js"></script>
-    
+        <!-- MathJax JavaScript
+             ================================================== -->
+             <!-- Placed at the end of the document so the pages load faster -->
+        <script type="text/x-mathjax-config">
+          MathJax.Hub.Config({
+          TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
+          jax: ['input/TeX','input/MathML','output/HTML-CSS'],
+          extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
+          });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+          <script src="../tipuesearch/tipuesearch_content.js"></script>
+          <script src="../tipuesearch/tipuesearch_set.js"></script>
+          <script src="../tipuesearch/tipuesearch.js"></script>
+
   </body>
 </html>

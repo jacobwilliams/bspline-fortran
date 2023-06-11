@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-   <meta name="description" content="BSPLINE-FORTRAN -- Multidimensional B-Spline Interpolation of Data on a Regular Grid">
+      <meta name="description" content="BSPLINE-FORTRAN -- Multidimensional B-Spline Interpolation of Data on a Regular Grid">
     <meta name="author" content="Jacob Williams" >
     <link rel="icon" href="../favicon.png">
 
@@ -14,16 +14,16 @@
     <link href="../css/pygments.css" rel="stylesheet">
     <link href="../css/font-awesome.min.css" rel="stylesheet">
     <link href="../css/local.css" rel="stylesheet">
-    <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
+      <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-    
-    <script src="../js/jquery-2.1.3.min.js"></script>
-    <script src="../js/svg-pan-zoom.min.js"></script>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+         <script src="../js/jquery-2.1.3.min.js"></script>
+         <script src="../js/svg-pan-zoom.min.js"></script>
 
   </head>
 
@@ -45,33 +45,43 @@
           <ul class="nav navbar-nav">
             <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
               <a href="#" class="dropdown-toggle"
-              data-toggle="dropdown" role="button"
-              aria-haspopup="true"
-     aria-expanded="false">Contents <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-            <li><a href="../lists/files.html">Source Files</a></li>
-            <li><a href="../lists/modules.html">Modules</a></li>
-            <li><a href="../lists/procedures.html">Procedures</a></li>
-            <li><a href="../lists/absint.html">Abstract Interfaces</a></li>
-                   <li><a href="../lists/types.html">Derived Types</a></li>
-       
-            </ul>
-        
+                 data-toggle="dropdown" role="button"
+                 aria-haspopup="true"
+                 aria-expanded="false">
+                 Contents <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                    <li><a href="../lists/files.html">Source Files</a></li>
+                  <li><a href="../lists/modules.html">Modules</a></li>
+                  <li><a href="../lists/procedures.html">Procedures</a></li>
+                  <li><a href="../lists/absint.html">Abstract Interfaces</a></li>
+                  <li><a href="../lists/types.html">Derived Types</a></li>
+              </ul>
             </li>
-<li class="visible-xs hidden-sm visible-lg"><a href="../lists/files.html">Source Files</a></li>
-<li class="visible-xs hidden-sm visible-lg"><a href="../lists/modules.html">Modules</a></li>
-<li class="visible-xs hidden-sm visible-lg"><a href="../lists/procedures.html">Procedures</a></li>
-<li class="visible-xs hidden-sm visible-lg"><a href="../lists/absint.html">Abstract Interfaces</a></li>
-                             <li class="visible-xs hidden-sm visible-lg"><a href="../lists/types.html">Derived Types</a></li>
+                <li class="visible-xs hidden-sm visible-lg">
+                  <a href="../lists/files.html">Source Files</a>
+                </li>
+              <li class="visible-xs hidden-sm visible-lg">
+                <a href="../lists/modules.html">Modules</a>
+              </li>
+              <li class="visible-xs hidden-sm visible-lg">
+                <a href="../lists/procedures.html">Procedures</a>
+              </li>
+              <li class="visible-xs hidden-sm visible-lg">
+                <a href="../lists/absint.html">Abstract Interfaces</a>
+              </li>
+              <li class="visible-xs hidden-sm visible-lg">
+                <a href="../lists/types.html">Derived Types</a>
+              </li>
           </ul>
-        <form action="../search.html" class="navbar-form navbar-right" role="search">
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
-        </div>
-<!--
-        <button type="submit" class="btn btn-default">Submit</button>
--->
-        </form>
+            <form action="../search.html" class="navbar-form navbar-right" role="search">
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+              </div>
+              <!--
+                  <button type="submit" class="btn btn-default">Submit</button>
+                  -->
+            </form>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
@@ -166,6 +176,7 @@
 <p></p><div class="alert alert-info" role="alert"><h4>Note</h4><p>This one is not pure, because we are not enforcing
       that the user function <code>fun</code> be pure.</p></div>
 
+
     <h3>Arguments</h3>
         <table class="table table-striped varlist">
     <thead>
@@ -179,7 +190,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-fun~2"></span>
+              <span class="anchor" id="variable-fun"></span>
               procedure(<a href='../interface/b1fqad_func.html'>b1fqad_func</a>)
             </td>
 <td></td>
@@ -195,7 +206,7 @@ integrand <code>bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,id,x,inbv,work)</code></p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-tx~25"></span>
+              <span class="anchor" id="variable-tx~7"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -210,7 +221,7 @@ integrand <code>bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,id,x,inbv,work)</code></p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-bcoef~13"></span>
+              <span class="anchor" id="variable-bcoef~7"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -225,7 +236,7 @@ integrand <code>bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,id,x,inbv,work)</code></p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-nx~13"></span>
+              <span class="anchor" id="variable-nx~7"></span>
               integer(kind=ip),
             </td>
 <td>intent(in)</td>
@@ -240,7 +251,7 @@ integrand <code>bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,id,x,inbv,work)</code></p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-kx~37"></span>
+              <span class="anchor" id="variable-kx~7"></span>
               integer(kind=ip),
             </td>
 <td>intent(in)</td>
@@ -255,7 +266,7 @@ integrand <code>bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,id,x,inbv,work)</code></p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-idx~10"></span>
+              <span class="anchor" id="variable-idx~3"></span>
               integer(kind=ip),
             </td>
 <td>intent(in)</td>
@@ -271,7 +282,7 @@ integrand <code>bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,id,x,inbv,work)</code></p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-x1~4"></span>
+              <span class="anchor" id="variable-x1~2"></span>
               real(kind=wp),
             </td>
 <td>intent(in)</td>
@@ -286,7 +297,7 @@ integrand <code>bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,id,x,inbv,work)</code></p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-x2~4"></span>
+              <span class="anchor" id="variable-x2~2"></span>
               real(kind=wp),
             </td>
 <td>intent(in)</td>
@@ -301,7 +312,7 @@ integrand <code>bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,id,x,inbv,work)</code></p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-tol~2"></span>
+              <span class="anchor" id="variable-tol"></span>
               real(kind=wp),
             </td>
 <td>intent(in)</td>
@@ -319,7 +330,7 @@ the machine</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-f~13"></span>
+              <span class="anchor" id="variable-f~5"></span>
               real(kind=wp),
             </td>
 <td>intent(out)</td>
@@ -334,7 +345,7 @@ the machine</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-iflag~32"></span>
+              <span class="anchor" id="variable-iflag~9"></span>
               integer(kind=ip),
             </td>
 <td>intent(out)</td>
@@ -383,82 +394,96 @@ the machine</p>
 <!-- Generated by graphviz version 2.43.0 (0)
  -->
 <!-- Title: proc~~db1fqad~~CallsGraph Pages: 1 -->
-<svg id="procdb1fqadCallsGraph" width="414pt" height="74pt"
- viewBox="0.00 0.00 414.00 74.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="proc~~db1fqad~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 70)">
+<svg id="procdb1fqadCallsGraph" width="641pt" height="55pt"
+ viewBox="0.00 0.00 641.00 54.52" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~db1fqad~~CallsGraph" class="graph" transform="scale(1.36 1.36) rotate(0) translate(4 70)">
 <title>proc~~db1fqad~~CallsGraph</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-70 410,-70 410,4 -4,4"/>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-70 866,-70 866,4 -4,4"/>
 <!-- proc~db1fqad -->
 <g id="proc~~db1fqad~~CallsGraph_node1" class="node">
 <title>proc~db1fqad</title>
-<polygon fill="none" stroke="black" points="57,-45 0,-45 0,-21 57,-21 57,-45"/>
-<text text-anchor="middle" x="28.5" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50">db1fqad</text>
+<polygon fill="none" stroke="black" points="172,-45 0,-45 0,-21 172,-21 172,-45"/>
+<text text-anchor="middle" x="86" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50">bspline_sub_module::db1fqad</text>
 </g>
 <!-- proc~dbfqad -->
 <g id="proc~~db1fqad~~CallsGraph_node2" class="node">
 <title>proc~dbfqad</title>
-<g id="a_proc~~db1fqad~~CallsGraph_node2"><a xlink:href=".././proc/dbfqad.html" xlink:title="dbfqad">
-<polygon fill="#d9534f" stroke="#d9534f" points="147,-45 93,-45 93,-21 147,-21 147,-45"/>
-<text text-anchor="middle" x="120" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbfqad</text>
+<g id="a_proc~~db1fqad~~CallsGraph_node2"><a xlink:href=".././proc/dbfqad.html" xlink:title="bspline_sub_module::dbfqad">
+<polygon fill="#d9534f" stroke="#d9534f" points="374,-45 208,-45 208,-21 374,-21 374,-45"/>
+<text text-anchor="middle" x="291" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbfqad</text>
 </a>
 </g>
 </g>
 <!-- proc~db1fqad&#45;&gt;proc~dbfqad -->
 <g id="proc~~db1fqad~~CallsGraph_edge1" class="edge">
 <title>proc~db1fqad&#45;&gt;proc~dbfqad</title>
-<path fill="none" stroke="#000000" d="M57.33,-33C65.35,-33 74.23,-33 82.69,-33"/>
-<polygon fill="#000000" stroke="#000000" points="82.72,-36.5 92.72,-33 82.72,-29.5 82.72,-36.5"/>
-</g>
-<!-- proc~dintrv -->
-<g id="proc~~db1fqad~~CallsGraph_node3" class="node">
-<title>proc~dintrv</title>
-<g id="a_proc~~db1fqad~~CallsGraph_node3"><a xlink:href=".././proc/dintrv.html" xlink:title="dintrv">
-<polygon fill="#d9534f" stroke="#d9534f" points="237,-66 183,-66 183,-42 237,-42 237,-66"/>
-<text text-anchor="middle" x="210" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dintrv</text>
-</a>
-</g>
-</g>
-<!-- proc~dbfqad&#45;&gt;proc~dintrv -->
-<g id="proc~~db1fqad~~CallsGraph_edge2" class="edge">
-<title>proc~dbfqad&#45;&gt;proc~dintrv</title>
-<path fill="none" stroke="#000000" d="M147.4,-39.3C155.48,-41.23 164.51,-43.38 173.1,-45.43"/>
-<polygon fill="#000000" stroke="#000000" points="172.38,-48.86 182.92,-47.78 174,-42.05 172.38,-48.86"/>
+<path fill="none" stroke="#000000" d="M172.21,-33C180.71,-33 189.37,-33 197.93,-33"/>
+<polygon fill="#000000" stroke="#000000" points="197.93,-36.5 207.93,-33 197.93,-29.5 197.93,-36.5"/>
 </g>
 <!-- proc~dbsgq8 -->
-<g id="proc~~db1fqad~~CallsGraph_node4" class="node">
+<g id="proc~~db1fqad~~CallsGraph_node3" class="node">
 <title>proc~dbsgq8</title>
-<g id="a_proc~~db1fqad~~CallsGraph_node4"><a xlink:href=".././proc/dbsgq8.html" xlink:title="dbsgq8">
-<polygon fill="#d9534f" stroke="#d9534f" points="237,-24 183,-24 183,0 237,0 237,-24"/>
-<text text-anchor="middle" x="210" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbsgq8</text>
+<g id="a_proc~~db1fqad~~CallsGraph_node3"><a xlink:href=".././proc/dbsgq8.html" xlink:title="bspline_sub_module::dbsgq8">
+<polygon fill="#d9534f" stroke="#d9534f" points="577,-66 410,-66 410,-42 577,-42 577,-66"/>
+<text text-anchor="middle" x="493.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbsgq8</text>
 </a>
 </g>
 </g>
 <!-- proc~dbfqad&#45;&gt;proc~dbsgq8 -->
-<g id="proc~~db1fqad~~CallsGraph_edge3" class="edge">
+<g id="proc~~db1fqad~~CallsGraph_edge2" class="edge">
 <title>proc~dbfqad&#45;&gt;proc~dbsgq8</title>
-<path fill="none" stroke="#000000" d="M147.4,-26.7C155.48,-24.77 164.51,-22.62 173.1,-20.57"/>
-<polygon fill="#000000" stroke="#000000" points="174,-23.95 182.92,-18.22 172.38,-17.14 174,-23.95"/>
+<path fill="none" stroke="#000000" d="M374.13,-41.6C382.6,-42.49 391.25,-43.4 399.83,-44.29"/>
+<polygon fill="#000000" stroke="#000000" points="399.54,-47.78 409.85,-45.34 400.27,-40.82 399.54,-47.78"/>
+</g>
+<!-- proc~dintrv -->
+<g id="proc~~db1fqad~~CallsGraph_node4" class="node">
+<title>proc~dintrv</title>
+<g id="a_proc~~db1fqad~~CallsGraph_node4"><a xlink:href=".././proc/dintrv.html" xlink:title="bspline_sub_module::dintrv">
+<polygon fill="#d9534f" stroke="#d9534f" points="573,-24 414,-24 414,0 573,0 573,-24"/>
+<text text-anchor="middle" x="493.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dintrv</text>
+</a>
+</g>
+</g>
+<!-- proc~dbfqad&#45;&gt;proc~dintrv -->
+<g id="proc~~db1fqad~~CallsGraph_edge3" class="edge">
+<title>proc~dbfqad&#45;&gt;proc~dintrv</title>
+<path fill="none" stroke="#000000" d="M374.13,-24.4C383.84,-23.38 393.79,-22.34 403.59,-21.31"/>
+<polygon fill="#000000" stroke="#000000" points="404.15,-24.77 413.73,-20.25 403.42,-17.81 404.15,-24.77"/>
 </g>
 <!-- proc~get_temp_x_for_extrap -->
 <g id="proc~~db1fqad~~CallsGraph_node5" class="node">
 <title>proc~get_temp_x_for_extrap</title>
-<g id="a_proc~~db1fqad~~CallsGraph_node5"><a xlink:href=".././proc/get_temp_x_for_extrap.html" xlink:title="get_temp_x_for_extrap">
-<polygon fill="#d94e8f" stroke="#d94e8f" points="406,-66 273,-66 273,-42 406,-42 406,-66"/>
-<text text-anchor="middle" x="339.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_temp_x_for_extrap</text>
+<g id="a_proc~~db1fqad~~CallsGraph_node5"><a xlink:href=".././proc/get_temp_x_for_extrap.html" xlink:title="bspline_sub_module::get_temp_x_for_extrap">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="862,-24 613,-24 613,0 862,0 862,-24"/>
+<text text-anchor="middle" x="737.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::get_temp_x_for_extrap</text>
 </a>
 </g>
 </g>
 <!-- proc~dintrv&#45;&gt;proc~get_temp_x_for_extrap -->
 <g id="proc~~db1fqad~~CallsGraph_edge4" class="edge">
 <title>proc~dintrv&#45;&gt;proc~get_temp_x_for_extrap</title>
-<path fill="none" stroke="#000000" d="M237.11,-54C244.81,-54 253.66,-54 262.85,-54"/>
-<polygon fill="#000000" stroke="#000000" points="262.92,-57.5 272.92,-54 262.92,-50.5 262.92,-57.5"/>
+<path fill="none" stroke="#000000" d="M573.07,-12C582.59,-12 592.52,-12 602.56,-12"/>
+<polygon fill="#000000" stroke="#000000" points="602.64,-15.5 612.64,-12 602.64,-8.5 602.64,-15.5"/>
 </g>
 </g>
 </svg>
-</div><div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div><div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="-graph-help-label">Graph Key</h4></div><div class="modal-body">
-    <p>Nodes of different colours represent the following: </p>
-    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+</div>                <script>
+                  var panprocdb1fqadCallsGraph = svgPanZoom('#procdb1fqadCallsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>        <div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div>
+          <div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                </div>
+              <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Generated by graphviz version 2.43.0 (0)
@@ -508,13 +533,15 @@ the machine</p>
 </g>
 </svg>
 
-    
-    <p>Solid arrows point from a procedure to one which it calls. Dashed 
-    arrows point from an interface to procedures which implement that interface.
-    This could include the module procedures in a generic interface or the
-    implementation in a submodule of an interface in a parent module.
-    </p>
-    </div></div></div></div>
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="panel panel-default">
@@ -528,37 +555,47 @@ the machine</p>
 <!-- Generated by graphviz version 2.43.0 (0)
  -->
 <!-- Title: proc~~db1fqad~~CalledByGraph Pages: 1 -->
-<svg id="procdb1fqadCalledByGraph" width="177pt" height="32pt"
- viewBox="0.00 0.00 177.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg id="procdb1fqadCalledByGraph" width="469pt" height="32pt"
+ viewBox="0.00 0.00 469.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="proc~~db1fqad~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
 <title>proc~~db1fqad~~CalledByGraph</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 173,-28 173,4 -4,4"/>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 465,-28 465,4 -4,4"/>
 <!-- proc~db1fqad -->
 <g id="proc~~db1fqad~~CalledByGraph_node1" class="node">
 <title>proc~db1fqad</title>
-<polygon fill="none" stroke="black" points="169,-24 112,-24 112,0 169,0 169,-24"/>
-<text text-anchor="middle" x="140.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">db1fqad</text>
+<polygon fill="none" stroke="black" points="461,-24 289,-24 289,0 461,0 461,-24"/>
+<text text-anchor="middle" x="375" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">bspline_sub_module::db1fqad</text>
 </g>
 <!-- proc~fintegral_1d -->
 <g id="proc~~db1fqad~~CalledByGraph_node2" class="node">
 <title>proc~fintegral_1d</title>
-<g id="a_proc~~db1fqad~~CalledByGraph_node2"><a xlink:href=".././proc/fintegral_1d.html" xlink:title="fintegral_1d">
-<polygon fill="#d9534f" stroke="#d9534f" points="76,-24 0,-24 0,0 76,0 76,-24"/>
-<text text-anchor="middle" x="38" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">fintegral_1d</text>
+<g id="a_proc~~db1fqad~~CalledByGraph_node2"><a xlink:href=".././proc/fintegral_1d.html" xlink:title="bspline_oo_module::bspline_1d%fintegral_1d">
+<polygon fill="#d9534f" stroke="#d9534f" points="253,-24 0,-24 0,0 253,0 253,-24"/>
+<text text-anchor="middle" x="126.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_1d%fintegral_1d</text>
 </a>
 </g>
 </g>
 <!-- proc~fintegral_1d&#45;&gt;proc~db1fqad -->
 <g id="proc~~db1fqad~~CalledByGraph_edge1" class="edge">
 <title>proc~fintegral_1d&#45;&gt;proc~db1fqad</title>
-<path fill="none" stroke="#000000" d="M76.14,-12C84.47,-12 93.32,-12 101.69,-12"/>
-<polygon fill="#000000" stroke="#000000" points="101.94,-15.5 111.94,-12 101.94,-8.5 101.94,-15.5"/>
+<path fill="none" stroke="#000000" d="M253.28,-12C261.8,-12 270.31,-12 278.63,-12"/>
+<polygon fill="#000000" stroke="#000000" points="278.69,-15.5 288.69,-12 278.69,-8.5 278.69,-15.5"/>
 </g>
 </g>
 </svg>
-</div><div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div><div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="-graph-help-label">Graph Key</h4></div><div class="modal-body">
-    <p>Nodes of different colours represent the following: </p>
-    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+</div>        <div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div>
+          <div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                </div>
+              <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Generated by graphviz version 2.43.0 (0)
@@ -608,13 +645,15 @@ the machine</p>
 </g>
 </svg>
 
-    
-    <p>Solid arrows point from a procedure to one which it calls. Dashed 
-    arrows point from an interface to procedures which implement that interface.
-    This could include the module procedures in a generic interface or the
-    implementation in a submodule of an interface in a parent module.
-    </p>
-    </div></div></div></div>
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <br>
@@ -698,50 +737,50 @@ the machine</p>
     </div>
   </div>
 
-    <hr>    
+      <hr>
     </div> <!-- /container -->
     <footer>
       <div class="container">
-      <div class="row">
-        <div class="col-xs-6 col-md-6"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2023 
+        <div class="row">
+          <div class="col-xs-6 col-md-6"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2023 
 </p>
+          </div>
+          <div class="col-xs-6 col-md-6">
+            <p class="text-right">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
         </div>
-        <div class="col-xs-6 col-md-6">
-          <p class="text-right">
-            Documentation generated by 
-            <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
-          </p>
-        </div>
-      </div>
-      <br>
-      </div> <!-- /container -->    
+        <br>
+      </div> <!-- /container -->
     </footer>
 
     <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-<!--
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
--->
-    <script src="../js/bootstrap.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../js/ie10-viewport-bug-workaround.js"></script>
+         ================================================== -->
+         <!-- Placed at the end of the document so the pages load faster -->
+    <!--
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        -->
+        <script src="../js/bootstrap.min.js"></script>
+        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <script src="../js/ie10-viewport-bug-workaround.js"></script>
 
-    <!-- MathJax JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
-        jax: ['input/TeX','input/MathML','output/HTML-CSS'],
-        extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
-      });
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    
-    <script src="../tipuesearch/tipuesearch_content.js"></script>
-    <script src="../tipuesearch/tipuesearch_set.js"></script>
-    <script src="../tipuesearch/tipuesearch.js"></script>
-    
+        <!-- MathJax JavaScript
+             ================================================== -->
+             <!-- Placed at the end of the document so the pages load faster -->
+        <script type="text/x-mathjax-config">
+          MathJax.Hub.Config({
+          TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
+          jax: ['input/TeX','input/MathML','output/HTML-CSS'],
+          extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
+          });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+          <script src="../tipuesearch/tipuesearch_content.js"></script>
+          <script src="../tipuesearch/tipuesearch_set.js"></script>
+          <script src="../tipuesearch/tipuesearch.js"></script>
+
   </body>
 </html>
