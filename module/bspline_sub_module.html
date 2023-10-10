@@ -102,7 +102,7 @@
           <li id="statements"><i class="fa fa-list-ol"></i>
             <a data-toggle="tooltip"
                data-placement="bottom" data-html="true"
-               title="37.5% of total for modules and submodules.">2473 statements</a>
+               title="37.5% of total for modules and submodules.">2474 statements</a>
           </li>
 
             <li id="source-file">
@@ -138,6 +138,7 @@
       </div>
       <div id="vars-0" class="panel-collapse collapse">
         <div class="list-group">
+            <a class="list-group-item" href="../module/bspline_sub_module.html#variable-bspline_order_linear">bspline_order_linear</a>
             <a class="list-group-item" href="../module/bspline_sub_module.html#variable-bspline_order_quadratic">bspline_order_quadratic</a>
             <a class="list-group-item" href="../module/bspline_sub_module.html#variable-bspline_order_cubic">bspline_order_cubic</a>
             <a class="list-group-item" href="../module/bspline_sub_module.html#variable-bspline_order_quartic">bspline_order_quartic</a>
@@ -573,6 +574,7 @@ modules which it uses.
       </div>
       <div id="vars-1" class="panel-collapse collapse">
         <div class="list-group">
+            <a class="list-group-item" href="../module/bspline_sub_module.html#variable-bspline_order_linear">bspline_order_linear</a>
             <a class="list-group-item" href="../module/bspline_sub_module.html#variable-bspline_order_quadratic">bspline_order_quadratic</a>
             <a class="list-group-item" href="../module/bspline_sub_module.html#variable-bspline_order_cubic">bspline_order_cubic</a>
             <a class="list-group-item" href="../module/bspline_sub_module.html#variable-bspline_order_quartic">bspline_order_quartic</a>
@@ -700,6 +702,25 @@ modules which it uses.
 <th></th><th>Initial</th>        <th></th>
     </thead>
     <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-bspline_order_linear"></span>
+              integer(kind=ip),
+            </td>
+              <td>public,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>bspline_order_linear</strong></td>
+<td> =</td>
+                <td>2_ip</td>
+            <td>
+                <p>spline order <code>k</code> parameter
+(for input to the <code>db*ink</code> routines)
+[order = polynomial degree + 1]</p>
+            </td>
+        </tr>
         <tr>
             <td>
               <span class="anchor" id="variable-bspline_order_quadratic"></span>
@@ -970,7 +991,7 @@ contain the function value at the point <code>x(i)</code></p>
             <td><strong>tx</strong></td>
             <td>
 <p>The <code>(nx+kx)</code> knots in the <script type="math/tex">x</script> direction
-for the spline interpolant:</p><a href="../proc/db1ink_default.html#variable-tx" class="pull-right"><emph>Read more&hellip;</emph></a>
+for the spline interpolant:</p><a href="../proc/db1ink_default.html#variable-tx~19" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -1000,7 +1021,7 @@ for the spline interpolant:</p><a href="../proc/db1ink_default.html#variable-tx"
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db1ink_default.html#variable-iflag~3" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db1ink_default.html#variable-iflag~26" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -1217,7 +1238,7 @@ and in increasing order</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db1ink_alt.html#variable-iflag~4" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db1ink_alt.html#variable-iflag~27" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -1450,7 +1471,7 @@ and in increasing order</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db1ink_alt_2.html#variable-iflag~5" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db1ink_alt_2.html#variable-iflag~28" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -1634,7 +1655,7 @@ in the <script type="math/tex">x</script> direction. (same as in last call to <a
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db1val_default.html#variable-iflag~6" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db1val_default.html#variable-iflag~29" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -1845,7 +1866,7 @@ in the <script type="math/tex">x</script> direction.</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db1val_alt.html#variable-iflag~7" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db1val_alt.html#variable-iflag~30" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -2314,7 +2335,7 @@ contain the function value at the point <code>x(i)</code></p>
             <td><strong>tx</strong></td>
             <td>
 <p>The <code>(nx+kx)</code> knots in the <script type="math/tex">x</script> direction
-for the spline interpolant:</p><a href="../proc/db1ink_default.html#variable-tx" class="pull-right"><emph>Read more&hellip;</emph></a>
+for the spline interpolant:</p><a href="../proc/db1ink_default.html#variable-tx~19" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -2344,7 +2365,7 @@ for the spline interpolant:</p><a href="../proc/db1ink_default.html#variable-tx"
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db1ink_default.html#variable-iflag~3" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db1ink_default.html#variable-iflag~26" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -2553,7 +2574,7 @@ and in increasing order</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db1ink_alt.html#variable-iflag~4" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db1ink_alt.html#variable-iflag~27" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -2778,7 +2799,7 @@ and in increasing order</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db1ink_alt_2.html#variable-iflag~5" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db1ink_alt_2.html#variable-iflag~28" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -2930,7 +2951,7 @@ in the <script type="math/tex">x</script> direction. (same as in last call to <a
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db1val_default.html#variable-iflag~6" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db1val_default.html#variable-iflag~29" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -3142,7 +3163,7 @@ in the <script type="math/tex">x</script> direction.</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db1val_alt.html#variable-iflag~7" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db1val_alt.html#variable-iflag~30" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -3338,7 +3359,7 @@ and must not be changed by the user.</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db1sqad.html#variable-iflag~8" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db1sqad.html#variable-iflag~31" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -3552,7 +3573,7 @@ the machine</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db1fqad.html#variable-iflag~9" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db1fqad.html#variable-iflag~32" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -3738,7 +3759,7 @@ point (<code>x(i)</code>,<code>y(j)</code>)</p>
             <td><strong>tx</strong></td>
             <td>
 <p>The <code>(nx+kx)</code> knots in the <script type="math/tex">x</script> direction for the spline
-interpolant.</p><a href="../proc/db2ink.html#variable-tx~8" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db2ink.html#variable-tx~26" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -3754,7 +3775,7 @@ interpolant.</p><a href="../proc/db2ink.html#variable-tx~8" class="pull-right"><
             <td><strong>ty</strong></td>
             <td>
 <p>The <code>(ny+ky)</code> knots in the <script type="math/tex">y</script> direction for the spline
-interpolant.</p><a href="../proc/db2ink.html#variable-ty" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db2ink.html#variable-ty~16" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -3784,7 +3805,7 @@ interpolant.</p><a href="../proc/db2ink.html#variable-ty" class="pull-right"><em
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<a href="../proc/db2ink.html#variable-iflag~10" class="pull-right"><emph>Read more&hellip;</emph></a>
+<a href="../proc/db2ink.html#variable-iflag~33" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -4018,7 +4039,7 @@ polynomial in the <script type="math/tex">y</script> direction.
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db2val.html#variable-iflag~11" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db2val.html#variable-iflag~34" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -4334,7 +4355,7 @@ contain the function value at the point (<code>x(i)</code>,<code>y(j)</code>,<co
             <td><strong>tx</strong></td>
             <td>
 <p>The <code>(nx+kx)</code> knots in the <script type="math/tex">x</script> direction for the spline
-interpolant.</p><a href="../proc/db3ink.html#variable-tx~10" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db3ink.html#variable-tx~28" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -4350,7 +4371,7 @@ interpolant.</p><a href="../proc/db3ink.html#variable-tx~10" class="pull-right">
             <td><strong>ty</strong></td>
             <td>
 <p>The <code>(ny+ky)</code> knots in the <script type="math/tex">y</script> direction for the spline
-interpolant.</p><a href="../proc/db3ink.html#variable-ty~3" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db3ink.html#variable-ty~18" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -4366,7 +4387,7 @@ interpolant.</p><a href="../proc/db3ink.html#variable-ty~3" class="pull-right"><
             <td><strong>tz</strong></td>
             <td>
 <p>The <code>(nz+kz)</code> knots in the <script type="math/tex">z</script> direction for the spline
-interpolant.</p><a href="../proc/db3ink.html#variable-tz" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db3ink.html#variable-tz~13" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -4396,7 +4417,7 @@ interpolant.</p><a href="../proc/db3ink.html#variable-tz" class="pull-right"><em
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<a href="../proc/db3ink.html#variable-iflag~12" class="pull-right"><emph>Read more&hellip;</emph></a>
+<a href="../proc/db3ink.html#variable-iflag~35" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -4708,7 +4729,7 @@ in the <script type="math/tex">z</script> direction. (same as in last call to <a
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db3val.html#variable-iflag~13" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db3val.html#variable-iflag~36" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -5121,7 +5142,7 @@ and must not be changed by the user.</p>
             <td><strong>tx</strong></td>
             <td>
 <p>The <code>(nx+kx)</code> knots in the x direction for the spline
-interpolant.</p><a href="../proc/db4ink.html#variable-tx~12" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db4ink.html#variable-tx~30" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -5137,7 +5158,7 @@ interpolant.</p><a href="../proc/db4ink.html#variable-tx~12" class="pull-right">
             <td><strong>ty</strong></td>
             <td>
 <p>The <code>(ny+ky)</code> knots in the y direction for the spline
-interpolant.</p><a href="../proc/db4ink.html#variable-ty~5" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db4ink.html#variable-ty~20" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -5153,7 +5174,7 @@ interpolant.</p><a href="../proc/db4ink.html#variable-ty~5" class="pull-right"><
             <td><strong>tz</strong></td>
             <td>
 <p>The <code>(nz+kz)</code> knots in the z direction for the spline
-interpolant.</p><a href="../proc/db4ink.html#variable-tz~3" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db4ink.html#variable-tz~15" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -5169,7 +5190,7 @@ interpolant.</p><a href="../proc/db4ink.html#variable-tz~3" class="pull-right"><
             <td><strong>tq</strong></td>
             <td>
 <p>The <code>(nq+kq)</code> knots in the q direction for the spline
-interpolant.</p><a href="../proc/db4ink.html#variable-tq" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db4ink.html#variable-tq~10" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -5200,7 +5221,7 @@ interpolant.</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<a href="../proc/db4ink.html#variable-iflag~14" class="pull-right"><emph>Read more&hellip;</emph></a>
+<a href="../proc/db4ink.html#variable-iflag~37" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -5596,7 +5617,7 @@ in the <script type="math/tex">q</script> direction. (same as in last call to
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db4val.html#variable-iflag~15" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db4val.html#variable-iflag~38" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -6100,7 +6121,7 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
             <td><strong>tx</strong></td>
             <td>
 <p>The <code>(nx+kx)</code> knots in the <script type="math/tex">x</script> direction for the spline
-interpolant.</p><a href="../proc/db5ink.html#variable-tx~14" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db5ink.html#variable-tx~32" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -6116,7 +6137,7 @@ interpolant.</p><a href="../proc/db5ink.html#variable-tx~14" class="pull-right">
             <td><strong>ty</strong></td>
             <td>
 <p>The <code>(ny+ky)</code> knots in the <script type="math/tex">y</script> direction for the spline
-interpolant.</p><a href="../proc/db5ink.html#variable-ty~7" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db5ink.html#variable-ty~22" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -6132,7 +6153,7 @@ interpolant.</p><a href="../proc/db5ink.html#variable-ty~7" class="pull-right"><
             <td><strong>tz</strong></td>
             <td>
 <p>The <code>(nz+kz)</code> knots in the <script type="math/tex">z</script> direction for the spline
-interpolant.</p><a href="../proc/db5ink.html#variable-tz~5" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db5ink.html#variable-tz~17" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -6148,7 +6169,7 @@ interpolant.</p><a href="../proc/db5ink.html#variable-tz~5" class="pull-right"><
             <td><strong>tq</strong></td>
             <td>
 <p>The <code>(nq+kq)</code> knots in the <script type="math/tex">q</script> direction for the spline
-interpolant.</p><a href="../proc/db5ink.html#variable-tq~3" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db5ink.html#variable-tq~12" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -6164,7 +6185,7 @@ interpolant.</p><a href="../proc/db5ink.html#variable-tq~3" class="pull-right"><
             <td><strong>tr</strong></td>
             <td>
 <p>The <code>(nr+kr)</code> knots in the <script type="math/tex">r</script> direction for the spline
-interpolant.</p><a href="../proc/db5ink.html#variable-tr" class="pull-right"><emph>Read more&hellip;</emph></a>
+interpolant.</p><a href="../proc/db5ink.html#variable-tr~7" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -6195,7 +6216,7 @@ interpolant.</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<a href="../proc/db5ink.html#variable-iflag~16" class="pull-right"><emph>Read more&hellip;</emph></a>
+<a href="../proc/db5ink.html#variable-iflag~39" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -6672,7 +6693,7 @@ in the <script type="math/tex">r</script> direction.
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db5val.html#variable-iflag~17" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db5val.html#variable-iflag~40" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -7279,7 +7300,7 @@ function value at the point
             <td><strong>tx</strong></td>
             <td>
 <p>The <code>(nx+kx)</code> knots in the <script type="math/tex">x</script> direction for the
-spline interpolant.</p><a href="../proc/db6ink.html#variable-tx~16" class="pull-right"><emph>Read more&hellip;</emph></a>
+spline interpolant.</p><a href="../proc/db6ink.html#variable-tx~34" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -7295,7 +7316,7 @@ spline interpolant.</p><a href="../proc/db6ink.html#variable-tx~16" class="pull-
             <td><strong>ty</strong></td>
             <td>
 <p>The <code>(ny+ky)</code> knots in the <script type="math/tex">y</script> direction for the
-spline interpolant.</p><a href="../proc/db6ink.html#variable-ty~9" class="pull-right"><emph>Read more&hellip;</emph></a>
+spline interpolant.</p><a href="../proc/db6ink.html#variable-ty~24" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -7311,7 +7332,7 @@ spline interpolant.</p><a href="../proc/db6ink.html#variable-ty~9" class="pull-r
             <td><strong>tz</strong></td>
             <td>
 <p>The <code>(nz+kz)</code> knots in the <script type="math/tex">z</script> direction for the
-spline interpolant.</p><a href="../proc/db6ink.html#variable-tz~7" class="pull-right"><emph>Read more&hellip;</emph></a>
+spline interpolant.</p><a href="../proc/db6ink.html#variable-tz~19" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -7327,7 +7348,7 @@ spline interpolant.</p><a href="../proc/db6ink.html#variable-tz~7" class="pull-r
             <td><strong>tq</strong></td>
             <td>
 <p>The <code>(nq+kq)</code> knots in the <script type="math/tex">q</script> direction for the
-spline interpolant.</p><a href="../proc/db6ink.html#variable-tq~5" class="pull-right"><emph>Read more&hellip;</emph></a>
+spline interpolant.</p><a href="../proc/db6ink.html#variable-tq~14" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -7343,7 +7364,7 @@ spline interpolant.</p><a href="../proc/db6ink.html#variable-tq~5" class="pull-r
             <td><strong>tr</strong></td>
             <td>
 <p>The <code>(nr+kr)</code> knots in the <script type="math/tex">r</script> direction for the
-spline interpolant.</p><a href="../proc/db6ink.html#variable-tr~3" class="pull-right"><emph>Read more&hellip;</emph></a>
+spline interpolant.</p><a href="../proc/db6ink.html#variable-tr~9" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -7359,7 +7380,7 @@ spline interpolant.</p><a href="../proc/db6ink.html#variable-tr~3" class="pull-r
             <td><strong>ts</strong></td>
             <td>
 <p>The <code>(ns+ks)</code> knots in the <script type="math/tex">s</script> direction for the
-spline interpolant.</p><a href="../proc/db6ink.html#variable-ts" class="pull-right"><emph>Read more&hellip;</emph></a>
+spline interpolant.</p><a href="../proc/db6ink.html#variable-ts~4" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -7390,7 +7411,7 @@ b-spline interpolant.</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<a href="../proc/db6ink.html#variable-iflag~18" class="pull-right"><emph>Read more&hellip;</emph></a>
+<a href="../proc/db6ink.html#variable-iflag~41" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -7948,7 +7969,7 @@ in the <script type="math/tex">s</script> direction.
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/db6val.html#variable-iflag~19" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/db6val.html#variable-iflag~42" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -9314,7 +9335,7 @@ call dbnslv(q,2k-1,n,k-1,k-1,bcoef)</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<a href="../proc/dbintk.html#variable-iflag~20" class="pull-right"><emph>Read more&hellip;</emph></a>
+<a href="../proc/dbintk.html#variable-iflag~43" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -9746,7 +9767,7 @@ variables and can be used for other purposes.</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<a href="../proc/dbspvn.html#variable-iflag~22" class="pull-right"><emph>Read more&hellip;</emph></a>
+<a href="../proc/dbspvn.html#variable-iflag~45" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -9922,7 +9943,7 @@ distinct <code>inbv</code> parameters.</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/dbvalu.html#variable-iflag~23" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/dbvalu.html#variable-iflag~46" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -10365,7 +10386,7 @@ order to be supplied by the user.</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/dbint4.html#variable-iflag~24" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/dbint4.html#variable-iflag~47" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -10542,7 +10563,7 @@ at <code>x</code> and their derivatives columnwise.</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/dbspvd.html#variable-iflag~25" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/dbspvd.html#variable-iflag~48" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -10708,7 +10729,7 @@ in <code>t(k) &lt;= x &lt;= t(n+1)</code></p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/dbsqad.html#variable-iflag~26" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/dbsqad.html#variable-iflag~49" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
     </tbody>
@@ -10908,7 +10929,7 @@ the machine</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag:</p><a href="../proc/dbfqad.html#variable-iflag~27" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>status flag:</p><a href="../proc/dbfqad.html#variable-iflag~50" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
@@ -11137,7 +11158,7 @@ the integral of the absolute value of
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>a status code:</p><a href="../proc/dbsgq8.html#variable-iflag~28" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>a status code:</p><a href="../proc/dbsgq8.html#variable-iflag~51" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
