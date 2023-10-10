@@ -38,8 +38,6 @@
     inbvx = 1
     iloy  = 1
 
-    ! the low-level routines are given the wrong result? check this...
-
     ! initialize
     call b2%initialize(x,fcn_1d,2,iflag,extrap=.true.) ! linear
     if (iflag/=0) error stop 'Error initializing 1D linear spline: '//get_status_message(iflag)
