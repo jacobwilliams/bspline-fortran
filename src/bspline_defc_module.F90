@@ -22,14 +22,11 @@
 !### History
 !  * Dec 2022 (Jacob Williams) : Cleanup and modernization of the SLATEC routines.
 !
-!@note This module does not support the user-defined `ip` integer kind.
-!      It only uses the default integer kind.
-!
 !@todo add `iflag` outputs to be consistent with the rest of the library.
 
 module bspline_defc_module
 
-   use bspline_kinds_module, only: wp !, ip
+   use bspline_kinds_module, only: wp, ip
 #ifndef HAS_BLAS
    use bspline_blas_module
 #endif
@@ -43,7 +40,7 @@ module bspline_defc_module
 #ifdef HAS_BLAS
    ! user is linking against an external BLAS library
    double precision,external :: ddot, dasum
-   integer,external :: idamax
+   integer(ip),external :: idamax
    external :: daxpy,dcopy,dscal,dswap,dnrm2,drotm,drotmg
 #endif
 
@@ -105,7 +102,7 @@ module bspline_defc_module
    subroutine defc(Ndata, Xdata, Ydata, Sddata, Nord, Nbkpt, Bkpt, Mdein, &
                    Mdeout, Coeff, Lw, w)
 
-      integer,intent(in) :: Ndata !! number of points (size of `xdata` and `ydata`).
+      integer(ip),intent(in) :: Ndata !! number of points (size of `xdata` and `ydata`).
                                   !! Any non-negative value of `NDATA` is allowed.
                                   !! A negative value of `NDATA` is an error.
       real(wp),dimension(ndata), intent(in) :: Xdata !! X data array. No sorting of `XDATA(*)` is required.
@@ -115,14 +112,14 @@ module bspline_defc_module
                                                       !! `SDDATA(*)` will weight that data point as 1.
                                                       !! Otherwise the weight of that data point is
                                                       !! the reciprocal of this entry.
-      integer,intent(in) :: Nord !! B-spline order.
+      integer(ip),intent(in) :: Nord !! B-spline order.
                                  !! (The order of the spline is one more than the
                                  !! degree of the piecewise polynomial defined on
                                  !! each interval.  This is consistent with the
                                  !! B-spline package convention.  For example,
                                  !! `NORD=4` when we are using piecewise cubics.)
                                  !! `NORD` must be in the range `1 <= NORD <= 20`.
-      integer,intent(in) :: Nbkpt !! The value of `NBKPT` must satisfy the condition `NBKPT >= 2*NORD`.
+      integer(ip),intent(in) :: Nbkpt !! The value of `NBKPT` must satisfy the condition `NBKPT >= 2*NORD`.
       real(wp),dimension(:),intent(in) :: Bkpt !! `NBKPT` knots of the B-spline.
                                      !! Normally the
                                      !! problem data interval will be included between
@@ -136,7 +133,7 @@ module bspline_defc_module
                                      !! accommodate any data values that are exterior
                                      !! to the given knot values.  The contents of
                                      !! `BKPT(*)` is not changed.
-      integer,intent(in) :: Mdein !! An integer flag, with one of two possible
+      integer(ip),intent(in) :: Mdein !! An integer flag, with one of two possible
                                   !! values (1 or 2), that directs the subprogram
                                   !! action with regard to new data points provided
                                   !! by the user:
@@ -151,7 +148,7 @@ module bspline_defc_module
                                   !!   (When using [[DEFC]] with MDEIN=2 it is
                                   !!   important that the set of knots remain fixed at the
                                   !!   same values for all entries to [[DEFC]].)
-      integer,intent(out) :: Mdeout !! An output flag that indicates the status
+      integer(ip),intent(out) :: Mdeout !! An output flag that indicates the status
                                     !! of the curve fit:
                                     !!
                                     !!  * `=-1`  A usage error of [[DEFC]] occurred.  The
@@ -192,7 +189,7 @@ module bspline_defc_module
                                        !! to [[DFC]] with the "old problem" designation.
                                        !! The user should read the usage instructions
                                        !! for subprogram [[DFC]] for further details.
-      integer,intent(in) :: Lw !! The amount of working storage actually
+      integer(ip),intent(in) :: Lw !! The amount of working storage actually
                                !! allocated for the working array `W(*)`.
                                !! This quantity is compared with the
                                !! actual amount of storage needed in [[DEFC]].
@@ -217,7 +214,7 @@ module bspline_defc_module
                        !! `W(*)` are acceptable as direct input to [[DFC]]
                        !! for an "old problem" only when `MDEOUT=1` or `2`.
 
-      integer :: lbf, lbkpt, lg, lptemp, lww, lxtemp, mdg, mdw
+      integer(ip) :: lbf, lbkpt, lg, lptemp, lww, lxtemp, mdg, mdw
 
       ! LWW=1               USAGE IN DEFCMN( ) OF W(*)..
       ! LWW,...,LG-1        W(*,*)
@@ -264,16 +261,16 @@ module bspline_defc_module
                      Mdein, Mdeout, Coeff, Bf, Xtemp, Ptemp, Bkpt, g, Mdg, w, &
                      Mdw, Lw)
 
-      integer :: Lw, Mdein, Mdeout, Mdg, Mdw, Nbkpt, Ndata, Nord
+      integer(ip) :: Lw, Mdein, Mdeout, Mdg, Mdw, Nbkpt, Ndata, Nord
       real(wp) :: Bf(Nord, *), Bkpt(*), Bkptin(*), Coeff(*), &
                   g(Mdg, *), Ptemp(*), Sddata(*), w(Mdw, *), &
                   Xdata(*), Xtemp(*), Ydata(*)
 
       real(wp) :: rnorm, xmax, xmin, xval
-      integer :: i, idata, ileft, intseq, ip, ir, irow, l, mt, n, &
+      integer(ip) :: i, idata, ileft, intseq, ipp, ir, irow, l, mt, n, &
                  nb, nordm1, nordp1, np1
       character(len=8) :: xern1, xern2
-      integer :: dfspvn_j
+      integer(ip) :: dfspvn_j
       real(wp), dimension(20) :: dfspvn_deltam, dfspvn_deltap
 
       ! Initialize variables and analyze input.
@@ -367,7 +364,7 @@ module bspline_defc_module
       ! Initialize parameters of banded matrix processor, DBNDAC( ).
 
       mt = 0
-      ip = 1
+      ipp = 1
       ir = 1
       ileft = Nord
       intseq = 1
@@ -381,7 +378,7 @@ module bspline_defc_module
          ! When interval changes, process equations in the last block.
 
          if (xval >= Bkpt(ileft + 1)) then
-            call dbndac(g, Mdg, Nord, ip, ir, mt, ileft - nordm1)
+            call dbndac(g, Mdg, Nord, ipp, ir, mt, ileft - nordm1)
             mt = 0
 
             ! Move pointer up to have BKPT(ILEFT)<=XVAL, ILEFT<=N.
@@ -393,7 +390,7 @@ module bspline_defc_module
                   !  Transfer previously accumulated rows from W(*,*) to
                   !  G(*,*) and process them.
                   call dcopy(nordp1, w(intseq, 1), Mdw, g(ir, 1), Mdg)
-                  call dbndac(g, Mdg, Nord, ip, ir, 1, intseq)
+                  call dbndac(g, Mdg, Nord, ipp, ir, 1, intseq)
                   intseq = intseq + 1
                end if
             end do
@@ -418,14 +415,14 @@ module bspline_defc_module
          ! When staging work area is exhausted, process rows.
 
          if (irow == Mdg - 1) then
-            call dbndac(g, Mdg, Nord, ip, ir, mt, ileft - nordm1)
+            call dbndac(g, Mdg, Nord, ipp, ir, mt, ileft - nordm1)
             mt = 0
          end if
       end do
 
       ! Process last block of equations.
 
-      call dbndac(g, Mdg, Nord, ip, ir, mt, ileft - nordm1)
+      call dbndac(g, Mdg, Nord, ipp, ir, mt, ileft - nordm1)
 
       ! Finish processing any previously accumulated rows from W(*,*)
       ! to G(*,*).
@@ -433,14 +430,14 @@ module bspline_defc_module
       if (Mdein == 2) then
          do i = intseq, np1
             call dcopy(nordp1, w(i, 1), Mdw, g(ir, 1), Mdg)
-            call dbndac(g, Mdg, Nord, ip, ir, 1, min(n, i))
+            call dbndac(g, Mdg, Nord, ipp, ir, 1, min(n, i))
          end do
       end if
 
       ! Last call to adjust block positioning.
 
       call dcopy(nordp1, [0.0_wp], 0, g(ir, 1), Mdg)
-      call dbndac(g, Mdg, Nord, ip, ir, 1, np1)
+      call dbndac(g, Mdg, Nord, ipp, ir, 1, np1)
 
       ! Transfer accumulated rows from G(*,*) to W(*,*) for
       ! possible later sequential accumulation.
@@ -464,7 +461,7 @@ module bspline_defc_module
       ! conditioning or the lack of constraints.  No checking
       ! for either of these is done here.
 
-      call dbndsl(1, g, Mdg, Nord, ip, ir, Coeff, n, rnorm)
+      call dbndsl(1, g, Mdg, Nord, ipp, ir, Coeff, n, rnorm)
       Mdeout = 1
 
    end subroutine defcmn
@@ -538,7 +535,7 @@ module bspline_defc_module
 !     end do
 !     mt=1
 !     jt=n+1
-!     call dbndac(g,mdg,nb,ip,ir,mt,jt)
+!     call dbndac(g,mdg,nb,ipp,ir,mt,jt)
 !```
 !
 !### References
@@ -555,11 +552,11 @@ module bspline_defc_module
 !  * 900315  CALLs to XERROR changed to CALLs to XERMSG.  (THJ)
 !  * 920501  Reformatted the REFERENCES section.  (WRB)
 
-   subroutine dbndac(g, Mdg, Nb, Ip, Ir, Mt, Jt)
+   subroutine dbndac(g, Mdg, Nb, ipp, Ir, Mt, Jt)
 
       implicit none
 
-      integer,intent(in) :: Mdg !! The number of rows in the working array
+      integer(ip),intent(in) :: Mdg !! The number of rows in the working array
                                 !! `G(*,*)`.  The value of MDG should be `>= MU`.
                                 !! The value of `MU` is defined in the abstract
                                 !! of these subprograms.
@@ -575,8 +572,8 @@ module bspline_defc_module
                                           !! The working array which will contain the
                                           !! processed rows of that part of the data
                                           !! matrix which has been passed to [[DBNDAC]].
-      integer,intent(in) :: Nb !! The bandwidth of the data matrix `A`.
-      integer,intent(inout) :: Ip !! *Input*
+      integer(ip),intent(in) :: Nb !! The bandwidth of the data matrix `A`.
+      integer(ip),intent(inout) :: ipp !! *Input*
                                   !! Set by the user to the value 1 before the
                                   !! first call to [[DBNDAC]].  Its subsequent value
                                   !! is controlled by [[DBNDAC]] to set up for the
@@ -586,7 +583,7 @@ module bspline_defc_module
                                   !! The value of this argument is advanced by
                                   !! [[DBNDAC]] to be ready for storing and processing
                                   !! a new block of data in `G(*,*)`.
-      integer,intent(inout) :: Ir !! *Input*
+      integer(ip),intent(inout) :: Ir !! *Input*
                                   !! Index of the row of `G(*,*)` where the user is
                                   !! to place the new block of data `(C F)`.  Set by
                                   !! the user to the value 1 before the first call
@@ -598,14 +595,14 @@ module bspline_defc_module
                                   !! The value of this argument is advanced by
                                   !! [[DBNDAC]] to be ready for storing and processing
                                   !! a new block of data in `G(*,*)`.
-      integer,intent(in) :: Mt !! Set by the user to indicate the
+      integer(ip),intent(in) :: Mt !! Set by the user to indicate the
                                !! number of new rows of data in the block
-      integer,intent(in) :: Jt !! Set by the user to indicate
+      integer(ip),intent(in) :: Jt !! Set by the user to indicate
                                !! the index of the first nonzero column in that
                                !! set of rows `(E F) = (0 C 0 F)` being processed.
 
       real(wp) :: rho
-      integer :: i, ie, ig, ig1, ig2, iopt, j, jg, &
+      integer(ip) :: i, ie, ig, ig1, ig2, iopt, j, jg, &
                  k, kh, l, lp1, mh, mu, nbp1, nerr
 
       real(wp), parameter :: zero = 0.0_wp
@@ -615,7 +612,7 @@ module bspline_defc_module
       nbp1 = Nb + 1
       if (Mt <= 0 .or. Nb <= 0) return
       if (.not. Mdg < Ir) then
-         if (Jt /= Ip) then
+         if (Jt /= ipp) then
             if (Jt > Ir) then
                do i = 1, Mt
                   ig1 = Jt + Mt - i
@@ -633,12 +630,12 @@ module bspline_defc_module
                end do
                Ir = Jt
             end if
-            mu = min(Nb - 1, Ir - Ip - 1)
+            mu = min(Nb - 1, Ir - ipp - 1)
             if (mu /= 0) then
                do l = 1, mu
-                  k = min(l, Jt - Ip)
+                  k = min(l, Jt - ipp)
                   lp1 = l + 1
-                  ig = Ip + l
+                  ig = ipp + l
                   do i = lp1, Nb
                      jg = i - k
                      g(ig, jg) = g(ig, i)
@@ -649,15 +646,15 @@ module bspline_defc_module
                   end do
                end do
             end if
-            Ip = Jt
+            ipp = Jt
          end if
-         mh = Ir + Mt - Ip
+         mh = Ir + Mt - ipp
          kh = min(nbp1, mh)
          do i = 1, kh
-            call dh12(1, i, max(i + 1, Ir - Ip + 1), mh, g(Ip, i), 1, &
-                      rho, g(Ip, i + 1), 1, Mdg, nbp1 - i)
+            call dh12(1, i, max(i + 1, Ir - ipp + 1), mh, g(ipp, i), 1, &
+                      rho, g(ipp, i + 1), 1, Mdg, nbp1 - i)
          end do
-         Ir = Ip + kh
+         Ir = ipp + kh
          if (kh >= nbp1) then
             do i = 1, Nb
                g(Ir - 1, i) = zero
@@ -695,13 +692,13 @@ module bspline_defc_module
 !  * 900315  CALLs to XERROR changed to CALLs to XERMSG.  (THJ)
 !  * 920501  Reformatted the REFERENCES section.  (WRB)
 
-    subroutine dbndsl(Mode, g, Mdg, Nb, Ip, Ir, x, n, Rnorm)
+    subroutine dbndsl(Mode, g, Mdg, Nb, ipp, Ir, x, n, Rnorm)
 
-      integer,intent(in) :: Mode !! Set by the user to one of the values 1, 2, or
+      integer(ip),intent(in) :: Mode !! Set by the user to one of the values 1, 2, or
                                  !! 3. These values respectively indicate that
                                  !! the solution of `AX = B`, `YR = H` or `RZ = W` is
                                  !! required.
-      integer,intent(in) :: Mdg !! The number of rows in the working array
+      integer(ip),intent(in) :: Mdg !! The number of rows in the working array
                                 !! `G(*,*)`.  The value of `MDG` should be `>= MU`.
                                 !! The value of `MU` is defined in the abstract
                                 !! of these subprograms.
@@ -712,11 +709,11 @@ module bspline_defc_module
                                        !!
                                        !! This argument has the same meaning and
                                        !! contents as following the last call to [[DBNDAC]].
-      integer,intent(in) :: Nb !! This argument has the same meaning and
+      integer(ip),intent(in) :: Nb !! This argument has the same meaning and
                                !! contents as following the last call to [[DBNDAC]].
-      integer,intent(in) :: Ip !! This argument has the same meaning and
+      integer(ip),intent(in) :: ipp !! This argument has the same meaning and
                                !! contents as following the last call to [[DBNDAC]].
-      integer,intent(in) :: Ir !! This argument has the same meaning and
+      integer(ip),intent(in) :: Ir !! This argument has the same meaning and
                                !! contents as following the last call to [[DBNDAC]].
       real(wp),intent(inout) :: x(*) !! `X(N)`
                                      !!
@@ -728,7 +725,7 @@ module bspline_defc_module
                                      !! `Y` or `Z` of the systems `AX = B`, `YR = H` or
                                      !! `RZ = W` depending on the value of `MODE`=1,
                                      !! 2 or 3.
-      integer,intent(in) :: n !! The number of variables in the solution
+      integer(ip),intent(in) :: n !! The number of variables in the solution
                               !! vector.  If any of the `N` diagonal terms are
                               !! zero the subroutine [[DBNDSL]] prints an
                               !! appropriate message.  This condition is
@@ -738,7 +735,7 @@ module bspline_defc_module
                                     !! is set to zero.
 
       real(wp) :: rsq, s
-      integer :: i, i1, i2, ie, ii, iopt, irm1, ix, j, &
+      integer(ip) :: i, i1, i2, ie, ii, iopt, irm1, ix, j, &
                  jg, l, nerr, np1
 
       real(wp), parameter :: zero = 0.0_wp
@@ -768,11 +765,11 @@ module bspline_defc_module
                   i1 = max(1, j - Nb + 1)
                   i2 = j - 1
                   do i = i1, i2
-                     l = j - i + 1 + max(0, i - Ip)
+                     l = j - i + 1 + max(0, i - ipp)
                      s = s + x(i)*g(i, l)
                   end do
                end if
-               l = max(0, j - Ip)
+               l = max(0, j - ipp)
                if (g(j, l + 1) == 0) exit main
                x(j) = (x(j) - s)/g(j, l + 1)
             end do
@@ -783,7 +780,7 @@ module bspline_defc_module
          do ii = 1, n
             i = n + 1 - ii
             s = zero
-            l = max(0, i - Ip)
+            l = max(0, i - ipp)
             if (i /= n) then
                ie = min(n + 1 - i, Nb)
                do j = 2, ie
@@ -822,16 +819,16 @@ module bspline_defc_module
    subroutine dfspvn(t, Jhigh, Index, x, Ileft, Vnikx, j, deltam, deltap)
 
       real(wp),intent(in) :: t(*)
-      integer,intent(in) :: Jhigh
-      integer,intent(in) :: Index
+      integer(ip),intent(in) :: Jhigh
+      integer(ip),intent(in) :: Index
       real(wp),intent(in) :: x
-      integer,intent(in) :: Ileft
+      integer(ip),intent(in) :: Ileft
       real(wp) :: Vnikx(*)
-      integer, intent(inout) :: j !! JW : added
+      integer(ip), intent(inout) :: j !! JW : added
       real(wp), dimension(20), intent(inout) :: deltam, deltap !! JW : added
 
       real(wp) :: vm, vmprev
-      integer :: imjp1, ipj, jp1, jp1ml, l
+      integer(ip) :: imjp1, ipj, jp1, jp1ml, l
 
       if (Index /= 2) then
          j = 1
@@ -880,13 +877,13 @@ module bspline_defc_module
 
     subroutine dh12(Mode, Lpivot, l1, m, u, Iue, Up, c, Ice, Icv, Ncv)
 
-    integer,intent(in) :: Mode !! 1 or 2   to select algorithm  H1  or  H2 .
-    integer,intent(in) :: Lpivot !! the index of the pivot element.
-    integer,intent(in) :: l1 !! If `L1 <= M` the transformation will be constructed to
+    integer(ip),intent(in) :: Mode !! 1 or 2   to select algorithm  H1  or  H2 .
+    integer(ip),intent(in) :: Lpivot !! the index of the pivot element.
+    integer(ip),intent(in) :: l1 !! If `L1 <= M` the transformation will be constructed to
                              !! zero elements indexed from `L1` through `M`. If `L1 > M`
                              !! the subroutine does an identity transformation.
-    integer,intent(in) :: m !! see `l1`
-    integer,intent(in) :: Iue !! the storage increment between elements of `U`.
+    integer(ip),intent(in) :: m !! see `l1`
+    integer(ip),intent(in) :: Iue !! the storage increment between elements of `U`.
     real(wp),intent(inout) :: u(Iue, *) !! On entry to H1 `U()` contains the pivot vector.
                                         !! On exit from H1 `U()` and `UP`
                                         !! contain quantities defining the vector `U` of the
@@ -898,12 +895,12 @@ module bspline_defc_module
                                    !! regarded as a set of vectors to which the Householder
                                    !! transformation is to be applied.  On exit `C()` contains the
                                    !! set of transformed vectors.
-    integer,intent(in) :: Ice !! Storage increment between elements of vectors in `C()`.
-    integer,intent(in) :: Icv !! Storage increment between vectors in `C()`.
-    integer,intent(in) :: Ncv !! Number of vectors in `C()` to be transformed. If `NCV <= 0`
+    integer(ip),intent(in) :: Ice !! Storage increment between elements of vectors in `C()`.
+    integer(ip),intent(in) :: Icv !! Storage increment between vectors in `C()`.
+    integer(ip),intent(in) :: Ncv !! Number of vectors in `C()` to be transformed. If `NCV <= 0`
                               !! no operations will be done on `C()`.
 
-      integer :: i, i2, i3, i4, incr, j, kl1, &
+      integer(ip) :: i, i2, i3, i4, incr, j, kl1, &
                  kl2, klp, l1m1, mml1p2
       real(wp) :: b, cl, clinv, ul1m1, sm
 
@@ -998,8 +995,8 @@ module bspline_defc_module
    subroutine dsort(n, Kflag, Dx, Dy)
       implicit none
 
-      integer, intent(in) :: n !! number of values in array DX to be sorted
-      integer, intent(in) :: Kflag !! control parameter:
+      integer(ip), intent(in) :: n !! number of values in array DX to be sorted
+      integer(ip), intent(in) :: Kflag !! control parameter:
                                    !!  * Kflag < 0 : sort DX in decreasing order and optionally carry DY along.
                                    !!  * Kflag > 0 : sort DX in increasing order and optionally carry DY along.
       real(wp), dimension(*), intent(inout) :: Dx !! array of values to be sorted   (usually abscissas)
@@ -1033,13 +1030,13 @@ module bspline_defc_module
 
    subroutine sort_ascending(n, dx, dy)
 
-      integer, intent(in) :: n
+      integer(ip), intent(in) :: n
       real(wp), dimension(*), intent(inout) :: dx !! array of values to be sorted
       real(wp), dimension(*), intent(inout), optional :: dy !! array to be (optionally) carried along
 
       logical :: carry_dy !! if `dy` is to be also sorted
 
-      integer, parameter :: max_size_for_insertion_sort = 20 !! max size for using insertion sort.
+      integer(ip), parameter :: max_size_for_insertion_sort = 20 !! max size for using insertion sort.
                                                              !! (otherwise, use quicksort)
 
 
@@ -1052,12 +1049,12 @@ module bspline_defc_module
 
          !! Sort the array (ascending order).
 
-         integer, intent(in) :: ilow
-         integer, intent(in) :: ihigh
+         integer(ip), intent(in) :: ilow
+         integer(ip), intent(in) :: ihigh
 
-         integer :: ipivot !! pivot element
-         integer :: i      !! counter
-         integer :: j      !! counter
+         integer(ip) :: ipivot !! pivot element
+         integer(ip) :: i      !! counter
+         integer(ip) :: j      !! counter
 
          if (ihigh - ilow <= max_size_for_insertion_sort .and. ihigh > ilow) then
 
@@ -1088,26 +1085,26 @@ module bspline_defc_module
 
          !! Partition the array
 
-         integer, intent(in)  :: ilow
-         integer, intent(in)  :: ihigh
-         integer, intent(out) :: ipivot
+         integer(ip), intent(in)  :: ilow
+         integer(ip), intent(in)  :: ihigh
+         integer(ip), intent(out) :: ipivot
 
-         integer :: i, ip, im
+         integer(ip) :: i, ipp, im
 
          im = (ilow + ihigh)/2
          call swap(dx(ilow), dx(im))
          if (carry_dy) call swap(dy(ilow), dy(im))
-         ip = ilow
+         ipp = ilow
          do i = ilow + 1, ihigh
             if (dx(i) < dx(ilow)) then
-               ip = ip + 1
-               call swap(dx(ip), dx(i))
-               if (carry_dy) call swap(dy(ip), dy(i))
+               ipp = ipp + 1
+               call swap(dx(ipp), dx(i))
+               if (carry_dy) call swap(dy(ipp), dy(i))
             end if
          end do
-         call swap(dx(ilow), dx(ip))
-         if (carry_dy) call swap(dy(ilow), dy(ip))
-         ipivot = ip
+         call swap(dx(ilow), dx(ipp))
+         if (carry_dy) call swap(dy(ilow), dy(ipp))
+         ipivot = ipp
 
       end subroutine partition
 
@@ -1195,7 +1192,7 @@ module bspline_defc_module
    subroutine dfc (ndata, xdata, ydata, sddata, nord, nbkpt, bkpt, &
                    nconst, xconst, yconst, nderiv, mode, coeff, w, iw)
 
-   integer, intent(in) :: ndata !! number of points (size of `xdata` and `ydata`).
+   integer(ip), intent(in) :: ndata !! number of points (size of `xdata` and `ydata`).
                                 !! Any non-negative value of `NDATA` is allowed.
                                 !! A negative value of `NDATA` is an error.
    real(wp), intent(in) :: xdata(*) !! X data array. No sorting of `XDATA(*)` is required.
@@ -1205,14 +1202,14 @@ module bspline_defc_module
                                      !! `SDDATA(*)` will weight that data point as 1.
                                      !! Otherwise the weight of that data point is
                                      !! the reciprocal of this entry.
-   integer, intent(in) :: nord !! B-spline order.
+   integer(ip), intent(in) :: nord !! B-spline order.
                                !! (The order of the spline is one more than the
                                !! degree of the piecewise polynomial defined on
                                !! each interval.  This is consistent with the
                                !! B-spline package convention.  For example,
                                !! `NORD=4` when we are using piecewise cubics.)
                                !! `NORD` must be in the range `1 <= NORD <= 20`.
-   integer,intent(in) :: Nbkpt !! The value of `NBKPT` must satisfy the condition `NBKPT >= 2*NORD`.
+   integer(ip),intent(in) :: Nbkpt !! The value of `NBKPT` must satisfy the condition `NBKPT >= 2*NORD`.
    real(wp),dimension(*),intent(in) :: Bkpt !! `NBKPT` knots of the B-spline.
                                             !! Normally the
                                             !! problem data interval will be included between
@@ -1226,7 +1223,7 @@ module bspline_defc_module
                                             !! accommodate any data values that are exterior
                                             !! to the given knot values.  The contents of
                                             !! `BKPT(*)` is not changed.
-   integer, intent(in) :: nconst !! The number of conditions that constrain the
+   integer(ip), intent(in) :: nconst !! The number of conditions that constrain the
                                  !! B-spline is NCONST.  A constraint is specified
                                  !! by an (X,Y) pair in the arrays XCONST(*) and
                                  !! YCONST(*), and by the type of constraint and
@@ -1235,7 +1232,7 @@ module bspline_defc_module
    real(wp), intent(in) :: xconst(*) !! X value of constraint.
                                      !! No sorting of XCONST(*) is required.
    real(wp), intent(in) :: yconst(*) !! Y value of constraint
-   integer, intent(in) :: nderiv(*) !! The value of NDERIV(*) is
+   integer(ip), intent(in) :: nderiv(*) !! The value of NDERIV(*) is
                                     !! determined as follows.  Suppose the I-th
                                     !! constraint applies to the J-th derivative
                                     !! of the B-spline.  (Any non-negative value of
@@ -1259,7 +1256,7 @@ module bspline_defc_module
                                     !! suppressing a constraint while still
                                     !! retaining the source code of the calling
                                     !! program.)
-   integer, intent(inout) :: mode !! *Input*
+   integer(ip), intent(inout) :: mode !! *Input*
                                   !!
                                   !! An input flag that directs the least squares
                                   !! solution method used by [[DFC]].
@@ -1405,7 +1402,7 @@ module bspline_defc_module
                     !! least
                     !!
                     !! `LW = NB+(L+NCONST)*L+2*(NEQCON+L)+(NINCON+L)+(NINCON+2)*(L+6)`
-   integer  :: iw(*) !! integer work array of length `IW(2)`
+   integer(ip) :: iw(*) !! integer work array of length `IW(2)`
                      !!
                      !! `IW(1),IW(2)` are the amounts of working storage actually
                      !! allocated for the working arrays W(*) and
@@ -1424,7 +1421,7 @@ module bspline_defc_module
                      !!
                      !! in any case.
 
-   integer :: i1, i2, i3, i4, i5, i6, i7, mdg, mdw
+   integer(ip) :: i1, i2, i3, i4, i5, i6, i7, mdg, mdw
 
    mdg = nbkpt - nord + 3
    mdw = nbkpt - nord + 1 + nconst
@@ -1471,7 +1468,7 @@ module bspline_defc_module
                      bkptin, nconst, xconst, yconst, nderiv, mode, coeff, bf, xtemp, &
                      ptemp, bkpt, g, mdg, w, mdw, work, iwork)
 
-   integer :: iwork(*), mdg, mdw, mode, nbkpt, nconst, ndata, nderiv(*), &
+   integer(ip) :: iwork(*), mdg, mdw, mode, nbkpt, nconst, ndata, nderiv(*), &
               nord
    real(wp) :: bf(nord,*), bkpt(*), bkptin(*), coeff(*), &
                g(mdg,*), ptemp(*), sddata(*), w(mdw,*), work(*), &
@@ -1479,12 +1476,12 @@ module bspline_defc_module
 
    real(wp) :: prgopt(10), rnorm, rnorme, rnorml, xmax, &
                xmin, xval, yval
-   integer :: i, idata, ideriv, ileft, intrvl, intw1, ip, ir, irow, &
+   integer(ip) :: i, idata, ideriv, ileft, intrvl, intw1, ipp, ir, irow, &
               itype, iw1, iw2, l, lw, mt, n, nb, neqcon, nincon, nordm1, &
               nordp1, np1
    logical :: band, new, var
    character(len=8) :: xern1
-   integer :: dfspvn_j
+   integer(ip) :: dfspvn_j
    real(wp), dimension(20) :: dfspvn_deltam, dfspvn_deltap
 
    ! Analyze input.
@@ -1651,7 +1648,7 @@ module bspline_defc_module
       ! Initialize parameters of banded matrix processor, DBNDAC( ).
 
       mt = 0
-      ip = 1
+      ipp = 1
       ir = 1
       ileft = nord
       do idata = 1,ndata
@@ -1664,7 +1661,7 @@ module bspline_defc_module
          ! When interval changes, process equations in the last block.
 
          if (xval>=bkpt(ileft+1)) then
-            call dbndac (g, mdg, nord, ip, ir, mt, ileft-nordm1)
+            call dbndac (g, mdg, nord, ipp, ir, mt, ileft-nordm1)
             mt = 0
 
             ! Move pointer up to have BKPT(ILEFT)<=XVAL,
@@ -1700,19 +1697,19 @@ module bspline_defc_module
          ! When staging work area is exhausted, process rows.
 
          if (irow==mdg-1) then
-            call dbndac (g, mdg, nord, ip, ir, mt, ileft-nordm1)
+            call dbndac (g, mdg, nord, ipp, ir, mt, ileft-nordm1)
             mt = 0
          endif
       end do
 
       ! Process last block of equations.
 
-      call dbndac (g, mdg, nord, ip, ir, mt, ileft-nordm1)
+      call dbndac (g, mdg, nord, ipp, ir, mt, ileft-nordm1)
 
       ! Last call to adjust block positioning.
 
       call dcopy (nordp1, [0.0_wp], 0, g(ir,1), mdg)
-      call dbndac (g, mdg, nord, ip, ir, 1, np1)
+      call dbndac (g, mdg, nord, ipp, ir, 1, np1)
    endif
 
    band = band .and. nconst==0
@@ -1723,7 +1720,7 @@ module bspline_defc_module
    ! Process banded least squares equations.
 
    if (band) then
-      call dbndsl (1, g, mdg, nord, ip, ir, coeff, n, rnorm)
+      call dbndsl (1, g, mdg, nord, ipp, ir, coeff, n, rnorm)
       return
    endif
 
@@ -1853,16 +1850,16 @@ module bspline_defc_module
    subroutine dfspvd (t, k, x, ileft, vnikx, nderiv)
 
    real(wp) :: t(*)
-   integer :: k
+   integer(ip) :: k
    real(wp) :: x
-   integer :: ileft
+   integer(ip) :: ileft
    real(wp) :: vnikx(k,*)
-   integer :: nderiv
+   integer(ip) :: nderiv
 
    real(wp) :: a(20,20)
-   integer :: ideriv,idervm,i,j,kmd,m,jm1,ipkmd,l,jlow
+   integer(ip) :: ideriv,idervm,i,j,kmd,m,jm1,ipkmd,l,jlow
    real(wp) :: fkmd,diff,v
-   integer :: dfspvn_j
+   integer(ip) :: dfspvn_j
    real(wp), dimension(20) :: dfspvn_deltam, dfspvn_deltap
 
    ! set up variables for dfspvn
@@ -1961,7 +1958,7 @@ module bspline_defc_module
 !  l = min(m,n).
 !```
 !
-!  The subroutine will compute an integer, KRANK, equal to the number
+!  The subroutine will compute an integer(ip), KRANK, equal to the number
 !  of diagonal terms of R that exceed TAU in magnitude. Then a
 !  solution of minimum Euclidean length is computed using the first
 !  KRANK rows of (R C).
@@ -1988,10 +1985,10 @@ module bspline_defc_module
 !  * 901005  Replace usage of DDIFF with usage of D1MACH.  (RWC)
 !  * 920501  Reformatted the REFERENCES section.  (WRB)
 
-   subroutine dhfti (a, mda, m, n, b, mdb, nb, tau, krank, rnorm, h, g, ip)
+   subroutine dhfti (a, mda, m, n, b, mdb, nb, tau, krank, rnorm, h, g, ipp)
 
-   integer,intent(in) :: mda !! actual leading dimension of `a`
-   integer,intent(in) :: mdb !! actual leading dimension of `b`
+   integer(ip),intent(in) :: mda !! actual leading dimension of `a`
+   integer(ip),intent(in) :: mdb !! actual leading dimension of `b`
    real(wp),intent(inout) :: a(mda,*) !! `A(MDA,N)`.
                                       !! The array A(*,*) initially contains the M by N
                                       !! matrix A of the least squares problem AX = B.
@@ -2004,8 +2001,8 @@ module bspline_defc_module
                                       !! The contents of the array A(*,*) will be
                                       !! modified by the subroutine. These contents
                                       !! are not generally required by the user.
-   integer,intent(in) :: m
-   integer,intent(in) :: n
+   integer(ip),intent(in) :: m
+   integer(ip),intent(in) :: n
    real(wp),intent(inout) :: b(mdb,*) !! `(B(MDB,NB) or B(M))`.
                                       !! If NB = 0 the subroutine will perform the
                                       !! orthogonal decomposition but will make no
@@ -2025,10 +2022,10 @@ module bspline_defc_module
                                       !!
                                       !! On return the array B(*) will contain the N by
                                       !! NB solution matrix X.
-   integer,intent(in) :: nb
+   integer(ip),intent(in) :: nb
    real(wp),intent(in) :: tau !! Absolute tolerance parameter provided by user
                               !! for pseudorank determination.
-   integer,intent(out) :: krank !! Set by the subroutine to indicate the
+   integer(ip),intent(out) :: krank !! Set by the subroutine to indicate the
                                 !! pseudorank of A.
    real(wp),intent(out)  :: rnorm(*) !! `RNORM(NB)`.
                                      !! On return, RNORM(J) will contain the Euclidean
@@ -2047,12 +2044,12 @@ module bspline_defc_module
                     !! Householder transformations used to compute
                     !! the minimum Euclidean length solution.
                     !! not generally required by the user.
-   integer :: ip(*) !! `IP(N)`. Array of working space used by DHFTI.
+   integer(ip) :: ipp(*) !! `ipp(N)`. Array of working space used by DHFTI.
                     !! Array in which the subroutine records indices
                     !! describing the permutation of column vectors.
                     !! not generally required by the user.
 
-   integer :: i, ii, iopt, ip1, j, jb, jj, k, kp1, l, ldiag, lmax, nerr
+   integer(ip) :: i, ii, iopt, ip1, j, jb, jj, k, kp1, l, ldiag, lmax, nerr
    real(wp) :: dzero, factor, hmax, sm, sm1, szero, tmp
    logical :: lmax_found
 
@@ -2102,8 +2099,8 @@ module bspline_defc_module
          end if
          ! LMAX HAS BEEN DETERMINED
          ! DO COLUMN INTERCHANGES IF NEEDED.
-         ip(j) = lmax
-         if (ip(j) /= j) then
+         ipp(j) = lmax
+         if (ipp(j) /= j) then
             do i = 1, m
                tmp = a(i,j)
                a(i,j) = a(i,lmax)
@@ -2183,8 +2180,8 @@ module bspline_defc_module
 
                   do jj = 1, ldiag
                      j = ldiag + 1 - jj
-                     if (ip(j) /= j) then
-                        l = ip(j)
+                     if (ipp(j) /= j) then
+                        l = ipp(j)
                         tmp = b(l,jb)
                         b(l,jb) = b(j,jb)
                         b(j,jb) = tmp
@@ -2244,23 +2241,23 @@ module bspline_defc_module
 
    subroutine dlpdp (a, mda, m, n1, n2, prgopt, x, wnorm, mode, ws, is)
 
-   integer,intent(in) :: mda
-   integer :: m
-   integer,intent(in) :: n1
-   integer,intent(in) :: n2
+   integer(ip),intent(in) :: mda
+   integer(ip) :: m
+   integer(ip),intent(in) :: n1
+   integer(ip),intent(in) :: n2
    real(wp) :: a(mda,*) !! `A(MDA,N+1)`, where `N=N1+N2`.
    real(wp) :: prgopt(*)
    real(wp) :: x(*) !! `X(N)`, where `N=N1+N2`.
    real(wp) :: wnorm
-   integer,intent(out) :: mode !! The value of MODE indicates the status of
+   integer(ip),intent(out) :: mode !! The value of MODE indicates the status of
                                !! the computation after returning to the user.
                                !!
                                !!  * `MODE=1` The solution was successfully obtained.
                                !!  * `MODE=2` The inequalities are inconsistent.
    real(wp) :: ws(*) !! `WS((M+2)*(N+7))`, where `N=N1+N2`. This is a slight overestimate for WS(*).
-   integer :: is(*) !! `IS(M+N+1)`, where `N=N1+N2`.
+   integer(ip) :: is(*) !! `IS(M+N+1)`, where `N=N1+N2`.
 
-   integer :: i, iw, ix, j, l, modew, n, np1
+   integer(ip) :: i, iw, ix, j, l, modew, n, np1
    real(wp) :: rnorm, sc, ynorm
 
    real(wp),parameter :: zero = 0.0_wp
@@ -2436,7 +2433,7 @@ module bspline_defc_module
 !
 !  Any values ME >= 0, MA >= 0, or MG >= 0 are permitted.  The
 !  rank of the matrix E is estimated during the computation.  We call
-!  this value KRANKE.  It is an output parameter in IP(1) defined
+!  this value KRANKE.  It is an output parameter in ipp(1) defined
 !  below.  Using a generalized inverse solution of EX=F, a reduced
 !  least squares problem with inequality constraints is obtained.
 !  The tolerances used in these tests for determining the rank
@@ -2446,11 +2443,11 @@ module bspline_defc_module
 !  the option list of the array PRGOPT(*).
 !
 !  The user must dimension all arrays appearing in the call list..
-!  W(MDW,N+1),PRGOPT(*),X(N),WS(2*(ME+N)+K+(MG+2)*(N+7)),IP(MG+2*N+2)
+!  W(MDW,N+1),PRGOPT(*),X(N),WS(2*(ME+N)+K+(MG+2)*(N+7)),ipp(MG+2*N+2)
 !  where K=MAX(MA+MG,N).  This allows for a solution of a range of
 !  problems in the given working space.  The dimension of WS(*)
 !  given is a necessary overestimate.  Once a particular problem
-!  has been run, the output parameter IP(3) gives the actual
+!  has been run, the output parameter ipp(3) gives the actual
 !  dimension required for that problem.
 !
 !  The parameters for [[DLSEI]] are
@@ -2639,15 +2636,15 @@ module bspline_defc_module
 !               subroutine WNNLS( ).  Normally these options
 !               do not need to be modified when using [[DLSEI]].
 !
-!  IP(1),       The amounts of working storage actually
-!  IP(2)        allocated for the working arrays WS(*) and
-!               IP(*), respectively.  These quantities are
+!  ipp(1),       The amounts of working storage actually
+!  ipp(2)        allocated for the working arrays WS(*) and
+!               ipp(*), respectively.  These quantities are
 !               compared with the actual amounts of storage
 !               needed by [[DLSEI]].  Insufficient storage
-!               allocated for either WS(*) or IP(*) is an
+!               allocated for either WS(*) or ipp(*) is an
 !               error.  This feature was included in [[DLSEI]]
 !               because miscalculating the storage formulas
-!               for WS(*) and IP(*) might very well lead to
+!               for WS(*) and ipp(*) might very well lead to
 !               subtle and hard-to-find execution errors.
 !
 !               The length of WS(*) must be at least
@@ -2655,12 +2652,12 @@ module bspline_defc_module
 !               LW = 2*(ME+N)+K+(MG+2)*(N+7)
 !
 !               where K = max(MA+MG,N)
-!               This test will not be made if IP(1)<=0.
+!               This test will not be made if ipp(1)<=0.
 !
-!               The length of IP(*) must be at least
+!               The length of ipp(*) must be at least
 !
 !               LIP = MG+2*N+2
-!               This test will not be made if IP(2)<=0.
+!               This test will not be made if ipp(2)<=0.
 !
 !  Output.. All TYPE REAL variables are DOUBLE PRECISION
 !
@@ -2711,8 +2708,8 @@ module bspline_defc_module
 !                   requested, or the option vector
 !                   PRGOPT(*) is not properly defined,
 !                   or the lengths of the working arrays
-!                   WS(*) and IP(*), when specified in
-!                   IP(1) and IP(2) respectively, are not
+!                   WS(*) and ipp(*), when specified in
+!                   ipp(1) and ipp(2) respectively, are not
 !                   long enough.
 !
 !  W(*,*)        The array W(*,*) contains the N by N symmetric
@@ -2721,18 +2718,18 @@ module bspline_defc_module
 !                the option vector PRGOPT(*) and the output
 !                flag is returned with MODE = 0 or 1.
 !
-!  IP(*)         The integer working array has three entries
+!  ipp(*)         The integer working array has three entries
 !                that provide rank and working array length
 !                information after completion.
 !
-!                   IP(1) = rank of equality constraint
+!                   ipp(1) = rank of equality constraint
 !                           matrix.  Define this quantity
 !                           as KRANKE.
 !
-!                   IP(2) = rank of reduced least squares
+!                   ipp(2) = rank of reduced least squares
 !                           problem.
 !
-!                   IP(3) = the amount of storage in the
+!                   ipp(3) = the amount of storage in the
 !                           working array WS(*) that was
 !                           actually used by the subprogram.
 !                           The formula given above for the length
@@ -2744,7 +2741,7 @@ module bspline_defc_module
 !  User Designated
 !  Working Arrays..
 !
-!  WS(*),IP(*)              These are respectively type real
+!  WS(*),ipp(*)              These are respectively type real
 !                           and type integer working arrays.
 !                           Their required minimal lengths are
 !                           given above.
@@ -2779,25 +2776,25 @@ module bspline_defc_module
 !  * 920501  Reformatted the REFERENCES section.  (WRB)
 
    subroutine dlsei (w, mdw, me, ma, mg, n, prgopt, x, rnorme, &
-                     rnorml, mode, ws, ip)
+                     rnorml, mode, ws, ipp)
 
-   integer,intent(in) :: mdw
+   integer(ip),intent(in) :: mdw
    real(wp) :: w(mdw,*)
-   integer :: me
-   integer :: ma
-   integer :: mg
-   integer :: n
+   integer(ip) :: me
+   integer(ip) :: ma
+   integer(ip) :: mg
+   integer(ip) :: n
    real(wp) :: prgopt(*)
    real(wp) :: x(*)
    real(wp) :: rnorme
    real(wp) :: rnorml
-   integer :: mode
+   integer(ip) :: mode
    real(wp) :: ws(*)
-   integer :: ip(3)
+   integer(ip) :: ipp(3)
 
    real(wp) :: enorm, fnorm, gam, rb, rn, rnmax, size, &
                sn, snmax, t, tau, uj, up, vj, xnorm, xnrme
-   integer :: i, imax, j, jp1, k, key, kranke, last, lchk, link, m, &
+   integer(ip) :: i, imax, j, jp1, k, key, kranke, last, lchk, link, m, &
               mapke1, mdeqc, mend, mep1, n1, n2, next, nlink, nopt, np1, &
               ntimes
    logical :: cov, done
@@ -2807,7 +2804,7 @@ module bspline_defc_module
    ! constraint equations.
    tau = sqrt(drelpr)
 
-   ! Check that enough storage was allocated in WS(*) and IP(*).
+   ! Check that enough storage was allocated in WS(*) and ipp(*).
    mode = 4
    if (min(n,me,ma,mg) < 0) then
       write (xern1, '(I8)') n
@@ -2823,9 +2820,9 @@ module bspline_defc_module
       return
    endif
 
-   if (ip(1)>0) then
+   if (ipp(1)>0) then
       lchk = 2*(me+n) + max(ma+mg,n) + (mg+2)*(n+7)
-      if (ip(1)<lchk) then
+      if (ipp(1)<lchk) then
          write (xern1, '(I8)') lchk
          write(*,*) 'INSUFFICIENT STORAGE ' // &
                     'ALLOCATED FOR WS(*), NEED LW = ' // xern1
@@ -2833,12 +2830,12 @@ module bspline_defc_module
       endif
    endif
 
-   if (ip(2)>0) then
+   if (ipp(2)>0) then
       lchk = mg + 2*n + 2
-      if (ip(2)<lchk) then
+      if (ipp(2)<lchk) then
          write (xern1, '(I8)') lchk
          write(*,*) 'INSUFFICIENT STORAGE ' // &
-                    'ALLOCATED FOR IP(*), NEED LIP = ' // xern1
+                    'ALLOCATED FOR ipp(*), NEED LIP = ' // xern1
          return
       endif
    endif
@@ -3027,7 +3024,7 @@ module bspline_defc_module
    ! Compute solution of reduced problem.
 
    call dlsi(w(kranke+1, kranke+1), mdw, ma, mg, n-kranke, prgopt, &
-             x(kranke+1), rnorml, mode, ws(n2), ip(2))
+             x(kranke+1), rnorml, mode, ws(n2), ipp(2))
 
    ! Test for consistency of equality constraints.
    done = .false.
@@ -3114,8 +3111,8 @@ module bspline_defc_module
       end do
    endif
 
-   ip(1) = kranke
-   ip(3) = ip(3) + 2*kranke + n
+   ipp(1) = kranke
+   ipp(3) = ipp(3) + 2*kranke + n
 
    end subroutine dlsei
 !*****************************************************************************************
@@ -3144,12 +3141,12 @@ module bspline_defc_module
 !  * 900604  DP version created from SP version.  (RWC)
 !  * 920422  Changed CALL to DHFTI to include variable MA.  (WRB)
 
-   subroutine dlsi (w, mdw, ma, mg, n, prgopt, x, rnorm, mode, ws, ip)
+   subroutine dlsi (w, mdw, ma, mg, n, prgopt, x, rnorm, mode, ws, ipp)
 
-   integer,intent(in) :: mdw !! contain (resp) var. dimension of `W(*,*)`, and matrix dimensions.
-   integer,intent(in) :: ma  !! contain (resp) var. dimension of `W(*,*)`, and matrix dimensions.
-   integer,intent(in) :: mg  !! contain (resp) var. dimension of `W(*,*)`, and matrix dimensions.
-   integer,intent(in) :: n   !! contain (resp) var. dimension of `W(*,*)`, and matrix dimensions.
+   integer(ip),intent(in) :: mdw !! contain (resp) var. dimension of `W(*,*)`, and matrix dimensions.
+   integer(ip),intent(in) :: ma  !! contain (resp) var. dimension of `W(*,*)`, and matrix dimensions.
+   integer(ip),intent(in) :: mg  !! contain (resp) var. dimension of `W(*,*)`, and matrix dimensions.
+   integer(ip),intent(in) :: n   !! contain (resp) var. dimension of `W(*,*)`, and matrix dimensions.
    real(wp) :: w(mdw,*) !! `W(*,*)` contains:
                         !!
                         !!```
@@ -3162,14 +3159,14 @@ module bspline_defc_module
    real(wp),intent(in) :: prgopt(*) !! Program option vector.
    real(wp),intent(out) :: x(*) !! Solution vector(unless MODE=2)
    real(wp),intent(out) :: rnorm !! length of AX-B.
-   integer,intent(out) :: mode !! * `=0`   Inequality constraints are compatible.
+   integer(ip),intent(out) :: mode !! * `=0`   Inequality constraints are compatible.
                                !! * `=2`   Inequality constraints contradictory.
    real(wp) :: ws(*) !! Working storage of dimension `K+N+(MG+2)*(N+7)`,
                      !! where `K=MAX(MA+MG,N)`.
-   integer :: ip(*) !! `IP(MG+2*N+1)` Integer working storage
+   integer(ip) :: ipp(*) !! `ipp(MG+2*N+1)` Integer working storage
 
    real(wp) :: anorm, fac, gam, rb, tau, tol, xnorm
-   integer :: i, j, k, key, krank, krm1, krp1, l, last, link, m, map1, &
+   integer(ip) :: i, j, k, key, krank, krm1, krp1, l, last, link, m, map1, &
               mdlpdp, minman, n1, n2, n3, next, np1
    logical :: cov, sclcov
    real(wp) :: rnorm_(1) !! JW added for call to [[dhfti]]
@@ -3226,7 +3223,7 @@ module bspline_defc_module
       n2 = n1 + n
       rnorm_(1) = rnorm ! JW
       call dhfti (w, mdw, ma, n, ws, ma, 1, tau, krank, rnorm_, ws(n2), &
-                  ws(n1), ip)
+                  ws(n1), ipp)
       rnorm = rnorm_(1) ! JW
       fac = 1.0_wp
       gam = ma - krank
@@ -3247,7 +3244,7 @@ module bspline_defc_module
             ! Apply permutations to col. of inequality constraint matrix.
 
             do i = 1,minman
-               call dswap (mg, w(map1,i), 1, w(map1,ip(i)), 1)
+               call dswap (mg, w(map1,i), 1, w(map1,ipp(i)), 1)
             end do
 
             ! Apply Householder transformations to constraint matrix.
@@ -3272,7 +3269,7 @@ module bspline_defc_module
          ! the least projected distance problem.
 
          call dlpdp(w(map1,1), mdw, mg, krank, n-krank, prgopt, x, &
-                  xnorm, mdlpdp, ws(n2), ip(n+1))
+                  xnorm, mdlpdp, ws(n2), ipp(n+1))
 
          ! Compute solution in original coordinates.
 
@@ -3294,7 +3291,7 @@ module bspline_defc_module
 
             if (minman>0) then
                do i = minman,1,-1
-                  call dswap (1, x(i), 1, x(ip(i)), 1)
+                  call dswap (1, x(i), 1, x(ipp(i)), 1)
                end do
 
                ! Variables are now in original coordinates.
@@ -3416,7 +3413,7 @@ module bspline_defc_module
       ! Repermute rows and columns.
 
       do i = minman,1,-1
-         k = ip(i)
+         k = ipp(i)
          if (i/=k) then
             call dswap (1, w(i,i), 1, w(k,k), 1)
             call dswap (i-1, w(1,i), 1, w(1,k), 1)
@@ -3435,8 +3432,8 @@ module bspline_defc_module
 
    end block main
 
-   ip(1) = krank
-   ip(2) = n + max(m,n) + (mg+2)*(n+7)
+   ipp(1) = krank
+   ipp(2) = n + max(m,n) + (mg+2)*(n+7)
 
    end subroutine dlsi
 !*****************************************************************************************
@@ -3464,13 +3461,13 @@ module bspline_defc_module
    subroutine dwnlit (w, mdw, m, n, l, ipivot, itype, h, scale, &
                       rnorm, idope, dope, done)
 
-   integer :: idope(*), ipivot(*), itype(*), l, m, mdw, n
+   integer(ip) :: idope(*), ipivot(*), itype(*), l, m, mdw, n
    real(wp) :: dope(*), h(*), rnorm, scale(*), w(mdw,*)
    logical :: done
 
    real(wp) :: alsq, amax, eanorm, factor, hbar, rn, sparam(5), &
                t, tau
-   integer :: i, i1, imax, ir, j, j1, jj, jp, krank, l1, lb, lend, me, &
+   integer(ip) :: i, i1, imax, ir, j, j1, jj, jp, krank, l1, lb, lend, me, &
               mend, niv, nsoln
    logical :: indep, recalc
 
@@ -3751,14 +3748,14 @@ module bspline_defc_module
    subroutine dwnlsm (w, mdw, mme, ma, n, l, prgopt, x, rnorm, mode, &
                       ipivot, itype, wd, h, scale, z, temp, d)
 
-   integer :: ipivot(*), itype(*), l, ma, mdw, mme, mode, n
+   integer(ip) :: ipivot(*), itype(*), l, ma, mdw, mme, mode, n
    real(wp) :: d(*), h(*), prgopt(*), rnorm, scale(*), temp(*), &
                w(mdw,*), wd(*), x(*), z(*)
 
    real(wp) :: alamda, alpha, alsq, amax, blowup, bnorm, &
                dope(3), eanorm, fac, sm, sparam(5), t, tau, wmax, z2, &
                zz
-   integer :: i, idope(3), imax, isol, itemp, iter, itmax, iwmax, j, &
+   integer(ip) :: i, idope(3), imax, isol, itemp, iter, itmax, iwmax, j, &
               jcon, jp, key, krank, l1, last, link, m, me, next, niv, nlink, &
               nopt, nsoln, ntimes
    logical :: done, feasbl, hitcon, pos
@@ -4283,11 +4280,11 @@ module bspline_defc_module
    subroutine dwnlt1 (i, lend, mend, ir, mdw, recalc, imax, hbar, h, &
                       scale, w)
 
-   integer :: i, imax, ir, lend, mdw, mend
+   integer(ip) :: i, imax, ir, lend, mdw, mend
    real(wp) :: h(*), hbar, scale(*), w(mdw,*)
    logical :: recalc
 
-   integer :: j, k
+   integer(ip) :: j, k
 
    if (ir/=1 .and. (.not.recalc)) then
       ! Update column SS=sum of squares.
@@ -4348,10 +4345,10 @@ module bspline_defc_module
    logical function dwnlt2 (me, mend, ir, factor, tau, scale, wic)
 
    real(wp) :: factor, scale(*), tau, wic(*)
-   integer :: ir, me, mend
+   integer(ip) :: ir, me, mend
 
    real(wp) :: rn, sn, t
-   integer :: j
+   integer(ip) :: j
 
    sn = 0.0_wp
    rn = 0.0_wp
@@ -4383,16 +4380,16 @@ module bspline_defc_module
 
    subroutine dwnlt3 (i, imax, m, mdw, ipivot, h, w)
 
-   integer,intent(in) :: i
-   integer,intent(in) :: imax
-   integer,intent(inout) :: ipivot(*)
+   integer(ip),intent(in) :: i
+   integer(ip),intent(in) :: imax
+   integer(ip),intent(inout) :: ipivot(*)
    integer ,intent(in):: m
-   integer,intent(in) :: mdw
+   integer(ip),intent(in) :: mdw
    real(wp),intent(inout) :: h(*)
    real(wp),intent(inout) :: w(mdw,*)
 
    real(wp) :: t
-   integer :: itemp
+   integer(ip) :: itemp
 
    if (imax/=i) then
       itemp        = ipivot(i)
@@ -4664,7 +4661,7 @@ module bspline_defc_module
    subroutine dwnnls (w, mdw, me, ma, n, l, prgopt, x, rnorm, mode, &
                       iwork, work)
 
-   integer :: iwork(*), l, l1, l2, l3, l4, l5, liw, lw, ma, mdw, me, &
+   integer(ip) :: iwork(*), l, l1, l2, l3, l4, l5, liw, lw, ma, mdw, me, &
               mode, n
    real(wp) :: prgopt(*), rnorm, w(mdw,*), work(*), x(*)
    character(len=8) :: xern1
@@ -4785,13 +4782,13 @@ module bspline_defc_module
    real(wp) function dcv (xval, ndata, nconst, nord, nbkpt, bkpt, w)
 
       real(wp),intent(in) :: xval !! The point where the variance is desired
-      integer,intent(in) :: nbkpt !! The number of knots in the array BKPT(*).
+      integer(ip),intent(in) :: nbkpt !! The number of knots in the array BKPT(*).
                                   !! The value of NBKPT must satisfy NBKPT .GE. 2*NORD.
-      integer,intent(in) :: nconst !! The number of conditions that constrained the B-spline in
+      integer(ip),intent(in) :: nconst !! The number of conditions that constrained the B-spline in
                                    !! [[dfc]].
-      integer,intent(in) :: ndata !! The number of discrete (X,Y) pairs for which [[dfc]]
+      integer(ip),intent(in) :: ndata !! The number of discrete (X,Y) pairs for which [[dfc]]
                                   !! calculated a piece-wise polynomial curve.
-      integer,intent(in) :: nord !! The order of the B-spline used in [[dfc]].
+      integer(ip),intent(in) :: nord !! The order of the B-spline used in [[dfc]].
                                  !! The value of NORD must satisfy 1 < NORD < 20 .
                                  !!
                                  !! (The order of the spline is one more than the degree of
@@ -4810,8 +4807,8 @@ module bspline_defc_module
                        !! is desired.
 
       real(wp) :: v(40)
-      integer :: i, ileft, ip, is, last, mdg, mdw, n
-      integer :: dfspvn_j
+      integer(ip) :: i, ileft, ipp, is, last, mdg, mdw, n
+      integer(ip) :: dfspvn_j
       real(wp), dimension(20) :: dfspvn_deltam, dfspvn_deltap
 
       real(wp),parameter :: zero = 0.0_wp
@@ -4833,11 +4830,11 @@ module bspline_defc_module
       call dfspvn(bkpt,nord,1,xval,ileft,v(nord+1), &
                   dfspvn_j, dfspvn_deltam, dfspvn_deltap)
       ileft = ileft - nord + 1
-      ip = mdw*(ileft - 1) + ileft + is
+      ipp = mdw*(ileft - 1) + ileft + is
       n = nbkpt - nord
       do i = 1, nord
-         v(i) = ddot(nord,w(ip),1,v(nord+1),1)
-         ip = ip + mdw
+         v(i) = ddot(nord,w(ipp),1,v(nord+1),1)
+         ipp = ipp + mdw
       end do
       dcv = max(ddot(nord,v,1,v(nord+1),1),zero)
 
