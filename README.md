@@ -70,6 +70,15 @@ type(bspline_3d) :: s
 s = bspline_3d(x,y,z,fcn,kx,ky,kz,iflag,extrap)
 ```
 
+## Spline order
+
+The various `k` inputs (i.e., `kx`, `ky`, etc.) specify the spline order for each dimension. The order is the polynomial degree + 1. For example:
+
+* `k=2` : Linear
+* `k=3` : Quadratic
+* `k=4` : Cubic
+* etc.
+
 ## Extrapolation
 
 The library optionally supports extrapolation for points outside the range of the coefficients. This is disabled by default (in which case an error code is returned for points outside the bounds). To enable extrapolation, use the optional `extrap` input to the various `db*val` subroutines or the `initialize` methods from the object-oriented interface.
@@ -180,3 +189,10 @@ The latest API documentation can be found [here](https://jacobwilliams.github.io
 ## License
 
 The bspline-fortran source code and related files and documentation are distributed under a permissive free software [license](https://github.com/jacobwilliams/bspline-fortran/blob/master/LICENSE) (BSD-style).
+
+## See also
+
+ * [SPLPAK](https://github.com/jacobwilliams/splpak) Multidimensional least-squares cubic spline fitting
+ * [FINTERP](https://github.com/jacobwilliams/finterp) Multidimensional Linear Interpolation with Modern Fortran
+ * [PCHIP](https://github.com/jacobwilliams/PCHIP) Piecewise Cubic Hermite Interpolation.
+ * [Regridpack](https://github.com/jacobwilliams/regridpack) Linear or cubic interpolation for 1D-4D grids.
