@@ -41,6 +41,7 @@
     real(wp)                          :: f_true !! the true integral of
                                                 !! the analytic function
     real(wp),dimension(:),allocatable :: w1_1d  !! work array
+    real(wp),dimension(nx)            :: bcoef  !! spline coefficient array
 
     do imeth = 1,2  ! the two methods
 
@@ -69,17 +70,17 @@
 
             ! initialize:
             ! [note we are overwriting fcn here with the b coeffs]
-            call db1ink(x,nx,fcn,kx,iknot,tx,fcn,iflag)
+            call db1ink(x,nx,fcn,kx,iknot,tx,bcoef,iflag)
             if (iflag/=0) error stop 'error calling db1ink'
 
             ! integrate:
             if (imeth==1) then
                 if (kx>20) cycle
                 meth = 'db1sqad'
-                call db1sqad(tx,fcn,nx,kx,x1,x2,f,iflag,w1_1d)
+                call db1sqad(tx,bcoef,nx,kx,x1,x2,f,iflag,w1_1d)
             else
                 meth = 'db1fqad'
-                call db1fqad(test_function,tx,fcn,nx,kx,0_ip,x1,x2,tol,f,iflag,w1_1d)
+                call db1fqad(test_function,tx,bcoef,nx,kx,0_ip,x1,x2,tol,f,iflag,w1_1d)
             end if
 
             ! display results:
