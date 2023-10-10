@@ -58,6 +58,9 @@
     end interface
     public :: b1fqad_func
 
+    integer(ip),parameter,public :: bspline_order_linear    = 2_ip !! spline order `k` parameter
+                                                                   !! (for input to the `db*ink` routines)
+                                                                   !! [order = polynomial degree + 1]
     integer(ip),parameter,public :: bspline_order_quadratic = 3_ip !! spline order `k` parameter
                                                                    !! (for input to the `db*ink` routines)
                                                                    !! [order = polynomial degree + 1]

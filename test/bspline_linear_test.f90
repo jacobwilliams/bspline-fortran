@@ -39,11 +39,11 @@
     iloy  = 1
 
     ! initialize
-    call b2%initialize(x,fcn_1d,2,iflag,extrap=.true.) ! linear
+    call b2%initialize(x,fcn_1d,bspline_order_linear,iflag,extrap=.true.) ! linear
     if (iflag/=0) error stop 'Error initializing 1D linear spline: '//get_status_message(iflag)
-    call b3%initialize(x,fcn_1d,3,iflag,extrap=.true.) ! quadratic
+    call b3%initialize(x,fcn_1d,bspline_order_quadratic,iflag,extrap=.true.) ! quadratic
     if (iflag/=0) error stop 'Error initializing 1D quadratic spline: '//get_status_message(iflag)
-    call b4%initialize(x,fcn_1d,4,iflag,extrap=.true.) ! cubic
+    call b4%initialize(x,fcn_1d,bspline_order_cubic,iflag,extrap=.true.) ! cubic
     if (iflag/=0) error stop 'Error initializing 1D cubic spline: '//get_status_message(iflag)
     call s1%initialize(x,fcn_1d,iflag)
     if (iflag/=0) error stop 'Error initializing 1D linear interpolator'
