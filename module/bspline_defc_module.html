@@ -1,3 +1,5 @@
+<!-- -*- mode: jinja2 -*- -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,81 +12,56 @@
 
     <title>bspline_defc_module &ndash; bspline-fortran</title>
 
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link href="../css/pygments.css" rel="stylesheet">
     <link href="../css/font-awesome.min.css" rel="stylesheet">
     <link href="../css/local.css" rel="stylesheet">
       <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
-
-         <script src="../js/jquery-2.1.3.min.js"></script>
-         <script src="../js/svg-pan-zoom.min.js"></script>
-
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
   </head>
 
   <body>
 
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
           <a class="navbar-brand" href="../index.html">bspline-fortran </a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
-              <a href="#" class="dropdown-toggle"
-                 data-toggle="dropdown" role="button"
-                 aria-haspopup="true"
-                 aria-expanded="false">
-                 Contents <span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu">
-                    <li><a href="../lists/files.html">Source Files</a></li>
-                  <li><a href="../lists/modules.html">Modules</a></li>
-                  <li><a href="../lists/procedures.html">Procedures</a></li>
-                  <li><a href="../lists/absint.html">Abstract Interfaces</a></li>
-                  <li><a href="../lists/types.html">Derived Types</a></li>
-              </ul>
-            </li>
-                <li class="visible-xs hidden-sm visible-lg">
-                  <a href="../lists/files.html">Source Files</a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
                 </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/modules.html">Modules</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/procedures.html">Procedures</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/absint.html">Abstract Interfaces</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/types.html">Derived Types</a>
-              </li>
-          </ul>
-            <form action="../search.html" class="navbar-form navbar-right" role="search">
-              <div class="form-group">
-                <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
               </div>
-              <!--
-                  <button type="submit" class="btn btn-default">Submit</button>
-                  -->
-            </form>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
 
     <div class="container">
   <div class="row">
@@ -92,50 +69,53 @@
       <small>Module</small>
       
     </h1>
-      <div class="row" id="info-bar">
-    <div class="col-lg-12">
-      <div class="well well-sm">
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
         <ul class="list-inline" style="margin-bottom:0px;display:inline">
 
-          <li id="statements"><i class="fa fa-list-ol"></i>
-            <a data-toggle="tooltip"
-               data-placement="bottom" data-html="true"
-               title="31.5% of total for modules and submodules.">2081 statements</a>
-          </li>
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip"
+                 data-bs-placement="bottom" data-html="true"
+                 title="31.7% of total for modules and submodules.">2093 statements</a>
+            </li>
 
-            <li id="source-file">
+            <li class="list-inline-item" id="source-file">
               <i class="fa fa-code"></i>
               <a href="../src/bspline_defc_module.F90"> Source File</a>
             </li>
         </ul>
-        <ol class="breadcrumb in-well text-right">
-              <li><a href='../sourcefile/bspline_defc_module.f90.html'>bspline_defc_module.F90</a></li>
-          <li class="active">bspline_defc_module</li>
-        </ol>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/bspline_defc_module.f90.html'>bspline_defc_module.F90</a></li>
+            <li class="breadcrumb-item active" aria-current="page">bspline_defc_module</li>
+          </ol>
+        </nav>
       </div>
     </div>
   </div>
   <script>
     $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
+    $('[data-bs-toggle="tooltip"]').tooltip()
     })
   </script>
 
   </div>
 
   <div class="row">
-    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+    <div class="col-md-3">
         <div id="sidebar">
       <h3>Contents</h3>
   
-      <div class="panel panel-primary">
-      <div class="panel-heading text-left">
-        <h3 class="panel-title">
-          <a data-toggle="collapse" href="#vars-0">Variables</a>
-        </h3>
-      </div>
-      <div id="vars-0" class="panel-collapse collapse">
-        <div class="list-group">
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
             <a class="list-group-item" href="../module/bspline_defc_module.html#variable-drelpr">drelpr</a>
         </div>
       </div>
@@ -150,28 +130,26 @@
   
   
   
-      <div class="panel panel-primary">
-      <div class="panel-heading text-left">
-        <h3 class="panel-title">
-          <a data-toggle="collapse" href="#funcs-0">Functions</a>
-        </h3>
-      </div>
-      <div id="funcs-0" class="panel-collapse collapse">
-        <div class="list-group">
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#funcs-0"
+         aria-expanded="false" aria-controls="funcs-0">
+         <h4 class="card-header bg-primary text-white">Functions</h4>
+      </a>
+      <div id="funcs-0" class="collapse">
+        <div class="list-group list-group-flush">
             <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dwnlt2">dwnlt2</a>
             <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dcv">dcv</a>
         </div>
       </div>
     </div>
 
-      <div class="panel panel-primary">
-      <div class="panel-heading text-left">
-        <h3 class="panel-title">
-          <a data-toggle="collapse" href="#subs-0">Subroutines</a>
-        </h3>
-      </div>
-      <div id="subs-0" class="panel-collapse collapse">
-        <div class="list-group">
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#subs-0"
+         aria-expanded="false" aria-controls="subs-0">
+         <h4 class="card-header bg-primary text-white">Subroutines</h4>
+      </a>
+      <div id="subs-0" class="collapse">
+        <div class="list-group list-group-flush">
             <a class="list-group-item" href="../module/bspline_defc_module.html#proc-defc">defc</a>
             <a class="list-group-item" href="../module/bspline_defc_module.html#proc-defcmn">defcmn</a>
             <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dbndac">dbndac</a>
@@ -202,6 +180,7 @@
   
   
   
+  
 
 
   </div>
@@ -209,7 +188,7 @@
     </div>
 
     <div class="col-md-9" id='text'>
-      <p><a href="../proc/defc.html">defc</a> and <a href="../proc/dfc.html">dfc</a> procedures and support routines from <a href="https://netlib.org/slatec/src/">SLATEC</a>.
+      <p><a href="../proc/defc.html">defc</a> and <a href="../proc/dfc.html">dfc</a> procedures and support routines from [SLATEC](https:
   For fitting B-splines polynomials to discrete 1D data.</p>
 <h3>References</h3>
 <p>For a description of the B-splines and usage instructions to
@@ -230,22 +209,27 @@
 <ul>
 <li>Dec 2022 (Jacob Williams) : Cleanup and modernization of the SLATEC routines.</li>
 </ul>
-<p></p><div class="alert alert-info" role="alert"><h4>Note</h4><p>This module does not support the user-defined <code>ip</code> integer kind.
-      It only uses the default integer kind.</p></div>
-<p></p><div class="alert alert-success" role="alert"><h4>Todo</h4><p>add <code>iflag</code> outputs to be consistent with the rest of the library.</p></div>
-<br>          <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">Uses</h3>
-      </div>
-      <ul class="list-group">
-          <li class="list-group-item">
-            <ul class="list-inline">
-                <li><a href='../module/bspline_blas_module.html'>bspline_blas_module</a></li>
-                <li><a href='../module/bspline_kinds_module.html'>bspline_kinds_module</a></li>
-            </ul>
-          </li>
-          <li class="list-group-item">
-            <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p>This module does not support the user-defined <code>ip</code> integer kind.
+      It only uses the default integer kind.</p>
+</div>
+<div class="alert alert-success">
+<p class="alert-title h4">Todo</p>
+<p>add <code>iflag</code> outputs to be consistent with the rest of the library.</p>
+</div>
+<br>          <div class="card mb-4">
+      <h3 class="card-header card-title bg-light">Uses</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <ul class="list-inline">
+                  <li class="list-inline-item"><a href='bspline_kinds_module.html'>bspline_kinds_module</a></li>
+                  <li class="list-inline-item"><a href='bspline_blas_module.html'>bspline_blas_module</a></li>
+              </ul>
+            </li>
+            <li class="list-group-item">
+              <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Generated by graphviz version 2.43.0 (0)
@@ -265,7 +249,7 @@
 <!-- module~bspline_blas_module -->
 <g id="module~~bspline_defc_module~~UsesGraph_node2" class="node">
 <title>module~bspline_blas_module</title>
-<g id="a_module~~bspline_defc_module~~UsesGraph_node2"><a xlink:href=".././module/bspline_blas_module.html" xlink:title="bspline_blas_module">
+<g id="a_module~~bspline_defc_module~~UsesGraph_node2"><a xlink:href="../module/bspline_blas_module.html" xlink:title="bspline_blas_module">
 <polygon fill="#337ab7" stroke="#337ab7" points="420,-44 296,-44 296,-20 420,-20 420,-44"/>
 <text text-anchor="middle" x="358" y="-29.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_blas_module</text>
 </a>
@@ -280,7 +264,7 @@
 <!-- module~bspline_kinds_module -->
 <g id="module~~bspline_defc_module~~UsesGraph_node3" class="node">
 <title>module~bspline_kinds_module</title>
-<g id="a_module~~bspline_defc_module~~UsesGraph_node3"><a xlink:href=".././module/bspline_kinds_module.html" xlink:title="bspline_kinds_module">
+<g id="a_module~~bspline_defc_module~~UsesGraph_node3"><a xlink:href="../module/bspline_kinds_module.html" xlink:title="bspline_kinds_module">
 <polygon fill="#337ab7" stroke="#337ab7" points="260,-24 130,-24 130,0 260,0 260,-24"/>
 <text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_kinds_module</text>
 </a>
@@ -312,17 +296,17 @@
 </g>
 </g>
 </svg>
-</div>        <div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div>
-          <div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog">
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#UsesGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="UsesGraph-help-text" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
                   <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-              <div class="modal-body">
+                <div class="modal-body">
 <p>Nodes of different colours represent the following: </p>
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
@@ -382,17 +366,17 @@ modules which it uses.
             </div>
           </div>
         </div>
-          </li>
-      </ul>
+            </li>
+        </ul>
+      </div>
     </div>
 
-          <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">Used by</h3>
-      </div>
-      <ul class="list-group">
-          <li class="list-group-item">
-            <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+          <div class="card">
+      <h3 class="card-header card-title bg-light">Used by</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Generated by graphviz version 2.43.0 (0)
@@ -412,7 +396,7 @@ modules which it uses.
 <!-- module~bspline_module -->
 <g id="module~~bspline_defc_module~~UsedByGraph_node2" class="node">
 <title>module~bspline_module</title>
-<g id="a_module~~bspline_defc_module~~UsedByGraph_node2"><a xlink:href=".././module/bspline_module.html" xlink:title="bspline_module">
+<g id="a_module~~bspline_defc_module~~UsedByGraph_node2"><a xlink:href="../module/bspline_module.html" xlink:title="bspline_module">
 <polygon fill="#337ab7" stroke="#337ab7" points="258,-24 161,-24 161,0 258,0 258,-24"/>
 <text text-anchor="middle" x="209.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_module</text>
 </a>
@@ -426,17 +410,17 @@ modules which it uses.
 </g>
 </g>
 </svg>
-</div>        <div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div>
-          <div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog">
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#UsedByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="UsedByGraph-help-text" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
                   <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-              <div class="modal-body">
+                <div class="modal-body">
 <p>Nodes of different colours represent the following: </p>
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
@@ -496,93 +480,12 @@ modules which it uses.
             </div>
           </div>
         </div>
-          </li>
-      </ul>
+            </li>
+        </ul>
+      </div>
     </div>
 
       <br>
-
-      <section class="visible-xs visible-sm hidden-md">
-          <h3>Contents</h3>
-  
-      <div class="panel panel-primary">
-      <div class="panel-heading text-left">
-        <h3 class="panel-title">
-          <a data-toggle="collapse" href="#vars-1">Variables</a>
-        </h3>
-      </div>
-      <div id="vars-1" class="panel-collapse collapse">
-        <div class="list-group">
-            <a class="list-group-item" href="../module/bspline_defc_module.html#variable-drelpr">drelpr</a>
-        </div>
-      </div>
-    </div>
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-      <div class="panel panel-primary">
-      <div class="panel-heading text-left">
-        <h3 class="panel-title">
-          <a data-toggle="collapse" href="#funcs-1">Functions</a>
-        </h3>
-      </div>
-      <div id="funcs-1" class="panel-collapse collapse">
-        <div class="list-group">
-            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dwnlt2">dwnlt2</a>
-            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dcv">dcv</a>
-        </div>
-      </div>
-    </div>
-
-      <div class="panel panel-primary">
-      <div class="panel-heading text-left">
-        <h3 class="panel-title">
-          <a data-toggle="collapse" href="#subs-1">Subroutines</a>
-        </h3>
-      </div>
-      <div id="subs-1" class="panel-collapse collapse">
-        <div class="list-group">
-            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-defc">defc</a>
-            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-defcmn">defcmn</a>
-            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dbndac">dbndac</a>
-            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dbndsl">dbndsl</a>
-            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dfspvn">dfspvn</a>
-            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dh12">dh12</a>
-            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dsort">dsort</a>
-            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-sort_ascending">sort_ascending</a>
-            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dfc">dfc</a>
-            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dfcmn">dfcmn</a>
-            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dfspvd">dfspvd</a>
-            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dhfti">dhfti</a>
-            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dlpdp">dlpdp</a>
-            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dlsei">dlsei</a>
-            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dlsi">dlsi</a>
-            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dwnlit">dwnlit</a>
-            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dwnlsm">dwnlsm</a>
-            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dwnlt1">dwnlt1</a>
-            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dwnlt3">dwnlt3</a>
-            <a class="list-group-item" href="../module/bspline_defc_module.html#proc-dwnnls">dwnnls</a>
-        </div>
-      </div>
-    </div>
-
-  
-  
-  
-  
-  
-  
-
-
-      </section>
-      <br class="visible-xs visible-sm hidden-md">
 
 
         <section>
@@ -590,11 +493,11 @@ modules which it uses.
             <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Visibility</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-<th></th><th>Initial</th>        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
@@ -626,10 +529,10 @@ parameter
 
         <section>
           <h2>Functions</h2>
-              <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="proc-dwnlt2"></span><h3>private  function <a href='../proc/dwnlt2.html'>dwnlt2</a>(me, mend, ir, factor, tau, scale, wic)  
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-dwnlt2"></span> <h3>private  function <a href='../proc/dwnlt2.html'>dwnlt2</a>(me, mend, ir, factor, tau, scale, wic)  
 </h3></div>
-    <div class="panel-body">
+    <div class="card-body">
           
   <p>To test independence of incoming column.</p><a href="../proc/dwnlt2.html" class="pull-right"><emph>Read more&hellip;</emph></a>
 
@@ -637,16 +540,16 @@ parameter
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-me~4"></span>
               integer
             </td>
 <td></td>
@@ -661,7 +564,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mend~4"></span>
               integer
             </td>
 <td></td>
@@ -676,7 +579,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ir~5"></span>
               integer
             </td>
 <td></td>
@@ -691,7 +594,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-factor~3"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -706,7 +609,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-tau~6"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -721,7 +624,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-scale~4"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -736,7 +639,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-wic"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -761,28 +664,28 @@ parameter
     </div>
   </div>
 
-              <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="proc-dcv"></span><h3>public  function <a href='../proc/dcv.html'>dcv</a>(xval, ndata, nconst, nord, nbkpt, bkpt, w)  
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-dcv"></span> <h3>public  function <a href='../proc/dcv.html'>dcv</a>(xval, ndata, nconst, nord, nbkpt, bkpt, w)  
 </h3></div>
-    <div class="panel-body">
+    <div class="card-body">
           
-  <p><a href="../proc/dcv.html">dcv</a> is a companion function subprogram for <a href="../proc/dfc.html">dfc</a>.  The
-  documentation for <a href="../proc/dfc.html">dfc</a> has complete usage instructions.</p><a href="../proc/dcv.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  <p><a href="dcv.html#variable-dcv">dcv</a> is a companion function subprogram for <a href="dfc.html">dfc</a>.  The
+  documentation for <a href="dfc.html">dfc</a> has complete usage instructions.</p><a href="../proc/dcv.html" class="pull-right"><emph>Read more&hellip;</emph></a>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-xval~3"></span>
               real(kind=wp),
             </td>
 <td>intent(in)</td>
@@ -797,7 +700,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ndata~3"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -807,13 +710,13 @@ parameter
             <td>::</td>
             <td><strong>ndata</strong></td>
             <td>
-<p>The number of discrete (X,Y) pairs for which <a href="../proc/dfc.html">dfc</a>
+<p>The number of discrete (X,Y) pairs for which <a href="dfc.html">dfc</a>
 calculated a piece-wise polynomial curve.</p>
             </td>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-nconst~3"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -824,12 +727,12 @@ calculated a piece-wise polynomial curve.</p>
             <td><strong>nconst</strong></td>
             <td>
 <p>The number of conditions that constrained the B-spline in
-<a href="../proc/dfc.html">dfc</a>.</p>
+<a href="dfc.html">dfc</a>.</p>
             </td>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-nord~3"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -839,13 +742,13 @@ calculated a piece-wise polynomial curve.</p>
             <td>::</td>
             <td><strong>nord</strong></td>
             <td>
-<p>The order of the B-spline used in <a href="../proc/dfc.html">dfc</a>.
-The value of NORD must satisfy 1 &lt; NORD &lt; 20 .</p><a href="../proc/dcv.html#variable-nord" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>The order of the B-spline used in <a href="dfc.html">dfc</a>.
+The value of NORD must satisfy 1 &lt; NORD &lt; 20 .</p><a href="../proc/dcv.html#variable-nord~3" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-nbkpt~2"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -861,7 +764,7 @@ The value of NBKPT must satisfy NBKPT .GE. 2</em>NORD.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-bkpt~2"></span>
               real(kind=wp),
             </td>
 <td>intent(in)</td>
@@ -875,13 +778,13 @@ The value of NBKPT must satisfy NBKPT .GE. 2</em>NORD.</p>
 data interval will be included between the limits
 BKPT(NORD) and BKPT(NBKPT-NORD+1).  The additional end
 knots BKPT(I),I=1,...,NORD-1 and I=NBKPT-NORD+2,...,NBKPT,
-are required by <a href="../proc/dfc.html">dfc</a> to compute the functions used to
+are required by <a href="dfc.html">dfc</a> to compute the functions used to
 fit the data.</p>
             </td>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-w~12"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -891,7 +794,7 @@ fit the data.</p>
             <td>::</td>
             <td><strong>w</strong>(*)</td>
             <td>
-<p>Real work array as used in <a href="../proc/dfc.html">dfc</a>.  See <a href="../proc/dfc.html">dfc</a>
+<p>Real work array as used in <a href="dfc.html">dfc</a>.  See <a href="dfc.html">dfc</a>
 for the required length of W(<em>).  The contents of W(</em>)
 must not be modified by the user if the variance function
 is desired.</p>
@@ -914,10 +817,10 @@ is desired.</p>
 
         <section>
           <h2>Subroutines</h2>
-              <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="proc-defc"></span><h3>public  subroutine <a href='../proc/defc.html'>defc</a>(Ndata, Xdata, Ydata, Sddata, Nord, Nbkpt, Bkpt, Mdein, Mdeout, Coeff, Lw, w)  
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-defc"></span> <h3>public  subroutine <a href='../proc/defc.html'>defc</a>(Ndata, Xdata, Ydata, Sddata, Nord, Nbkpt, Bkpt, Mdein, Mdeout, Coeff, Lw, w)  
 </h3></div>
-    <div class="panel-body">
+    <div class="card-body">
           
   <p>This subprogram fits a piecewise polynomial curve
   to discrete data.  The piecewise polynomials are
@@ -928,16 +831,16 @@ is desired.</p>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ndata"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -954,7 +857,7 @@ A negative value of <code>NDATA</code> is an error.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-xdata"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -969,7 +872,7 @@ A negative value of <code>NDATA</code> is an error.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ydata"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -984,7 +887,7 @@ A negative value of <code>NDATA</code> is an error.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-sddata"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -1003,7 +906,7 @@ the reciprocal of this entry.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-nord"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -1024,7 +927,7 @@ B-spline package convention.  For example,
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-nbkpt"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -1039,7 +942,7 @@ B-spline package convention.  For example,
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-bkpt"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -1057,7 +960,7 @@ The additional end knots <code>BKPT(I),I=1,...,NORD-1</code>
 and <code>I=NBKPT-NORD+2,...,NBKPT</code>, are
 required to compute the functions used to fit
 the data.  No sorting of <code>BKPT(*)</code> is required.
-Internal to <a href="../proc/defc.html">defc</a> the extreme end knots may
+Internal to <a>DEFC</a> the extreme end knots may
 be reduced and increased respectively to
 accommodate any data values that are exterior
 to the given knot values.  The contents of
@@ -1066,7 +969,7 @@ to the given knot values.  The contents of
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mdein"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -1084,7 +987,7 @@ by the user:</p><a href="../proc/defc.html#variable-mdein" class="pull-right"><e
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mdeout"></span>
               integer,
             </td>
 <td>intent(out)</td>
@@ -1100,7 +1003,7 @@ of the curve fit:</p><a href="../proc/defc.html#variable-mdeout" class="pull-rig
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-coeff"></span>
               real(kind=wp),
             </td>
 <td>intent(out)</td>
@@ -1122,7 +1025,7 @@ values of <code>COEFF(*)</code> are set to zero.</p><a href="../proc/defc.html#v
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-lw"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -1135,9 +1038,9 @@ values of <code>COEFF(*)</code> are set to zero.</p><a href="../proc/defc.html#v
 <p>The amount of working storage actually
  allocated for the working array <code>W(*)</code>.
  This quantity is compared with the
- actual amount of storage needed in <a href="../proc/defc.html">defc</a>.
+ actual amount of storage needed in <a>DEFC</a>.
  Insufficient storage allocated for <code>W(*)</code> is
- an error.  This feature was included in <a href="../proc/defc.html">defc</a>
+ an error.  This feature was included in <a>DEFC</a>
  because misreading the storage formula
  for <code>W(*)</code> might very well lead to subtle
  and hard-to-find programming bugs.</p><a href="../proc/defc.html#variable-lw" class="pull-right"><emph>Read more&hellip;</emph></a>
@@ -1145,7 +1048,7 @@ values of <code>COEFF(*)</code> are set to zero.</p><a href="../proc/defc.html#v
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-w"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -1159,9 +1062,9 @@ values of <code>COEFF(*)</code> are set to zero.</p><a href="../proc/defc.html#v
 Its length is specified as an input parameter
 in <code>LW</code> as noted above. The contents of <code>W(*)</code>
 must not be modified by the user between calls
-to <a href="../proc/defc.html">defc</a> with values of <code>MDEIN=1,2,2,...</code> .
+to <a>DEFC</a> with values of <code>MDEIN=1,2,2,...</code> .
 The first <code>(NBKPT-NORD+3)*(NORD+1)</code> entries of
-<code>W(*)</code> are acceptable as direct input to <a href="../proc/dfc.html">dfc</a>
+<code>W(*)</code> are acceptable as direct input to <a>DFC</a>
 for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
             </td>
         </tr>
@@ -1172,30 +1075,30 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
     </div>
   </div>
 
-              <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="proc-defcmn"></span><h3>private  subroutine <a href='../proc/defcmn.html'>defcmn</a>(Ndata, Xdata, Ydata, Sddata, Nord, Nbkpt, Bkptin, Mdein, Mdeout, Coeff, Bf, Xtemp, Ptemp, Bkpt, g, Mdg, w, Mdw, Lw)  
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-defcmn"></span> <h3>private  subroutine <a href='../proc/defcmn.html'>defcmn</a>(Ndata, Xdata, Ydata, Sddata, Nord, Nbkpt, Bkptin, Mdein, Mdeout, Coeff, Bf, Xtemp, Ptemp, Bkpt, g, Mdg, w, Mdw, Lw)  
 </h3></div>
-    <div class="panel-body">
+    <div class="card-body">
           
-  <p>This is a companion subprogram to <a href="../proc/defc.html">defc</a>.
+  <p>This is a companion subprogram to <a>DEFC</a>.
   This subprogram does weighted least squares fitting of data by
   B-spline curves.
-  The documentation for <a href="../proc/defc.html">defc</a> has complete usage instructions.</p><a href="../proc/defcmn.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  The documentation for <a>DEFC</a> has complete usage instructions.</p><a href="../proc/defcmn.html" class="pull-right"><emph>Read more&hellip;</emph></a>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ndata~2"></span>
               integer
             </td>
 <td></td>
@@ -1210,7 +1113,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-xdata~2"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -1225,7 +1128,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ydata~2"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -1240,7 +1143,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-sddata~2"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -1255,7 +1158,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-nord~2"></span>
               integer
             </td>
 <td></td>
@@ -1270,7 +1173,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-nbkpt~2"></span>
               integer
             </td>
 <td></td>
@@ -1285,7 +1188,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-bkptin"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -1300,7 +1203,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mdein~2"></span>
               integer
             </td>
 <td></td>
@@ -1315,7 +1218,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mdeout~2"></span>
               integer
             </td>
 <td></td>
@@ -1330,7 +1233,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-coeff~2"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -1345,7 +1248,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-bf"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -1360,7 +1263,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-xtemp"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -1375,7 +1278,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ptemp"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -1390,7 +1293,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-bkpt~2"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -1405,7 +1308,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-g"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -1420,7 +1323,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mdg"></span>
               integer
             </td>
 <td></td>
@@ -1435,7 +1338,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-w~2"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -1450,7 +1353,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mdw"></span>
               integer
             </td>
 <td></td>
@@ -1465,7 +1368,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-lw~2"></span>
               integer
             </td>
 <td></td>
@@ -1485,10 +1388,10 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
     </div>
   </div>
 
-              <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="proc-dbndac"></span><h3>private  subroutine <a href='../proc/dbndac.html'>dbndac</a>(g, Mdg, Nb, Ip, Ir, Mt, Jt)  
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-dbndac"></span> <h3>private  subroutine <a href='../proc/dbndac.html'>dbndac</a>(g, Mdg, Nb, Ip, Ir, Mt, Jt)  
 </h3></div>
-    <div class="panel-body">
+    <div class="card-body">
           
   <p>These subroutines solve the least squares problem <code>Ax = b</code> for
   banded matrices A using sequential accumulation of rows of the
@@ -1498,16 +1401,16 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-g~2"></span>
               real(kind=wp),
             </td>
 <td>intent(inout)</td>
@@ -1517,12 +1420,12 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
             <td>::</td>
             <td><strong>g</strong>(Mdg,*)</td>
             <td>
-<p><code>G(MDG,NB+1)</code></p><a href="../proc/dbndac.html#variable-g" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p><code>G(MDG,NB+1)</code></p><a href="../proc/dbndac.html#variable-g~2" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mdg~2"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -1540,7 +1443,7 @@ of these subprograms.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-nb"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -1555,7 +1458,7 @@ of these subprograms.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ip"></span>
               integer,
             </td>
 <td>intent(inout)</td>
@@ -1567,14 +1470,14 @@ of these subprograms.</p>
             <td>
 <p><em>Input</em>
 Set by the user to the value 1 before the
-first call to <a href="../proc/dbndac.html">dbndac</a>.  Its subsequent value
-is controlled by <a href="../proc/dbndac.html">dbndac</a> to set up for the
-next call to <a href="../proc/dbndac.html">dbndac</a>.</p><a href="../proc/dbndac.html#variable-ip" class="pull-right"><emph>Read more&hellip;</emph></a>
+first call to <a>DBNDAC</a>.  Its subsequent value
+is controlled by <a>DBNDAC</a> to set up for the
+next call to <a>DBNDAC</a>.</p><a href="../proc/dbndac.html#variable-ip" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ir"></span>
               integer,
             </td>
 <td>intent(inout)</td>
@@ -1588,14 +1491,14 @@ next call to <a href="../proc/dbndac.html">dbndac</a>.</p><a href="../proc/dbnda
 Index of the row of <code>G(*,*)</code> where the user is
 to place the new block of data <code>(C F)</code>.  Set by
 the user to the value 1 before the first call
-to <a href="../proc/dbndac.html">dbndac</a>.  Its subsequent value is controlled
-by <a href="../proc/dbndac.html">dbndac</a>. A value of <code>IR &gt; MDG</code> is considered
+to <a>DBNDAC</a>.  Its subsequent value is controlled
+by <a>DBNDAC</a>. A value of <code>IR &gt; MDG</code> is considered
 an error.</p><a href="../proc/dbndac.html#variable-ir" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mt"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -1611,7 +1514,7 @@ number of new rows of data in the block</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-jt"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -1633,10 +1536,10 @@ set of rows <code>(E F) = (0 C 0 F)</code> being processed.</p>
     </div>
   </div>
 
-              <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="proc-dbndsl"></span><h3>private  subroutine <a href='../proc/dbndsl.html'>dbndsl</a>(Mode, g, Mdg, Nb, Ip, Ir, x, n, Rnorm)  
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-dbndsl"></span> <h3>private  subroutine <a href='../proc/dbndsl.html'>dbndsl</a>(Mode, g, Mdg, Nb, Ip, Ir, x, n, Rnorm)  
 </h3></div>
-    <div class="panel-body">
+    <div class="card-body">
           
   <p>These subroutines solve the least squares problem <code>Ax = b</code> for
   banded matrices A using sequential accumulation of rows of the
@@ -1646,16 +1549,16 @@ set of rows <code>(E F) = (0 C 0 F)</code> being processed.</p>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mode"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -1673,7 +1576,7 @@ required.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-g~3"></span>
               real(kind=wp),
             </td>
 <td>intent(in)</td>
@@ -1683,12 +1586,12 @@ required.</p>
             <td>::</td>
             <td><strong>g</strong>(Mdg,*)</td>
             <td>
-<p><code>G(MDG,NB+1)</code></p><a href="../proc/dbndsl.html#variable-g~2" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p><code>G(MDG,NB+1)</code></p><a href="../proc/dbndsl.html#variable-g~3" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mdg~3"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -1701,12 +1604,12 @@ required.</p>
 <p>The number of rows in the working array
 <code>G(*,*)</code>.  The value of <code>MDG</code> should be <code>&gt;= MU</code>.
 The value of <code>MU</code> is defined in the abstract
-of these subprograms.</p><a href="../proc/dbndsl.html#variable-mdg~2" class="pull-right"><emph>Read more&hellip;</emph></a>
+of these subprograms.</p><a href="../proc/dbndsl.html#variable-mdg~3" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-nb~2"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -1717,12 +1620,12 @@ of these subprograms.</p><a href="../proc/dbndsl.html#variable-mdg~2" class="pul
             <td><strong>Nb</strong></td>
             <td>
 <p>This argument has the same meaning and
-contents as following the last call to <a href="../proc/dbndac.html">dbndac</a>.</p>
+contents as following the last call to <a>DBNDAC</a>.</p>
             </td>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ip~2"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -1733,12 +1636,12 @@ contents as following the last call to <a href="../proc/dbndac.html">dbndac</a>.
             <td><strong>Ip</strong></td>
             <td>
 <p>This argument has the same meaning and
-contents as following the last call to <a href="../proc/dbndac.html">dbndac</a>.</p>
+contents as following the last call to <a>DBNDAC</a>.</p>
             </td>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ir~2"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -1749,12 +1652,12 @@ contents as following the last call to <a href="../proc/dbndac.html">dbndac</a>.
             <td><strong>Ir</strong></td>
             <td>
 <p>This argument has the same meaning and
-contents as following the last call to <a href="../proc/dbndac.html">dbndac</a>.</p>
+contents as following the last call to <a>DBNDAC</a>.</p>
             </td>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-x"></span>
               real(kind=wp),
             </td>
 <td>intent(inout)</td>
@@ -1764,12 +1667,12 @@ contents as following the last call to <a href="../proc/dbndac.html">dbndac</a>.
             <td>::</td>
             <td><strong>x</strong>(*)</td>
             <td>
-<p><code>X(N)</code></p><a href="../proc/dbndsl.html#variable-x~25" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p><code>X(N)</code></p><a href="../proc/dbndsl.html#variable-x" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-n~2"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -1781,14 +1684,14 @@ contents as following the last call to <a href="../proc/dbndac.html">dbndac</a>.
             <td>
 <p>The number of variables in the solution
 vector.  If any of the <code>N</code> diagonal terms are
-zero the subroutine <a href="../proc/dbndsl.html">dbndsl</a> prints an
+zero the subroutine <a>DBNDSL</a> prints an
 appropriate message.  This condition is
 considered an error.</p>
             </td>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-rnorm"></span>
               real(kind=wp),
             </td>
 <td>intent(out)</td>
@@ -1810,10 +1713,10 @@ is set to zero.</p>
     </div>
   </div>
 
-              <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="proc-dfspvn"></span><h3>private  subroutine <a href='../proc/dfspvn.html'>dfspvn</a>(t, Jhigh, Index, x, Ileft, Vnikx, j, deltam, deltap)  
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-dfspvn"></span> <h3>private  subroutine <a href='../proc/dfspvn.html'>dfspvn</a>(t, Jhigh, Index, x, Ileft, Vnikx, j, deltam, deltap)  
 </h3></div>
-    <div class="panel-body">
+    <div class="card-body">
           
   <p>Calculates the value of all possibly nonzero B-splines at <code>X</code> of
   order <code>MAX(JHIGH,(J+1)(INDEX-1))</code> on <code>T</code>.</p><a href="../proc/dfspvn.html" class="pull-right"><emph>Read more&hellip;</emph></a>
@@ -1822,16 +1725,16 @@ is set to zero.</p>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-t"></span>
               real(kind=wp),
             </td>
 <td>intent(in)</td>
@@ -1846,7 +1749,7 @@ is set to zero.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-jhigh"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -1861,7 +1764,7 @@ is set to zero.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-index"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -1876,7 +1779,7 @@ is set to zero.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-x~2"></span>
               real(kind=wp),
             </td>
 <td>intent(in)</td>
@@ -1891,7 +1794,7 @@ is set to zero.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ileft"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -1906,7 +1809,7 @@ is set to zero.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-vnikx"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -1921,7 +1824,7 @@ is set to zero.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-j~3"></span>
               integer,
             </td>
 <td>intent(inout)</td>
@@ -1936,7 +1839,7 @@ is set to zero.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-deltam"></span>
               real(kind=wp),
             </td>
 <td>intent(inout),</td>
@@ -1951,7 +1854,7 @@ is set to zero.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-deltap"></span>
               real(kind=wp),
             </td>
 <td>intent(inout),</td>
@@ -1971,10 +1874,10 @@ is set to zero.</p>
     </div>
   </div>
 
-              <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="proc-dh12"></span><h3>private  subroutine <a href='../proc/dh12.html'>dh12</a>(Mode, Lpivot, l1, m, u, Iue, Up, c, Ice, Icv, Ncv)  
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-dh12"></span> <h3>private  subroutine <a href='../proc/dh12.html'>dh12</a>(Mode, Lpivot, l1, m, u, Iue, Up, c, Ice, Icv, Ncv)  
 </h3></div>
-    <div class="panel-body">
+    <div class="card-body">
           
   <p>Construction and/or application of a single
   Householder transformation. <code>Q = I + U*(U**T)/B</code></p><a href="../proc/dh12.html" class="pull-right"><emph>Read more&hellip;</emph></a>
@@ -1983,16 +1886,16 @@ is set to zero.</p>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mode~2"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -2007,7 +1910,7 @@ is set to zero.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-lpivot"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -2022,7 +1925,7 @@ is set to zero.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-l1"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -2039,7 +1942,7 @@ the subroutine does an identity transformation.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-m"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -2054,7 +1957,7 @@ the subroutine does an identity transformation.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-u"></span>
               real(kind=wp),
             </td>
 <td>intent(inout)</td>
@@ -2074,7 +1977,7 @@ by H1.  These will not be modified by H2.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-iue"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -2089,7 +1992,7 @@ by H1.  These will not be modified by H2.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-up"></span>
               real(kind=wp),
             </td>
 <td>intent(inout)</td>
@@ -2104,7 +2007,7 @@ by H1.  These will not be modified by H2.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-c"></span>
               real(kind=wp),
             </td>
 <td>intent(inout)</td>
@@ -2122,7 +2025,7 @@ set of transformed vectors.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ice"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -2137,7 +2040,7 @@ set of transformed vectors.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-icv"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -2152,7 +2055,7 @@ set of transformed vectors.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ncv"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -2173,10 +2076,10 @@ no operations will be done on <code>C()</code>.</p>
     </div>
   </div>
 
-              <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="proc-dsort"></span><h3>private  subroutine <a href='../proc/dsort.html'>dsort</a>(n, Kflag, Dx, Dy)  
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-dsort"></span> <h3>private  subroutine <a href='../proc/dsort.html'>dsort</a>(n, Kflag, Dx, Dy)  
 </h3></div>
-    <div class="panel-body">
+    <div class="card-body">
           
   <p>Sort an array and optionally make the same interchanges in
   an auxiliary array.  The array may be sorted in increasing
@@ -2186,16 +2089,16 @@ no operations will be done on <code>C()</code>.</p>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-n~3"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -2210,7 +2113,7 @@ no operations will be done on <code>C()</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-kflag"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -2227,7 +2130,7 @@ no operations will be done on <code>C()</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-dx"></span>
               real(kind=wp),
             </td>
 <td>intent(inout),</td>
@@ -2242,7 +2145,7 @@ no operations will be done on <code>C()</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-dy"></span>
               real(kind=wp),
             </td>
 <td>intent(inout),</td>
@@ -2262,10 +2165,10 @@ no operations will be done on <code>C()</code>.</p>
     </div>
   </div>
 
-              <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="proc-sort_ascending"></span><h3>private  subroutine <a href='../proc/sort_ascending.html'>sort_ascending</a>(n, dx, dy)  
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-sort_ascending"></span> <h3>private  subroutine <a href='../proc/sort_ascending.html'>sort_ascending</a>(n, dx, dy)  
 </h3></div>
-    <div class="panel-body">
+    <div class="card-body">
           
   <p>Recursive quicksoft.
   Modified to also carry along a second array.</p><a href="../proc/sort_ascending.html" class="pull-right"><emph>Read more&hellip;</emph></a>
@@ -2274,16 +2177,16 @@ no operations will be done on <code>C()</code>.</p>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-n~4"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -2298,7 +2201,7 @@ no operations will be done on <code>C()</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-dx"></span>
               real(kind=wp),
             </td>
 <td>intent(inout),</td>
@@ -2313,7 +2216,7 @@ no operations will be done on <code>C()</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-dy"></span>
               real(kind=wp),
             </td>
 <td>intent(inout),</td>
@@ -2333,10 +2236,10 @@ no operations will be done on <code>C()</code>.</p>
     </div>
   </div>
 
-              <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="proc-dfc"></span><h3>public  subroutine <a href='../proc/dfc.html'>dfc</a>(ndata, xdata, ydata, sddata, nord, Nbkpt, Bkpt, nconst, xconst, yconst, nderiv, mode, coeff, w, iw)  
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-dfc"></span> <h3>public  subroutine <a href='../proc/dfc.html'>dfc</a>(ndata, xdata, ydata, sddata, nord, Nbkpt, Bkpt, nconst, xconst, yconst, nderiv, mode, coeff, w, iw)  
 </h3></div>
-    <div class="panel-body">
+    <div class="card-body">
           
   <p>This subprogram fits a piecewise polynomial curve
   to discrete data.  The piecewise polynomials are
@@ -2349,16 +2252,16 @@ no operations will be done on <code>C()</code>.</p>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ndata"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -2375,7 +2278,7 @@ A negative value of <code>NDATA</code> is an error.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-xdata"></span>
               real(kind=wp),
             </td>
 <td>intent(in)</td>
@@ -2390,7 +2293,7 @@ A negative value of <code>NDATA</code> is an error.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ydata"></span>
               real(kind=wp),
             </td>
 <td>intent(in)</td>
@@ -2405,7 +2308,7 @@ A negative value of <code>NDATA</code> is an error.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-sddata"></span>
               real(kind=wp),
             </td>
 <td>intent(in)</td>
@@ -2424,7 +2327,7 @@ the reciprocal of this entry.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-nord"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -2445,7 +2348,7 @@ B-spline package convention.  For example,
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-nbkpt~3"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -2460,7 +2363,7 @@ B-spline package convention.  For example,
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-bkpt~3"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -2478,7 +2381,7 @@ The additional end knots <code>BKPT(I),I=1,...,NORD-1</code>
 and <code>I=NBKPT-NORD+2,...,NBKPT</code>, are
 required to compute the functions used to fit
 the data.  No sorting of <code>BKPT(*)</code> is required.
-Internal to <a href="../proc/defc.html">defc</a> the extreme end knots may
+Internal to <a>DEFC</a> the extreme end knots may
 be reduced and increased respectively to
 accommodate any data values that are exterior
 to the given knot values.  The contents of
@@ -2487,7 +2390,7 @@ to the given knot values.  The contents of
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-nconst"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -2507,7 +2410,7 @@ NDERIV(*).</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-xconst"></span>
               real(kind=wp),
             </td>
 <td>intent(in)</td>
@@ -2523,7 +2426,7 @@ No sorting of XCONST(*) is required.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-yconst"></span>
               real(kind=wp),
             </td>
 <td>intent(in)</td>
@@ -2538,7 +2441,7 @@ No sorting of XCONST(*) is required.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-nderiv"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -2559,7 +2462,7 @@ No sorting of XCONST(*) is required.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mode"></span>
               integer,
             </td>
 <td>intent(inout)</td>
@@ -2574,7 +2477,7 @@ No sorting of XCONST(*) is required.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-coeff"></span>
               real(kind=wp),
             </td>
 <td>intent(out)</td>
@@ -2600,7 +2503,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-w~3"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -2617,7 +2520,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-iw"></span>
               integer
             </td>
 <td></td>
@@ -2637,28 +2540,28 @@ array COEFF(</em>) is undefined.</p>
     </div>
   </div>
 
-              <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="proc-dfcmn"></span><h3>private  subroutine <a href='../proc/dfcmn.html'>dfcmn</a>(ndata, xdata, ydata, sddata, nord, nbkpt, bkptin, nconst, xconst, yconst, nderiv, mode, coeff, bf, xtemp, ptemp, bkpt, g, mdg, w, mdw, work, iwork)  
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-dfcmn"></span> <h3>private  subroutine <a href='../proc/dfcmn.html'>dfcmn</a>(ndata, xdata, ydata, sddata, nord, nbkpt, bkptin, nconst, xconst, yconst, nderiv, mode, coeff, bf, xtemp, ptemp, bkpt, g, mdg, w, mdw, work, iwork)  
 </h3></div>
-    <div class="panel-body">
+    <div class="card-body">
           
-  <p>This is a companion subprogram to <a href="../proc/dfc.html">dfc</a>.
-  The documentation for <a href="../proc/dfc.html">dfc</a> has complete usage instructions.</p><a href="../proc/dfcmn.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  <p>This is a companion subprogram to <a>DFC</a>.
+  The documentation for <a>DFC</a> has complete usage instructions.</p><a href="../proc/dfcmn.html" class="pull-right"><emph>Read more&hellip;</emph></a>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ndata~2"></span>
               integer
             </td>
 <td></td>
@@ -2673,7 +2576,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-xdata~2"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -2688,7 +2591,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ydata~2"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -2703,7 +2606,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-sddata~2"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -2718,7 +2621,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-nord~2"></span>
               integer
             </td>
 <td></td>
@@ -2733,7 +2636,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-nbkpt"></span>
               integer
             </td>
 <td></td>
@@ -2748,7 +2651,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-bkptin"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -2763,7 +2666,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-nconst~2"></span>
               integer
             </td>
 <td></td>
@@ -2778,7 +2681,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-xconst~2"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -2793,7 +2696,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-yconst~2"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -2808,7 +2711,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-nderiv~2"></span>
               integer
             </td>
 <td></td>
@@ -2823,7 +2726,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mode~2"></span>
               integer
             </td>
 <td></td>
@@ -2838,7 +2741,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-coeff~2"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -2853,7 +2756,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-bf"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -2868,7 +2771,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-xtemp"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -2883,7 +2786,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ptemp"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -2898,7 +2801,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-bkpt"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -2913,7 +2816,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-g~4"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -2928,7 +2831,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mdg~3"></span>
               integer
             </td>
 <td></td>
@@ -2943,7 +2846,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-w~4"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -2958,7 +2861,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mdw~3"></span>
               integer
             </td>
 <td></td>
@@ -2973,7 +2876,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-work"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -2988,7 +2891,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-iwork"></span>
               integer
             </td>
 <td></td>
@@ -3008,10 +2911,10 @@ array COEFF(</em>) is undefined.</p>
     </div>
   </div>
 
-              <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="proc-dfspvd"></span><h3>private  subroutine <a href='../proc/dfspvd.html'>dfspvd</a>(t, k, x, ileft, vnikx, nderiv)  
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-dfspvd"></span> <h3>private  subroutine <a href='../proc/dfspvd.html'>dfspvd</a>(t, k, x, ileft, vnikx, nderiv)  
 </h3></div>
-    <div class="panel-body">
+    <div class="card-body">
           
   <p>Calculates value and derivs of all B-splines which do not vanish at <code>X</code></p><a href="../proc/dfspvd.html" class="pull-right"><emph>Read more&hellip;</emph></a>
 
@@ -3019,16 +2922,16 @@ array COEFF(</em>) is undefined.</p>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-t~2"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -3043,7 +2946,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-k~2"></span>
               integer
             </td>
 <td></td>
@@ -3058,7 +2961,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-x~3"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -3073,7 +2976,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ileft~3"></span>
               integer
             </td>
 <td></td>
@@ -3088,7 +2991,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-vnikx"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -3103,7 +3006,7 @@ array COEFF(</em>) is undefined.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-nderiv~3"></span>
               integer
             </td>
 <td></td>
@@ -3123,10 +3026,10 @@ array COEFF(</em>) is undefined.</p>
     </div>
   </div>
 
-              <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="proc-dhfti"></span><h3>private  subroutine <a href='../proc/dhfti.html'>dhfti</a>(a, mda, m, n, b, mdb, nb, tau, krank, rnorm, h, g, ip)  
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-dhfti"></span> <h3>private  subroutine <a href='../proc/dhfti.html'>dhfti</a>(a, mda, m, n, b, mdb, nb, tau, krank, rnorm, h, g, ip)  
 </h3></div>
-    <div class="panel-body">
+    <div class="card-body">
           
   <p>Solve a least squares problem for banded matrices using
   sequential accumulation of rows of the data matrix.
@@ -3136,16 +3039,16 @@ array COEFF(</em>) is undefined.</p>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-a~2"></span>
               real(kind=wp),
             </td>
 <td>intent(inout)</td>
@@ -3162,12 +3065,12 @@ The first dimensioning parameter of the array
 A(<em>,</em>) is MDA, which must satisfy MDA&gt;=M
 Either M&gt;=N or M&lt;N is permitted.  There
 is no restriction on the rank of A.  The
-condition MDA&lt;M is considered an error.</p><a href="../proc/dhfti.html#variable-a" class="pull-right"><emph>Read more&hellip;</emph></a>
+condition MDA&lt;M is considered an error.</p><a href="../proc/dhfti.html#variable-a~2" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mda"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -3182,7 +3085,7 @@ condition MDA&lt;M is considered an error.</p><a href="../proc/dhfti.html#variab
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-m~3"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -3197,7 +3100,7 @@ condition MDA&lt;M is considered an error.</p><a href="../proc/dhfti.html#variab
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-n~6"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -3212,7 +3115,7 @@ condition MDA&lt;M is considered an error.</p><a href="../proc/dhfti.html#variab
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-b~2"></span>
               real(kind=wp),
             </td>
 <td>intent(inout)</td>
@@ -3234,12 +3137,12 @@ MDB&gt;=MAX(M,N).  If NB = 1 the array B(</em>) may
 be either doubly or singly subscripted.  In
 the latter case the value of MDB is arbitrary
 but it should be set to some valid integer
-value such as MDB = M.</p><a href="../proc/dhfti.html#variable-b" class="pull-right"><emph>Read more&hellip;</emph></a>
+value such as MDB = M.</p><a href="../proc/dhfti.html#variable-b~2" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mdb"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -3254,7 +3157,7 @@ value such as MDB = M.</p><a href="../proc/dhfti.html#variable-b" class="pull-ri
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-nb~3"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -3269,7 +3172,7 @@ value such as MDB = M.</p><a href="../proc/dhfti.html#variable-b" class="pull-ri
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-tau"></span>
               real(kind=wp),
             </td>
 <td>intent(in)</td>
@@ -3285,7 +3188,7 @@ for pseudorank determination.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-krank"></span>
               integer,
             </td>
 <td>intent(out)</td>
@@ -3301,7 +3204,7 @@ pseudorank of A.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-rnorm~3"></span>
               real(kind=wp),
             </td>
 <td>intent(out)</td>
@@ -3320,7 +3223,7 @@ B(<em>,</em>) for J = 1,...,NB.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-h"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -3340,7 +3243,7 @@ not generally required by the user.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-g~5"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -3360,7 +3263,7 @@ not generally required by the user.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ip~4"></span>
               integer
             </td>
 <td></td>
@@ -3383,10 +3286,10 @@ not generally required by the user.</p>
     </div>
   </div>
 
-              <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="proc-dlpdp"></span><h3>private  subroutine <a href='../proc/dlpdp.html'>dlpdp</a>(a, mda, m, n1, n2, prgopt, x, wnorm, mode, ws, is)  
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-dlpdp"></span> <h3>private  subroutine <a href='../proc/dlpdp.html'>dlpdp</a>(a, mda, m, n1, n2, prgopt, x, wnorm, mode, ws, is)  
 </h3></div>
-    <div class="panel-body">
+    <div class="card-body">
           
   <p>Determine an N1-vector W, and
             an N2-vector Z
@@ -3400,16 +3303,16 @@ not generally required by the user.</p>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-a~3"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -3424,7 +3327,7 @@ not generally required by the user.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mda~2"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -3439,7 +3342,7 @@ not generally required by the user.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-m~4"></span>
               integer
             </td>
 <td></td>
@@ -3454,7 +3357,7 @@ not generally required by the user.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-n1"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -3469,7 +3372,7 @@ not generally required by the user.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-n2"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -3484,7 +3387,7 @@ not generally required by the user.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-prgopt~2"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -3499,7 +3402,7 @@ not generally required by the user.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-x~4"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -3514,7 +3417,7 @@ not generally required by the user.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-wnorm"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -3529,7 +3432,7 @@ not generally required by the user.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mode~3"></span>
               integer,
             </td>
 <td>intent(out)</td>
@@ -3540,12 +3443,12 @@ not generally required by the user.</p>
             <td><strong>mode</strong></td>
             <td>
 <p>The value of MODE indicates the status of
-the computation after returning to the user.</p><a href="../proc/dlpdp.html#variable-mode~2" class="pull-right"><emph>Read more&hellip;</emph></a>
+the computation after returning to the user.</p><a href="../proc/dlpdp.html#variable-mode~3" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ws"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -3560,7 +3463,7 @@ the computation after returning to the user.</p><a href="../proc/dlpdp.html#vari
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-is"></span>
               integer
             </td>
 <td></td>
@@ -3580,10 +3483,10 @@ the computation after returning to the user.</p><a href="../proc/dlpdp.html#vari
     </div>
   </div>
 
-              <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="proc-dlsei"></span><h3>private  subroutine <a href='../proc/dlsei.html'>dlsei</a>(w, mdw, me, ma, mg, n, prgopt, x, rnorme, rnorml, mode, ws, ip)  
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-dlsei"></span> <h3>private  subroutine <a href='../proc/dlsei.html'>dlsei</a>(w, mdw, me, ma, mg, n, prgopt, x, rnorme, rnorml, mode, ws, ip)  
 </h3></div>
-    <div class="panel-body">
+    <div class="card-body">
           
   <p>This subprogram solves a linearly constrained least squares
   problem with both equality and inequality constraints, and, if the
@@ -3594,16 +3497,16 @@ the computation after returning to the user.</p><a href="../proc/dlpdp.html#vari
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-w~5"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -3618,7 +3521,7 @@ the computation after returning to the user.</p><a href="../proc/dlpdp.html#vari
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mdw~4"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -3633,7 +3536,7 @@ the computation after returning to the user.</p><a href="../proc/dlpdp.html#vari
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-me"></span>
               integer
             </td>
 <td></td>
@@ -3648,7 +3551,7 @@ the computation after returning to the user.</p><a href="../proc/dlpdp.html#vari
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ma"></span>
               integer
             </td>
 <td></td>
@@ -3663,7 +3566,7 @@ the computation after returning to the user.</p><a href="../proc/dlpdp.html#vari
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mg"></span>
               integer
             </td>
 <td></td>
@@ -3678,7 +3581,7 @@ the computation after returning to the user.</p><a href="../proc/dlpdp.html#vari
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-n~8"></span>
               integer
             </td>
 <td></td>
@@ -3693,7 +3596,7 @@ the computation after returning to the user.</p><a href="../proc/dlpdp.html#vari
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-prgopt~3"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -3708,7 +3611,7 @@ the computation after returning to the user.</p><a href="../proc/dlpdp.html#vari
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-x~5"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -3723,7 +3626,7 @@ the computation after returning to the user.</p><a href="../proc/dlpdp.html#vari
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-rnorme~2"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -3738,7 +3641,7 @@ the computation after returning to the user.</p><a href="../proc/dlpdp.html#vari
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-rnorml~2"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -3753,7 +3656,7 @@ the computation after returning to the user.</p><a href="../proc/dlpdp.html#vari
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mode~4"></span>
               integer
             </td>
 <td></td>
@@ -3768,7 +3671,7 @@ the computation after returning to the user.</p><a href="../proc/dlpdp.html#vari
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ws~2"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -3783,7 +3686,7 @@ the computation after returning to the user.</p><a href="../proc/dlpdp.html#vari
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ip~5"></span>
               integer
             </td>
 <td></td>
@@ -3803,28 +3706,28 @@ the computation after returning to the user.</p><a href="../proc/dlpdp.html#vari
     </div>
   </div>
 
-              <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="proc-dlsi"></span><h3>private  subroutine <a href='../proc/dlsi.html'>dlsi</a>(w, mdw, ma, mg, n, prgopt, x, rnorm, mode, ws, ip)  
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-dlsi"></span> <h3>private  subroutine <a href='../proc/dlsi.html'>dlsi</a>(w, mdw, ma, mg, n, prgopt, x, rnorm, mode, ws, ip)  
 </h3></div>
-    <div class="panel-body">
+    <div class="card-body">
           
-  <p>This is a companion subprogram to <a href="../proc/dlsei.html">dlsei</a>.  The documentation for
-  <a href="../proc/dlsei.html">dlsei</a> has complete usage instructions.</p><a href="../proc/dlsi.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  <p>This is a companion subprogram to <a>DLSEI</a>.  The documentation for
+  <a>DLSEI</a> has complete usage instructions.</p><a href="../proc/dlsi.html" class="pull-right"><emph>Read more&hellip;</emph></a>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-w~6"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -3834,12 +3737,12 @@ the computation after returning to the user.</p><a href="../proc/dlpdp.html#vari
             <td>::</td>
             <td><strong>w</strong>(mdw,*)</td>
             <td>
-<p><code>W(*,*)</code> contains:</p><a href="../proc/dlsi.html#variable-w~4" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p><code>W(*,*)</code> contains:</p><a href="../proc/dlsi.html#variable-w~6" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mdw~5"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -3854,7 +3757,7 @@ the computation after returning to the user.</p><a href="../proc/dlpdp.html#vari
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ma~2"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -3869,7 +3772,7 @@ the computation after returning to the user.</p><a href="../proc/dlpdp.html#vari
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mg~2"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -3884,7 +3787,7 @@ the computation after returning to the user.</p><a href="../proc/dlpdp.html#vari
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-n~9"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -3899,7 +3802,7 @@ the computation after returning to the user.</p><a href="../proc/dlpdp.html#vari
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-prgopt~4"></span>
               real(kind=wp),
             </td>
 <td>intent(in)</td>
@@ -3914,7 +3817,7 @@ the computation after returning to the user.</p><a href="../proc/dlpdp.html#vari
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-x~6"></span>
               real(kind=wp),
             </td>
 <td>intent(out)</td>
@@ -3929,7 +3832,7 @@ the computation after returning to the user.</p><a href="../proc/dlpdp.html#vari
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-rnorm~5"></span>
               real(kind=wp),
             </td>
 <td>intent(out)</td>
@@ -3944,7 +3847,7 @@ the computation after returning to the user.</p><a href="../proc/dlpdp.html#vari
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mode~5"></span>
               integer,
             </td>
 <td>intent(out)</td>
@@ -3954,12 +3857,12 @@ the computation after returning to the user.</p><a href="../proc/dlpdp.html#vari
             <td>::</td>
             <td><strong>mode</strong></td>
             <td>
-<a href="../proc/dlsi.html#variable-mode~3" class="pull-right"><emph>Read more&hellip;</emph></a>
+<a href="../proc/dlsi.html#variable-mode~5" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ws~3"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -3975,7 +3878,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ip~6"></span>
               integer
             </td>
 <td></td>
@@ -3995,28 +3898,28 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
     </div>
   </div>
 
-              <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="proc-dwnlit"></span><h3>private  subroutine <a href='../proc/dwnlit.html'>dwnlit</a>(w, mdw, m, n, l, ipivot, itype, h, scale, rnorm, idope, dope, done)  
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-dwnlit"></span> <h3>private  subroutine <a href='../proc/dwnlit.html'>dwnlit</a>(w, mdw, m, n, l, ipivot, itype, h, scale, rnorm, idope, dope, done)  
 </h3></div>
-    <div class="panel-body">
+    <div class="card-body">
           
-  <p>This is a companion subprogram to <a href="../proc/dwnnls.html">dwnnls</a>.
-  The documentation for <a href="../proc/dwnnls.html">dwnnls</a> has complete usage instructions.</p><a href="../proc/dwnlit.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  <p>This is a companion subprogram to <a>DWNNLS</a>.
+  The documentation for <a>DWNNLS</a> has complete usage instructions.</p><a href="../proc/dwnlit.html" class="pull-right"><emph>Read more&hellip;</emph></a>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-w~7"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -4031,7 +3934,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mdw~6"></span>
               integer
             </td>
 <td></td>
@@ -4046,7 +3949,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-m~7"></span>
               integer
             </td>
 <td></td>
@@ -4061,7 +3964,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-n~10"></span>
               integer
             </td>
 <td></td>
@@ -4076,7 +3979,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-l~10"></span>
               integer
             </td>
 <td></td>
@@ -4091,7 +3994,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ipivot~3"></span>
               integer
             </td>
 <td></td>
@@ -4106,7 +4009,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-itype~2"></span>
               integer
             </td>
 <td></td>
@@ -4121,7 +4024,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-h~2"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -4136,7 +4039,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-scale"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -4151,7 +4054,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-rnorm~6"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -4166,7 +4069,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-idope"></span>
               integer
             </td>
 <td></td>
@@ -4181,7 +4084,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-dope"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -4196,7 +4099,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-done~2"></span>
               logical
             </td>
 <td></td>
@@ -4216,28 +4119,28 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
     </div>
   </div>
 
-              <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="proc-dwnlsm"></span><h3>private  subroutine <a href='../proc/dwnlsm.html'>dwnlsm</a>(w, mdw, mme, ma, n, l, prgopt, x, rnorm, mode, ipivot, itype, wd, h, scale, z, temp, d)  
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-dwnlsm"></span> <h3>private  subroutine <a href='../proc/dwnlsm.html'>dwnlsm</a>(w, mdw, mme, ma, n, l, prgopt, x, rnorm, mode, ipivot, itype, wd, h, scale, z, temp, d)  
 </h3></div>
-    <div class="panel-body">
+    <div class="card-body">
           
-  <p>This is a companion subprogram to <a href="../proc/dwnnls.html">dwnnls</a>.
-  The documentation for <a href="../proc/dwnnls.html">dwnnls</a> has complete usage instructions.</p><a href="../proc/dwnlsm.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  <p>This is a companion subprogram to <a>DWNNLS</a>.
+  The documentation for <a>DWNNLS</a> has complete usage instructions.</p><a href="../proc/dwnlsm.html" class="pull-right"><emph>Read more&hellip;</emph></a>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-w~8"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -4252,7 +4155,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mdw~7"></span>
               integer
             </td>
 <td></td>
@@ -4267,7 +4170,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mme"></span>
               integer
             </td>
 <td></td>
@@ -4282,7 +4185,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ma~3"></span>
               integer
             </td>
 <td></td>
@@ -4297,7 +4200,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-n~11"></span>
               integer
             </td>
 <td></td>
@@ -4312,7 +4215,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-l~11"></span>
               integer
             </td>
 <td></td>
@@ -4327,7 +4230,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-prgopt~5"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -4342,7 +4245,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-x~7"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -4357,7 +4260,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-rnorm~7"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -4372,7 +4275,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mode~6"></span>
               integer
             </td>
 <td></td>
@@ -4387,7 +4290,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ipivot~4"></span>
               integer
             </td>
 <td></td>
@@ -4402,7 +4305,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-itype~3"></span>
               integer
             </td>
 <td></td>
@@ -4417,7 +4320,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-wd"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -4432,7 +4335,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-h~3"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -4447,7 +4350,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-scale~2"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -4462,7 +4365,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-z"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -4477,7 +4380,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-temp"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -4492,7 +4395,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-d"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -4512,10 +4415,10 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
     </div>
   </div>
 
-              <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="proc-dwnlt1"></span><h3>private  subroutine <a href='../proc/dwnlt1.html'>dwnlt1</a>(i, lend, mend, ir, mdw, recalc, imax, hbar, h, scale, w)  
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-dwnlt1"></span> <h3>private  subroutine <a href='../proc/dwnlt1.html'>dwnlt1</a>(i, lend, mend, ir, mdw, recalc, imax, hbar, h, scale, w)  
 </h3></div>
-    <div class="panel-body">
+    <div class="card-body">
           
   <p>To update the column Sum Of Squares and find the pivot column.
   The column Sum of Squares Vector will be updated at each step.
@@ -4525,16 +4428,16 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-i~15"></span>
               integer
             </td>
 <td></td>
@@ -4549,7 +4452,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-lend~2"></span>
               integer
             </td>
 <td></td>
@@ -4564,7 +4467,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mend~3"></span>
               integer
             </td>
 <td></td>
@@ -4579,7 +4482,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ir~4"></span>
               integer
             </td>
 <td></td>
@@ -4594,7 +4497,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mdw~8"></span>
               integer
             </td>
 <td></td>
@@ -4609,7 +4512,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-recalc~2"></span>
               logical
             </td>
 <td></td>
@@ -4624,7 +4527,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-imax~4"></span>
               integer
             </td>
 <td></td>
@@ -4639,7 +4542,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-hbar~2"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -4654,7 +4557,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-h~4"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -4669,7 +4572,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-scale~3"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -4684,7 +4587,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-w~9"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -4704,10 +4607,10 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
     </div>
   </div>
 
-              <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="proc-dwnlt3"></span><h3>private  subroutine <a href='../proc/dwnlt3.html'>dwnlt3</a>(i, imax, m, mdw, ipivot, h, w)  
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-dwnlt3"></span> <h3>private  subroutine <a href='../proc/dwnlt3.html'>dwnlt3</a>(i, imax, m, mdw, ipivot, h, w)  
 </h3></div>
-    <div class="panel-body">
+    <div class="card-body">
           
   <p>Perform column interchange.
   Exchange elements of permuted index vector and perform column
@@ -4717,16 +4620,16 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-i~16"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -4741,7 +4644,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-imax~5"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -4756,7 +4659,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-m~9"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -4771,7 +4674,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mdw~9"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -4786,7 +4689,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ipivot~5"></span>
               integer,
             </td>
 <td>intent(inout)</td>
@@ -4801,7 +4704,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-h~5"></span>
               real(kind=wp),
             </td>
 <td>intent(inout)</td>
@@ -4816,7 +4719,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-w~10"></span>
               real(kind=wp),
             </td>
 <td>intent(inout)</td>
@@ -4836,10 +4739,10 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
     </div>
   </div>
 
-              <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="proc-dwnnls"></span><h3>private  subroutine <a href='../proc/dwnnls.html'>dwnnls</a>(w, mdw, me, ma, n, l, prgopt, x, rnorm, mode, iwork, work)  
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-dwnnls"></span> <h3>private  subroutine <a href='../proc/dwnnls.html'>dwnnls</a>(w, mdw, me, ma, n, l, prgopt, x, rnorm, mode, iwork, work)  
 </h3></div>
-    <div class="panel-body">
+    <div class="card-body">
           
   <p>This subprogram solves a linearly constrained least squares
   problem.  Suppose there are given matrices <code>E</code> and <code>A</code> of
@@ -4851,16 +4754,16 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-w~11"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -4875,7 +4778,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mdw~10"></span>
               integer
             </td>
 <td></td>
@@ -4890,7 +4793,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-me~5"></span>
               integer
             </td>
 <td></td>
@@ -4905,7 +4808,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ma~4"></span>
               integer
             </td>
 <td></td>
@@ -4920,7 +4823,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-n~12"></span>
               integer
             </td>
 <td></td>
@@ -4935,7 +4838,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-l~12"></span>
               integer
             </td>
 <td></td>
@@ -4950,7 +4853,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-prgopt~6"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -4965,7 +4868,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-x~8"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -4980,7 +4883,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-rnorm~8"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -4995,7 +4898,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-mode~7"></span>
               integer
             </td>
 <td></td>
@@ -5010,7 +4913,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-iwork~2"></span>
               integer
             </td>
 <td></td>
@@ -5025,7 +4928,7 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-work~2"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -5057,12 +4960,12 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
     </div> <!-- /container -->
     <footer>
       <div class="container">
-        <div class="row">
-          <div class="col-xs-6 col-md-6"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2023 
+        <div class="row justify-content-between">
+          <div class="col"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2024 
 </p>
           </div>
-          <div class="col-xs-6 col-md-6">
-            <p class="text-right">
+          <div class="col">
+            <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
             </p>
@@ -5072,17 +4975,12 @@ where <code>K=MAX(MA+MG,N)</code>.</p>
       </div> <!-- /container -->
     </footer>
 
-    <!-- Bootstrap core JavaScript
-         ================================================== -->
-         <!-- Placed at the end of the document so the pages load faster -->
-    <!--
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        -->
-        <script src="../js/bootstrap.min.js"></script>
-        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-        <script src="../js/ie10-viewport-bug-workaround.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
 
-        <!-- MathJax JavaScript
+    <!-- MathJax JavaScript
              ================================================== -->
              <!-- Placed at the end of the document so the pages load faster -->
         <script type="text/x-mathjax-config">

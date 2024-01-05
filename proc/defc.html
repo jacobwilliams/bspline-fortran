@@ -1,3 +1,5 @@
+<!-- -*- mode: jinja2 -*- -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,81 +12,56 @@
 
     <title>defc &ndash; bspline-fortran</title>
 
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link href="../css/pygments.css" rel="stylesheet">
     <link href="../css/font-awesome.min.css" rel="stylesheet">
     <link href="../css/local.css" rel="stylesheet">
       <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
-
-         <script src="../js/jquery-2.1.3.min.js"></script>
-         <script src="../js/svg-pan-zoom.min.js"></script>
-
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
   </head>
 
   <body>
 
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
           <a class="navbar-brand" href="../index.html">bspline-fortran </a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
-              <a href="#" class="dropdown-toggle"
-                 data-toggle="dropdown" role="button"
-                 aria-haspopup="true"
-                 aria-expanded="false">
-                 Contents <span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu">
-                    <li><a href="../lists/files.html">Source Files</a></li>
-                  <li><a href="../lists/modules.html">Modules</a></li>
-                  <li><a href="../lists/procedures.html">Procedures</a></li>
-                  <li><a href="../lists/absint.html">Abstract Interfaces</a></li>
-                  <li><a href="../lists/types.html">Derived Types</a></li>
-              </ul>
-            </li>
-                <li class="visible-xs hidden-sm visible-lg">
-                  <a href="../lists/files.html">Source Files</a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
                 </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/modules.html">Modules</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/procedures.html">Procedures</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/absint.html">Abstract Interfaces</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/types.html">Derived Types</a>
-              </li>
-          </ul>
-            <form action="../search.html" class="navbar-form navbar-right" role="search">
-              <div class="form-group">
-                <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
               </div>
-              <!--
-                  <button type="submit" class="btn btn-default">Submit</button>
-                  -->
-            </form>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
 
     <div class="container">
   <div class="row">
@@ -92,33 +69,37 @@
       <small>Subroutine</small>
       
     </h1>
-      <div class="row" id="info-bar">
-    <div class="col-lg-12">
-      <div class="well well-sm">
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
         <ul class="list-inline" style="margin-bottom:0px;display:inline">
 
-          <li id="statements"><i class="fa fa-list-ol"></i>
-            <a data-toggle="tooltip"
-               data-placement="bottom" data-html="true"
-               title=" 0.4% of total for procedures.">24 statements</a>
-          </li>
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip"
+                 data-bs-placement="bottom" data-html="true"
+                 title=" 0.4% of total for procedures.">24 statements</a>
+            </li>
 
-            <li id="source-file">
+            <li class="list-inline-item" id="source-file">
               <i class="fa fa-code"></i>
               <a href="../src/bspline_defc_module.F90"> Source File</a>
             </li>
         </ul>
-        <ol class="breadcrumb in-well text-right">
-              <li><a href='../sourcefile/bspline_defc_module.f90.html'>bspline_defc_module.F90</a></li>
-              <li><a href='../module/bspline_defc_module.html'>bspline_defc_module</a></li>
-          <li class="active">defc</li>
-        </ol>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/bspline_defc_module.f90.html'>bspline_defc_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/bspline_defc_module.html'>bspline_defc_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">defc</li>
+          </ol>
+        </nav>
       </div>
     </div>
   </div>
   <script>
     $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
+    $('[data-bs-toggle="tooltip"]').tooltip()
     })
   </script>
 
@@ -147,8 +128,9 @@
   
   
   
-    <div class="panel panel-primary">
-      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
       <div class="list-group">
         <a class="list-group-item" href="../proc/defc.html#src">defc</a>
       </div>
@@ -171,24 +153,24 @@
 <p>The data can be processed in groups of modest size.
   The size of the group is chosen by the user.  This feature
   may be necessary for purposes of using constrained curve fitting
-  with subprogram <a href="../proc/dfc.html">dfc</a> on a very large data set.</p>
+  with subprogram <a>DFC</a> on a very large data set.</p>
 <h3>Evaluating the Fitted Curve</h3>
 <p>To evaluate derivative number <code>IDER</code> at <code>XVAL</code>,
-  use the function subprogram <a href="../proc/dbvalu.html">dbvalu</a>.</p>
-<div class="codehilite"><pre><span></span><code><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dbvalu</span><span class="p">(</span><span class="n">bkpt</span><span class="p">,</span><span class="n">coeff</span><span class="p">,</span><span class="n">nbkpt</span><span class="o">-</span><span class="n">nord</span><span class="p">,</span><span class="n">nord</span><span class="p">,</span><span class="n">ider</span><span class="p">,</span><span class="n">xval</span><span class="p">,</span><span class="n">inbv</span><span class="p">,</span><span class="n">workb</span><span class="p">)</span><span class="w"></span>
+  use the function subprogram <a>DBVALU</a>.</p>
+<div class="codehilite"><pre><span></span><code><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dbvalu</span><span class="p">(</span><span class="n">bkpt</span><span class="p">,</span><span class="n">coeff</span><span class="p">,</span><span class="n">nbkpt</span><span class="o">-</span><span class="n">nord</span><span class="p">,</span><span class="n">nord</span><span class="p">,</span><span class="n">ider</span><span class="p">,</span><span class="n">xval</span><span class="p">,</span><span class="n">inbv</span><span class="p">,</span><span class="n">workb</span><span class="p">)</span>
 </code></pre></div>
 
 <p>The output of this subprogram will not be
   defined unless an output value of <code>MDEOUT=1</code>
-  was obtained from <a href="../proc/defc.html">defc</a>, <code>XVAL</code> is in the data
+  was obtained from <a>DEFC</a>, <code>XVAL</code> is in the data
   interval, and <code>IDER</code> is nonnegative and <code>&lt; NORD</code>.</p>
-<p>The first time <a href="../proc/dbvalu.html">dbvalu</a> is called, <code>INBV=1</code>
+<p>The first time <a>DBVALU</a> is called, <code>INBV=1</code>
   must be specified.  This value of <code>INBV</code> is the
-  overwritten by <a href="../proc/dbvalu.html">dbvalu</a>.  The array <code>WORKB(*)</code>
+  overwritten by <a>DBVALU</a>.  The array <code>WORKB(*)</code>
   must be of length at least <code>3*NORD</code>, and must
   not be the same as the <code>W(*)</code> array used in the
-  call to <a href="../proc/defc.html">defc</a>.</p>
-<p><a href="../proc/dbvalu.html">dbvalu</a> expects the breakpoint array <code>BKPT(*)</code>
+  call to <a>DEFC</a>.</p>
+<p><a>DBVALU</a> expects the breakpoint array <code>BKPT(*)</code>
   to be sorted.</p>
 <h3>Revision history</h3>
 <ul>
@@ -210,11 +192,11 @@
         <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
@@ -339,7 +321,7 @@ The additional end knots <code>BKPT(I),I=1,...,NORD-1</code>
 and <code>I=NBKPT-NORD+2,...,NBKPT</code>, are
 required to compute the functions used to fit
 the data.  No sorting of <code>BKPT(*)</code> is required.
-Internal to <a href="../proc/defc.html">defc</a> the extreme end knots may
+Internal to <a>DEFC</a> the extreme end knots may
 be reduced and increased respectively to
 accommodate any data values that are exterior
 to the given knot values.  The contents of
@@ -363,16 +345,16 @@ values (1 or 2), that directs the subprogram
 action with regard to new data points provided
 by the user:</p>
 <ul>
-<li><code>= 1</code>  The first time that <a href="../proc/defc.html">defc</a> has been
+<li><code>= 1</code>  The first time that <a>DEFC</a> has been
   entered.  There are NDATA points to process.</li>
 <li><code>= 2</code>  This is another entry to DEFC().  The
-  subprogram <a href="../proc/defc.html">defc</a> has been entered with MDEIN=1
+  subprogram <a>DEFC</a> has been entered with MDEIN=1
   exactly once before for this problem.  There
   are NDATA new additional points to merge and
   process with any previous points.
-  (When using <a href="../proc/defc.html">defc</a> with MDEIN=2 it is
+  (When using <a>DEFC</a> with MDEIN=2 it is
   important that the set of knots remain fixed at the
-  same values for all entries to <a href="../proc/defc.html">defc</a>.)</li>
+  same values for all entries to <a>DEFC</a>.)</li>
 </ul>
             </td>
         </tr>
@@ -392,7 +374,7 @@ by the user:</p>
 of the curve fit:</p>
 <ul>
 <li>
-<p><code>=-1</code>  A usage error of <a href="../proc/defc.html">defc</a> occurred.  The
+<p><code>=-1</code>  A usage error of <a>DEFC</a> occurred.  The
    offending condition is noted with the SLATEC
    library error processor, <code>XERMSG( )</code>.  In case
    the working array <code>W(*)</code> is not long enough, the
@@ -408,9 +390,9 @@ of the curve fit:</p>
    The user has one of two options.  Continue
    to process more data until a unique set
    of coefficients is obtained, or use the
-   subprogram <a href="../proc/dfc.html">dfc</a> to obtain a specific
+   subprogram <a>DFC</a> to obtain a specific
    set of coefficients.  The user should read
-   the usage instructions for <a href="../proc/dfc.html">dfc</a> for further
+   the usage instructions for <a>DFC</a> for further
    details if this second option is chosen.</p>
 </li>
 </ul>
@@ -437,16 +419,16 @@ uniquely determine the B-spline coefficients.
 In this case, and also when <code>MDEOUT=-1</code>, all
 values of <code>COEFF(*)</code> are set to zero.</p>
 <p>If the user is not satisfied with the fitted
-curve returned by <a href="../proc/defc.html">defc</a>, the constrained
-least squares curve fitting subprogram <a href="../proc/dfc.html">dfc</a>
-may be required.  The work done within <a href="../proc/defc.html">defc</a>
+curve returned by <a>DEFC</a>, the constrained
+least squares curve fitting subprogram <a>DFC</a>
+may be required.  The work done within <a>DEFC</a>
 to accumulate the data can be utilized by
 the user, if so desired.  This involves
 saving the first <code>(NBKPT-NORD+3)*(NORD+1)</code>
 entries of <code>W(*)</code> and providing this data
-to <a href="../proc/dfc.html">dfc</a> with the "old problem" designation.
+to <a>DFC</a> with the "old problem" designation.
 The user should read the usage instructions
-for subprogram <a href="../proc/dfc.html">dfc</a> for further details.</p>
+for subprogram <a>DFC</a> for further details.</p>
             </td>
         </tr>
         <tr>
@@ -464,9 +446,9 @@ for subprogram <a href="../proc/dfc.html">dfc</a> for further details.</p>
                 <p>The amount of working storage actually
  allocated for the working array <code>W(*)</code>.
  This quantity is compared with the
- actual amount of storage needed in <a href="../proc/defc.html">defc</a>.
+ actual amount of storage needed in <a>DEFC</a>.
  Insufficient storage allocated for <code>W(*)</code> is
- an error.  This feature was included in <a href="../proc/defc.html">defc</a>
+ an error.  This feature was included in <a>DEFC</a>
  because misreading the storage formula
  for <code>W(*)</code> might very well lead to subtle
  and hard-to-find programming bugs.</p>
@@ -479,7 +461,7 @@ for subprogram <a href="../proc/dfc.html">dfc</a> for further details.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-w~2"></span>
+              <span class="anchor" id="variable-w"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -493,9 +475,9 @@ for subprogram <a href="../proc/dfc.html">dfc</a> for further details.</p>
 Its length is specified as an input parameter
 in <code>LW</code> as noted above. The contents of <code>W(*)</code>
 must not be modified by the user between calls
-to <a href="../proc/defc.html">defc</a> with values of <code>MDEIN=1,2,2,...</code> .
+to <a>DEFC</a> with values of <code>MDEIN=1,2,2,...</code> .
 The first <code>(NBKPT-NORD+3)*(NORD+1)</code> entries of
-<code>W(*)</code> are acceptable as direct input to <a href="../proc/dfc.html">dfc</a>
+<code>W(*)</code> are acceptable as direct input to <a>DFC</a>
 for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
             </td>
         </tr>
@@ -503,11 +485,11 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
   </table>
 
     <br>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-  <h3 class="panel-title">Calls</h3>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
   <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -528,7 +510,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
 <!-- proc~defcmn -->
 <g id="proc~~defc~~CallsGraph_node2" class="node">
 <title>proc~defcmn</title>
-<g id="a_proc~~defc~~CallsGraph_node2"><a xlink:href=".././proc/defcmn.html" xlink:title="bspline_defc_module::defcmn">
+<g id="a_proc~~defc~~CallsGraph_node2"><a xlink:href="../proc/defcmn.html" xlink:title="bspline_defc_module::defcmn">
 <polygon fill="#d9534f" stroke="#d9534f" points="365,-129 192,-129 192,-105 365,-105 365,-129"/>
 <text text-anchor="middle" x="278.5" y="-114.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_defc_module::defcmn</text>
 </a>
@@ -543,7 +525,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
 <!-- proc~dbndac -->
 <g id="proc~~defc~~CallsGraph_node3" class="node">
 <title>proc~dbndac</title>
-<g id="a_proc~~defc~~CallsGraph_node3"><a xlink:href=".././proc/dbndac.html" xlink:title="bspline_defc_module::dbndac">
+<g id="a_proc~~defc~~CallsGraph_node3"><a xlink:href="../proc/dbndac.html" xlink:title="bspline_defc_module::dbndac">
 <polygon fill="#d9534f" stroke="#d9534f" points="573,-234 401,-234 401,-210 573,-210 573,-234"/>
 <text text-anchor="middle" x="487" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_defc_module::dbndac</text>
 </a>
@@ -558,7 +540,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
 <!-- proc~dbndsl -->
 <g id="proc~~defc~~CallsGraph_node4" class="node">
 <title>proc~dbndsl</title>
-<g id="a_proc~~defc~~CallsGraph_node4"><a xlink:href=".././proc/dbndsl.html" xlink:title="bspline_defc_module::dbndsl">
+<g id="a_proc~~defc~~CallsGraph_node4"><a xlink:href="../proc/dbndsl.html" xlink:title="bspline_defc_module::dbndsl">
 <polygon fill="#d9534f" stroke="#d9534f" points="571,-192 403,-192 403,-168 571,-168 571,-192"/>
 <text text-anchor="middle" x="487" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_defc_module::dbndsl</text>
 </a>
@@ -573,7 +555,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
 <!-- proc~dcopy -->
 <g id="proc~~defc~~CallsGraph_node5" class="node">
 <title>proc~dcopy</title>
-<g id="a_proc~~defc~~CallsGraph_node5"><a xlink:href=".././proc/dcopy.html" xlink:title="bspline_blas_module::dcopy">
+<g id="a_proc~~defc~~CallsGraph_node5"><a xlink:href="../proc/dcopy.html" xlink:title="bspline_blas_module::dcopy">
 <polygon fill="#d9534f" stroke="#d9534f" points="568.5,-150 405.5,-150 405.5,-126 568.5,-126 568.5,-150"/>
 <text text-anchor="middle" x="487" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_blas_module::dcopy</text>
 </a>
@@ -588,7 +570,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
 <!-- proc~dfspvn -->
 <g id="proc~~defc~~CallsGraph_node6" class="node">
 <title>proc~dfspvn</title>
-<g id="a_proc~~defc~~CallsGraph_node6"><a xlink:href=".././proc/dfspvn.html" xlink:title="bspline_defc_module::dfspvn">
+<g id="a_proc~~defc~~CallsGraph_node6"><a xlink:href="../proc/dfspvn.html" xlink:title="bspline_defc_module::dfspvn">
 <polygon fill="#d9534f" stroke="#d9534f" points="571,-108 403,-108 403,-84 571,-84 571,-108"/>
 <text text-anchor="middle" x="487" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_defc_module::dfspvn</text>
 </a>
@@ -603,7 +585,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
 <!-- proc~dscal -->
 <g id="proc~~defc~~CallsGraph_node7" class="node">
 <title>proc~dscal</title>
-<g id="a_proc~~defc~~CallsGraph_node7"><a xlink:href=".././proc/dscal.html" xlink:title="bspline_blas_module::dscal">
+<g id="a_proc~~defc~~CallsGraph_node7"><a xlink:href="../proc/dscal.html" xlink:title="bspline_blas_module::dscal">
 <polygon fill="#d9534f" stroke="#d9534f" points="566.5,-66 407.5,-66 407.5,-42 566.5,-42 566.5,-66"/>
 <text text-anchor="middle" x="487" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_blas_module::dscal</text>
 </a>
@@ -618,7 +600,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
 <!-- proc~dsort -->
 <g id="proc~~defc~~CallsGraph_node8" class="node">
 <title>proc~dsort</title>
-<g id="a_proc~~defc~~CallsGraph_node8"><a xlink:href=".././proc/dsort.html" xlink:title="bspline_defc_module::dsort">
+<g id="a_proc~~defc~~CallsGraph_node8"><a xlink:href="../proc/dsort.html" xlink:title="bspline_defc_module::dsort">
 <polygon fill="#d9534f" stroke="#d9534f" points="567,-24 407,-24 407,0 567,0 567,-24"/>
 <text text-anchor="middle" x="487" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_defc_module::dsort</text>
 </a>
@@ -633,7 +615,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
 <!-- proc~dh12 -->
 <g id="proc~~defc~~CallsGraph_node9" class="node">
 <title>proc~dh12</title>
-<g id="a_proc~~defc~~CallsGraph_node9"><a xlink:href=".././proc/dh12.html" xlink:title="bspline_defc_module::dh12">
+<g id="a_proc~~defc~~CallsGraph_node9"><a xlink:href="../proc/dh12.html" xlink:title="bspline_defc_module::dh12">
 <polygon fill="#d9534f" stroke="#d9534f" points="795.5,-234 635.5,-234 635.5,-210 795.5,-210 795.5,-234"/>
 <text text-anchor="middle" x="715.5" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_defc_module::dh12</text>
 </a>
@@ -648,7 +630,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
 <!-- proc~sort_ascending -->
 <g id="proc~~defc~~CallsGraph_node10" class="node">
 <title>proc~sort_ascending</title>
-<g id="a_proc~~defc~~CallsGraph_node10"><a xlink:href=".././proc/sort_ascending.html" xlink:title="bspline_defc_module::sort_ascending">
+<g id="a_proc~~defc~~CallsGraph_node10"><a xlink:href="../proc/sort_ascending.html" xlink:title="bspline_defc_module::sort_ascending">
 <polygon fill="#d9534f" stroke="#d9534f" points="822,-24 609,-24 609,0 822,0 822,-24"/>
 <text text-anchor="middle" x="715.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_defc_module::sort_ascending</text>
 </a>
@@ -663,7 +645,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
 <!-- proc~daxpy -->
 <g id="proc~~defc~~CallsGraph_node11" class="node">
 <title>proc~daxpy</title>
-<g id="a_proc~~defc~~CallsGraph_node11"><a xlink:href=".././proc/daxpy.html" xlink:title="bspline_blas_module::daxpy">
+<g id="a_proc~~defc~~CallsGraph_node11"><a xlink:href="../proc/daxpy.html" xlink:title="bspline_blas_module::daxpy">
 <polygon fill="#d9534f" stroke="#d9534f" points="1022,-276 859,-276 859,-252 1022,-252 1022,-276"/>
 <text text-anchor="middle" x="940.5" y="-261.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_blas_module::daxpy</text>
 </a>
@@ -678,7 +660,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
 <!-- proc~ddot -->
 <g id="proc~~defc~~CallsGraph_node12" class="node">
 <title>proc~ddot</title>
-<g id="a_proc~~defc~~CallsGraph_node12"><a xlink:href=".././proc/ddot.html" xlink:title="bspline_blas_module::ddot">
+<g id="a_proc~~defc~~CallsGraph_node12"><a xlink:href="../proc/ddot.html" xlink:title="bspline_blas_module::ddot">
 <polygon fill="#d94e8f" stroke="#d94e8f" points="1018,-234 863,-234 863,-210 1018,-210 1018,-234"/>
 <text text-anchor="middle" x="940.5" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_blas_module::ddot</text>
 </a>
@@ -693,7 +675,7 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
 <!-- proc~dswap -->
 <g id="proc~~defc~~CallsGraph_node13" class="node">
 <title>proc~dswap</title>
-<g id="a_proc~~defc~~CallsGraph_node13"><a xlink:href=".././proc/dswap.html" xlink:title="bspline_blas_module::dswap">
+<g id="a_proc~~defc~~CallsGraph_node13"><a xlink:href="../proc/dswap.html" xlink:title="bspline_blas_module::dswap">
 <polygon fill="#d9534f" stroke="#d9534f" points="1023,-192 858,-192 858,-168 1023,-168 1023,-192"/>
 <text text-anchor="middle" x="940.5" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_blas_module::dswap</text>
 </a>
@@ -711,17 +693,17 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
                   var panprocdefcCallsGraph = svgPanZoom('#procdefcCallsGraph',
                     {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
                   );
-                </script>        <div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div>
-          <div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog">
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
                   <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-              <div class="modal-body">
+                <div class="modal-body">
 <p>Nodes of different colours represent the following: </p>
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
@@ -729,11 +711,11 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
 <!-- Generated by graphviz version 2.43.0 (0)
  -->
 <!-- Title: Graph Key Pages: 1 -->
-<svg width="597pt" height="32pt"
- viewBox="0.00 0.00 596.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1.16 1.16) rotate(0) translate(4 28)">
 <title>Graph Key</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 592.5,-28 592.5,4 -4,4"/>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
 <!-- Subroutine -->
 <g id="node1" class="node">
 <title>Subroutine</title>
@@ -752,23 +734,29 @@ for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
 <polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
 <text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
 </g>
-<!-- Unknown Procedure Type -->
+<!-- Type Bound Procedure -->
 <g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
 <title>Unknown Procedure Type</title>
-<polygon fill="#777777" stroke="#777777" points="388.5,-24 243.5,-24 243.5,0 388.5,0 388.5,-24"/>
-<text text-anchor="middle" x="316" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
 </g>
 <!-- Program -->
-<g id="node5" class="node">
+<g id="node6" class="node">
 <title>Program</title>
-<polygon fill="#f0ad4e" stroke="#f0ad4e" points="465,-24 407,-24 407,0 465,0 465,-24"/>
-<text text-anchor="middle" x="436" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
 </g>
 <!-- This Page&#39;s Entity -->
-<g id="node6" class="node">
+<g id="node7" class="node">
 <title>This Page&#39;s Entity</title>
-<polygon fill="none" stroke="black" points="588.5,-24 483.5,-24 483.5,0 588.5,0 588.5,-24"/>
-<text text-anchor="middle" x="536" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
 </g>
 </g>
 </svg>
@@ -786,51 +774,20 @@ implementation in a submodule of an interface in a parent module.
     </div>
     <br>
 
-    <section class="visible-xs visible-sm hidden-md">
-        <h3>Contents</h3>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-    <div class="panel panel-primary">
-      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
-      <div class="list-group">
-        <a class="list-group-item" href="../proc/defc.html#src">defc</a>
-      </div>
-    </div>
-
-
-    </section>
-    <br class="visible-xs visible-sm hidden-md">
-
 
     
     
 
     
     
+
 
 
     
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
-    <div class="highlight"><pre><span></span><span class="w">   </span><span class="k">subroutine </span><span class="n">defc</span><span class="p">(</span><span class="n">Ndata</span><span class="p">,</span><span class="w"> </span><span class="n">Xdata</span><span class="p">,</span><span class="w"> </span><span class="n">Ydata</span><span class="p">,</span><span class="w"> </span><span class="n">Sddata</span><span class="p">,</span><span class="w"> </span><span class="n">Nord</span><span class="p">,</span><span class="w"> </span><span class="n">Nbkpt</span><span class="p">,</span><span class="w"> </span><span class="n">Bkpt</span><span class="p">,</span><span class="w"> </span><span class="n">Mdein</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span><span class="w"></span>
-<span class="w">                   </span><span class="n">Mdeout</span><span class="p">,</span><span class="w"> </span><span class="n">Coeff</span><span class="p">,</span><span class="w"> </span><span class="n">Lw</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">)</span><span class="w"></span>
+    <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">subroutine </span><span class="n">defc</span><span class="p">(</span><span class="n">Ndata</span><span class="p">,</span><span class="w"> </span><span class="n">Xdata</span><span class="p">,</span><span class="w"> </span><span class="n">Ydata</span><span class="p">,</span><span class="w"> </span><span class="n">Sddata</span><span class="p">,</span><span class="w"> </span><span class="n">Nord</span><span class="p">,</span><span class="w"> </span><span class="n">Nbkpt</span><span class="p">,</span><span class="w"> </span><span class="n">Bkpt</span><span class="p">,</span><span class="w"> </span><span class="n">Mdein</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                   </span><span class="n">Mdeout</span><span class="p">,</span><span class="w"> </span><span class="n">Coeff</span><span class="p">,</span><span class="w"> </span><span class="n">Lw</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">)</span>
 
 <span class="w">      </span><span class="kt">integer</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">Ndata</span><span class="w"> </span><span class="c">!! number of points (size of `xdata` and `ydata`).</span>
 <span class="w">                                  </span><span class="c">!! Any non-negative value of `NDATA` is allowed.</span>
@@ -944,7 +901,7 @@ implementation in a submodule of an interface in a parent module.
 <span class="w">                       </span><span class="c">!! `W(*)` are acceptable as direct input to [[DFC]]</span>
 <span class="w">                       </span><span class="c">!! for an &quot;old problem&quot; only when `MDEOUT=1` or `2`.</span>
 
-<span class="w">      </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">lbf</span><span class="p">,</span><span class="w"> </span><span class="n">lbkpt</span><span class="p">,</span><span class="w"> </span><span class="n">lg</span><span class="p">,</span><span class="w"> </span><span class="n">lptemp</span><span class="p">,</span><span class="w"> </span><span class="n">lww</span><span class="p">,</span><span class="w"> </span><span class="n">lxtemp</span><span class="p">,</span><span class="w"> </span><span class="n">mdg</span><span class="p">,</span><span class="w"> </span><span class="n">mdw</span><span class="w"></span>
+<span class="w">      </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">lbf</span><span class="p">,</span><span class="w"> </span><span class="n">lbkpt</span><span class="p">,</span><span class="w"> </span><span class="n">lg</span><span class="p">,</span><span class="w"> </span><span class="n">lptemp</span><span class="p">,</span><span class="w"> </span><span class="n">lww</span><span class="p">,</span><span class="w"> </span><span class="n">lxtemp</span><span class="p">,</span><span class="w"> </span><span class="n">mdg</span><span class="p">,</span><span class="w"> </span><span class="n">mdw</span>
 
 <span class="w">      </span><span class="c">! LWW=1               USAGE IN DEFCMN( ) OF W(*)..</span>
 <span class="w">      </span><span class="c">! LWW,...,LG-1        W(*,*)</span>
@@ -954,20 +911,20 @@ implementation in a submodule of an interface in a parent module.
 <span class="w">      </span><span class="c">! LBKPT,...,LBF       BKPT(*) (LOCAL TO DEFCMN( ))</span>
 <span class="w">      </span><span class="c">! LBF,...,LBF+NORD**2 BF(*,*)</span>
 
-<span class="w">      </span><span class="n">mdg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Nbkpt</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
-<span class="w">      </span><span class="n">mdw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Nbkpt</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Nord</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">3</span><span class="w"></span>
-<span class="w">      </span><span class="n">lww</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
-<span class="w">      </span><span class="n">lg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lww</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">mdw</span><span class="o">*</span><span class="p">(</span><span class="n">Nord</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
-<span class="w">      </span><span class="n">lxtemp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lg</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">mdg</span><span class="o">*</span><span class="p">(</span><span class="n">Nord</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
-<span class="w">      </span><span class="n">lptemp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lxtemp</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">max</span><span class="p">(</span><span class="n">Ndata</span><span class="p">,</span><span class="w"> </span><span class="n">Nbkpt</span><span class="p">)</span><span class="w"></span>
-<span class="w">      </span><span class="n">lbkpt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lptemp</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">max</span><span class="p">(</span><span class="n">Ndata</span><span class="p">,</span><span class="w"> </span><span class="n">Nbkpt</span><span class="p">)</span><span class="w"></span>
-<span class="w">      </span><span class="n">lbf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lbkpt</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Nbkpt</span><span class="w"></span>
+<span class="w">      </span><span class="n">mdg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Nbkpt</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="n">mdw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Nbkpt</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Nord</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">      </span><span class="n">lww</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="n">lg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lww</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">mdw</span><span class="o">*</span><span class="p">(</span><span class="n">Nord</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">      </span><span class="n">lxtemp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lg</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">mdg</span><span class="o">*</span><span class="p">(</span><span class="n">Nord</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">      </span><span class="n">lptemp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lxtemp</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">max</span><span class="p">(</span><span class="n">Ndata</span><span class="p">,</span><span class="w"> </span><span class="n">Nbkpt</span><span class="p">)</span>
+<span class="w">      </span><span class="n">lbkpt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lptemp</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">max</span><span class="p">(</span><span class="n">Ndata</span><span class="p">,</span><span class="w"> </span><span class="n">Nbkpt</span><span class="p">)</span>
+<span class="w">      </span><span class="n">lbf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lbkpt</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Nbkpt</span>
 
-<span class="w">      </span><span class="k">call </span><span class="n">defcmn</span><span class="p">(</span><span class="n">Ndata</span><span class="p">,</span><span class="w"> </span><span class="n">Xdata</span><span class="p">,</span><span class="w"> </span><span class="n">Ydata</span><span class="p">,</span><span class="w"> </span><span class="n">Sddata</span><span class="p">,</span><span class="w"> </span><span class="n">Nord</span><span class="p">,</span><span class="w"> </span><span class="n">Nbkpt</span><span class="p">,</span><span class="w"> </span><span class="n">Bkpt</span><span class="p">,</span><span class="w"> </span><span class="n">Mdein</span><span class="p">,</span><span class="w"> </span><span class="n">Mdeout</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span><span class="w"></span>
-<span class="w">                  </span><span class="n">Coeff</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">lbf</span><span class="p">),</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">lxtemp</span><span class="p">),</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">lptemp</span><span class="p">),</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">lbkpt</span><span class="p">),</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">lg</span><span class="p">),</span><span class="w"> </span><span class="n">mdg</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span><span class="w"></span>
-<span class="w">                  </span><span class="n">w</span><span class="p">(</span><span class="n">lww</span><span class="p">),</span><span class="w"> </span><span class="n">mdw</span><span class="p">,</span><span class="w"> </span><span class="n">Lw</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="k">call </span><span class="n">defcmn</span><span class="p">(</span><span class="n">Ndata</span><span class="p">,</span><span class="w"> </span><span class="n">Xdata</span><span class="p">,</span><span class="w"> </span><span class="n">Ydata</span><span class="p">,</span><span class="w"> </span><span class="n">Sddata</span><span class="p">,</span><span class="w"> </span><span class="n">Nord</span><span class="p">,</span><span class="w"> </span><span class="n">Nbkpt</span><span class="p">,</span><span class="w"> </span><span class="n">Bkpt</span><span class="p">,</span><span class="w"> </span><span class="n">Mdein</span><span class="p">,</span><span class="w"> </span><span class="n">Mdeout</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                  </span><span class="n">Coeff</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">lbf</span><span class="p">),</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">lxtemp</span><span class="p">),</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">lptemp</span><span class="p">),</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">lbkpt</span><span class="p">),</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">lg</span><span class="p">),</span><span class="w"> </span><span class="n">mdg</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                  </span><span class="n">w</span><span class="p">(</span><span class="n">lww</span><span class="p">),</span><span class="w"> </span><span class="n">mdw</span><span class="p">,</span><span class="w"> </span><span class="n">Lw</span><span class="p">)</span>
 
-<span class="w">   </span><span class="k">end subroutine </span><span class="n">defc</span><span class="w"></span>
+<span class="w">   </span><span class="k">end subroutine </span><span class="n">defc</span>
 </pre></div>
 
     </section>
@@ -980,12 +937,12 @@ implementation in a submodule of an interface in a parent module.
     </div> <!-- /container -->
     <footer>
       <div class="container">
-        <div class="row">
-          <div class="col-xs-6 col-md-6"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2023 
+        <div class="row justify-content-between">
+          <div class="col"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2024 
 </p>
           </div>
-          <div class="col-xs-6 col-md-6">
-            <p class="text-right">
+          <div class="col">
+            <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
             </p>
@@ -995,17 +952,12 @@ implementation in a submodule of an interface in a parent module.
       </div> <!-- /container -->
     </footer>
 
-    <!-- Bootstrap core JavaScript
-         ================================================== -->
-         <!-- Placed at the end of the document so the pages load faster -->
-    <!--
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        -->
-        <script src="../js/bootstrap.min.js"></script>
-        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-        <script src="../js/ie10-viewport-bug-workaround.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
 
-        <!-- MathJax JavaScript
+    <!-- MathJax JavaScript
              ================================================== -->
              <!-- Placed at the end of the document so the pages load faster -->
         <script type="text/x-mathjax-config">

@@ -1,3 +1,5 @@
+<!-- -*- mode: jinja2 -*- -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,81 +12,56 @@
 
     <title>get_temp_x_for_extrap &ndash; bspline-fortran</title>
 
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link href="../css/pygments.css" rel="stylesheet">
     <link href="../css/font-awesome.min.css" rel="stylesheet">
     <link href="../css/local.css" rel="stylesheet">
       <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
-
-         <script src="../js/jquery-2.1.3.min.js"></script>
-         <script src="../js/svg-pan-zoom.min.js"></script>
-
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
   </head>
 
   <body>
 
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
           <a class="navbar-brand" href="../index.html">bspline-fortran </a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
-              <a href="#" class="dropdown-toggle"
-                 data-toggle="dropdown" role="button"
-                 aria-haspopup="true"
-                 aria-expanded="false">
-                 Contents <span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu">
-                    <li><a href="../lists/files.html">Source Files</a></li>
-                  <li><a href="../lists/modules.html">Modules</a></li>
-                  <li><a href="../lists/procedures.html">Procedures</a></li>
-                  <li><a href="../lists/absint.html">Abstract Interfaces</a></li>
-                  <li><a href="../lists/types.html">Derived Types</a></li>
-              </ul>
-            </li>
-                <li class="visible-xs hidden-sm visible-lg">
-                  <a href="../lists/files.html">Source Files</a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
                 </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/modules.html">Modules</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/procedures.html">Procedures</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/absint.html">Abstract Interfaces</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/types.html">Derived Types</a>
-              </li>
-          </ul>
-            <form action="../search.html" class="navbar-form navbar-right" role="search">
-              <div class="form-group">
-                <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
               </div>
-              <!--
-                  <button type="submit" class="btn btn-default">Submit</button>
-                  -->
-            </form>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
 
     <div class="container">
   <div class="row">
@@ -92,33 +69,37 @@
       <small>Function</small>
       
     </h1>
-      <div class="row" id="info-bar">
-    <div class="col-lg-12">
-      <div class="well well-sm">
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
         <ul class="list-inline" style="margin-bottom:0px;display:inline">
 
-          <li id="statements"><i class="fa fa-list-ol"></i>
-            <a data-toggle="tooltip"
-               data-placement="bottom" data-html="true"
-               title=" 0.4% of total for procedures.">25 statements</a>
-          </li>
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip"
+                 data-bs-placement="bottom" data-html="true"
+                 title=" 0.4% of total for procedures.">25 statements</a>
+            </li>
 
-            <li id="source-file">
+            <li class="list-inline-item" id="source-file">
               <i class="fa fa-code"></i>
               <a href="../src/bspline_sub_module.f90"> Source File</a>
             </li>
         </ul>
-        <ol class="breadcrumb in-well text-right">
-              <li><a href='../sourcefile/bspline_sub_module.f90.html'>bspline_sub_module.f90</a></li>
-              <li><a href='../module/bspline_sub_module.html'>bspline_sub_module</a></li>
-          <li class="active">get_temp_x_for_extrap</li>
-        </ol>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/bspline_sub_module.f90.html'>bspline_sub_module.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/bspline_sub_module.html'>bspline_sub_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">get_temp_x_for_extrap</li>
+          </ol>
+        </nav>
       </div>
     </div>
   </div>
   <script>
     $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
+    $('[data-bs-toggle="tooltip"]').tooltip()
     })
   </script>
 
@@ -147,8 +128,9 @@
   
   
   
-    <div class="panel panel-primary">
-      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
       <div class="list-group">
         <a class="list-group-item" href="../proc/get_temp_x_for_extrap.html#src">get_temp_x_for_extrap</a>
       </div>
@@ -175,16 +157,16 @@ Otherwise, <code>x</code> is returned.</p>
         <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-x~29"></span>
+              <span class="anchor" id="variable-x~33"></span>
               real(kind=wp),
             </td>
 <td>intent(in)</td>
@@ -229,7 +211,7 @@ Otherwise, <code>x</code> is returned.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-extrap~28"></span>
+              <span class="anchor" id="variable-extrap~11"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -248,406 +230,427 @@ Otherwise, <code>x</code> is returned.</p>
 
       <h3>Return Value
         <small>
-          <span class="anchor" id="variable-xt"></span>
+          <span class="anchor" id="variable-xt~4"></span>
           real(kind=wp)
         </small>
       </h3>
       <p>The value returned (it will either
 be <code>tmin</code>, <code>x</code>, or <code>tmax</code>)</p>
     <br>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-  <h3 class="panel-title">Called by</h3>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
   <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Generated by graphviz version 2.43.0 (0)
  -->
 <!-- Title: proc~~get_temp_x_for_extrap~~CalledByGraph Pages: 1 -->
-<svg id="procget_temp_x_for_extrapCalledByGraph" width="641pt" height="159pt"
- viewBox="0.00 0.00 641.00 159.49" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="proc~~get_temp_x_for_extrap~~CalledByGraph" class="graph" transform="scale(2.31 2.31) rotate(0) translate(4 364)">
+<svg id="procget_temp_x_for_extrapCalledByGraph" width="641pt" height="148pt"
+ viewBox="0.00 0.00 641.00 148.20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~get_temp_x_for_extrap~~CalledByGraph" class="graph" transform="scale(2.76 2.76) rotate(0) translate(4 404.31)">
 <title>proc~~get_temp_x_for_extrap~~CalledByGraph</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-364 1475,-364 1475,4 -4,4"/>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-404.31 1762,-404.31 1762,4 -4,4"/>
 <!-- proc~get_temp_x_for_extrap -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node1" class="node">
 <title>proc~get_temp_x_for_extrap</title>
-<polygon fill="none" stroke="black" points="1471,-214 1222,-214 1222,-190 1471,-190 1471,-214"/>
-<text text-anchor="middle" x="1346.5" y="-199.6" font-family="Helvetica,sans-Serif" font-size="10.50">bspline_sub_module::get_temp_x_for_extrap</text>
+<polygon fill="none" stroke="black" points="1758,-253.31 1509,-253.31 1509,-229.31 1758,-229.31 1758,-253.31"/>
+<text text-anchor="middle" x="1633.5" y="-238.91" font-family="Helvetica,sans-Serif" font-size="10.50">bspline_sub_module::get_temp_x_for_extrap</text>
 </g>
 <!-- proc~dintrv -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node2" class="node">
 <title>proc~dintrv</title>
-<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node2"><a xlink:href=".././proc/dintrv.html" xlink:title="bspline_sub_module::dintrv">
-<polygon fill="#d9534f" stroke="#d9534f" points="1186,-214 1027,-214 1027,-190 1186,-190 1186,-214"/>
-<text text-anchor="middle" x="1106.5" y="-199.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dintrv</text>
+<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node2"><a xlink:href="../proc/dintrv.html" xlink:title="bspline_sub_module::dintrv">
+<polygon fill="#d9534f" stroke="#d9534f" points="1473,-253.31 1314,-253.31 1314,-229.31 1473,-229.31 1473,-253.31"/>
+<text text-anchor="middle" x="1393.5" y="-238.91" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dintrv</text>
 </a>
 </g>
 </g>
 <!-- proc~dintrv&#45;&gt;proc~get_temp_x_for_extrap -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge1" class="edge">
 <title>proc~dintrv&#45;&gt;proc~get_temp_x_for_extrap</title>
-<path fill="none" stroke="#000000" d="M1186.09,-202C1194.36,-202 1202.93,-202 1211.6,-202"/>
-<polygon fill="#000000" stroke="#000000" points="1211.83,-205.5 1221.83,-202 1211.83,-198.5 1211.83,-205.5"/>
+<path fill="none" stroke="#000000" d="M1473.09,-241.31C1481.36,-241.31 1489.93,-241.31 1498.6,-241.31"/>
+<polygon fill="#000000" stroke="#000000" points="1498.83,-244.81 1508.83,-241.31 1498.83,-237.81 1498.83,-244.81"/>
 </g>
 <!-- proc~db2val -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node3" class="node">
 <title>proc~db2val</title>
-<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node3"><a xlink:href=".././proc/db2val.html" xlink:title="bspline_sub_module::db2val">
-<polygon fill="#d9534f" stroke="#d9534f" points="767.5,-360 603.5,-360 603.5,-336 767.5,-336 767.5,-360"/>
-<text text-anchor="middle" x="685.5" y="-345.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::db2val</text>
+<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node3"><a xlink:href="../proc/db2val.html" xlink:title="bspline_sub_module::db2val">
+<polygon fill="#d9534f" stroke="#d9534f" points="1056.5,-400.31 892.5,-400.31 892.5,-376.31 1056.5,-376.31 1056.5,-400.31"/>
+<text text-anchor="middle" x="974.5" y="-385.91" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::db2val</text>
 </a>
 </g>
 </g>
 <!-- proc~db2val&#45;&gt;proc~dintrv -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge2" class="edge">
 <title>proc~db2val&#45;&gt;proc~dintrv</title>
-<path fill="none" stroke="#000000" d="M767.78,-339.4C830.75,-330.63 919.09,-313.64 991,-282 1026.62,-266.32 1062.58,-238.86 1084.46,-220.55"/>
-<polygon fill="#000000" stroke="#000000" points="1086.78,-223.17 1092.12,-214.02 1082.24,-217.84 1086.78,-223.17"/>
+<path fill="none" stroke="#000000" d="M1056.59,-379.3C1119.14,-370.26 1206.72,-352.97 1278,-321.31 1313.37,-305.6 1349.15,-278.38 1371.07,-260.11"/>
+<polygon fill="#000000" stroke="#000000" points="1373.4,-262.73 1378.77,-253.59 1368.87,-257.39 1373.4,-262.73"/>
 </g>
 <!-- proc~dbvalu -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node10" class="node">
 <title>proc~dbvalu</title>
-<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node10"><a xlink:href=".././proc/dbvalu.html" xlink:title="bspline_sub_module::dbvalu">
-<polygon fill="#d9534f" stroke="#d9534f" points="990,-194 826,-194 826,-170 990,-170 990,-194"/>
-<text text-anchor="middle" x="908" y="-179.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbvalu</text>
+<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node10"><a xlink:href="../proc/dbvalu.html" xlink:title="bspline_sub_module::dbvalu">
+<polygon fill="#d9534f" stroke="#d9534f" points="1278,-233.31 1114,-233.31 1114,-209.31 1278,-209.31 1278,-233.31"/>
+<text text-anchor="middle" x="1196" y="-218.91" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbvalu</text>
 </a>
 </g>
 </g>
 <!-- proc~db2val&#45;&gt;proc~dbvalu -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge19" class="edge">
 <title>proc~db2val&#45;&gt;proc~dbvalu</title>
-<path fill="none" stroke="#000000" d="M767.69,-336.89C775.16,-334.25 782.4,-331 789,-327 839.81,-296.2 878.29,-235.31 896.1,-203.1"/>
-<polygon fill="#000000" stroke="#000000" points="899.29,-204.56 900.95,-194.1 893.12,-201.24 899.29,-204.56"/>
+<path fill="none" stroke="#000000" d="M1056.72,-377.26C1064.19,-374.6 1071.41,-371.34 1078,-367.31 1128.73,-336.3 1166.74,-274.98 1184.27,-242.56"/>
+<polygon fill="#000000" stroke="#000000" points="1187.49,-243.97 1189.05,-233.49 1181.29,-240.71 1187.49,-243.97"/>
 </g>
 <!-- proc~db3val -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node4" class="node">
 <title>proc~db3val</title>
-<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node4"><a xlink:href=".././proc/db3val.html" xlink:title="bspline_sub_module::db3val">
-<polygon fill="#d9534f" stroke="#d9534f" points="767.5,-318 603.5,-318 603.5,-294 767.5,-294 767.5,-318"/>
-<text text-anchor="middle" x="685.5" y="-303.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::db3val</text>
+<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node4"><a xlink:href="../proc/db3val.html" xlink:title="bspline_sub_module::db3val">
+<polygon fill="#d9534f" stroke="#d9534f" points="1056.5,-358.31 892.5,-358.31 892.5,-334.31 1056.5,-334.31 1056.5,-358.31"/>
+<text text-anchor="middle" x="974.5" y="-343.91" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::db3val</text>
 </a>
 </g>
 </g>
 <!-- proc~db3val&#45;&gt;proc~dintrv -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge3" class="edge">
 <title>proc~db3val&#45;&gt;proc~dintrv</title>
-<path fill="none" stroke="#000000" d="M767.75,-295.91C829.74,-287.05 916.82,-272.09 991,-250 1019.02,-241.66 1049.49,-228.68 1071.94,-218.32"/>
-<polygon fill="#000000" stroke="#000000" points="1073.47,-221.47 1081.05,-214.07 1070.51,-215.13 1073.47,-221.47"/>
+<path fill="none" stroke="#000000" d="M1056.54,-335.78C1118.09,-326.65 1204.42,-311.4 1278,-289.31 1306,-280.91 1336.47,-267.93 1358.93,-257.59"/>
+<polygon fill="#000000" stroke="#000000" points="1360.46,-260.74 1368.04,-253.34 1357.5,-254.4 1360.46,-260.74"/>
 </g>
 <!-- proc~db3val&#45;&gt;proc~dbvalu -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge20" class="edge">
 <title>proc~db3val&#45;&gt;proc~dbvalu</title>
-<path fill="none" stroke="#000000" d="M766.22,-293.95C774.11,-291.5 781.84,-288.55 789,-285 830.63,-264.38 869.26,-225.4 890.34,-201.76"/>
-<polygon fill="#000000" stroke="#000000" points="893.1,-203.92 897.04,-194.09 887.83,-199.32 893.1,-203.92"/>
+<path fill="none" stroke="#000000" d="M1055.52,-334.24C1063.31,-331.79 1070.94,-328.85 1078,-325.31 1119.52,-304.51 1157.73,-265.15 1178.56,-241.27"/>
+<polygon fill="#000000" stroke="#000000" points="1181.34,-243.4 1185.18,-233.52 1176.02,-238.85 1181.34,-243.4"/>
 </g>
 <!-- proc~db4val -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node5" class="node">
 <title>proc~db4val</title>
-<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node5"><a xlink:href=".././proc/db4val.html" xlink:title="bspline_sub_module::db4val">
-<polygon fill="#d9534f" stroke="#d9534f" points="767.5,-276 603.5,-276 603.5,-252 767.5,-252 767.5,-276"/>
-<text text-anchor="middle" x="685.5" y="-261.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::db4val</text>
+<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node5"><a xlink:href="../proc/db4val.html" xlink:title="bspline_sub_module::db4val">
+<polygon fill="#d9534f" stroke="#d9534f" points="1056.5,-316.31 892.5,-316.31 892.5,-292.31 1056.5,-292.31 1056.5,-316.31"/>
+<text text-anchor="middle" x="974.5" y="-301.91" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::db4val</text>
 </a>
 </g>
 </g>
 <!-- proc~db4val&#45;&gt;proc~dintrv -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge4" class="edge">
 <title>proc~db4val&#45;&gt;proc~dintrv</title>
-<path fill="none" stroke="#000000" d="M767.51,-255.21C828.99,-248.15 915.53,-237.4 991,-225 1006.76,-222.41 1023.65,-219.24 1039.5,-216.09"/>
-<polygon fill="#000000" stroke="#000000" points="1040.62,-219.43 1049.74,-214.03 1039.24,-212.57 1040.62,-219.43"/>
+<path fill="none" stroke="#000000" d="M1056.61,-295.08C1117.64,-287.77 1203.27,-276.74 1278,-264.31 1293.67,-261.7 1310.47,-258.54 1326.24,-255.4"/>
+<polygon fill="#000000" stroke="#000000" points="1327.33,-258.75 1336.44,-253.35 1325.94,-251.89 1327.33,-258.75"/>
 </g>
 <!-- proc~db4val&#45;&gt;proc~dbvalu -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge21" class="edge">
 <title>proc~db4val&#45;&gt;proc~dbvalu</title>
-<path fill="none" stroke="#000000" d="M758.05,-251.98C768.56,-249.45 779.15,-246.48 789,-243 821.25,-231.61 855.74,-212.94 879.05,-199.25"/>
-<polygon fill="#000000" stroke="#000000" points="880.91,-202.22 887.71,-194.09 877.32,-196.2 880.91,-202.22"/>
+<path fill="none" stroke="#000000" d="M1047.63,-292.25C1057.95,-289.74 1068.34,-286.78 1078,-283.31 1110.28,-271.72 1144.67,-252.58 1167.75,-238.63"/>
+<polygon fill="#000000" stroke="#000000" points="1169.62,-241.59 1176.32,-233.38 1165.96,-235.62 1169.62,-241.59"/>
 </g>
 <!-- proc~db5val -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node6" class="node">
 <title>proc~db5val</title>
-<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node6"><a xlink:href=".././proc/db5val.html" xlink:title="bspline_sub_module::db5val">
-<polygon fill="#d9534f" stroke="#d9534f" points="767.5,-234 603.5,-234 603.5,-210 767.5,-210 767.5,-234"/>
-<text text-anchor="middle" x="685.5" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::db5val</text>
+<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node6"><a xlink:href="../proc/db5val.html" xlink:title="bspline_sub_module::db5val">
+<polygon fill="#d9534f" stroke="#d9534f" points="1056.5,-274.31 892.5,-274.31 892.5,-250.31 1056.5,-250.31 1056.5,-274.31"/>
+<text text-anchor="middle" x="974.5" y="-259.91" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::db5val</text>
 </a>
 </g>
 </g>
 <!-- proc~db5val&#45;&gt;proc~dintrv -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge5" class="edge">
 <title>proc~db5val&#45;&gt;proc~dintrv</title>
-<path fill="none" stroke="#000000" d="M767.78,-218.12C839.27,-214.71 943.11,-209.75 1016.74,-206.24"/>
-<polygon fill="#000000" stroke="#000000" points="1017.1,-209.72 1026.93,-205.75 1016.77,-202.73 1017.1,-209.72"/>
+<path fill="none" stroke="#000000" d="M1056.89,-258.21C1127.86,-254.64 1230.6,-249.46 1303.68,-245.78"/>
+<polygon fill="#000000" stroke="#000000" points="1303.98,-249.27 1313.79,-245.27 1303.62,-242.28 1303.98,-249.27"/>
 </g>
 <!-- proc~db5val&#45;&gt;proc~dbvalu -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge22" class="edge">
 <title>proc~db5val&#45;&gt;proc~dbvalu</title>
-<path fill="none" stroke="#000000" d="M752.66,-210C777.18,-205.55 805.19,-200.47 830.56,-195.87"/>
-<polygon fill="#000000" stroke="#000000" points="831.29,-199.29 840.51,-194.06 830.04,-192.4 831.29,-199.29"/>
+<path fill="none" stroke="#000000" d="M1039.87,-250.29C1065.22,-245.55 1094.5,-240.08 1120.73,-235.18"/>
+<polygon fill="#000000" stroke="#000000" points="1121.44,-238.61 1130.63,-233.33 1120.15,-231.73 1121.44,-238.61"/>
 </g>
 <!-- proc~db6val -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node7" class="node">
 <title>proc~db6val</title>
-<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node7"><a xlink:href=".././proc/db6val.html" xlink:title="bspline_sub_module::db6val">
-<polygon fill="#d9534f" stroke="#d9534f" points="767.5,-108 603.5,-108 603.5,-84 767.5,-84 767.5,-108"/>
-<text text-anchor="middle" x="685.5" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::db6val</text>
+<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node7"><a xlink:href="../proc/db6val.html" xlink:title="bspline_sub_module::db6val">
+<polygon fill="#d9534f" stroke="#d9534f" points="1056.5,-68.31 892.5,-68.31 892.5,-44.31 1056.5,-44.31 1056.5,-68.31"/>
+<text text-anchor="middle" x="974.5" y="-53.91" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::db6val</text>
 </a>
 </g>
 </g>
 <!-- proc~db6val&#45;&gt;proc~dintrv -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge6" class="edge">
 <title>proc~db6val&#45;&gt;proc~dintrv</title>
-<path fill="none" stroke="#000000" d="M745.88,-108.03C760.02,-110.94 775.05,-114.05 789,-117 878.9,-136 902.67,-135.68 991,-161 1016.17,-168.21 1043.82,-178.06 1065.65,-186.3"/>
-<polygon fill="#000000" stroke="#000000" points="1064.64,-189.66 1075.23,-189.95 1067.14,-183.12 1064.64,-189.66"/>
+<path fill="none" stroke="#000000" d="M1056.67,-45.64C1120.87,-41.17 1210.61,-44.06 1278,-82.31 1333.2,-113.64 1368.76,-183.76 1383.98,-219.49"/>
+<polygon fill="#000000" stroke="#000000" points="1380.85,-221.08 1387.9,-228.99 1387.33,-218.41 1380.85,-221.08"/>
 </g>
 <!-- proc~db6val&#45;&gt;proc~dbvalu -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge23" class="edge">
 <title>proc~db6val&#45;&gt;proc~dbvalu</title>
-<path fill="none" stroke="#000000" d="M766.85,-108.05C774.53,-110.5 782.04,-113.45 789,-117 808.33,-126.87 806.58,-138.53 825,-150 835.24,-156.37 846.95,-161.86 858.26,-166.4"/>
-<polygon fill="#000000" stroke="#000000" points="857.04,-169.68 867.63,-169.99 859.54,-163.14 857.04,-169.68"/>
+<path fill="none" stroke="#000000" d="M1000.01,-68.52C1021.36,-79.59 1052.77,-96.94 1078,-115.31 1115.27,-142.44 1154.06,-179.67 1176.29,-202.02"/>
+<polygon fill="#000000" stroke="#000000" points="1173.93,-204.6 1183.44,-209.27 1178.91,-199.69 1173.93,-204.6"/>
 </g>
 <!-- proc~dbfqad -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node8" class="node">
 <title>proc~dbfqad</title>
-<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node8"><a xlink:href=".././proc/dbfqad.html" xlink:title="bspline_sub_module::dbfqad">
-<polygon fill="#d9534f" stroke="#d9534f" points="991,-31 825,-31 825,-7 991,-7 991,-31"/>
-<text text-anchor="middle" x="908" y="-16.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbfqad</text>
+<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node8"><a xlink:href="../proc/dbfqad.html" xlink:title="bspline_sub_module::dbfqad">
+<polygon fill="#d9534f" stroke="#d9534f" points="790.5,-138.31 624.5,-138.31 624.5,-114.31 790.5,-114.31 790.5,-138.31"/>
+<text text-anchor="middle" x="707.5" y="-123.91" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbfqad</text>
 </a>
 </g>
 </g>
 <!-- proc~dbfqad&#45;&gt;proc~dintrv -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge7" class="edge">
 <title>proc~dbfqad&#45;&gt;proc~dintrv</title>
-<path fill="none" stroke="#000000" d="M931.77,-31.08C948.93,-40.72 972.57,-55.2 991,-71 1031.17,-105.45 1069.99,-154.1 1090.49,-181.38"/>
-<polygon fill="#000000" stroke="#000000" points="1087.94,-183.82 1096.71,-189.76 1093.56,-179.65 1087.94,-183.82"/>
+<path fill="none" stroke="#000000" d="M790.7,-119.66C816.39,-117.88 844.86,-116.19 871,-115.31 962.95,-112.2 987.66,-97.89 1078,-115.31 1187.47,-136.42 1307.23,-195.34 1362.05,-224.51"/>
+<polygon fill="#000000" stroke="#000000" points="1360.43,-227.61 1370.89,-229.26 1363.74,-221.45 1360.43,-227.61"/>
+</g>
+<!-- proc~dbsgq8 -->
+<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node15" class="node">
+<title>proc~dbsgq8</title>
+<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node15"><a xlink:href="../proc/dbsgq8.html" xlink:title="bspline_sub_module::dbsgq8">
+<polygon fill="#d9534f" stroke="#d9534f" points="1058,-148.31 891,-148.31 891,-124.31 1058,-124.31 1058,-148.31"/>
+<text text-anchor="middle" x="974.5" y="-133.91" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbsgq8</text>
+</a>
+</g>
+</g>
+<!-- proc~dbfqad&#45;&gt;proc~dbsgq8 -->
+<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge30" class="edge">
+<title>proc~dbfqad&#45;&gt;proc~dbsgq8</title>
+<path fill="none" stroke="#000000" d="M790.53,-129.41C819.09,-130.48 851.32,-131.7 880.69,-132.81"/>
+<polygon fill="#000000" stroke="#000000" points="880.82,-136.31 890.94,-133.19 881.08,-129.32 880.82,-136.31"/>
 </g>
 <!-- proc~dbsqad -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node9" class="node">
 <title>proc~dbsqad</title>
-<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node9"><a xlink:href=".././proc/dbsqad.html" xlink:title="bspline_sub_module::dbsqad">
-<polygon fill="#d9534f" stroke="#d9534f" points="769,-66 602,-66 602,-42 769,-42 769,-66"/>
-<text text-anchor="middle" x="685.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbsqad</text>
+<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node9"><a xlink:href="../proc/dbsqad.html" xlink:title="bspline_sub_module::dbsqad">
+<polygon fill="#d9534f" stroke="#d9534f" points="1058,-26.31 891,-26.31 891,-2.31 1058,-2.31 1058,-26.31"/>
+<text text-anchor="middle" x="974.5" y="-11.91" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbsqad</text>
 </a>
 </g>
 </g>
 <!-- proc~dbsqad&#45;&gt;proc~dintrv -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge8" class="edge">
 <title>proc~dbsqad&#45;&gt;proc~dintrv</title>
-<path fill="none" stroke="#000000" d="M769.19,-62.55C832.13,-71.25 919.76,-88.16 991,-120 1027.02,-136.1 1063.13,-164.49 1084.9,-183.27"/>
-<polygon fill="#000000" stroke="#000000" points="1082.69,-185.99 1092.51,-189.96 1087.31,-180.73 1082.69,-185.99"/>
+<path fill="none" stroke="#000000" d="M1055.2,-2.3C1120.23,3.27 1211.86,1.08 1278,-41.31 1343.39,-83.21 1375.44,-176.55 1387.12,-219.24"/>
+<polygon fill="#000000" stroke="#000000" points="1383.8,-220.38 1389.72,-229.17 1390.58,-218.61 1383.8,-220.38"/>
 </g>
 <!-- proc~dbsqad&#45;&gt;proc~dbvalu -->
-<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge24" class="edge">
+<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge25" class="edge">
 <title>proc~dbsqad&#45;&gt;proc~dbvalu</title>
-<path fill="none" stroke="#000000" d="M766.83,-66.08C774.52,-68.53 782.03,-71.47 789,-75 811.32,-86.32 861.06,-135.11 888.29,-162.74"/>
-<polygon fill="#000000" stroke="#000000" points="885.83,-165.23 895.33,-169.92 890.83,-160.33 885.83,-165.23"/>
+<path fill="none" stroke="#000000" d="M1058.26,-25C1065.25,-27.73 1071.95,-31.12 1078,-35.31 1137.88,-76.78 1173.52,-159.86 1187.77,-199.41"/>
+<polygon fill="#000000" stroke="#000000" points="1184.49,-200.62 1191.08,-208.91 1191.1,-198.31 1184.49,-200.62"/>
 </g>
 <!-- proc~dbvalu&#45;&gt;proc~dintrv -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge9" class="edge">
 <title>proc~dbvalu&#45;&gt;proc~dintrv</title>
-<path fill="none" stroke="#000000" d="M990.06,-190.25C998.89,-191.15 1007.92,-192.07 1016.83,-192.98"/>
-<polygon fill="#000000" stroke="#000000" points="1016.54,-196.46 1026.84,-193.99 1017.25,-189.5 1016.54,-196.46"/>
+<path fill="none" stroke="#000000" d="M1278.21,-229.62C1286.56,-230.47 1295.08,-231.34 1303.52,-232.21"/>
+<polygon fill="#000000" stroke="#000000" points="1303.44,-235.72 1313.74,-233.25 1304.15,-228.75 1303.44,-235.72"/>
 </g>
 <!-- proc~db1fqad -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node11" class="node">
 <title>proc~db1fqad</title>
-<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node11"><a xlink:href=".././proc/db1fqad.html" xlink:title="bspline_sub_module::db1fqad">
-<polygon fill="#d9534f" stroke="#d9534f" points="771.5,-24 599.5,-24 599.5,0 771.5,0 771.5,-24"/>
-<text text-anchor="middle" x="685.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::db1fqad</text>
+<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node11"><a xlink:href="../proc/db1fqad.html" xlink:title="bspline_sub_module::db1fqad">
+<polygon fill="#d9534f" stroke="#d9534f" points="502.5,-138.31 330.5,-138.31 330.5,-114.31 502.5,-114.31 502.5,-138.31"/>
+<text text-anchor="middle" x="416.5" y="-123.91" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::db1fqad</text>
 </a>
 </g>
 </g>
 <!-- proc~db1fqad&#45;&gt;proc~dbfqad -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge15" class="edge">
 <title>proc~db1fqad&#45;&gt;proc~dbfqad</title>
-<path fill="none" stroke="#000000" d="M771.75,-14.71C785.79,-15.15 800.41,-15.62 814.62,-16.07"/>
-<polygon fill="#000000" stroke="#000000" points="814.77,-19.57 824.87,-16.39 814.99,-12.58 814.77,-19.57"/>
+<path fill="none" stroke="#000000" d="M502.65,-126.31C537.65,-126.31 578.28,-126.31 614.02,-126.31"/>
+<polygon fill="#000000" stroke="#000000" points="614.45,-129.81 624.45,-126.31 614.45,-122.81 614.45,-129.81"/>
 </g>
 <!-- proc~db1sqad -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node12" class="node">
 <title>proc~db1sqad</title>
-<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node12"><a xlink:href=".././proc/db1sqad.html" xlink:title="bspline_sub_module::db1sqad">
-<polygon fill="#d9534f" stroke="#d9534f" points="505.5,-66 331.5,-66 331.5,-42 505.5,-42 505.5,-66"/>
-<text text-anchor="middle" x="418.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::db1sqad</text>
+<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node12"><a xlink:href="../proc/db1sqad.html" xlink:title="bspline_sub_module::db1sqad">
+<polygon fill="#d9534f" stroke="#d9534f" points="794.5,-26.31 620.5,-26.31 620.5,-2.31 794.5,-2.31 794.5,-26.31"/>
+<text text-anchor="middle" x="707.5" y="-11.91" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::db1sqad</text>
 </a>
 </g>
 </g>
 <!-- proc~db1sqad&#45;&gt;proc~dbsqad -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge16" class="edge">
 <title>proc~db1sqad&#45;&gt;proc~dbsqad</title>
-<path fill="none" stroke="#000000" d="M505.54,-54C533,-54 563.5,-54 591.44,-54"/>
-<polygon fill="#000000" stroke="#000000" points="591.6,-57.5 601.6,-54 591.6,-50.5 591.6,-57.5"/>
+<path fill="none" stroke="#000000" d="M794.54,-14.31C822,-14.31 852.5,-14.31 880.44,-14.31"/>
+<polygon fill="#000000" stroke="#000000" points="880.6,-17.81 890.6,-14.31 880.6,-10.81 880.6,-17.81"/>
 </g>
 <!-- proc~db1val_alt -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node13" class="node">
 <title>proc~db1val_alt</title>
-<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node13"><a xlink:href=".././proc/db1val_alt.html" xlink:title="bspline_sub_module::db1val_alt">
-<polygon fill="#d9534f" stroke="#d9534f" points="777,-192 594,-192 594,-168 777,-168 777,-192"/>
-<text text-anchor="middle" x="685.5" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::db1val_alt</text>
+<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node13"><a xlink:href="../proc/db1val_alt.html" xlink:title="bspline_sub_module::db1val_alt">
+<polygon fill="#d9534f" stroke="#d9534f" points="1066,-190.31 883,-190.31 883,-166.31 1066,-166.31 1066,-190.31"/>
+<text text-anchor="middle" x="974.5" y="-175.91" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::db1val_alt</text>
 </a>
 </g>
 </g>
 <!-- proc~db1val_alt&#45;&gt;proc~dbvalu -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge17" class="edge">
 <title>proc~db1val_alt&#45;&gt;proc~dbvalu</title>
-<path fill="none" stroke="#000000" d="M777.14,-180.82C789.89,-180.94 803,-181.06 815.75,-181.17"/>
-<polygon fill="#000000" stroke="#000000" points="815.87,-184.67 825.9,-181.26 815.93,-177.67 815.87,-184.67"/>
+<path fill="none" stroke="#000000" d="M1036.93,-190.35C1063.82,-195.61 1095.53,-201.82 1123.47,-207.3"/>
+<polygon fill="#000000" stroke="#000000" points="1123.09,-210.79 1133.58,-209.28 1124.44,-203.92 1123.09,-210.79"/>
 </g>
 <!-- proc~db1val_default -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node14" class="node">
 <title>proc~db1val_default</title>
-<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node14"><a xlink:href=".././proc/db1val_default.html" xlink:title="bspline_sub_module::db1val_default">
-<polygon fill="#d9534f" stroke="#d9534f" points="789,-150 582,-150 582,-126 789,-126 789,-150"/>
-<text text-anchor="middle" x="685.5" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::db1val_default</text>
+<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node14"><a xlink:href="../proc/db1val_default.html" xlink:title="bspline_sub_module::db1val_default">
+<polygon fill="#d9534f" stroke="#d9534f" points="1078,-232.31 871,-232.31 871,-208.31 1078,-208.31 1078,-232.31"/>
+<text text-anchor="middle" x="974.5" y="-217.91" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::db1val_default</text>
 </a>
 </g>
 </g>
 <!-- proc~db1val_default&#45;&gt;proc~dbvalu -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge18" class="edge">
 <title>proc~db1val_default&#45;&gt;proc~dbvalu</title>
-<path fill="none" stroke="#000000" d="M746.75,-150.02C774.58,-155.58 807.81,-162.21 836.77,-167.99"/>
-<polygon fill="#000000" stroke="#000000" points="836.33,-171.47 846.82,-169.99 837.7,-164.6 836.33,-171.47"/>
+<path fill="none" stroke="#000000" d="M1078.18,-220.78C1086.67,-220.82 1095.21,-220.86 1103.61,-220.89"/>
+<polygon fill="#000000" stroke="#000000" points="1103.75,-224.39 1113.76,-220.94 1103.78,-217.39 1103.75,-224.39"/>
+</g>
+<!-- proc~dbsgq8&#45;&gt;proc~dbvalu -->
+<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge24" class="edge">
+<title>proc~dbsgq8&#45;&gt;proc~dbvalu</title>
+<path fill="none" stroke="#000000" d="M1047.94,-148.33C1058.17,-150.84 1068.45,-153.81 1078,-157.31 1110.63,-169.27 1145.21,-189.2 1168.24,-203.65"/>
+<polygon fill="#000000" stroke="#000000" points="1166.46,-206.66 1176.77,-209.08 1170.22,-200.76 1166.46,-206.66"/>
 </g>
 <!-- proc~evaluate_2d -->
-<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node15" class="node">
+<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node16" class="node">
 <title>proc~evaluate_2d</title>
-<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node15"><a xlink:href=".././proc/evaluate_2d.html" xlink:title="bspline_oo_module::bspline_2d%evaluate_2d">
-<polygon fill="#d9534f" stroke="#d9534f" points="546,-360 291,-360 291,-336 546,-336 546,-360"/>
-<text text-anchor="middle" x="418.5" y="-345.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_2d%evaluate_2d</text>
+<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node16"><a xlink:href="../proc/evaluate_2d.html" xlink:title="bspline_oo_module::bspline_2d%evaluate_2d">
+<polygon fill="#d9534f" stroke="#d9534f" points="835,-400.31 580,-400.31 580,-376.31 835,-376.31 835,-400.31"/>
+<text text-anchor="middle" x="707.5" y="-385.91" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_2d%evaluate_2d</text>
 </a>
 </g>
 </g>
 <!-- proc~evaluate_2d&#45;&gt;proc~db2val -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge10" class="edge">
 <title>proc~evaluate_2d&#45;&gt;proc~db2val</title>
-<path fill="none" stroke="#000000" d="M546.18,-348C561.96,-348 577.86,-348 592.97,-348"/>
-<polygon fill="#000000" stroke="#000000" points="593.29,-351.5 603.29,-348 593.29,-344.5 593.29,-351.5"/>
+<path fill="none" stroke="#000000" d="M835.18,-388.31C850.96,-388.31 866.86,-388.31 881.97,-388.31"/>
+<polygon fill="#000000" stroke="#000000" points="882.29,-391.81 892.29,-388.31 882.29,-384.81 882.29,-391.81"/>
 </g>
 <!-- proc~evaluate_3d -->
-<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node16" class="node">
+<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node17" class="node">
 <title>proc~evaluate_3d</title>
-<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node16"><a xlink:href=".././proc/evaluate_3d.html" xlink:title="bspline_oo_module::bspline_3d%evaluate_3d">
-<polygon fill="#d9534f" stroke="#d9534f" points="546,-318 291,-318 291,-294 546,-294 546,-318"/>
-<text text-anchor="middle" x="418.5" y="-303.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_3d%evaluate_3d</text>
+<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node17"><a xlink:href="../proc/evaluate_3d.html" xlink:title="bspline_oo_module::bspline_3d%evaluate_3d">
+<polygon fill="#d9534f" stroke="#d9534f" points="835,-358.31 580,-358.31 580,-334.31 835,-334.31 835,-358.31"/>
+<text text-anchor="middle" x="707.5" y="-343.91" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_3d%evaluate_3d</text>
 </a>
 </g>
 </g>
 <!-- proc~evaluate_3d&#45;&gt;proc~db3val -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge11" class="edge">
 <title>proc~evaluate_3d&#45;&gt;proc~db3val</title>
-<path fill="none" stroke="#000000" d="M546.18,-306C561.96,-306 577.86,-306 592.97,-306"/>
-<polygon fill="#000000" stroke="#000000" points="593.29,-309.5 603.29,-306 593.29,-302.5 593.29,-309.5"/>
+<path fill="none" stroke="#000000" d="M835.18,-346.31C850.96,-346.31 866.86,-346.31 881.97,-346.31"/>
+<polygon fill="#000000" stroke="#000000" points="882.29,-349.81 892.29,-346.31 882.29,-342.81 882.29,-349.81"/>
 </g>
 <!-- proc~evaluate_4d -->
-<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node17" class="node">
+<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node18" class="node">
 <title>proc~evaluate_4d</title>
-<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node17"><a xlink:href=".././proc/evaluate_4d.html" xlink:title="bspline_oo_module::bspline_4d%evaluate_4d">
-<polygon fill="#d9534f" stroke="#d9534f" points="546,-276 291,-276 291,-252 546,-252 546,-276"/>
-<text text-anchor="middle" x="418.5" y="-261.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_4d%evaluate_4d</text>
+<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node18"><a xlink:href="../proc/evaluate_4d.html" xlink:title="bspline_oo_module::bspline_4d%evaluate_4d">
+<polygon fill="#d9534f" stroke="#d9534f" points="835,-316.31 580,-316.31 580,-292.31 835,-292.31 835,-316.31"/>
+<text text-anchor="middle" x="707.5" y="-301.91" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_4d%evaluate_4d</text>
 </a>
 </g>
 </g>
 <!-- proc~evaluate_4d&#45;&gt;proc~db4val -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge12" class="edge">
 <title>proc~evaluate_4d&#45;&gt;proc~db4val</title>
-<path fill="none" stroke="#000000" d="M546.18,-264C561.96,-264 577.86,-264 592.97,-264"/>
-<polygon fill="#000000" stroke="#000000" points="593.29,-267.5 603.29,-264 593.29,-260.5 593.29,-267.5"/>
+<path fill="none" stroke="#000000" d="M835.18,-304.31C850.96,-304.31 866.86,-304.31 881.97,-304.31"/>
+<polygon fill="#000000" stroke="#000000" points="882.29,-307.81 892.29,-304.31 882.29,-300.81 882.29,-307.81"/>
 </g>
 <!-- proc~evaluate_5d -->
-<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node18" class="node">
+<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node19" class="node">
 <title>proc~evaluate_5d</title>
-<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node18"><a xlink:href=".././proc/evaluate_5d.html" xlink:title="bspline_oo_module::bspline_5d%evaluate_5d">
-<polygon fill="#d9534f" stroke="#d9534f" points="546,-234 291,-234 291,-210 546,-210 546,-234"/>
-<text text-anchor="middle" x="418.5" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_5d%evaluate_5d</text>
+<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node19"><a xlink:href="../proc/evaluate_5d.html" xlink:title="bspline_oo_module::bspline_5d%evaluate_5d">
+<polygon fill="#d9534f" stroke="#d9534f" points="835,-274.31 580,-274.31 580,-250.31 835,-250.31 835,-274.31"/>
+<text text-anchor="middle" x="707.5" y="-259.91" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_5d%evaluate_5d</text>
 </a>
 </g>
 </g>
 <!-- proc~evaluate_5d&#45;&gt;proc~db5val -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge13" class="edge">
 <title>proc~evaluate_5d&#45;&gt;proc~db5val</title>
-<path fill="none" stroke="#000000" d="M546.18,-222C561.96,-222 577.86,-222 592.97,-222"/>
-<polygon fill="#000000" stroke="#000000" points="593.29,-225.5 603.29,-222 593.29,-218.5 593.29,-225.5"/>
+<path fill="none" stroke="#000000" d="M835.18,-262.31C850.96,-262.31 866.86,-262.31 881.97,-262.31"/>
+<polygon fill="#000000" stroke="#000000" points="882.29,-265.81 892.29,-262.31 882.29,-258.81 882.29,-265.81"/>
 </g>
 <!-- proc~evaluate_6d -->
-<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node19" class="node">
+<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node20" class="node">
 <title>proc~evaluate_6d</title>
-<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node19"><a xlink:href=".././proc/evaluate_6d.html" xlink:title="bspline_oo_module::bspline_6d%evaluate_6d">
-<polygon fill="#d9534f" stroke="#d9534f" points="546,-108 291,-108 291,-84 546,-84 546,-108"/>
-<text text-anchor="middle" x="418.5" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_6d%evaluate_6d</text>
+<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node20"><a xlink:href="../proc/evaluate_6d.html" xlink:title="bspline_oo_module::bspline_6d%evaluate_6d">
+<polygon fill="#d9534f" stroke="#d9534f" points="835,-68.31 580,-68.31 580,-44.31 835,-44.31 835,-68.31"/>
+<text text-anchor="middle" x="707.5" y="-53.91" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_6d%evaluate_6d</text>
 </a>
 </g>
 </g>
 <!-- proc~evaluate_6d&#45;&gt;proc~db6val -->
 <g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge14" class="edge">
 <title>proc~evaluate_6d&#45;&gt;proc~db6val</title>
-<path fill="none" stroke="#000000" d="M546.18,-96C561.96,-96 577.86,-96 592.97,-96"/>
-<polygon fill="#000000" stroke="#000000" points="593.29,-99.5 603.29,-96 593.29,-92.5 593.29,-99.5"/>
+<path fill="none" stroke="#000000" d="M835.18,-56.31C850.96,-56.31 866.86,-56.31 881.97,-56.31"/>
+<polygon fill="#000000" stroke="#000000" points="882.29,-59.81 892.29,-56.31 882.29,-52.81 882.29,-59.81"/>
 </g>
 <!-- interface~db1val -->
-<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node20" class="node">
+<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node21" class="node">
 <title>interface~db1val</title>
-<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node20"><a xlink:href=".././interface/db1val.html" xlink:title="bspline_sub_module::db1val">
-<polygon fill="#a7506f" stroke="#a7506f" points="500.5,-171 336.5,-171 336.5,-147 500.5,-147 500.5,-171"/>
-<text text-anchor="middle" x="418.5" y="-156.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::db1val</text>
+<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node21"><a xlink:href="../interface/db1val.html" xlink:title="bspline_sub_module::db1val">
+<polygon fill="#a7506f" stroke="#a7506f" points="789.5,-199.31 625.5,-199.31 625.5,-175.31 789.5,-175.31 789.5,-199.31"/>
+<text text-anchor="middle" x="707.5" y="-184.91" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::db1val</text>
 </a>
 </g>
 </g>
 <!-- interface~db1val&#45;&gt;proc~db1val_alt -->
-<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge27" class="edge">
+<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge28" class="edge">
 <title>interface~db1val&#45;&gt;proc~db1val_alt</title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M500.81,-165.44C526.96,-167.52 556.26,-169.84 583.64,-172.01"/>
-<polygon fill="#000000" stroke="#000000" points="583.39,-175.5 593.63,-172.8 583.94,-168.52 583.39,-175.5"/>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M789.81,-184.55C815.85,-183.66 845,-182.67 872.28,-181.75"/>
+<polygon fill="#000000" stroke="#000000" points="872.76,-185.23 882.63,-181.4 872.52,-178.24 872.76,-185.23"/>
 </g>
 <!-- interface~db1val&#45;&gt;proc~db1val_default -->
-<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge28" class="edge">
+<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge29" class="edge">
 <title>interface~db1val&#45;&gt;proc~db1val_default</title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M500.81,-152.56C523.17,-150.78 547.84,-148.83 571.64,-146.94"/>
-<polygon fill="#000000" stroke="#000000" points="572.09,-150.42 581.78,-146.14 571.53,-143.44 572.09,-150.42"/>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M789.81,-197.44C814.12,-200.46 841.15,-203.83 866.83,-207.03"/>
+<polygon fill="#000000" stroke="#000000" points="866.62,-210.53 876.98,-208.29 867.49,-203.58 866.62,-210.53"/>
 </g>
 <!-- proc~fintegral_1d -->
-<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node21" class="node">
+<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node22" class="node">
 <title>proc~fintegral_1d</title>
-<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node21"><a xlink:href=".././proc/fintegral_1d.html" xlink:title="bspline_oo_module::bspline_1d%fintegral_1d">
-<polygon fill="#d9534f" stroke="#d9534f" points="545,-24 292,-24 292,0 545,0 545,-24"/>
-<text text-anchor="middle" x="418.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_1d%fintegral_1d</text>
+<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node22"><a xlink:href="../proc/fintegral_1d.html" xlink:title="bspline_oo_module::bspline_1d%fintegral_1d">
+<polygon fill="#d9534f" stroke="#d9534f" points="253,-138.31 0,-138.31 0,-114.31 253,-114.31 253,-138.31"/>
+<text text-anchor="middle" x="126.5" y="-123.91" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_1d%fintegral_1d</text>
 </a>
 </g>
 </g>
 <!-- proc~fintegral_1d&#45;&gt;proc~db1fqad -->
-<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge25" class="edge">
+<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge26" class="edge">
 <title>proc~fintegral_1d&#45;&gt;proc~db1fqad</title>
-<path fill="none" stroke="#000000" d="M545.02,-12C559.76,-12 574.63,-12 588.87,-12"/>
-<polygon fill="#000000" stroke="#000000" points="589.13,-15.5 599.13,-12 589.13,-8.5 589.13,-15.5"/>
+<path fill="none" stroke="#000000" d="M253.4,-126.31C275.88,-126.31 298.95,-126.31 320.38,-126.31"/>
+<polygon fill="#000000" stroke="#000000" points="320.43,-129.81 330.43,-126.31 320.43,-122.81 320.43,-129.81"/>
 </g>
 <!-- proc~integral_1d -->
-<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node22" class="node">
+<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node23" class="node">
 <title>proc~integral_1d</title>
-<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node22"><a xlink:href=".././proc/integral_1d.html" xlink:title="bspline_oo_module::bspline_1d%integral_1d">
-<polygon fill="#d9534f" stroke="#d9534f" points="252.5,-66 2.5,-66 2.5,-42 252.5,-42 252.5,-66"/>
-<text text-anchor="middle" x="127.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_1d%integral_1d</text>
+<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node23"><a xlink:href="../proc/integral_1d.html" xlink:title="bspline_oo_module::bspline_1d%integral_1d">
+<polygon fill="#d9534f" stroke="#d9534f" points="541.5,-26.31 291.5,-26.31 291.5,-2.31 541.5,-2.31 541.5,-26.31"/>
+<text text-anchor="middle" x="416.5" y="-11.91" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_1d%integral_1d</text>
 </a>
 </g>
 </g>
 <!-- proc~integral_1d&#45;&gt;proc~db1sqad -->
-<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge26" class="edge">
+<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge27" class="edge">
 <title>proc~integral_1d&#45;&gt;proc~db1sqad</title>
-<path fill="none" stroke="#000000" d="M252.74,-54C275.59,-54 299.12,-54 321.01,-54"/>
-<polygon fill="#000000" stroke="#000000" points="321.27,-57.5 331.27,-54 321.27,-50.5 321.27,-57.5"/>
+<path fill="none" stroke="#000000" d="M541.74,-14.31C564.59,-14.31 588.12,-14.31 610.01,-14.31"/>
+<polygon fill="#000000" stroke="#000000" points="610.27,-17.81 620.27,-14.31 610.27,-10.81 610.27,-17.81"/>
 </g>
 <!-- proc~evaluate_1d -->
-<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node23" class="node">
+<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_node24" class="node">
 <title>proc~evaluate_1d</title>
-<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node23"><a xlink:href=".././proc/evaluate_1d.html" xlink:title="bspline_oo_module::bspline_1d%evaluate_1d">
-<polygon fill="#d9534f" stroke="#d9534f" points="255,-171 0,-171 0,-147 255,-147 255,-171"/>
-<text text-anchor="middle" x="127.5" y="-156.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_1d%evaluate_1d</text>
+<g id="a_proc~~get_temp_x_for_extrap~~CalledByGraph_node24"><a xlink:href="../proc/evaluate_1d.html" xlink:title="bspline_oo_module::bspline_1d%evaluate_1d">
+<polygon fill="#d9534f" stroke="#d9534f" points="544,-199.31 289,-199.31 289,-175.31 544,-175.31 544,-199.31"/>
+<text text-anchor="middle" x="416.5" y="-184.91" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_1d%evaluate_1d</text>
 </a>
 </g>
 </g>
 <!-- proc~evaluate_1d&#45;&gt;interface~db1val -->
-<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge29" class="edge">
+<g id="proc~~get_temp_x_for_extrap~~CalledByGraph_edge31" class="edge">
 <title>proc~evaluate_1d&#45;&gt;interface~db1val</title>
-<path fill="none" stroke="#000000" d="M255.26,-159C279.06,-159 303.52,-159 325.99,-159"/>
-<polygon fill="#000000" stroke="#000000" points="326.17,-162.5 336.17,-159 326.17,-155.5 326.17,-162.5"/>
+<path fill="none" stroke="#000000" d="M544.26,-187.31C568.06,-187.31 592.52,-187.31 614.99,-187.31"/>
+<polygon fill="#000000" stroke="#000000" points="615.17,-190.81 625.17,-187.31 615.17,-183.81 615.17,-190.81"/>
 </g>
 </g>
 </svg>
@@ -655,17 +658,17 @@ be <code>tmin</code>, <code>x</code>, or <code>tmax</code>)</p>
                   var panprocget_temp_x_for_extrapCalledByGraph = svgPanZoom('#procget_temp_x_for_extrapCalledByGraph',
                     {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
                   );
-                </script>        <div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div>
-          <div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog">
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
                   <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-              <div class="modal-body">
+                <div class="modal-body">
 <p>Nodes of different colours represent the following: </p>
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
@@ -673,11 +676,11 @@ be <code>tmin</code>, <code>x</code>, or <code>tmax</code>)</p>
 <!-- Generated by graphviz version 2.43.0 (0)
  -->
 <!-- Title: Graph Key Pages: 1 -->
-<svg width="597pt" height="32pt"
- viewBox="0.00 0.00 596.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1.16 1.16) rotate(0) translate(4 28)">
 <title>Graph Key</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 592.5,-28 592.5,4 -4,4"/>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
 <!-- Subroutine -->
 <g id="node1" class="node">
 <title>Subroutine</title>
@@ -696,23 +699,29 @@ be <code>tmin</code>, <code>x</code>, or <code>tmax</code>)</p>
 <polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
 <text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
 </g>
-<!-- Unknown Procedure Type -->
+<!-- Type Bound Procedure -->
 <g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
 <title>Unknown Procedure Type</title>
-<polygon fill="#777777" stroke="#777777" points="388.5,-24 243.5,-24 243.5,0 388.5,0 388.5,-24"/>
-<text text-anchor="middle" x="316" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
 </g>
 <!-- Program -->
-<g id="node5" class="node">
+<g id="node6" class="node">
 <title>Program</title>
-<polygon fill="#f0ad4e" stroke="#f0ad4e" points="465,-24 407,-24 407,0 465,0 465,-24"/>
-<text text-anchor="middle" x="436" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
 </g>
 <!-- This Page&#39;s Entity -->
-<g id="node6" class="node">
+<g id="node7" class="node">
 <title>This Page&#39;s Entity</title>
-<polygon fill="none" stroke="black" points="588.5,-24 483.5,-24 483.5,0 588.5,0 588.5,-24"/>
-<text text-anchor="middle" x="536" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
 </g>
 </g>
 </svg>
@@ -730,50 +739,19 @@ implementation in a submodule of an interface in a parent module.
     </div>
     <br>
 
-    <section class="visible-xs visible-sm hidden-md">
-        <h3>Contents</h3>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-    <div class="panel panel-primary">
-      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
-      <div class="list-group">
-        <a class="list-group-item" href="../proc/get_temp_x_for_extrap.html#src">get_temp_x_for_extrap</a>
-      </div>
-    </div>
-
-
-    </section>
-    <br class="visible-xs visible-sm hidden-md">
-
 
     
     
 
     
     
+
 
 
     
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
-    <div class="highlight"><pre><span></span><span class="w">    </span><span class="k">pure function </span><span class="n">get_temp_x_for_extrap</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">tmin</span><span class="p">,</span><span class="n">tmax</span><span class="p">,</span><span class="n">extrap</span><span class="p">)</span><span class="w"> </span><span class="k">result</span><span class="p">(</span><span class="n">xt</span><span class="p">)</span><span class="w"></span>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">pure function </span><span class="n">get_temp_x_for_extrap</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">tmin</span><span class="p">,</span><span class="n">tmax</span><span class="p">,</span><span class="n">extrap</span><span class="p">)</span><span class="w"> </span><span class="k">result</span><span class="p">(</span><span class="n">xt</span><span class="p">)</span>
 
 <span class="w">    </span><span class="k">implicit none</span>
 
@@ -788,27 +766,27 @@ implementation in a submodule of an interface in a parent module.
 <span class="w">    </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">extrapolation_allowed</span><span class="w">  </span><span class="c">!! if extrapolation is allowed</span>
 
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">extrap</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
-<span class="k">        </span><span class="n">extrapolation_allowed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">extrap</span><span class="w"></span>
+<span class="k">        </span><span class="n">extrapolation_allowed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">extrap</span>
 <span class="w">    </span><span class="k">else</span>
-<span class="k">        </span><span class="n">extrapolation_allowed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span><span class="w"></span>
+<span class="k">        </span><span class="n">extrapolation_allowed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
 <span class="w">    </span><span class="k">end if</span>
 
 <span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">extrapolation_allowed</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
 <span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="o">&lt;</span><span class="n">tmin</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
-<span class="k">            </span><span class="n">xt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tmin</span><span class="w"></span>
-<span class="w">        </span><span class="k">else if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="o">&gt;</span><span class="n">tmax</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w"></span>
+<span class="k">            </span><span class="n">xt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tmin</span>
+<span class="w">        </span><span class="k">else if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="o">&gt;</span><span class="n">tmax</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
 <span class="w">            </span><span class="c">! Put it just inside the upper bound.</span>
 <span class="w">            </span><span class="c">! This is sort of a hack to get</span>
 <span class="w">            </span><span class="c">! extrapolation to work.</span>
-<span class="w">            </span><span class="n">xt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tmax</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">2.0_wp</span><span class="o">*</span><span class="nb">spacing</span><span class="p">(</span><span class="n">tmax</span><span class="p">)</span><span class="w"></span>
+<span class="w">            </span><span class="n">xt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tmax</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">2.0_wp</span><span class="o">*</span><span class="nb">spacing</span><span class="p">(</span><span class="n">tmax</span><span class="p">)</span>
 <span class="w">        </span><span class="k">else</span>
-<span class="k">            </span><span class="n">xt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"></span>
+<span class="k">            </span><span class="n">xt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span>
 <span class="w">        </span><span class="k">end if</span>
 <span class="k">    else</span>
-<span class="k">        </span><span class="n">xt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"></span>
+<span class="k">        </span><span class="n">xt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span>
 <span class="w">    </span><span class="k">end if</span>
 
-<span class="k">    end function </span><span class="n">get_temp_x_for_extrap</span><span class="w"></span>
+<span class="k">    end function </span><span class="n">get_temp_x_for_extrap</span>
 </pre></div>
 
     </section>
@@ -821,12 +799,12 @@ implementation in a submodule of an interface in a parent module.
     </div> <!-- /container -->
     <footer>
       <div class="container">
-        <div class="row">
-          <div class="col-xs-6 col-md-6"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2023 
+        <div class="row justify-content-between">
+          <div class="col"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2024 
 </p>
           </div>
-          <div class="col-xs-6 col-md-6">
-            <p class="text-right">
+          <div class="col">
+            <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
             </p>
@@ -836,17 +814,12 @@ implementation in a submodule of an interface in a parent module.
       </div> <!-- /container -->
     </footer>
 
-    <!-- Bootstrap core JavaScript
-         ================================================== -->
-         <!-- Placed at the end of the document so the pages load faster -->
-    <!--
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        -->
-        <script src="../js/bootstrap.min.js"></script>
-        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-        <script src="../js/ie10-viewport-bug-workaround.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
 
-        <!-- MathJax JavaScript
+    <!-- MathJax JavaScript
              ================================================== -->
              <!-- Placed at the end of the document so the pages load faster -->
         <script type="text/x-mathjax-config">

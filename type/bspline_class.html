@@ -1,3 +1,5 @@
+<!-- -*- mode: jinja2 -*- -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,81 +12,56 @@
 
     <title>bspline_class &ndash; bspline-fortran </title>
 
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link href="../css/pygments.css" rel="stylesheet">
     <link href="../css/font-awesome.min.css" rel="stylesheet">
     <link href="../css/local.css" rel="stylesheet">
       <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
-
-         <script src="../js/jquery-2.1.3.min.js"></script>
-         <script src="../js/svg-pan-zoom.min.js"></script>
-
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
   </head>
 
   <body>
 
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
           <a class="navbar-brand" href="../index.html">bspline-fortran </a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
-              <a href="#" class="dropdown-toggle"
-                 data-toggle="dropdown" role="button"
-                 aria-haspopup="true"
-                 aria-expanded="false">
-                 Contents <span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu">
-                    <li><a href="../lists/files.html">Source Files</a></li>
-                  <li><a href="../lists/modules.html">Modules</a></li>
-                  <li><a href="../lists/procedures.html">Procedures</a></li>
-                  <li><a href="../lists/absint.html">Abstract Interfaces</a></li>
-                  <li><a href="../lists/types.html">Derived Types</a></li>
-              </ul>
-            </li>
-                <li class="visible-xs hidden-sm visible-lg">
-                  <a href="../lists/files.html">Source Files</a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
                 </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/modules.html">Modules</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/procedures.html">Procedures</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/absint.html">Abstract Interfaces</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/types.html">Derived Types</a>
-              </li>
-          </ul>
-            <form action="../search.html" class="navbar-form navbar-right" role="search">
-              <div class="form-group">
-                <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
               </div>
-              <!--
-                  <button type="submit" class="btn btn-default">Submit</button>
-                  -->
-            </form>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
 
     <div class="container">
   <div class="row">
@@ -92,33 +69,37 @@
       <small>Derived Type</small>
       
     </h1>
-      <div class="row" id="info-bar">
-    <div class="col-lg-12">
-      <div class="well well-sm">
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
         <ul class="list-inline" style="margin-bottom:0px;display:inline">
 
-          <li id="statements"><i class="fa fa-list-ol"></i>
-            <a data-toggle="tooltip"
-               data-placement="bottom" data-html="true"
-               title="<p> 7.0% of total for derived types.</p>Including implementation: 56 statements,  3.0% of total for derived types.">16 statements</a>
-          </li>
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip"
+                 data-bs-placement="bottom" data-html="true"
+                 title="<p> 7.0% of total for derived types.</p>Including implementation: 56 statements,  4.2% of total for derived types.">16 statements</a>
+            </li>
 
-            <li id="source-file">
+            <li class="list-inline-item" id="source-file">
               <i class="fa fa-code"></i>
               <a href="../src/bspline_oo_module.f90"> Source File</a>
             </li>
         </ul>
-        <ol class="breadcrumb in-well text-right">
-              <li><a href='../sourcefile/bspline_oo_module.f90.html'>bspline_oo_module.f90</a></li>
-              <li><a href='../module/bspline_oo_module.html'>bspline_oo_module</a></li>
-          <li class="active">bspline_class</li>
-        </ol>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/bspline_oo_module.f90.html'>bspline_oo_module.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/bspline_oo_module.html'>bspline_oo_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">bspline_class</li>
+          </ol>
+        </nav>
       </div>
     </div>
   </div>
   <script>
     $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
+    $('[data-bs-toggle="tooltip"]').tooltip()
     })
   </script>
 
@@ -129,18 +110,17 @@
       <div id="sidebar">
       <h3>Contents</h3>
   
-      <div class="panel panel-primary">
-      <div class="panel-heading text-left">
-        <h3 class="panel-title">
-          <a data-toggle="collapse" href="#vars-0">Variables</a>
-        </h3>
-      </div>
-      <div id="vars-0" class="panel-collapse collapse">
-        <div class="list-group">
-            <a class="list-group-item" href="../type/bspline_class.html#variable-inbvx">inbvx</a>
-            <a class="list-group-item" href="../type/bspline_class.html#variable-iflag~23">iflag</a>
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../type/bspline_class.html#variable-inbvx~8">inbvx</a>
+            <a class="list-group-item" href="../type/bspline_class.html#variable-iflag~37">iflag</a>
             <a class="list-group-item" href="../type/bspline_class.html#variable-initialized">initialized</a>
-            <a class="list-group-item" href="../type/bspline_class.html#variable-extrap~26">extrap</a>
+            <a class="list-group-item" href="../type/bspline_class.html#variable-extrap~12">extrap</a>
         </div>
       </div>
     </div>
@@ -160,19 +140,18 @@
   
   
   
-      <div class="panel panel-primary">
-      <div class="panel-heading text-left">
-        <h3 class="panel-title">
-          <a data-toggle="collapse" href="#boundprocs-0">Type-Bound Procedures</a>
-        </h3>
-      </div>
-      <div id="boundprocs-0" class="panel-collapse collapse">
-        <div class="list-group">
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#boundprocs-0"
+         aria-expanded="false" aria-controls="boundprocs-0">
+         <h4 class="card-header bg-primary text-white">Type-Bound Procedures</h4>
+      </a>
+      <div id="boundprocs-0" class="collapse">
+        <div class="list-group list-group-flush">
             <a class="list-group-item" href="../type/bspline_class.html#boundprocedure-destroy_base">destroy_base</a>
             <a class="list-group-item" href="../type/bspline_class.html#boundprocedure-set_extrap_flag">set_extrap_flag</a>
             <a class="list-group-item" href="../type/bspline_class.html#boundprocedure-destroy">destroy</a>
             <a class="list-group-item" href="../type/bspline_class.html#boundprocedure-size_of">size_of</a>
-            <a class="list-group-item" href="../type/bspline_class.html#boundprocedure-status_ok">status_ok</a>
+            <a class="list-group-item" href="../type/bspline_class.html#boundprocedure-status_ok~10">status_ok</a>
             <a class="list-group-item" href="../type/bspline_class.html#boundprocedure-status_message">status_message</a>
             <a class="list-group-item" href="../type/bspline_class.html#boundprocedure-clear_flag">clear_flag</a>
         </div>
@@ -180,8 +159,9 @@
     </div>
 
   
-    <div class="panel panel-primary">
-      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
       <div class="list-group">
         <a class="list-group-item" href="../type/bspline_class.html#src">bspline_class</a>
       </div>
@@ -193,14 +173,15 @@
     </div>
     
     <div class="col-md-9" id='text'>
-      <h2>type, public, abstract :: bspline_class</h2>
+      <h2>
+        type, public :: bspline_class</h2>
     <p>Base class for the b-spline types</p>
-<br>    <div class="panel panel-default">
-      <div class="panel-heading">
-  <h3 class="panel-title">Inherited by</h3>
-      </div>
-      <div class="panel-body">
-     <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<br>      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Inherited by</h3>
+        </div>
+        <div class="card-body">
+          <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Generated by graphviz version 2.43.0 (0)
@@ -220,14 +201,14 @@
 <!-- type~bspline_1d -->
 <g id="type~~bspline_class~~InheritedByGraph_node2" class="node">
 <title>type~bspline_1d</title>
-<g id="a_type~~bspline_class~~InheritedByGraph_node2"><a xlink:href=".././type/bspline_1d.html" xlink:title="bspline_1d">
+<g id="a_type~~bspline_class~~InheritedByGraph_node2"><a xlink:href="../type/bspline_1d.html" xlink:title="bspline_1d">
 <polygon fill="#5cb85c" stroke="#5cb85c" points="188,-234 118,-234 118,-210 188,-210 188,-234"/>
 <text text-anchor="middle" x="153" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d</text>
 </a>
 </g>
 </g>
 <!-- type~bspline_1d&#45;&gt;type~bspline_class -->
-<g id="type~~bspline_class~~InheritedByGraph_edge4" class="edge">
+<g id="type~~bspline_class~~InheritedByGraph_edge5" class="edge">
 <title>type~bspline_1d&#45;&gt;type~bspline_class</title>
 <path fill="none" stroke="#000000" d="M130.15,-209.77C125.97,-207.09 121.73,-204.11 118,-201 94.75,-181.64 72,-155.22 57.54,-137.21"/>
 <polygon fill="#000000" stroke="#000000" points="60.09,-134.79 51.15,-129.11 54.6,-139.13 60.09,-134.79"/>
@@ -235,14 +216,14 @@
 <!-- type~bspline_2d -->
 <g id="type~~bspline_class~~InheritedByGraph_node3" class="node">
 <title>type~bspline_2d</title>
-<g id="a_type~~bspline_class~~InheritedByGraph_node3"><a xlink:href=".././type/bspline_2d.html" xlink:title="bspline_2d">
+<g id="a_type~~bspline_class~~InheritedByGraph_node3"><a xlink:href="../type/bspline_2d.html" xlink:title="bspline_2d">
 <polygon fill="#5cb85c" stroke="#5cb85c" points="188,-192 118,-192 118,-168 188,-168 188,-192"/>
 <text text-anchor="middle" x="153" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_2d</text>
 </a>
 </g>
 </g>
 <!-- type~bspline_2d&#45;&gt;type~bspline_class -->
-<g id="type~~bspline_class~~InheritedByGraph_edge2" class="edge">
+<g id="type~~bspline_class~~InheritedByGraph_edge1" class="edge">
 <title>type~bspline_2d&#45;&gt;type~bspline_class</title>
 <path fill="none" stroke="#000000" d="M130.79,-167.85C114.05,-158.27 90.49,-144.77 71.85,-134.1"/>
 <polygon fill="#000000" stroke="#000000" points="73.56,-131.04 63.14,-129.11 70.08,-137.12 73.56,-131.04"/>
@@ -250,14 +231,14 @@
 <!-- type~bspline_3d -->
 <g id="type~~bspline_class~~InheritedByGraph_node4" class="node">
 <title>type~bspline_3d</title>
-<g id="a_type~~bspline_class~~InheritedByGraph_node4"><a xlink:href=".././type/bspline_3d.html" xlink:title="bspline_3d">
+<g id="a_type~~bspline_class~~InheritedByGraph_node4"><a xlink:href="../type/bspline_3d.html" xlink:title="bspline_3d">
 <polygon fill="#5cb85c" stroke="#5cb85c" points="188,-150 118,-150 118,-126 188,-126 188,-150"/>
 <text text-anchor="middle" x="153" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_3d</text>
 </a>
 </g>
 </g>
 <!-- type~bspline_3d&#45;&gt;type~bspline_class -->
-<g id="type~~bspline_class~~InheritedByGraph_edge5" class="edge">
+<g id="type~~bspline_class~~InheritedByGraph_edge4" class="edge">
 <title>type~bspline_3d&#45;&gt;type~bspline_class</title>
 <path fill="none" stroke="#000000" d="M117.8,-131.47C109.73,-129.93 100.96,-128.26 92.34,-126.61"/>
 <polygon fill="#000000" stroke="#000000" points="92.83,-123.14 82.35,-124.7 91.52,-130.02 92.83,-123.14"/>
@@ -265,14 +246,14 @@
 <!-- type~bspline_4d -->
 <g id="type~~bspline_class~~InheritedByGraph_node5" class="node">
 <title>type~bspline_4d</title>
-<g id="a_type~~bspline_class~~InheritedByGraph_node5"><a xlink:href=".././type/bspline_4d.html" xlink:title="bspline_4d">
+<g id="a_type~~bspline_class~~InheritedByGraph_node5"><a xlink:href="../type/bspline_4d.html" xlink:title="bspline_4d">
 <polygon fill="#5cb85c" stroke="#5cb85c" points="188,-108 118,-108 118,-84 188,-84 188,-108"/>
 <text text-anchor="middle" x="153" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_4d</text>
 </a>
 </g>
 </g>
 <!-- type~bspline_4d&#45;&gt;type~bspline_class -->
-<g id="type~~bspline_class~~InheritedByGraph_edge3" class="edge">
+<g id="type~~bspline_class~~InheritedByGraph_edge6" class="edge">
 <title>type~bspline_4d&#45;&gt;type~bspline_class</title>
 <path fill="none" stroke="#000000" d="M117.8,-102.53C109.73,-104.07 100.96,-105.74 92.34,-107.39"/>
 <polygon fill="#000000" stroke="#000000" points="91.52,-103.98 82.35,-109.3 92.83,-110.86 91.52,-103.98"/>
@@ -280,14 +261,14 @@
 <!-- type~bspline_5d -->
 <g id="type~~bspline_class~~InheritedByGraph_node6" class="node">
 <title>type~bspline_5d</title>
-<g id="a_type~~bspline_class~~InheritedByGraph_node6"><a xlink:href=".././type/bspline_5d.html" xlink:title="bspline_5d">
+<g id="a_type~~bspline_class~~InheritedByGraph_node6"><a xlink:href="../type/bspline_5d.html" xlink:title="bspline_5d">
 <polygon fill="#5cb85c" stroke="#5cb85c" points="188,-66 118,-66 118,-42 188,-42 188,-66"/>
 <text text-anchor="middle" x="153" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_5d</text>
 </a>
 </g>
 </g>
 <!-- type~bspline_5d&#45;&gt;type~bspline_class -->
-<g id="type~~bspline_class~~InheritedByGraph_edge1" class="edge">
+<g id="type~~bspline_class~~InheritedByGraph_edge3" class="edge">
 <title>type~bspline_5d&#45;&gt;type~bspline_class</title>
 <path fill="none" stroke="#000000" d="M130.79,-66.15C114.05,-75.73 90.49,-89.23 71.85,-99.9"/>
 <polygon fill="#000000" stroke="#000000" points="70.08,-96.88 63.14,-104.89 73.56,-102.96 70.08,-96.88"/>
@@ -295,31 +276,31 @@
 <!-- type~bspline_6d -->
 <g id="type~~bspline_class~~InheritedByGraph_node7" class="node">
 <title>type~bspline_6d</title>
-<g id="a_type~~bspline_class~~InheritedByGraph_node7"><a xlink:href=".././type/bspline_6d.html" xlink:title="bspline_6d">
+<g id="a_type~~bspline_class~~InheritedByGraph_node7"><a xlink:href="../type/bspline_6d.html" xlink:title="bspline_6d">
 <polygon fill="#5cb85c" stroke="#5cb85c" points="188,-24 118,-24 118,0 188,0 188,-24"/>
 <text text-anchor="middle" x="153" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_6d</text>
 </a>
 </g>
 </g>
 <!-- type~bspline_6d&#45;&gt;type~bspline_class -->
-<g id="type~~bspline_class~~InheritedByGraph_edge6" class="edge">
+<g id="type~~bspline_class~~InheritedByGraph_edge2" class="edge">
 <title>type~bspline_6d&#45;&gt;type~bspline_class</title>
 <path fill="none" stroke="#000000" d="M130.15,-24.23C125.97,-26.91 121.73,-29.89 118,-33 94.75,-52.36 72,-78.78 57.54,-96.79"/>
 <polygon fill="#000000" stroke="#000000" points="54.6,-94.87 51.15,-104.89 60.09,-99.21 54.6,-94.87"/>
 </g>
 </g>
 </svg>
-</div>        <div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div>
-          <div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog">
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#InheritedByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="InheritedByGraph-help-text" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
                   <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-              <div class="modal-body">
+                <div class="modal-body">
 <p>Nodes of different colours represent the following: </p>
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
@@ -356,90 +337,25 @@ said component(s).
             </div>
           </div>
         </div>
+        </div>
       </div>
-    </div>
     <br>
-
-    <section class="visible-xs visible-sm hidden-md">
-        <h3>Contents</h3>
-  
-      <div class="panel panel-primary">
-      <div class="panel-heading text-left">
-        <h3 class="panel-title">
-          <a data-toggle="collapse" href="#vars-1">Variables</a>
-        </h3>
-      </div>
-      <div id="vars-1" class="panel-collapse collapse">
-        <div class="list-group">
-            <a class="list-group-item" href="../type/bspline_class.html#variable-inbvx">inbvx</a>
-            <a class="list-group-item" href="../type/bspline_class.html#variable-iflag~23">iflag</a>
-            <a class="list-group-item" href="../type/bspline_class.html#variable-initialized">initialized</a>
-            <a class="list-group-item" href="../type/bspline_class.html#variable-extrap~26">extrap</a>
-        </div>
-      </div>
-    </div>
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-      <div class="panel panel-primary">
-      <div class="panel-heading text-left">
-        <h3 class="panel-title">
-          <a data-toggle="collapse" href="#boundprocs-1">Type-Bound Procedures</a>
-        </h3>
-      </div>
-      <div id="boundprocs-1" class="panel-collapse collapse">
-        <div class="list-group">
-            <a class="list-group-item" href="../type/bspline_class.html#boundprocedure-destroy_base">destroy_base</a>
-            <a class="list-group-item" href="../type/bspline_class.html#boundprocedure-set_extrap_flag">set_extrap_flag</a>
-            <a class="list-group-item" href="../type/bspline_class.html#boundprocedure-destroy">destroy</a>
-            <a class="list-group-item" href="../type/bspline_class.html#boundprocedure-size_of">size_of</a>
-            <a class="list-group-item" href="../type/bspline_class.html#boundprocedure-status_ok">status_ok</a>
-            <a class="list-group-item" href="../type/bspline_class.html#boundprocedure-status_message">status_message</a>
-            <a class="list-group-item" href="../type/bspline_class.html#boundprocedure-clear_flag">clear_flag</a>
-        </div>
-      </div>
-    </div>
-
-  
-    <div class="panel panel-primary">
-      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
-      <div class="list-group">
-        <a class="list-group-item" href="../type/bspline_class.html#src">bspline_class</a>
-      </div>
-    </div>
-
-
-    </section>
-    <br class="visible-xs visible-sm hidden-md">
 
     <section>
     <h2>Components</h2>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Visibility</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-<th></th><th>Initial</th>        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-inbvx"></span>
+              <span class="anchor" id="variable-inbvx~8"></span>
               integer(kind=ip),
             </td>
               <td>private</td>
@@ -456,7 +372,7 @@ said component(s).
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-iflag~23"></span>
+              <span class="anchor" id="variable-iflag~37"></span>
               integer(kind=ip),
             </td>
               <td>private</td>
@@ -490,7 +406,7 @@ said component(s).
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-extrap~26"></span>
+              <span class="anchor" id="variable-extrap~12"></span>
               logical,
             </td>
               <td>private</td>
@@ -515,10 +431,17 @@ said component(s).
 
       <section>
         <h2>Type-Bound Procedures</h2>
-            <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-destroy_base"></span><h3>procedure, private, non_overridable :: <strong>destroy_base</strong>          
-    </h3></div>
-      <div class="panel-body">
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-destroy_base"></span>
+      <h3>
+          procedure, private, non_overridable ::
+  <strong>destroy_base</strong>
+        
+      </h3>
+    </div>
+      <div class="card-body">
         
         <p>destructor for the abstract type</p>
       </div>
@@ -528,6 +451,7 @@ said component(s).
     private pure subroutine <a href='../proc/destroy_base.html'>destroy_base</a>(me)  
 </h3>
     
+
   <p>Destructor for contents of the base <a href="../type/bspline_class.html">bspline_class</a> class.
 (this routine is called by the extended classes).</p>
 
@@ -535,17 +459,17 @@ said component(s).
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
               <span class="anchor" ></span>
-              class(<a href='../type/bspline_class.html'>bspline_class</a>),
+              class(<a href='bspline_class.html'>bspline_class</a>),
             </td>
 <td>intent(inout)</td>
               <td></td>            <td>
@@ -565,10 +489,18 @@ said component(s).
     </ul>
   </div>
 
-            <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-set_extrap_flag"></span><h3>procedure, private, non_overridable :: <strong>set_extrap_flag</strong>          
-    </h3></div>
-      <div class="panel-body">
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-set_extrap_flag"></span>
+      <h3>
+          procedure, private, non_overridable ::
+  <strong>set_extrap_flag</strong>
+        
+      </h3>
+    </div>
+      <div class="card-body">
         
         <p>internal routine to set the <code>extrap</code> flag</p>
       </div>
@@ -578,23 +510,24 @@ said component(s).
     private pure subroutine <a href='../proc/set_extrap_flag.html'>set_extrap_flag</a>(me, extrap)  
 </h3>
     
+
   <p>Sets the <code>extrap</code> flag in the class.</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
               <span class="anchor" ></span>
-              class(<a href='../type/bspline_class.html'>bspline_class</a>),
+              class(<a href='bspline_class.html'>bspline_class</a>),
             </td>
 <td>intent(inout)</td>
               <td></td>            <td>
@@ -629,10 +562,18 @@ said component(s).
     </ul>
   </div>
 
-            <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-destroy"></span><h3>procedure(<a href='../interface/destroy_func.html'>destroy_func</a>), public, deferred :: <strong>destroy</strong>          
-    </h3></div>
-      <div class="panel-body">
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-destroy"></span>
+      <h3>
+          procedure(<a href='../interface/destroy_func.html'>destroy_func</a>), public, deferred ::
+  <strong>destroy</strong>
+        
+      </h3>
+    </div>
+      <div class="card-body">
         
         <p>destructor</p>
       </div>
@@ -641,23 +582,24 @@ said component(s).
                   <h3>
     pure subroutine destroy_func(me)  
 <small>Prototype</small></h3>
+
   <p>interface for bspline destructor routines</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
               <span class="anchor" ></span>
-              class(<a href='../type/bspline_class.html'>bspline_class</a>),
+              class(<a href='bspline_class.html'>bspline_class</a>),
             </td>
 <td>intent(inout)</td>
               <td></td>            <td>
@@ -677,10 +619,18 @@ said component(s).
     </ul>
   </div>
 
-            <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-size_of"></span><h3>procedure(<a href='../interface/size_func.html'>size_func</a>), public, deferred :: <strong>size_of</strong>          
-    </h3></div>
-      <div class="panel-body">
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-size_of"></span>
+      <h3>
+          procedure(<a href='../interface/size_func.html'>size_func</a>), public, deferred ::
+  <strong>size_of</strong>
+        
+      </h3>
+    </div>
+      <div class="card-body">
         
         <p>size of the structure in bits</p>
       </div>
@@ -689,23 +639,24 @@ said component(s).
                   <h3>
     pure function size_func(me) result(s)  
 <small>Prototype</small></h3>
+
   <p>interface for size routines</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
               <span class="anchor" ></span>
-              class(<a href='../type/bspline_class.html'>bspline_class</a>),
+              class(<a href='bspline_class.html'>bspline_class</a>),
             </td>
 <td>intent(in)</td>
               <td></td>            <td>
@@ -730,10 +681,18 @@ said component(s).
     </ul>
   </div>
 
-            <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-status_ok"></span><h3>procedure, public, non_overridable :: <strong>status_ok</strong>          
-    </h3></div>
-      <div class="panel-body">
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-status_ok~10"></span>
+      <h3>
+          procedure, public, non_overridable ::
+  <strong>status_ok</strong>
+        
+      </h3>
+    </div>
+      <div class="card-body">
         
         <p>returns true if the last <code>iflag</code> status code was <code>=0</code>.</p>
       </div>
@@ -743,33 +702,27 @@ said component(s).
     private elemental function <a href='../proc/status_ok.html'>status_ok</a>(me) result(ok)  
 </h3>
     
+
   <p>This routines returns true if the <code>iflag</code> code from the last
 routine called was <code>=0</code>. Maybe of the routines have output <code>iflag</code>
 variables, so they can be checked explicitly, or this routine
-can be used.</p>
-<p>If the class is initialized using a function constructor, then
-this is the only way to know if it was properly initialized,
-since those are pure functions with not output <code>iflag</code> arguments.</p>
-<p>If <code>status_ok=.false.</code>, then the error message can be
-obtained from the <a href="../proc/get_bspline_status_message.html">get_bspline_status_message</a> routine.</p>
-<p>Note: after an error condition, the <a href="../proc/clear_bspline_flag.html">clear_bspline_flag</a> routine
-can be called to reset the <code>iflag</code> to 0.</p>
+can be used.</p><a href="../proc/status_ok.html" class="pull-right"><emph>Read more&hellip;</emph></a>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
               <span class="anchor" ></span>
-              class(<a href='../type/bspline_class.html'>bspline_class</a>),
+              class(<a href='bspline_class.html'>bspline_class</a>),
             </td>
 <td>intent(in)</td>
               <td></td>            <td>
@@ -794,10 +747,18 @@ can be called to reset the <code>iflag</code> to 0.</p>
     </ul>
   </div>
 
-            <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-status_message"></span><h3>procedure, public, non_overridable :: <strong>status_message</strong>  => <a href='../proc/get_bspline_status_message.html'>get_bspline_status_message</a>         
-    </h3></div>
-      <div class="panel-body">
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-status_message"></span>
+      <h3>
+          procedure, public, non_overridable ::
+  <strong>status_message</strong> => <a href='/home/runner/work/bspline-fortran/bspline-fortran/doc/proc/get_bspline_status_message.html'>get_bspline_status_message</a>
+        
+      </h3>
+    </div>
+      <div class="card-body">
         
         <p>retrieve the last
 status message</p>
@@ -808,28 +769,24 @@ status message</p>
     private pure function <a href='../proc/get_bspline_status_message.html'>get_bspline_status_message</a>(me, iflag) result(msg)  
 </h3>
     
-  <p>Get the status message from a <a href="../type/bspline_class.html">bspline_class</a> routine call.</p>
-<p>If <code>iflag</code> is not included, then the one in the class is used (which
-corresponds to the last routine called.)
-Otherwise, it will convert the
-input <code>iflag</code> argument into the appropriate message.</p>
-<p>This is a wrapper for <a href="../proc/get_status_message.html">get_status_message</a>.</p>
+
+  <p>Get the status message from a <a href="../type/bspline_class.html">bspline_class</a> routine call.</p><a href="../proc/get_bspline_status_message.html" class="pull-right"><emph>Read more&hellip;</emph></a>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
               <span class="anchor" ></span>
-              class(<a href='../type/bspline_class.html'>bspline_class</a>),
+              class(<a href='bspline_class.html'>bspline_class</a>),
             </td>
 <td>intent(in)</td>
               <td></td>            <td>
@@ -869,10 +826,18 @@ input <code>iflag</code> argument into the appropriate message.</p>
     </ul>
   </div>
 
-            <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-clear_flag"></span><h3>procedure, public, non_overridable :: <strong>clear_flag</strong>  => <a href='../proc/clear_bspline_flag.html'>clear_bspline_flag</a>         
-    </h3></div>
-      <div class="panel-body">
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-clear_flag"></span>
+      <h3>
+          procedure, public, non_overridable ::
+  <strong>clear_flag</strong> => <a href='/home/runner/work/bspline-fortran/bspline-fortran/doc/proc/clear_bspline_flag.html'>clear_bspline_flag</a>
+        
+      </h3>
+    </div>
+      <div class="card-body">
         
         <p>to reset the <code>iflag</code> saved in the class.</p>
       </div>
@@ -882,6 +847,7 @@ input <code>iflag</code> argument into the appropriate message.</p>
     private elemental subroutine <a href='../proc/clear_bspline_flag.html'>clear_bspline_flag</a>(me)  
 </h3>
     
+
   <p>This sets the <code>iflag</code> variable in the class to <code>0</code>
 (which indicates that everything is OK). It can be used
 after an error is encountered.</p>
@@ -890,17 +856,17 @@ after an error is encountered.</p>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
               <span class="anchor" ></span>
-              class(<a href='../type/bspline_class.html'>bspline_class</a>),
+              class(<a href='bspline_class.html'>bspline_class</a>),
             </td>
 <td>intent(inout)</td>
               <td></td>            <td>
@@ -920,11 +886,12 @@ after an error is encountered.</p>
     </ul>
   </div>
 
+          </div>
       </section>
 
     <section>
     <h3><span class="anchor" id="src"></span>Source Code</h3>
-    <div class="highlight"><pre><span></span><span class="w">    </span><span class="k">type</span><span class="p">,</span><span class="k">public</span><span class="p">,</span><span class="k">abstract</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">bspline_class</span><span class="w"></span>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">type</span><span class="p">,</span><span class="k">public</span><span class="p">,</span><span class="k">abstract</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">bspline_class</span>
 <span class="w">        </span><span class="c">!! Base class for the b-spline types</span>
 <span class="w">        </span><span class="k">private</span>
 <span class="k">        </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">inbvx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_ip</span><span class="w">  </span><span class="c">!! internal variable used by [[dbvalu]] for efficient processing</span>
@@ -941,7 +908,7 @@ after an error is encountered.</p>
 <span class="w">        </span><span class="k">procedure</span><span class="p">,</span><span class="k">public</span><span class="p">,</span><span class="k">non_overridable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">status_message</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">get_bspline_status_message</span><span class="w">  </span><span class="c">!! retrieve the last</span>
 <span class="w">                                                                                          </span><span class="c">!! status message</span>
 <span class="w">        </span><span class="k">procedure</span><span class="p">,</span><span class="k">public</span><span class="p">,</span><span class="k">non_overridable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">clear_flag</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">clear_bspline_flag</span><span class="w">  </span><span class="c">!! to reset the `iflag` saved in the class.</span>
-<span class="w">    </span><span class="k">end type </span><span class="n">bspline_class</span><span class="w"></span>
+<span class="w">    </span><span class="k">end type </span><span class="n">bspline_class</span>
 </pre></div>
 
     </section>
@@ -953,12 +920,12 @@ after an error is encountered.</p>
     </div> <!-- /container -->
     <footer>
       <div class="container">
-        <div class="row">
-          <div class="col-xs-6 col-md-6"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2023 
+        <div class="row justify-content-between">
+          <div class="col"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2024 
 </p>
           </div>
-          <div class="col-xs-6 col-md-6">
-            <p class="text-right">
+          <div class="col">
+            <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
             </p>
@@ -968,17 +935,12 @@ after an error is encountered.</p>
       </div> <!-- /container -->
     </footer>
 
-    <!-- Bootstrap core JavaScript
-         ================================================== -->
-         <!-- Placed at the end of the document so the pages load faster -->
-    <!--
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        -->
-        <script src="../js/bootstrap.min.js"></script>
-        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-        <script src="../js/ie10-viewport-bug-workaround.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
 
-        <!-- MathJax JavaScript
+    <!-- MathJax JavaScript
              ================================================== -->
              <!-- Placed at the end of the document so the pages load faster -->
         <script type="text/x-mathjax-config">

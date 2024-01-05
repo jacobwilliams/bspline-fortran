@@ -1,3 +1,5 @@
+<!-- -*- mode: jinja2 -*- -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,81 +12,56 @@
 
     <title>bspline_1d &ndash; bspline-fortran </title>
 
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link href="../css/pygments.css" rel="stylesheet">
     <link href="../css/font-awesome.min.css" rel="stylesheet">
     <link href="../css/local.css" rel="stylesheet">
       <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
-
-         <script src="../js/jquery-2.1.3.min.js"></script>
-         <script src="../js/svg-pan-zoom.min.js"></script>
-
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
   </head>
 
   <body>
 
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
           <a class="navbar-brand" href="../index.html">bspline-fortran </a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
-              <a href="#" class="dropdown-toggle"
-                 data-toggle="dropdown" role="button"
-                 aria-haspopup="true"
-                 aria-expanded="false">
-                 Contents <span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu">
-                    <li><a href="../lists/files.html">Source Files</a></li>
-                  <li><a href="../lists/modules.html">Modules</a></li>
-                  <li><a href="../lists/procedures.html">Procedures</a></li>
-                  <li><a href="../lists/absint.html">Abstract Interfaces</a></li>
-                  <li><a href="../lists/types.html">Derived Types</a></li>
-              </ul>
-            </li>
-                <li class="visible-xs hidden-sm visible-lg">
-                  <a href="../lists/files.html">Source Files</a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
                 </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/modules.html">Modules</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/procedures.html">Procedures</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/absint.html">Abstract Interfaces</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/types.html">Derived Types</a>
-              </li>
-          </ul>
-            <form action="../search.html" class="navbar-form navbar-right" role="search">
-              <div class="form-group">
-                <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
               </div>
-              <!--
-                  <button type="submit" class="btn btn-default">Submit</button>
-                  -->
-            </form>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
 
     <div class="container">
   <div class="row">
@@ -92,33 +69,37 @@
       <small>Derived Type</small>
       
     </h1>
-      <div class="row" id="info-bar">
-    <div class="col-lg-12">
-      <div class="well well-sm">
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
         <ul class="list-inline" style="margin-bottom:0px;display:inline">
 
-          <li id="statements"><i class="fa fa-list-ol"></i>
-            <a data-toggle="tooltip"
-               data-placement="bottom" data-html="true"
-               title="<p> 9.6% of total for derived types.</p>Including implementation: 211 statements, 11.3% of total for derived types.">19 statements</a>
-          </li>
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip"
+                 data-bs-placement="bottom" data-html="true"
+                 title="<p> 9.6% of total for derived types.</p>Including implementation: 160 statements, 12.0% of total for derived types.">22 statements</a>
+            </li>
 
-            <li id="source-file">
+            <li class="list-inline-item" id="source-file">
               <i class="fa fa-code"></i>
               <a href="../src/bspline_oo_module.f90"> Source File</a>
             </li>
         </ul>
-        <ol class="breadcrumb in-well text-right">
-              <li><a href='../sourcefile/bspline_oo_module.f90.html'>bspline_oo_module.f90</a></li>
-              <li><a href='../module/bspline_oo_module.html'>bspline_oo_module</a></li>
-          <li class="active">bspline_1d</li>
-        </ol>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/bspline_oo_module.f90.html'>bspline_oo_module.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/bspline_oo_module.html'>bspline_oo_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">bspline_1d</li>
+          </ol>
+        </nav>
       </div>
     </div>
   </div>
   <script>
     $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
+    $('[data-bs-toggle="tooltip"]').tooltip()
     })
   </script>
 
@@ -129,32 +110,30 @@
       <div id="sidebar">
       <h3>Contents</h3>
   
-      <div class="panel panel-primary">
-      <div class="panel-heading text-left">
-        <h3 class="panel-title">
-          <a data-toggle="collapse" href="#vars-0">Variables</a>
-        </h3>
-      </div>
-      <div id="vars-0" class="panel-collapse collapse">
-        <div class="list-group">
-            <a class="list-group-item" href="../type/bspline_1d.html#variable-nx">nx</a>
-            <a class="list-group-item" href="../type/bspline_1d.html#variable-kx~25">kx</a>
-            <a class="list-group-item" href="../type/bspline_1d.html#variable-bcoef">bcoef</a>
-            <a class="list-group-item" href="../type/bspline_1d.html#variable-tx~13">tx</a>
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../type/bspline_1d.html#variable-nx~19">nx</a>
+            <a class="list-group-item" href="../type/bspline_1d.html#variable-kx~20">kx</a>
+            <a class="list-group-item" href="../type/bspline_1d.html#variable-bcoef~23">bcoef</a>
+            <a class="list-group-item" href="../type/bspline_1d.html#variable-tx~19">tx</a>
             <a class="list-group-item" href="../type/bspline_1d.html#variable-work_val_1">work_val_1</a>
         </div>
       </div>
     </div>
 
   
-      <div class="panel panel-primary">
-      <div class="panel-heading text-left">
-        <h3 class="panel-title">
-          <a data-toggle="collapse" href="#cons-0">Constructor</a>
-        </h3>
-      </div>
-      <div id="cons-0" class="panel-collapse collapse">
-        <div class="list-group">
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#cons-0"
+         aria-expanded="false" aria-controls="cons-0">
+         <h4 class="card-header bg-primary text-white">Constructor</h4>
+      </a>
+      <div id="cons-0" class="collapse">
+        <div class="list-group list-group-flush">
             <a class="list-group-item" href="../type/bspline_1d.html#interface-bspline_1d">bspline_1d</a>
         </div>
       </div>
@@ -172,28 +151,26 @@
   
   
   
-      <div class="panel panel-primary">
-      <div class="panel-heading text-left">
-        <h3 class="panel-title">
-          <a data-toggle="collapse" href="#fins-0">Finalization Procedures</a>
-        </h3>
-      </div>
-      <div id="fins-0" class="panel-collapse collapse">
-        <div class="list-group">
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#fins-0"
+         aria-expanded="false" aria-controls="fins-0">
+         <h4 class="card-header bg-primary text-white">Finalization Procedures</h4>
+      </a>
+      <div id="fins-0" class="collapse">
+        <div class="list-group list-group-flush">
             <a class="list-group-item" href="../type/bspline_1d.html#finalproc-finalize_1d">finalize_1d</a>
         </div>
       </div>
     </div>
 
-      <div class="panel panel-primary">
-      <div class="panel-heading text-left">
-        <h3 class="panel-title">
-          <a data-toggle="collapse" href="#boundprocs-0">Type-Bound Procedures</a>
-        </h3>
-      </div>
-      <div id="boundprocs-0" class="panel-collapse collapse">
-        <div class="list-group">
-            <a class="list-group-item" href="../type/bspline_1d.html#boundprocedure-status_ok">status_ok</a>
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#boundprocs-0"
+         aria-expanded="false" aria-controls="boundprocs-0">
+         <h4 class="card-header bg-primary text-white">Type-Bound Procedures</h4>
+      </a>
+      <div id="boundprocs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../type/bspline_1d.html#boundprocedure-status_ok~10">status_ok</a>
             <a class="list-group-item" href="../type/bspline_1d.html#boundprocedure-status_message">status_message</a>
             <a class="list-group-item" href="../type/bspline_1d.html#boundprocedure-clear_flag">clear_flag</a>
             <a class="list-group-item" href="../type/bspline_1d.html#boundprocedure-initialize">initialize</a>
@@ -209,8 +186,9 @@
     </div>
 
   
-    <div class="panel panel-primary">
-      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
       <div class="list-group">
         <a class="list-group-item" href="../type/bspline_1d.html#src">bspline_1d</a>
       </div>
@@ -222,16 +200,20 @@
     </div>
     
     <div class="col-md-9" id='text'>
-      <h2>type, public, extends(<a href='../type/bspline_class.html'>bspline_class</a>) :: bspline_1d</h2>
+      <h2>
+        type, public, extends(<a href='bspline_class.html'>bspline_class</a>) :: bspline_1d</h2>
     <p>Class for 1d b-spline interpolation.</p>
-<p></p><div class="alert alert-info" role="alert"><h4>Note</h4><p>The 1D class also contains two methods
-      for computing definite integrals.</p></div>
-<br>    <div class="panel panel-default">
-      <div class="panel-heading">
-  <h3 class="panel-title">Inherits</h3>
-      </div>
-      <div class="panel-body">
-    <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p>The 1D class also contains two methods
+      for computing definite integrals.</p>
+</div>
+<br>      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Inherits</h3>
+        </div>
+        <div class="card-body">
+          <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Generated by graphviz version 2.43.0 (0)
@@ -251,7 +233,7 @@
 <!-- type~bspline_class -->
 <g id="type~~bspline_1d~~InheritsGraph_node2" class="node">
 <title>type~bspline_class</title>
-<g id="a_type~~bspline_1d~~InheritsGraph_node2"><a xlink:href=".././type/bspline_class.html" xlink:title="bspline_class">
+<g id="a_type~~bspline_1d~~InheritsGraph_node2"><a xlink:href="../type/bspline_class.html" xlink:title="bspline_class">
 <polygon fill="#5cb85c" stroke="#5cb85c" points="82,-24 0,-24 0,0 82,0 82,-24"/>
 <text text-anchor="middle" x="41" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_class</text>
 </a>
@@ -265,17 +247,17 @@
 </g>
 </g>
 </svg>
-</div>        <div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div>
-          <div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog">
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#InheritsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="InheritsGraph-help-text" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
                   <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-              <div class="modal-body">
+                <div class="modal-body">
 <p>Nodes of different colours represent the following: </p>
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
@@ -312,119 +294,25 @@ said component(s).
             </div>
           </div>
         </div>
+        </div>
       </div>
-    </div>
     <br>
-
-    <section class="visible-xs visible-sm hidden-md">
-        <h3>Contents</h3>
-  
-      <div class="panel panel-primary">
-      <div class="panel-heading text-left">
-        <h3 class="panel-title">
-          <a data-toggle="collapse" href="#vars-1">Variables</a>
-        </h3>
-      </div>
-      <div id="vars-1" class="panel-collapse collapse">
-        <div class="list-group">
-            <a class="list-group-item" href="../type/bspline_1d.html#variable-nx">nx</a>
-            <a class="list-group-item" href="../type/bspline_1d.html#variable-kx~25">kx</a>
-            <a class="list-group-item" href="../type/bspline_1d.html#variable-bcoef">bcoef</a>
-            <a class="list-group-item" href="../type/bspline_1d.html#variable-tx~13">tx</a>
-            <a class="list-group-item" href="../type/bspline_1d.html#variable-work_val_1">work_val_1</a>
-        </div>
-      </div>
-    </div>
-
-  
-      <div class="panel panel-primary">
-      <div class="panel-heading text-left">
-        <h3 class="panel-title">
-          <a data-toggle="collapse" href="#cons-1">Constructor</a>
-        </h3>
-      </div>
-      <div id="cons-1" class="panel-collapse collapse">
-        <div class="list-group">
-            <a class="list-group-item" href="../type/bspline_1d.html#interface-bspline_1d">bspline_1d</a>
-        </div>
-      </div>
-    </div>
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-      <div class="panel panel-primary">
-      <div class="panel-heading text-left">
-        <h3 class="panel-title">
-          <a data-toggle="collapse" href="#fins-1">Finalization Procedures</a>
-        </h3>
-      </div>
-      <div id="fins-1" class="panel-collapse collapse">
-        <div class="list-group">
-            <a class="list-group-item" href="../type/bspline_1d.html#finalproc-finalize_1d">finalize_1d</a>
-        </div>
-      </div>
-    </div>
-
-      <div class="panel panel-primary">
-      <div class="panel-heading text-left">
-        <h3 class="panel-title">
-          <a data-toggle="collapse" href="#boundprocs-1">Type-Bound Procedures</a>
-        </h3>
-      </div>
-      <div id="boundprocs-1" class="panel-collapse collapse">
-        <div class="list-group">
-            <a class="list-group-item" href="../type/bspline_1d.html#boundprocedure-status_ok">status_ok</a>
-            <a class="list-group-item" href="../type/bspline_1d.html#boundprocedure-status_message">status_message</a>
-            <a class="list-group-item" href="../type/bspline_1d.html#boundprocedure-clear_flag">clear_flag</a>
-            <a class="list-group-item" href="../type/bspline_1d.html#boundprocedure-initialize">initialize</a>
-            <a class="list-group-item" href="../type/bspline_1d.html#boundprocedure-initialize_1d_auto_knots">initialize_1d_auto_knots</a>
-            <a class="list-group-item" href="../type/bspline_1d.html#boundprocedure-initialize_1d_specify_knots">initialize_1d_specify_knots</a>
-            <a class="list-group-item" href="../type/bspline_1d.html#boundprocedure-evaluate">evaluate</a>
-            <a class="list-group-item" href="../type/bspline_1d.html#boundprocedure-destroy~2">destroy</a>
-            <a class="list-group-item" href="../type/bspline_1d.html#boundprocedure-size_of~2">size_of</a>
-            <a class="list-group-item" href="../type/bspline_1d.html#boundprocedure-integral">integral</a>
-            <a class="list-group-item" href="../type/bspline_1d.html#boundprocedure-fintegral">fintegral</a>
-        </div>
-      </div>
-    </div>
-
-  
-    <div class="panel panel-primary">
-      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
-      <div class="list-group">
-        <a class="list-group-item" href="../type/bspline_1d.html#src">bspline_1d</a>
-      </div>
-    </div>
-
-
-    </section>
-    <br class="visible-xs visible-sm hidden-md">
 
     <section>
     <h2>Components</h2>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Visibility</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-<th></th><th>Initial</th>        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-nx"></span>
+              <span class="anchor" id="variable-nx~19"></span>
               integer(kind=ip),
             </td>
               <td>private</td>
@@ -441,7 +329,7 @@ said component(s).
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-kx~25"></span>
+              <span class="anchor" id="variable-kx~20"></span>
               integer(kind=ip),
             </td>
               <td>private</td>
@@ -459,7 +347,7 @@ said component(s).
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-bcoef"></span>
+              <span class="anchor" id="variable-bcoef~23"></span>
               real(kind=wp),
             </td>
               <td>private,</td>
@@ -476,7 +364,7 @@ said component(s).
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-tx~13"></span>
+              <span class="anchor" id="variable-tx~19"></span>
               real(kind=wp),
             </td>
               <td>private,</td>
@@ -516,13 +404,13 @@ said component(s).
     
       <section>
         <h2>Constructor</h2>
-            <div class="panel panel-default">
-    <div class="panel-heading codesum">
+            <div class="card">
+    <div class="card-header bg-light codesum">
       <span class="anchor" id="interface-bspline_1d"></span>
       <h3>public        interface <a href='../interface/bspline_1d.html'>bspline_1d</a> 
       </h3>
     </div>
-      <div class="panel-body">
+      <div class="card-body">
         <p>Constructor for <a href="../type/bspline_1d.html">bspline_1d</a></p>
       </div>
     <ul class="list-group">
@@ -540,7 +428,7 @@ Not really that useful except perhaps in some OpenMP applications.</p>
     <em>None</em>
     <h4>
     Return Value
-    <small>type(<a href='../type/bspline_1d.html'>bspline_1d</a>)</small>
+    <small>type(<a href='bspline_1d.html'>bspline_1d</a>)</small>
     </h4>
     
 
@@ -552,22 +440,22 @@ Not really that useful except perhaps in some OpenMP applications.</p>
     </h3>
     
   <p>Constructor for a <a href="../type/bspline_1d.html">bspline_1d</a> type (auto knots).
-This is a wrapper for <a href="../proc/initialize_1d_auto_knots.html">initialize_1d_auto_knots</a>.</p>
+This is a wrapper for <a href="initialize_1d_auto_knots.html">initialize_1d_auto_knots</a>.</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-x~35"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -582,7 +470,7 @@ This is a wrapper for <a href="../proc/initialize_1d_auto_knots.html">initialize
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-fcn~10"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -598,7 +486,7 @@ contain the function value at the point <code>x(i)</code></p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-kx~26"></span>
               integer(kind=ip),
             </td>
 <td>intent(in)</td>
@@ -615,7 +503,7 @@ contain the function value at the point <code>x(i)</code></p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-extrap~14"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -634,7 +522,7 @@ contain the function value at the point <code>x(i)</code></p>
 
     <h4>
     Return Value
-    <small>type(<a href='../type/bspline_1d.html'>bspline_1d</a>)</small>
+    <small>type(<a href='bspline_1d.html'>bspline_1d</a>)</small>
     </h4>
     
 
@@ -646,22 +534,22 @@ contain the function value at the point <code>x(i)</code></p>
     </h3>
     
   <p>Constructor for a <a href="../type/bspline_1d.html">bspline_1d</a> type (user-specified knots).
-This is a wrapper for <a href="../proc/initialize_1d_specify_knots.html">initialize_1d_specify_knots</a>.</p>
+This is a wrapper for <a href="initialize_1d_specify_knots.html">initialize_1d_specify_knots</a>.</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-x~36"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -676,7 +564,7 @@ This is a wrapper for <a href="../proc/initialize_1d_specify_knots.html">initial
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-fcn~11"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -692,7 +580,7 @@ contain the function value at the point <code>x(i)</code></p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-kx~27"></span>
               integer(kind=ip),
             </td>
 <td>intent(in)</td>
@@ -709,7 +597,7 @@ contain the function value at the point <code>x(i)</code></p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-tx~25"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -726,7 +614,7 @@ Must be non-decreasing.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-extrap~15"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -745,7 +633,7 @@ Must be non-decreasing.</p>
 
     <h4>
     Return Value
-    <small>type(<a href='../type/bspline_1d.html'>bspline_1d</a>)</small>
+    <small>type(<a href='bspline_1d.html'>bspline_1d</a>)</small>
     </h4>
     
 
@@ -758,12 +646,12 @@ Must be non-decreasing.</p>
 
       <section>
         <h2>Finalization Procedures</h2>
-            <div class="panel panel-default">
-    <div class="panel-heading codesum">
+            <div class="card">
+    <div class="card-header codesum">
       <span class="anchor" id="finalproc-finalize_1d"></span>
       <h3>final :: <strong>finalize_1d</strong> </h3>
     </div>
-    <div class="panel-body">
+    <div class="card-body">
       
       
     </div>
@@ -774,23 +662,23 @@ Must be non-decreasing.</p>
 
     </h3>
     
-  <p>Finalizer for <a href="../type/bspline_1d.html">bspline_1d</a> class. Just a wrapper for <a href="../proc/destroy_1d.html">destroy_1d</a>.</p>
+  <p>Finalizer for <a href="../type/bspline_1d.html">bspline_1d</a> class. Just a wrapper for <a href="destroy_1d.html">destroy_1d</a>.</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
-              type(<a href='../type/bspline_1d.html'>bspline_1d</a>),
+              <span class="anchor" id="variable-me~24"></span>
+              type(<a href='bspline_1d.html'>bspline_1d</a>),
             </td>
 <td>intent(inout)</td>
               <td></td>            <td>
@@ -815,10 +703,17 @@ Must be non-decreasing.</p>
 
       <section>
         <h2>Type-Bound Procedures</h2>
-            <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-status_ok"></span><h3>procedure, public, non_overridable :: <strong>status_ok</strong>          
-    </h3></div>
-      <div class="panel-body">
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-status_ok~10"></span>
+      <h3>
+          procedure, public, non_overridable ::
+  <strong>status_ok</strong>
+        
+      </h3>
+    </div>
+      <div class="card-body">
         
         <p>returns true if the last <code>iflag</code> status code was <code>=0</code>.</p>
       </div>
@@ -828,33 +723,27 @@ Must be non-decreasing.</p>
     private elemental function <a href='../proc/status_ok.html'>status_ok</a>(me) result(ok)  
 </h3>
     
+
   <p>This routines returns true if the <code>iflag</code> code from the last
 routine called was <code>=0</code>. Maybe of the routines have output <code>iflag</code>
 variables, so they can be checked explicitly, or this routine
-can be used.</p>
-<p>If the class is initialized using a function constructor, then
-this is the only way to know if it was properly initialized,
-since those are pure functions with not output <code>iflag</code> arguments.</p>
-<p>If <code>status_ok=.false.</code>, then the error message can be
-obtained from the <a href="../proc/get_bspline_status_message.html">get_bspline_status_message</a> routine.</p>
-<p>Note: after an error condition, the <a href="../proc/clear_bspline_flag.html">clear_bspline_flag</a> routine
-can be called to reset the <code>iflag</code> to 0.</p>
+can be used.</p><a href="../proc/status_ok.html" class="pull-right"><emph>Read more&hellip;</emph></a>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
               <span class="anchor" ></span>
-              class(<a href='../type/bspline_class.html'>bspline_class</a>),
+              class(<a href='bspline_class.html'>bspline_class</a>),
             </td>
 <td>intent(in)</td>
               <td></td>            <td>
@@ -879,10 +768,18 @@ can be called to reset the <code>iflag</code> to 0.</p>
     </ul>
   </div>
 
-            <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-status_message"></span><h3>procedure, public, non_overridable :: <strong>status_message</strong>  => <a href='../proc/get_bspline_status_message.html'>get_bspline_status_message</a>         
-    </h3></div>
-      <div class="panel-body">
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-status_message"></span>
+      <h3>
+          procedure, public, non_overridable ::
+  <strong>status_message</strong> => <a href='/home/runner/work/bspline-fortran/bspline-fortran/doc/proc/get_bspline_status_message.html'>get_bspline_status_message</a>
+        
+      </h3>
+    </div>
+      <div class="card-body">
         
         <p>retrieve the last
 status message</p>
@@ -893,28 +790,24 @@ status message</p>
     private pure function <a href='../proc/get_bspline_status_message.html'>get_bspline_status_message</a>(me, iflag) result(msg)  
 </h3>
     
-  <p>Get the status message from a <a href="../type/bspline_class.html">bspline_class</a> routine call.</p>
-<p>If <code>iflag</code> is not included, then the one in the class is used (which
-corresponds to the last routine called.)
-Otherwise, it will convert the
-input <code>iflag</code> argument into the appropriate message.</p>
-<p>This is a wrapper for <a href="../proc/get_status_message.html">get_status_message</a>.</p>
+
+  <p>Get the status message from a <a href="../type/bspline_class.html">bspline_class</a> routine call.</p><a href="../proc/get_bspline_status_message.html" class="pull-right"><emph>Read more&hellip;</emph></a>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
               <span class="anchor" ></span>
-              class(<a href='../type/bspline_class.html'>bspline_class</a>),
+              class(<a href='bspline_class.html'>bspline_class</a>),
             </td>
 <td>intent(in)</td>
               <td></td>            <td>
@@ -954,10 +847,18 @@ input <code>iflag</code> argument into the appropriate message.</p>
     </ul>
   </div>
 
-            <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-clear_flag"></span><h3>procedure, public, non_overridable :: <strong>clear_flag</strong>  => <a href='../proc/clear_bspline_flag.html'>clear_bspline_flag</a>         
-    </h3></div>
-      <div class="panel-body">
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-clear_flag"></span>
+      <h3>
+          procedure, public, non_overridable ::
+  <strong>clear_flag</strong> => <a href='/home/runner/work/bspline-fortran/bspline-fortran/doc/proc/clear_bspline_flag.html'>clear_bspline_flag</a>
+        
+      </h3>
+    </div>
+      <div class="card-body">
         
         <p>to reset the <code>iflag</code> saved in the class.</p>
       </div>
@@ -967,6 +868,7 @@ input <code>iflag</code> argument into the appropriate message.</p>
     private elemental subroutine <a href='../proc/clear_bspline_flag.html'>clear_bspline_flag</a>(me)  
 </h3>
     
+
   <p>This sets the <code>iflag</code> variable in the class to <code>0</code>
 (which indicates that everything is OK). It can be used
 after an error is encountered.</p>
@@ -975,17 +877,17 @@ after an error is encountered.</p>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
               <span class="anchor" ></span>
-              class(<a href='../type/bspline_class.html'>bspline_class</a>),
+              class(<a href='bspline_class.html'>bspline_class</a>),
             </td>
 <td>intent(inout)</td>
               <td></td>            <td>
@@ -1005,15 +907,24 @@ after an error is encountered.</p>
     </ul>
   </div>
 
-            <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-initialize"></span><h3>generic, public :: <strong>initialize</strong>  => <a href='../type/bspline_1d.html#boundprocedure-initialize_1d_auto_knots'>initialize_1d_auto_knots</a>, <a href='../type/bspline_1d.html#boundprocedure-initialize_1d_specify_knots'>initialize_1d_specify_knots</a>         
-    </h3></div>
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-initialize"></span>
+      <h3>
+          generic, public ::
+  <strong>initialize</strong> => <a href='/home/runner/work/bspline-fortran/bspline-fortran/doc/type/bspline_1d.html#boundprocedure-initialize_1d_auto_knots'>initialize_1d_auto_knots</a>, <a href='/home/runner/work/bspline-fortran/bspline-fortran/doc/type/bspline_1d.html#boundprocedure-initialize_1d_specify_knots'>initialize_1d_specify_knots</a>
+        
+      </h3>
+    </div>
     <ul class="list-group">
         <li class="list-group-item">
                   <h3>
     private pure subroutine <a href='../proc/initialize_1d_auto_knots.html'>initialize_1d_auto_knots</a>(me, x, fcn, kx, iflag, extrap)  
 </h3>
     
+
   <p>Initialize a <a href="../type/bspline_1d.html">bspline_1d</a> type (with automatically-computed knots).
 This is a wrapper for <a href="../interface/db1ink.html">db1ink</a>.</p>
 
@@ -1021,17 +932,17 @@ This is a wrapper for <a href="../interface/db1ink.html">db1ink</a>.</p>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
               <span class="anchor" ></span>
-              class(<a href='../type/bspline_1d.html'>bspline_1d</a>),
+              class(<a href='bspline_1d.html'>bspline_1d</a>),
             </td>
 <td>intent(inout)</td>
               <td></td>            <td>
@@ -1132,6 +1043,7 @@ contain the function value at the point <code>x(i)</code></p>
     private pure subroutine <a href='../proc/initialize_1d_specify_knots.html'>initialize_1d_specify_knots</a>(me, x, fcn, kx, tx, iflag, extrap)  
 </h3>
     
+
   <p>Initialize a <a href="../type/bspline_1d.html">bspline_1d</a> type (with user-specified knots).
 This is a wrapper for <a href="../interface/db1ink.html">db1ink</a>.</p>
 
@@ -1139,17 +1051,17 @@ This is a wrapper for <a href="../interface/db1ink.html">db1ink</a>.</p>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
               <span class="anchor" ></span>
-              class(<a href='../type/bspline_1d.html'>bspline_1d</a>),
+              class(<a href='bspline_1d.html'>bspline_1d</a>),
             </td>
 <td>intent(inout)</td>
               <td></td>            <td>
@@ -1265,15 +1177,24 @@ Must be non-decreasing.</p>
     </ul>
   </div>
 
-            <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-initialize_1d_auto_knots"></span><h3>procedure, private,  :: <strong>initialize_1d_auto_knots</strong>          
-    </h3></div>
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-initialize_1d_auto_knots"></span>
+      <h3>
+          procedure, private ::
+  <strong>initialize_1d_auto_knots</strong>
+        
+      </h3>
+    </div>
     <ul class="list-group">
         <li class="list-group-item">
                   <h3>
     private pure subroutine <a href='../proc/initialize_1d_auto_knots.html'>initialize_1d_auto_knots</a>(me, x, fcn, kx, iflag, extrap)  
 </h3>
     
+
   <p>Initialize a <a href="../type/bspline_1d.html">bspline_1d</a> type (with automatically-computed knots).
 This is a wrapper for <a href="../interface/db1ink.html">db1ink</a>.</p>
 
@@ -1281,17 +1202,17 @@ This is a wrapper for <a href="../interface/db1ink.html">db1ink</a>.</p>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
               <span class="anchor" ></span>
-              class(<a href='../type/bspline_1d.html'>bspline_1d</a>),
+              class(<a href='bspline_1d.html'>bspline_1d</a>),
             </td>
 <td>intent(inout)</td>
               <td></td>            <td>
@@ -1390,15 +1311,24 @@ contain the function value at the point <code>x(i)</code></p>
     </ul>
   </div>
 
-            <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-initialize_1d_specify_knots"></span><h3>procedure, private,  :: <strong>initialize_1d_specify_knots</strong>          
-    </h3></div>
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-initialize_1d_specify_knots"></span>
+      <h3>
+          procedure, private ::
+  <strong>initialize_1d_specify_knots</strong>
+        
+      </h3>
+    </div>
     <ul class="list-group">
         <li class="list-group-item">
                   <h3>
     private pure subroutine <a href='../proc/initialize_1d_specify_knots.html'>initialize_1d_specify_knots</a>(me, x, fcn, kx, tx, iflag, extrap)  
 </h3>
     
+
   <p>Initialize a <a href="../type/bspline_1d.html">bspline_1d</a> type (with user-specified knots).
 This is a wrapper for <a href="../interface/db1ink.html">db1ink</a>.</p>
 
@@ -1406,17 +1336,17 @@ This is a wrapper for <a href="../interface/db1ink.html">db1ink</a>.</p>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
               <span class="anchor" ></span>
-              class(<a href='../type/bspline_1d.html'>bspline_1d</a>),
+              class(<a href='bspline_1d.html'>bspline_1d</a>),
             </td>
 <td>intent(inout)</td>
               <td></td>            <td>
@@ -1532,32 +1462,41 @@ Must be non-decreasing.</p>
     </ul>
   </div>
 
-            <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-evaluate"></span><h3>procedure, public :: <strong>evaluate</strong>  => <a href='../proc/evaluate_1d.html'>evaluate_1d</a>         
-    </h3></div>
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-evaluate"></span>
+      <h3>
+          procedure, public ::
+  <strong>evaluate</strong> => <a href='/home/runner/work/bspline-fortran/bspline-fortran/doc/proc/evaluate_1d.html'>evaluate_1d</a>
+        
+      </h3>
+    </div>
     <ul class="list-group">
         <li class="list-group-item">
                   <h3>
     private pure subroutine <a href='../proc/evaluate_1d.html'>evaluate_1d</a>(me, xval, idx, f, iflag)  
 </h3>
     
+
   <p>Evaluate a <a href="../type/bspline_1d.html">bspline_1d</a> interpolate.  This is a wrapper for <a href="../interface/db1val.html">db1val</a>.</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
               <span class="anchor" ></span>
-              class(<a href='../type/bspline_1d.html'>bspline_1d</a>),
+              class(<a href='bspline_1d.html'>bspline_1d</a>),
             </td>
 <td>intent(inout)</td>
               <td></td>            <td>
@@ -1639,32 +1578,41 @@ Must be non-decreasing.</p>
     </ul>
   </div>
 
-            <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-destroy~2"></span><h3>procedure, public :: <strong>destroy</strong>  => <a href='../proc/destroy_1d.html'>destroy_1d</a>         
-    </h3></div>
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-destroy~2"></span>
+      <h3>
+          procedure, public ::
+  <strong>destroy</strong> => <a href='/home/runner/work/bspline-fortran/bspline-fortran/doc/proc/destroy_1d.html'>destroy_1d</a>
+        
+      </h3>
+    </div>
     <ul class="list-group">
         <li class="list-group-item">
                   <h3>
     private pure subroutine <a href='../proc/destroy_1d.html'>destroy_1d</a>(me)  
 </h3>
     
+
   <p>Destructor for <a href="../type/bspline_1d.html">bspline_1d</a> class.</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
               <span class="anchor" ></span>
-              class(<a href='../type/bspline_1d.html'>bspline_1d</a>),
+              class(<a href='bspline_1d.html'>bspline_1d</a>),
             </td>
 <td>intent(inout)</td>
               <td></td>            <td>
@@ -1684,32 +1632,41 @@ Must be non-decreasing.</p>
     </ul>
   </div>
 
-            <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-size_of~2"></span><h3>procedure, public :: <strong>size_of</strong>  => <a href='../proc/size_1d.html'>size_1d</a>         
-    </h3></div>
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-size_of~2"></span>
+      <h3>
+          procedure, public ::
+  <strong>size_of</strong> => <a href='/home/runner/work/bspline-fortran/bspline-fortran/doc/proc/size_1d.html'>size_1d</a>
+        
+      </h3>
+    </div>
     <ul class="list-group">
         <li class="list-group-item">
                   <h3>
     private pure function <a href='../proc/size_1d.html'>size_1d</a>(me) result(s)  
 </h3>
     
+
   <p>Actual size of a <a href="../type/bspline_1d.html">bspline_1d</a> structure in bits.</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
               <span class="anchor" ></span>
-              class(<a href='../type/bspline_1d.html'>bspline_1d</a>),
+              class(<a href='bspline_1d.html'>bspline_1d</a>),
             </td>
 <td>intent(in)</td>
               <td></td>            <td>
@@ -1734,32 +1691,41 @@ Must be non-decreasing.</p>
     </ul>
   </div>
 
-            <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-integral"></span><h3>procedure, public :: <strong>integral</strong>  => <a href='../proc/integral_1d.html'>integral_1d</a>         
-    </h3></div>
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-integral"></span>
+      <h3>
+          procedure, public ::
+  <strong>integral</strong> => <a href='/home/runner/work/bspline-fortran/bspline-fortran/doc/proc/integral_1d.html'>integral_1d</a>
+        
+      </h3>
+    </div>
     <ul class="list-group">
         <li class="list-group-item">
                   <h3>
     private pure subroutine <a href='../proc/integral_1d.html'>integral_1d</a>(me, x1, x2, f, iflag)  
 </h3>
     
-  <p>Evaluate a <a href="../type/bspline_1d.html">bspline_1d</a> definite integral.  This is a wrapper for <a href="../proc/db1sqad.html">db1sqad</a>.</p>
+
+  <p>Evaluate a <a href="../type/bspline_1d.html">bspline_1d</a> definite integral.  This is a wrapper for <a href="db1sqad.html">db1sqad</a>.</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
               <span class="anchor" ></span>
-              class(<a href='../type/bspline_1d.html'>bspline_1d</a>),
+              class(<a href='bspline_1d.html'>bspline_1d</a>),
             </td>
 <td>intent(inout)</td>
               <td></td>            <td>
@@ -1829,7 +1795,7 @@ Must be non-decreasing.</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag (see <a href="../proc/db1sqad.html">db1sqad</a>)</p>
+<p>status flag (see <a href="db1sqad.html">db1sqad</a>)</p>
             </td>
         </tr>
     </tbody>
@@ -1840,32 +1806,41 @@ Must be non-decreasing.</p>
     </ul>
   </div>
 
-            <div class="panel panel-default">
-    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-fintegral"></span><h3>procedure, public :: <strong>fintegral</strong>  => <a href='../proc/fintegral_1d.html'>fintegral_1d</a>         
-    </h3></div>
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-fintegral"></span>
+      <h3>
+          procedure, public ::
+  <strong>fintegral</strong> => <a href='/home/runner/work/bspline-fortran/bspline-fortran/doc/proc/fintegral_1d.html'>fintegral_1d</a>
+        
+      </h3>
+    </div>
     <ul class="list-group">
         <li class="list-group-item">
                   <h3>
     private  subroutine <a href='../proc/fintegral_1d.html'>fintegral_1d</a>(me, fun, idx, x1, x2, tol, f, iflag)  
 </h3>
     
-  <p>Evaluate a <a href="../type/bspline_1d.html">bspline_1d</a> definite integral.  This is a wrapper for <a href="../proc/db1fqad.html">db1fqad</a>.</p>
+
+  <p>Evaluate a <a href="../type/bspline_1d.html">bspline_1d</a> definite integral.  This is a wrapper for <a href="db1fqad.html">db1fqad</a>.</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
               <span class="anchor" ></span>
-              class(<a href='../type/bspline_1d.html'>bspline_1d</a>),
+              class(<a href='bspline_1d.html'>bspline_1d</a>),
             </td>
 <td>intent(inout)</td>
               <td></td>            <td>
@@ -1982,7 +1957,7 @@ integrand <code>bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,idx,x,inbv)</code></p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-<p>status flag (see <a href="../proc/db1sqad.html">db1sqad</a>)</p>
+<p>status flag (see <a href="db1sqad.html">db1sqad</a>)</p>
             </td>
         </tr>
     </tbody>
@@ -1993,11 +1968,12 @@ integrand <code>bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,idx,x,inbv)</code></p>
     </ul>
   </div>
 
+          </div>
       </section>
 
     <section>
     <h3><span class="anchor" id="src"></span>Source Code</h3>
-    <div class="highlight"><pre><span></span><span class="w">    </span><span class="k">type</span><span class="p">,</span><span class="k">extends</span><span class="p">(</span><span class="n">bspline_class</span><span class="p">),</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">bspline_1d</span><span class="w"></span>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">type</span><span class="p">,</span><span class="k">extends</span><span class="p">(</span><span class="n">bspline_class</span><span class="p">),</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">bspline_1d</span>
 <span class="w">        </span><span class="c">!! Class for 1d b-spline interpolation.</span>
 <span class="w">        </span><span class="c">!!</span>
 <span class="w">        </span><span class="c">!!@note The 1D class also contains two methods</span>
@@ -2010,16 +1986,16 @@ integrand <code>bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,idx,x,inbv)</code></p>
 <span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">work_val_1</span><span class="w">   </span><span class="c">!! [[db1val] work array of dimension `3*kx`</span>
 <span class="w">        </span><span class="k">contains</span>
 <span class="k">        private</span>
-<span class="k">        generic</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">initialize</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">initialize_1d_auto_knots</span><span class="p">,</span><span class="n">initialize_1d_specify_knots</span><span class="w"></span>
-<span class="w">        </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">initialize_1d_auto_knots</span><span class="w"></span>
-<span class="w">        </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">initialize_1d_specify_knots</span><span class="w"></span>
-<span class="w">        </span><span class="k">procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">evaluate</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">evaluate_1d</span><span class="w"></span>
-<span class="w">        </span><span class="k">procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">destroy</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">destroy_1d</span><span class="w"></span>
-<span class="w">        </span><span class="k">procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">size_of</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">size_1d</span><span class="w"></span>
-<span class="w">        </span><span class="k">procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">integral</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">integral_1d</span><span class="w"></span>
-<span class="w">        </span><span class="k">procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">fintegral</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">fintegral_1d</span><span class="w"></span>
-<span class="w">        </span><span class="k">final</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">finalize_1d</span><span class="w"></span>
-<span class="w">    </span><span class="k">end type </span><span class="n">bspline_1d</span><span class="w"></span>
+<span class="k">        generic</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">initialize</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">initialize_1d_auto_knots</span><span class="p">,</span><span class="n">initialize_1d_specify_knots</span>
+<span class="w">        </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">initialize_1d_auto_knots</span>
+<span class="w">        </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">initialize_1d_specify_knots</span>
+<span class="w">        </span><span class="k">procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">evaluate</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">evaluate_1d</span>
+<span class="w">        </span><span class="k">procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">destroy</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">destroy_1d</span>
+<span class="w">        </span><span class="k">procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">size_of</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">size_1d</span>
+<span class="w">        </span><span class="k">procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">integral</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">integral_1d</span>
+<span class="w">        </span><span class="k">procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">fintegral</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">fintegral_1d</span>
+<span class="w">        </span><span class="k">final</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">finalize_1d</span>
+<span class="w">    </span><span class="k">end type </span><span class="n">bspline_1d</span>
 </pre></div>
 
     </section>
@@ -2031,12 +2007,12 @@ integrand <code>bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,idx,x,inbv)</code></p>
     </div> <!-- /container -->
     <footer>
       <div class="container">
-        <div class="row">
-          <div class="col-xs-6 col-md-6"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2023 
+        <div class="row justify-content-between">
+          <div class="col"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2024 
 </p>
           </div>
-          <div class="col-xs-6 col-md-6">
-            <p class="text-right">
+          <div class="col">
+            <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
             </p>
@@ -2046,17 +2022,12 @@ integrand <code>bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,idx,x,inbv)</code></p>
       </div> <!-- /container -->
     </footer>
 
-    <!-- Bootstrap core JavaScript
-         ================================================== -->
-         <!-- Placed at the end of the document so the pages load faster -->
-    <!--
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        -->
-        <script src="../js/bootstrap.min.js"></script>
-        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-        <script src="../js/ie10-viewport-bug-workaround.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
 
-        <!-- MathJax JavaScript
+    <!-- MathJax JavaScript
              ================================================== -->
              <!-- Placed at the end of the document so the pages load faster -->
         <script type="text/x-mathjax-config">

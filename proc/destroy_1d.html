@@ -1,3 +1,5 @@
+<!-- -*- mode: jinja2 -*- -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,81 +12,56 @@
 
     <title>destroy_1d &ndash; bspline-fortran</title>
 
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link href="../css/pygments.css" rel="stylesheet">
     <link href="../css/font-awesome.min.css" rel="stylesheet">
     <link href="../css/local.css" rel="stylesheet">
       <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
-
-         <script src="../js/jquery-2.1.3.min.js"></script>
-         <script src="../js/svg-pan-zoom.min.js"></script>
-
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
   </head>
 
   <body>
 
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
           <a class="navbar-brand" href="../index.html">bspline-fortran </a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
-              <a href="#" class="dropdown-toggle"
-                 data-toggle="dropdown" role="button"
-                 aria-haspopup="true"
-                 aria-expanded="false">
-                 Contents <span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu">
-                    <li><a href="../lists/files.html">Source Files</a></li>
-                  <li><a href="../lists/modules.html">Modules</a></li>
-                  <li><a href="../lists/procedures.html">Procedures</a></li>
-                  <li><a href="../lists/absint.html">Abstract Interfaces</a></li>
-                  <li><a href="../lists/types.html">Derived Types</a></li>
-              </ul>
-            </li>
-                <li class="visible-xs hidden-sm visible-lg">
-                  <a href="../lists/files.html">Source Files</a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
                 </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/modules.html">Modules</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/procedures.html">Procedures</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/absint.html">Abstract Interfaces</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/types.html">Derived Types</a>
-              </li>
-          </ul>
-            <form action="../search.html" class="navbar-form navbar-right" role="search">
-              <div class="form-group">
-                <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
               </div>
-              <!--
-                  <button type="submit" class="btn btn-default">Submit</button>
-                  -->
-            </form>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
 
     <div class="container">
   <div class="row">
@@ -92,33 +69,37 @@
       <small>Subroutine</small>
       
     </h1>
-      <div class="row" id="info-bar">
-    <div class="col-lg-12">
-      <div class="well well-sm">
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
         <ul class="list-inline" style="margin-bottom:0px;display:inline">
 
-          <li id="statements"><i class="fa fa-list-ol"></i>
-            <a data-toggle="tooltip"
-               data-placement="bottom" data-html="true"
-               title=" 0.2% of total for procedures.">10 statements</a>
-          </li>
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip"
+                 data-bs-placement="bottom" data-html="true"
+                 title=" 0.2% of total for procedures.">10 statements</a>
+            </li>
 
-            <li id="source-file">
+            <li class="list-inline-item" id="source-file">
               <i class="fa fa-code"></i>
               <a href="../src/bspline_oo_module.f90"> Source File</a>
             </li>
         </ul>
-        <ol class="breadcrumb in-well text-right">
-              <li><a href='../sourcefile/bspline_oo_module.f90.html'>bspline_oo_module.f90</a></li>
-              <li><a href='../module/bspline_oo_module.html'>bspline_oo_module</a></li>
-          <li class="active">destroy_1d</li>
-        </ol>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/bspline_oo_module.f90.html'>bspline_oo_module.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/bspline_oo_module.html'>bspline_oo_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">destroy_1d</li>
+          </ol>
+        </nav>
       </div>
     </div>
   </div>
   <script>
     $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
+    $('[data-bs-toggle="tooltip"]').tooltip()
     })
   </script>
 
@@ -147,8 +128,9 @@
   
   
   
-    <div class="panel panel-primary">
-      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
       <div class="list-group">
         <a class="list-group-item" href="../proc/destroy_1d.html#src">destroy_1d</a>
       </div>
@@ -173,16 +155,16 @@
         <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-me~12"></span>
+              <span class="anchor" id="variable-me~18"></span>
               class(<a href='../type/bspline_1d.html'>bspline_1d</a>),
             </td>
 <td>intent(inout)</td>
@@ -199,11 +181,11 @@
   </table>
 
     <br>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-  <h3 class="panel-title">Calls</h3>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
   <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -224,7 +206,7 @@
 <!-- proc~destroy_base -->
 <g id="proc~~destroy_1d~~CallsGraph_node2" class="node">
 <title>proc~destroy_base</title>
-<g id="a_proc~~destroy_1d~~CallsGraph_node2"><a xlink:href=".././proc/destroy_base.html" xlink:title="bspline_oo_module::bspline_class%destroy_base">
+<g id="a_proc~~destroy_1d~~CallsGraph_node2"><a xlink:href="../proc/destroy_base.html" xlink:title="bspline_oo_module::bspline_class%destroy_base">
 <polygon fill="#d9534f" stroke="#d9534f" points="555,-24 283,-24 283,0 555,0 555,-24"/>
 <text text-anchor="middle" x="419" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_class%destroy_base</text>
 </a>
@@ -238,17 +220,17 @@
 </g>
 </g>
 </svg>
-</div>        <div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div>
-          <div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog">
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
                   <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-              <div class="modal-body">
+                <div class="modal-body">
 <p>Nodes of different colours represent the following: </p>
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
@@ -256,11 +238,11 @@
 <!-- Generated by graphviz version 2.43.0 (0)
  -->
 <!-- Title: Graph Key Pages: 1 -->
-<svg width="597pt" height="32pt"
- viewBox="0.00 0.00 596.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1.16 1.16) rotate(0) translate(4 28)">
 <title>Graph Key</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 592.5,-28 592.5,4 -4,4"/>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
 <!-- Subroutine -->
 <g id="node1" class="node">
 <title>Subroutine</title>
@@ -279,23 +261,232 @@
 <polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
 <text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
 </g>
-<!-- Unknown Procedure Type -->
+<!-- Type Bound Procedure -->
 <g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
 <title>Unknown Procedure Type</title>
-<polygon fill="#777777" stroke="#777777" points="388.5,-24 243.5,-24 243.5,0 388.5,0 388.5,-24"/>
-<text text-anchor="middle" x="316" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
 </g>
 <!-- Program -->
-<g id="node5" class="node">
+<g id="node6" class="node">
 <title>Program</title>
-<polygon fill="#f0ad4e" stroke="#f0ad4e" points="465,-24 407,-24 407,0 465,0 465,-24"/>
-<text text-anchor="middle" x="436" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
 </g>
 <!-- This Page&#39;s Entity -->
-<g id="node6" class="node">
+<g id="node7" class="node">
 <title>This Page&#39;s Entity</title>
-<polygon fill="none" stroke="black" points="588.5,-24 483.5,-24 483.5,0 588.5,0 588.5,-24"/>
-<text text-anchor="middle" x="536" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~destroy_1d~~CalledByGraph Pages: 1 -->
+<svg id="procdestroy_1dCalledByGraph" width="641pt" height="62pt"
+ viewBox="0.00 0.00 641.00 62.27" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~destroy_1d~~CalledByGraph" class="graph" transform="scale(1.86 1.86) rotate(0) translate(4 112)">
+<title>proc~~destroy_1d~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-112 1190,-112 1190,4 -4,4"/>
+<!-- proc~destroy_1d -->
+<g id="proc~~destroy_1d~~CalledByGraph_node1" class="node">
+<title>proc~destroy_1d</title>
+<polygon fill="none" stroke="black" points="1186,-66 939,-66 939,-42 1186,-42 1186,-66"/>
+<text text-anchor="middle" x="1062.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50">bspline_oo_module::bspline_1d%destroy_1d</text>
+</g>
+<!-- proc~finalize_1d -->
+<g id="proc~~destroy_1d~~CalledByGraph_node2" class="node">
+<title>proc~finalize_1d</title>
+<g id="a_proc~~destroy_1d~~CalledByGraph_node2"><a xlink:href="../proc/finalize_1d.html" xlink:title="bspline_oo_module::finalize_1d">
+<polygon fill="#d9534f" stroke="#d9534f" points="828.5,-108 648.5,-108 648.5,-84 828.5,-84 828.5,-108"/>
+<text text-anchor="middle" x="738.5" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::finalize_1d</text>
+</a>
+</g>
+</g>
+<!-- proc~finalize_1d&#45;&gt;proc~destroy_1d -->
+<g id="proc~~destroy_1d~~CalledByGraph_edge1" class="edge">
+<title>proc~finalize_1d&#45;&gt;proc~destroy_1d</title>
+<path fill="none" stroke="#000000" d="M828.61,-84.62C852.75,-81.52 878.88,-78.15 903,-75 921.87,-72.54 942,-69.89 961.36,-67.33"/>
+<polygon fill="#000000" stroke="#000000" points="961.95,-70.78 971.4,-66 961.03,-63.84 961.95,-70.78"/>
+</g>
+<!-- proc~initialize_1d_auto_knots -->
+<g id="proc~~destroy_1d~~CalledByGraph_node3" class="node">
+<title>proc~initialize_1d_auto_knots</title>
+<g id="a_proc~~destroy_1d~~CalledByGraph_node3"><a xlink:href="../proc/initialize_1d_auto_knots.html" xlink:title="bspline_oo_module::bspline_1d%initialize_1d_auto_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="896.5,-66 580.5,-66 580.5,-42 896.5,-42 896.5,-66"/>
+<text text-anchor="middle" x="738.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_1d%initialize_1d_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_1d_auto_knots&#45;&gt;proc~destroy_1d -->
+<g id="proc~~destroy_1d~~CalledByGraph_edge2" class="edge">
+<title>proc~initialize_1d_auto_knots&#45;&gt;proc~destroy_1d</title>
+<path fill="none" stroke="#000000" d="M896.73,-54C907.37,-54 918.04,-54 928.55,-54"/>
+<polygon fill="#000000" stroke="#000000" points="928.56,-57.5 938.56,-54 928.56,-50.5 928.56,-57.5"/>
+</g>
+<!-- proc~initialize_1d_specify_knots -->
+<g id="proc~~destroy_1d~~CalledByGraph_node4" class="node">
+<title>proc~initialize_1d_specify_knots</title>
+<g id="a_proc~~destroy_1d~~CalledByGraph_node4"><a xlink:href="../proc/initialize_1d_specify_knots.html" xlink:title="bspline_oo_module::bspline_1d%initialize_1d_specify_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="903,-24 574,-24 574,0 903,0 903,-24"/>
+<text text-anchor="middle" x="738.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_1d%initialize_1d_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_1d_specify_knots&#45;&gt;proc~destroy_1d -->
+<g id="proc~~destroy_1d~~CalledByGraph_edge3" class="edge">
+<title>proc~initialize_1d_specify_knots&#45;&gt;proc~destroy_1d</title>
+<path fill="none" stroke="#000000" d="M833.75,-24.04C856.43,-26.96 880.58,-30.08 903,-33 921.87,-35.46 942,-38.11 961.36,-40.67"/>
+<polygon fill="#000000" stroke="#000000" points="961.03,-44.16 971.4,-42 961.95,-37.22 961.03,-44.16"/>
+</g>
+<!-- proc~bspline_1d_constructor_auto_knots -->
+<g id="proc~~destroy_1d~~CalledByGraph_node5" class="node">
+<title>proc~bspline_1d_constructor_auto_knots</title>
+<g id="a_proc~~destroy_1d~~CalledByGraph_node5"><a xlink:href="../proc/bspline_1d_constructor_auto_knots.html" xlink:title="bspline_oo_module::bspline_1d_constructor_auto_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="531.5,-66 222.5,-66 222.5,-42 531.5,-42 531.5,-66"/>
+<text text-anchor="middle" x="377" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_1d_constructor_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_1d_constructor_auto_knots&#45;&gt;proc~initialize_1d_auto_knots -->
+<g id="proc~~destroy_1d~~CalledByGraph_edge4" class="edge">
+<title>proc~bspline_1d_constructor_auto_knots&#45;&gt;proc~initialize_1d_auto_knots</title>
+<path fill="none" stroke="#000000" d="M531.5,-54C544.3,-54 557.28,-54 570.18,-54"/>
+<polygon fill="#000000" stroke="#000000" points="570.5,-57.5 580.5,-54 570.5,-50.5 570.5,-57.5"/>
+</g>
+<!-- proc~bspline_1d_constructor_specify_knots -->
+<g id="proc~~destroy_1d~~CalledByGraph_node6" class="node">
+<title>proc~bspline_1d_constructor_specify_knots</title>
+<g id="a_proc~~destroy_1d~~CalledByGraph_node6"><a xlink:href="../proc/bspline_1d_constructor_specify_knots.html" xlink:title="bspline_oo_module::bspline_1d_constructor_specify_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="538,-24 216,-24 216,0 538,0 538,-24"/>
+<text text-anchor="middle" x="377" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_1d_constructor_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_1d_constructor_specify_knots&#45;&gt;proc~initialize_1d_specify_knots -->
+<g id="proc~~destroy_1d~~CalledByGraph_edge5" class="edge">
+<title>proc~bspline_1d_constructor_specify_knots&#45;&gt;proc~initialize_1d_specify_knots</title>
+<path fill="none" stroke="#000000" d="M538.04,-12C546.59,-12 555.2,-12 563.8,-12"/>
+<polygon fill="#000000" stroke="#000000" points="563.87,-15.5 573.87,-12 563.87,-8.5 563.87,-15.5"/>
+</g>
+<!-- interface~bspline_1d -->
+<g id="proc~~destroy_1d~~CalledByGraph_node7" class="node">
+<title>interface~bspline_1d</title>
+<g id="a_proc~~destroy_1d~~CalledByGraph_node7"><a xlink:href="../interface/bspline_1d.html" xlink:title="bspline_oo_module::bspline_1d">
+<polygon fill="#a7506f" stroke="#a7506f" points="180,-45 0,-45 0,-21 180,-21 180,-45"/>
+<text text-anchor="middle" x="90" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_1d</text>
+</a>
+</g>
+</g>
+<!-- interface~bspline_1d&#45;&gt;proc~bspline_1d_constructor_auto_knots -->
+<g id="proc~~destroy_1d~~CalledByGraph_edge6" class="edge">
+<title>interface~bspline_1d&#45;&gt;proc~bspline_1d_constructor_auto_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M180,-39.56C190.38,-40.32 201.2,-41.12 212.2,-41.93"/>
+<polygon fill="#000000" stroke="#000000" points="212.11,-45.43 222.34,-42.68 212.62,-38.45 212.11,-45.43"/>
+</g>
+<!-- interface~bspline_1d&#45;&gt;proc~bspline_1d_constructor_specify_knots -->
+<g id="proc~~destroy_1d~~CalledByGraph_edge7" class="edge">
+<title>interface~bspline_1d&#45;&gt;proc~bspline_1d_constructor_specify_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M180,-26.44C188.37,-25.83 197.02,-25.19 205.82,-24.54"/>
+<polygon fill="#000000" stroke="#000000" points="206.1,-28.03 215.81,-23.8 205.58,-21.05 206.1,-28.03"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocdestroy_1dCalledByGraph = svgPanZoom('#procdestroy_1dCalledByGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1.16 1.16) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
 </g>
 </g>
 </svg>
@@ -313,64 +504,33 @@ implementation in a submodule of an interface in a parent module.
     </div>
     <br>
 
-    <section class="visible-xs visible-sm hidden-md">
-        <h3>Contents</h3>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-    <div class="panel panel-primary">
-      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
-      <div class="list-group">
-        <a class="list-group-item" href="../proc/destroy_1d.html#src">destroy_1d</a>
-      </div>
-    </div>
-
-
-    </section>
-    <br class="visible-xs visible-sm hidden-md">
-
 
     
     
 
     
     
+
 
 
     
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
-    <div class="highlight"><pre><span></span><span class="w">    </span><span class="k">pure subroutine </span><span class="n">destroy_1d</span><span class="p">(</span><span class="n">me</span><span class="p">)</span><span class="w"></span>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">pure subroutine </span><span class="n">destroy_1d</span><span class="p">(</span><span class="n">me</span><span class="p">)</span>
 
 <span class="w">    </span><span class="k">implicit none</span>
 
-<span class="k">    class</span><span class="p">(</span><span class="n">bspline_1d</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">me</span><span class="w"></span>
+<span class="k">    class</span><span class="p">(</span><span class="n">bspline_1d</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">me</span>
 
-<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">destroy_base</span><span class="p">()</span><span class="w"></span>
+<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">destroy_base</span><span class="p">()</span>
 
-<span class="w">    </span><span class="n">me</span><span class="p">%</span><span class="n">nx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0_ip</span><span class="w"></span>
-<span class="w">    </span><span class="n">me</span><span class="p">%</span><span class="n">kx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0_ip</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">allocated</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">bcoef</span><span class="p">))</span><span class="w">      </span><span class="k">deallocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">bcoef</span><span class="p">)</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">allocated</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">tx</span><span class="p">))</span><span class="w">         </span><span class="k">deallocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">tx</span><span class="p">)</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">allocated</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">work_val_1</span><span class="p">))</span><span class="w"> </span><span class="k">deallocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">work_val_1</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="n">me</span><span class="p">%</span><span class="n">nx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0_ip</span>
+<span class="w">    </span><span class="n">me</span><span class="p">%</span><span class="n">kx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0_ip</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">allocated</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">bcoef</span><span class="p">))</span><span class="w">      </span><span class="k">deallocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">bcoef</span><span class="p">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">allocated</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">tx</span><span class="p">))</span><span class="w">         </span><span class="k">deallocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">tx</span><span class="p">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">allocated</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">work_val_1</span><span class="p">))</span><span class="w"> </span><span class="k">deallocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">work_val_1</span><span class="p">)</span>
 
-<span class="w">    </span><span class="k">end subroutine </span><span class="n">destroy_1d</span><span class="w"></span>
+<span class="w">    </span><span class="k">end subroutine </span><span class="n">destroy_1d</span>
 </pre></div>
 
     </section>
@@ -383,12 +543,12 @@ implementation in a submodule of an interface in a parent module.
     </div> <!-- /container -->
     <footer>
       <div class="container">
-        <div class="row">
-          <div class="col-xs-6 col-md-6"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2023 
+        <div class="row justify-content-between">
+          <div class="col"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2024 
 </p>
           </div>
-          <div class="col-xs-6 col-md-6">
-            <p class="text-right">
+          <div class="col">
+            <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
             </p>
@@ -398,17 +558,12 @@ implementation in a submodule of an interface in a parent module.
       </div> <!-- /container -->
     </footer>
 
-    <!-- Bootstrap core JavaScript
-         ================================================== -->
-         <!-- Placed at the end of the document so the pages load faster -->
-    <!--
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        -->
-        <script src="../js/bootstrap.min.js"></script>
-        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-        <script src="../js/ie10-viewport-bug-workaround.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
 
-        <!-- MathJax JavaScript
+    <!-- MathJax JavaScript
              ================================================== -->
              <!-- Placed at the end of the document so the pages load faster -->
         <script type="text/x-mathjax-config">

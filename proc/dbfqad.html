@@ -1,3 +1,5 @@
+<!-- -*- mode: jinja2 -*- -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,81 +12,56 @@
 
     <title>dbfqad &ndash; bspline-fortran</title>
 
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link href="../css/pygments.css" rel="stylesheet">
     <link href="../css/font-awesome.min.css" rel="stylesheet">
     <link href="../css/local.css" rel="stylesheet">
       <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
-
-         <script src="../js/jquery-2.1.3.min.js"></script>
-         <script src="../js/svg-pan-zoom.min.js"></script>
-
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
   </head>
 
   <body>
 
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
           <a class="navbar-brand" href="../index.html">bspline-fortran </a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
-              <a href="#" class="dropdown-toggle"
-                 data-toggle="dropdown" role="button"
-                 aria-haspopup="true"
-                 aria-expanded="false">
-                 Contents <span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu">
-                    <li><a href="../lists/files.html">Source Files</a></li>
-                  <li><a href="../lists/modules.html">Modules</a></li>
-                  <li><a href="../lists/procedures.html">Procedures</a></li>
-                  <li><a href="../lists/absint.html">Abstract Interfaces</a></li>
-                  <li><a href="../lists/types.html">Derived Types</a></li>
-              </ul>
-            </li>
-                <li class="visible-xs hidden-sm visible-lg">
-                  <a href="../lists/files.html">Source Files</a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
                 </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/modules.html">Modules</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/procedures.html">Procedures</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/absint.html">Abstract Interfaces</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/types.html">Derived Types</a>
-              </li>
-          </ul>
-            <form action="../search.html" class="navbar-form navbar-right" role="search">
-              <div class="form-group">
-                <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
               </div>
-              <!--
-                  <button type="submit" class="btn btn-default">Submit</button>
-                  -->
-            </form>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
 
     <div class="container">
   <div class="row">
@@ -92,33 +69,37 @@
       <small>Subroutine</small>
       
     </h1>
-      <div class="row" id="info-bar">
-    <div class="col-lg-12">
-      <div class="well well-sm">
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
         <ul class="list-inline" style="margin-bottom:0px;display:inline">
 
-          <li id="statements"><i class="fa fa-list-ol"></i>
-            <a data-toggle="tooltip"
-               data-placement="bottom" data-html="true"
-               title=" 1.0% of total for procedures.">63 statements</a>
-          </li>
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip"
+                 data-bs-placement="bottom" data-html="true"
+                 title=" 1.0% of total for procedures.">63 statements</a>
+            </li>
 
-            <li id="source-file">
+            <li class="list-inline-item" id="source-file">
               <i class="fa fa-code"></i>
               <a href="../src/bspline_sub_module.f90"> Source File</a>
             </li>
         </ul>
-        <ol class="breadcrumb in-well text-right">
-              <li><a href='../sourcefile/bspline_sub_module.f90.html'>bspline_sub_module.f90</a></li>
-              <li><a href='../module/bspline_sub_module.html'>bspline_sub_module</a></li>
-          <li class="active">dbfqad</li>
-        </ol>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/bspline_sub_module.f90.html'>bspline_sub_module.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/bspline_sub_module.html'>bspline_sub_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">dbfqad</li>
+          </ol>
+        </nav>
       </div>
     </div>
   </div>
   <script>
     $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
+    $('[data-bs-toggle="tooltip"]').tooltip()
     })
   </script>
 
@@ -147,8 +128,9 @@
   
   
   
-    <div class="panel panel-primary">
-      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
       <div class="list-group">
         <a class="list-group-item" href="../proc/dbfqad.html#src">dbfqad</a>
       </div>
@@ -168,7 +150,7 @@
   function <code>f</code> and the <code>id</code>-th derivative of a <code>k</code>-th order b-spline,
   using the b-representation <code>(t,bcoef,n,k)</code>.  <code>(x1,x2)</code> must be a
   subinterval of <code>t(k) &lt;= x &lt;= t(n+1)</code>.  an integration routine,
-  <a href="../proc/dbsgq8.html">dbsgq8</a> (a modification of <code>gaus8</code>), integrates the product
+  <a href="dbsgq8.html">dbsgq8</a> (a modification of <code>gaus8</code>), integrates the product
   on subintervals of <code>(x1,x2)</code> formed by included (distinct) knots</p>
 <h3>Reference</h3>
 <ul>
@@ -187,26 +169,32 @@
 <li>920501  Reformatted the REFERENCES section.  (WRB)</li>
 <li>Jacob Williams, 9/6/2017 : refactored to modern Fortran. Some changes.</li>
 </ul>
-<p></p><div class="alert alert-info" role="alert"><h4>Note</h4><p>the maximum number of significant digits obtainable in
-      <a href="../proc/dbsqad.html">dbsqad</a> is the smaller of ~300 and the number of digits
-      carried in <code>real(wp)</code> arithmetic.</p></div>
-<p></p><div class="alert alert-info" role="alert"><h4>Note</h4><p>Extrapolation is not enabled for this routine.</p></div>
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p>the maximum number of significant digits obtainable in
+      <a href="dbsqad.html">dbsqad</a> is the smaller of ~300 and the number of digits
+      carried in <code>real(wp)</code> arithmetic.</p>
+</div>
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p>Extrapolation is not enabled for this routine.</p>
+</div>
 
 
     <h3>Arguments</h3>
         <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-f~19"></span>
+              <span class="anchor" id="variable-f~11"></span>
               procedure(<a href='../interface/b1fqad_func.html'>b1fqad_func</a>)
             </td>
 <td></td>
@@ -222,7 +210,7 @@ integrand <code>bf(x)=f(x)*dbvalu(t,bcoef,n,k,id,x,inbv,work)</code></p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-t~8"></span>
+              <span class="anchor" id="variable-t~19"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -237,7 +225,7 @@ integrand <code>bf(x)=f(x)*dbvalu(t,bcoef,n,k,id,x,inbv,work)</code></p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-bcoef~27"></span>
+              <span class="anchor" id="variable-bcoef~22"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -252,7 +240,7 @@ integrand <code>bf(x)=f(x)*dbvalu(t,bcoef,n,k,id,x,inbv,work)</code></p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-n~13"></span>
+              <span class="anchor" id="variable-n~28"></span>
               integer(kind=ip),
             </td>
 <td>intent(in)</td>
@@ -267,7 +255,7 @@ integrand <code>bf(x)=f(x)*dbvalu(t,bcoef,n,k,id,x,inbv,work)</code></p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-k~11"></span>
+              <span class="anchor" id="variable-k~28"></span>
               integer(kind=ip),
             </td>
 <td>intent(in)</td>
@@ -298,7 +286,7 @@ integrand <code>bf(x)=f(x)*dbvalu(t,bcoef,n,k,id,x,inbv,work)</code></p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-x1~6"></span>
+              <span class="anchor" id="variable-x1~4"></span>
               real(kind=wp),
             </td>
 <td>intent(in)</td>
@@ -313,7 +301,7 @@ integrand <code>bf(x)=f(x)*dbvalu(t,bcoef,n,k,id,x,inbv,work)</code></p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-x2~6"></span>
+              <span class="anchor" id="variable-x2~4"></span>
               real(kind=wp),
             </td>
 <td>intent(in)</td>
@@ -328,7 +316,7 @@ integrand <code>bf(x)=f(x)*dbvalu(t,bcoef,n,k,id,x,inbv,work)</code></p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-tol~3"></span>
+              <span class="anchor" id="variable-tol~4"></span>
               real(kind=wp),
             </td>
 <td>intent(in)</td>
@@ -361,7 +349,7 @@ the machine</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-iflag~50"></span>
+              <span class="anchor" id="variable-iflag~33"></span>
               integer(kind=ip),
             </td>
 <td>intent(out)</td>
@@ -386,7 +374,7 @@ the machine</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-work~14"></span>
+              <span class="anchor" id="variable-work~16"></span>
               real(kind=wp),
             </td>
 <td>intent(inout),</td>
@@ -403,72 +391,93 @@ the machine</p>
   </table>
 
     <br>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-  <h3 class="panel-title">Calls</h3>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
   <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Generated by graphviz version 2.43.0 (0)
  -->
 <!-- Title: proc~~dbfqad~~CallsGraph Pages: 1 -->
-<svg id="procdbfqadCallsGraph" width="641pt" height="72pt"
- viewBox="0.00 0.00 641.00 71.65" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="proc~~dbfqad~~CallsGraph" class="graph" transform="scale(1.03 1.03) rotate(0) translate(4 70)">
+<svg id="procdbfqadCallsGraph" width="641pt" height="32pt"
+ viewBox="0.00 0.00 641.00 31.53" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~dbfqad~~CallsGraph" class="graph" transform="scale(1.65 1.65) rotate(0) translate(4 48)">
 <title>proc~~dbfqad~~CallsGraph</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-70 658,-70 658,4 -4,4"/>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-48 1053,-48 1053,4 -4,4"/>
 <!-- proc~dbfqad -->
 <g id="proc~~dbfqad~~CallsGraph_node1" class="node">
 <title>proc~dbfqad</title>
-<polygon fill="none" stroke="black" points="166,-45 0,-45 0,-21 166,-21 166,-45"/>
-<text text-anchor="middle" x="83" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50">bspline_sub_module::dbfqad</text>
+<polygon fill="none" stroke="black" points="166,-24 0,-24 0,0 166,0 166,-24"/>
+<text text-anchor="middle" x="83" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">bspline_sub_module::dbfqad</text>
 </g>
 <!-- proc~dbsgq8 -->
 <g id="proc~~dbfqad~~CallsGraph_node2" class="node">
 <title>proc~dbsgq8</title>
-<g id="a_proc~~dbfqad~~CallsGraph_node2"><a xlink:href=".././proc/dbsgq8.html" xlink:title="bspline_sub_module::dbsgq8">
-<polygon fill="#d9534f" stroke="#d9534f" points="369,-66 202,-66 202,-42 369,-42 369,-66"/>
-<text text-anchor="middle" x="285.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbsgq8</text>
+<g id="a_proc~~dbfqad~~CallsGraph_node2"><a xlink:href="../proc/dbsgq8.html" xlink:title="bspline_sub_module::dbsgq8">
+<polygon fill="#d9534f" stroke="#d9534f" points="369,-44 202,-44 202,-20 369,-20 369,-44"/>
+<text text-anchor="middle" x="285.5" y="-29.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbsgq8</text>
 </a>
 </g>
 </g>
 <!-- proc~dbfqad&#45;&gt;proc~dbsgq8 -->
 <g id="proc~~dbfqad~~CallsGraph_edge1" class="edge">
 <title>proc~dbfqad&#45;&gt;proc~dbsgq8</title>
-<path fill="none" stroke="#000000" d="M166.13,-41.6C174.6,-42.49 183.25,-43.4 191.83,-44.29"/>
-<polygon fill="#000000" stroke="#000000" points="191.54,-47.78 201.85,-45.34 192.27,-40.82 191.54,-47.78"/>
+<path fill="none" stroke="#000000" d="M166.13,-20.19C174.6,-21.04 183.25,-21.9 191.83,-22.76"/>
+<polygon fill="#000000" stroke="#000000" points="191.55,-26.25 201.85,-23.76 192.25,-19.28 191.55,-26.25"/>
 </g>
 <!-- proc~dintrv -->
 <g id="proc~~dbfqad~~CallsGraph_node3" class="node">
 <title>proc~dintrv</title>
-<g id="a_proc~~dbfqad~~CallsGraph_node3"><a xlink:href=".././proc/dintrv.html" xlink:title="bspline_sub_module::dintrv">
-<polygon fill="#d9534f" stroke="#d9534f" points="365,-24 206,-24 206,0 365,0 365,-24"/>
-<text text-anchor="middle" x="285.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dintrv</text>
+<g id="a_proc~~dbfqad~~CallsGraph_node3"><a xlink:href="../proc/dintrv.html" xlink:title="bspline_sub_module::dintrv">
+<polygon fill="#d9534f" stroke="#d9534f" points="764,-24 605,-24 605,0 764,0 764,-24"/>
+<text text-anchor="middle" x="684.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dintrv</text>
 </a>
 </g>
 </g>
 <!-- proc~dbfqad&#45;&gt;proc~dintrv -->
 <g id="proc~~dbfqad~~CallsGraph_edge2" class="edge">
 <title>proc~dbfqad&#45;&gt;proc~dintrv</title>
-<path fill="none" stroke="#000000" d="M166.13,-24.4C175.84,-23.38 185.79,-22.34 195.59,-21.31"/>
-<polygon fill="#000000" stroke="#000000" points="196.15,-24.77 205.73,-20.25 195.42,-17.81 196.15,-24.77"/>
+<path fill="none" stroke="#000000" d="M166.21,-11.21C178.21,-11.13 190.43,-11.05 202,-11 365.11,-10.31 405.89,-10.29 569,-11 577.36,-11.04 586.06,-11.09 594.77,-11.15"/>
+<polygon fill="#000000" stroke="#000000" points="594.94,-14.65 604.97,-11.22 595,-7.65 594.94,-14.65"/>
+</g>
+<!-- proc~dbvalu -->
+<g id="proc~~dbfqad~~CallsGraph_node4" class="node">
+<title>proc~dbvalu</title>
+<g id="a_proc~~dbfqad~~CallsGraph_node4"><a xlink:href="../proc/dbvalu.html" xlink:title="bspline_sub_module::dbvalu">
+<polygon fill="#d9534f" stroke="#d9534f" points="569,-44 405,-44 405,-20 569,-20 569,-44"/>
+<text text-anchor="middle" x="487" y="-29.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbvalu</text>
+</a>
+</g>
+</g>
+<!-- proc~dbsgq8&#45;&gt;proc~dbvalu -->
+<g id="proc~~dbfqad~~CallsGraph_edge3" class="edge">
+<title>proc~dbsgq8&#45;&gt;proc~dbvalu</title>
+<path fill="none" stroke="#000000" d="M369.08,-32C377.47,-32 386.02,-32 394.49,-32"/>
+<polygon fill="#000000" stroke="#000000" points="394.76,-35.5 404.76,-32 394.76,-28.5 394.76,-35.5"/>
 </g>
 <!-- proc~get_temp_x_for_extrap -->
-<g id="proc~~dbfqad~~CallsGraph_node4" class="node">
+<g id="proc~~dbfqad~~CallsGraph_node5" class="node">
 <title>proc~get_temp_x_for_extrap</title>
-<g id="a_proc~~dbfqad~~CallsGraph_node4"><a xlink:href=".././proc/get_temp_x_for_extrap.html" xlink:title="bspline_sub_module::get_temp_x_for_extrap">
-<polygon fill="#d94e8f" stroke="#d94e8f" points="654,-24 405,-24 405,0 654,0 654,-24"/>
-<text text-anchor="middle" x="529.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::get_temp_x_for_extrap</text>
+<g id="a_proc~~dbfqad~~CallsGraph_node5"><a xlink:href="../proc/get_temp_x_for_extrap.html" xlink:title="bspline_sub_module::get_temp_x_for_extrap">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1049,-24 800,-24 800,0 1049,0 1049,-24"/>
+<text text-anchor="middle" x="924.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::get_temp_x_for_extrap</text>
 </a>
 </g>
 </g>
 <!-- proc~dintrv&#45;&gt;proc~get_temp_x_for_extrap -->
-<g id="proc~~dbfqad~~CallsGraph_edge3" class="edge">
+<g id="proc~~dbfqad~~CallsGraph_edge4" class="edge">
 <title>proc~dintrv&#45;&gt;proc~get_temp_x_for_extrap</title>
-<path fill="none" stroke="#000000" d="M365.07,-12C374.59,-12 384.52,-12 394.56,-12"/>
-<polygon fill="#000000" stroke="#000000" points="394.64,-15.5 404.64,-12 394.64,-8.5 394.64,-15.5"/>
+<path fill="none" stroke="#000000" d="M764.09,-12C772.36,-12 780.93,-12 789.6,-12"/>
+<polygon fill="#000000" stroke="#000000" points="789.83,-15.5 799.83,-12 789.83,-8.5 789.83,-15.5"/>
+</g>
+<!-- proc~dbvalu&#45;&gt;proc~dintrv -->
+<g id="proc~~dbfqad~~CallsGraph_edge5" class="edge">
+<title>proc~dbvalu&#45;&gt;proc~dintrv</title>
+<path fill="none" stroke="#000000" d="M569.21,-23.69C577.56,-22.84 586.08,-21.97 594.52,-21.1"/>
+<polygon fill="#000000" stroke="#000000" points="595.15,-24.56 604.74,-20.06 594.44,-17.59 595.15,-24.56"/>
 </g>
 </g>
 </svg>
@@ -476,17 +485,17 @@ the machine</p>
                   var panprocdbfqadCallsGraph = svgPanZoom('#procdbfqadCallsGraph',
                     {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
                   );
-                </script>        <div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div>
-          <div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog">
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
                   <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-              <div class="modal-body">
+                <div class="modal-body">
 <p>Nodes of different colours represent the following: </p>
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
@@ -494,11 +503,11 @@ the machine</p>
 <!-- Generated by graphviz version 2.43.0 (0)
  -->
 <!-- Title: Graph Key Pages: 1 -->
-<svg width="597pt" height="32pt"
- viewBox="0.00 0.00 596.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1.16 1.16) rotate(0) translate(4 28)">
 <title>Graph Key</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 592.5,-28 592.5,4 -4,4"/>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
 <!-- Subroutine -->
 <g id="node1" class="node">
 <title>Subroutine</title>
@@ -517,23 +526,29 @@ the machine</p>
 <polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
 <text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
 </g>
-<!-- Unknown Procedure Type -->
+<!-- Type Bound Procedure -->
 <g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
 <title>Unknown Procedure Type</title>
-<polygon fill="#777777" stroke="#777777" points="388.5,-24 243.5,-24 243.5,0 388.5,0 388.5,-24"/>
-<text text-anchor="middle" x="316" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
 </g>
 <!-- Program -->
-<g id="node5" class="node">
+<g id="node6" class="node">
 <title>Program</title>
-<polygon fill="#f0ad4e" stroke="#f0ad4e" points="465,-24 407,-24 407,0 465,0 465,-24"/>
-<text text-anchor="middle" x="436" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
 </g>
 <!-- This Page&#39;s Entity -->
-<g id="node6" class="node">
+<g id="node7" class="node">
 <title>This Page&#39;s Entity</title>
-<polygon fill="none" stroke="black" points="588.5,-24 483.5,-24 483.5,0 588.5,0 588.5,-24"/>
-<text text-anchor="middle" x="536" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
 </g>
 </g>
 </svg>
@@ -549,11 +564,11 @@ implementation in a submodule of an interface in a parent module.
         </div>
       </div>
     </div>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-  <h3 class="panel-title">Called by</h3>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
   <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -574,7 +589,7 @@ implementation in a submodule of an interface in a parent module.
 <!-- proc~db1fqad -->
 <g id="proc~~dbfqad~~CalledByGraph_node2" class="node">
 <title>proc~db1fqad</title>
-<g id="a_proc~~dbfqad~~CalledByGraph_node2"><a xlink:href=".././proc/db1fqad.html" xlink:title="bspline_sub_module::db1fqad">
+<g id="a_proc~~dbfqad~~CalledByGraph_node2"><a xlink:href="../proc/db1fqad.html" xlink:title="bspline_sub_module::db1fqad">
 <polygon fill="#d9534f" stroke="#d9534f" points="461,-24 289,-24 289,0 461,0 461,-24"/>
 <text text-anchor="middle" x="375" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::db1fqad</text>
 </a>
@@ -589,7 +604,7 @@ implementation in a submodule of an interface in a parent module.
 <!-- proc~fintegral_1d -->
 <g id="proc~~dbfqad~~CalledByGraph_node3" class="node">
 <title>proc~fintegral_1d</title>
-<g id="a_proc~~dbfqad~~CalledByGraph_node3"><a xlink:href=".././proc/fintegral_1d.html" xlink:title="bspline_oo_module::bspline_1d%fintegral_1d">
+<g id="a_proc~~dbfqad~~CalledByGraph_node3"><a xlink:href="../proc/fintegral_1d.html" xlink:title="bspline_oo_module::bspline_1d%fintegral_1d">
 <polygon fill="#d9534f" stroke="#d9534f" points="253,-24 0,-24 0,0 253,0 253,-24"/>
 <text text-anchor="middle" x="126.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_1d%fintegral_1d</text>
 </a>
@@ -607,17 +622,17 @@ implementation in a submodule of an interface in a parent module.
                   var panprocdbfqadCalledByGraph = svgPanZoom('#procdbfqadCalledByGraph',
                     {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
                   );
-                </script>        <div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div>
-          <div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog">
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
                   <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-              <div class="modal-body">
+                <div class="modal-body">
 <p>Nodes of different colours represent the following: </p>
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
@@ -625,11 +640,11 @@ implementation in a submodule of an interface in a parent module.
 <!-- Generated by graphviz version 2.43.0 (0)
  -->
 <!-- Title: Graph Key Pages: 1 -->
-<svg width="597pt" height="32pt"
- viewBox="0.00 0.00 596.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1.16 1.16) rotate(0) translate(4 28)">
 <title>Graph Key</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 592.5,-28 592.5,4 -4,4"/>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
 <!-- Subroutine -->
 <g id="node1" class="node">
 <title>Subroutine</title>
@@ -648,23 +663,29 @@ implementation in a submodule of an interface in a parent module.
 <polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
 <text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
 </g>
-<!-- Unknown Procedure Type -->
+<!-- Type Bound Procedure -->
 <g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
 <title>Unknown Procedure Type</title>
-<polygon fill="#777777" stroke="#777777" points="388.5,-24 243.5,-24 243.5,0 388.5,0 388.5,-24"/>
-<text text-anchor="middle" x="316" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
 </g>
 <!-- Program -->
-<g id="node5" class="node">
+<g id="node6" class="node">
 <title>Program</title>
-<polygon fill="#f0ad4e" stroke="#f0ad4e" points="465,-24 407,-24 407,0 465,0 465,-24"/>
-<text text-anchor="middle" x="436" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
 </g>
 <!-- This Page&#39;s Entity -->
-<g id="node6" class="node">
+<g id="node7" class="node">
 <title>This Page&#39;s Entity</title>
-<polygon fill="none" stroke="black" points="588.5,-24 483.5,-24 483.5,0 588.5,0 588.5,-24"/>
-<text text-anchor="middle" x="536" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
 </g>
 </g>
 </svg>
@@ -682,50 +703,19 @@ implementation in a submodule of an interface in a parent module.
     </div>
     <br>
 
-    <section class="visible-xs visible-sm hidden-md">
-        <h3>Contents</h3>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-    <div class="panel panel-primary">
-      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
-      <div class="list-group">
-        <a class="list-group-item" href="../proc/dbfqad.html#src">dbfqad</a>
-      </div>
-    </div>
-
-
-    </section>
-    <br class="visible-xs visible-sm hidden-md">
-
 
     
     
 
     
     
+
 
 
     
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
-    <div class="highlight"><pre><span></span><span class="w">    </span><span class="k">subroutine </span><span class="n">dbfqad</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">bcoef</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">id</span><span class="p">,</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">,</span><span class="n">tol</span><span class="p">,</span><span class="n">quad</span><span class="p">,</span><span class="n">iflag</span><span class="p">,</span><span class="n">work</span><span class="p">)</span><span class="w"></span>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">subroutine </span><span class="n">dbfqad</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">bcoef</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">id</span><span class="p">,</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">,</span><span class="n">tol</span><span class="p">,</span><span class="n">quad</span><span class="p">,</span><span class="n">iflag</span><span class="p">,</span><span class="n">work</span><span class="p">)</span>
 
 <span class="w">    </span><span class="k">implicit none</span>
 
@@ -756,48 +746,48 @@ implementation in a submodule of an interface in a parent module.
 <span class="w">                                                  </span><span class="c">!! * 1005: `tol` is less than `dtol`</span>
 <span class="w">                                                  </span><span class="c">!!   or greater than 0.1</span>
 
-<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">inbv</span><span class="p">,</span><span class="n">ilo</span><span class="p">,</span><span class="n">il1</span><span class="p">,</span><span class="n">il2</span><span class="p">,</span><span class="n">left</span><span class="p">,</span><span class="n">mflag</span><span class="p">,</span><span class="n">npk</span><span class="p">,</span><span class="n">np1</span><span class="w"></span>
-<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="n">aa</span><span class="p">,</span><span class="n">ans</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">bb</span><span class="p">,</span><span class="n">q</span><span class="p">,</span><span class="n">ta</span><span class="p">,</span><span class="n">tb</span><span class="p">,</span><span class="n">err</span><span class="w"></span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">inbv</span><span class="p">,</span><span class="n">ilo</span><span class="p">,</span><span class="n">il1</span><span class="p">,</span><span class="n">il2</span><span class="p">,</span><span class="n">left</span><span class="p">,</span><span class="n">mflag</span><span class="p">,</span><span class="n">npk</span><span class="p">,</span><span class="n">np1</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="n">aa</span><span class="p">,</span><span class="n">ans</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">bb</span><span class="p">,</span><span class="n">q</span><span class="p">,</span><span class="n">ta</span><span class="p">,</span><span class="n">tb</span><span class="p">,</span><span class="n">err</span>
 
 <span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">min_tol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">max</span><span class="p">(</span><span class="nb">epsilon</span><span class="p">(</span><span class="mf">1.0_wp</span><span class="p">),</span><span class="mf">1.0e-300_wp</span><span class="p">)</span><span class="w"> </span><span class="c">!! minimum allowed `tol`</span>
 
-<span class="w">    </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0_ip</span><span class="w"></span>
-<span class="w">    </span><span class="n">quad</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0_wp</span><span class="w"></span>
-<span class="w">    </span><span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tol</span><span class="w"></span>
+<span class="w">    </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0_ip</span>
+<span class="w">    </span><span class="n">quad</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0_wp</span>
+<span class="w">    </span><span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tol</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">k</span><span class="o">&lt;</span><span class="mi">1_ip</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
 <span class="k">        </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1001_ip</span><span class="w">     </span><span class="c">! error</span>
-<span class="w">    </span><span class="n">elseif</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">n</span><span class="o">&lt;</span><span class="n">k</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="k">elseif</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">n</span><span class="o">&lt;</span><span class="n">k</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
 <span class="k">        </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1002_ip</span><span class="w">     </span><span class="c">! error</span>
-<span class="w">    </span><span class="n">elseif</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">id</span><span class="o">&lt;</span><span class="mi">0_ip</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">id</span><span class="o">&gt;=</span><span class="n">k</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="k">elseif</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">id</span><span class="o">&lt;</span><span class="mi">0_ip</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">id</span><span class="o">&gt;=</span><span class="n">k</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
 <span class="k">        </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1003_ip</span><span class="w">     </span><span class="c">! error</span>
 <span class="w">    </span><span class="k">else</span>
 <span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">tol</span><span class="o">&gt;=</span><span class="n">min_tol</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="n">tol</span><span class="o">&lt;=</span><span class="mf">0.1_wp</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
-<span class="k">            </span><span class="n">aa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">min</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">)</span><span class="w"></span>
-<span class="w">            </span><span class="n">bb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">max</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">)</span><span class="w"></span>
+<span class="k">            </span><span class="n">aa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">min</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">)</span>
+<span class="w">            </span><span class="n">bb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">max</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">)</span>
 <span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">aa</span><span class="o">&gt;=</span><span class="n">t</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
-<span class="k">                </span><span class="n">np1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span><span class="w"></span>
+<span class="k">                </span><span class="n">np1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span>
 <span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">bb</span><span class="o">&lt;=</span><span class="n">t</span><span class="p">(</span><span class="n">np1</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
 <span class="k">                    if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">aa</span><span class="o">==</span><span class="n">bb</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
-<span class="k">                    </span><span class="n">npk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">k</span><span class="w"></span>
-<span class="w">                    </span><span class="n">ilo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_ip</span><span class="w"></span>
-<span class="w">                    </span><span class="k">call </span><span class="n">dintrv</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">npk</span><span class="p">,</span><span class="n">aa</span><span class="p">,</span><span class="n">ilo</span><span class="p">,</span><span class="n">il1</span><span class="p">,</span><span class="n">mflag</span><span class="p">)</span><span class="w"></span>
-<span class="w">                    </span><span class="k">call </span><span class="n">dintrv</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">npk</span><span class="p">,</span><span class="n">bb</span><span class="p">,</span><span class="n">ilo</span><span class="p">,</span><span class="n">il2</span><span class="p">,</span><span class="n">mflag</span><span class="p">)</span><span class="w"></span>
-<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">il2</span><span class="o">&gt;=</span><span class="n">np1</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="n">il2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="w"></span>
-<span class="w">                    </span><span class="n">inbv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_ip</span><span class="w"></span>
-<span class="w">                    </span><span class="n">q</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0_wp</span><span class="w"></span>
-<span class="w">                    </span><span class="k">do </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">il1</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">il2</span><span class="w"></span>
-<span class="w">                        </span><span class="n">ta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="n">left</span><span class="p">)</span><span class="w"></span>
-<span class="w">                        </span><span class="n">tb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="n">left</span><span class="o">+</span><span class="mi">1_ip</span><span class="p">)</span><span class="w"></span>
+<span class="k">                    </span><span class="n">npk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">k</span>
+<span class="w">                    </span><span class="n">ilo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">                    </span><span class="k">call </span><span class="n">dintrv</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">npk</span><span class="p">,</span><span class="n">aa</span><span class="p">,</span><span class="n">ilo</span><span class="p">,</span><span class="n">il1</span><span class="p">,</span><span class="n">mflag</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">call </span><span class="n">dintrv</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">npk</span><span class="p">,</span><span class="n">bb</span><span class="p">,</span><span class="n">ilo</span><span class="p">,</span><span class="n">il2</span><span class="p">,</span><span class="n">mflag</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">il2</span><span class="o">&gt;=</span><span class="n">np1</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="n">il2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span>
+<span class="w">                    </span><span class="n">inbv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">                    </span><span class="n">q</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0_wp</span>
+<span class="w">                    </span><span class="k">do </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">il1</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">il2</span>
+<span class="w">                        </span><span class="n">ta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="n">left</span><span class="p">)</span>
+<span class="w">                        </span><span class="n">tb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="n">left</span><span class="o">+</span><span class="mi">1_ip</span><span class="p">)</span>
 <span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">ta</span><span class="o">/=</span><span class="n">tb</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
-<span class="k">                            </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">max</span><span class="p">(</span><span class="n">aa</span><span class="p">,</span><span class="n">ta</span><span class="p">)</span><span class="w"></span>
-<span class="w">                            </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">min</span><span class="p">(</span><span class="n">bb</span><span class="p">,</span><span class="n">tb</span><span class="p">)</span><span class="w"></span>
-<span class="w">                            </span><span class="k">call </span><span class="n">dbsgq8</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">bcoef</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">id</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">inbv</span><span class="p">,</span><span class="n">err</span><span class="p">,</span><span class="n">ans</span><span class="p">,</span><span class="n">iflag</span><span class="p">,</span><span class="n">work</span><span class="p">)</span><span class="w"></span>
+<span class="k">                            </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">max</span><span class="p">(</span><span class="n">aa</span><span class="p">,</span><span class="n">ta</span><span class="p">)</span>
+<span class="w">                            </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">min</span><span class="p">(</span><span class="n">bb</span><span class="p">,</span><span class="n">tb</span><span class="p">)</span>
+<span class="w">                            </span><span class="k">call </span><span class="n">dbsgq8</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">bcoef</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">id</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">inbv</span><span class="p">,</span><span class="n">err</span><span class="p">,</span><span class="n">ans</span><span class="p">,</span><span class="n">iflag</span><span class="p">,</span><span class="n">work</span><span class="p">)</span>
 <span class="w">                            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">iflag</span><span class="o">/=</span><span class="mi">0_ip</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="n">iflag</span><span class="o">/=</span><span class="mi">1101_ip</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
-<span class="k">                            </span><span class="n">q</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">ans</span><span class="w"></span>
+<span class="k">                            </span><span class="n">q</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">ans</span>
 <span class="w">                        </span><span class="k">end if</span>
 <span class="k">                    end do</span>
-<span class="k">                    if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">x1</span><span class="o">&gt;</span><span class="n">x2</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">q</span><span class="w"></span>
-<span class="w">                    </span><span class="n">quad</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">q</span><span class="w"></span>
+<span class="k">                    if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">x1</span><span class="o">&gt;</span><span class="n">x2</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">q</span>
+<span class="w">                    </span><span class="n">quad</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">q</span>
 <span class="w">                </span><span class="k">end if</span>
 <span class="k">            else</span>
 <span class="k">                </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1004_ip</span><span class="w">  </span><span class="c">! error</span>
@@ -807,7 +797,7 @@ implementation in a submodule of an interface in a parent module.
 <span class="w">        </span><span class="k">end if</span>
 <span class="k">    end if</span>
 
-<span class="k">    end subroutine </span><span class="n">dbfqad</span><span class="w"></span>
+<span class="k">    end subroutine </span><span class="n">dbfqad</span>
 </pre></div>
 
     </section>
@@ -820,12 +810,12 @@ implementation in a submodule of an interface in a parent module.
     </div> <!-- /container -->
     <footer>
       <div class="container">
-        <div class="row">
-          <div class="col-xs-6 col-md-6"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2023 
+        <div class="row justify-content-between">
+          <div class="col"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2024 
 </p>
           </div>
-          <div class="col-xs-6 col-md-6">
-            <p class="text-right">
+          <div class="col">
+            <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
             </p>
@@ -835,17 +825,12 @@ implementation in a submodule of an interface in a parent module.
       </div> <!-- /container -->
     </footer>
 
-    <!-- Bootstrap core JavaScript
-         ================================================== -->
-         <!-- Placed at the end of the document so the pages load faster -->
-    <!--
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        -->
-        <script src="../js/bootstrap.min.js"></script>
-        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-        <script src="../js/ie10-viewport-bug-workaround.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
 
-        <!-- MathJax JavaScript
+    <!-- MathJax JavaScript
              ================================================== -->
              <!-- Placed at the end of the document so the pages load faster -->
         <script type="text/x-mathjax-config">

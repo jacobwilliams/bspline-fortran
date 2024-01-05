@@ -1,3 +1,5 @@
+<!-- -*- mode: jinja2 -*- -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,81 +12,56 @@
 
     <title>fintegral_1d &ndash; bspline-fortran</title>
 
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link href="../css/pygments.css" rel="stylesheet">
     <link href="../css/font-awesome.min.css" rel="stylesheet">
     <link href="../css/local.css" rel="stylesheet">
       <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
-
-         <script src="../js/jquery-2.1.3.min.js"></script>
-         <script src="../js/svg-pan-zoom.min.js"></script>
-
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
   </head>
 
   <body>
 
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
           <a class="navbar-brand" href="../index.html">bspline-fortran </a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
-              <a href="#" class="dropdown-toggle"
-                 data-toggle="dropdown" role="button"
-                 aria-haspopup="true"
-                 aria-expanded="false">
-                 Contents <span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu">
-                    <li><a href="../lists/files.html">Source Files</a></li>
-                  <li><a href="../lists/modules.html">Modules</a></li>
-                  <li><a href="../lists/procedures.html">Procedures</a></li>
-                  <li><a href="../lists/absint.html">Abstract Interfaces</a></li>
-                  <li><a href="../lists/types.html">Derived Types</a></li>
-              </ul>
-            </li>
-                <li class="visible-xs hidden-sm visible-lg">
-                  <a href="../lists/files.html">Source Files</a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
                 </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/modules.html">Modules</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/procedures.html">Procedures</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/absint.html">Abstract Interfaces</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/types.html">Derived Types</a>
-              </li>
-          </ul>
-            <form action="../search.html" class="navbar-form navbar-right" role="search">
-              <div class="form-group">
-                <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
               </div>
-              <!--
-                  <button type="submit" class="btn btn-default">Submit</button>
-                  -->
-            </form>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
 
     <div class="container">
   <div class="row">
@@ -92,33 +69,37 @@
       <small>Subroutine</small>
       
     </h1>
-      <div class="row" id="info-bar">
-    <div class="col-lg-12">
-      <div class="well well-sm">
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
         <ul class="list-inline" style="margin-bottom:0px;display:inline">
 
-          <li id="statements"><i class="fa fa-list-ol"></i>
-            <a data-toggle="tooltip"
-               data-placement="bottom" data-html="true"
-               title=" 0.3% of total for procedures.">17 statements</a>
-          </li>
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip"
+                 data-bs-placement="bottom" data-html="true"
+                 title=" 0.3% of total for procedures.">17 statements</a>
+            </li>
 
-            <li id="source-file">
+            <li class="list-inline-item" id="source-file">
               <i class="fa fa-code"></i>
               <a href="../src/bspline_oo_module.f90"> Source File</a>
             </li>
         </ul>
-        <ol class="breadcrumb in-well text-right">
-              <li><a href='../sourcefile/bspline_oo_module.f90.html'>bspline_oo_module.f90</a></li>
-              <li><a href='../module/bspline_oo_module.html'>bspline_oo_module</a></li>
-          <li class="active">fintegral_1d</li>
-        </ol>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/bspline_oo_module.f90.html'>bspline_oo_module.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/bspline_oo_module.html'>bspline_oo_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">fintegral_1d</li>
+          </ol>
+        </nav>
       </div>
     </div>
   </div>
   <script>
     $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
+    $('[data-bs-toggle="tooltip"]').tooltip()
     })
   </script>
 
@@ -147,8 +128,9 @@
   
   
   
-    <div class="panel panel-primary">
-      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
       <div class="list-group">
         <a class="list-group-item" href="../proc/fintegral_1d.html#src">fintegral_1d</a>
       </div>
@@ -164,7 +146,7 @@
 </h2>
     
 
-    <p>Evaluate a <a href="../type/bspline_1d.html">bspline_1d</a> definite integral.  This is a wrapper for <a href="../proc/db1fqad.html">db1fqad</a>.</p>
+    <p>Evaluate a <a href="../type/bspline_1d.html">bspline_1d</a> definite integral.  This is a wrapper for <a href="db1fqad.html">db1fqad</a>.</p>
 
     <h3>Type Bound</h3>
     <p><a href='../type/bspline_1d.html'>bspline_1d</a></p>
@@ -173,16 +155,16 @@
         <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-me~15"></span>
+              <span class="anchor" id="variable-me~38"></span>
               class(<a href='../type/bspline_1d.html'>bspline_1d</a>),
             </td>
 <td>intent(inout)</td>
@@ -197,7 +179,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-fun"></span>
+              <span class="anchor" id="variable-fun~3"></span>
               procedure(<a href='../interface/b1fqad_func.html'>b1fqad_func</a>)
             </td>
 <td></td>
@@ -213,7 +195,7 @@ integrand <code>bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,idx,x,inbv)</code></p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-idx~2"></span>
+              <span class="anchor" id="variable-idx~10"></span>
               integer(kind=ip),
             </td>
 <td>intent(in)</td>
@@ -229,7 +211,7 @@ integrand <code>bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,idx,x,inbv)</code></p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-x1~2"></span>
+              <span class="anchor" id="variable-x1~7"></span>
               real(kind=wp),
             </td>
 <td>intent(in)</td>
@@ -244,7 +226,7 @@ integrand <code>bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,idx,x,inbv)</code></p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-x2~2"></span>
+              <span class="anchor" id="variable-x2~7"></span>
               real(kind=wp),
             </td>
 <td>intent(in)</td>
@@ -259,7 +241,7 @@ integrand <code>bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,idx,x,inbv)</code></p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-tol"></span>
+              <span class="anchor" id="variable-tol~6"></span>
               real(kind=wp),
             </td>
 <td>intent(in)</td>
@@ -274,7 +256,7 @@ integrand <code>bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,idx,x,inbv)</code></p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-f~3"></span>
+              <span class="anchor" id="variable-f~15"></span>
               real(kind=wp),
             </td>
 <td>intent(out)</td>
@@ -290,7 +272,7 @@ integrand <code>bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,idx,x,inbv)</code></p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-iflag~6"></span>
+              <span class="anchor" id="variable-iflag~43"></span>
               integer(kind=ip),
             </td>
 <td>intent(out)</td>
@@ -300,109 +282,130 @@ integrand <code>bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,idx,x,inbv)</code></p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-                <p>status flag (see <a href="../proc/db1sqad.html">db1sqad</a>)</p>
+                <p>status flag (see <a href="db1sqad.html">db1sqad</a>)</p>
             </td>
         </tr>
     </tbody>
   </table>
 
     <br>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-  <h3 class="panel-title">Calls</h3>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
   <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Generated by graphviz version 2.43.0 (0)
  -->
 <!-- Title: proc~~fintegral_1d~~CallsGraph Pages: 1 -->
-<svg id="procfintegral_1dCallsGraph" width="641pt" height="41pt"
- viewBox="0.00 0.00 641.00 40.93" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="proc~~fintegral_1d~~CallsGraph" class="graph" transform="scale(1.81 1.81) rotate(0) translate(4 70)">
+<svg id="procfintegral_1dCallsGraph" width="641pt" height="21pt"
+ viewBox="0.00 0.00 641.00 21.45" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~fintegral_1d~~CallsGraph" class="graph" transform="scale(2.42 2.42) rotate(0) translate(4 48)">
 <title>proc~~fintegral_1d~~CallsGraph</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-70 1155,-70 1155,4 -4,4"/>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-48 1550,-48 1550,4 -4,4"/>
 <!-- proc~fintegral_1d -->
 <g id="proc~~fintegral_1d~~CallsGraph_node1" class="node">
 <title>proc~fintegral_1d</title>
-<polygon fill="none" stroke="black" points="253,-45 0,-45 0,-21 253,-21 253,-45"/>
-<text text-anchor="middle" x="126.5" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50">bspline_oo_module::bspline_1d%fintegral_1d</text>
+<polygon fill="none" stroke="black" points="253,-24 0,-24 0,0 253,0 253,-24"/>
+<text text-anchor="middle" x="126.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">bspline_oo_module::bspline_1d%fintegral_1d</text>
 </g>
 <!-- proc~db1fqad -->
 <g id="proc~~fintegral_1d~~CallsGraph_node2" class="node">
 <title>proc~db1fqad</title>
-<g id="a_proc~~fintegral_1d~~CallsGraph_node2"><a xlink:href=".././proc/db1fqad.html" xlink:title="bspline_sub_module::db1fqad">
-<polygon fill="#d9534f" stroke="#d9534f" points="461,-45 289,-45 289,-21 461,-21 461,-45"/>
-<text text-anchor="middle" x="375" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::db1fqad</text>
+<g id="a_proc~~fintegral_1d~~CallsGraph_node2"><a xlink:href="../proc/db1fqad.html" xlink:title="bspline_sub_module::db1fqad">
+<polygon fill="#d9534f" stroke="#d9534f" points="461,-24 289,-24 289,0 461,0 461,-24"/>
+<text text-anchor="middle" x="375" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::db1fqad</text>
 </a>
 </g>
 </g>
 <!-- proc~fintegral_1d&#45;&gt;proc~db1fqad -->
 <g id="proc~~fintegral_1d~~CallsGraph_edge1" class="edge">
 <title>proc~fintegral_1d&#45;&gt;proc~db1fqad</title>
-<path fill="none" stroke="#000000" d="M253.28,-33C261.8,-33 270.31,-33 278.63,-33"/>
-<polygon fill="#000000" stroke="#000000" points="278.69,-36.5 288.69,-33 278.69,-29.5 278.69,-36.5"/>
+<path fill="none" stroke="#000000" d="M253.28,-12C261.8,-12 270.31,-12 278.63,-12"/>
+<polygon fill="#000000" stroke="#000000" points="278.69,-15.5 288.69,-12 278.69,-8.5 278.69,-15.5"/>
 </g>
 <!-- proc~dbfqad -->
 <g id="proc~~fintegral_1d~~CallsGraph_node3" class="node">
 <title>proc~dbfqad</title>
-<g id="a_proc~~fintegral_1d~~CallsGraph_node3"><a xlink:href=".././proc/dbfqad.html" xlink:title="bspline_sub_module::dbfqad">
-<polygon fill="#d9534f" stroke="#d9534f" points="663,-45 497,-45 497,-21 663,-21 663,-45"/>
-<text text-anchor="middle" x="580" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbfqad</text>
+<g id="a_proc~~fintegral_1d~~CallsGraph_node3"><a xlink:href="../proc/dbfqad.html" xlink:title="bspline_sub_module::dbfqad">
+<polygon fill="#d9534f" stroke="#d9534f" points="663,-24 497,-24 497,0 663,0 663,-24"/>
+<text text-anchor="middle" x="580" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbfqad</text>
 </a>
 </g>
 </g>
 <!-- proc~db1fqad&#45;&gt;proc~dbfqad -->
 <g id="proc~~fintegral_1d~~CallsGraph_edge2" class="edge">
 <title>proc~db1fqad&#45;&gt;proc~dbfqad</title>
-<path fill="none" stroke="#000000" d="M461.21,-33C469.71,-33 478.37,-33 486.93,-33"/>
-<polygon fill="#000000" stroke="#000000" points="486.93,-36.5 496.93,-33 486.93,-29.5 486.93,-36.5"/>
+<path fill="none" stroke="#000000" d="M461.21,-12C469.71,-12 478.37,-12 486.93,-12"/>
+<polygon fill="#000000" stroke="#000000" points="486.93,-15.5 496.93,-12 486.93,-8.5 486.93,-15.5"/>
 </g>
 <!-- proc~dbsgq8 -->
 <g id="proc~~fintegral_1d~~CallsGraph_node4" class="node">
 <title>proc~dbsgq8</title>
-<g id="a_proc~~fintegral_1d~~CallsGraph_node4"><a xlink:href=".././proc/dbsgq8.html" xlink:title="bspline_sub_module::dbsgq8">
-<polygon fill="#d9534f" stroke="#d9534f" points="866,-66 699,-66 699,-42 866,-42 866,-66"/>
-<text text-anchor="middle" x="782.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbsgq8</text>
+<g id="a_proc~~fintegral_1d~~CallsGraph_node4"><a xlink:href="../proc/dbsgq8.html" xlink:title="bspline_sub_module::dbsgq8">
+<polygon fill="#d9534f" stroke="#d9534f" points="866,-44 699,-44 699,-20 866,-20 866,-44"/>
+<text text-anchor="middle" x="782.5" y="-29.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbsgq8</text>
 </a>
 </g>
 </g>
 <!-- proc~dbfqad&#45;&gt;proc~dbsgq8 -->
 <g id="proc~~fintegral_1d~~CallsGraph_edge3" class="edge">
 <title>proc~dbfqad&#45;&gt;proc~dbsgq8</title>
-<path fill="none" stroke="#000000" d="M663.13,-41.6C671.6,-42.49 680.25,-43.4 688.83,-44.29"/>
-<polygon fill="#000000" stroke="#000000" points="688.54,-47.78 698.85,-45.34 689.27,-40.82 688.54,-47.78"/>
+<path fill="none" stroke="#000000" d="M663.13,-20.19C671.6,-21.04 680.25,-21.9 688.83,-22.76"/>
+<polygon fill="#000000" stroke="#000000" points="688.55,-26.25 698.85,-23.76 689.25,-19.28 688.55,-26.25"/>
 </g>
 <!-- proc~dintrv -->
 <g id="proc~~fintegral_1d~~CallsGraph_node5" class="node">
 <title>proc~dintrv</title>
-<g id="a_proc~~fintegral_1d~~CallsGraph_node5"><a xlink:href=".././proc/dintrv.html" xlink:title="bspline_sub_module::dintrv">
-<polygon fill="#d9534f" stroke="#d9534f" points="862,-24 703,-24 703,0 862,0 862,-24"/>
-<text text-anchor="middle" x="782.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dintrv</text>
+<g id="a_proc~~fintegral_1d~~CallsGraph_node5"><a xlink:href="../proc/dintrv.html" xlink:title="bspline_sub_module::dintrv">
+<polygon fill="#d9534f" stroke="#d9534f" points="1261,-24 1102,-24 1102,0 1261,0 1261,-24"/>
+<text text-anchor="middle" x="1181.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dintrv</text>
 </a>
 </g>
 </g>
 <!-- proc~dbfqad&#45;&gt;proc~dintrv -->
 <g id="proc~~fintegral_1d~~CallsGraph_edge4" class="edge">
 <title>proc~dbfqad&#45;&gt;proc~dintrv</title>
-<path fill="none" stroke="#000000" d="M663.13,-24.4C672.84,-23.38 682.79,-22.34 692.59,-21.31"/>
-<polygon fill="#000000" stroke="#000000" points="693.15,-24.77 702.73,-20.25 692.42,-17.81 693.15,-24.77"/>
+<path fill="none" stroke="#000000" d="M663.21,-11.21C675.21,-11.13 687.43,-11.05 699,-11 862.11,-10.31 902.89,-10.29 1066,-11 1074.36,-11.04 1083.06,-11.09 1091.77,-11.15"/>
+<polygon fill="#000000" stroke="#000000" points="1091.94,-14.65 1101.97,-11.22 1092,-7.65 1091.94,-14.65"/>
+</g>
+<!-- proc~dbvalu -->
+<g id="proc~~fintegral_1d~~CallsGraph_node6" class="node">
+<title>proc~dbvalu</title>
+<g id="a_proc~~fintegral_1d~~CallsGraph_node6"><a xlink:href="../proc/dbvalu.html" xlink:title="bspline_sub_module::dbvalu">
+<polygon fill="#d9534f" stroke="#d9534f" points="1066,-44 902,-44 902,-20 1066,-20 1066,-44"/>
+<text text-anchor="middle" x="984" y="-29.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbvalu</text>
+</a>
+</g>
+</g>
+<!-- proc~dbsgq8&#45;&gt;proc~dbvalu -->
+<g id="proc~~fintegral_1d~~CallsGraph_edge5" class="edge">
+<title>proc~dbsgq8&#45;&gt;proc~dbvalu</title>
+<path fill="none" stroke="#000000" d="M866.08,-32C874.47,-32 883.02,-32 891.49,-32"/>
+<polygon fill="#000000" stroke="#000000" points="891.76,-35.5 901.76,-32 891.76,-28.5 891.76,-35.5"/>
 </g>
 <!-- proc~get_temp_x_for_extrap -->
-<g id="proc~~fintegral_1d~~CallsGraph_node6" class="node">
+<g id="proc~~fintegral_1d~~CallsGraph_node7" class="node">
 <title>proc~get_temp_x_for_extrap</title>
-<g id="a_proc~~fintegral_1d~~CallsGraph_node6"><a xlink:href=".././proc/get_temp_x_for_extrap.html" xlink:title="bspline_sub_module::get_temp_x_for_extrap">
-<polygon fill="#d94e8f" stroke="#d94e8f" points="1151,-24 902,-24 902,0 1151,0 1151,-24"/>
-<text text-anchor="middle" x="1026.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::get_temp_x_for_extrap</text>
+<g id="a_proc~~fintegral_1d~~CallsGraph_node7"><a xlink:href="../proc/get_temp_x_for_extrap.html" xlink:title="bspline_sub_module::get_temp_x_for_extrap">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1546,-24 1297,-24 1297,0 1546,0 1546,-24"/>
+<text text-anchor="middle" x="1421.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::get_temp_x_for_extrap</text>
 </a>
 </g>
 </g>
 <!-- proc~dintrv&#45;&gt;proc~get_temp_x_for_extrap -->
-<g id="proc~~fintegral_1d~~CallsGraph_edge5" class="edge">
+<g id="proc~~fintegral_1d~~CallsGraph_edge6" class="edge">
 <title>proc~dintrv&#45;&gt;proc~get_temp_x_for_extrap</title>
-<path fill="none" stroke="#000000" d="M862.07,-12C871.59,-12 881.52,-12 891.56,-12"/>
-<polygon fill="#000000" stroke="#000000" points="891.64,-15.5 901.64,-12 891.64,-8.5 891.64,-15.5"/>
+<path fill="none" stroke="#000000" d="M1261.09,-12C1269.36,-12 1277.93,-12 1286.6,-12"/>
+<polygon fill="#000000" stroke="#000000" points="1286.83,-15.5 1296.83,-12 1286.83,-8.5 1286.83,-15.5"/>
+</g>
+<!-- proc~dbvalu&#45;&gt;proc~dintrv -->
+<g id="proc~~fintegral_1d~~CallsGraph_edge7" class="edge">
+<title>proc~dbvalu&#45;&gt;proc~dintrv</title>
+<path fill="none" stroke="#000000" d="M1066.21,-23.69C1074.56,-22.84 1083.08,-21.97 1091.52,-21.1"/>
+<polygon fill="#000000" stroke="#000000" points="1092.15,-24.56 1101.74,-20.06 1091.44,-17.59 1092.15,-24.56"/>
 </g>
 </g>
 </svg>
@@ -410,17 +413,17 @@ integrand <code>bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,idx,x,inbv)</code></p>
                   var panprocfintegral_1dCallsGraph = svgPanZoom('#procfintegral_1dCallsGraph',
                     {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
                   );
-                </script>        <div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div>
-          <div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog">
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
                   <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-              <div class="modal-body">
+                <div class="modal-body">
 <p>Nodes of different colours represent the following: </p>
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
@@ -428,11 +431,11 @@ integrand <code>bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,idx,x,inbv)</code></p>
 <!-- Generated by graphviz version 2.43.0 (0)
  -->
 <!-- Title: Graph Key Pages: 1 -->
-<svg width="597pt" height="32pt"
- viewBox="0.00 0.00 596.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1.16 1.16) rotate(0) translate(4 28)">
 <title>Graph Key</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 592.5,-28 592.5,4 -4,4"/>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
 <!-- Subroutine -->
 <g id="node1" class="node">
 <title>Subroutine</title>
@@ -451,23 +454,29 @@ integrand <code>bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,idx,x,inbv)</code></p>
 <polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
 <text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
 </g>
-<!-- Unknown Procedure Type -->
+<!-- Type Bound Procedure -->
 <g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
 <title>Unknown Procedure Type</title>
-<polygon fill="#777777" stroke="#777777" points="388.5,-24 243.5,-24 243.5,0 388.5,0 388.5,-24"/>
-<text text-anchor="middle" x="316" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
 </g>
 <!-- Program -->
-<g id="node5" class="node">
+<g id="node6" class="node">
 <title>Program</title>
-<polygon fill="#f0ad4e" stroke="#f0ad4e" points="465,-24 407,-24 407,0 465,0 465,-24"/>
-<text text-anchor="middle" x="436" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
 </g>
 <!-- This Page&#39;s Entity -->
-<g id="node6" class="node">
+<g id="node7" class="node">
 <title>This Page&#39;s Entity</title>
-<polygon fill="none" stroke="black" points="588.5,-24 483.5,-24 483.5,0 588.5,0 588.5,-24"/>
-<text text-anchor="middle" x="536" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
 </g>
 </g>
 </svg>
@@ -485,54 +494,23 @@ implementation in a submodule of an interface in a parent module.
     </div>
     <br>
 
-    <section class="visible-xs visible-sm hidden-md">
-        <h3>Contents</h3>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-    <div class="panel panel-primary">
-      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
-      <div class="list-group">
-        <a class="list-group-item" href="../proc/fintegral_1d.html#src">fintegral_1d</a>
-      </div>
-    </div>
-
-
-    </section>
-    <br class="visible-xs visible-sm hidden-md">
-
 
     
     
 
     
     
+
 
 
     
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
-    <div class="highlight"><pre><span></span><span class="w">    </span><span class="k">subroutine </span><span class="n">fintegral_1d</span><span class="p">(</span><span class="n">me</span><span class="p">,</span><span class="n">fun</span><span class="p">,</span><span class="n">idx</span><span class="p">,</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">,</span><span class="n">tol</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">iflag</span><span class="p">)</span><span class="w"></span>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">subroutine </span><span class="n">fintegral_1d</span><span class="p">(</span><span class="n">me</span><span class="p">,</span><span class="n">fun</span><span class="p">,</span><span class="n">idx</span><span class="p">,</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">,</span><span class="n">tol</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">iflag</span><span class="p">)</span>
 
 <span class="w">    </span><span class="k">implicit none</span>
 
-<span class="k">    class</span><span class="p">(</span><span class="n">bspline_1d</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">me</span><span class="w"></span>
+<span class="k">    class</span><span class="p">(</span><span class="n">bspline_1d</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">me</span>
 <span class="w">    </span><span class="k">procedure</span><span class="p">(</span><span class="n">b1fqad_func</span><span class="p">)</span><span class="w">          </span><span class="kd">::</span><span class="w"> </span><span class="n">fun</span><span class="w">   </span><span class="c">!! external function of one argument for the</span>
 <span class="w">                                             </span><span class="c">!! integrand `bf(x)=fun(x)*dbvalu(tx,bcoef,nx,kx,idx,x,inbv)`</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">          </span><span class="kd">::</span><span class="w"> </span><span class="n">idx</span><span class="w">   </span><span class="c">!! order of the spline derivative, `0 &lt;= idx &lt;= k-1`</span>
@@ -544,13 +522,13 @@ implementation in a submodule of an interface in a parent module.
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">         </span><span class="kd">::</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="c">!! status flag (see [[db1sqad]])</span>
 
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">initialized</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
-<span class="k">        call </span><span class="n">db1fqad</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span><span class="n">me</span><span class="p">%</span><span class="n">tx</span><span class="p">,</span><span class="n">me</span><span class="p">%</span><span class="n">bcoef</span><span class="p">,</span><span class="n">me</span><span class="p">%</span><span class="n">nx</span><span class="p">,</span><span class="n">me</span><span class="p">%</span><span class="n">kx</span><span class="p">,</span><span class="n">idx</span><span class="p">,</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">,</span><span class="n">tol</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">iflag</span><span class="p">,</span><span class="n">me</span><span class="p">%</span><span class="n">work_val_1</span><span class="p">)</span><span class="w"></span>
+<span class="k">        call </span><span class="n">db1fqad</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span><span class="n">me</span><span class="p">%</span><span class="n">tx</span><span class="p">,</span><span class="n">me</span><span class="p">%</span><span class="n">bcoef</span><span class="p">,</span><span class="n">me</span><span class="p">%</span><span class="n">nx</span><span class="p">,</span><span class="n">me</span><span class="p">%</span><span class="n">kx</span><span class="p">,</span><span class="n">idx</span><span class="p">,</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">,</span><span class="n">tol</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">iflag</span><span class="p">,</span><span class="n">me</span><span class="p">%</span><span class="n">work_val_1</span><span class="p">)</span>
 <span class="w">    </span><span class="k">else</span>
-<span class="k">        </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_ip</span><span class="w"></span>
+<span class="k">        </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_ip</span>
 <span class="w">    </span><span class="k">end if</span>
-<span class="k">    </span><span class="n">me</span><span class="p">%</span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iflag</span><span class="w"></span>
+<span class="k">    </span><span class="n">me</span><span class="p">%</span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iflag</span>
 
-<span class="w">    </span><span class="k">end subroutine </span><span class="n">fintegral_1d</span><span class="w"></span>
+<span class="w">    </span><span class="k">end subroutine </span><span class="n">fintegral_1d</span>
 </pre></div>
 
     </section>
@@ -563,12 +541,12 @@ implementation in a submodule of an interface in a parent module.
     </div> <!-- /container -->
     <footer>
       <div class="container">
-        <div class="row">
-          <div class="col-xs-6 col-md-6"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2023 
+        <div class="row justify-content-between">
+          <div class="col"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2024 
 </p>
           </div>
-          <div class="col-xs-6 col-md-6">
-            <p class="text-right">
+          <div class="col">
+            <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
             </p>
@@ -578,17 +556,12 @@ implementation in a submodule of an interface in a parent module.
       </div> <!-- /container -->
     </footer>
 
-    <!-- Bootstrap core JavaScript
-         ================================================== -->
-         <!-- Placed at the end of the document so the pages load faster -->
-    <!--
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        -->
-        <script src="../js/bootstrap.min.js"></script>
-        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-        <script src="../js/ie10-viewport-bug-workaround.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
 
-        <!-- MathJax JavaScript
+    <!-- MathJax JavaScript
              ================================================== -->
              <!-- Placed at the end of the document so the pages load faster -->
         <script type="text/x-mathjax-config">

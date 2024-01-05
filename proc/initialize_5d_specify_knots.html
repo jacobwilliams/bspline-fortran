@@ -1,3 +1,5 @@
+<!-- -*- mode: jinja2 -*- -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,81 +12,56 @@
 
     <title>initialize_5d_specify_knots &ndash; bspline-fortran</title>
 
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link href="../css/pygments.css" rel="stylesheet">
     <link href="../css/font-awesome.min.css" rel="stylesheet">
     <link href="../css/local.css" rel="stylesheet">
       <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
-
-         <script src="../js/jquery-2.1.3.min.js"></script>
-         <script src="../js/svg-pan-zoom.min.js"></script>
-
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
   </head>
 
   <body>
 
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
           <a class="navbar-brand" href="../index.html">bspline-fortran </a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
-              <a href="#" class="dropdown-toggle"
-                 data-toggle="dropdown" role="button"
-                 aria-haspopup="true"
-                 aria-expanded="false">
-                 Contents <span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu">
-                    <li><a href="../lists/files.html">Source Files</a></li>
-                  <li><a href="../lists/modules.html">Modules</a></li>
-                  <li><a href="../lists/procedures.html">Procedures</a></li>
-                  <li><a href="../lists/absint.html">Abstract Interfaces</a></li>
-                  <li><a href="../lists/types.html">Derived Types</a></li>
-              </ul>
-            </li>
-                <li class="visible-xs hidden-sm visible-lg">
-                  <a href="../lists/files.html">Source Files</a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
                 </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/modules.html">Modules</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/procedures.html">Procedures</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/absint.html">Abstract Interfaces</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/types.html">Derived Types</a>
-              </li>
-          </ul>
-            <form action="../search.html" class="navbar-form navbar-right" role="search">
-              <div class="form-group">
-                <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
               </div>
-              <!--
-                  <button type="submit" class="btn btn-default">Submit</button>
-                  -->
-            </form>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
 
     <div class="container">
   <div class="row">
@@ -92,33 +69,37 @@
       <small>Subroutine</small>
       
     </h1>
-      <div class="row" id="info-bar">
-    <div class="col-lg-12">
-      <div class="well well-sm">
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
         <ul class="list-inline" style="margin-bottom:0px;display:inline">
 
-          <li id="statements"><i class="fa fa-list-ol"></i>
-            <a data-toggle="tooltip"
-               data-placement="bottom" data-html="true"
-               title=" 1.0% of total for procedures.">62 statements</a>
-          </li>
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip"
+                 data-bs-placement="bottom" data-html="true"
+                 title=" 1.0% of total for procedures.">62 statements</a>
+            </li>
 
-            <li id="source-file">
+            <li class="list-inline-item" id="source-file">
               <i class="fa fa-code"></i>
               <a href="../src/bspline_oo_module.f90"> Source File</a>
             </li>
         </ul>
-        <ol class="breadcrumb in-well text-right">
-              <li><a href='../sourcefile/bspline_oo_module.f90.html'>bspline_oo_module.f90</a></li>
-              <li><a href='../module/bspline_oo_module.html'>bspline_oo_module</a></li>
-          <li class="active">initialize_5d_specify_knots</li>
-        </ol>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/bspline_oo_module.f90.html'>bspline_oo_module.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/bspline_oo_module.html'>bspline_oo_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">initialize_5d_specify_knots</li>
+          </ol>
+        </nav>
       </div>
     </div>
   </div>
   <script>
     $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
+    $('[data-bs-toggle="tooltip"]').tooltip()
     })
   </script>
 
@@ -147,8 +128,9 @@
   
   
   
-    <div class="panel panel-primary">
-      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
       <div class="list-group">
         <a class="list-group-item" href="../proc/initialize_5d_specify_knots.html#src">initialize_5d_specify_knots</a>
       </div>
@@ -165,7 +147,7 @@
     
 
     <p>Initialize a <a href="../type/bspline_5d.html">bspline_5d</a> type (with user-specified knots).
-This is a wrapper for <a href="../proc/db5ink.html">db5ink</a>.</p>
+This is a wrapper for <a href="db5ink.html">db5ink</a>.</p>
 
     <h3>Type Bound</h3>
     <p><a href='../type/bspline_5d.html'>bspline_5d</a></p>
@@ -174,16 +156,16 @@ This is a wrapper for <a href="../proc/db5ink.html">db5ink</a>.</p>
         <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-me~36"></span>
+              <span class="anchor" id="variable-me~61"></span>
               class(<a href='../type/bspline_5d.html'>bspline_5d</a>),
             </td>
 <td>intent(inout)</td>
@@ -198,7 +180,7 @@ This is a wrapper for <a href="../proc/db5ink.html">db5ink</a>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-x~22"></span>
+              <span class="anchor" id="variable-x~54"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -213,7 +195,7 @@ This is a wrapper for <a href="../proc/db5ink.html">db5ink</a>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-y~18"></span>
+              <span class="anchor" id="variable-y~24"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -228,7 +210,7 @@ This is a wrapper for <a href="../proc/db5ink.html">db5ink</a>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-z~14"></span>
+              <span class="anchor" id="variable-z~19"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -243,7 +225,7 @@ This is a wrapper for <a href="../proc/db5ink.html">db5ink</a>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-q~10"></span>
+              <span class="anchor" id="variable-q~18"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -258,7 +240,7 @@ This is a wrapper for <a href="../proc/db5ink.html">db5ink</a>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-r~6"></span>
+              <span class="anchor" id="variable-r~9"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -273,7 +255,7 @@ This is a wrapper for <a href="../proc/db5ink.html">db5ink</a>.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-fcn~22"></span>
+              <span class="anchor" id="variable-fcn~29"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -290,7 +272,7 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-kx~22"></span>
+              <span class="anchor" id="variable-kx~45"></span>
               integer(kind=ip),
             </td>
 <td>intent(in)</td>
@@ -307,7 +289,7 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-ky~18"></span>
+              <span class="anchor" id="variable-ky~33"></span>
               integer(kind=ip),
             </td>
 <td>intent(in)</td>
@@ -324,7 +306,7 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-kz~14"></span>
+              <span class="anchor" id="variable-kz~25"></span>
               integer(kind=ip),
             </td>
 <td>intent(in)</td>
@@ -341,7 +323,7 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-kq~10"></span>
+              <span class="anchor" id="variable-kq~18"></span>
               integer(kind=ip),
             </td>
 <td>intent(in)</td>
@@ -358,7 +340,7 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-kr~6"></span>
+              <span class="anchor" id="variable-kr~11"></span>
               integer(kind=ip),
             </td>
 <td>intent(in)</td>
@@ -375,7 +357,7 @@ point (<code>x(i)</code>,<code>y(j)</code>,<code>z(k)</code>,<code>q(l)</code>,<
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-tx~11"></span>
+              <span class="anchor" id="variable-tx~34"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -392,7 +374,7 @@ Must be non-decreasing.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-ty~9"></span>
+              <span class="anchor" id="variable-ty~24"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -409,7 +391,7 @@ Must be non-decreasing.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-tz~7"></span>
+              <span class="anchor" id="variable-tz~19"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -426,7 +408,7 @@ Must be non-decreasing.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-tq~5"></span>
+              <span class="anchor" id="variable-tq~14"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -443,7 +425,7 @@ Must be non-decreasing.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-tr~3"></span>
+              <span class="anchor" id="variable-tr~9"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -460,7 +442,7 @@ Must be non-decreasing.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-iflag~17"></span>
+              <span class="anchor" id="variable-iflag~54"></span>
               integer(kind=ip),
             </td>
 <td>intent(out)</td>
@@ -470,12 +452,12 @@ Must be non-decreasing.</p>
             <td>::</td>
             <td><strong>iflag</strong></td>
             <td>
-                <p>status flag (see <a href="../proc/db5ink.html">db5ink</a>)</p>
+                <p>status flag (see <a href="db5ink.html">db5ink</a>)</p>
             </td>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-extrap~23"></span>
+              <span class="anchor" id="variable-extrap~33"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -493,267 +475,198 @@ Must be non-decreasing.</p>
   </table>
 
     <br>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-  <h3 class="panel-title">Calls</h3>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
   <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Generated by graphviz version 2.43.0 (0)
  -->
 <!-- Title: proc~~initialize_5d_specify_knots~~CallsGraph Pages: 1 -->
-<svg id="procinitialize_5d_specify_knotsCallsGraph" width="641pt" height="204pt"
- viewBox="0.00 0.00 641.00 204.05" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph" class="graph" transform="scale(2.01 2.01) rotate(0) translate(4 406)">
+<svg id="procinitialize_5d_specify_knotsCallsGraph" width="641pt" height="89pt"
+ viewBox="0.00 0.00 641.00 88.59" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~initialize_5d_specify_knots~~CallsGraph" class="graph" transform="scale(2.01 2.01) rotate(0) translate(4 174)">
 <title>proc~~initialize_5d_specify_knots~~CallsGraph</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-406 1284,-406 1284,4 -4,4"/>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-174 1284,-174 1284,4 -4,4"/>
 <!-- proc~initialize_5d_specify_knots -->
 <g id="proc~~initialize_5d_specify_knots~~CallsGraph_node1" class="node">
 <title>proc~initialize_5d_specify_knots</title>
-<polygon fill="none" stroke="black" points="329,-213 0,-213 0,-189 329,-189 329,-213"/>
-<text text-anchor="middle" x="164.5" y="-198.6" font-family="Helvetica,sans-Serif" font-size="10.50">bspline_oo_module::bspline_5d%initialize_5d_specify_knots</text>
-</g>
-<!-- bcoef -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node2" class="node">
-<title>bcoef</title>
-<polygon fill="#777777" stroke="#777777" points="533.5,-402 479.5,-402 479.5,-378 533.5,-378 533.5,-402"/>
-<text text-anchor="middle" x="506.5" y="-387.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bcoef</text>
-</g>
-<!-- proc~initialize_5d_specify_knots&#45;&gt;bcoef -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge1" class="edge">
-<title>proc~initialize_5d_specify_knots&#45;&gt;bcoef</title>
-<path fill="none" stroke="#000000" d="M175.63,-213.33C202.61,-245.22 279.99,-330.61 365,-369 398.23,-384.01 439.94,-388.68 469.25,-389.96"/>
-<polygon fill="#000000" stroke="#000000" points="469.34,-393.46 479.45,-390.29 469.57,-386.47 469.34,-393.46"/>
-</g>
-<!-- destroy -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node3" class="node">
-<title>destroy</title>
-<polygon fill="#777777" stroke="#777777" points="533.5,-360 479.5,-360 479.5,-336 533.5,-336 533.5,-360"/>
-<text text-anchor="middle" x="506.5" y="-345.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">destroy</text>
-</g>
-<!-- proc~initialize_5d_specify_knots&#45;&gt;destroy -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge2" class="edge">
-<title>proc~initialize_5d_specify_knots&#45;&gt;destroy</title>
-<path fill="none" stroke="#000000" d="M179.87,-213.12C211.21,-238.82 288.97,-298.74 365,-327 398.97,-339.63 440.24,-344.68 469.23,-346.69"/>
-<polygon fill="#000000" stroke="#000000" points="469.13,-350.19 479.32,-347.3 469.55,-343.2 469.13,-350.19"/>
+<polygon fill="none" stroke="black" points="329,-107 0,-107 0,-83 329,-83 329,-107"/>
+<text text-anchor="middle" x="164.5" y="-92.6" font-family="Helvetica,sans-Serif" font-size="10.50">bspline_oo_module::bspline_5d%initialize_5d_specify_knots</text>
 </g>
 <!-- proc~check_knot_vectors_sizes -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node4" class="node">
+<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node2" class="node">
 <title>proc~check_knot_vectors_sizes</title>
-<g id="a_proc~~initialize_5d_specify_knots~~CallsGraph_node4"><a xlink:href=".././proc/check_knot_vectors_sizes.html" xlink:title="bspline_oo_module::check_knot_vectors_sizes">
-<polygon fill="#d9534f" stroke="#d9534f" points="635.5,-318 377.5,-318 377.5,-294 635.5,-294 635.5,-318"/>
-<text text-anchor="middle" x="506.5" y="-303.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::check_knot_vectors_sizes</text>
+<g id="a_proc~~initialize_5d_specify_knots~~CallsGraph_node2"><a xlink:href="../proc/check_knot_vectors_sizes.html" xlink:title="bspline_oo_module::check_knot_vectors_sizes">
+<polygon fill="#d9534f" stroke="#d9534f" points="635.5,-170 377.5,-170 377.5,-146 635.5,-146 635.5,-170"/>
+<text text-anchor="middle" x="506.5" y="-155.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::check_knot_vectors_sizes</text>
 </a>
 </g>
 </g>
 <!-- proc~initialize_5d_specify_knots&#45;&gt;proc~check_knot_vectors_sizes -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge3" class="edge">
+<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge1" class="edge">
 <title>proc~initialize_5d_specify_knots&#45;&gt;proc~check_knot_vectors_sizes</title>
-<path fill="none" stroke="#000000" d="M188.76,-213.07C225.29,-231.48 298.78,-266.43 365,-285 374.44,-287.65 384.33,-289.98 394.32,-292.03"/>
-<polygon fill="#000000" stroke="#000000" points="393.83,-295.5 404.31,-293.99 395.17,-288.63 393.83,-295.5"/>
+<path fill="none" stroke="#000000" d="M218.68,-107.09C258.77,-115.99 315.18,-128.04 365,-137 379.3,-139.57 394.46,-142.07 409.32,-144.4"/>
+<polygon fill="#000000" stroke="#000000" points="409.13,-147.91 419.55,-145.98 410.2,-140.99 409.13,-147.91"/>
 </g>
 <!-- proc~db5ink -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node5" class="node">
+<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node3" class="node">
 <title>proc~db5ink</title>
-<g id="a_proc~~initialize_5d_specify_knots~~CallsGraph_node5"><a xlink:href=".././proc/db5ink.html" xlink:title="bspline_sub_module::db5ink">
-<polygon fill="#d9534f" stroke="#d9534f" points="588.5,-276 424.5,-276 424.5,-252 588.5,-252 588.5,-276"/>
-<text text-anchor="middle" x="506.5" y="-261.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::db5ink</text>
+<g id="a_proc~~initialize_5d_specify_knots~~CallsGraph_node3"><a xlink:href="../proc/db5ink.html" xlink:title="bspline_sub_module::db5ink">
+<polygon fill="#d9534f" stroke="#d9534f" points="588.5,-128 424.5,-128 424.5,-104 588.5,-104 588.5,-128"/>
+<text text-anchor="middle" x="506.5" y="-113.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::db5ink</text>
 </a>
 </g>
 </g>
 <!-- proc~initialize_5d_specify_knots&#45;&gt;proc~db5ink -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge4" class="edge">
+<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge2" class="edge">
 <title>proc~initialize_5d_specify_knots&#45;&gt;proc~db5ink</title>
-<path fill="none" stroke="#000000" d="M218.68,-213.09C258.77,-221.99 315.18,-234.04 365,-243 380.88,-245.86 397.82,-248.62 414.24,-251.16"/>
-<polygon fill="#000000" stroke="#000000" points="413.97,-254.66 424.38,-252.71 415.03,-247.74 413.97,-254.66"/>
+<path fill="none" stroke="#000000" d="M329.03,-105.1C358.31,-106.91 387.86,-108.73 414.17,-110.36"/>
+<polygon fill="#000000" stroke="#000000" points="414.28,-113.87 424.47,-111 414.71,-106.89 414.28,-113.87"/>
+</g>
+<!-- proc~destroy_5d -->
+<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node4" class="node">
+<title>proc~destroy_5d</title>
+<g id="a_proc~~initialize_5d_specify_knots~~CallsGraph_node4"><a xlink:href="../proc/destroy_5d.html" xlink:title="bspline_oo_module::bspline_5d%destroy_5d">
+<polygon fill="#d9534f" stroke="#d9534f" points="630,-86 383,-86 383,-62 630,-62 630,-86"/>
+<text text-anchor="middle" x="506.5" y="-71.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_5d%destroy_5d</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_5d_specify_knots&#45;&gt;proc~destroy_5d -->
+<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge3" class="edge">
+<title>proc~initialize_5d_specify_knots&#45;&gt;proc~destroy_5d</title>
+<path fill="none" stroke="#000000" d="M329.03,-84.9C343.54,-84 358.11,-83.1 372.32,-82.23"/>
+<polygon fill="#000000" stroke="#000000" points="372.84,-85.7 382.6,-81.59 372.41,-78.71 372.84,-85.7"/>
 </g>
 <!-- proc~set_extrap_flag -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node6" class="node">
+<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node5" class="node">
 <title>proc~set_extrap_flag</title>
-<g id="a_proc~~initialize_5d_specify_knots~~CallsGraph_node6"><a xlink:href=".././proc/set_extrap_flag.html" xlink:title="bspline_oo_module::bspline_class%set_extrap_flag">
-<polygon fill="#d9534f" stroke="#d9534f" points="648,-234 365,-234 365,-210 648,-210 648,-234"/>
-<text text-anchor="middle" x="506.5" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_class%set_extrap_flag</text>
+<g id="a_proc~~initialize_5d_specify_knots~~CallsGraph_node5"><a xlink:href="../proc/set_extrap_flag.html" xlink:title="bspline_oo_module::bspline_class%set_extrap_flag">
+<polygon fill="#d9534f" stroke="#d9534f" points="648,-44 365,-44 365,-20 648,-20 648,-44"/>
+<text text-anchor="middle" x="506.5" y="-29.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_class%set_extrap_flag</text>
 </a>
 </g>
 </g>
 <!-- proc~initialize_5d_specify_knots&#45;&gt;proc~set_extrap_flag -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge5" class="edge">
+<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge4" class="edge">
 <title>proc~initialize_5d_specify_knots&#45;&gt;proc~set_extrap_flag</title>
-<path fill="none" stroke="#000000" d="M329.03,-211.1C337.65,-211.63 346.29,-212.17 354.87,-212.7"/>
-<polygon fill="#000000" stroke="#000000" points="354.7,-216.19 364.9,-213.32 355.13,-209.21 354.7,-216.19"/>
-</g>
-<!-- work_val_1 -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node7" class="node">
-<title>work_val_1</title>
-<polygon fill="#777777" stroke="#777777" points="542,-192 471,-192 471,-168 542,-168 542,-192"/>
-<text text-anchor="middle" x="506.5" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">work_val_1</text>
-</g>
-<!-- proc~initialize_5d_specify_knots&#45;&gt;work_val_1 -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge6" class="edge">
-<title>proc~initialize_5d_specify_knots&#45;&gt;work_val_1</title>
-<path fill="none" stroke="#000000" d="M329.03,-190.9C377.44,-187.91 426.55,-184.88 460.63,-182.77"/>
-<polygon fill="#000000" stroke="#000000" points="460.94,-186.26 470.7,-182.15 460.51,-179.27 460.94,-186.26"/>
-</g>
-<!-- work_val_2 -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node8" class="node">
-<title>work_val_2</title>
-<polygon fill="#777777" stroke="#777777" points="542,-150 471,-150 471,-126 542,-126 542,-150"/>
-<text text-anchor="middle" x="506.5" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">work_val_2</text>
-</g>
-<!-- proc~initialize_5d_specify_knots&#45;&gt;work_val_2 -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge7" class="edge">
-<title>proc~initialize_5d_specify_knots&#45;&gt;work_val_2</title>
-<path fill="none" stroke="#000000" d="M218.68,-188.91C258.77,-180.01 315.18,-167.96 365,-159 396.86,-153.27 432.97,-147.9 460.61,-144.02"/>
-<polygon fill="#000000" stroke="#000000" points="461.34,-147.45 470.76,-142.61 460.38,-140.52 461.34,-147.45"/>
-</g>
-<!-- work_val_3 -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node9" class="node">
-<title>work_val_3</title>
-<polygon fill="#777777" stroke="#777777" points="542,-108 471,-108 471,-84 542,-84 542,-108"/>
-<text text-anchor="middle" x="506.5" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">work_val_3</text>
-</g>
-<!-- proc~initialize_5d_specify_knots&#45;&gt;work_val_3 -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge8" class="edge">
-<title>proc~initialize_5d_specify_knots&#45;&gt;work_val_3</title>
-<path fill="none" stroke="#000000" d="M188.76,-188.93C225.29,-170.52 298.78,-135.57 365,-117 396.37,-108.2 432.79,-102.89 460.68,-99.81"/>
-<polygon fill="#000000" stroke="#000000" points="461.35,-103.26 470.93,-98.74 460.62,-96.3 461.35,-103.26"/>
-</g>
-<!-- work_val_4 -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node10" class="node">
-<title>work_val_4</title>
-<polygon fill="#777777" stroke="#777777" points="542,-66 471,-66 471,-42 542,-42 542,-66"/>
-<text text-anchor="middle" x="506.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">work_val_4</text>
-</g>
-<!-- proc~initialize_5d_specify_knots&#45;&gt;work_val_4 -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge9" class="edge">
-<title>proc~initialize_5d_specify_knots&#45;&gt;work_val_4</title>
-<path fill="none" stroke="#000000" d="M179.87,-188.88C211.21,-163.18 288.97,-103.26 365,-75 395.78,-63.56 432.55,-58.34 460.75,-55.96"/>
-<polygon fill="#000000" stroke="#000000" points="461.02,-59.45 470.73,-55.21 460.49,-52.47 461.02,-59.45"/>
-</g>
-<!-- work_val_5 -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node11" class="node">
-<title>work_val_5</title>
-<polygon fill="#777777" stroke="#777777" points="542,-24 471,-24 471,0 542,0 542,-24"/>
-<text text-anchor="middle" x="506.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">work_val_5</text>
-</g>
-<!-- proc~initialize_5d_specify_knots&#45;&gt;work_val_5 -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge10" class="edge">
-<title>proc~initialize_5d_specify_knots&#45;&gt;work_val_5</title>
-<path fill="none" stroke="#000000" d="M175.63,-188.67C202.61,-156.78 279.99,-71.39 365,-33 395.13,-19.4 432.23,-14.28 460.73,-12.49"/>
-<polygon fill="#000000" stroke="#000000" points="461.01,-15.98 470.82,-11.98 460.65,-8.99 461.01,-15.98"/>
+<path fill="none" stroke="#000000" d="M218.68,-82.91C258.77,-74.01 315.18,-61.96 365,-53 379.3,-50.43 394.46,-47.93 409.32,-45.6"/>
+<polygon fill="#000000" stroke="#000000" points="410.2,-49.01 419.55,-44.02 409.13,-42.09 410.2,-49.01"/>
 </g>
 <!-- proc~check_inputs -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node12" class="node">
+<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node6" class="node">
 <title>proc~check_inputs</title>
-<g id="a_proc~~initialize_5d_specify_knots~~CallsGraph_node12"><a xlink:href=".././proc/check_inputs.html" xlink:title="bspline_sub_module::check_inputs">
-<polygon fill="#d9534f" stroke="#d9534f" points="881,-318 684,-318 684,-294 881,-294 881,-318"/>
-<text text-anchor="middle" x="782.5" y="-303.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::check_inputs</text>
+<g id="a_proc~~initialize_5d_specify_knots~~CallsGraph_node6"><a xlink:href="../proc/check_inputs.html" xlink:title="bspline_sub_module::check_inputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="881,-170 684,-170 684,-146 881,-146 881,-170"/>
+<text text-anchor="middle" x="782.5" y="-155.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::check_inputs</text>
 </a>
 </g>
 </g>
 <!-- proc~db5ink&#45;&gt;proc~check_inputs -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge11" class="edge">
+<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge5" class="edge">
 <title>proc~db5ink&#45;&gt;proc~check_inputs</title>
-<path fill="none" stroke="#000000" d="M588.87,-276.05C608.25,-278.96 628.86,-282.06 648,-285 663.31,-287.35 679.61,-289.88 695.36,-292.35"/>
-<polygon fill="#000000" stroke="#000000" points="695.2,-295.87 705.62,-293.96 696.28,-288.95 695.2,-295.87"/>
+<path fill="none" stroke="#000000" d="M588.87,-128.05C608.25,-130.96 628.86,-134.06 648,-137 663.31,-139.35 679.61,-141.88 695.36,-144.35"/>
+<polygon fill="#000000" stroke="#000000" points="695.2,-147.87 705.62,-145.96 696.28,-140.95 695.2,-147.87"/>
 </g>
 <!-- proc~dbknot -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node13" class="node">
+<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node7" class="node">
 <title>proc~dbknot</title>
-<g id="a_proc~~initialize_5d_specify_knots~~CallsGraph_node13"><a xlink:href=".././proc/dbknot.html" xlink:title="bspline_sub_module::dbknot">
-<polygon fill="#d9534f" stroke="#d9534f" points="865,-276 700,-276 700,-252 865,-252 865,-276"/>
-<text text-anchor="middle" x="782.5" y="-261.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbknot</text>
+<g id="a_proc~~initialize_5d_specify_knots~~CallsGraph_node7"><a xlink:href="../proc/dbknot.html" xlink:title="bspline_sub_module::dbknot">
+<polygon fill="#d9534f" stroke="#d9534f" points="865,-128 700,-128 700,-104 865,-104 865,-128"/>
+<text text-anchor="middle" x="782.5" y="-113.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbknot</text>
 </a>
 </g>
 </g>
 <!-- proc~db5ink&#45;&gt;proc~dbknot -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge12" class="edge">
+<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge6" class="edge">
 <title>proc~db5ink&#45;&gt;proc~dbknot</title>
-<path fill="none" stroke="#000000" d="M588.6,-264C620.35,-264 656.93,-264 689.64,-264"/>
-<polygon fill="#000000" stroke="#000000" points="689.66,-267.5 699.66,-264 689.66,-260.5 689.66,-267.5"/>
+<path fill="none" stroke="#000000" d="M588.6,-116C620.35,-116 656.93,-116 689.64,-116"/>
+<polygon fill="#000000" stroke="#000000" points="689.66,-119.5 699.66,-116 689.66,-112.5 689.66,-119.5"/>
 </g>
 <!-- proc~dbtpcf -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node14" class="node">
+<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node8" class="node">
 <title>proc~dbtpcf</title>
-<g id="a_proc~~initialize_5d_specify_knots~~CallsGraph_node14"><a xlink:href=".././proc/dbtpcf.html" xlink:title="bspline_sub_module::dbtpcf">
-<polygon fill="#d9534f" stroke="#d9534f" points="863.5,-234 701.5,-234 701.5,-210 863.5,-210 863.5,-234"/>
-<text text-anchor="middle" x="782.5" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbtpcf</text>
+<g id="a_proc~~initialize_5d_specify_knots~~CallsGraph_node8"><a xlink:href="../proc/dbtpcf.html" xlink:title="bspline_sub_module::dbtpcf">
+<polygon fill="#d9534f" stroke="#d9534f" points="863.5,-86 701.5,-86 701.5,-62 863.5,-62 863.5,-86"/>
+<text text-anchor="middle" x="782.5" y="-71.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbtpcf</text>
 </a>
 </g>
 </g>
 <!-- proc~db5ink&#45;&gt;proc~dbtpcf -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge13" class="edge">
+<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge7" class="edge">
 <title>proc~db5ink&#45;&gt;proc~dbtpcf</title>
-<path fill="none" stroke="#000000" d="M588.87,-251.95C608.25,-249.04 628.86,-245.94 648,-243 663.31,-240.65 679.61,-238.12 695.36,-235.65"/>
-<polygon fill="#000000" stroke="#000000" points="696.28,-239.05 705.62,-234.04 695.2,-232.13 696.28,-239.05"/>
+<path fill="none" stroke="#000000" d="M588.87,-103.95C608.25,-101.04 628.86,-97.94 648,-95 663.31,-92.65 679.61,-90.12 695.36,-87.65"/>
+<polygon fill="#000000" stroke="#000000" points="696.28,-91.05 705.62,-86.04 695.2,-84.13 696.28,-91.05"/>
 </g>
 <!-- proc~dbintk -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node15" class="node">
+<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node9" class="node">
 <title>proc~dbintk</title>
-<g id="a_proc~~initialize_5d_specify_knots~~CallsGraph_node15"><a xlink:href=".././proc/dbintk.html" xlink:title="bspline_sub_module::dbintk">
-<polygon fill="#d9534f" stroke="#d9534f" points="1078,-214 917,-214 917,-190 1078,-190 1078,-214"/>
-<text text-anchor="middle" x="997.5" y="-199.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbintk</text>
+<g id="a_proc~~initialize_5d_specify_knots~~CallsGraph_node9"><a xlink:href="../proc/dbintk.html" xlink:title="bspline_sub_module::dbintk">
+<polygon fill="#d9534f" stroke="#d9534f" points="1078,-66 917,-66 917,-42 1078,-42 1078,-66"/>
+<text text-anchor="middle" x="997.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbintk</text>
 </a>
 </g>
 </g>
 <!-- proc~dbtpcf&#45;&gt;proc~dbintk -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge14" class="edge">
+<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge8" class="edge">
 <title>proc~dbtpcf&#45;&gt;proc~dbintk</title>
-<path fill="none" stroke="#000000" d="M863.72,-214.47C877.67,-213.16 892.26,-211.79 906.45,-210.45"/>
-<polygon fill="#000000" stroke="#000000" points="907.07,-213.91 916.7,-209.49 906.42,-206.94 907.07,-213.91"/>
+<path fill="none" stroke="#000000" d="M863.72,-66.47C877.67,-65.16 892.26,-63.79 906.45,-62.45"/>
+<polygon fill="#000000" stroke="#000000" points="907.07,-65.91 916.7,-61.49 906.42,-58.94 907.07,-65.91"/>
 </g>
 <!-- proc~dbnslv -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node16" class="node">
+<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node10" class="node">
 <title>proc~dbnslv</title>
-<g id="a_proc~~initialize_5d_specify_knots~~CallsGraph_node16"><a xlink:href=".././proc/dbnslv.html" xlink:title="bspline_sub_module::dbnslv">
-<polygon fill="#d9534f" stroke="#d9534f" points="1278.5,-256 1115.5,-256 1115.5,-232 1278.5,-232 1278.5,-256"/>
-<text text-anchor="middle" x="1197" y="-241.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbnslv</text>
+<g id="a_proc~~initialize_5d_specify_knots~~CallsGraph_node10"><a xlink:href="../proc/dbnslv.html" xlink:title="bspline_sub_module::dbnslv">
+<polygon fill="#d9534f" stroke="#d9534f" points="1278.5,-108 1115.5,-108 1115.5,-84 1278.5,-84 1278.5,-108"/>
+<text text-anchor="middle" x="1197" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbnslv</text>
 </a>
 </g>
 </g>
 <!-- proc~dbtpcf&#45;&gt;proc~dbnslv -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge15" class="edge">
+<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge9" class="edge">
 <title>proc~dbtpcf&#45;&gt;proc~dbnslv</title>
-<path fill="none" stroke="#000000" d="M863.52,-226.27C932.89,-229.97 1033.21,-235.32 1105.49,-239.17"/>
-<polygon fill="#000000" stroke="#000000" points="1105.32,-242.67 1115.5,-239.71 1105.7,-235.68 1105.32,-242.67"/>
+<path fill="none" stroke="#000000" d="M863.52,-78.27C932.89,-81.97 1033.21,-87.32 1105.49,-91.17"/>
+<polygon fill="#000000" stroke="#000000" points="1105.32,-94.67 1115.5,-91.71 1105.7,-87.68 1105.32,-94.67"/>
 </g>
 <!-- proc~dbintk&#45;&gt;proc~dbnslv -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge17" class="edge">
+<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge11" class="edge">
 <title>proc~dbintk&#45;&gt;proc~dbnslv</title>
-<path fill="none" stroke="#000000" d="M1055.1,-214.04C1078.34,-218.98 1105.42,-224.74 1129.59,-229.88"/>
-<polygon fill="#000000" stroke="#000000" points="1128.89,-233.31 1139.4,-231.96 1130.34,-226.46 1128.89,-233.31"/>
+<path fill="none" stroke="#000000" d="M1055.1,-66.04C1078.34,-70.98 1105.42,-76.74 1129.59,-81.88"/>
+<polygon fill="#000000" stroke="#000000" points="1128.89,-85.31 1139.4,-83.96 1130.34,-78.46 1128.89,-85.31"/>
 </g>
 <!-- proc~dbnfac -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node17" class="node">
+<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node11" class="node">
 <title>proc~dbnfac</title>
-<g id="a_proc~~initialize_5d_specify_knots~~CallsGraph_node17"><a xlink:href=".././proc/dbnfac.html" xlink:title="bspline_sub_module::dbnfac">
-<polygon fill="#d9534f" stroke="#d9534f" points="1279.5,-214 1114.5,-214 1114.5,-190 1279.5,-190 1279.5,-214"/>
-<text text-anchor="middle" x="1197" y="-199.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbnfac</text>
+<g id="a_proc~~initialize_5d_specify_knots~~CallsGraph_node11"><a xlink:href="../proc/dbnfac.html" xlink:title="bspline_sub_module::dbnfac">
+<polygon fill="#d9534f" stroke="#d9534f" points="1279.5,-66 1114.5,-66 1114.5,-42 1279.5,-42 1279.5,-66"/>
+<text text-anchor="middle" x="1197" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbnfac</text>
 </a>
 </g>
 </g>
 <!-- proc~dbintk&#45;&gt;proc~dbnfac -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge16" class="edge">
+<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge10" class="edge">
 <title>proc~dbintk&#45;&gt;proc~dbnfac</title>
-<path fill="none" stroke="#000000" d="M1078.26,-202C1086.8,-202 1095.54,-202 1104.21,-202"/>
-<polygon fill="#000000" stroke="#000000" points="1104.33,-205.5 1114.33,-202 1104.33,-198.5 1104.33,-205.5"/>
+<path fill="none" stroke="#000000" d="M1078.26,-54C1086.8,-54 1095.54,-54 1104.21,-54"/>
+<polygon fill="#000000" stroke="#000000" points="1104.33,-57.5 1114.33,-54 1104.33,-50.5 1104.33,-57.5"/>
 </g>
 <!-- proc~dbspvn -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node18" class="node">
+<g id="proc~~initialize_5d_specify_knots~~CallsGraph_node12" class="node">
 <title>proc~dbspvn</title>
-<g id="a_proc~~initialize_5d_specify_knots~~CallsGraph_node18"><a xlink:href=".././proc/dbspvn.html" xlink:title="bspline_sub_module::dbspvn">
-<polygon fill="#d9534f" stroke="#d9534f" points="1280,-172 1114,-172 1114,-148 1280,-148 1280,-172"/>
-<text text-anchor="middle" x="1197" y="-157.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbspvn</text>
+<g id="a_proc~~initialize_5d_specify_knots~~CallsGraph_node12"><a xlink:href="../proc/dbspvn.html" xlink:title="bspline_sub_module::dbspvn">
+<polygon fill="#d9534f" stroke="#d9534f" points="1280,-24 1114,-24 1114,0 1280,0 1280,-24"/>
+<text text-anchor="middle" x="1197" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module::dbspvn</text>
 </a>
 </g>
 </g>
 <!-- proc~dbintk&#45;&gt;proc~dbspvn -->
-<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge18" class="edge">
+<g id="proc~~initialize_5d_specify_knots~~CallsGraph_edge12" class="edge">
 <title>proc~dbintk&#45;&gt;proc~dbspvn</title>
-<path fill="none" stroke="#000000" d="M1055.1,-189.96C1078.34,-185.02 1105.42,-179.26 1129.59,-174.12"/>
-<polygon fill="#000000" stroke="#000000" points="1130.34,-177.54 1139.4,-172.04 1128.89,-170.69 1130.34,-177.54"/>
+<path fill="none" stroke="#000000" d="M1055.1,-41.96C1078.34,-37.02 1105.42,-31.26 1129.59,-26.12"/>
+<polygon fill="#000000" stroke="#000000" points="1130.34,-29.54 1139.4,-24.04 1128.89,-22.69 1130.34,-29.54"/>
 </g>
 </g>
 </svg>
@@ -761,17 +674,17 @@ Must be non-decreasing.</p>
                   var panprocinitialize_5d_specify_knotsCallsGraph = svgPanZoom('#procinitialize_5d_specify_knotsCallsGraph',
                     {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
                   );
-                </script>        <div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div>
-          <div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog">
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
                   <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-              <div class="modal-body">
+                <div class="modal-body">
 <p>Nodes of different colours represent the following: </p>
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
@@ -779,11 +692,11 @@ Must be non-decreasing.</p>
 <!-- Generated by graphviz version 2.43.0 (0)
  -->
 <!-- Title: Graph Key Pages: 1 -->
-<svg width="597pt" height="32pt"
- viewBox="0.00 0.00 596.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1.16 1.16) rotate(0) translate(4 28)">
 <title>Graph Key</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 592.5,-28 592.5,4 -4,4"/>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
 <!-- Subroutine -->
 <g id="node1" class="node">
 <title>Subroutine</title>
@@ -802,23 +715,29 @@ Must be non-decreasing.</p>
 <polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
 <text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
 </g>
-<!-- Unknown Procedure Type -->
+<!-- Type Bound Procedure -->
 <g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
 <title>Unknown Procedure Type</title>
-<polygon fill="#777777" stroke="#777777" points="388.5,-24 243.5,-24 243.5,0 388.5,0 388.5,-24"/>
-<text text-anchor="middle" x="316" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
 </g>
 <!-- Program -->
-<g id="node5" class="node">
+<g id="node6" class="node">
 <title>Program</title>
-<polygon fill="#f0ad4e" stroke="#f0ad4e" points="465,-24 407,-24 407,0 465,0 465,-24"/>
-<text text-anchor="middle" x="436" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
 </g>
 <!-- This Page&#39;s Entity -->
-<g id="node6" class="node">
+<g id="node7" class="node">
 <title>This Page&#39;s Entity</title>
-<polygon fill="none" stroke="black" points="588.5,-24 483.5,-24 483.5,0 588.5,0 588.5,-24"/>
-<text text-anchor="middle" x="536" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
 </g>
 </g>
 </svg>
@@ -834,11 +753,11 @@ implementation in a submodule of an interface in a parent module.
         </div>
       </div>
     </div>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-  <h3 class="panel-title">Called by</h3>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
   <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -859,7 +778,7 @@ implementation in a submodule of an interface in a parent module.
 <!-- proc~bspline_5d_constructor_specify_knots -->
 <g id="proc~~initialize_5d_specify_knots~~CalledByGraph_node2" class="node">
 <title>proc~bspline_5d_constructor_specify_knots</title>
-<g id="a_proc~~initialize_5d_specify_knots~~CalledByGraph_node2"><a xlink:href=".././proc/bspline_5d_constructor_specify_knots.html" xlink:title="bspline_oo_module::bspline_5d_constructor_specify_knots">
+<g id="a_proc~~initialize_5d_specify_knots~~CalledByGraph_node2"><a xlink:href="../proc/bspline_5d_constructor_specify_knots.html" xlink:title="bspline_oo_module::bspline_5d_constructor_specify_knots">
 <polygon fill="#d94e8f" stroke="#d94e8f" points="538,-24 216,-24 216,0 538,0 538,-24"/>
 <text text-anchor="middle" x="377" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_5d_constructor_specify_knots</text>
 </a>
@@ -874,7 +793,7 @@ implementation in a submodule of an interface in a parent module.
 <!-- interface~bspline_5d -->
 <g id="proc~~initialize_5d_specify_knots~~CalledByGraph_node3" class="node">
 <title>interface~bspline_5d</title>
-<g id="a_proc~~initialize_5d_specify_knots~~CalledByGraph_node3"><a xlink:href=".././interface/bspline_5d.html" xlink:title="bspline_oo_module::bspline_5d">
+<g id="a_proc~~initialize_5d_specify_knots~~CalledByGraph_node3"><a xlink:href="../interface/bspline_5d.html" xlink:title="bspline_oo_module::bspline_5d">
 <polygon fill="#a7506f" stroke="#a7506f" points="180,-24 0,-24 0,0 180,0 180,-24"/>
 <text text-anchor="middle" x="90" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module::bspline_5d</text>
 </a>
@@ -892,17 +811,17 @@ implementation in a submodule of an interface in a parent module.
                   var panprocinitialize_5d_specify_knotsCalledByGraph = svgPanZoom('#procinitialize_5d_specify_knotsCalledByGraph',
                     {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
                   );
-                </script>        <div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div>
-          <div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog">
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
                   <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-              <div class="modal-body">
+                <div class="modal-body">
 <p>Nodes of different colours represent the following: </p>
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
@@ -910,11 +829,11 @@ implementation in a submodule of an interface in a parent module.
 <!-- Generated by graphviz version 2.43.0 (0)
  -->
 <!-- Title: Graph Key Pages: 1 -->
-<svg width="597pt" height="32pt"
- viewBox="0.00 0.00 596.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1.16 1.16) rotate(0) translate(4 28)">
 <title>Graph Key</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 592.5,-28 592.5,4 -4,4"/>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
 <!-- Subroutine -->
 <g id="node1" class="node">
 <title>Subroutine</title>
@@ -933,23 +852,29 @@ implementation in a submodule of an interface in a parent module.
 <polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
 <text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
 </g>
-<!-- Unknown Procedure Type -->
+<!-- Type Bound Procedure -->
 <g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
 <title>Unknown Procedure Type</title>
-<polygon fill="#777777" stroke="#777777" points="388.5,-24 243.5,-24 243.5,0 388.5,0 388.5,-24"/>
-<text text-anchor="middle" x="316" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
 </g>
 <!-- Program -->
-<g id="node5" class="node">
+<g id="node6" class="node">
 <title>Program</title>
-<polygon fill="#f0ad4e" stroke="#f0ad4e" points="465,-24 407,-24 407,0 465,0 465,-24"/>
-<text text-anchor="middle" x="436" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
 </g>
 <!-- This Page&#39;s Entity -->
-<g id="node6" class="node">
+<g id="node7" class="node">
 <title>This Page&#39;s Entity</title>
-<polygon fill="none" stroke="black" points="588.5,-24 483.5,-24 483.5,0 588.5,0 588.5,-24"/>
-<text text-anchor="middle" x="536" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
 </g>
 </g>
 </svg>
@@ -967,56 +892,25 @@ implementation in a submodule of an interface in a parent module.
     </div>
     <br>
 
-    <section class="visible-xs visible-sm hidden-md">
-        <h3>Contents</h3>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-    <div class="panel panel-primary">
-      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
-      <div class="list-group">
-        <a class="list-group-item" href="../proc/initialize_5d_specify_knots.html#src">initialize_5d_specify_knots</a>
-      </div>
-    </div>
-
-
-    </section>
-    <br class="visible-xs visible-sm hidden-md">
-
 
     
     
 
     
     
+
 
 
     
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
-    <div class="highlight"><pre><span></span><span class="w">    </span><span class="k">pure subroutine </span><span class="n">initialize_5d_specify_knots</span><span class="p">(</span><span class="n">me</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">q</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">fcn</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                                                </span><span class="n">kx</span><span class="p">,</span><span class="n">ky</span><span class="p">,</span><span class="n">kz</span><span class="p">,</span><span class="n">kq</span><span class="p">,</span><span class="n">kr</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                                                </span><span class="n">tx</span><span class="p">,</span><span class="n">ty</span><span class="p">,</span><span class="n">tz</span><span class="p">,</span><span class="n">tq</span><span class="p">,</span><span class="n">tr</span><span class="p">,</span><span class="n">iflag</span><span class="p">,</span><span class="n">extrap</span><span class="p">)</span><span class="w"></span>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">pure subroutine </span><span class="n">initialize_5d_specify_knots</span><span class="p">(</span><span class="n">me</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">q</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">fcn</span><span class="p">,&amp;</span>
+<span class="w">                                                </span><span class="n">kx</span><span class="p">,</span><span class="n">ky</span><span class="p">,</span><span class="n">kz</span><span class="p">,</span><span class="n">kq</span><span class="p">,</span><span class="n">kr</span><span class="p">,&amp;</span>
+<span class="w">                                                </span><span class="n">tx</span><span class="p">,</span><span class="n">ty</span><span class="p">,</span><span class="n">tz</span><span class="p">,</span><span class="n">tq</span><span class="p">,</span><span class="n">tr</span><span class="p">,</span><span class="n">iflag</span><span class="p">,</span><span class="n">extrap</span><span class="p">)</span>
 
 <span class="w">    </span><span class="k">implicit none</span>
 
-<span class="k">    class</span><span class="p">(</span><span class="n">bspline_5d</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w">            </span><span class="kd">::</span><span class="w"> </span><span class="n">me</span><span class="w"></span>
+<span class="k">    class</span><span class="p">(</span><span class="n">bspline_5d</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w">            </span><span class="kd">::</span><span class="w"> </span><span class="n">me</span>
 <span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">           </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span><span class="w">   </span><span class="c">!! `(nx)` array of \(x\) abcissae. Must be strictly increasing.</span>
 <span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">           </span><span class="kd">::</span><span class="w"> </span><span class="n">y</span><span class="w">   </span><span class="c">!! `(ny)` array of \(y\) abcissae. Must be strictly increasing.</span>
 <span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">           </span><span class="kd">::</span><span class="w"> </span><span class="n">z</span><span class="w">   </span><span class="c">!! `(nz)` array of \(z\) abcissae. Must be strictly increasing.</span>
@@ -1059,70 +953,70 @@ implementation in a submodule of an interface in a parent module.
 <span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">extrap</span><span class="w">            </span><span class="c">!! if true, then extrapolation is allowed</span>
 <span class="w">                                                      </span><span class="c">!! (default is false)</span>
 
-<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">nx</span><span class="p">,</span><span class="n">ny</span><span class="p">,</span><span class="n">nz</span><span class="p">,</span><span class="n">nq</span><span class="p">,</span><span class="n">nr</span><span class="w"></span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">nx</span><span class="p">,</span><span class="n">ny</span><span class="p">,</span><span class="n">nz</span><span class="p">,</span><span class="n">nq</span><span class="p">,</span><span class="n">nr</span>
 
-<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span><span class="w"></span>
+<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span>
 
-<span class="w">    </span><span class="n">nx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="w"></span>
-<span class="w">    </span><span class="n">ny</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="w"></span>
-<span class="w">    </span><span class="n">nz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="w"></span>
-<span class="w">    </span><span class="n">nq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="w"></span>
-<span class="w">    </span><span class="n">nr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="n">nx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span>
+<span class="w">    </span><span class="n">ny</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span>
+<span class="w">    </span><span class="n">nz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span>
+<span class="w">    </span><span class="n">nq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span>
+<span class="w">    </span><span class="n">nr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span>
 
-<span class="w">    </span><span class="k">call </span><span class="n">check_knot_vectors_sizes</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">nx</span><span class="p">,</span><span class="n">kx</span><span class="o">=</span><span class="n">kx</span><span class="p">,</span><span class="n">tx</span><span class="o">=</span><span class="n">tx</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                                  </span><span class="n">ny</span><span class="o">=</span><span class="n">ny</span><span class="p">,</span><span class="n">ky</span><span class="o">=</span><span class="n">ky</span><span class="p">,</span><span class="n">ty</span><span class="o">=</span><span class="n">ty</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                                  </span><span class="n">nz</span><span class="o">=</span><span class="n">nz</span><span class="p">,</span><span class="n">kz</span><span class="o">=</span><span class="n">kz</span><span class="p">,</span><span class="n">tz</span><span class="o">=</span><span class="n">tz</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                                  </span><span class="n">nq</span><span class="o">=</span><span class="n">nq</span><span class="p">,</span><span class="n">kq</span><span class="o">=</span><span class="n">kq</span><span class="p">,</span><span class="n">tq</span><span class="o">=</span><span class="n">tq</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                                  </span><span class="n">nr</span><span class="o">=</span><span class="n">nr</span><span class="p">,</span><span class="n">kr</span><span class="o">=</span><span class="n">kr</span><span class="p">,</span><span class="n">tr</span><span class="o">=</span><span class="n">tr</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                                  </span><span class="n">iflag</span><span class="o">=</span><span class="n">iflag</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="k">call </span><span class="n">check_knot_vectors_sizes</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">nx</span><span class="p">,</span><span class="n">kx</span><span class="o">=</span><span class="n">kx</span><span class="p">,</span><span class="n">tx</span><span class="o">=</span><span class="n">tx</span><span class="p">,&amp;</span>
+<span class="w">                                  </span><span class="n">ny</span><span class="o">=</span><span class="n">ny</span><span class="p">,</span><span class="n">ky</span><span class="o">=</span><span class="n">ky</span><span class="p">,</span><span class="n">ty</span><span class="o">=</span><span class="n">ty</span><span class="p">,&amp;</span>
+<span class="w">                                  </span><span class="n">nz</span><span class="o">=</span><span class="n">nz</span><span class="p">,</span><span class="n">kz</span><span class="o">=</span><span class="n">kz</span><span class="p">,</span><span class="n">tz</span><span class="o">=</span><span class="n">tz</span><span class="p">,&amp;</span>
+<span class="w">                                  </span><span class="n">nq</span><span class="o">=</span><span class="n">nq</span><span class="p">,</span><span class="n">kq</span><span class="o">=</span><span class="n">kq</span><span class="p">,</span><span class="n">tq</span><span class="o">=</span><span class="n">tq</span><span class="p">,&amp;</span>
+<span class="w">                                  </span><span class="n">nr</span><span class="o">=</span><span class="n">nr</span><span class="p">,</span><span class="n">kr</span><span class="o">=</span><span class="n">kr</span><span class="p">,</span><span class="n">tr</span><span class="o">=</span><span class="n">tr</span><span class="p">,&amp;</span>
+<span class="w">                                  </span><span class="n">iflag</span><span class="o">=</span><span class="n">iflag</span><span class="p">)</span>
 
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">iflag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0_ip</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
 
-<span class="k">        </span><span class="n">me</span><span class="p">%</span><span class="n">nx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nx</span><span class="w"></span>
-<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">ny</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ny</span><span class="w"></span>
-<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">nz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nz</span><span class="w"></span>
-<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">nq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nq</span><span class="w"></span>
-<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">nr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nr</span><span class="w"></span>
+<span class="k">        </span><span class="n">me</span><span class="p">%</span><span class="n">nx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nx</span>
+<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">ny</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ny</span>
+<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">nz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nz</span>
+<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">nq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nq</span>
+<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">nr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nr</span>
 
-<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">kx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kx</span><span class="w"></span>
-<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">ky</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ky</span><span class="w"></span>
-<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">kz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kz</span><span class="w"></span>
-<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">kq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kq</span><span class="w"></span>
-<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">kr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kr</span><span class="w"></span>
+<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">kx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kx</span>
+<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">ky</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ky</span>
+<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">kz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kz</span>
+<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">kq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kq</span>
+<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">kr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kr</span>
 
-<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">tx</span><span class="p">(</span><span class="n">nx</span><span class="o">+</span><span class="n">kx</span><span class="p">))</span><span class="w"></span>
-<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">ty</span><span class="p">(</span><span class="n">ny</span><span class="o">+</span><span class="n">ky</span><span class="p">))</span><span class="w"></span>
-<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">tz</span><span class="p">(</span><span class="n">nz</span><span class="o">+</span><span class="n">kz</span><span class="p">))</span><span class="w"></span>
-<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">tq</span><span class="p">(</span><span class="n">nq</span><span class="o">+</span><span class="n">kq</span><span class="p">))</span><span class="w"></span>
-<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">tr</span><span class="p">(</span><span class="n">nr</span><span class="o">+</span><span class="n">kr</span><span class="p">))</span><span class="w"></span>
-<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">bcoef</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span><span class="n">ny</span><span class="p">,</span><span class="n">nz</span><span class="p">,</span><span class="n">nq</span><span class="p">,</span><span class="n">nr</span><span class="p">))</span><span class="w"></span>
-<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">work_val_1</span><span class="p">(</span><span class="n">ky</span><span class="p">,</span><span class="n">kz</span><span class="p">,</span><span class="n">kq</span><span class="p">,</span><span class="n">kr</span><span class="p">))</span><span class="w"></span>
-<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">work_val_2</span><span class="p">(</span><span class="n">kz</span><span class="p">,</span><span class="n">kq</span><span class="p">,</span><span class="n">kr</span><span class="p">))</span><span class="w"></span>
-<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">work_val_3</span><span class="p">(</span><span class="n">kq</span><span class="p">,</span><span class="n">kr</span><span class="p">))</span><span class="w"></span>
-<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">work_val_4</span><span class="p">(</span><span class="n">kr</span><span class="p">))</span><span class="w"></span>
-<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">work_val_5</span><span class="p">(</span><span class="mi">3_ip</span><span class="o">*</span><span class="nb">max</span><span class="p">(</span><span class="n">kx</span><span class="p">,</span><span class="n">ky</span><span class="p">,</span><span class="n">kz</span><span class="p">,</span><span class="n">kq</span><span class="p">,</span><span class="n">kr</span><span class="p">)))</span><span class="w"></span>
+<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">tx</span><span class="p">(</span><span class="n">nx</span><span class="o">+</span><span class="n">kx</span><span class="p">))</span>
+<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">ty</span><span class="p">(</span><span class="n">ny</span><span class="o">+</span><span class="n">ky</span><span class="p">))</span>
+<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">tz</span><span class="p">(</span><span class="n">nz</span><span class="o">+</span><span class="n">kz</span><span class="p">))</span>
+<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">tq</span><span class="p">(</span><span class="n">nq</span><span class="o">+</span><span class="n">kq</span><span class="p">))</span>
+<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">tr</span><span class="p">(</span><span class="n">nr</span><span class="o">+</span><span class="n">kr</span><span class="p">))</span>
+<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">bcoef</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span><span class="n">ny</span><span class="p">,</span><span class="n">nz</span><span class="p">,</span><span class="n">nq</span><span class="p">,</span><span class="n">nr</span><span class="p">))</span>
+<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">work_val_1</span><span class="p">(</span><span class="n">ky</span><span class="p">,</span><span class="n">kz</span><span class="p">,</span><span class="n">kq</span><span class="p">,</span><span class="n">kr</span><span class="p">))</span>
+<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">work_val_2</span><span class="p">(</span><span class="n">kz</span><span class="p">,</span><span class="n">kq</span><span class="p">,</span><span class="n">kr</span><span class="p">))</span>
+<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">work_val_3</span><span class="p">(</span><span class="n">kq</span><span class="p">,</span><span class="n">kr</span><span class="p">))</span>
+<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">work_val_4</span><span class="p">(</span><span class="n">kr</span><span class="p">))</span>
+<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">work_val_5</span><span class="p">(</span><span class="mi">3_ip</span><span class="o">*</span><span class="nb">max</span><span class="p">(</span><span class="n">kx</span><span class="p">,</span><span class="n">ky</span><span class="p">,</span><span class="n">kz</span><span class="p">,</span><span class="n">kq</span><span class="p">,</span><span class="n">kr</span><span class="p">)))</span>
 
-<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">tx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tx</span><span class="w"></span>
-<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">ty</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ty</span><span class="w"></span>
-<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">tz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tz</span><span class="w"></span>
-<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">tq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tq</span><span class="w"></span>
-<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">tr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tr</span><span class="w"></span>
+<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">tx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tx</span>
+<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">ty</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ty</span>
+<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">tz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tz</span>
+<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">tq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tq</span>
+<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">tr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tr</span>
 
-<span class="w">        </span><span class="k">call </span><span class="n">db5ink</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">ny</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">nz</span><span class="p">,</span><span class="n">q</span><span class="p">,</span><span class="n">nq</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">nr</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                    </span><span class="n">fcn</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                    </span><span class="n">kx</span><span class="p">,</span><span class="n">ky</span><span class="p">,</span><span class="n">kz</span><span class="p">,</span><span class="n">kq</span><span class="p">,</span><span class="n">kr</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                    </span><span class="mi">1_ip</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                    </span><span class="n">me</span><span class="p">%</span><span class="n">tx</span><span class="p">,</span><span class="n">me</span><span class="p">%</span><span class="n">ty</span><span class="p">,</span><span class="n">me</span><span class="p">%</span><span class="n">tz</span><span class="p">,</span><span class="n">me</span><span class="p">%</span><span class="n">tq</span><span class="p">,</span><span class="n">me</span><span class="p">%</span><span class="n">tr</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                    </span><span class="n">me</span><span class="p">%</span><span class="n">bcoef</span><span class="p">,</span><span class="n">iflag</span><span class="p">)</span><span class="w"></span>
+<span class="w">        </span><span class="k">call </span><span class="n">db5ink</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">ny</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">nz</span><span class="p">,</span><span class="n">q</span><span class="p">,</span><span class="n">nq</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">nr</span><span class="p">,&amp;</span>
+<span class="w">                    </span><span class="n">fcn</span><span class="p">,&amp;</span>
+<span class="w">                    </span><span class="n">kx</span><span class="p">,</span><span class="n">ky</span><span class="p">,</span><span class="n">kz</span><span class="p">,</span><span class="n">kq</span><span class="p">,</span><span class="n">kr</span><span class="p">,&amp;</span>
+<span class="w">                    </span><span class="mi">1_ip</span><span class="p">,&amp;</span>
+<span class="w">                    </span><span class="n">me</span><span class="p">%</span><span class="n">tx</span><span class="p">,</span><span class="n">me</span><span class="p">%</span><span class="n">ty</span><span class="p">,</span><span class="n">me</span><span class="p">%</span><span class="n">tz</span><span class="p">,</span><span class="n">me</span><span class="p">%</span><span class="n">tq</span><span class="p">,</span><span class="n">me</span><span class="p">%</span><span class="n">tr</span><span class="p">,&amp;</span>
+<span class="w">                    </span><span class="n">me</span><span class="p">%</span><span class="n">bcoef</span><span class="p">,</span><span class="n">iflag</span><span class="p">)</span>
 
-<span class="w">        </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">set_extrap_flag</span><span class="p">(</span><span class="n">extrap</span><span class="p">)</span><span class="w"></span>
+<span class="w">        </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">set_extrap_flag</span><span class="p">(</span><span class="n">extrap</span><span class="p">)</span>
 
 <span class="w">    </span><span class="k">end if</span>
 
-<span class="k">    </span><span class="n">me</span><span class="p">%</span><span class="n">initialized</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iflag</span><span class="o">==</span><span class="mi">0_ip</span><span class="w"></span>
-<span class="w">    </span><span class="n">me</span><span class="p">%</span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iflag</span><span class="w"></span>
+<span class="k">    </span><span class="n">me</span><span class="p">%</span><span class="n">initialized</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iflag</span><span class="o">==</span><span class="mi">0_ip</span>
+<span class="w">    </span><span class="n">me</span><span class="p">%</span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iflag</span>
 
-<span class="w">    </span><span class="k">end subroutine </span><span class="n">initialize_5d_specify_knots</span><span class="w"></span>
+<span class="w">    </span><span class="k">end subroutine </span><span class="n">initialize_5d_specify_knots</span>
 </pre></div>
 
     </section>
@@ -1135,12 +1029,12 @@ implementation in a submodule of an interface in a parent module.
     </div> <!-- /container -->
     <footer>
       <div class="container">
-        <div class="row">
-          <div class="col-xs-6 col-md-6"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2023 
+        <div class="row justify-content-between">
+          <div class="col"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2024 
 </p>
           </div>
-          <div class="col-xs-6 col-md-6">
-            <p class="text-right">
+          <div class="col">
+            <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
             </p>
@@ -1150,17 +1044,12 @@ implementation in a submodule of an interface in a parent module.
       </div> <!-- /container -->
     </footer>
 
-    <!-- Bootstrap core JavaScript
-         ================================================== -->
-         <!-- Placed at the end of the document so the pages load faster -->
-    <!--
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        -->
-        <script src="../js/bootstrap.min.js"></script>
-        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-        <script src="../js/ie10-viewport-bug-workaround.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
 
-        <!-- MathJax JavaScript
+    <!-- MathJax JavaScript
              ================================================== -->
              <!-- Placed at the end of the document so the pages load faster -->
         <script type="text/x-mathjax-config">

@@ -1,3 +1,5 @@
+<!-- -*- mode: jinja2 -*- -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,81 +12,56 @@
 
     <title>dswap &ndash; bspline-fortran</title>
 
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link href="../css/pygments.css" rel="stylesheet">
     <link href="../css/font-awesome.min.css" rel="stylesheet">
     <link href="../css/local.css" rel="stylesheet">
       <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
-
-         <script src="../js/jquery-2.1.3.min.js"></script>
-         <script src="../js/svg-pan-zoom.min.js"></script>
-
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
   </head>
 
   <body>
 
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
           <a class="navbar-brand" href="../index.html">bspline-fortran </a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
-              <a href="#" class="dropdown-toggle"
-                 data-toggle="dropdown" role="button"
-                 aria-haspopup="true"
-                 aria-expanded="false">
-                 Contents <span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu">
-                    <li><a href="../lists/files.html">Source Files</a></li>
-                  <li><a href="../lists/modules.html">Modules</a></li>
-                  <li><a href="../lists/procedures.html">Procedures</a></li>
-                  <li><a href="../lists/absint.html">Abstract Interfaces</a></li>
-                  <li><a href="../lists/types.html">Derived Types</a></li>
-              </ul>
-            </li>
-                <li class="visible-xs hidden-sm visible-lg">
-                  <a href="../lists/files.html">Source Files</a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
                 </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/modules.html">Modules</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/procedures.html">Procedures</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/absint.html">Abstract Interfaces</a>
-              </li>
-              <li class="visible-xs hidden-sm visible-lg">
-                <a href="../lists/types.html">Derived Types</a>
-              </li>
-          </ul>
-            <form action="../search.html" class="navbar-form navbar-right" role="search">
-              <div class="form-group">
-                <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
               </div>
-              <!--
-                  <button type="submit" class="btn btn-default">Submit</button>
-                  -->
-            </form>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
 
     <div class="container">
   <div class="row">
@@ -92,33 +69,37 @@
       <small>Subroutine</small>
       
     </h1>
-      <div class="row" id="info-bar">
-    <div class="col-lg-12">
-      <div class="well well-sm">
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
         <ul class="list-inline" style="margin-bottom:0px;display:inline">
 
-          <li id="statements"><i class="fa fa-list-ol"></i>
-            <a data-toggle="tooltip"
-               data-placement="bottom" data-html="true"
-               title=" 0.7% of total for procedures.">42 statements</a>
-          </li>
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip"
+                 data-bs-placement="bottom" data-html="true"
+                 title=" 0.7% of total for procedures.">42 statements</a>
+            </li>
 
-            <li id="source-file">
+            <li class="list-inline-item" id="source-file">
               <i class="fa fa-code"></i>
               <a href="../src/bspline_blas_module.F90"> Source File</a>
             </li>
         </ul>
-        <ol class="breadcrumb in-well text-right">
-              <li><a href='../sourcefile/bspline_blas_module.f90.html'>bspline_blas_module.F90</a></li>
-              <li><a href='../module/bspline_blas_module.html'>bspline_blas_module</a></li>
-          <li class="active">dswap</li>
-        </ol>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/bspline_blas_module.f90.html'>bspline_blas_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/bspline_blas_module.html'>bspline_blas_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">dswap</li>
+          </ol>
+        </nav>
       </div>
     </div>
   </div>
   <script>
     $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
+    $('[data-bs-toggle="tooltip"]').tooltip()
     })
   </script>
 
@@ -147,8 +128,9 @@
   
   
   
-    <div class="panel panel-primary">
-      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
       <div class="list-group">
         <a class="list-group-item" href="../proc/dswap.html#src">dswap</a>
       </div>
@@ -172,16 +154,16 @@ uses unrolled loops for increments equal to 1.</p>
         <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-n~22"></span>
+              <span class="anchor" id="variable-n~33"></span>
               integer(kind=ip)
             </td>
 <td></td>
@@ -196,7 +178,7 @@ uses unrolled loops for increments equal to 1.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-dx~8"></span>
+              <span class="anchor" id="variable-dx~5"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -211,7 +193,7 @@ uses unrolled loops for increments equal to 1.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-incx~8"></span>
+              <span class="anchor" id="variable-incx~4"></span>
               integer(kind=ip)
             </td>
 <td></td>
@@ -226,7 +208,7 @@ uses unrolled loops for increments equal to 1.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-dy~5"></span>
+              <span class="anchor" id="variable-dy~4"></span>
               real(kind=wp)
             </td>
 <td></td>
@@ -241,7 +223,7 @@ uses unrolled loops for increments equal to 1.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-incy~4"></span>
+              <span class="anchor" id="variable-incy~3"></span>
               integer(kind=ip)
             </td>
 <td></td>
@@ -258,11 +240,11 @@ uses unrolled loops for increments equal to 1.</p>
   </table>
 
     <br>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-  <h3 class="panel-title">Called by</h3>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
   <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -283,7 +265,7 @@ uses unrolled loops for increments equal to 1.</p>
 <!-- proc~dh12 -->
 <g id="proc~~dswap~~CalledByGraph_node2" class="node">
 <title>proc~dh12</title>
-<g id="a_proc~~dswap~~CalledByGraph_node2"><a xlink:href=".././proc/dh12.html" xlink:title="bspline_defc_module::dh12">
+<g id="a_proc~~dswap~~CalledByGraph_node2"><a xlink:href="../proc/dh12.html" xlink:title="bspline_defc_module::dh12">
 <polygon fill="#d9534f" stroke="#d9534f" points="1773,-208 1613,-208 1613,-184 1773,-184 1773,-208"/>
 <text text-anchor="middle" x="1693" y="-193.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_defc_module::dh12</text>
 </a>
@@ -298,7 +280,7 @@ uses unrolled loops for increments equal to 1.</p>
 <!-- proc~dlsei -->
 <g id="proc~~dswap~~CalledByGraph_node3" class="node">
 <title>proc~dlsei</title>
-<g id="a_proc~~dswap~~CalledByGraph_node3"><a xlink:href=".././proc/dlsei.html" xlink:title="bspline_defc_module::dlsei">
+<g id="a_proc~~dswap~~CalledByGraph_node3"><a xlink:href="../proc/dlsei.html" xlink:title="bspline_defc_module::dlsei">
 <polygon fill="#d9534f" stroke="#d9534f" points="565.5,-229 408.5,-229 408.5,-205 565.5,-205 565.5,-229"/>
 <text text-anchor="middle" x="487" y="-214.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_defc_module::dlsei</text>
 </a>
@@ -319,7 +301,7 @@ uses unrolled loops for increments equal to 1.</p>
 <!-- proc~dlsi -->
 <g id="proc~~dswap~~CalledByGraph_node4" class="node">
 <title>proc~dlsi</title>
-<g id="a_proc~~dswap~~CalledByGraph_node4"><a xlink:href=".././proc/dlsi.html" xlink:title="bspline_defc_module::dlsi">
+<g id="a_proc~~dswap~~CalledByGraph_node4"><a xlink:href="../proc/dlsi.html" xlink:title="bspline_defc_module::dlsi">
 <polygon fill="#d9534f" stroke="#d9534f" points="760,-238 609,-238 609,-214 760,-214 760,-238"/>
 <text text-anchor="middle" x="684.5" y="-223.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_defc_module::dlsi</text>
 </a>
@@ -346,7 +328,7 @@ uses unrolled loops for increments equal to 1.</p>
 <!-- proc~dhfti -->
 <g id="proc~~dswap~~CalledByGraph_node10" class="node">
 <title>proc~dhfti</title>
-<g id="a_proc~~dswap~~CalledByGraph_node10"><a xlink:href=".././proc/dhfti.html" xlink:title="bspline_defc_module::dhfti">
+<g id="a_proc~~dswap~~CalledByGraph_node10"><a xlink:href="../proc/dhfti.html" xlink:title="bspline_defc_module::dhfti">
 <polygon fill="#d9534f" stroke="#d9534f" points="1158,-242 1001,-242 1001,-218 1158,-218 1158,-242"/>
 <text text-anchor="middle" x="1079.5" y="-227.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_defc_module::dhfti</text>
 </a>
@@ -361,7 +343,7 @@ uses unrolled loops for increments equal to 1.</p>
 <!-- proc~dlpdp -->
 <g id="proc~~dswap~~CalledByGraph_node14" class="node">
 <title>proc~dlpdp</title>
-<g id="a_proc~~dswap~~CalledByGraph_node14"><a xlink:href=".././proc/dlpdp.html" xlink:title="bspline_defc_module::dlpdp">
+<g id="a_proc~~dswap~~CalledByGraph_node14"><a xlink:href="../proc/dlpdp.html" xlink:title="bspline_defc_module::dlpdp">
 <polygon fill="#d9534f" stroke="#d9534f" points="959,-201 796,-201 796,-177 959,-177 959,-201"/>
 <text text-anchor="middle" x="877.5" y="-186.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_defc_module::dlpdp</text>
 </a>
@@ -376,7 +358,7 @@ uses unrolled loops for increments equal to 1.</p>
 <!-- proc~dwnlit -->
 <g id="proc~~dswap~~CalledByGraph_node5" class="node">
 <title>proc~dwnlit</title>
-<g id="a_proc~~dswap~~CalledByGraph_node5"><a xlink:href=".././proc/dwnlit.html" xlink:title="bspline_defc_module::dwnlit">
+<g id="a_proc~~dswap~~CalledByGraph_node5"><a xlink:href="../proc/dwnlit.html" xlink:title="bspline_defc_module::dwnlit">
 <polygon fill="#d9534f" stroke="#d9534f" points="1573,-90 1409,-90 1409,-66 1573,-66 1573,-90"/>
 <text text-anchor="middle" x="1491" y="-75.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_defc_module::dwnlit</text>
 </a>
@@ -397,7 +379,7 @@ uses unrolled loops for increments equal to 1.</p>
 <!-- proc~dwnlt3 -->
 <g id="proc~~dswap~~CalledByGraph_node7" class="node">
 <title>proc~dwnlt3</title>
-<g id="a_proc~~dswap~~CalledByGraph_node7"><a xlink:href=".././proc/dwnlt3.html" xlink:title="bspline_defc_module::dwnlt3">
+<g id="a_proc~~dswap~~CalledByGraph_node7"><a xlink:href="../proc/dwnlt3.html" xlink:title="bspline_defc_module::dwnlt3">
 <polygon fill="#d9534f" stroke="#d9534f" points="1777,-128 1609,-128 1609,-104 1777,-104 1777,-128"/>
 <text text-anchor="middle" x="1693" y="-113.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_defc_module::dwnlt3</text>
 </a>
@@ -412,7 +394,7 @@ uses unrolled loops for increments equal to 1.</p>
 <!-- proc~dwnlsm -->
 <g id="proc~~dswap~~CalledByGraph_node6" class="node">
 <title>proc~dwnlsm</title>
-<g id="a_proc~~dswap~~CalledByGraph_node6"><a xlink:href=".././proc/dwnlsm.html" xlink:title="bspline_defc_module::dwnlsm">
+<g id="a_proc~~dswap~~CalledByGraph_node6"><a xlink:href="../proc/dwnlsm.html" xlink:title="bspline_defc_module::dwnlsm">
 <polygon fill="#d9534f" stroke="#d9534f" points="1373,-139 1200,-139 1200,-115 1373,-115 1373,-139"/>
 <text text-anchor="middle" x="1286.5" y="-124.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_defc_module::dwnlsm</text>
 </a>
@@ -445,7 +427,7 @@ uses unrolled loops for increments equal to 1.</p>
 <!-- proc~dbndac -->
 <g id="proc~~dswap~~CalledByGraph_node8" class="node">
 <title>proc~dbndac</title>
-<g id="a_proc~~dswap~~CalledByGraph_node8"><a xlink:href=".././proc/dbndac.html" xlink:title="bspline_defc_module::dbndac">
+<g id="a_proc~~dswap~~CalledByGraph_node8"><a xlink:href="../proc/dbndac.html" xlink:title="bspline_defc_module::dbndac">
 <polygon fill="#d9534f" stroke="#d9534f" points="573,-178 401,-178 401,-154 573,-154 573,-178"/>
 <text text-anchor="middle" x="487" y="-163.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_defc_module::dbndac</text>
 </a>
@@ -460,7 +442,7 @@ uses unrolled loops for increments equal to 1.</p>
 <!-- proc~dfcmn -->
 <g id="proc~~dswap~~CalledByGraph_node9" class="node">
 <title>proc~dfcmn</title>
-<g id="a_proc~~dswap~~CalledByGraph_node9"><a xlink:href=".././proc/dfcmn.html" xlink:title="bspline_defc_module::dfcmn">
+<g id="a_proc~~dswap~~CalledByGraph_node9"><a xlink:href="../proc/dfcmn.html" xlink:title="bspline_defc_module::dfcmn">
 <polygon fill="#d9534f" stroke="#d9534f" points="361.5,-225 195.5,-225 195.5,-201 361.5,-201 361.5,-225"/>
 <text text-anchor="middle" x="278.5" y="-210.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_defc_module::dfcmn</text>
 </a>
@@ -487,7 +469,7 @@ uses unrolled loops for increments equal to 1.</p>
 <!-- proc~dwnnls -->
 <g id="proc~~dswap~~CalledByGraph_node11" class="node">
 <title>proc~dwnnls</title>
-<g id="a_proc~~dswap~~CalledByGraph_node11"><a xlink:href=".././proc/dwnnls.html" xlink:title="bspline_defc_module::dwnnls">
+<g id="a_proc~~dswap~~CalledByGraph_node11"><a xlink:href="../proc/dwnnls.html" xlink:title="bspline_defc_module::dwnnls">
 <polygon fill="#d9534f" stroke="#d9534f" points="1164,-200 995,-200 995,-176 1164,-176 1164,-200"/>
 <text text-anchor="middle" x="1079.5" y="-185.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_defc_module::dwnnls</text>
 </a>
@@ -502,7 +484,7 @@ uses unrolled loops for increments equal to 1.</p>
 <!-- proc~defcmn -->
 <g id="proc~~dswap~~CalledByGraph_node12" class="node">
 <title>proc~defcmn</title>
-<g id="a_proc~~dswap~~CalledByGraph_node12"><a xlink:href=".././proc/defcmn.html" xlink:title="bspline_defc_module::defcmn">
+<g id="a_proc~~dswap~~CalledByGraph_node12"><a xlink:href="../proc/defcmn.html" xlink:title="bspline_defc_module::defcmn">
 <polygon fill="#d9534f" stroke="#d9534f" points="365,-178 192,-178 192,-154 365,-154 365,-178"/>
 <text text-anchor="middle" x="278.5" y="-163.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_defc_module::defcmn</text>
 </a>
@@ -517,7 +499,7 @@ uses unrolled loops for increments equal to 1.</p>
 <!-- proc~dfc -->
 <g id="proc~~dswap~~CalledByGraph_node13" class="node">
 <title>proc~dfc</title>
-<g id="a_proc~~dswap~~CalledByGraph_node13"><a xlink:href=".././proc/dfc.html" xlink:title="bspline_defc_module::dfc">
+<g id="a_proc~~dswap~~CalledByGraph_node13"><a xlink:href="../proc/dfc.html" xlink:title="bspline_defc_module::dfc">
 <polygon fill="#d9534f" stroke="#d9534f" points="152.5,-225 3.5,-225 3.5,-201 152.5,-201 152.5,-225"/>
 <text text-anchor="middle" x="78" y="-210.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_defc_module::dfc</text>
 </a>
@@ -538,7 +520,7 @@ uses unrolled loops for increments equal to 1.</p>
 <!-- proc~defc -->
 <g id="proc~~dswap~~CalledByGraph_node15" class="node">
 <title>proc~defc</title>
-<g id="a_proc~~dswap~~CalledByGraph_node15"><a xlink:href=".././proc/defc.html" xlink:title="bspline_defc_module::defc">
+<g id="a_proc~~dswap~~CalledByGraph_node15"><a xlink:href="../proc/defc.html" xlink:title="bspline_defc_module::defc">
 <polygon fill="#d9534f" stroke="#d9534f" points="156,-178 0,-178 0,-154 156,-154 156,-178"/>
 <text text-anchor="middle" x="78" y="-163.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_defc_module::defc</text>
 </a>
@@ -556,17 +538,17 @@ uses unrolled loops for increments equal to 1.</p>
                   var panprocdswapCalledByGraph = svgPanZoom('#procdswapCalledByGraph',
                     {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
                   );
-                </script>        <div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div>
-          <div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog">
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
                   <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-              <div class="modal-body">
+                <div class="modal-body">
 <p>Nodes of different colours represent the following: </p>
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
@@ -574,11 +556,11 @@ uses unrolled loops for increments equal to 1.</p>
 <!-- Generated by graphviz version 2.43.0 (0)
  -->
 <!-- Title: Graph Key Pages: 1 -->
-<svg width="597pt" height="32pt"
- viewBox="0.00 0.00 596.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1.16 1.16) rotate(0) translate(4 28)">
 <title>Graph Key</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 592.5,-28 592.5,4 -4,4"/>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
 <!-- Subroutine -->
 <g id="node1" class="node">
 <title>Subroutine</title>
@@ -597,23 +579,29 @@ uses unrolled loops for increments equal to 1.</p>
 <polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
 <text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
 </g>
-<!-- Unknown Procedure Type -->
+<!-- Type Bound Procedure -->
 <g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
 <title>Unknown Procedure Type</title>
-<polygon fill="#777777" stroke="#777777" points="388.5,-24 243.5,-24 243.5,0 388.5,0 388.5,-24"/>
-<text text-anchor="middle" x="316" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
 </g>
 <!-- Program -->
-<g id="node5" class="node">
+<g id="node6" class="node">
 <title>Program</title>
-<polygon fill="#f0ad4e" stroke="#f0ad4e" points="465,-24 407,-24 407,0 465,0 465,-24"/>
-<text text-anchor="middle" x="436" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
 </g>
 <!-- This Page&#39;s Entity -->
-<g id="node6" class="node">
+<g id="node7" class="node">
 <title>This Page&#39;s Entity</title>
-<polygon fill="none" stroke="black" points="588.5,-24 483.5,-24 483.5,0 588.5,0 588.5,-24"/>
-<text text-anchor="middle" x="536" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
 </g>
 </g>
 </svg>
@@ -631,101 +619,70 @@ implementation in a submodule of an interface in a parent module.
     </div>
     <br>
 
-    <section class="visible-xs visible-sm hidden-md">
-        <h3>Contents</h3>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-    <div class="panel panel-primary">
-      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
-      <div class="list-group">
-        <a class="list-group-item" href="../proc/dswap.html#src">dswap</a>
-      </div>
-    </div>
-
-
-    </section>
-    <br class="visible-xs visible-sm hidden-md">
-
 
     
     
 
     
     
+
 
 
     
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
-    <div class="highlight"><pre><span></span><span class="w">   </span><span class="k">subroutine </span><span class="n">dswap</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">dx</span><span class="p">,</span><span class="w"> </span><span class="n">incx</span><span class="p">,</span><span class="w"> </span><span class="n">dy</span><span class="p">,</span><span class="w"> </span><span class="n">incy</span><span class="p">)</span><span class="w"></span>
+    <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">subroutine </span><span class="n">dswap</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">dx</span><span class="p">,</span><span class="w"> </span><span class="n">incx</span><span class="p">,</span><span class="w"> </span><span class="n">dy</span><span class="p">,</span><span class="w"> </span><span class="n">incy</span><span class="p">)</span>
 <span class="w">         </span><span class="c">!! DSWAP interchanges two vectors.</span>
 <span class="w">         </span><span class="c">!! uses unrolled loops for increments equal to 1.</span>
 
-<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">incx</span><span class="p">,</span><span class="w"> </span><span class="n">incy</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="w"></span>
-<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">dx</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="n">dy</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">incx</span><span class="p">,</span><span class="w"> </span><span class="n">incy</span><span class="p">,</span><span class="w"> </span><span class="n">n</span>
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">dx</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="n">dy</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
 
-<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">dtemp</span><span class="w"></span>
-<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">ix</span><span class="p">,</span><span class="w"> </span><span class="n">iy</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">mp1</span><span class="w"></span>
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">dtemp</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">ix</span><span class="p">,</span><span class="w"> </span><span class="n">iy</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">mp1</span>
 
 <span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">0_ip</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
-<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">incx</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1_ip</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="n">incy</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w"></span>
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">incx</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1_ip</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="n">incy</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
 <span class="w">         </span><span class="c">! code for both increments equal to 1</span>
 <span class="w">         </span><span class="c">! clean-up loop</span>
-<span class="w">         </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">mod</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="mi">3_ip</span><span class="p">)</span><span class="w"></span>
+<span class="w">         </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">mod</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="mi">3_ip</span><span class="p">)</span>
 <span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="mi">0_ip</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
-<span class="k">            do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="w"></span>
-<span class="w">               </span><span class="n">dtemp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dx</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"></span>
-<span class="w">               </span><span class="n">dx</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dy</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"></span>
-<span class="w">               </span><span class="n">dy</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dtemp</span><span class="w"></span>
+<span class="k">            do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">,</span><span class="w"> </span><span class="n">m</span>
+<span class="w">               </span><span class="n">dtemp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dx</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="w">               </span><span class="n">dx</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dy</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="w">               </span><span class="n">dy</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dtemp</span>
 <span class="w">            </span><span class="k">end do</span>
 <span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">3_ip</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
 <span class="k">         end if</span>
-<span class="k">         </span><span class="n">mp1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span><span class="w"></span>
-<span class="w">         </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mp1</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="mi">3_ip</span><span class="w"></span>
-<span class="w">            </span><span class="n">dtemp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dx</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"></span>
-<span class="w">            </span><span class="n">dx</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dy</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"></span>
-<span class="w">            </span><span class="n">dy</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dtemp</span><span class="w"></span>
-<span class="w">            </span><span class="n">dtemp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dx</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">)</span><span class="w"></span>
-<span class="w">            </span><span class="n">dx</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dy</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">)</span><span class="w"></span>
-<span class="w">            </span><span class="n">dy</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dtemp</span><span class="w"></span>
-<span class="w">            </span><span class="n">dtemp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dx</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2_ip</span><span class="p">)</span><span class="w"></span>
-<span class="w">            </span><span class="n">dx</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2_ip</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dy</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2_ip</span><span class="p">)</span><span class="w"></span>
-<span class="w">            </span><span class="n">dy</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2_ip</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dtemp</span><span class="w"></span>
+<span class="k">         </span><span class="n">mp1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">         </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mp1</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="mi">3_ip</span>
+<span class="w">            </span><span class="n">dtemp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dx</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="w">            </span><span class="n">dx</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dy</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="w">            </span><span class="n">dy</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dtemp</span>
+<span class="w">            </span><span class="n">dtemp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dx</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">)</span>
+<span class="w">            </span><span class="n">dx</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dy</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">)</span>
+<span class="w">            </span><span class="n">dy</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dtemp</span>
+<span class="w">            </span><span class="n">dtemp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dx</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2_ip</span><span class="p">)</span>
+<span class="w">            </span><span class="n">dx</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2_ip</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dy</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2_ip</span><span class="p">)</span>
+<span class="w">            </span><span class="n">dy</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2_ip</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dtemp</span>
 <span class="w">         </span><span class="k">end do</span>
-<span class="k">      else</span><span class="w"></span>
+<span class="k">      else</span>
 <span class="w">         </span><span class="c">! code for unequal increments or equal increments not equal</span>
 <span class="w">         </span><span class="c">! to 1</span>
-<span class="w">         </span><span class="n">ix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
-<span class="w">         </span><span class="n">iy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
-<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">incx</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0_ip</span><span class="p">)</span><span class="w"> </span><span class="n">ix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="o">-</span><span class="n">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">)</span><span class="o">*</span><span class="n">incx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span><span class="w"></span>
-<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">incy</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0_ip</span><span class="p">)</span><span class="w"> </span><span class="n">iy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="o">-</span><span class="n">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">)</span><span class="o">*</span><span class="n">incy</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span><span class="w"></span>
-<span class="w">         </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="w"></span>
-<span class="w">            </span><span class="n">dtemp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dx</span><span class="p">(</span><span class="n">ix</span><span class="p">)</span><span class="w"></span>
-<span class="w">            </span><span class="n">dx</span><span class="p">(</span><span class="n">ix</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dy</span><span class="p">(</span><span class="n">iy</span><span class="p">)</span><span class="w"></span>
-<span class="w">            </span><span class="n">dy</span><span class="p">(</span><span class="n">iy</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dtemp</span><span class="w"></span>
-<span class="w">            </span><span class="n">ix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ix</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">incx</span><span class="w"></span>
-<span class="w">            </span><span class="n">iy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iy</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">incy</span><span class="w"></span>
+<span class="w">         </span><span class="n">ix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">         </span><span class="n">iy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">incx</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0_ip</span><span class="p">)</span><span class="w"> </span><span class="n">ix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="o">-</span><span class="n">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">)</span><span class="o">*</span><span class="n">incx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">incy</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0_ip</span><span class="p">)</span><span class="w"> </span><span class="n">iy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="o">-</span><span class="n">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">)</span><span class="o">*</span><span class="n">incy</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">         </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">,</span><span class="w"> </span><span class="n">n</span>
+<span class="w">            </span><span class="n">dtemp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dx</span><span class="p">(</span><span class="n">ix</span><span class="p">)</span>
+<span class="w">            </span><span class="n">dx</span><span class="p">(</span><span class="n">ix</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dy</span><span class="p">(</span><span class="n">iy</span><span class="p">)</span>
+<span class="w">            </span><span class="n">dy</span><span class="p">(</span><span class="n">iy</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dtemp</span>
+<span class="w">            </span><span class="n">ix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ix</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">incx</span>
+<span class="w">            </span><span class="n">iy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iy</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">incy</span>
 <span class="w">         </span><span class="k">end do</span>
 <span class="k">      end if</span>
 
-<span class="k">   end subroutine </span><span class="n">dswap</span><span class="w"></span>
+<span class="k">   end subroutine </span><span class="n">dswap</span>
 </pre></div>
 
     </section>
@@ -738,12 +695,12 @@ implementation in a submodule of an interface in a parent module.
     </div> <!-- /container -->
     <footer>
       <div class="container">
-        <div class="row">
-          <div class="col-xs-6 col-md-6"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2023 
+        <div class="row justify-content-between">
+          <div class="col"><p>bspline-fortran was developed by Jacob Williams<br>&copy; 2024 
 </p>
           </div>
-          <div class="col-xs-6 col-md-6">
-            <p class="text-right">
+          <div class="col">
+            <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
             </p>
@@ -753,17 +710,12 @@ implementation in a submodule of an interface in a parent module.
       </div> <!-- /container -->
     </footer>
 
-    <!-- Bootstrap core JavaScript
-         ================================================== -->
-         <!-- Placed at the end of the document so the pages load faster -->
-    <!--
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        -->
-        <script src="../js/bootstrap.min.js"></script>
-        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-        <script src="../js/ie10-viewport-bug-workaround.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
 
-        <!-- MathJax JavaScript
+    <!-- MathJax JavaScript
              ================================================== -->
              <!-- Placed at the end of the document so the pages load faster -->
         <script type="text/x-mathjax-config">
