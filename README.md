@@ -4,7 +4,7 @@
 Multidimensional B-Spline Interpolation of Data on a Regular Grid.
 
 ## Status
-
+[![Language](https://img.shields.io/badge/-Fortran-734f96?logo=fortran&logoColor=white)](https://github.com/topics/fortran)
 [![GitHub release](https://img.shields.io/github/release/jacobwilliams/bspline-fortran.svg)](https://github.com/jacobwilliams/bspline-fortran/releases/latest)
 [![Build Status](https://github.com/jacobwilliams/bspline-fortran/actions/workflows/CI.yml/badge.svg)](https://github.com/jacobwilliams/bspline-fortran/actions)
 [![codecov](https://codecov.io/gh/jacobwilliams/bspline-fortran/branch/master/graph/badge.svg)](https://codecov.io/gh/jacobwilliams/bspline-fortran)
@@ -184,7 +184,7 @@ However, note that an external BLAS can only be used if the library is compiled 
 
 ## Documentation
 
-The latest API documentation can be found [here](https://jacobwilliams.github.io/bspline-fortran/). This was generated from the source code using [FORD](https://github.com/Fortran-FOSS-Programmers/ford) (i.e. by running `ford bspline-fortran.md`).
+The latest API documentation can be found [here](https://jacobwilliams.github.io/bspline-fortran/). This was generated from the source code using [FORD](https://github.com/Fortran-FOSS-Programmers/ford) (i.e. by running `ford ford.md`).
 
 ## License
 

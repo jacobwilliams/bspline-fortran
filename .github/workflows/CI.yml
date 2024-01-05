@@ -76,7 +76,7 @@ jobs:
         files: build/coverage/coverage.info
 
     - name: Build documentation
-      run: ford ./bspline-fortran.md
+      run: ford ./ford.md
 
     - name: Deploy Documentation
       if: github.ref == 'refs/heads/master'
