@@ -1,4 +1,4 @@
-![bspline-fortran](/media/bspline-fortran.png)
+![bspline-fortran](media/bspline-fortran.png)
 ============
 
 Multidimensional B-Spline Interpolation of Data on a Regular Grid.
@@ -190,8 +190,13 @@ The latest API documentation can be found [here](https://jacobwilliams.github.io
 
 The bspline-fortran source code and related files and documentation are distributed under a permissive free software [license](https://github.com/jacobwilliams/bspline-fortran/blob/master/LICENSE) (BSD-style).
 
+### Keywords
+
+* Bspline, spline, interpolation, data fitting, multivariate interpolation, multidimensional interpolation, integration
+
 ## See also
 
+ * This library includes the public domain DBSPLIN and DTENSBS code from the [NIST Core Math Library](http://www.nist.gov/itl/math/mcsd-software.cfm) (CMLIB).
  * [SPLPAK](https://github.com/jacobwilliams/splpak) Multidimensional least-squares cubic spline fitting
  * [FINTERP](https://github.com/jacobwilliams/finterp) Multidimensional Linear Interpolation with Modern Fortran
  * [PCHIP](https://github.com/jacobwilliams/PCHIP) Piecewise Cubic Hermite Interpolation.
