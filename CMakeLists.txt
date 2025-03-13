@@ -11,6 +11,8 @@ project(bspline-fortran NONE)
 
 # Define build options
 option(BSPLINE_BUILD_TESTING "Build the test programs" ON)
+option(BSPLINE_BUILD_SHARED_LIBS "Build shared libraries" ON)
+option(BSPLINE_BUILD_STATIC_LIBS "Build static libraries" ON)
 
 # Real and Integer kinds
 SET(BSPLINE_REAL_KIND "REAL64" CACHE STRING "Real kind parameter")
@@ -73,32 +75,43 @@ else()
     "${ABS_LIB_INSTALL_DIR}" )
 endif()
 
-add_library( ${LIB_NAME}        SHARED ${SOURCES} )
-add_library( ${LIB_NAME}-static STATIC ${SOURCES} )
+if(BSPLINE_BUILD_SHARED_LIBS)
+  add_library( ${LIB_NAME}        SHARED ${SOURCES} )
 
-set_target_properties(${LIB_NAME}-static
-  PROPERTIES
-  OUTPUT_NAME "${LIB_NAME}"
-  if(NOT MSVC_IDE)
-    PREFIX lib
-  endif()
-  ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-  Fortran_MODULE_DIRECTORY ${MODULE_DIR})
+  set_target_properties(${LIB_NAME}
+    PROPERTIES
+    OUTPUT_NAME "${LIB_NAME}"
+    if(NOT MSVC_IDE)
+      PREFIX lib
+    endif()
+    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+    Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR})
 
-set_target_properties(${LIB_NAME}
-  PROPERTIES
-  OUTPUT_NAME "${LIB_NAME}"
-  if(NOT MSVC_IDE)
-    PREFIX lib
-  endif()
-  LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-  Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR})
+  # install library:
+  install( TARGETS ${LIB_NAME}
+  LIBRARY DESTINATION "${INSTALL_LIB_DIR}"
+  ARCHIVE DESTINATION "${INSTALL_LIB_DIR}" )
+  install( DIRECTORY "${MODULE_DIR}/" DESTINATION "${INSTALL_MOD_DIR}" )
+endif()
 
-# install library:
-install( TARGETS ${LIB_NAME} ${LIB_NAME}-static
-          LIBRARY DESTINATION "${INSTALL_LIB_DIR}"
-          ARCHIVE DESTINATION "${INSTALL_LIB_DIR}" )
-install( DIRECTORY "${MODULE_DIR}/" DESTINATION "${INSTALL_MOD_DIR}" )
+if(BSPLINE_BUILD_STATIC_LIBS)
+  add_library( ${LIB_NAME}-static STATIC ${SOURCES} )
+
+  set_target_properties(${LIB_NAME}-static
+    PROPERTIES
+    OUTPUT_NAME "${LIB_NAME}"
+    if(NOT MSVC_IDE)
+      PREFIX lib
+    endif()
+    ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+    Fortran_MODULE_DIRECTORY ${MODULE_DIR})
+
+  # install library:
+  install( TARGETS ${LIB_NAME}-static
+  LIBRARY DESTINATION "${INSTALL_LIB_DIR}"
+  ARCHIVE DESTINATION "${INSTALL_LIB_DIR}" )
+  install( DIRECTORY "${MODULE_DIR}/" DESTINATION "${INSTALL_MOD_DIR}" )
+endif()
 
 # Windows settings:
 if(MSVC_IDE)
@@ -123,7 +136,14 @@ if(BSPLINE_BUILD_TESTING)
           test_oo
           test_regrid)
       add_executable(${prog_name} test/${prog_name}.f90)
-      target_link_libraries(${prog_name} ${LIB_NAME}-static)
+      if(BSPLINE_BUILD_STATIC_LIBS)
+        target_link_libraries(${prog_name} ${LIB_NAME}-static)
+        target_include_directories(${prog_name} PRIVATE ${MODULE_DIR})
+      elseif(BSPLINE_BUILD_SHARED_LIBS)
+        target_link_libraries(${prog_name} ${LIB_NAME})
+      else()
+        message(FATAL_ERROR "No libraries to link the test programs to. Either shared or static libraries must be built.")
+      endif()
       add_test(NAME ${prog_name}
               COMMAND ${prog_name})
   endforeach()
