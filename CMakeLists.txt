@@ -9,6 +9,9 @@ set( CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/install"
 
 project(bspline-fortran NONE)
 
+# Define build options
+option(BSPLINE_BUILD_TESTING "Build the test programs" ON)
+
 # Real and Integer kinds
 SET(BSPLINE_REAL_KIND "REAL64" CACHE STRING "Real kind parameter")
 SET_PROPERTY(CACHE BSPLINE_REAL_KIND PROPERTY STRINGS REAL32 REAL64 REAL128)
@@ -103,23 +106,25 @@ if(MSVC_IDE)
    SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fpp")
 endif()
 
-# Add ctest commands, to build all test programs (that do not depend on pyplot_module)
-# Thus, tests can all be run with `make test`
-enable_testing()
-foreach(prog_name
-        # bspline_extrap_test
-        bspline_test_2
-        bspline_test
-        # dbint4_test
-        # knot_tests
-        # speed_test
-        # speed_test_oo
-        stack_size_test_oo
-        test_integrate
-        test_oo
-        test_regrid)
-    add_executable(${prog_name} test/${prog_name}.f90)
-    target_link_libraries(${prog_name} ${LIB_NAME}-static)
-    add_test(NAME ${prog_name}
-             COMMAND ${prog_name})
-endforeach()
+if(BSPLINE_BUILD_TESTING)
+  # Add ctest commands, to build all test programs (that do not depend on pyplot_module)
+  # Thus, tests can all be run with `make test`
+  enable_testing()
+  foreach(prog_name
+          # bspline_extrap_test
+          bspline_test_2
+          bspline_test
+          # dbint4_test
+          # knot_tests
+          # speed_test
+          # speed_test_oo
+          stack_size_test_oo
+          test_integrate
+          test_oo
+          test_regrid)
+      add_executable(${prog_name} test/${prog_name}.f90)
+      target_link_libraries(${prog_name} ${LIB_NAME}-static)
+      add_test(NAME ${prog_name}
+              COMMAND ${prog_name})
+  endforeach()
+endif()
