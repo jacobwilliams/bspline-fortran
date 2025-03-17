@@ -155,21 +155,19 @@ bspline-fortran = { git="https://github.com/jacobwilliams/bspline-fortran.git", 
 A basic CMake configuration file is also included. For example, to build a static library:
 
 ```bash
- mkdir build
- cd build
- cmake ..
- make
+ cmake -S. -Bbuild
+ cmake --build build
 ```
 
-Or, to build a shared library:
+Or, to build a shared library, replace the first CMake command with:
 
 ```bash
- cmake -DBUILD_SHARED_LIBS=ON ..
+ cmake -S. -Bbuild -DBUILD_SHARED_LIBS=ON ..
 ```
 
 For a debug build:
 ```bash
- cmake -DCMAKE_BUILD_TYPE=DEBUG ..
+ cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=DEBUG ..
 ```
 
 ## Dependencies

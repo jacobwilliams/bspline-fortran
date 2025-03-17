@@ -9,6 +9,11 @@ set( CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/install"
 
 project(bspline-fortran NONE)
 
+# Define build options
+option(BSPLINE_BUILD_TESTING "Build the test programs" ON)
+option(BSPLINE_BUILD_SHARED_LIBS "Build shared libraries" ON)
+option(BSPLINE_BUILD_STATIC_LIBS "Build static libraries" ON)
+
 # Real and Integer kinds
 SET(BSPLINE_REAL_KIND "REAL64" CACHE STRING "Real kind parameter")
 SET_PROPERTY(CACHE BSPLINE_REAL_KIND PROPERTY STRINGS REAL32 REAL64 REAL128)
@@ -70,32 +75,43 @@ else()
     "${ABS_LIB_INSTALL_DIR}" )
 endif()
 
-add_library( ${LIB_NAME}        SHARED ${SOURCES} )
-add_library( ${LIB_NAME}-static STATIC ${SOURCES} )
+if(BSPLINE_BUILD_SHARED_LIBS)
+  add_library( ${LIB_NAME}        SHARED ${SOURCES} )
 
-set_target_properties(${LIB_NAME}-static
-  PROPERTIES
-  OUTPUT_NAME "${LIB_NAME}"
-  if(NOT MSVC_IDE)
-    PREFIX lib
-  endif()
-  ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-  Fortran_MODULE_DIRECTORY ${MODULE_DIR})
+  set_target_properties(${LIB_NAME}
+    PROPERTIES
+    OUTPUT_NAME "${LIB_NAME}"
+    if(NOT MSVC_IDE)
+      PREFIX lib
+    endif()
+    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+    Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR})
 
-set_target_properties(${LIB_NAME}
-  PROPERTIES
-  OUTPUT_NAME "${LIB_NAME}"
-  if(NOT MSVC_IDE)
-    PREFIX lib
-  endif()
-  LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-  Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR})
+  # install library:
+  install( TARGETS ${LIB_NAME}
+  LIBRARY DESTINATION "${INSTALL_LIB_DIR}"
+  ARCHIVE DESTINATION "${INSTALL_LIB_DIR}" )
+  install( DIRECTORY "${MODULE_DIR}/" DESTINATION "${INSTALL_MOD_DIR}" )
+endif()
 
-# install library:
-install( TARGETS ${LIB_NAME} ${LIB_NAME}-static
-          LIBRARY DESTINATION "${INSTALL_LIB_DIR}"
-          ARCHIVE DESTINATION "${INSTALL_LIB_DIR}" )
-install( DIRECTORY "${MODULE_DIR}/" DESTINATION "${INSTALL_MOD_DIR}" )
+if(BSPLINE_BUILD_STATIC_LIBS)
+  add_library( ${LIB_NAME}-static STATIC ${SOURCES} )
+
+  set_target_properties(${LIB_NAME}-static
+    PROPERTIES
+    OUTPUT_NAME "${LIB_NAME}"
+    if(NOT MSVC_IDE)
+      PREFIX lib
+    endif()
+    ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+    Fortran_MODULE_DIRECTORY ${MODULE_DIR})
+
+  # install library:
+  install( TARGETS ${LIB_NAME}-static
+  LIBRARY DESTINATION "${INSTALL_LIB_DIR}"
+  ARCHIVE DESTINATION "${INSTALL_LIB_DIR}" )
+  install( DIRECTORY "${MODULE_DIR}/" DESTINATION "${INSTALL_MOD_DIR}" )
+endif()
 
 # Windows settings:
 if(MSVC_IDE)
@@ -103,23 +119,32 @@ if(MSVC_IDE)
    SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fpp")
 endif()
 
-# Add ctest commands, to build all test programs (that do not depend on pyplot_module)
-# Thus, tests can all be run with `make test`
-enable_testing()
-foreach(prog_name
-        # bspline_extrap_test
-        bspline_test_2
-        bspline_test
-        # dbint4_test
-        # knot_tests
-        # speed_test
-        # speed_test_oo
-        stack_size_test_oo
-        test_integrate
-        test_oo
-        test_regrid)
-    add_executable(${prog_name} test/${prog_name}.f90)
-    target_link_libraries(${prog_name} ${LIB_NAME}-static)
-    add_test(NAME ${prog_name}
-             COMMAND ${prog_name})
-endforeach()
+if(BSPLINE_BUILD_TESTING)
+  # Add ctest commands, to build all test programs (that do not depend on pyplot_module)
+  # Thus, tests can all be run with `make test`
+  enable_testing()
+  foreach(prog_name
+          # bspline_extrap_test
+          bspline_test_2
+          bspline_test
+          # dbint4_test
+          # knot_tests
+          # speed_test
+          # speed_test_oo
+          stack_size_test_oo
+          test_integrate
+          test_oo
+          test_regrid)
+      add_executable(${prog_name} test/${prog_name}.f90)
+      if(BSPLINE_BUILD_STATIC_LIBS)
+        target_link_libraries(${prog_name} ${LIB_NAME}-static)
+        target_include_directories(${prog_name} PRIVATE ${MODULE_DIR})
+      elseif(BSPLINE_BUILD_SHARED_LIBS)
+        target_link_libraries(${prog_name} ${LIB_NAME})
+      else()
+        message(FATAL_ERROR "No libraries to link the test programs to. Either shared or static libraries must be built.")
+      endif()
+      add_test(NAME ${prog_name}
+              COMMAND ${prog_name})
+  endforeach()
+endif()
