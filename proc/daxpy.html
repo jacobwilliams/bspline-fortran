@@ -1,0 +1,718 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="BSPLINE-FORTRAN -- Multidimensional B-Spline Interpolation of Data on a Regular Grid">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>daxpy &ndash; bspline-fortran</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">bspline-fortran </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>daxpy
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.5% of total for procedures.">34 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/bspline_blas_module.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/bspline_blas_module.f90.html'>bspline_blas_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/bspline_blas_module.html'>bspline_blas_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">daxpy</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/daxpy.html#src">daxpy</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>public  subroutine daxpy(n, da, dx, incx, dy, incy)  
+</h2>
+    
+
+    <p>DAXPY constant times a vector plus a vector.
+uses unrolled loops for increments equal to one.</p>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~30"></span>
+              integer(kind=ip)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-da"></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>da</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-dx~2"></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dx</strong>(*)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-incx"></span>
+              integer(kind=ip)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>incx</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-dy~2"></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dy</strong>(*)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-incy"></span>
+              integer(kind=ip)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>incy</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~daxpy~~CalledByGraph Pages: 1 -->
+<svg id="procdaxpyCalledByGraph" width="641pt" height="260pt"
+ viewBox="0.00 0.00 641.00 260.22" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~daxpy~~CalledByGraph" class="graph" transform="scale(0.74 0.74) rotate(0) translate(4 350)">
+<title>proc~~daxpy~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-350 868,-350 868,4 -4,4"/>
+<!-- proc~daxpy -->
+<g id="proc~~daxpy~~CalledByGraph_node1" class="node">
+<title>proc~daxpy</title>
+<polygon fill="none" stroke="black" points="864,-126 810,-126 810,-102 864,-102 864,-126"/>
+<text text-anchor="middle" x="837" y="-111.6" font-family="Helvetica,sans-Serif" font-size="10.50">daxpy</text>
+</g>
+<!-- proc~dfcmn -->
+<g id="proc~~daxpy~~CalledByGraph_node2" class="node">
+<title>proc~dfcmn</title>
+<g id="a_proc~~daxpy~~CalledByGraph_node2"><a xlink:href="../proc/dfcmn.html" xlink:title="dfcmn">
+<polygon fill="#d9534f" stroke="#d9534f" points="144,-88 90,-88 90,-64 144,-64 144,-88"/>
+<text text-anchor="middle" x="117" y="-73.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dfcmn</text>
+</a>
+</g>
+</g>
+<!-- proc~dfcmn&#45;&gt;proc~daxpy -->
+<g id="proc~~daxpy~~CalledByGraph_edge1" class="edge">
+<title>proc~dfcmn&#45;&gt;proc~daxpy</title>
+<path fill="none" stroke="#000000" d="M134.19,-63.79C164.32,-42.31 231.82,0 296,0 296,0 296,0 658,0 713.63,0 728.23,-15.38 774,-47 792.64,-59.88 809.79,-79.26 821.31,-93.87"/>
+<polygon fill="#000000" stroke="#000000" points="818.55,-96.03 827.41,-101.84 824.11,-91.77 818.55,-96.03"/>
+</g>
+<!-- proc~dlsei -->
+<g id="proc~~daxpy~~CalledByGraph_node4" class="node">
+<title>proc~dlsei</title>
+<g id="a_proc~~daxpy~~CalledByGraph_node4"><a xlink:href="../proc/dlsei.html" xlink:title="dlsei">
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-88 180,-88 180,-64 234,-64 234,-88"/>
+<text text-anchor="middle" x="207" y="-73.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dlsei</text>
+</a>
+</g>
+</g>
+<!-- proc~dfcmn&#45;&gt;proc~dlsei -->
+<g id="proc~~daxpy~~CalledByGraph_edge13" class="edge">
+<title>proc~dfcmn&#45;&gt;proc~dlsei</title>
+<path fill="none" stroke="#000000" d="M144.4,-76C152.39,-76 161.31,-76 169.82,-76"/>
+<polygon fill="#000000" stroke="#000000" points="169.92,-79.5 179.92,-76 169.92,-72.5 169.92,-79.5"/>
+</g>
+<!-- proc~dbndac -->
+<g id="proc~~daxpy~~CalledByGraph_node7" class="node">
+<title>proc~dbndac</title>
+<g id="a_proc~~daxpy~~CalledByGraph_node7"><a xlink:href="../proc/dbndac.html" xlink:title="dbndac">
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-244 180,-244 180,-220 234,-220 234,-244"/>
+<text text-anchor="middle" x="207" y="-229.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbndac</text>
+</a>
+</g>
+</g>
+<!-- proc~dfcmn&#45;&gt;proc~dbndac -->
+<g id="proc~~daxpy~~CalledByGraph_edge17" class="edge">
+<title>proc~dfcmn&#45;&gt;proc~dbndac</title>
+<path fill="none" stroke="#000000" d="M124.91,-88.24C139.88,-114.78 175.48,-177.9 194.13,-210.96"/>
+<polygon fill="#000000" stroke="#000000" points="191.17,-212.83 199.13,-219.82 197.26,-209.39 191.17,-212.83"/>
+</g>
+<!-- proc~dh12 -->
+<g id="proc~~daxpy~~CalledByGraph_node3" class="node">
+<title>proc~dh12</title>
+<g id="a_proc~~daxpy~~CalledByGraph_node3"><a xlink:href="../proc/dh12.html" xlink:title="dh12">
+<polygon fill="#d9534f" stroke="#d9534f" points="774,-202 720,-202 720,-178 774,-178 774,-202"/>
+<text text-anchor="middle" x="747" y="-187.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dh12</text>
+</a>
+</g>
+</g>
+<!-- proc~dh12&#45;&gt;proc~daxpy -->
+<g id="proc~~daxpy~~CalledByGraph_edge2" class="edge">
+<title>proc~dh12&#45;&gt;proc~daxpy</title>
+<path fill="none" stroke="#000000" d="M762.14,-177.79C776.12,-165.71 797.73,-147.05 813.96,-133.03"/>
+<polygon fill="#000000" stroke="#000000" points="816.62,-135.37 821.9,-126.18 812.04,-130.07 816.62,-135.37"/>
+</g>
+<!-- proc~dlsei&#45;&gt;proc~daxpy -->
+<g id="proc~~daxpy~~CalledByGraph_edge3" class="edge">
+<title>proc~dlsei&#45;&gt;proc~daxpy</title>
+<path fill="none" stroke="#000000" d="M234.17,-66.8C268.55,-55.56 331.02,-38 386,-38 386,-38 386,-38 658,-38 716.66,-38 778.1,-73.35 811.24,-95.83"/>
+<polygon fill="#000000" stroke="#000000" points="809.61,-98.95 819.81,-101.79 813.6,-93.21 809.61,-98.95"/>
+</g>
+<!-- proc~dlsei&#45;&gt;proc~dh12 -->
+<g id="proc~~daxpy~~CalledByGraph_edge9" class="edge">
+<title>proc~dlsei&#45;&gt;proc~dh12</title>
+<path fill="none" stroke="#000000" d="M234.24,-76C268.96,-76 332.07,-76 386,-76 386,-76 386,-76 568,-76 637.01,-76 700.69,-137.52 729.63,-170.18"/>
+<polygon fill="#000000" stroke="#000000" points="727.03,-172.52 736.22,-177.8 732.33,-167.95 727.03,-172.52"/>
+</g>
+<!-- proc~dlsi -->
+<g id="proc~~daxpy~~CalledByGraph_node5" class="node">
+<title>proc~dlsi</title>
+<g id="a_proc~~daxpy~~CalledByGraph_node5"><a xlink:href="../proc/dlsi.html" xlink:title="dlsi">
+<polygon fill="#d9534f" stroke="#d9534f" points="324,-166 270,-166 270,-142 324,-142 324,-166"/>
+<text text-anchor="middle" x="297" y="-151.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dlsi</text>
+</a>
+</g>
+</g>
+<!-- proc~dlsei&#45;&gt;proc~dlsi -->
+<g id="proc~~daxpy~~CalledByGraph_edge14" class="edge">
+<title>proc~dlsei&#45;&gt;proc~dlsi</title>
+<path fill="none" stroke="#000000" d="M221.75,-88.19C235.96,-100.78 258.32,-120.6 274.79,-135.2"/>
+<polygon fill="#000000" stroke="#000000" points="272.54,-137.88 282.35,-141.9 277.18,-132.65 272.54,-137.88"/>
+</g>
+<!-- proc~dlsi&#45;&gt;proc~daxpy -->
+<g id="proc~~daxpy~~CalledByGraph_edge4" class="edge">
+<title>proc~dlsi&#45;&gt;proc~daxpy</title>
+<path fill="none" stroke="#000000" d="M324.13,-144.32C358.46,-132.48 420.89,-114 476,-114 476,-114 476,-114 658,-114 707.08,-114 763.77,-114 799.74,-114"/>
+<polygon fill="#000000" stroke="#000000" points="799.76,-117.5 809.76,-114 799.76,-110.5 799.76,-117.5"/>
+</g>
+<!-- proc~dlsi&#45;&gt;proc~dh12 -->
+<g id="proc~~daxpy~~CalledByGraph_edge10" class="edge">
+<title>proc~dlsi&#45;&gt;proc~dh12</title>
+<path fill="none" stroke="#000000" d="M324.09,-160.77C335.1,-163.4 348.11,-166.2 360,-168 487.26,-187.21 640.43,-189.99 709.3,-190.17"/>
+<polygon fill="#000000" stroke="#000000" points="709.61,-193.67 719.62,-190.18 709.62,-186.67 709.61,-193.67"/>
+</g>
+<!-- proc~dhfti -->
+<g id="proc~~daxpy~~CalledByGraph_node9" class="node">
+<title>proc~dhfti</title>
+<g id="a_proc~~daxpy~~CalledByGraph_node9"><a xlink:href="../proc/dhfti.html" xlink:title="dhfti">
+<polygon fill="#d9534f" stroke="#d9534f" points="504,-166 450,-166 450,-142 504,-142 504,-166"/>
+<text text-anchor="middle" x="477" y="-151.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dhfti</text>
+</a>
+</g>
+</g>
+<!-- proc~dlsi&#45;&gt;proc~dhfti -->
+<g id="proc~~daxpy~~CalledByGraph_edge18" class="edge">
+<title>proc~dlsi&#45;&gt;proc~dhfti</title>
+<path fill="none" stroke="#000000" d="M324.26,-154C354.85,-154 405.55,-154 439.84,-154"/>
+<polygon fill="#000000" stroke="#000000" points="439.92,-157.5 449.92,-154 439.92,-150.5 439.92,-157.5"/>
+</g>
+<!-- proc~dlpdp -->
+<g id="proc~~daxpy~~CalledByGraph_node13" class="node">
+<title>proc~dlpdp</title>
+<g id="a_proc~~daxpy~~CalledByGraph_node13"><a xlink:href="../proc/dlpdp.html" xlink:title="dlpdp">
+<polygon fill="#d9534f" stroke="#d9534f" points="414,-251 360,-251 360,-227 414,-227 414,-251"/>
+<text text-anchor="middle" x="387" y="-236.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dlpdp</text>
+</a>
+</g>
+</g>
+<!-- proc~dlsi&#45;&gt;proc~dlpdp -->
+<g id="proc~~daxpy~~CalledByGraph_edge22" class="edge">
+<title>proc~dlsi&#45;&gt;proc~dlpdp</title>
+<path fill="none" stroke="#000000" d="M310.61,-166.18C325.12,-180.19 349.12,-203.38 366.14,-219.82"/>
+<polygon fill="#000000" stroke="#000000" points="363.79,-222.41 373.42,-226.84 368.65,-217.38 363.79,-222.41"/>
+</g>
+<!-- proc~dwnlsm -->
+<g id="proc~~daxpy~~CalledByGraph_node6" class="node">
+<title>proc~dwnlsm</title>
+<g id="a_proc~~daxpy~~CalledByGraph_node6"><a xlink:href="../proc/dwnlsm.html" xlink:title="dwnlsm">
+<polygon fill="#d9534f" stroke="#d9534f" points="594,-263 540,-263 540,-239 594,-239 594,-263"/>
+<text text-anchor="middle" x="567" y="-248.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dwnlsm</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~daxpy -->
+<g id="proc~~daxpy~~CalledByGraph_edge5" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~daxpy</title>
+<path fill="none" stroke="#000000" d="M582.68,-263.25C594.59,-272.34 612.26,-284 630,-289 653.1,-295.52 661.51,-297.39 684,-289 756.99,-261.77 806.51,-175.65 826.32,-135.27"/>
+<polygon fill="#000000" stroke="#000000" points="829.57,-136.59 830.71,-126.06 823.25,-133.58 829.57,-136.59"/>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~dh12 -->
+<g id="proc~~daxpy~~CalledByGraph_edge12" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~dh12</title>
+<path fill="none" stroke="#000000" d="M594.26,-242C624.98,-231.47 675.99,-213.99 710.29,-202.24"/>
+<polygon fill="#000000" stroke="#000000" points="711.59,-205.49 719.92,-198.94 709.32,-198.87 711.59,-205.49"/>
+</g>
+<!-- proc~dwnlit -->
+<g id="proc~~daxpy~~CalledByGraph_node10" class="node">
+<title>proc~dwnlit</title>
+<g id="a_proc~~daxpy~~CalledByGraph_node10"><a xlink:href="../proc/dwnlit.html" xlink:title="dwnlit">
+<polygon fill="#d9534f" stroke="#d9534f" points="684,-280 630,-280 630,-256 684,-256 684,-280"/>
+<text text-anchor="middle" x="657" y="-265.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dwnlit</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~dwnlit -->
+<g id="proc~~daxpy~~CalledByGraph_edge19" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~dwnlit</title>
+<path fill="none" stroke="#000000" d="M594.4,-256.1C602.39,-257.64 611.31,-259.37 619.82,-261.01"/>
+<polygon fill="#000000" stroke="#000000" points="619.44,-264.5 629.92,-262.96 620.76,-257.63 619.44,-264.5"/>
+</g>
+<!-- proc~dbndac&#45;&gt;proc~dh12 -->
+<g id="proc~~daxpy~~CalledByGraph_edge7" class="edge">
+<title>proc~dbndac&#45;&gt;proc~dh12</title>
+<path fill="none" stroke="#000000" d="M217.78,-244.2C242.56,-273.61 311.14,-346 386,-346 386,-346 386,-346 568,-346 625.44,-346 641.35,-327.48 684,-289 708.31,-267.07 726.61,-233.43 736.82,-211.57"/>
+<polygon fill="#000000" stroke="#000000" points="740.14,-212.72 741.05,-202.16 733.76,-209.85 740.14,-212.72"/>
+</g>
+<!-- proc~dfc -->
+<g id="proc~~daxpy~~CalledByGraph_node8" class="node">
+<title>proc~dfc</title>
+<g id="a_proc~~daxpy~~CalledByGraph_node8"><a xlink:href="../proc/dfc.html" xlink:title="dfc">
+<polygon fill="#d9534f" stroke="#d9534f" points="54,-88 0,-88 0,-64 54,-64 54,-88"/>
+<text text-anchor="middle" x="27" y="-73.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dfc</text>
+</a>
+</g>
+</g>
+<!-- proc~dfc&#45;&gt;proc~dfcmn -->
+<g id="proc~~daxpy~~CalledByGraph_edge6" class="edge">
+<title>proc~dfc&#45;&gt;proc~dfcmn</title>
+<path fill="none" stroke="#000000" d="M54.4,-76C62.39,-76 71.31,-76 79.82,-76"/>
+<polygon fill="#000000" stroke="#000000" points="79.92,-79.5 89.92,-76 79.92,-72.5 79.92,-79.5"/>
+</g>
+<!-- proc~dhfti&#45;&gt;proc~dh12 -->
+<g id="proc~~daxpy~~CalledByGraph_edge8" class="edge">
+<title>proc~dhfti&#45;&gt;proc~dh12</title>
+<path fill="none" stroke="#000000" d="M504.15,-155.82C543.39,-158.77 619.78,-165.36 684,-176 692.44,-177.4 701.45,-179.23 709.91,-181.11"/>
+<polygon fill="#000000" stroke="#000000" points="709.36,-184.58 719.89,-183.4 710.92,-177.75 709.36,-184.58"/>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~dh12 -->
+<g id="proc~~daxpy~~CalledByGraph_edge11" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~dh12</title>
+<path fill="none" stroke="#000000" d="M671.75,-255.81C685.96,-243.22 708.32,-223.4 724.79,-208.8"/>
+<polygon fill="#000000" stroke="#000000" points="727.18,-211.35 732.35,-202.1 722.54,-206.12 727.18,-211.35"/>
+</g>
+<!-- proc~dwnnls -->
+<g id="proc~~daxpy~~CalledByGraph_node11" class="node">
+<title>proc~dwnnls</title>
+<g id="a_proc~~daxpy~~CalledByGraph_node11"><a xlink:href="../proc/dwnnls.html" xlink:title="dwnnls">
+<polygon fill="#d9534f" stroke="#d9534f" points="504,-255 450,-255 450,-231 504,-231 504,-255"/>
+<text text-anchor="middle" x="477" y="-240.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dwnnls</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnnls&#45;&gt;proc~dwnlsm -->
+<g id="proc~~daxpy~~CalledByGraph_edge15" class="edge">
+<title>proc~dwnnls&#45;&gt;proc~dwnlsm</title>
+<path fill="none" stroke="#000000" d="M504.4,-245.4C512.39,-246.13 521.31,-246.94 529.82,-247.71"/>
+<polygon fill="#000000" stroke="#000000" points="529.64,-251.21 539.92,-248.63 530.28,-244.24 529.64,-251.21"/>
+</g>
+<!-- proc~defcmn -->
+<g id="proc~~daxpy~~CalledByGraph_node12" class="node">
+<title>proc~defcmn</title>
+<g id="a_proc~~daxpy~~CalledByGraph_node12"><a xlink:href="../proc/defcmn.html" xlink:title="defcmn">
+<polygon fill="#d9534f" stroke="#d9534f" points="144,-244 90,-244 90,-220 144,-220 144,-244"/>
+<text text-anchor="middle" x="117" y="-229.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">defcmn</text>
+</a>
+</g>
+</g>
+<!-- proc~defcmn&#45;&gt;proc~dbndac -->
+<g id="proc~~daxpy~~CalledByGraph_edge16" class="edge">
+<title>proc~defcmn&#45;&gt;proc~dbndac</title>
+<path fill="none" stroke="#000000" d="M144.4,-232C152.39,-232 161.31,-232 169.82,-232"/>
+<polygon fill="#000000" stroke="#000000" points="169.92,-235.5 179.92,-232 169.92,-228.5 169.92,-235.5"/>
+</g>
+<!-- proc~dlpdp&#45;&gt;proc~dwnnls -->
+<g id="proc~~daxpy~~CalledByGraph_edge20" class="edge">
+<title>proc~dlpdp&#45;&gt;proc~dwnnls</title>
+<path fill="none" stroke="#000000" d="M414.4,-240.2C422.39,-240.56 431.31,-240.97 439.82,-241.36"/>
+<polygon fill="#000000" stroke="#000000" points="439.77,-244.86 449.92,-241.81 440.09,-237.86 439.77,-244.86"/>
+</g>
+<!-- proc~defc -->
+<g id="proc~~daxpy~~CalledByGraph_node14" class="node">
+<title>proc~defc</title>
+<g id="a_proc~~daxpy~~CalledByGraph_node14"><a xlink:href="../proc/defc.html" xlink:title="defc">
+<polygon fill="#d9534f" stroke="#d9534f" points="54,-244 0,-244 0,-220 54,-220 54,-244"/>
+<text text-anchor="middle" x="27" y="-229.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">defc</text>
+</a>
+</g>
+</g>
+<!-- proc~defc&#45;&gt;proc~defcmn -->
+<g id="proc~~daxpy~~CalledByGraph_edge21" class="edge">
+<title>proc~defc&#45;&gt;proc~defcmn</title>
+<path fill="none" stroke="#000000" d="M54.4,-232C62.39,-232 71.31,-232 79.82,-232"/>
+<polygon fill="#000000" stroke="#000000" points="79.92,-235.5 89.92,-232 79.92,-228.5 79.92,-235.5"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocdaxpyCalledByGraph = svgPanZoom('#procdaxpyCalledByGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">subroutine </span><span class="n">daxpy</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">da</span><span class="p">,</span><span class="w"> </span><span class="n">dx</span><span class="p">,</span><span class="w"> </span><span class="n">incx</span><span class="p">,</span><span class="w"> </span><span class="n">dy</span><span class="p">,</span><span class="w"> </span><span class="n">incy</span><span class="p">)</span>
+<span class="w">         </span><span class="c">!! DAXPY constant times a vector plus a vector.</span>
+<span class="w">         </span><span class="c">!! uses unrolled loops for increments equal to one.</span>
+
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">da</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">incx</span><span class="p">,</span><span class="w"> </span><span class="n">incy</span><span class="p">,</span><span class="w"> </span><span class="n">n</span>
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">dx</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="n">dy</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">ix</span><span class="p">,</span><span class="w"> </span><span class="n">iy</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">mp1</span>
+
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">0_ip</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">da</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mf">0.0_wp</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">incx</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1_ip</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="n">incy</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">         </span><span class="c">! code for both increments equal to 1</span>
+<span class="w">         </span><span class="c">! clean-up loop</span>
+<span class="w">         </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">mod</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="mi">4_ip</span><span class="p">)</span>
+<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="mi">0_ip</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">,</span><span class="w"> </span><span class="n">m</span>
+<span class="w">               </span><span class="n">dy</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dy</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">da</span><span class="o">*</span><span class="n">dx</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="w">            </span><span class="k">end do</span>
+<span class="k">         end if</span>
+<span class="k">         if</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">4_ip</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+<span class="k">         </span><span class="n">mp1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">         </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mp1</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="mi">4_ip</span>
+<span class="w">            </span><span class="n">dy</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dy</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">da</span><span class="o">*</span><span class="n">dx</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="w">            </span><span class="n">dy</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dy</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">da</span><span class="o">*</span><span class="n">dx</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">)</span>
+<span class="w">            </span><span class="n">dy</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2_ip</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dy</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2_ip</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">da</span><span class="o">*</span><span class="n">dx</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2_ip</span><span class="p">)</span>
+<span class="w">            </span><span class="n">dy</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">3_ip</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dy</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">3_ip</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">da</span><span class="o">*</span><span class="n">dx</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">3_ip</span><span class="p">)</span>
+<span class="w">         </span><span class="k">end do</span>
+<span class="k">      else</span>
+<span class="w">         </span><span class="c">! code for unequal increments or equal increments</span>
+<span class="w">         </span><span class="c">! not equal to 1</span>
+<span class="w">         </span><span class="n">ix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">         </span><span class="n">iy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">incx</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0_ip</span><span class="p">)</span><span class="w"> </span><span class="n">ix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="o">-</span><span class="n">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">)</span><span class="o">*</span><span class="n">incx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">incy</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0_ip</span><span class="p">)</span><span class="w"> </span><span class="n">iy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="o">-</span><span class="n">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">)</span><span class="o">*</span><span class="n">incy</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">         </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">,</span><span class="w"> </span><span class="n">n</span>
+<span class="w">            </span><span class="n">dy</span><span class="p">(</span><span class="n">iy</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dy</span><span class="p">(</span><span class="n">iy</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">da</span><span class="o">*</span><span class="n">dx</span><span class="p">(</span><span class="n">ix</span><span class="p">)</span>
+<span class="w">            </span><span class="n">ix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ix</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">incx</span>
+<span class="w">            </span><span class="n">iy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iy</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">incy</span>
+<span class="w">         </span><span class="k">end do</span>
+<span class="k">      end if</span>
+
+<span class="k">   end subroutine </span><span class="n">daxpy</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              bspline-fortran
+ was developed by Jacob Williams<br>              &copy; 2025 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

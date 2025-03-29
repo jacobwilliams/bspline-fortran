@@ -1,0 +1,376 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="BSPLINE-FORTRAN -- Multidimensional B-Spline Interpolation of Data on a Regular Grid">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>All Modules &ndash; bspline-fortran
+</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">bspline-fortran </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12" id='text'>
+			 <h1>Modules</h1>
+			 <table class="table">
+			 <thead><tr><th>Module</th><th>Source File</th><th>Description</th></tr></thead>
+			 <tbody>
+			   <tr class="active">
+                 <td><a href='../module/bspline_blas_module.html'>bspline_blas_module</a></td>
+                 <td><a href='../sourcefile/bspline_blas_module.f90.html'>bspline_blas_module.F90</a></td>
+                 <td><p>BLAS procedures, which can be use used if not linking with a BLAS library,
+  if one is not available, or if a real kind /= <code>real64</code> is required.</p><a href="../module/bspline_blas_module.html" class="pull-right"><emph>Read more&hellip;</emph></a></td>
+               </tr>
+<!--active-->			   <tr class="">
+                 <td><a href='../module/bspline_defc_module.html'>bspline_defc_module</a></td>
+                 <td><a href='../sourcefile/bspline_defc_module.f90.html'>bspline_defc_module.F90</a></td>
+                 <td><p><a href="../proc/defc.html">defc</a> and <a href="../proc/dfc.html">dfc</a> procedures and support routines from <a href="https://netlib.org/slatec/src/">SLATEC</a>.
+  For fitting B-splines polynomials to discrete 1D data.</p><a href="../module/bspline_defc_module.html" class="pull-right"><emph>Read more&hellip;</emph></a></td>
+               </tr>
+<!---->			   <tr class="active">
+                 <td><a href='../module/bspline_kinds_module.html'>bspline_kinds_module</a></td>
+                 <td><a href='../sourcefile/bspline_kinds_module.f90.html'>bspline_kinds_module.F90</a></td>
+                 <td><p>Numeric kind definitions for BSpline-Fortran.</p><a href="../module/bspline_kinds_module.html" class="pull-right"><emph>Read more&hellip;</emph></a></td>
+               </tr>
+<!--active-->			   <tr class="">
+                 <td><a href='../module/bspline_module.html'>bspline_module</a></td>
+                 <td><a href='../sourcefile/bspline_module.f90.html'>bspline_module.f90</a></td>
+                 <td><p>Multidimensional (1D-6D) B-Spline interpolation of data on a regular grid.
+  This module uses both the subroutine and object-oriented modules.</p><a href="../module/bspline_module.html" class="pull-right"><emph>Read more&hellip;</emph></a></td>
+               </tr>
+<!---->			   <tr class="active">
+                 <td><a href='../module/bspline_oo_module.html'>bspline_oo_module</a></td>
+                 <td><a href='../sourcefile/bspline_oo_module.f90.html'>bspline_oo_module.f90</a></td>
+                 <td><p>Object-oriented style wrappers to <a href="../module/bspline_sub_module.html">bspline_sub_module</a>.
+This module provides classes (<a href="../type/bspline_1d.html">bspline_1d</a>, <a href="../type/bspline_2d.html">bspline_2d</a>,
+<a href="../type/bspline_3d.html">bspline_3d</a>, <a href="../type/bspline_4d.html">bspline_4d</a>, <a href="../type/bspline_5d.html">bspline_5d</a>, and <a href="../type/bspline_6d.html">bspline_6d</a>)
+which can be used instead of the main subroutine interface.</p></td>
+               </tr>
+<!--active-->			   <tr class="">
+                 <td><a href='../module/bspline_sub_module.html'>bspline_sub_module</a></td>
+                 <td><a href='../sourcefile/bspline_sub_module.f90.html'>bspline_sub_module.f90</a></td>
+                 <td><p>Multidimensional (1D-6D) B-spline interpolation of data on a regular grid.
+  Basic pure subroutine interface.</p><a href="../module/bspline_sub_module.html" class="pull-right"><emph>Read more&hellip;</emph></a></td>
+               </tr>
+<!---->			 </tbody></table>
+             <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: module~~graph~~ModuleGraph Pages: 1 -->
+<svg id="modulegraphModuleGraph" width="722pt" height="144pt"
+ viewBox="0.00 0.00 722.00 143.85" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="module~~graph~~ModuleGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 139.85)">
+<title>module~~graph~~ModuleGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-139.85 718,-139.85 718,4 -4,4"/>
+<!-- module~bspline_blas_module -->
+<g id="module~~graph~~ModuleGraph_node1" class="node">
+<title>module~bspline_blas_module</title>
+<g id="a_module~~graph~~ModuleGraph_node1"><a xlink:href="../module/bspline_blas_module.html" xlink:title="bspline_blas_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="420,-104 296,-104 296,-80 420,-80 420,-104"/>
+<text text-anchor="middle" x="358" y="-89.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_blas_module</text>
+</a>
+</g>
+</g>
+<!-- module~bspline_kinds_module -->
+<g id="module~~graph~~ModuleGraph_node3" class="node">
+<title>module~bspline_kinds_module</title>
+<g id="a_module~~graph~~ModuleGraph_node3"><a xlink:href="../module/bspline_kinds_module.html" xlink:title="bspline_kinds_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="260,-104 130,-104 130,-80 260,-80 260,-104"/>
+<text text-anchor="middle" x="195" y="-89.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_kinds_module</text>
+</a>
+</g>
+</g>
+<!-- module~bspline_blas_module&#45;&gt;module~bspline_kinds_module -->
+<g id="module~~graph~~ModuleGraph_edge1" class="edge">
+<title>module~bspline_blas_module&#45;&gt;module~bspline_kinds_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M295.67,-92C287.4,-92 278.83,-92 270.36,-92"/>
+<polygon fill="#000000" stroke="#000000" points="270.1,-88.5 260.1,-92 270.1,-95.5 270.1,-88.5"/>
+</g>
+<!-- module~bspline_defc_module -->
+<g id="module~~graph~~ModuleGraph_node2" class="node">
+<title>module~bspline_defc_module</title>
+<g id="a_module~~graph~~ModuleGraph_node2"><a xlink:href="../module/bspline_defc_module.html" xlink:title="bspline_defc_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="581,-104 456,-104 456,-80 581,-80 581,-104"/>
+<text text-anchor="middle" x="518.5" y="-89.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_defc_module</text>
+</a>
+</g>
+</g>
+<!-- module~bspline_defc_module&#45;&gt;module~bspline_blas_module -->
+<g id="module~~graph~~ModuleGraph_edge2" class="edge">
+<title>module~bspline_defc_module&#45;&gt;module~bspline_blas_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M455.77,-92C447.42,-92 438.81,-92 430.32,-92"/>
+<polygon fill="#000000" stroke="#000000" points="430.04,-88.5 420.04,-92 430.04,-95.5 430.04,-88.5"/>
+</g>
+<!-- module~bspline_defc_module&#45;&gt;module~bspline_kinds_module -->
+<g id="module~~graph~~ModuleGraph_edge3" class="edge">
+<title>module~bspline_defc_module&#45;&gt;module~bspline_kinds_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M490.78,-104.03C459.67,-116.79 406.46,-134.77 359,-132"/>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M357,-132C315.96,-129.6 270.64,-117.44 238.56,-107.15"/>
+<polygon fill="#000000" stroke="#000000" points="239.64,-103.83 229.05,-104.03 237.46,-110.48 239.64,-103.83"/>
+</g>
+<!-- iso_fortran_env -->
+<g id="module~~graph~~ModuleGraph_node7" class="node">
+<title>iso_fortran_env</title>
+<g id="a_module~~graph~~ModuleGraph_node7"><a xlink:href="http://fortranwiki.org/fortran/show/iso_fortran_env" xlink:title="iso_fortran_env">
+<polygon fill="#337ab7" stroke="#337ab7" points="94,-84 0,-84 0,-60 94,-60 94,-84"/>
+<text text-anchor="middle" x="47" y="-69.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_fortran_env</text>
+</a>
+</g>
+</g>
+<!-- module~bspline_kinds_module&#45;&gt;iso_fortran_env -->
+<g id="module~~graph~~ModuleGraph_edge4" class="edge">
+<title>module~bspline_kinds_module&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M129.96,-83.23C121.36,-82.05 112.58,-80.85 104.13,-79.69"/>
+<polygon fill="#000000" stroke="#000000" points="104.39,-76.19 94,-78.3 103.44,-83.13 104.39,-76.19"/>
+</g>
+<!-- module~bspline_module -->
+<g id="module~~graph~~ModuleGraph_node4" class="node">
+<title>module~bspline_module</title>
+<g id="a_module~~graph~~ModuleGraph_node4"><a xlink:href="../module/bspline_module.html" xlink:title="bspline_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="714,-83 617,-83 617,-59 714,-59 714,-83"/>
+<text text-anchor="middle" x="665.5" y="-68.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_module</text>
+</a>
+</g>
+</g>
+<!-- module~bspline_module&#45;&gt;module~bspline_defc_module -->
+<g id="module~~graph~~ModuleGraph_edge5" class="edge">
+<title>module~bspline_module&#45;&gt;module~bspline_defc_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M616.62,-77.93C608.44,-79.12 599.78,-80.37 591.14,-81.62"/>
+<polygon fill="#000000" stroke="#000000" points="590.43,-78.19 581.03,-83.09 591.43,-85.12 590.43,-78.19"/>
+</g>
+<!-- module~bspline_module&#45;&gt;module~bspline_kinds_module -->
+<g id="module~~graph~~ModuleGraph_edge6" class="edge">
+<title>module~bspline_module&#45;&gt;module~bspline_kinds_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M645.78,-83.03C629.39,-92.92 604.58,-106.33 581,-113 485.71,-139.96 457.86,-137.77 359,-132"/>
+</g>
+<!-- module~bspline_oo_module -->
+<g id="module~~graph~~ModuleGraph_node5" class="node">
+<title>module~bspline_oo_module</title>
+<g id="a_module~~graph~~ModuleGraph_node5"><a xlink:href="../module/bspline_oo_module.html" xlink:title="bspline_oo_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="576,-62 461,-62 461,-38 576,-38 576,-62"/>
+<text text-anchor="middle" x="518.5" y="-47.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module</text>
+</a>
+</g>
+</g>
+<!-- module~bspline_module&#45;&gt;module~bspline_oo_module -->
+<g id="module~~graph~~ModuleGraph_edge7" class="edge">
+<title>module~bspline_module&#45;&gt;module~bspline_oo_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M616.62,-64.07C606.91,-62.66 596.52,-61.16 586.29,-59.67"/>
+<polygon fill="#000000" stroke="#000000" points="586.54,-56.17 576.15,-58.2 585.54,-63.1 586.54,-56.17"/>
+</g>
+<!-- module~bspline_sub_module -->
+<g id="module~~graph~~ModuleGraph_node6" class="node">
+<title>module~bspline_sub_module</title>
+<g id="a_module~~graph~~ModuleGraph_node6"><a xlink:href="../module/bspline_sub_module.html" xlink:title="bspline_sub_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="418.5,-24 297.5,-24 297.5,0 418.5,0 418.5,-24"/>
+<text text-anchor="middle" x="358" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module</text>
+</a>
+</g>
+</g>
+<!-- module~bspline_module&#45;&gt;module~bspline_sub_module -->
+<g id="module~~graph~~ModuleGraph_edge8" class="edge">
+<title>module~bspline_module&#45;&gt;module~bspline_sub_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M645.8,-58.91C629.42,-49 604.61,-35.56 581,-29 531.25,-15.16 472.97,-11.14 428.6,-10.45"/>
+<polygon fill="#000000" stroke="#000000" points="428.54,-6.95 418.5,-10.35 428.47,-13.95 428.54,-6.95"/>
+</g>
+<!-- module~bspline_oo_module&#45;&gt;module~bspline_kinds_module -->
+<g id="module~~graph~~ModuleGraph_edge10" class="edge">
+<title>module~bspline_oo_module&#45;&gt;module~bspline_kinds_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M357,-52C316.42,-54.73 271.62,-66.62 239.6,-76.74"/>
+<polygon fill="#000000" stroke="#000000" points="238.12,-73.54 229.68,-79.94 240.27,-80.2 238.12,-73.54"/>
+</g>
+<!-- module~bspline_oo_module&#45;&gt;module~bspline_sub_module -->
+<g id="module~~graph~~ModuleGraph_edge11" class="edge">
+<title>module~bspline_oo_module&#45;&gt;module~bspline_sub_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M467.35,-37.98C451.95,-34.29 434.85,-30.19 418.88,-26.35"/>
+<polygon fill="#000000" stroke="#000000" points="419.64,-22.94 409.1,-24.01 418,-29.75 419.64,-22.94"/>
+</g>
+<!-- module~bspline_oo_module&#45;&gt;iso_fortran_env -->
+<g id="module~~graph~~ModuleGraph_edge9" class="edge">
+<title>module~bspline_oo_module&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M460.96,-49.22C430.68,-49.17 392.77,-49.72 359,-52"/>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M357,-52C285.61,-56.81 266.97,-42.85 196,-52"/>
+</g>
+<!-- module~bspline_sub_module&#45;&gt;module~bspline_kinds_module -->
+<g id="module~~graph~~ModuleGraph_edge13" class="edge">
+<title>module~bspline_sub_module&#45;&gt;module~bspline_kinds_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M324.26,-24.12C314.89,-28.08 304.83,-32.8 296,-38 278.53,-48.28 277.56,-55.87 260,-66 253.72,-69.63 246.83,-72.99 239.97,-76.02"/>
+<polygon fill="#000000" stroke="#000000" points="238.56,-72.81 230.7,-79.92 241.28,-79.26 238.56,-72.81"/>
+</g>
+<!-- module~bspline_sub_module&#45;&gt;iso_fortran_env -->
+<g id="module~~graph~~ModuleGraph_edge12" class="edge">
+<title>module~bspline_sub_module&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M319.09,-24.05C286.76,-33.69 238.85,-46.48 196,-52"/>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M194,-52C164.3,-55.83 131.24,-60.34 104.1,-64.1"/>
+<polygon fill="#000000" stroke="#000000" points="103.43,-60.66 94,-65.51 104.39,-67.6 103.43,-60.66"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#ModuleGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="ModuleGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="518pt" height="32pt"
+ viewBox="0.00 0.00 517.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 513.5,-28 513.5,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="145.5,-24 72.5,-24 72.5,0 145.5,0 145.5,-24"/>
+<text text-anchor="middle" x="109" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-24 164,-24 164,0 234,0 234,-24"/>
+<text text-anchor="middle" x="199" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="310,-24 252,-24 252,0 310,0 310,-24"/>
+<text text-anchor="middle" x="281" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="386,-24 328,-24 328,0 386,0 386,-24"/>
+<text text-anchor="middle" x="357" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="509.5,-24 404.5,-24 404.5,0 509.5,0 509.5,-24"/>
+<text text-anchor="middle" x="457" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              bspline-fortran
+ was developed by Jacob Williams<br>              &copy; 2025 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>
