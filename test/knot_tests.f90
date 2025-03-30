@@ -41,7 +41,7 @@
     call plt%initialize(grid=.true.,xlabel='x',ylabel='f(x)',&
                         title='Knot Test',legend=.true.)
     call plt%add_plot(x,fcn,&
-                        label='Function $f(x) = \sin(x \cdot \pi/18)$ : $x=[0,20,40,60,80,100]$',&
+                        label='Function $f(x) = \\sin(x \\cdot \\pi/18)$ : $x=[0,20,40,60,80,100]$',&
                         linestyle='ko--',markersize=5,linewidth=2,istat=istat)
 
     !initialize three with different knot sequences:

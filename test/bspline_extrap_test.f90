@@ -57,7 +57,7 @@
     call plt%initialize(grid=.true.,xlabel='x (deg)',ylabel='f(x)',&
                         title='Extrapolation Test',legend=.true.)
     call plt%add_plot(x*rad2deg,fcn_1d,&
-                        label='Function $f(x) = \sin(x)$',&
+                        label='Function $f(x) = \\sin(x)$',&
                         linestyle='ko',markersize=5,linewidth=2,istat=istat)
 
     do j=1,2
