@@ -52,7 +52,7 @@
     call plt%initialize(grid=.true.,xlabel='x (deg)',ylabel='f(x)',&
                         title='Linear Test',legend=.true.,figsize=[10,5])
     call plt%add_plot(x,fcn_1d,&
-                        label='Function $f(x) = \sin(x)$',&
+                        label='Function $f(x) = \\sin(x)$',&
                         linestyle='ko',markersize=5,linewidth=2,istat=istat)
 
     errmax = 0.0_wp
