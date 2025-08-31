@@ -22,7 +22,7 @@
     real(wp) :: x(nx)
     real(wp) :: xval(nxv),fval(nxv)
     real(wp) :: tx(nx+kx)
-    real(wp) :: fcn_1d(nx)
+    real(wp) :: fcn_1d(nx), bcoef(nx)
     real(wp) :: val,tru,err,errmax
     integer(ip) :: i,j,idx,iflag,inbvx,iloy
     logical :: extrap
@@ -47,7 +47,7 @@
     iloy  = 1
 
     ! initialize
-    call db1ink(x,nx,fcn_1d,kx,iknot,tx,fcn_1d,iflag)
+    call db1ink(x,nx,fcn_1d,kx,iknot,tx,bcoef,iflag)
 
     if (iflag/=0) then
         write(*,*) 'Error initializing 1D spline: '//get_status_message(iflag)
@@ -57,7 +57,7 @@
     call plt%initialize(grid=.true.,xlabel='x (deg)',ylabel='f(x)',&
                         title='Extrapolation Test',legend=.true.)
     call plt%add_plot(x*rad2deg,fcn_1d,&
-                        label='Function $f(x) = \sin(x)$',&
+                        label='Function $f(x) = \\sin(x)$',&
                         linestyle='ko',markersize=5,linewidth=2,istat=istat)
 
     do j=1,2
@@ -67,7 +67,7 @@
 
         errmax = 0.0_wp
         do i=1,nxv
-            call db1val(xval(i),idx,tx,nx,kx,fcn_1d,val,iflag,inbvx,w1_1d,extrap=extrap)
+            call db1val(xval(i),idx,tx,nx,kx,bcoef,val,iflag,inbvx,w1_1d,extrap=extrap)
             fval(i) = val  ! save it for plot
             tru    = f1(xval(i))
             err    = abs(tru-val)

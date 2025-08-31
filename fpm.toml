@@ -1,8 +1,8 @@
 name = "bspline-fortran"
-version = "7.0.0"
+version = "7.4.0"
 author = "Jacob Williams"
 maintainer = "Jacob Williams"
-copyright = "Copyright (c) 2015-2022, Jacob Williams"
+copyright = "Copyright (c) 2015-2024, Jacob Williams"
 license = "BSD"
 description = "Multidimensional B-Spline Interpolation of Data on a Regular Grid"
 homepage = "https://github.com/jacobwilliams/bspline-fortran"
@@ -14,6 +14,7 @@ auto-tests = true
 
 [dev-dependencies]
 pyplot-fortran = { git = "https://github.com/jacobwilliams/pyplot-fortran", tag = "3.3.0" }
+finterp = { git = "https://github.com/jacobwilliams/finterp", tag = "1.3.0" }
 
 [library]
 source-dir = "src"

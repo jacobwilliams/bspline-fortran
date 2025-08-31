@@ -58,6 +58,9 @@
     end interface
     public :: b1fqad_func
 
+    integer(ip),parameter,public :: bspline_order_linear    = 2_ip !! spline order `k` parameter
+                                                                   !! (for input to the `db*ink` routines)
+                                                                   !! [order = polynomial degree + 1]
     integer(ip),parameter,public :: bspline_order_quadratic = 3_ip !! spline order `k` parameter
                                                                    !! (for input to the `db*ink` routines)
                                                                    !! [order = polynomial degree + 1]
@@ -2630,8 +2633,10 @@
     real(wp),dimension(:),intent(in)      :: t
     real(wp),dimension(nf,n),intent(out)  :: bcoef
     real(wp),dimension(*),intent(out)     :: work   !! work array of size >= `2*k*(n+1)`
-    integer(ip),intent(out)               :: iflag  !!   0: no errors
-                                                    !! 301: n should be >0
+    integer(ip),intent(out)               :: iflag  !! status flag:
+                                                    !!
+                                                    !! * 0: no errors
+                                                    !! * 301: n should be >0
 
     integer(ip) :: i, j, m1, m2, iq, iw
 

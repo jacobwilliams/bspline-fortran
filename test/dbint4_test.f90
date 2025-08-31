@@ -56,7 +56,7 @@
     call plt%initialize(grid=.true.,xlabel='x (deg)',ylabel='f(x)',&
                         title='B-Spline End Conditions',legend=.true.)
     call plt%add_plot(x*rad2deg,fcn_1d,&
-                        label='Function $f(x) = \sin(x)$',&
+                        label='Function $f(x) = \\sin(x)$',&
                         linestyle='ko',markersize=5,linewidth=2,istat=istat)
 
     if (extrap) then

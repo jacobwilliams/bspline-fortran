@@ -1,10 +1,10 @@
-![bspline-fortran](/media/bspline-fortran.png)
+![bspline-fortran](media/bspline-fortran.png)
 ============
 
-Multidimensional B-Spline Interpolation of Data on a Regular Grid
+Multidimensional B-Spline Interpolation of Data on a Regular Grid.
 
 ## Status
-
+[![Language](https://img.shields.io/badge/-Fortran-734f96?logo=fortran&logoColor=white)](https://github.com/topics/fortran)
 [![GitHub release](https://img.shields.io/github/release/jacobwilliams/bspline-fortran.svg)](https://github.com/jacobwilliams/bspline-fortran/releases/latest)
 [![Build Status](https://github.com/jacobwilliams/bspline-fortran/actions/workflows/CI.yml/badge.svg)](https://github.com/jacobwilliams/bspline-fortran/actions)
 [![codecov](https://codecov.io/gh/jacobwilliams/bspline-fortran/branch/master/graph/badge.svg)](https://codecov.io/gh/jacobwilliams/bspline-fortran)
@@ -70,6 +70,15 @@ type(bspline_3d) :: s
 s = bspline_3d(x,y,z,fcn,kx,ky,kz,iflag,extrap)
 ```
 
+## Spline order
+
+The various `k` inputs (i.e., `kx`, `ky`, etc.) specify the spline order for each dimension. The order is the polynomial degree + 1. For example:
+
+* `k=2` : Linear
+* `k=3` : Quadratic
+* `k=4` : Cubic
+* etc.
+
 ## Extrapolation
 
 The library optionally supports extrapolation for points outside the range of the coefficients. This is disabled by default (in which case an error code is returned for points outside the bounds). To enable extrapolation, use the optional `extrap` input to the various `db*val` subroutines or the `initialize` methods from the object-oriented interface.
@@ -89,7 +98,7 @@ The BSpline-Fortran library also exports the `defc` subroutine, which can be use
 
 ## Examples
 
-See the [examples](https://github.com/jacobwilliams/bspline-fortran/tree/master/src/tests) for more details. Note that, to compile and run some of the test programs, the [pyplot_module.f90](https://github.com/jacobwilliams/pyplot-fortran) file (which is used to generate plots) must be copied into the `src/tests` directory.
+See the [examples](https://github.com/jacobwilliams/bspline-fortran/tree/master/test) for more details. Note that, to compile and run some of the test programs, the [pyplot-fortran](https://github.com/jacobwilliams/pyplot-fortran) library  (which is used to generate plots) is required. This will automatically be downloaded by `FPM`.
 
 ## Compiling
 
@@ -97,7 +106,7 @@ The library can be compiled with recent versions the Intel Fortran Compiler and 
 
 ### FPM
 
-A `fmp.toml` file is provided for compiling bspline-fortran with the [Fortran Package Manager](https://github.com/fortran-lang/fpm). For example, to build:
+A `fpm.toml` file is provided for compiling bspline-fortran with the [Fortran Package Manager](https://github.com/fortran-lang/fpm). For example, to build:
 
 ```
 fpm build --profile release
@@ -146,21 +155,19 @@ bspline-fortran = { git="https://github.com/jacobwilliams/bspline-fortran.git", 
 A basic CMake configuration file is also included. For example, to build a static library:
 
 ```bash
- mkdir build
- cd build
- cmake ..
- make
+ cmake -S. -Bbuild
+ cmake --build build
 ```
 
-Or, to build a shared library:
+Or, to build a shared library, replace the first CMake command with:
 
 ```bash
- cmake -DBUILD_SHARED_LIBS=ON ..
+ cmake -S. -Bbuild -DBUILD_SHARED_LIBS=ON ..
 ```
 
 For a debug build:
 ```bash
- cmake -DCMAKE_BUILD_TYPE=DEBUG ..
+ cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=DEBUG ..
 ```
 
 ## Dependencies
@@ -175,8 +182,20 @@ However, note that an external BLAS can only be used if the library is compiled 
 
 ## Documentation
 
-The latest API documentation can be found [here](https://jacobwilliams.github.io/bspline-fortran/). This was generated from the source code using [FORD](https://github.com/Fortran-FOSS-Programmers/ford) (i.e. by running `ford bspline-fortran.md`).
+The latest API documentation can be found [here](https://jacobwilliams.github.io/bspline-fortran/). This was generated from the source code using [FORD](https://github.com/Fortran-FOSS-Programmers/ford) (i.e. by running `ford ford.md`).
 
 ## License
 
 The bspline-fortran source code and related files and documentation are distributed under a permissive free software [license](https://github.com/jacobwilliams/bspline-fortran/blob/master/LICENSE) (BSD-style).
+
+### Keywords
+
+* Bspline, spline, interpolation, data fitting, multivariate interpolation, multidimensional interpolation, integration
+
+## See also
+
+ * This library includes the public domain DBSPLIN and DTENSBS code from the [NIST Core Math Library](http://www.nist.gov/itl/math/mcsd-software.cfm) (CMLIB).
+ * [SPLPAK](https://github.com/jacobwilliams/splpak) Multidimensional least-squares cubic spline fitting
+ * [FINTERP](https://github.com/jacobwilliams/finterp) Multidimensional Linear Interpolation with Modern Fortran
+ * [PCHIP](https://github.com/jacobwilliams/PCHIP) Piecewise Cubic Hermite Interpolation.
+ * [Regridpack](https://github.com/jacobwilliams/regridpack) Linear or cubic interpolation for 1D-4D grids.

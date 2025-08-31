@@ -27,12 +27,12 @@
 
     real(wp) :: x(nx),y(ny),z(nz),q(nq),r(nr),s(ns)
     real(wp) :: tx(nx+kx),ty(ny+ky),tz(nz+kz),tq(nq+kq),tr(nr+kr),ts(ns+ks)
-    real(wp) :: fcn_1d(nx)
-    real(wp) :: fcn_2d(nx,ny)
-    real(wp) :: fcn_3d(nx,ny,nz)
-    real(wp) :: fcn_4d(nx,ny,nz,nq)
-    real(wp) :: fcn_5d(nx,ny,nz,nq,nr)
-    real(wp) :: fcn_6d(nx,ny,nz,nq,nr,ns)
+    real(wp) :: fcn_1d(nx)               , bcoef_1d(nx)
+    real(wp) :: fcn_2d(nx,ny)            , bcoef_2d(nx,ny)
+    real(wp) :: fcn_3d(nx,ny,nz)         , bcoef_3d(nx,ny,nz)
+    real(wp) :: fcn_4d(nx,ny,nz,nq)      , bcoef_4d(nx,ny,nz,nq)
+    real(wp) :: fcn_5d(nx,ny,nz,nq,nr)   , bcoef_5d(nx,ny,nz,nq,nr)
+    real(wp) :: fcn_6d(nx,ny,nz,nq,nr,ns), bcoef_6d(nx,ny,nz,nq,nr,ns)
 
     real(wp),dimension(3*kx)                     :: w1_1d
     real(wp),dimension(ky)                       :: w1_2d
@@ -229,12 +229,12 @@
     ilos  = 1
 
     ! initialize
-    call db1ink(x,nx,fcn_1d,kx,iknot,tx,fcn_1d,iflag(1))
-    call db2ink(x,nx,y,ny,fcn_2d,kx,ky,iknot,tx,ty,fcn_2d,iflag(2))
-    call db3ink(x,nx,y,ny,z,nz,fcn_3d,kx,ky,kz,iknot,tx,ty,tz,fcn_3d,iflag(3))
-    call db4ink(x,nx,y,ny,z,nz,q,nq,fcn_4d,kx,ky,kz,kq,iknot,tx,ty,tz,tq,fcn_4d,iflag(4))
-    call db5ink(x,nx,y,ny,z,nz,q,nq,r,nr,fcn_5d,kx,ky,kz,kq,kr,iknot,tx,ty,tz,tq,tr,fcn_5d,iflag(5))
-    call db6ink(x,nx,y,ny,z,nz,q,nq,r,nr,s,ns,fcn_6d,kx,ky,kz,kq,kr,ks,iknot,tx,ty,tz,tq,tr,ts,fcn_6d,iflag(6))
+    call db1ink(x,nx,fcn_1d,kx,iknot,tx,bcoef_1d,iflag(1))
+    call db2ink(x,nx,y,ny,fcn_2d,kx,ky,iknot,tx,ty,bcoef_2d,iflag(2))
+    call db3ink(x,nx,y,ny,z,nz,fcn_3d,kx,ky,kz,iknot,tx,ty,tz,bcoef_3d,iflag(3))
+    call db4ink(x,nx,y,ny,z,nz,q,nq,fcn_4d,kx,ky,kz,kq,iknot,tx,ty,tz,tq,bcoef_4d,iflag(4))
+    call db5ink(x,nx,y,ny,z,nz,q,nq,r,nr,fcn_5d,kx,ky,kz,kq,kr,iknot,tx,ty,tz,tq,tr,bcoef_5d,iflag(5))
+    call db6ink(x,nx,y,ny,z,nz,q,nq,r,nr,s,ns,fcn_6d,kx,ky,kz,kq,kr,ks,iknot,tx,ty,tz,tq,tr,ts,bcoef_6d,iflag(6))
 
     if (any(iflag/=0)) then
         do i=1,6
@@ -249,14 +249,14 @@
      errmax = 0.0_wp
      do i=1,nx
                         call db1val(x(i),idx,&
-                                            tx,nx,kx,fcn_1d,val(1),iflag(1),inbvx,&
+                                            tx,nx,kx,bcoef_1d,val(1),iflag(1),inbvx,&
                                             w1_1d)
                         tru(1)    = f1(x(i))
                         err(1)    = abs(tru(1)-val(1))
                         errmax(1) = max(err(1),errmax(1))
         do j=1,ny
                         call db2val(x(i),y(j),idx,idy,&
-                                            tx,ty,nx,ny,kx,ky,fcn_2d,val(2),iflag(2),&
+                                            tx,ty,nx,ny,kx,ky,bcoef_2d,val(2),iflag(2),&
                                             inbvx,inbvy,iloy,&
                                             w1_2d,w2_2d)
                         tru(2)    = f2(x(i),y(j))
@@ -264,7 +264,7 @@
                         errmax(2) = max(err(2),errmax(2))
            do k=1,nz
                         call db3val(x(i),y(j),z(k),idx,idy,idz,&
-                                            tx,ty,tz,nx,ny,nz,kx,ky,kz,fcn_3d,val(3),iflag(3),&
+                                            tx,ty,tz,nx,ny,nz,kx,ky,kz,bcoef_3d,val(3),iflag(3),&
                                             inbvx,inbvy,inbvz,iloy,iloz,&
                                             w1_3d,w2_3d,w3_3d)
                         tru(3)    = f3(x(i),y(j),z(k))
@@ -272,7 +272,7 @@
                         errmax(3) = max(err(3),errmax(3))
               do l=1,nq
                         call db4val(x(i),y(j),z(k),q(l),idx,idy,idz,idq,&
-                                            tx,ty,tz,tq,nx,ny,nz,nq,kx,ky,kz,kq,fcn_4d,val(4),iflag(4),&
+                                            tx,ty,tz,tq,nx,ny,nz,nq,kx,ky,kz,kq,bcoef_4d,val(4),iflag(4),&
                                             inbvx,inbvy,inbvz,inbvq,iloy,iloz,iloq,&
                                             w1_4d,w2_4d,w3_4d,w4_4d)
                         tru(4)    = f4(x(i),y(j),z(k),q(l))
@@ -280,7 +280,7 @@
                         errmax(4) = max(err(4),errmax(4))
                 do m=1,nr
                         call db5val(x(i),y(j),z(k),q(l),r(m),idx,idy,idz,idq,idr,&
-                                            tx,ty,tz,tq,tr,nx,ny,nz,nq,nr,kx,ky,kz,kq,kr,fcn_5d,val(5),iflag(5),&
+                                            tx,ty,tz,tq,tr,nx,ny,nz,nq,nr,kx,ky,kz,kq,kr,bcoef_5d,val(5),iflag(5),&
                                             inbvx,inbvy,inbvz,inbvq,inbvr,iloy,iloz,iloq,ilor,&
                                             w1_5d,w2_5d,w3_5d,w4_5d,w5_5d)
                         tru(5)    = f5(x(i),y(j),z(k),q(l),r(m))
@@ -288,7 +288,7 @@
                         errmax(5) = max(err(5),errmax(5))
                     do n=1,ns
                         call db6val(x(i),y(j),z(k),q(l),r(m),s(n),idx,idy,idz,idq,idr,ids,&
-                                            tx,ty,tz,tq,tr,ts,nx,ny,nz,nq,nr,ns,kx,ky,kz,kq,kr,ks,fcn_6d,val(6),iflag(6),&
+                                            tx,ty,tz,tq,tr,ts,nx,ny,nz,nq,nr,ns,kx,ky,kz,kq,kr,ks,bcoef_6d,val(6),iflag(6),&
                                             inbvx,inbvy,inbvz,inbvq,inbvr,inbvs,iloy,iloz,iloq,ilor,ilos,&
                                             w1_6d,w2_6d,w3_6d,w4_6d,w5_6d,w6_6d)
                         tru(6)    = f6(x(i),y(j),z(k),q(l),r(m),s(n))
