@@ -65,7 +65,7 @@
     integer(ip) :: iloy,iloz,iloq,ilor,ilos
     character(len=:),allocatable :: msg    !! status message associated with `flag`
 
-    integer,dimension(*),parameter :: iflags = [   -1_ip, &
+    integer(ip),dimension(*),parameter :: iflags = [-1_ip, &
                                                    -2_ip, &
                                                     0_ip, &
                                                     1_ip, &

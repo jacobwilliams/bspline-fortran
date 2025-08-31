@@ -14,7 +14,7 @@
     integer(ip),parameter :: nx    = 10    !! number of points in x
     integer(ip),parameter :: nxv   = 111   !! number of points to evaluate interpolant
     integer(ip),parameter :: iknot = 0    !! automatically select the knots
-    integer,parameter :: idx = 0 !! compute value for the spline interpolation
+    integer(ip),parameter :: idx = 0 !! compute value for the spline interpolation
 
     real(wp) :: x(nx)
     real(wp) :: xval(nxv),fval(nxv),fval_linear(nxv),fval3(nxv),fval4(nxv)
@@ -45,8 +45,8 @@
     if (iflag/=0) error stop 'Error initializing 1D quadratic spline: '//get_status_message(iflag)
     call b4%initialize(x,fcn_1d,bspline_order_cubic,iflag,extrap=.true.) ! cubic
     if (iflag/=0) error stop 'Error initializing 1D cubic spline: '//get_status_message(iflag)
-    call s1%initialize(x,fcn_1d,iflag)
-    if (iflag/=0) error stop 'Error initializing 1D linear interpolator'
+    call s1%initialize(x,fcn_1d,istat)
+    if (istat/=0) error stop 'Error initializing 1D linear interpolator'
 
     !initialize the plot:
     call plt%initialize(grid=.true.,xlabel='x (deg)',ylabel='f(x)',&

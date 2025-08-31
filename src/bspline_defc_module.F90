@@ -280,7 +280,7 @@ module bspline_defc_module
 
       ! Initially set all output coefficients to zero.
 
-      call dcopy(n, [0.0_wp], 0, Coeff, 1)
+      call dcopy(n, [0.0_wp], 0_ip, Coeff, 1_ip)
 
       Mdeout = -1
       if (Nord < 1 .or. Nord > 20) then
@@ -317,8 +317,8 @@ module bspline_defc_module
 
       ! Sort the breakpoints.
 
-      call dcopy(Nbkpt, Bkptin, 1, Bkpt, 1)
-      call dsort(Nbkpt, 1, Bkpt)
+      call dcopy(Nbkpt, Bkptin, 1_ip, Bkpt, 1_ip)
+      call dsort(Nbkpt, 1_ip, Bkpt)
 
       ! Save interval containing knots.
 
@@ -331,7 +331,7 @@ module bspline_defc_module
 
       ! Sort data and an array of pointers.
 
-      call dcopy(Ndata, Xdata, 1, Xtemp, 1)
+      call dcopy(Ndata, Xdata, 1_ip, Xtemp, 1_ip)
       do i = 1, Ndata
          Ptemp(i) = i
       end do
@@ -340,7 +340,7 @@ module bspline_defc_module
       !      a real work array and also using dsort on it.
 
       if (Ndata > 0) then
-         call dsort(Ndata, 2, Xtemp, Ptemp)
+         call dsort(Ndata, 2_ip, Xtemp, Ptemp)
          xmin = min(xmin, Xtemp(1))
          xmax = max(xmax, Xtemp(Ndata))
       end if
@@ -390,7 +390,7 @@ module bspline_defc_module
                   !  Transfer previously accumulated rows from W(*,*) to
                   !  G(*,*) and process them.
                   call dcopy(nordp1, w(intseq, 1), Mdw, g(ir, 1), Mdg)
-                  call dbndac(g, Mdg, Nord, ipp, ir, 1, intseq)
+                  call dbndac(g, Mdg, Nord, ipp, ir, 1_ip, intseq)
                   intseq = intseq + 1
                end if
             end do
@@ -398,14 +398,14 @@ module bspline_defc_module
 
          ! Obtain B-spline function value.
 
-         call dfspvn(Bkpt, Nord, 1, xval, ileft, Bf, &
+         call dfspvn(Bkpt, Nord, 1_ip, xval, ileft, Bf, &
                      dfspvn_j, dfspvn_deltam, dfspvn_deltap)
 
          ! Move row into place.
 
          irow = ir + mt
          mt = mt + 1
-         call dcopy(Nord, Bf, 1, g(irow, 1), Mdg)
+         call dcopy(Nord, Bf, 1_ip, g(irow, 1), Mdg)
          g(irow, nordp1) = Ydata(l)
 
          ! Scale data if uncertainty is nonzero.
@@ -430,14 +430,14 @@ module bspline_defc_module
       if (Mdein == 2) then
          do i = intseq, np1
             call dcopy(nordp1, w(i, 1), Mdw, g(ir, 1), Mdg)
-            call dbndac(g, Mdg, Nord, ipp, ir, 1, min(n, i))
+            call dbndac(g, Mdg, Nord, ipp, ir, 1_ip, min(n, i))
          end do
       end if
 
       ! Last call to adjust block positioning.
 
-      call dcopy(nordp1, [0.0_wp], 0, g(ir, 1), Mdg)
-      call dbndac(g, Mdg, Nord, ipp, ir, 1, np1)
+      call dcopy(nordp1, [0.0_wp], 0_ip, g(ir, 1), Mdg)
+      call dbndac(g, Mdg, Nord, ipp, ir, 1_ip, np1)
 
       ! Transfer accumulated rows from G(*,*) to W(*,*) for
       ! possible later sequential accumulation.
@@ -461,8 +461,8 @@ module bspline_defc_module
       ! conditioning or the lack of constraints.  No checking
       ! for either of these is done here.
 
-      call dbndsl(1, g, Mdg, Nord, ipp, ir, Coeff, n, rnorm)
-      Mdeout = 1
+      call dbndsl(1_ip, g, Mdg, Nord, ipp, ir, Coeff, n, rnorm)
+      Mdeout = 1_ip
 
    end subroutine defcmn
 !*****************************************************************************************
@@ -651,8 +651,8 @@ module bspline_defc_module
          mh = Ir + Mt - ipp
          kh = min(nbp1, mh)
          do i = 1, kh
-            call dh12(1, i, max(i + 1, Ir - ipp + 1), mh, g(ipp, i), 1, &
-                      rho, g(ipp, i + 1), 1, Mdg, nbp1 - i)
+            call dh12(1_ip, i, max(i + 1_ip, Ir - ipp + 1_ip), mh, g(ipp, i), 1_ip, &
+                      rho, g(ipp, i + 1), 1_ip, Mdg, nbp1 - i)
          end do
          Ir = ipp + kh
          if (kh >= nbp1) then
@@ -1041,7 +1041,7 @@ module bspline_defc_module
 
 
       carry_dy = present(dy)
-      call quicksort(1, n)
+      call quicksort(1_ip, n)
 
    contains
 
@@ -1544,8 +1544,8 @@ module bspline_defc_module
 
    ! Sort the breakpoints.
 
-   call dcopy (nbkpt, bkptin, 1, bkpt, 1)
-   call dsort (nbkpt, 1, bkpt)
+   call dcopy (nbkpt, bkptin, 1_ip, bkpt, 1_ip)
+   call dsort (nbkpt, 1_ip, bkpt)
 
    ! Initialize variables.
 
@@ -1624,13 +1624,13 @@ module bspline_defc_module
       ! To process least squares equations sort data and an array of
       ! pointers.
 
-      call dcopy (ndata, xdata, 1, xtemp, 1)
+      call dcopy (ndata, xdata, 1_ip, xtemp, 1_ip)
       do i = 1,ndata
          ptemp(i) = i
       end do
 
       if (ndata>0) then
-         call dsort (ndata, 2, xtemp, ptemp)
+         call dsort (ndata, 2_ip, xtemp, ptemp)
          xmin = min(xmin,xtemp(1))
          xmax = max(xmax,xtemp(ndata))
       endif
@@ -1679,14 +1679,14 @@ module bspline_defc_module
 
          ! Obtain B-spline function value.
 
-         call dfspvn (bkpt, nord, 1, xval, ileft, bf, &
+         call dfspvn (bkpt, nord, 1_ip, xval, ileft, bf, &
                       dfspvn_j, dfspvn_deltam, dfspvn_deltap)
 
          ! Move row into place.
 
          irow = ir + mt
          mt = mt + 1
-         call dcopy (nord, bf, 1, g(irow,1), mdg)
+         call dcopy (nord, bf, 1_ip, g(irow,1), mdg)
          g(irow,nordp1) = ydata(l)
 
          ! Scale data if uncertainty is nonzero.
@@ -1708,8 +1708,8 @@ module bspline_defc_module
 
       ! Last call to adjust block positioning.
 
-      call dcopy (nordp1, [0.0_wp], 0, g(ir,1), mdg)
-      call dbndac (g, mdg, nord, ipp, ir, 1, np1)
+      call dcopy (nordp1, [0.0_wp], 0_ip, g(ir,1), mdg)
+      call dbndac (g, mdg, nord, ipp, ir, 1_ip, np1)
    endif
 
    band = band .and. nconst==0
@@ -1720,7 +1720,7 @@ module bspline_defc_module
    ! Process banded least squares equations.
 
    if (band) then
-      call dbndsl (1, g, mdg, nord, ipp, ir, coeff, n, rnorm)
+      call dbndsl (1_ip, g, mdg, nord, ipp, ir, coeff, n, rnorm)
       return
    endif
 
@@ -1759,8 +1759,8 @@ module bspline_defc_module
          end do
 
          call dfspvd (bkpt, nord, xval, ileft, bf, ideriv+1)
-         call dcopy (np1, [0.0_wp], 0, w(neqcon,1), mdw)
-         call dcopy (nord, bf(1,ideriv+1), 1, w(neqcon,ileft-nordm1), &
+         call dcopy (np1, [0.0_wp], 0_ip, w(neqcon,1), mdw)
+         call dcopy (nord, bf(1,ideriv+1), 1_ip, w(neqcon,ileft-nordm1), &
                      mdw)
 
          if (itype==2) then
@@ -1775,7 +1775,7 @@ module bspline_defc_module
             end do
 
             call dfspvd (bkpt, nord, yval, ileft, bf, ideriv+1)
-            call daxpy (nord, -1.0_wp, bf(1, ideriv+1), 1, &
+            call daxpy (nord, -1.0_wp, bf(1_ip, ideriv+1), 1_ip, &
                         w(neqcon, ileft-nordm1), mdw)
          endif
       endif
@@ -1785,7 +1785,7 @@ module bspline_defc_module
 
    do i = 1,np1
       irow = i + neqcon
-      call dcopy (n, [0.0_wp], 0, w(irow,1), mdw)
+      call dcopy (n, [0.0_wp], 0_ip, w(irow,1), mdw)
       call dcopy (min(np1-i, nord), g(i,1), mdg, w(irow,i), mdw)
       w(irow,np1) = g(i,nordp1)
    end do
@@ -1810,9 +1810,9 @@ module bspline_defc_module
 
          call dfspvd (bkpt, nord, xval, ileft, bf, ideriv+1)
          irow = neqcon + np1 + nincon
-         call dcopy (n, [0.0_wp], 0, w(irow,1), mdw)
+         call dcopy (n, [0.0_wp], 0_ip, w(irow,1), mdw)
          intrvl = ileft - nordm1
-         call dcopy (nord, bf(1, ideriv+1), 1, w(irow, intrvl), mdw)
+         call dcopy (nord, bf(1_ip, ideriv+1), 1_ip, w(irow, intrvl), mdw)
 
          if (itype==1) then
             w(irow,np1) = yconst(idata)
@@ -1867,7 +1867,7 @@ module bspline_defc_module
    dfspvn_deltam = 0.0_wp
    dfspvn_deltap = 0.0_wp
 
-   call dfspvn(t,k+1-nderiv,1,x,ileft,vnikx(nderiv,nderiv),&
+   call dfspvn(t,k+1-nderiv,1_ip,x,ileft,vnikx(nderiv,nderiv),&
                dfspvn_j,dfspvn_deltam,dfspvn_deltap)
    if (nderiv <= 1) return
 
@@ -1878,7 +1878,7 @@ module bspline_defc_module
           vnikx(j-1,idervm) = vnikx(j,ideriv)
       end do
       ideriv = idervm
-      call dfspvn(t,0,2,x,ileft,vnikx(ideriv,ideriv),&
+      call dfspvn(t,0_ip,2_ip,x,ileft,vnikx(ideriv,ideriv),&
                   dfspvn_j,dfspvn_deltam,dfspvn_deltap)
    end do
 
@@ -2110,8 +2110,8 @@ module bspline_defc_module
          end if
          ! COMPUTE THE J-TH TRANSFORMATION AND APPLY IT TO A
          ! AND B.
-         call dh12(1,j,j+1,m,a(1,j),1,h(j),a(1,j+1),1,mda,n-j)
-         call dh12(2,j,j+1,m,a(1,j),1,h(j),b,1,mdb,nb)
+         call dh12(1_ip,j,j+1,m,a(1,j),1_ip,h(j),a(1,j+1),1_ip,mda,n-j)
+         call dh12(2_ip,j,j+1,m,a(1,j),1_ip,h(j),b,1_ip,mdb,nb)
       end do
 
       ! DETERMINE THE PSEUDORANK, K, USING THE TOLERANCE, TAU.
@@ -2145,7 +2145,7 @@ module bspline_defc_module
             if (k /= n) then
                do ii = 1, k
                   i = kp1 - ii
-                  call dh12(1,i,kp1,n,a(i,1),mda,g(i),a,mda,1,i-1)
+                  call dh12(1_ip,i,kp1,n,a(i,1),mda,g(i),a,mda,1_ip,i-1)
                end do
             end if
 
@@ -2171,7 +2171,7 @@ module bspline_defc_module
                         b(j,jb) = szero
                      end do
                      do i = 1, k
-                        call dh12(2,i,kp1,n,a(i,1),mda,g(i),b(1,jb),1,mdb,1)
+                        call dh12(2_ip,i,kp1,n,a(i,1),mda,g(i),b(1,jb),1_ip,mdb,1_ip)
                      end do
                   end if
 
@@ -2269,7 +2269,7 @@ module bspline_defc_module
    if (m <= 0) then
       if (n > 0) then
          x(1) = zero
-         call dcopy(n,x,0,x,1)
+         call dcopy(n,x,0_ip,x,1_ip)
       end if
       wnorm = zero
       return
@@ -2287,19 +2287,19 @@ module bspline_defc_module
       end do
 
       ! SCALE RT.-SIDE VECTOR TO HAVE LENGTH ONE (OR ZERO).
-      ynorm = dnrm2(m,a(1,np1),1)
+      ynorm = dnrm2(m,a(1,np1),1_ip)
       if (ynorm /= zero) then
          sc = one/ynorm
-         call dscal(m,sc,a(1,np1),1)
+         call dscal(m,sc,a(1,np1),1_ip)
       end if
 
       ! SCALE COLS OF MATRIX H.
       j = n1 + 1
       do
          if (j > n) exit
-         sc = dnrm2(m,a(1,j),1)
+         sc = dnrm2(m,a(1,j),1_ip)
          if (sc /= zero) sc = one/sc
-         call dscal(m,sc,a(1,j),1)
+         call dscal(m,sc,a(1,j),1_ip)
          x(j) = sc
          j = j + 1
       end do
@@ -2311,50 +2311,50 @@ module bspline_defc_module
          do i = 1, m
 
             ! MOVE COL OF TRANSPOSE OF H INTO WORK ARRAY.
-            call dcopy(n2,a(i,n1+1),mda,ws(iw+1),1)
+            call dcopy(n2,a(i,n1+1),mda,ws(iw+1),1_ip)
             iw = iw + n2
 
             ! MOVE COL OF TRANSPOSE OF G INTO WORK ARRAY.
-            call dcopy(n1,a(i,1),mda,ws(iw+1),1)
+            call dcopy(n1,a(i,1),mda,ws(iw+1),1_ip)
             iw = iw + n1
 
             ! MOVE COMPONENT OF VECTOR Y INTO WORK ARRAY.
             ws(iw+1) = a(i,np1)
-            iw = iw + 1
+            iw = iw + 1_ip
          end do
          ws(iw+1) = zero
-         call dcopy(n,ws(iw+1),0,ws(iw+1),1)
+         call dcopy(n,ws(iw+1),0_ip,ws(iw+1),1_ip)
          iw = iw + n
          ws(iw+1) = one
-         iw = iw + 1
+         iw = iw + 1_ip
 
          ! SOLVE EU=F SUBJECT TO (TRANSPOSE OF H)U=0, U>=0.  THE
          ! MATRIX E = TRANSPOSE OF (G Y), AND THE (N+1)-VECTOR
          ! F = TRANSPOSE OF (0,...,0,1).
-         ix = iw + 1
+         ix = iw + 1_ip
          iw = iw + m
 
          ! DO NOT CHECK LENGTHS OF WORK ARRAYS IN THIS USAGE OF
          ! DWNNLS( ).
-         is(1) = 0
-         is(2) = 0
-         call dwnnls(ws,np1,n2,np1-n2,m,0,prgopt,ws(ix),rnorm, &
+         is(1) = 0_ip
+         is(2) = 0_ip
+         call dwnnls(ws,np1,n2,np1-n2,m,0_ip,prgopt,ws(ix),rnorm, &
                      modew,is,ws(iw+1))
 
          ! COMPUTE THE COMPONENTS OF THE SOLN DENOTED ABOVE BY W.
-         sc = one - ddot(m,a(1,np1),1,ws(ix),1)
+         sc = one - ddot(m,a(1,np1),1_ip,ws(ix),1_ip)
          if (one + fac*abs(sc) == one .or. rnorm <= zero) then
             mode = 2
             return
          end if
          sc = one/sc
          do j = 1, n1
-            x(j) = sc*ddot(m,a(1,j),1,ws(ix),1)
+            x(j) = sc*ddot(m,a(1,j),1_ip,ws(ix),1_ip)
          end do
          ! COMPUTE THE VECTOR Q=Y-GW.  OVERWRITE Y WITH THIS
          ! VECTOR.
          do i = 1, m
-            a(i,np1) = a(i,np1) - ddot(n1,a(i,1),mda,x,1)
+            a(i,np1) = a(i,np1) - ddot(n1,a(i,1),mda,x,1_ip)
          end do
 
       end if
@@ -2364,13 +2364,13 @@ module bspline_defc_module
          ! COPY TRANSPOSE OF (H Q) TO WORK ARRAY WS(*).
          iw = 0
          do i = 1, m
-            call dcopy(n2,a(i,n1+1),mda,ws(iw+1),1)
+            call dcopy(n2,a(i,n1+1),mda,ws(iw+1),1_ip)
             iw = iw + n2
             ws(iw+1) = a(i,np1)
             iw = iw + 1
          end do
          ws(iw+1) = zero
-         call dcopy(n2,ws(iw+1),0,ws(iw+1),1)
+         call dcopy(n2,ws(iw+1),0_ip,ws(iw+1),1_ip)
          iw = iw + n2
          ws(iw+1) = one
          iw = iw + 1
@@ -2383,13 +2383,13 @@ module bspline_defc_module
          !
          ! DO NOT CHECK LENGTHS OF WORK ARRAYS IN THIS USAGE OF
          ! DWNNLS( ).
-         is(1) = 0
-         is(2) = 0
-         call dwnnls(ws,n2+1,0,n2+1,m,0,prgopt,ws(ix),rnorm,modew, &
+         is(1) = 0_ip
+         is(2) = 0_ip
+         call dwnnls(ws,n2+1,0_ip,n2+1,m,0_ip,prgopt,ws(ix),rnorm,modew, &
                      is,ws(iw+1))
 
          ! COMPUTE THE COMPONENTS OF THE SOLN DENOTED ABOVE BY Z.
-         sc = one - ddot(m,a(1,np1),1,ws(ix),1)
+         sc = one - ddot(m,a(1,np1),1_ip,ws(ix),1_ip)
          if (one + fac*abs(sc) == one .or. rnorm <= zero) then
             mode = 2
             return
@@ -2397,13 +2397,13 @@ module bspline_defc_module
          sc = one/sc
          do j = 1, n2
             l = n1 + j
-            x(l) = sc*ddot(m,a(1,l),1,ws(ix),1)*x(l)
+            x(l) = sc*ddot(m,a(1,l),1_ip,ws(ix),1_ip)*x(l)
          end do
       end if
 
       ! ACCOUNT FOR SCALING OF RT.-SIDE VECTOR IN SOLUTION.
-      call dscal(n,ynorm,x,1)
-      wnorm = dnrm2(n1,x,1)
+      call dscal(n,ynorm,x,1_ip)
+      wnorm = dnrm2(n1,x,1_ip)
 
    end subroutine dlpdp
 !*****************************************************************************************
@@ -2866,7 +2866,7 @@ module bspline_defc_module
    ! The nominal column scaling used in the code is
    ! the identity scaling.
 
-   call dcopy (n, [1.0_wp], 0, ws(n1), 1)
+   call dcopy (n, [1.0_wp], 0_ip, ws(n1), 1_ip)
 
    ! No covariance matrix is nominally computed.
 
@@ -2901,12 +2901,12 @@ module bspline_defc_module
          cov = prgopt(last+2) /= 0.0_wp
       elseif (key==2 .and. prgopt(last+2)/=0.0_wp) then
          do j = 1,n
-            t = dnrm2(m,w(1,j),1)
+            t = dnrm2(m,w(1,j),1_ip)
             if (t/=0.0_wp) t = 1.0_wp/t
             ws(j+n1-1) = t
          end do
       elseif (key==3) then
-         call dcopy (n, prgopt(last+2), 1, ws(n1), 1)
+         call dcopy (n, prgopt(last+2), 1_ip, ws(n1), 1_ip)
       elseif (key==4) then
          tau = max(drelpr,prgopt(last+2))
       endif
@@ -2922,7 +2922,7 @@ module bspline_defc_module
    end do
 
    do j = 1,n
-      call dscal (m, ws(n1+j-1), w(1,j), 1)
+      call dscal (m, ws(n1+j-1), w(1,j), 1_ip)
    end do
 
    if (cov .and. mdw<n) then
@@ -2938,10 +2938,10 @@ module bspline_defc_module
 
    enorm = 0.0_wp
    do j = 1,n
-      enorm = max(enorm,dasum(me,w(1,j),1))
+      enorm = max(enorm,dasum(me,w(1,j),1_ip))
    end do
 
-   fnorm = dasum(me,w(1,np1),1)
+   fnorm = dasum(me,w(1,np1),1_ip)
    snmax = 0.0_wp
    rnmax = 0.0_wp
    do i = 1,kranke
@@ -2967,7 +2967,7 @@ module bspline_defc_module
       if (i/=imax) call dswap (np1, w(i,1), mdw, w(imax,1), mdw)
       if (snmax>rnmax*tau**2) then
          ! Eliminate elements I+1,...,N in row I.
-         call dh12 (1, i, i+1, n, w(i,1), mdw, ws(i), w(i+1,1), mdw, 1, m-i)
+         call dh12 (1_ip, i, i+1, n, w(i,1), mdw, ws(i), w(i+1,1), mdw, 1_ip, m-i)
       else
          kranke = i - 1
          exit
@@ -2976,7 +2976,7 @@ module bspline_defc_module
 
    ! Save diagonal terms of lower trapezoidal matrix.
 
-   call dcopy (kranke, w, mdw+1, ws(kranke+1), 1)
+   call dcopy (kranke, w, mdw+1, ws(kranke+1), 1_ip)
 
    ! Use Householder transformation from left to achieve
    ! KRANKE by KRANKE upper triangular form.
@@ -2984,17 +2984,17 @@ module bspline_defc_module
    if (kranke<me) then
       do k = kranke,1,-1
          ! Apply transformation to matrix cols. 1,...,K-1.
-         call dh12 (1, k, kranke+1, me, w(1,k), 1, up, w, 1, mdw, k-1)
+         call dh12 (1_ip, k, kranke+1, me, w(1,k), 1_ip, up, w, 1_ip, mdw, k-1)
          ! Apply to rt side vector.
-         call dh12 (2, k, kranke+1, me, w(1,k), 1, up, w(1,np1), 1, 1, 1)
+         call dh12 (2_ip, k, kranke+1, me, w(1,k), 1_ip, up, w(1,np1), 1_ip, 1_ip, 1_ip)
       end do
    endif
 
    ! Solve for variables 1,...,KRANKE in new coordinates.
 
-   call dcopy (kranke, w(1, np1), 1, x, 1)
+   call dcopy (kranke, w(1, np1), 1_ip, x, 1_ip)
    do i = 1,kranke
-      x(i) = (x(i)-ddot(i-1,w(i,1),mdw,x,1))/w(i,i)
+      x(i) = (x(i)-ddot(i-1,w(i,1),mdw,x,1_ip))/w(i,i)
    end do
 
    ! Compute residuals for reduced problem.
@@ -3002,22 +3002,22 @@ module bspline_defc_module
    mep1 = me + 1
    rnorml = 0.0_wp
    do i = mep1,m
-      w(i,np1) = w(i,np1) - ddot(kranke,w(i,1),mdw,x,1)
+      w(i,np1) = w(i,np1) - ddot(kranke,w(i,1),mdw,x,1_ip)
       sn = ddot(kranke,w(i,1),mdw,w(i,1),mdw)
       rn = ddot(n-kranke,w(i,kranke+1),mdw,w(i,kranke+1),mdw)
       if (rn<=sn*tau**2 .and. kranke<n) &
-         call dcopy (n-kranke, [0.0_wp], 0, w(i,kranke+1), mdw)
+         call dcopy (n-kranke, [0.0_wp], 0_ip, w(i,kranke+1), mdw)
    end do
 
    ! Compute equality constraint equations residual length.
 
-   rnorme = dnrm2(me-kranke,w(kranke+1,np1),1)
+   rnorme = dnrm2(me-kranke,w(kranke+1,np1),1_ip)
 
    ! Move reduced problem data upward if KRANKE<ME.
 
    if (kranke<me) then
       do j = 1,np1
-         call dcopy (m-me, w(me+1,j), 1, w(kranke+1,j), 1)
+         call dcopy (m-me, w(me+1,j), 1_ip, w(kranke+1,j), 1_ip)
       end do
    endif
 
@@ -3031,7 +3031,7 @@ module bspline_defc_module
 
    if (me>0) then
       mdeqc = 0
-      xnrme = dasum(kranke,w(1,np1),1)
+      xnrme = dasum(kranke,w(1,np1),1_ip)
       if (rnorme>tau*(enorm*xnrme+fnorm)) mdeqc = 1
       mode = mode + mdeqc
 
@@ -3039,7 +3039,7 @@ module bspline_defc_module
       ! constraints when there are no degrees of freedom left.
 
       if (kranke==n .and. mg>0) then
-         xnorm = dasum(n,x,1)
+         xnorm = dasum(n,x,1_ip)
          mapke1 = ma + kranke + 1
          mend = ma + kranke + mg
          do i = mapke1,mend
@@ -3057,10 +3057,10 @@ module bspline_defc_module
       ! Replace diagonal terms of lower trapezoidal matrix.
 
       if (kranke>0) then
-         call dcopy (kranke, ws(kranke+1), 1, w, mdw+1)
+         call dcopy (kranke, ws(kranke+1), 1_ip, w, mdw+1)
          ! Reapply transformation to put solution in original coordinates.
          do i = kranke,1,-1
-            call dh12 (2, i, i+1, n, w(i,1), mdw, ws(i), x, 1, 1, 1)
+            call dh12 (2_ip, i, i+1, n, w(i,1), mdw, ws(i), x, 1_ip, 1_ip, 1_ip)
          end do
 
          ! Compute covariance matrix of equality constrained problem.
@@ -3073,8 +3073,8 @@ module bspline_defc_module
                do i = jp1,n
                   w(i,j) = rb*ddot(n-j,w(i,jp1),mdw,w(j,jp1),mdw)
                end do
-               gam = 0.5_wp*rb*ddot(n-j,w(jp1,j),1,w(j,jp1),mdw)
-               call daxpy (n-j, gam, w(j,jp1), mdw, w(jp1,j), 1)
+               gam = 0.5_wp*rb*ddot(n-j,w(jp1,j),1_ip,w(j,jp1),mdw)
+               call daxpy (n-j, gam, w(j,jp1), mdw, w(jp1,j), 1_ip)
                do i = jp1,n
                   do k = i,n
                      w(i,k) = w(i,k) + w(j,i)*w(k,j) + w(i,j)*w(j,k)
@@ -3087,7 +3087,7 @@ module bspline_defc_module
                do i = jp1,n
                   w(j,i) = uj*w(i,j) + vj*w(j,i)
                end do
-               call dcopy (n-j, w(j, jp1), mdw, w(jp1,j), 1)
+               call dcopy (n-j, w(j, jp1), mdw, w(jp1,j), 1_ip)
             end do
          endif
       endif
@@ -3097,7 +3097,7 @@ module bspline_defc_module
       if (cov) then
          do i = 1,n
             call dscal (n, ws(i+n1-1), w(i,1), mdw)
-            call dscal (n, ws(i+n1-1), w(1,i), 1)
+            call dscal (n, ws(i+n1-1), w(1,i), 1_ip)
          end do
       endif
 
@@ -3206,7 +3206,7 @@ module bspline_defc_module
 
       anorm = 0.0_wp
       do j = 1,n
-         anorm = max(anorm,dasum(ma,w(1,j),1))
+         anorm = max(anorm,dasum(ma,w(1,j),1_ip))
       end do
 
       ! Set tolerance for DHFTI( ) rank test.
@@ -3215,14 +3215,14 @@ module bspline_defc_module
 
       ! Compute Householder orthogonal decomposition of matrix.
 
-      call dcopy (n, [0.0_wp], 0, ws, 1)
-      call dcopy (ma, w(1, np1), 1, ws, 1)
+      call dcopy (n, [0.0_wp], 0_ip, ws, 1_ip)
+      call dcopy (ma, w(1, np1), 1_ip, ws, 1_ip)
       k = max(m,n)
       minman = min(ma,n)
       n1 = k + 1
       n2 = n1 + n
       rnorm_(1) = rnorm ! JW
-      call dhfti (w, mdw, ma, n, ws, ma, 1, tau, krank, rnorm_, ws(n2), &
+      call dhfti (w, mdw, ma, n, ws, ma, 1_ip, tau, krank, rnorm_, ws(n2), &
                   ws(n1), ipp)
       rnorm = rnorm_(1) ! JW
       fac = 1.0_wp
@@ -3238,21 +3238,21 @@ module bspline_defc_module
       if (ma<m) then
          if (minman>0) then
             do i = map1,m
-               w(i,np1) = w(i,np1) - ddot(n,w(i,1),mdw,ws,1)
+               w(i,np1) = w(i,np1) - ddot(n,w(i,1),mdw,ws,1_ip)
             end do
 
             ! Apply permutations to col. of inequality constraint matrix.
 
             do i = 1,minman
-               call dswap (mg, w(map1,i), 1, w(map1,ipp(i)), 1)
+               call dswap (mg, w(map1,i), 1_ip, w(map1,ipp(i)), 1_ip)
             end do
 
             ! Apply Householder transformations to constraint matrix.
 
             if (krank>0 .and. krank<n) then
                do i = krank,1,-1
-                  call dh12 (2, i, krank+1, n, w(i,1), mdw, ws(n1+i-1), &
-                           w(map1,1), mdw, 1, mg)
+                  call dh12 (2_ip, i, krank+1, n, w(i,1), mdw, ws(n1+i-1), &
+                             w(map1,1), mdw, 1_ip, mg)
                end do
             endif
 
@@ -3260,7 +3260,7 @@ module bspline_defc_module
 
             do i = map1,m
                do j = 1,krank
-                  w(i,j) = (w(i,j)-ddot(j-1,w(1,j),1,w(i,1),mdw))/w(j,j)
+                  w(i,j) = (w(i,j)-ddot(j-1,w(1,j),1_ip,w(i,1),mdw))/w(j,j)
                end do
          end do
          endif
@@ -3269,21 +3269,21 @@ module bspline_defc_module
          ! the least projected distance problem.
 
          call dlpdp(w(map1,1), mdw, mg, krank, n-krank, prgopt, x, &
-                  xnorm, mdlpdp, ws(n2), ipp(n+1))
+                    xnorm, mdlpdp, ws(n2), ipp(n+1))
 
          ! Compute solution in original coordinates.
 
          if (mdlpdp==1) then
             do i = krank,1,-1
-               x(i) = (x(i)-ddot(krank-i,w(i,i+1),mdw,x(i+1),1))/w(i,i)
+               x(i) = (x(i)-ddot(krank-i,w(i,i+1),mdw,x(i+1),1_ip))/w(i,i)
             end do
 
             ! Apply Householder transformation to solution vector.
 
             if (krank<n) then
                do i = 1,krank
-                  call dh12 (2, i, krank+1, n, w(i,1), mdw, ws(n1+i-1), &
-                           x, 1, 1, 1)
+                  call dh12 (2_ip, i, krank+1, n, w(i,1), mdw, ws(n1+i-1), &
+                             x, 1_ip, 1_ip, 1_ip)
                end do
             endif
 
@@ -3291,7 +3291,7 @@ module bspline_defc_module
 
             if (minman>0) then
                do i = minman,1,-1
-                  call dswap (1, x(i), 1, x(ipp(i)), 1)
+                  call dswap (1_ip, x(i), 1_ip, x(ipp(i)), 1_ip)
                end do
 
                ! Variables are now in original coordinates.
@@ -3309,7 +3309,7 @@ module bspline_defc_module
             mode = 2
          endif
       else
-         call dcopy (n, ws, 1, x, 1)
+         call dcopy (n, ws, 1_ip, x, 1_ip)
       endif
 
       ! Compute covariance matrix based on the orthogonal decomposition
@@ -3321,7 +3321,7 @@ module bspline_defc_module
 
       ! Copy diagonal terms to working array.
 
-      call dcopy (krank, w, mdw+1, ws(n2), 1)
+      call dcopy (krank, w, mdw+1, ws(n2), 1_ip)
 
       ! Reciprocate diagonal terms.
 
@@ -3334,7 +3334,7 @@ module bspline_defc_module
       if (krank>1) then
          do i = 1,krm1
             do j = i+1,krank
-               w(i,j) = -ddot(j-i,w(i,i),mdw,w(i,j),1)*w(j,j)
+               w(i,j) = -ddot(j-i,w(i,i),mdw,w(i,j),1_ip)*w(j,j)
             end do
          end do
       endif
@@ -3352,11 +3352,11 @@ module bspline_defc_module
 
       if (krank<n) then
          do j = 1,krank
-            call dcopy (j, w(1,j), 1, w(j,1), mdw)
+            call dcopy (j, w(1,j), 1_ip, w(j,1), mdw)
          end do
 
          do i = krp1,n
-            call dcopy (i, [0.0_wp], 0, w(i,1), mdw)
+            call dcopy (i, [0.0_wp], 0_ip, w(i,1), mdw)
          end do
 
          ! Apply right side transformations to lower triangle.
@@ -3374,7 +3374,7 @@ module bspline_defc_module
 
                ! Store unscaled rank one Householder update in work array.
 
-               call dcopy (n, [0.0_wp], 0, ws(n3), 1)
+               call dcopy (n, [0.0_wp], 0_ip, ws(n3), 1_ip)
                l = n1 + i
                k = n3 + i
                ws(k-1) = ws(l-1)
@@ -3384,13 +3384,13 @@ module bspline_defc_module
                end do
 
                do j = 1,n
-                  ws(j) = rb*(ddot(j-i,w(j,i),mdw,ws(n3+i-1),1)+ &
-                        ddot(n-j+1,w(j,j),1,ws(n3+j-1),1))
+                  ws(j) = rb*(ddot(j-i,w(j,i),mdw,ws(n3+i-1),1_ip)+ &
+                        ddot(n-j+1,w(j,j),1_ip,ws(n3+j-1),1_ip))
                end do
 
                l = n3 + i
-               gam = 0.5_wp*rb*ddot(n-i+1,ws(l-1),1,ws(i),1)
-               call daxpy (n-i+1, gam, ws(l-1), 1, ws(i), 1)
+               gam = 0.5_wp*rb*ddot(n-i+1,ws(l-1),1_ip,ws(i),1_ip)
+               call daxpy (n-i+1_ip, gam, ws(l-1), 1_ip, ws(i), 1_ip)
                do j = i,n
                   do l = 1,i-1
                      w(j,l) = w(j,l) + ws(n3+j-1)*ws(l)
@@ -3406,7 +3406,7 @@ module bspline_defc_module
          ! covariance matrix.
 
          do i = 1,n
-            call dcopy (i, w(i,1), mdw, w(1,i), 1)
+            call dcopy (i, w(i,1), mdw, w(1,i), 1_ip)
          end do
       endif
 
@@ -3415,9 +3415,9 @@ module bspline_defc_module
       do i = minman,1,-1
          k = ipp(i)
          if (i/=k) then
-            call dswap (1, w(i,i), 1, w(k,k), 1)
-            call dswap (i-1, w(1,i), 1, w(1,k), 1)
-            call dswap (k-i-1, w(i,i+1), mdw, w(i+1,k), 1)
+            call dswap (1_ip, w(i,i), 1_ip, w(k,k), 1_ip)
+            call dswap (i-1_ip, w(1,i), 1_ip, w(1,k), 1_ip)
+            call dswap (k-i-1_ip, w(i,i+1), mdw, w(i+1,k), 1_ip)
             call dswap (n-k, w(i, k+1), mdw, w(k, k+1), mdw)
          endif
       end do
@@ -3426,8 +3426,8 @@ module bspline_defc_module
       ! and symmetrize the resulting covariance matrix.
 
       do j = 1,n
-         call dscal (j, fac, w(1,j), 1)
-         call dcopy (j, w(1,j), 1, w(j,1), mdw)
+         call dscal (j, fac, w(1,j), 1_ip)
+         call dcopy (j, w(1,j), 1_ip, w(j,1), mdw)
       end do
 
    end block main
@@ -3538,7 +3538,7 @@ module bspline_defc_module
                ! and find column in remaining set with largest SS.
                call dwnlt3 (i, lend, m, mdw, ipivot, h, w)
                lend = lend - 1
-               imax = idamax(lend-i+1, h(i), 1) + i - 1
+               imax = idamax(lend-i+1, h(i), 1_ip) + i - 1
                hbar = h(imax)
             else
                krank = i - 1
@@ -3554,7 +3554,7 @@ module bspline_defc_module
    if (krank<me) then
       factor = alsq
       do i=krank+1,me
-         call dcopy (l, [0.0_wp], 0, w(i,1), mdw)
+         call dcopy (l, [0.0_wp], 0_ip, w(i,1), mdw)
       end do
 
       ! Determine the rank of the remaining equality constraint
@@ -3591,7 +3591,7 @@ module bspline_defc_module
          if (.not.dwnlt2(me, mend, ir, factor,tau,scale,w(1,i))) then
             jj = ir
             do ir=jj,me
-               call dcopy (n, [0.0_wp], 0, w(ir,1), mdw)
+               call dcopy (n, [0.0_wp], 0_ip, w(ir,1), mdw)
                rnorm = rnorm + (scale(ir)*w(ir,n+1)/alsq)*w(ir,n+1)
                w(ir,n+1) = 0.0_wp
                scale(ir) = 1.0_wp
@@ -3655,8 +3655,8 @@ module bspline_defc_module
          ! maintain the triangular form.  Update the rank indicator
          ! KRANK and the equality constraint pointer ME.
          if (.not.indep) exit
-         call dswap(n+1, w(krank+1,1), mdw, w(ir,1), mdw)
-         call dswap(1, scale(krank+1), 1, scale(ir), 1)
+         call dswap(n+1_ip, w(krank+1,1), mdw, w(ir,1), mdw)
+         call dswap(1_ip, scale(krank+1), 1_ip, scale(ir), 1_ip)
 
          ! Reclassify the least square equation as an equality
          ! constraint and rescale it.
@@ -3673,8 +3673,8 @@ module bspline_defc_module
    ! from right.
    if (krank<l) then
       do j=krank,1,-1
-         call dh12 (1, j, krank+1, l, w(j,1), mdw, h(j), w, mdw, 1, &
-                   j-1)
+         call dh12 (1_ip, j, krank+1, l, w(j,1), mdw, h(j), w, mdw, 1_ip, &
+                    j-1_ip)
       end do
    endif
 
@@ -3775,7 +3775,7 @@ module bspline_defc_module
 
    ! The nominal column scaling used in the code is
    ! the identity scaling.
-   call dcopy (n, [1.0_wp], 0, d, 1)
+   call dcopy (n, [1.0_wp], 0_ip, d, 1_ip)
 
    ! Define bound for number of options to change.
    nopt = 1000
@@ -3801,13 +3801,13 @@ module bspline_defc_module
       key = prgopt(last+1)
       if (key==6 .and. prgopt(last+2)/=0.0_wp) then
          do j = 1,n
-            t = dnrm2(m,w(1,j),1)
+            t = dnrm2(m,w(1,j),1_ip)
             if (t/=0.0_wp) t = 1.0_wp/t
             d(j) = t
          end do
       endif
 
-      if (key==7) call dcopy (n, prgopt(last+2), 1, d, 1)
+      if (key==7) call dcopy (n, prgopt(last+2), 1_ip, d, 1_ip)
       if (key==8) tau = max(drelpr,prgopt(last+2))
       if (key==9) blowup = max(drelpr,prgopt(last+2))
 
@@ -3822,7 +3822,7 @@ module bspline_defc_module
    end do
 
    do j = 1,n
-      call dscal (m, d(j), w(1,j), 1)
+      call dscal (m, d(j), w(1,j), 1_ip)
    end do
 
    ! Process option vector
@@ -3835,12 +3835,12 @@ module bspline_defc_module
 
    ! Compute scale factor to apply to equality constraint equations.
    do j = 1,n
-      wd(j) = dasum(m,w(1,j),1)
+      wd(j) = dasum(m,w(1,j),1_ip)
    end do
 
-   imax = idamax(n,wd,1)
+   imax = idamax(n,wd,1_ip)
    eanorm = wd(imax)
-   bnorm = dasum(m,w(1,n+1),1)
+   bnorm = dasum(m,w(1,n+1),1_ip)
    alamda = eanorm/(drelpr*fac)
 
    ! On machines, such as the VAXes using D floating, with a very
@@ -3868,7 +3868,7 @@ module bspline_defc_module
 
    ! Set the solution vector X(*) to zero and the column interchange
    ! matrix to the identity.
-   call dcopy (n, [0.0_wp], 0, x, 1)
+   call dcopy (n, [0.0_wp], 0_ip, x, 1_ip)
    do i = 1,n
       ipivot(i) = i
    end do
@@ -3877,7 +3877,7 @@ module bspline_defc_module
    ! corresponding to the unconstrained variables.
    ! Set first L components of dual vector to zero because
    ! these correspond to the unconstrained variables.
-   call dcopy (l, [0.0_wp], 0, wd, 1)
+   call dcopy (l, [0.0_wp], 0_ip, wd, 1_ip)
 
    ! The arrays IDOPE(*) and DOPE(*) are used to pass
    ! information to DWNLIT().  This was done to avoid
@@ -3915,7 +3915,7 @@ module bspline_defc_module
       if (done) exit main
       isol = l + 1
       if (nsoln>=isol) then
-         call dcopy (niv, w(1,n+1), 1, temp, 1)
+         call dcopy (niv, w(1,n+1), 1_ip, temp, 1_ip)
          do j = nsoln,isol,-1
             if (j>krank) then
                i = niv - nsoln + j
@@ -3926,7 +3926,7 @@ module bspline_defc_module
                z(j) = 0.0_wp
             else
                z(j) = temp(i)/w(i,j)
-               call daxpy (i-1, -z(j), w(1,j), 1, temp, 1)
+               call daxpy (i-1_ip, -z(j), w(1,j), 1_ip, temp, 1_ip)
             endif
          end do
       endif
@@ -3986,7 +3986,7 @@ module bspline_defc_module
             ipivot(n) = itemp
 
             ! Similarly permute X(*) vector.
-            call dcopy (n-jcon, x(jcon+1), 1, x(jcon), 1)
+            call dcopy (n-jcon, x(jcon+1), 1_ip, x(jcon), 1_ip)
             x(n) = 0.0_wp
             nsoln = nsoln - 1
             niv = niv - 1
@@ -4014,8 +4014,8 @@ module bspline_defc_module
                                  sparam)
                   endif
                elseif (itype(i)==1 .and. itype(i+1)==0) then
-                  call dswap (n+1, w(i,1), mdw, w(i+1,1), mdw)
-                  call dswap (1, scale(i), 1, scale(i+1), 1)
+                  call dswap (n+1_ip, w(i,1), mdw, w(i+1,1), mdw)
+                  call dswap (1_ip, scale(i), 1_ip, scale(i+1), 1_ip)
                   itemp = itype(i+1)
                   itype(i+1) = itype(i)
                   itype(i) = itemp
@@ -4034,14 +4034,14 @@ module bspline_defc_module
                      ! Zero IP1 to I in column J
                      if (w(i+1,j)/=0.0_wp) then
                         call drotmg (scale(i), scale(i+1), w(i,j), &
-                                    w(i+1,j), sparam)
+                                     w(i+1,j), sparam)
                         w(i+1,j) = 0.0_wp
                         call drotm (n+1-j, w(i,j+1), mdw, w(i+1,j+1), mdw, &
                                     sparam)
                      endif
                   else
-                     call dswap (n+1, w(i,1), mdw, w(i+1,1), mdw)
-                     call dswap (1, scale(i), 1, scale(i+1), 1)
+                     call dswap (n+1_ip, w(i,1), mdw, w(i+1,1), mdw)
+                     call dswap (1_ip, scale(i), 1_ip, scale(i+1), 1_ip)
                      itemp = itype(i+1)
                      itype(i+1) = itype(i)
                      itype(i) = itemp
@@ -4069,8 +4069,8 @@ module bspline_defc_module
       else
 
          ! To perform multiplier test and drop a constraint.
-         call dcopy (nsoln, z, 1, x, 1)
-         if (nsoln<n) call dcopy (n-nsoln, [0.0_wp], 0, x(nsoln+1), 1)
+         call dcopy (nsoln, z, 1_ip, x, 1_ip)
+         if (nsoln<n) call dcopy (n-nsoln, [0.0_wp], 0_ip, x(nsoln+1), 1_ip)
 
          ! Reclassify least squares equations as equalities as necessary.
          i = niv + 1
@@ -4079,8 +4079,8 @@ module bspline_defc_module
             if (itype(i)==0) then
                i = i + 1
             else
-               call dswap (n+1, w(i,1), mdw, w(me,1), mdw)
-               call dswap (1, scale(i), 1, scale(me), 1)
+               call dswap (n+1_ip, w(i,1), mdw, w(me,1), mdw)
+               call dswap (1_ip, scale(i), 1_ip, scale(me), 1_ip)
                itemp = itype(i)
                itype(i) = itype(me)
                itype(me) = itemp
@@ -4124,7 +4124,7 @@ module bspline_defc_module
             nsoln = nsoln + 1
             niv = niv + 1
             if (nsoln/=iwmax) then
-               call dswap (m, w(1,nsoln), 1, w(1,iwmax), 1)
+               call dswap (m, w(1,nsoln), 1_ip, w(1,iwmax), 1_ip)
                wd(iwmax) = wd(nsoln)
                wd(nsoln) = 0.0_wp
                itemp = ipivot(nsoln)
@@ -4180,8 +4180,8 @@ module bspline_defc_module
                isol = me + 1
                if (pos) then
                   ! Swap rows ME+1 and NIV, and scale factors for these rows.
-                  call dswap (n+1, w(me+1,1), mdw, w(niv,1), mdw)
-                  call dswap (1, scale(me+1), 1, scale(niv), 1)
+                  call dswap (n+1_ip, w(me+1,1), mdw, w(niv,1), mdw)
+                  call dswap (1_ip, scale(me+1), 1_ip, scale(niv), 1_ip)
                   itemp = itype(me+1)
                   itype(me+1) = itype(niv)
                   itype(niv) = itemp
@@ -4208,7 +4208,7 @@ module bspline_defc_module
    ! Copy right hand side into TEMP vector to use overwriting method.
    isol = 1
    if (nsoln>=isol) then
-      call dcopy (niv, w(1,n+1), 1, temp, 1)
+      call dcopy (niv, w(1,n+1), 1_ip, temp, 1_ip)
       do j = nsoln,isol,-1
          if (j>krank) then
             i = niv - nsoln + j
@@ -4219,23 +4219,23 @@ module bspline_defc_module
             z(j) = 0.0_wp
          else
             z(j) = temp(i)/w(i,j)
-            call daxpy (i-1, -z(j), w(1,j), 1, temp, 1)
+            call daxpy (i-1, -z(j), w(1,j), 1_ip, temp, 1_ip)
          endif
       end do
    endif
 
    ! Solve system.
-   call dcopy (nsoln, z, 1, x, 1)
+   call dcopy (nsoln, z, 1_ip, x, 1_ip)
 
    ! Apply Householder transformations to X(*) if KRANK<L
    if (krank<l) then
       do i = 1,krank
-         call dh12 (2, i, krank+1, l, w(i,1), mdw, h(i), x, 1, 1, 1)
+         call dh12 (2_ip, i, krank+1, l, w(i,1), mdw, h(i), x, 1_ip, 1_ip, 1_ip)
       end do
    endif
 
    ! Fill in trailing zeroes for constrained variables not in solution.
-   if (nsoln<n) call dcopy (n-nsoln, [0.0_wp], 0, x(nsoln+1), 1)
+   if (nsoln<n) call dcopy (n-nsoln, [0.0_wp], 0_ip, x(nsoln+1), 1_ip)
 
    ! Permute solution vector to natural order.
    do i = 1,n
@@ -4246,7 +4246,7 @@ module bspline_defc_module
       end do
       ipivot(j) = ipivot(i)
       ipivot(i) = j
-      call dswap (1, x(j), 1, x(i), 1)
+      call dswap (1_ip, x(j), 1_ip, x(i), 1_ip)
    end do
 
    ! Rescale the solution using the column scaling.
@@ -4292,7 +4292,7 @@ module bspline_defc_module
          h(j) = h(j) - scale(ir-1)*w(ir-1,j)**2
       end do
       ! Test for numerical accuracy.
-      imax = idamax(lend-i+1, h(i), 1) + i - 1
+      imax = idamax(lend-i+1, h(i), 1_ip) + i - 1_ip
       recalc = (hbar+1.e-3*h(imax)) == hbar
    endif
 
@@ -4305,7 +4305,7 @@ module bspline_defc_module
          end do
       end do
       ! Find column with largest SS.
-      imax = idamax(lend-i+1, h(i), 1) + i - 1
+      imax = idamax(lend-i+1, h(i), 1_ip) + i - 1_ip
       hbar = h(imax)
    endif
 
@@ -4383,7 +4383,7 @@ module bspline_defc_module
    integer(ip),intent(in) :: i
    integer(ip),intent(in) :: imax
    integer(ip),intent(inout) :: ipivot(*)
-   integer ,intent(in):: m
+   integer(ip),intent(in):: m
    integer(ip),intent(in) :: mdw
    real(wp),intent(inout) :: h(*)
    real(wp),intent(inout) :: w(mdw,*)
@@ -4395,7 +4395,7 @@ module bspline_defc_module
       itemp        = ipivot(i)
       ipivot(i)    = ipivot(imax)
       ipivot(imax) = itemp
-      call dswap(m, w(1,imax), 1, w(1,i), 1)
+      call dswap(m, w(1,imax), 1_ip, w(1,i), 1_ip)
       t       = h(imax)
       h(imax) = h(i)
       h(i)    = t
@@ -4827,16 +4827,16 @@ module bspline_defc_module
          if (xval < bkpt(ileft+1) .or. ileft >= last - 1) exit
          ileft = ileft + 1
       end do
-      call dfspvn(bkpt,nord,1,xval,ileft,v(nord+1), &
+      call dfspvn(bkpt,nord,1_ip,xval,ileft,v(nord+1), &
                   dfspvn_j, dfspvn_deltam, dfspvn_deltap)
       ileft = ileft - nord + 1
       ipp = mdw*(ileft - 1) + ileft + is
       n = nbkpt - nord
       do i = 1, nord
-         v(i) = ddot(nord,w(ipp),1,v(nord+1),1)
+         v(i) = ddot(nord,w(ipp),1_ip,v(nord+1),1_ip)
          ipp = ipp + mdw
       end do
-      dcv = max(ddot(nord,v,1,v(nord+1),1),zero)
+      dcv = max(ddot(nord,v,1_ip,v(nord+1),1_ip),zero)
 
       ! scale the variance so it is an unbiased estimate.
       dcv = dcv/max(ndata-n,1)

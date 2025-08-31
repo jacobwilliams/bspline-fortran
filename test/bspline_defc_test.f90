@@ -38,8 +38,8 @@
     integer(ip) :: iflag    !! status flag
     integer(ip) :: inbvx
     integer(ip) :: mdein
-    integer(ip) :: isize !! for `random_seed`
-    integer(ip),dimension(:),allocatable :: iseed
+    integer :: isize !! for `random_seed`
+    integer,dimension(:),allocatable :: iseed
     real(wp),dimension(3_ip*NORD) :: w0  !! work array
     type(pyplot) :: plt
     real(wp),dimension(ndata+nord) :: tx
