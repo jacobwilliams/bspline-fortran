@@ -10,26 +10,30 @@
 
     implicit none
 
-    integer(ip),parameter :: nx = 7     !! number of points in x
+    ! integer(ip),parameter :: nx = 7     !! number of points in x
     integer(ip),parameter :: kx = 4     !! order in x
 
-    logical,parameter :: extrap = .true.
+    logical,parameter :: extrap = .false.
     real(wp),parameter :: rad2deg = 180.0_wp / acos(-1.0_wp)  !! deg. to radians conversion factor
 
-    real(wp) :: x(nx)
-    real(wp),dimension(:),allocatable :: xval,fval  !(nx+2)
-    real(wp) :: fcn_1d(nx)
-    real(wp),dimension(:),allocatable :: tx      !(nx+2+kx)
-    real(wp),dimension(:),allocatable :: bcoef   !(nx+2)
-    real(wp) :: tol,val,tru,err,errmax,fbcr,fbcl
+    integer :: nx !! number of points in x
+    real(wp),dimension(:),allocatable :: x          !! (nx)
+    real(wp),dimension(:),allocatable :: fcn_1d     !! (nx)
+    real(wp),dimension(:,:),allocatable :: w        !! (5,nx+2)
+    real(wp),dimension(:),allocatable :: xval,fval  !! (nx+2)
+    real(wp),dimension(:),allocatable :: tx         !! (nx+2+kx)
+    real(wp),dimension(:),allocatable :: bcoef      !! (nx+2)
+    real(wp) :: tol,val,tru,err,errmax,tmp
     logical  :: fail
-    integer(ip)  :: n,i,idx,iflag,inbvx,ibcl,ibcr,kntopt
-    real(wp),dimension(5,nx+2) :: w
+    integer(ip)  :: i,idx,iflag,inbvx,ibcl,ibcr,kntopt
     type(pyplot) :: plt
     integer :: istat
     integer :: icase
     real(wp),dimension(3) :: tleft, tright
     real(wp),dimension(3*kx) :: w1_1d
+
+    real(wp),parameter :: fbcl = 1.0_wp  !! left derivative
+    real(wp),parameter :: fbcr = 1.0_wp  !! right derivative
 
     character(len=*),dimension(7),parameter :: labels = ['not-a-knot [db1ink]          ', &
                                                          '2nd der=0, kntopt=1 [dbint4] ', &
@@ -49,15 +53,19 @@
     fail   = .false.
     tol    = 100 * epsilon(1.0_wp)
     idx    = 0
-    x      = real([1,2,3,4,5,6,7], wp)  ! nx points
-    fcn_1d = f1(x)
 
-    !initialize the plot:
-    call plt%initialize(grid=.true.,xlabel='x (deg)',ylabel='f(x)',&
-                        title='B-Spline End Conditions',legend=.true.)
-    call plt%add_plot(x*rad2deg,fcn_1d,&
-                        label='Function $f(x) = \\sin(x)$',&
-                        linestyle='ko',markersize=5,linewidth=2,istat=istat)
+    ! create x and fcn_1d array: [0.1, ..., 7.1]
+    allocate(x(0), fcn_1d(0))
+    tmp = 0.0_wp
+    nx = 0
+    do
+        tmp = tmp + 0.1_wp
+        if (tmp>=7.2_wp) exit
+        nx = nx + 1
+        x = [x, tmp]
+        fcn_1d = [fcn_1d, f1(tmp)]
+    end do
+    allocate(w(5,nx+2) )
 
     if (extrap) then
         ! points to evaluate [with extrapolation]:
@@ -67,6 +75,13 @@
         xval = real([(real(i)/100.0_wp, i=100, 700, 10)], wp)
     end if
     allocate(fval(size(xval)))
+
+    !initialize the plot:
+    call plt%initialize(grid=.true.,xlabel='x (deg)',ylabel='f(x)',&
+                        title='B-Spline End Conditions',legend=.true.)
+    call plt%add_plot(x*rad2deg,fcn_1d,&
+                        label='Function $f(x) = \\sin(x)$',&
+                        linestyle='ko',markersize=5,linewidth=2,istat=istat)
 
     do icase = 1, 7
 
@@ -107,8 +122,6 @@
                 ibcl = 1
                 ibcr = 1
             end if
-            fbcl = 0.0_wp
-            fbcr = 0.0_wp
 
             write(*,*) 'kntopt:  ', kntopt
 
@@ -125,16 +138,16 @@
                 kntopt = 3
                 w = 0.0_wp
                 ! WARNING: the knot values seem to make no difference in the result
-                tleft  = [-999.0_wp,-999.0_wp,-999.0_wp]
-                tright = [999.0_wp, 999.0_wp, 999.0_wp]
+                tleft  = [0.0_wp,0.0_wp,0.0_wp]
+                tright = [8.0_wp, 8.0_wp, 8.0_wp]
                 call db1ink(x,nx,fcn_1d,kx,ibcl,ibcr,fbcl,fbcr,tleft,tright,tx,bcoef,iflag)
             end select
 
-            write(*,*) ''
-            write(*,*) 'x:  ', x
-            write(*,*) ''
-            write(*,*) 'tx: ', tx
-            write(*,*) ''
+            ! write(*,*) ''
+            ! write(*,*) 'x:  ', x
+            ! write(*,*) ''
+            ! write(*,*) 'tx: ', tx
+            ! write(*,*) ''
 
         end if
         if (iflag/=0) then
