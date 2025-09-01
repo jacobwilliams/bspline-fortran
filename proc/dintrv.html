@@ -1,0 +1,1069 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="BSPLINE-FORTRAN -- Multidimensional B-Spline Interpolation of Data on a Regular Grid">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>dintrv &ndash; bspline-fortran</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">bspline-fortran </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>dintrv
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 1.3% of total for procedures.">83 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/bspline_sub_module.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/bspline_sub_module.f90.html'>bspline_sub_module.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/bspline_sub_module.html'>bspline_sub_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">dintrv</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/dintrv.html#src">dintrv</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>private pure subroutine dintrv(xt, lxt, xx, ilo, ileft, mflag, extrap)  
+</h2>
+    
+
+    <p>Computes the largest integer <code>ileft</code> in 1 <script type="math/tex"> \le </script>
+<code>ileft</code> <script type="math/tex"> \le </script>
+<code>lxt</code>
+  such that <code>xt(ileft)</code> <script type="math/tex"> \le </script>
+<code>x</code> where <code>xt(*)</code> is a subdivision of
+  the <code>x</code> interval.
+  precisely,</p>
+<div class="codehilite"><pre><span></span><code><span class="w">         </span><span class="k">if            </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">xt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w">   </span><span class="k">then </span><span class="n">ileft</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="w">   </span><span class="n">mflag</span><span class="o">=-</span><span class="mi">1</span>
+<span class="w">         </span><span class="k">if   </span><span class="n">xt</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">xt</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">then </span><span class="n">ileft</span><span class="o">=</span><span class="n">i</span><span class="p">,</span><span class="w">   </span><span class="n">mflag</span><span class="o">=</span><span class="mi">0</span>
+<span class="w">         </span><span class="k">if </span><span class="n">xt</span><span class="p">(</span><span class="n">lxt</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">x</span><span class="w">           </span><span class="k">then </span><span class="n">ileft</span><span class="o">=</span><span class="n">lxt</span><span class="p">,</span><span class="w"> </span><span class="n">mflag</span><span class="o">=-</span><span class="mi">2</span>
+</code></pre></div>
+
+<p>that is, when multiplicities are present in the break point
+  to the left of <code>x</code>, the largest index is taken for <code>ileft</code>.</p>
+<h3>History</h3>
+<ul>
+<li>interv written by carl de boor [5]</li>
+<li>dintrv author: amos, d. e., (snla) : date written 800901</li>
+<li>revision date 820801</li>
+<li>Jacob Williams, 2/24/2015 : updated to free-form Fortran.</li>
+<li>Jacob Williams, 2/17/2016 : additional refactoring (eliminated GOTOs).</li>
+<li>Jacob Williams, 3/4/2017 : added extrapolation option.</li>
+</ul>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-xt~2"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>xt</strong></td>
+            <td>
+                <p>a knot or break point vector of length <code>lxt</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-lxt"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>lxt</strong></td>
+            <td>
+                <p>length of the <code>xt</code> vector</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-xx"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>xx</strong></td>
+            <td>
+                <p>argument</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ilo~2"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ilo</strong></td>
+            <td>
+                <p>an initialization parameter which must be set
+to 1 the first time the spline array <code>xt</code> is
+processed by dintrv. <code>ilo</code> contains information for
+efficient processing after the initial call and <code>ilo</code>
+must not be changed by the user.  distinct splines
+require distinct <code>ilo</code> parameters.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ileft~6"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ileft</strong></td>
+            <td>
+                <p>largest integer satisfying <code>xt(ileft)</code> <script type="math/tex"> \le </script>
+<code>x</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mflag~2"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mflag</strong></td>
+            <td>
+                <p>signals when <code>x</code> lies out of bounds</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-extrap~36"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>extrap</strong></td>
+            <td>
+                <p>if extrapolation is allowed
+(if not present, default is False)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~dintrv~~CallsGraph Pages: 1 -->
+<svg id="procdintrvCallsGraph" width="231pt" height="32pt"
+ viewBox="0.00 0.00 231.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~dintrv~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>proc~~dintrv~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 227,-28 227,4 -4,4"/>
+<!-- proc~dintrv -->
+<g id="proc~~dintrv~~CallsGraph_node1" class="node">
+<title>proc~dintrv</title>
+<polygon fill="none" stroke="black" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">dintrv</text>
+</g>
+<!-- proc~get_temp_x_for_extrap -->
+<g id="proc~~dintrv~~CallsGraph_node2" class="node">
+<title>proc~get_temp_x_for_extrap</title>
+<g id="a_proc~~dintrv~~CallsGraph_node2"><a xlink:href="../proc/get_temp_x_for_extrap.html" xlink:title="get_temp_x_for_extrap">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="223,-24 90,-24 90,0 223,0 223,-24"/>
+<text text-anchor="middle" x="156.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_temp_x_for_extrap</text>
+</a>
+</g>
+</g>
+<!-- proc~dintrv&#45;&gt;proc~get_temp_x_for_extrap -->
+<g id="proc~~dintrv~~CallsGraph_edge1" class="edge">
+<title>proc~dintrv&#45;&gt;proc~get_temp_x_for_extrap</title>
+<path fill="none" stroke="#000000" d="M54.11,-12C61.81,-12 70.66,-12 79.85,-12"/>
+<polygon fill="#000000" stroke="#000000" points="79.92,-15.5 89.92,-12 79.92,-8.5 79.92,-15.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~dintrv~~CalledByGraph Pages: 1 -->
+<svg id="procdintrvCalledByGraph" width="641pt" height="317pt"
+ viewBox="0.00 0.00 641.00 317.37" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~dintrv~~CalledByGraph" class="graph" transform="scale(0.78 0.78) rotate(0) translate(4 402)">
+<title>proc~~dintrv~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-402 816,-402 816,4 -4,4"/>
+<!-- proc~dintrv -->
+<g id="proc~~dintrv~~CalledByGraph_node1" class="node">
+<title>proc~dintrv</title>
+<polygon fill="none" stroke="black" points="812,-251 758,-251 758,-227 812,-227 812,-251"/>
+<text text-anchor="middle" x="785" y="-236.6" font-family="Helvetica,sans-Serif" font-size="10.50">dintrv</text>
+</g>
+<!-- proc~db2val -->
+<g id="proc~~dintrv~~CalledByGraph_node2" class="node">
+<title>proc~db2val</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node2"><a xlink:href="../proc/db2val.html" xlink:title="db2val">
+<polygon fill="#d9534f" stroke="#d9534f" points="613.5,-398 559.5,-398 559.5,-374 613.5,-374 613.5,-398"/>
+<text text-anchor="middle" x="586.5" y="-383.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db2val</text>
+</a>
+</g>
+</g>
+<!-- proc~db2val&#45;&gt;proc~dintrv -->
+<g id="proc~~dintrv~~CalledByGraph_edge1" class="edge">
+<title>proc~db2val&#45;&gt;proc~dintrv</title>
+<path fill="none" stroke="#000000" d="M613.62,-374.25C619.71,-371.35 626.14,-368.16 632,-365 673.26,-342.74 686.17,-340.23 722,-310 739.98,-294.83 757.32,-274.3 769.07,-259.22"/>
+<polygon fill="#000000" stroke="#000000" points="772.02,-261.13 775.3,-251.05 766.46,-256.88 772.02,-261.13"/>
+</g>
+<!-- proc~dbvalu -->
+<g id="proc~~dintrv~~CalledByGraph_node9" class="node">
+<title>proc~dbvalu</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node9"><a xlink:href="../proc/dbvalu.html" xlink:title="dbvalu">
+<polygon fill="#d9534f" stroke="#d9534f" points="722,-231 668,-231 668,-207 722,-207 722,-231"/>
+<text text-anchor="middle" x="695" y="-216.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbvalu</text>
+</a>
+</g>
+</g>
+<!-- proc~db2val&#45;&gt;proc~dbvalu -->
+<g id="proc~~dintrv~~CalledByGraph_edge18" class="edge">
+<title>proc~db2val&#45;&gt;proc~dbvalu</title>
+<path fill="none" stroke="#000000" d="M613.57,-377.52C620.22,-374.4 626.91,-370.3 632,-365 666.15,-329.48 682.85,-272.3 689.81,-241.08"/>
+<polygon fill="#000000" stroke="#000000" points="693.25,-241.71 691.88,-231.2 686.4,-240.27 693.25,-241.71"/>
+</g>
+<!-- proc~db3val -->
+<g id="proc~~dintrv~~CalledByGraph_node3" class="node">
+<title>proc~db3val</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node3"><a xlink:href="../proc/db3val.html" xlink:title="db3val">
+<polygon fill="#d9534f" stroke="#d9534f" points="613.5,-356 559.5,-356 559.5,-332 613.5,-332 613.5,-356"/>
+<text text-anchor="middle" x="586.5" y="-341.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db3val</text>
+</a>
+</g>
+</g>
+<!-- proc~db3val&#45;&gt;proc~dintrv -->
+<g id="proc~~dintrv~~CalledByGraph_edge2" class="edge">
+<title>proc~db3val&#45;&gt;proc~dintrv</title>
+<path fill="none" stroke="#000000" d="M613.57,-334.25C641.25,-323.47 685.91,-304.84 722,-284 735.58,-276.16 749.81,-265.99 761.2,-257.3"/>
+<polygon fill="#000000" stroke="#000000" points="763.55,-259.91 769.31,-251.01 759.26,-254.38 763.55,-259.91"/>
+</g>
+<!-- proc~db3val&#45;&gt;proc~dbvalu -->
+<g id="proc~~dintrv~~CalledByGraph_edge19" class="edge">
+<title>proc~db3val&#45;&gt;proc~dbvalu</title>
+<path fill="none" stroke="#000000" d="M613.58,-334.83C620.07,-331.74 626.69,-327.82 632,-323 657.51,-299.84 675.77,-263.71 685.61,-240.71"/>
+<polygon fill="#000000" stroke="#000000" points="688.97,-241.74 689.53,-231.16 682.49,-239.08 688.97,-241.74"/>
+</g>
+<!-- proc~db4val -->
+<g id="proc~~dintrv~~CalledByGraph_node4" class="node">
+<title>proc~db4val</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node4"><a xlink:href="../proc/db4val.html" xlink:title="db4val">
+<polygon fill="#d9534f" stroke="#d9534f" points="613.5,-314 559.5,-314 559.5,-290 613.5,-290 613.5,-314"/>
+<text text-anchor="middle" x="586.5" y="-299.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db4val</text>
+</a>
+</g>
+</g>
+<!-- proc~db4val&#45;&gt;proc~dintrv -->
+<g id="proc~~dintrv~~CalledByGraph_edge3" class="edge">
+<title>proc~db4val&#45;&gt;proc~dintrv</title>
+<path fill="none" stroke="#000000" d="M613.7,-294.76C640.92,-287.12 684.68,-274.46 722,-262 730.62,-259.12 739.85,-255.82 748.47,-252.64"/>
+<polygon fill="#000000" stroke="#000000" points="749.75,-255.9 757.89,-249.12 747.3,-249.34 749.75,-255.9"/>
+</g>
+<!-- proc~db4val&#45;&gt;proc~dbvalu -->
+<g id="proc~~dintrv~~CalledByGraph_edge20" class="edge">
+<title>proc~db4val&#45;&gt;proc~dbvalu</title>
+<path fill="none" stroke="#000000" d="M613.75,-291.45C619.97,-288.46 626.41,-284.93 632,-281 649.11,-268.96 665.73,-251.97 677.44,-238.82"/>
+<polygon fill="#000000" stroke="#000000" points="680.14,-241.05 684.06,-231.21 674.86,-236.46 680.14,-241.05"/>
+</g>
+<!-- proc~db5val -->
+<g id="proc~~dintrv~~CalledByGraph_node5" class="node">
+<title>proc~db5val</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node5"><a xlink:href="../proc/db5val.html" xlink:title="db5val">
+<polygon fill="#d9534f" stroke="#d9534f" points="613.5,-272 559.5,-272 559.5,-248 613.5,-248 613.5,-272"/>
+<text text-anchor="middle" x="586.5" y="-257.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db5val</text>
+</a>
+</g>
+</g>
+<!-- proc~db5val&#45;&gt;proc~dintrv -->
+<g id="proc~~dintrv~~CalledByGraph_edge4" class="edge">
+<title>proc~db5val&#45;&gt;proc~dintrv</title>
+<path fill="none" stroke="#000000" d="M613.59,-257.21C647.95,-253.54 708.53,-247.07 747.44,-242.91"/>
+<polygon fill="#000000" stroke="#000000" points="748.23,-246.34 757.8,-241.8 747.48,-239.38 748.23,-246.34"/>
+</g>
+<!-- proc~db5val&#45;&gt;proc~dbvalu -->
+<g id="proc~~dintrv~~CalledByGraph_edge21" class="edge">
+<title>proc~db5val&#45;&gt;proc~dbvalu</title>
+<path fill="none" stroke="#000000" d="M613.55,-249.97C626.96,-244.81 643.52,-238.44 658.12,-232.81"/>
+<polygon fill="#000000" stroke="#000000" points="659.77,-235.93 667.85,-229.07 657.26,-229.39 659.77,-235.93"/>
+</g>
+<!-- proc~db6val -->
+<g id="proc~~dintrv~~CalledByGraph_node6" class="node">
+<title>proc~db6val</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node6"><a xlink:href="../proc/db6val.html" xlink:title="db6val">
+<polygon fill="#d9534f" stroke="#d9534f" points="613.5,-66 559.5,-66 559.5,-42 613.5,-42 613.5,-66"/>
+<text text-anchor="middle" x="586.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db6val</text>
+</a>
+</g>
+</g>
+<!-- proc~db6val&#45;&gt;proc~dintrv -->
+<g id="proc~~dintrv~~CalledByGraph_edge5" class="edge">
+<title>proc~db6val&#45;&gt;proc~dintrv</title>
+<path fill="none" stroke="#000000" d="M613.64,-52.03C643.26,-51.23 691.4,-54.49 722,-80 763.89,-114.93 777.59,-181.83 781.99,-216.67"/>
+<polygon fill="#000000" stroke="#000000" points="778.53,-217.22 783.11,-226.78 785.48,-216.45 778.53,-217.22"/>
+</g>
+<!-- proc~db6val&#45;&gt;proc~dbvalu -->
+<g id="proc~~dintrv~~CalledByGraph_edge22" class="edge">
+<title>proc~db6val&#45;&gt;proc~dbvalu</title>
+<path fill="none" stroke="#000000" d="M597.49,-66.35C606.81,-78.08 620.9,-96.34 632,-113 651.07,-141.62 670.72,-176.25 682.65,-197.96"/>
+<polygon fill="#000000" stroke="#000000" points="679.7,-199.86 687.56,-206.96 685.84,-196.51 679.7,-199.86"/>
+</g>
+<!-- proc~dbfqad -->
+<g id="proc~~dintrv~~CalledByGraph_node7" class="node">
+<title>proc~dbfqad</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node7"><a xlink:href="../proc/dbfqad.html" xlink:title="dbfqad">
+<polygon fill="#d9534f" stroke="#d9534f" points="459.5,-136 405.5,-136 405.5,-112 459.5,-112 459.5,-136"/>
+<text text-anchor="middle" x="432.5" y="-121.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbfqad</text>
+</a>
+</g>
+</g>
+<!-- proc~dbfqad&#45;&gt;proc~dintrv -->
+<g id="proc~~dintrv~~CalledByGraph_edge6" class="edge">
+<title>proc~dbfqad&#45;&gt;proc~dintrv</title>
+<path fill="none" stroke="#000000" d="M459.82,-116.18C498.75,-106 573.39,-91.87 632,-113 690.7,-134.16 742.77,-188.94 767.96,-218.82"/>
+<polygon fill="#000000" stroke="#000000" points="765.56,-221.4 774.62,-226.89 770.95,-216.95 765.56,-221.4"/>
+</g>
+<!-- proc~dbsgq8 -->
+<g id="proc~~dintrv~~CalledByGraph_node14" class="node">
+<title>proc~dbsgq8</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node14"><a xlink:href="../proc/dbsgq8.html" xlink:title="dbsgq8">
+<polygon fill="#d9534f" stroke="#d9534f" points="613.5,-146 559.5,-146 559.5,-122 613.5,-122 613.5,-146"/>
+<text text-anchor="middle" x="586.5" y="-131.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbsgq8</text>
+</a>
+</g>
+</g>
+<!-- proc~dbfqad&#45;&gt;proc~dbsgq8 -->
+<g id="proc~~dintrv~~CalledByGraph_edge29" class="edge">
+<title>proc~dbfqad&#45;&gt;proc~dbsgq8</title>
+<path fill="none" stroke="#000000" d="M459.63,-125.72C484.39,-127.35 521.8,-129.81 549.4,-131.63"/>
+<polygon fill="#000000" stroke="#000000" points="549.25,-135.12 559.46,-132.29 549.71,-128.14 549.25,-135.12"/>
+</g>
+<!-- proc~dbsqad -->
+<g id="proc~~dintrv~~CalledByGraph_node8" class="node">
+<title>proc~dbsqad</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node8"><a xlink:href="../proc/dbsqad.html" xlink:title="dbsqad">
+<polygon fill="#d9534f" stroke="#d9534f" points="613.5,-24 559.5,-24 559.5,0 613.5,0 613.5,-24"/>
+<text text-anchor="middle" x="586.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbsqad</text>
+</a>
+</g>
+</g>
+<!-- proc~dbsqad&#45;&gt;proc~dintrv -->
+<g id="proc~~dintrv~~CalledByGraph_edge7" class="edge">
+<title>proc~dbsqad&#45;&gt;proc~dintrv</title>
+<path fill="none" stroke="#000000" d="M613.57,-13.03C643.59,-15.61 692.54,-24.29 722,-53 767.93,-97.76 779.84,-177.38 782.92,-216.3"/>
+<polygon fill="#000000" stroke="#000000" points="779.45,-216.82 783.6,-226.57 786.43,-216.36 779.45,-216.82"/>
+</g>
+<!-- proc~dbsqad&#45;&gt;proc~dbvalu -->
+<g id="proc~~dintrv~~CalledByGraph_edge24" class="edge">
+<title>proc~dbsqad&#45;&gt;proc~dbvalu</title>
+<path fill="none" stroke="#000000" d="M613.86,-20.21C620.5,-23.33 627.12,-27.5 632,-33 674.57,-80.97 688.06,-159.07 692.22,-196.98"/>
+<polygon fill="#000000" stroke="#000000" points="688.74,-197.35 693.2,-206.96 695.7,-196.66 688.74,-197.35"/>
+</g>
+<!-- proc~dbvalu&#45;&gt;proc~dintrv -->
+<g id="proc~~dintrv~~CalledByGraph_edge8" class="edge">
+<title>proc~dbvalu&#45;&gt;proc~dintrv</title>
+<path fill="none" stroke="#000000" d="M722.4,-225C730.48,-226.84 739.51,-228.89 748.1,-230.84"/>
+<polygon fill="#000000" stroke="#000000" points="747.39,-234.27 757.92,-233.07 748.94,-227.44 747.39,-234.27"/>
+</g>
+<!-- proc~db1fqad -->
+<g id="proc~~dintrv~~CalledByGraph_node10" class="node">
+<title>proc~db1fqad</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node10"><a xlink:href="../proc/db1fqad.html" xlink:title="db1fqad">
+<polygon fill="#d9534f" stroke="#d9534f" points="280,-136 223,-136 223,-112 280,-112 280,-136"/>
+<text text-anchor="middle" x="251.5" y="-121.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1fqad</text>
+</a>
+</g>
+</g>
+<!-- proc~db1fqad&#45;&gt;proc~dbfqad -->
+<g id="proc~~dintrv~~CalledByGraph_edge14" class="edge">
+<title>proc~db1fqad&#45;&gt;proc~dbfqad</title>
+<path fill="none" stroke="#000000" d="M280.08,-124C311,-124 361.28,-124 395.34,-124"/>
+<polygon fill="#000000" stroke="#000000" points="395.35,-127.5 405.35,-124 395.35,-120.5 395.35,-127.5"/>
+</g>
+<!-- proc~db1sqad -->
+<g id="proc~~dintrv~~CalledByGraph_node11" class="node">
+<title>proc~db1sqad</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node11"><a xlink:href="../proc/db1sqad.html" xlink:title="db1sqad">
+<polygon fill="#d9534f" stroke="#d9534f" points="461.5,-24 403.5,-24 403.5,0 461.5,0 461.5,-24"/>
+<text text-anchor="middle" x="432.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1sqad</text>
+</a>
+</g>
+</g>
+<!-- proc~db1sqad&#45;&gt;proc~dbsqad -->
+<g id="proc~~dintrv~~CalledByGraph_edge15" class="edge">
+<title>proc~db1sqad&#45;&gt;proc~dbsqad</title>
+<path fill="none" stroke="#000000" d="M461.73,-12C486.44,-12 522.48,-12 549.3,-12"/>
+<polygon fill="#000000" stroke="#000000" points="549.45,-15.5 559.45,-12 549.45,-8.5 549.45,-15.5"/>
+</g>
+<!-- proc~db1val_alt -->
+<g id="proc~~dintrv~~CalledByGraph_node12" class="node">
+<title>proc~db1val_alt</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node12"><a xlink:href="../proc/db1val_alt.html" xlink:title="db1val_alt">
+<polygon fill="#d9534f" stroke="#d9534f" points="620,-188 553,-188 553,-164 620,-164 620,-188"/>
+<text text-anchor="middle" x="586.5" y="-173.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1val_alt</text>
+</a>
+</g>
+</g>
+<!-- proc~db1val_alt&#45;&gt;proc~dbvalu -->
+<g id="proc~~dintrv~~CalledByGraph_edge16" class="edge">
+<title>proc~db1val_alt&#45;&gt;proc~dbvalu</title>
+<path fill="none" stroke="#000000" d="M617.45,-188.09C630.22,-193.25 645.22,-199.31 658.55,-204.68"/>
+<polygon fill="#000000" stroke="#000000" points="657.31,-207.96 667.89,-208.46 659.93,-201.47 657.31,-207.96"/>
+</g>
+<!-- proc~db1val_default -->
+<g id="proc~~dintrv~~CalledByGraph_node13" class="node">
+<title>proc~db1val_default</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node13"><a xlink:href="../proc/db1val_default.html" xlink:title="db1val_default">
+<polygon fill="#d9534f" stroke="#d9534f" points="632,-230 541,-230 541,-206 632,-206 632,-230"/>
+<text text-anchor="middle" x="586.5" y="-215.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1val_default</text>
+</a>
+</g>
+</g>
+<!-- proc~db1val_default&#45;&gt;proc~dbvalu -->
+<g id="proc~~dintrv~~CalledByGraph_edge17" class="edge">
+<title>proc~db1val_default&#45;&gt;proc~dbvalu</title>
+<path fill="none" stroke="#000000" d="M632.05,-218.42C640.63,-218.5 649.51,-218.58 657.78,-218.66"/>
+<polygon fill="#000000" stroke="#000000" points="657.83,-222.16 667.87,-218.75 657.9,-215.16 657.83,-222.16"/>
+</g>
+<!-- proc~dbsgq8&#45;&gt;proc~dbvalu -->
+<g id="proc~~dintrv~~CalledByGraph_edge23" class="edge">
+<title>proc~dbsgq8&#45;&gt;proc~dbvalu</title>
+<path fill="none" stroke="#000000" d="M613.8,-144.49C620.01,-147.48 626.44,-151.02 632,-155 649.5,-167.52 666.29,-185.34 677.98,-198.99"/>
+<polygon fill="#000000" stroke="#000000" points="675.46,-201.44 684.55,-206.87 680.83,-196.95 675.46,-201.44"/>
+</g>
+<!-- proc~evaluate_2d -->
+<g id="proc~~dintrv~~CalledByGraph_node15" class="node">
+<title>proc~evaluate_2d</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node15"><a xlink:href="../proc/evaluate_2d.html" xlink:title="bspline_2d%evaluate_2d">
+<polygon fill="#d9534f" stroke="#d9534f" points="505,-398 360,-398 360,-374 505,-374 505,-398"/>
+<text text-anchor="middle" x="432.5" y="-383.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_2d%evaluate_2d</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_2d&#45;&gt;proc~db2val -->
+<g id="proc~~dintrv~~CalledByGraph_edge9" class="edge">
+<title>proc~evaluate_2d&#45;&gt;proc~db2val</title>
+<path fill="none" stroke="#000000" d="M505.05,-386C520.36,-386 535.91,-386 549.21,-386"/>
+<polygon fill="#000000" stroke="#000000" points="549.34,-389.5 559.34,-386 549.34,-382.5 549.34,-389.5"/>
+</g>
+<!-- proc~evaluate_3d -->
+<g id="proc~~dintrv~~CalledByGraph_node16" class="node">
+<title>proc~evaluate_3d</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node16"><a xlink:href="../proc/evaluate_3d.html" xlink:title="bspline_3d%evaluate_3d">
+<polygon fill="#d9534f" stroke="#d9534f" points="505,-356 360,-356 360,-332 505,-332 505,-356"/>
+<text text-anchor="middle" x="432.5" y="-341.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_3d%evaluate_3d</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_3d&#45;&gt;proc~db3val -->
+<g id="proc~~dintrv~~CalledByGraph_edge10" class="edge">
+<title>proc~evaluate_3d&#45;&gt;proc~db3val</title>
+<path fill="none" stroke="#000000" d="M505.05,-344C520.36,-344 535.91,-344 549.21,-344"/>
+<polygon fill="#000000" stroke="#000000" points="549.34,-347.5 559.34,-344 549.34,-340.5 549.34,-347.5"/>
+</g>
+<!-- proc~evaluate_4d -->
+<g id="proc~~dintrv~~CalledByGraph_node17" class="node">
+<title>proc~evaluate_4d</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node17"><a xlink:href="../proc/evaluate_4d.html" xlink:title="bspline_4d%evaluate_4d">
+<polygon fill="#d9534f" stroke="#d9534f" points="505,-314 360,-314 360,-290 505,-290 505,-314"/>
+<text text-anchor="middle" x="432.5" y="-299.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_4d%evaluate_4d</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_4d&#45;&gt;proc~db4val -->
+<g id="proc~~dintrv~~CalledByGraph_edge11" class="edge">
+<title>proc~evaluate_4d&#45;&gt;proc~db4val</title>
+<path fill="none" stroke="#000000" d="M505.05,-302C520.36,-302 535.91,-302 549.21,-302"/>
+<polygon fill="#000000" stroke="#000000" points="549.34,-305.5 559.34,-302 549.34,-298.5 549.34,-305.5"/>
+</g>
+<!-- proc~evaluate_5d -->
+<g id="proc~~dintrv~~CalledByGraph_node18" class="node">
+<title>proc~evaluate_5d</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node18"><a xlink:href="../proc/evaluate_5d.html" xlink:title="bspline_5d%evaluate_5d">
+<polygon fill="#d9534f" stroke="#d9534f" points="505,-272 360,-272 360,-248 505,-248 505,-272"/>
+<text text-anchor="middle" x="432.5" y="-257.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_5d%evaluate_5d</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_5d&#45;&gt;proc~db5val -->
+<g id="proc~~dintrv~~CalledByGraph_edge12" class="edge">
+<title>proc~evaluate_5d&#45;&gt;proc~db5val</title>
+<path fill="none" stroke="#000000" d="M505.05,-260C520.36,-260 535.91,-260 549.21,-260"/>
+<polygon fill="#000000" stroke="#000000" points="549.34,-263.5 559.34,-260 549.34,-256.5 549.34,-263.5"/>
+</g>
+<!-- proc~evaluate_6d -->
+<g id="proc~~dintrv~~CalledByGraph_node19" class="node">
+<title>proc~evaluate_6d</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node19"><a xlink:href="../proc/evaluate_6d.html" xlink:title="bspline_6d%evaluate_6d">
+<polygon fill="#d9534f" stroke="#d9534f" points="505,-66 360,-66 360,-42 505,-42 505,-66"/>
+<text text-anchor="middle" x="432.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_6d%evaluate_6d</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_6d&#45;&gt;proc~db6val -->
+<g id="proc~~dintrv~~CalledByGraph_edge13" class="edge">
+<title>proc~evaluate_6d&#45;&gt;proc~db6val</title>
+<path fill="none" stroke="#000000" d="M505.05,-54C520.36,-54 535.91,-54 549.21,-54"/>
+<polygon fill="#000000" stroke="#000000" points="549.34,-57.5 559.34,-54 549.34,-50.5 549.34,-57.5"/>
+</g>
+<!-- interface~db1val -->
+<g id="proc~~dintrv~~CalledByGraph_node20" class="node">
+<title>interface~db1val</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node20"><a xlink:href="../interface/db1val.html" xlink:title="db1val">
+<polygon fill="#a7506f" stroke="#a7506f" points="459.5,-197 405.5,-197 405.5,-173 459.5,-173 459.5,-197"/>
+<text text-anchor="middle" x="432.5" y="-182.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1val</text>
+</a>
+</g>
+</g>
+<!-- interface~db1val&#45;&gt;proc~db1val_alt -->
+<g id="proc~~dintrv~~CalledByGraph_edge27" class="edge">
+<title>interface~db1val&#45;&gt;proc~db1val_alt</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M459.63,-183.45C482.41,-182.1 515.89,-180.12 542.6,-178.54"/>
+<polygon fill="#000000" stroke="#000000" points="543.06,-182.02 552.83,-177.93 542.64,-175.03 543.06,-182.02"/>
+</g>
+<!-- interface~db1val&#45;&gt;proc~db1val_default -->
+<g id="proc~~dintrv~~CalledByGraph_edge28" class="edge">
+<title>interface~db1val&#45;&gt;proc~db1val_default</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M459.63,-190.67C479.25,-194.93 506.81,-200.92 531.14,-206.2"/>
+<polygon fill="#000000" stroke="#000000" points="530.47,-209.63 540.99,-208.34 531.96,-202.79 530.47,-209.63"/>
+</g>
+<!-- proc~fintegral_1d -->
+<g id="proc~~dintrv~~CalledByGraph_node21" class="node">
+<title>proc~fintegral_1d</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node21"><a xlink:href="../proc/fintegral_1d.html" xlink:title="bspline_1d%fintegral_1d">
+<polygon fill="#d9534f" stroke="#d9534f" points="143,-136 0,-136 0,-112 143,-112 143,-136"/>
+<text text-anchor="middle" x="71.5" y="-121.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d%fintegral_1d</text>
+</a>
+</g>
+</g>
+<!-- proc~fintegral_1d&#45;&gt;proc~db1fqad -->
+<g id="proc~~dintrv~~CalledByGraph_edge25" class="edge">
+<title>proc~fintegral_1d&#45;&gt;proc~db1fqad</title>
+<path fill="none" stroke="#000000" d="M143.11,-124C166.91,-124 192.55,-124 212.81,-124"/>
+<polygon fill="#000000" stroke="#000000" points="212.87,-127.5 222.87,-124 212.87,-120.5 212.87,-127.5"/>
+</g>
+<!-- proc~integral_1d -->
+<g id="proc~~dintrv~~CalledByGraph_node22" class="node">
+<title>proc~integral_1d</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node22"><a xlink:href="../proc/integral_1d.html" xlink:title="bspline_1d%integral_1d">
+<polygon fill="#d9534f" stroke="#d9534f" points="321,-24 182,-24 182,0 321,0 321,-24"/>
+<text text-anchor="middle" x="251.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d%integral_1d</text>
+</a>
+</g>
+</g>
+<!-- proc~integral_1d&#45;&gt;proc~db1sqad -->
+<g id="proc~~dintrv~~CalledByGraph_edge26" class="edge">
+<title>proc~integral_1d&#45;&gt;proc~db1sqad</title>
+<path fill="none" stroke="#000000" d="M321.19,-12C345.65,-12 372.31,-12 393.29,-12"/>
+<polygon fill="#000000" stroke="#000000" points="393.4,-15.5 403.4,-12 393.4,-8.5 393.4,-15.5"/>
+</g>
+<!-- proc~evaluate_1d -->
+<g id="proc~~dintrv~~CalledByGraph_node23" class="node">
+<title>proc~evaluate_1d</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node23"><a xlink:href="../proc/evaluate_1d.html" xlink:title="bspline_1d%evaluate_1d">
+<polygon fill="#d9534f" stroke="#d9534f" points="324,-197 179,-197 179,-173 324,-173 324,-197"/>
+<text text-anchor="middle" x="251.5" y="-182.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d%evaluate_1d</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_1d&#45;&gt;interface~db1val -->
+<g id="proc~~dintrv~~CalledByGraph_edge30" class="edge">
+<title>proc~evaluate_1d&#45;&gt;interface~db1val</title>
+<path fill="none" stroke="#000000" d="M324.02,-185C348.4,-185 374.63,-185 395.08,-185"/>
+<polygon fill="#000000" stroke="#000000" points="395.21,-188.5 405.21,-185 395.21,-181.5 395.21,-188.5"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocdintrvCalledByGraph = svgPanZoom('#procdintrvCalledByGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">pure subroutine </span><span class="n">dintrv</span><span class="p">(</span><span class="n">xt</span><span class="p">,</span><span class="n">lxt</span><span class="p">,</span><span class="n">xx</span><span class="p">,</span><span class="n">ilo</span><span class="p">,</span><span class="n">ileft</span><span class="p">,</span><span class="n">mflag</span><span class="p">,</span><span class="n">extrap</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">implicit none</span>
+
+<span class="k">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">             </span><span class="kd">::</span><span class="w"> </span><span class="n">lxt</span><span class="w">    </span><span class="c">!! length of the `xt` vector</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">   </span><span class="kd">::</span><span class="w"> </span><span class="n">xt</span><span class="w">     </span><span class="c">!! a knot or break point vector of length `lxt`</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">                </span><span class="kd">::</span><span class="w"> </span><span class="n">xx</span><span class="w">     </span><span class="c">!! argument</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w">          </span><span class="kd">::</span><span class="w"> </span><span class="n">ilo</span><span class="w">    </span><span class="c">!! an initialization parameter which must be set</span>
+<span class="w">                                                 </span><span class="c">!! to 1 the first time the spline array `xt` is</span>
+<span class="w">                                                 </span><span class="c">!! processed by dintrv. `ilo` contains information for</span>
+<span class="w">                                                 </span><span class="c">!! efficient processing after the initial call and `ilo`</span>
+<span class="w">                                                 </span><span class="c">!! must not be changed by the user.  distinct splines</span>
+<span class="w">                                                 </span><span class="c">!! require distinct `ilo` parameters.</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">            </span><span class="kd">::</span><span class="w"> </span><span class="n">ileft</span><span class="w">  </span><span class="c">!! largest integer satisfying `xt(ileft)` \( \le \) `x`</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">            </span><span class="kd">::</span><span class="w"> </span><span class="n">mflag</span><span class="w">  </span><span class="c">!! signals when `x` lies out of bounds</span>
+<span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w">        </span><span class="kd">::</span><span class="w"> </span><span class="n">extrap</span><span class="w"> </span><span class="c">!! if extrapolation is allowed</span>
+<span class="w">                                                 </span><span class="c">!! (if not present, default is False)</span>
+
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ihi</span><span class="p">,</span><span class="w"> </span><span class="n">istep</span><span class="p">,</span><span class="w"> </span><span class="n">middle</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span>
+
+<span class="w">    </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get_temp_x_for_extrap</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span><span class="n">xt</span><span class="p">(</span><span class="mi">1_ip</span><span class="p">),</span><span class="n">xt</span><span class="p">(</span><span class="n">lxt</span><span class="p">),</span><span class="n">extrap</span><span class="p">)</span>
+
+<span class="w">    </span><span class="n">ihi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ilo</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">ihi</span><span class="o">&gt;=</span><span class="n">lxt</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">x</span><span class="o">&gt;=</span><span class="n">xt</span><span class="p">(</span><span class="n">lxt</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">mflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">2_ip</span>
+<span class="w">            </span><span class="n">ileft</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lxt</span>
+<span class="w">            </span><span class="k">return</span>
+<span class="k">        end if</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">lxt</span><span class="o">&lt;=</span><span class="mi">1</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">mflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1_ip</span>
+<span class="w">            </span><span class="n">ileft</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">            </span><span class="k">return</span>
+<span class="k">        end if</span>
+<span class="k">        </span><span class="n">ilo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lxt</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">        </span><span class="n">ihi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lxt</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">x</span><span class="o">&gt;=</span><span class="n">xt</span><span class="p">(</span><span class="n">ihi</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+
+<span class="w">        </span><span class="c">! now x &gt;= xt(ilo). find upper bound</span>
+<span class="w">        </span><span class="n">istep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">        </span><span class="k">do</span>
+<span class="k">            </span><span class="n">ilo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ihi</span>
+<span class="w">            </span><span class="n">ihi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ilo</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">istep</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">ihi</span><span class="o">&gt;=</span><span class="n">lxt</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">x</span><span class="o">&gt;=</span><span class="n">xt</span><span class="p">(</span><span class="n">lxt</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                    </span><span class="n">mflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">2_ip</span>
+<span class="w">                    </span><span class="n">ileft</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lxt</span>
+<span class="w">                    </span><span class="k">return</span>
+<span class="k">                end if</span>
+<span class="k">                </span><span class="n">ihi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lxt</span>
+<span class="w">            </span><span class="k">else if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">x</span><span class="o">&gt;=</span><span class="n">xt</span><span class="p">(</span><span class="n">ihi</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                </span><span class="n">istep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">istep</span><span class="o">*</span><span class="mi">2_ip</span>
+<span class="w">                </span><span class="k">cycle</span>
+<span class="k">            end if</span>
+<span class="k">            exit</span>
+<span class="k">        end do</span>
+
+<span class="k">    else</span>
+
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">x</span><span class="o">&gt;=</span><span class="n">xt</span><span class="p">(</span><span class="n">ilo</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">mflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0_ip</span>
+<span class="w">            </span><span class="n">ileft</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ilo</span>
+<span class="w">            </span><span class="k">return</span>
+<span class="k">        end if</span>
+<span class="w">        </span><span class="c">! now x &lt;= xt(ihi). find lower bound</span>
+<span class="w">        </span><span class="n">istep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">        </span><span class="k">do</span>
+<span class="k">            </span><span class="n">ihi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ilo</span>
+<span class="w">            </span><span class="n">ilo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ihi</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">istep</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">ilo</span><span class="o">&lt;=</span><span class="mi">1_ip</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                </span><span class="n">ilo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">x</span><span class="o">&lt;</span><span class="n">xt</span><span class="p">(</span><span class="mi">1_ip</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                    </span><span class="n">mflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1_ip</span>
+<span class="w">                    </span><span class="n">ileft</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">                    </span><span class="k">return</span>
+<span class="k">                end if</span>
+<span class="k">            else if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">x</span><span class="o">&lt;</span><span class="n">xt</span><span class="p">(</span><span class="n">ilo</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                </span><span class="n">istep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">istep</span><span class="o">*</span><span class="mi">2_ip</span>
+<span class="w">                </span><span class="k">cycle</span>
+<span class="k">            end if</span>
+<span class="k">            exit</span>
+<span class="k">        end do</span>
+
+<span class="k">    end if</span>
+
+<span class="w">    </span><span class="c">! now xt(ilo) &lt;= x &lt; xt(ihi). narrow the interval</span>
+<span class="w">    </span><span class="k">do</span>
+<span class="k">        </span><span class="n">middle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">ilo</span><span class="o">+</span><span class="n">ihi</span><span class="p">)</span><span class="o">/</span><span class="mi">2_ip</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">middle</span><span class="o">==</span><span class="n">ilo</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">mflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0_ip</span>
+<span class="w">            </span><span class="n">ileft</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ilo</span>
+<span class="w">            </span><span class="k">return</span>
+<span class="k">        end if</span>
+<span class="w">        </span><span class="c">! note. it is assumed that middle = ilo in case ihi = ilo+1</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">x</span><span class="o">&lt;</span><span class="n">xt</span><span class="p">(</span><span class="n">middle</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">ihi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">middle</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="k">            </span><span class="n">ilo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">middle</span>
+<span class="w">        </span><span class="k">end if</span>
+<span class="k">    end do</span>
+
+<span class="k">    end subroutine </span><span class="n">dintrv</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              bspline-fortran
+ was developed by Jacob Williams<br>              &copy; 2025 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

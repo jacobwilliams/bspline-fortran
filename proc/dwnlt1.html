@@ -1,0 +1,778 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="BSPLINE-FORTRAN -- Multidimensional B-Spline Interpolation of Data on a Regular Grid">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>dwnlt1 &ndash; bspline-fortran</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">bspline-fortran </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>dwnlt1
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.4% of total for procedures.">23 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/bspline_defc_module.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/bspline_defc_module.f90.html'>bspline_defc_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/bspline_defc_module.html'>bspline_defc_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">dwnlt1</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/dwnlt1.html#src">dwnlt1</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>private  subroutine dwnlt1(i, lend, mend, ir, mdw, recalc, imax, hbar, h, scale, w)  
+</h2>
+    
+
+    <p>To update the column Sum Of Squares and find the pivot column.
+  The column Sum of Squares Vector will be updated at each step.
+  When numerically necessary, these values will be recomputed.</p>
+<h3>Revision history</h3>
+<ul>
+<li>790701  DATE WRITTEN. Hanson, R. J., (SNLA), Haskell, K. H., (SNLA)</li>
+<li>890620  Code extracted from WNLIT and made a subroutine.  (RWC))</li>
+<li>900604  DP version created from SP version.  (RWC)</li>
+</ul>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-i~15"></span>
+              integer(kind=ip)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>i</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-lend~2"></span>
+              integer(kind=ip)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>lend</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mend~3"></span>
+              integer(kind=ip)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mend</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ir~4"></span>
+              integer(kind=ip)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ir</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mdw~8"></span>
+              integer(kind=ip)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mdw</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-recalc~2"></span>
+              logical
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>recalc</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-imax~4"></span>
+              integer(kind=ip)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>imax</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-hbar~2"></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>hbar</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-h~4"></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>h</strong>(*)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-scale~3"></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>scale</strong>(*)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-w~9"></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>w</strong>(mdw,*)</td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~dwnlt1~~CallsGraph Pages: 1 -->
+<svg id="procdwnlt1CallsGraph" width="152pt" height="32pt"
+ viewBox="0.00 0.00 152.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~dwnlt1~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>proc~~dwnlt1~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 148,-28 148,4 -4,4"/>
+<!-- proc~dwnlt1 -->
+<g id="proc~~dwnlt1~~CallsGraph_node1" class="node">
+<title>proc~dwnlt1</title>
+<polygon fill="none" stroke="black" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">dwnlt1</text>
+</g>
+<!-- proc~idamax -->
+<g id="proc~~dwnlt1~~CallsGraph_node2" class="node">
+<title>proc~idamax</title>
+<g id="a_proc~~dwnlt1~~CallsGraph_node2"><a xlink:href="../proc/idamax.html" xlink:title="idamax">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="144,-24 90,-24 90,0 144,0 144,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">idamax</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlt1&#45;&gt;proc~idamax -->
+<g id="proc~~dwnlt1~~CallsGraph_edge1" class="edge">
+<title>proc~dwnlt1&#45;&gt;proc~idamax</title>
+<path fill="none" stroke="#000000" d="M54.4,-12C62.39,-12 71.31,-12 79.82,-12"/>
+<polygon fill="#000000" stroke="#000000" points="79.92,-15.5 89.92,-12 79.92,-8.5 79.92,-15.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~dwnlt1~~CalledByGraph Pages: 1 -->
+<svg id="procdwnlt1CalledByGraph" width="641pt" height="26pt"
+ viewBox="0.00 0.00 641.00 26.23" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~dwnlt1~~CalledByGraph" class="graph" transform="scale(0.82 0.82) rotate(0) translate(4 28)">
+<title>proc~~dwnlt1~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 778,-28 778,4 -4,4"/>
+<!-- proc~dwnlt1 -->
+<g id="proc~~dwnlt1~~CalledByGraph_node1" class="node">
+<title>proc~dwnlt1</title>
+<polygon fill="none" stroke="black" points="774,-24 720,-24 720,0 774,0 774,-24"/>
+<text text-anchor="middle" x="747" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">dwnlt1</text>
+</g>
+<!-- proc~dwnlit -->
+<g id="proc~~dwnlt1~~CalledByGraph_node2" class="node">
+<title>proc~dwnlit</title>
+<g id="a_proc~~dwnlt1~~CalledByGraph_node2"><a xlink:href="../proc/dwnlit.html" xlink:title="dwnlit">
+<polygon fill="#d9534f" stroke="#d9534f" points="684,-24 630,-24 630,0 684,0 684,-24"/>
+<text text-anchor="middle" x="657" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dwnlit</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~dwnlt1 -->
+<g id="proc~~dwnlt1~~CalledByGraph_edge1" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~dwnlt1</title>
+<path fill="none" stroke="#000000" d="M684.4,-12C692.39,-12 701.31,-12 709.82,-12"/>
+<polygon fill="#000000" stroke="#000000" points="709.92,-15.5 719.92,-12 709.92,-8.5 709.92,-15.5"/>
+</g>
+<!-- proc~dwnlsm -->
+<g id="proc~~dwnlt1~~CalledByGraph_node3" class="node">
+<title>proc~dwnlsm</title>
+<g id="a_proc~~dwnlt1~~CalledByGraph_node3"><a xlink:href="../proc/dwnlsm.html" xlink:title="dwnlsm">
+<polygon fill="#d9534f" stroke="#d9534f" points="594,-24 540,-24 540,0 594,0 594,-24"/>
+<text text-anchor="middle" x="567" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dwnlsm</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~dwnlit -->
+<g id="proc~~dwnlt1~~CalledByGraph_edge2" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~dwnlit</title>
+<path fill="none" stroke="#000000" d="M594.4,-12C602.39,-12 611.31,-12 619.82,-12"/>
+<polygon fill="#000000" stroke="#000000" points="619.92,-15.5 629.92,-12 619.92,-8.5 619.92,-15.5"/>
+</g>
+<!-- proc~dwnnls -->
+<g id="proc~~dwnlt1~~CalledByGraph_node4" class="node">
+<title>proc~dwnnls</title>
+<g id="a_proc~~dwnlt1~~CalledByGraph_node4"><a xlink:href="../proc/dwnnls.html" xlink:title="dwnnls">
+<polygon fill="#d9534f" stroke="#d9534f" points="504,-24 450,-24 450,0 504,0 504,-24"/>
+<text text-anchor="middle" x="477" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dwnnls</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnnls&#45;&gt;proc~dwnlsm -->
+<g id="proc~~dwnlt1~~CalledByGraph_edge3" class="edge">
+<title>proc~dwnnls&#45;&gt;proc~dwnlsm</title>
+<path fill="none" stroke="#000000" d="M504.4,-12C512.39,-12 521.31,-12 529.82,-12"/>
+<polygon fill="#000000" stroke="#000000" points="529.92,-15.5 539.92,-12 529.92,-8.5 529.92,-15.5"/>
+</g>
+<!-- proc~dlpdp -->
+<g id="proc~~dwnlt1~~CalledByGraph_node5" class="node">
+<title>proc~dlpdp</title>
+<g id="a_proc~~dwnlt1~~CalledByGraph_node5"><a xlink:href="../proc/dlpdp.html" xlink:title="dlpdp">
+<polygon fill="#d9534f" stroke="#d9534f" points="414,-24 360,-24 360,0 414,0 414,-24"/>
+<text text-anchor="middle" x="387" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dlpdp</text>
+</a>
+</g>
+</g>
+<!-- proc~dlpdp&#45;&gt;proc~dwnnls -->
+<g id="proc~~dwnlt1~~CalledByGraph_edge4" class="edge">
+<title>proc~dlpdp&#45;&gt;proc~dwnnls</title>
+<path fill="none" stroke="#000000" d="M414.4,-12C422.39,-12 431.31,-12 439.82,-12"/>
+<polygon fill="#000000" stroke="#000000" points="439.92,-15.5 449.92,-12 439.92,-8.5 439.92,-15.5"/>
+</g>
+<!-- proc~dlsi -->
+<g id="proc~~dwnlt1~~CalledByGraph_node6" class="node">
+<title>proc~dlsi</title>
+<g id="a_proc~~dwnlt1~~CalledByGraph_node6"><a xlink:href="../proc/dlsi.html" xlink:title="dlsi">
+<polygon fill="#d9534f" stroke="#d9534f" points="324,-24 270,-24 270,0 324,0 324,-24"/>
+<text text-anchor="middle" x="297" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dlsi</text>
+</a>
+</g>
+</g>
+<!-- proc~dlsi&#45;&gt;proc~dlpdp -->
+<g id="proc~~dwnlt1~~CalledByGraph_edge5" class="edge">
+<title>proc~dlsi&#45;&gt;proc~dlpdp</title>
+<path fill="none" stroke="#000000" d="M324.4,-12C332.39,-12 341.31,-12 349.82,-12"/>
+<polygon fill="#000000" stroke="#000000" points="349.92,-15.5 359.92,-12 349.92,-8.5 349.92,-15.5"/>
+</g>
+<!-- proc~dlsei -->
+<g id="proc~~dwnlt1~~CalledByGraph_node7" class="node">
+<title>proc~dlsei</title>
+<g id="a_proc~~dwnlt1~~CalledByGraph_node7"><a xlink:href="../proc/dlsei.html" xlink:title="dlsei">
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-24 180,-24 180,0 234,0 234,-24"/>
+<text text-anchor="middle" x="207" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dlsei</text>
+</a>
+</g>
+</g>
+<!-- proc~dlsei&#45;&gt;proc~dlsi -->
+<g id="proc~~dwnlt1~~CalledByGraph_edge6" class="edge">
+<title>proc~dlsei&#45;&gt;proc~dlsi</title>
+<path fill="none" stroke="#000000" d="M234.4,-12C242.39,-12 251.31,-12 259.82,-12"/>
+<polygon fill="#000000" stroke="#000000" points="259.92,-15.5 269.92,-12 259.92,-8.5 259.92,-15.5"/>
+</g>
+<!-- proc~dfcmn -->
+<g id="proc~~dwnlt1~~CalledByGraph_node8" class="node">
+<title>proc~dfcmn</title>
+<g id="a_proc~~dwnlt1~~CalledByGraph_node8"><a xlink:href="../proc/dfcmn.html" xlink:title="dfcmn">
+<polygon fill="#d9534f" stroke="#d9534f" points="144,-24 90,-24 90,0 144,0 144,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dfcmn</text>
+</a>
+</g>
+</g>
+<!-- proc~dfcmn&#45;&gt;proc~dlsei -->
+<g id="proc~~dwnlt1~~CalledByGraph_edge7" class="edge">
+<title>proc~dfcmn&#45;&gt;proc~dlsei</title>
+<path fill="none" stroke="#000000" d="M144.4,-12C152.39,-12 161.31,-12 169.82,-12"/>
+<polygon fill="#000000" stroke="#000000" points="169.92,-15.5 179.92,-12 169.92,-8.5 169.92,-15.5"/>
+</g>
+<!-- proc~dfc -->
+<g id="proc~~dwnlt1~~CalledByGraph_node9" class="node">
+<title>proc~dfc</title>
+<g id="a_proc~~dwnlt1~~CalledByGraph_node9"><a xlink:href="../proc/dfc.html" xlink:title="dfc">
+<polygon fill="#d9534f" stroke="#d9534f" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dfc</text>
+</a>
+</g>
+</g>
+<!-- proc~dfc&#45;&gt;proc~dfcmn -->
+<g id="proc~~dwnlt1~~CalledByGraph_edge8" class="edge">
+<title>proc~dfc&#45;&gt;proc~dfcmn</title>
+<path fill="none" stroke="#000000" d="M54.4,-12C62.39,-12 71.31,-12 79.82,-12"/>
+<polygon fill="#000000" stroke="#000000" points="79.92,-15.5 89.92,-12 79.92,-8.5 79.92,-15.5"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocdwnlt1CalledByGraph = svgPanZoom('#procdwnlt1CalledByGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">subroutine </span><span class="n">dwnlt1</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">lend</span><span class="p">,</span><span class="w"> </span><span class="n">mend</span><span class="p">,</span><span class="w"> </span><span class="n">ir</span><span class="p">,</span><span class="w"> </span><span class="n">mdw</span><span class="p">,</span><span class="w"> </span><span class="n">recalc</span><span class="p">,</span><span class="w"> </span><span class="n">imax</span><span class="p">,</span><span class="w"> </span><span class="n">hbar</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                      </span><span class="nb">scale</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">)</span>
+
+<span class="w">   </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">imax</span><span class="p">,</span><span class="w"> </span><span class="n">ir</span><span class="p">,</span><span class="w"> </span><span class="n">lend</span><span class="p">,</span><span class="w"> </span><span class="n">mdw</span><span class="p">,</span><span class="w"> </span><span class="n">mend</span>
+<span class="w">   </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">h</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="n">hbar</span><span class="p">,</span><span class="w"> </span><span class="nb">scale</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">mdw</span><span class="p">,</span><span class="o">*</span><span class="p">)</span>
+<span class="w">   </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">recalc</span>
+
+<span class="w">   </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">k</span>
+
+<span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ir</span><span class="o">/=</span><span class="mi">1</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="n">recalc</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="w">      </span><span class="c">! Update column SS=sum of squares.</span>
+<span class="w">      </span><span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="p">,</span><span class="n">lend</span>
+<span class="w">         </span><span class="n">h</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">scale</span><span class="p">(</span><span class="n">ir</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">w</span><span class="p">(</span><span class="n">ir</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+<span class="w">      </span><span class="k">end do</span>
+<span class="w">      </span><span class="c">! Test for numerical accuracy.</span>
+<span class="w">      </span><span class="n">imax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">idamax</span><span class="p">(</span><span class="n">lend</span><span class="o">-</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">      </span><span class="n">recalc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">hbar</span><span class="o">+</span><span class="mf">1.e-3</span><span class="o">*</span><span class="n">h</span><span class="p">(</span><span class="n">imax</span><span class="p">))</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">hbar</span>
+<span class="w">   </span><span class="k">endif</span>
+
+<span class="w">   </span><span class="c">! If required, recalculate column SS, using rows IR through MEND.</span>
+<span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">recalc</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">      do </span><span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="p">,</span><span class="n">lend</span>
+<span class="w">         </span><span class="n">h</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0_wp</span>
+<span class="w">         </span><span class="k">do </span><span class="n">k</span><span class="o">=</span><span class="n">ir</span><span class="p">,</span><span class="n">mend</span>
+<span class="w">            </span><span class="n">h</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">scale</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">*</span><span class="n">w</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">j</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+<span class="w">         </span><span class="k">end do</span>
+<span class="k">      end do</span>
+<span class="w">      </span><span class="c">! Find column with largest SS.</span>
+<span class="w">      </span><span class="n">imax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">idamax</span><span class="p">(</span><span class="n">lend</span><span class="o">-</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">      </span><span class="n">hbar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">(</span><span class="n">imax</span><span class="p">)</span>
+<span class="w">   </span><span class="k">endif</span>
+
+<span class="k">   end subroutine </span><span class="n">dwnlt1</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              bspline-fortran
+ was developed by Jacob Williams<br>              &copy; 2025 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

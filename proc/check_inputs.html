@@ -1,0 +1,1834 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="BSPLINE-FORTRAN -- Multidimensional B-Spline Interpolation of Data on a Regular Grid">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>check_inputs &ndash; bspline-fortran</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">bspline-fortran </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>check_inputs
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 5.2% of total for procedures.">328 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/bspline_sub_module.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/bspline_sub_module.f90.html'>bspline_sub_module.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/bspline_sub_module.html'>bspline_sub_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">check_inputs</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/check_inputs.html#src">check_inputs</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>private pure subroutine check_inputs(iknot, iflag, nx, ny, nz, nq, nr, ns, kx, ky, kz, kq, kr, ks, x, y, z, q, r, s, tx, ty, tz, tq, tr, ts, f1, f2, f3, f4, f5, f6, bcoef1, bcoef2, bcoef3, bcoef4, bcoef5, bcoef6, alt, status_ok)  
+</h2>
+    
+
+    <p>Check the validity of the inputs to the <code>db*ink</code> routines.
+  Prints warning message if there is an error,
+  and also sets iflag and status_ok.</p>
+<p>Supports up to 6D: <code>x</code>,<code>y</code>,<code>z</code>,<code>q</code>,<code>r</code>,<code>s</code></p>
+<h3>Notes</h3>
+<p>The code is new, but the logic is based on the original
+  logic in the CMLIB routines <code>db2ink</code> and <code>db3ink</code>.</p>
+<h3>History</h3>
+<ul>
+<li>Jacob Williams, 2/24/2015 : Created this routine.</li>
+</ul>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-iknot~13"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iknot</strong></td>
+            <td>
+                <p>= 0 if the <code>INK</code> routine is computing the knots.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-iflag~42"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iflag</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nx~37"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nx</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ny~27"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ny</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nz~22"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nz</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nq~17"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nq</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nr~12"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nr</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ns~7"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ns</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-kx~49"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>kx</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ky~37"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ky</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-kz~30"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>kz</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-kq~23"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>kq</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-kr~16"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>kr</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ks~9"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ks</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~43"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-y~26"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>y</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-z~22"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>z</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-q~19"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>q</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-r~13"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>r</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-s~15"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>s</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tx~37"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>tx</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ty~27"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>ty</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tz~22"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>tz</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tq~17"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>tq</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tr~12"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>tr</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ts~7"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>ts</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-f1"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>f1</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-f2"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:,:)
+            </td>
+            <td>::</td>
+            <td><strong>f2</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-f3"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:,:,:)
+            </td>
+            <td>::</td>
+            <td><strong>f3</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-f4"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:,:,:,:)
+            </td>
+            <td>::</td>
+            <td><strong>f4</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-f5"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:,:,:,:,:)
+            </td>
+            <td>::</td>
+            <td><strong>f5</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-f6"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:,:,:,:,:,:)
+            </td>
+            <td>::</td>
+            <td><strong>f6</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-bcoef1"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>bcoef1</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-bcoef2"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:,:)
+            </td>
+            <td>::</td>
+            <td><strong>bcoef2</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-bcoef3"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:,:,:)
+            </td>
+            <td>::</td>
+            <td><strong>bcoef3</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-bcoef4"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:,:,:,:)
+            </td>
+            <td>::</td>
+            <td><strong>bcoef4</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-bcoef5"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:,:,:,:,:)
+            </td>
+            <td>::</td>
+            <td><strong>bcoef5</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-bcoef6"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:,:,:,:,:,:)
+            </td>
+            <td>::</td>
+            <td><strong>bcoef6</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-alt"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>alt</strong></td>
+            <td>
+                <p>using the alt routine where 1st or
+2nd deriv is fixed at endpoints
+[default is False]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-status_ok~10"></span>
+              logical,
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>status_ok</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~check_inputs~~CalledByGraph Pages: 1 -->
+<svg id="proccheck_inputsCalledByGraph" width="641pt" height="293pt"
+ viewBox="0.00 0.00 641.00 292.93" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~check_inputs~~CalledByGraph" class="graph" transform="scale(0.59 0.59) rotate(0) translate(4 490)">
+<title>proc~~check_inputs~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-490 1077,-490 1077,4 -4,4"/>
+<!-- proc~check_inputs -->
+<g id="proc~~check_inputs~~CalledByGraph_node1" class="node">
+<title>proc~check_inputs</title>
+<polygon fill="none" stroke="black" points="1073,-318 991,-318 991,-294 1073,-294 1073,-318"/>
+<text text-anchor="middle" x="1032" y="-303.6" font-family="Helvetica,sans-Serif" font-size="10.50">check_inputs</text>
+</g>
+<!-- proc~db1ink_alt -->
+<g id="proc~~check_inputs~~CalledByGraph_node2" class="node">
+<title>proc~db1ink_alt</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node2"><a xlink:href="../proc/db1ink_alt.html" xlink:title="db1ink_alt">
+<polygon fill="#d9534f" stroke="#d9534f" points="943,-465 876,-465 876,-441 943,-441 943,-465"/>
+<text text-anchor="middle" x="909.5" y="-450.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1ink_alt</text>
+</a>
+</g>
+</g>
+<!-- proc~db1ink_alt&#45;&gt;proc~check_inputs -->
+<g id="proc~~check_inputs~~CalledByGraph_edge1" class="edge">
+<title>proc~db1ink_alt&#45;&gt;proc~check_inputs</title>
+<path fill="none" stroke="#000000" d="M942.12,-440.96C946.73,-438.41 951.2,-435.44 955,-432 987.78,-402.4 1010.95,-355.3 1022.54,-327.85"/>
+<polygon fill="#000000" stroke="#000000" points="1025.87,-328.95 1026.41,-318.37 1019.39,-326.3 1025.87,-328.95"/>
+</g>
+<!-- proc~db1ink_alt_2 -->
+<g id="proc~~check_inputs~~CalledByGraph_node3" class="node">
+<title>proc~db1ink_alt_2</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node3"><a xlink:href="../proc/db1ink_alt_2.html" xlink:title="db1ink_alt_2">
+<polygon fill="#d9534f" stroke="#d9534f" points="949,-423 870,-423 870,-399 949,-399 949,-423"/>
+<text text-anchor="middle" x="909.5" y="-408.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1ink_alt_2</text>
+</a>
+</g>
+</g>
+<!-- proc~db1ink_alt_2&#45;&gt;proc~check_inputs -->
+<g id="proc~~check_inputs~~CalledByGraph_edge2" class="edge">
+<title>proc~db1ink_alt_2&#45;&gt;proc~check_inputs</title>
+<path fill="none" stroke="#000000" d="M940.64,-398.78C945.63,-396.2 950.61,-393.26 955,-390 979.55,-371.8 1002.29,-344.74 1016.38,-326.29"/>
+<polygon fill="#000000" stroke="#000000" points="1019.22,-328.34 1022.4,-318.24 1013.61,-324.15 1019.22,-328.34"/>
+</g>
+<!-- proc~db1ink_default -->
+<g id="proc~~check_inputs~~CalledByGraph_node4" class="node">
+<title>proc~db1ink_default</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node4"><a xlink:href="../proc/db1ink_default.html" xlink:title="db1ink_default">
+<polygon fill="#d9534f" stroke="#d9534f" points="955,-381 864,-381 864,-357 955,-357 955,-381"/>
+<text text-anchor="middle" x="909.5" y="-366.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1ink_default</text>
+</a>
+</g>
+</g>
+<!-- proc~db1ink_default&#45;&gt;proc~check_inputs -->
+<g id="proc~~check_inputs~~CalledByGraph_edge3" class="edge">
+<title>proc~db1ink_default&#45;&gt;proc~check_inputs</title>
+<path fill="none" stroke="#000000" d="M936.99,-356.84C942.95,-354.01 949.22,-350.96 955,-348 970.27,-340.19 986.97,-331.03 1000.82,-323.26"/>
+<polygon fill="#000000" stroke="#000000" points="1002.91,-326.1 1009.9,-318.13 999.47,-320 1002.91,-326.1"/>
+</g>
+<!-- proc~db2ink -->
+<g id="proc~~check_inputs~~CalledByGraph_node5" class="node">
+<title>proc~db2ink</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node5"><a xlink:href="../proc/db2ink.html" xlink:title="db2ink">
+<polygon fill="#d9534f" stroke="#d9534f" points="936.5,-339 882.5,-339 882.5,-315 936.5,-315 936.5,-339"/>
+<text text-anchor="middle" x="909.5" y="-324.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db2ink</text>
+</a>
+</g>
+</g>
+<!-- proc~db2ink&#45;&gt;proc~check_inputs -->
+<g id="proc~~check_inputs~~CalledByGraph_edge4" class="edge">
+<title>proc~db2ink&#45;&gt;proc~check_inputs</title>
+<path fill="none" stroke="#000000" d="M936.65,-322.44C949.47,-320.21 965.37,-317.44 980.43,-314.81"/>
+<polygon fill="#000000" stroke="#000000" points="981.43,-318.19 990.68,-313.03 980.23,-311.3 981.43,-318.19"/>
+</g>
+<!-- proc~db3ink -->
+<g id="proc~~check_inputs~~CalledByGraph_node6" class="node">
+<title>proc~db3ink</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node6"><a xlink:href="../proc/db3ink.html" xlink:title="db3ink">
+<polygon fill="#d9534f" stroke="#d9534f" points="936.5,-297 882.5,-297 882.5,-273 936.5,-273 936.5,-297"/>
+<text text-anchor="middle" x="909.5" y="-282.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db3ink</text>
+</a>
+</g>
+</g>
+<!-- proc~db3ink&#45;&gt;proc~check_inputs -->
+<g id="proc~~check_inputs~~CalledByGraph_edge5" class="edge">
+<title>proc~db3ink&#45;&gt;proc~check_inputs</title>
+<path fill="none" stroke="#000000" d="M936.65,-289.56C949.47,-291.79 965.37,-294.56 980.43,-297.19"/>
+<polygon fill="#000000" stroke="#000000" points="980.23,-300.7 990.68,-298.97 981.43,-293.81 980.23,-300.7"/>
+</g>
+<!-- proc~db4ink -->
+<g id="proc~~check_inputs~~CalledByGraph_node7" class="node">
+<title>proc~db4ink</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node7"><a xlink:href="../proc/db4ink.html" xlink:title="db4ink">
+<polygon fill="#d9534f" stroke="#d9534f" points="936.5,-234 882.5,-234 882.5,-210 936.5,-210 936.5,-234"/>
+<text text-anchor="middle" x="909.5" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db4ink</text>
+</a>
+</g>
+</g>
+<!-- proc~db4ink&#45;&gt;proc~check_inputs -->
+<g id="proc~~check_inputs~~CalledByGraph_edge6" class="edge">
+<title>proc~db4ink&#45;&gt;proc~check_inputs</title>
+<path fill="none" stroke="#000000" d="M927.76,-234.04C948.08,-248.19 981.99,-271.84 1005.37,-288.13"/>
+<polygon fill="#000000" stroke="#000000" points="1003.56,-291.14 1013.77,-293.99 1007.57,-285.4 1003.56,-291.14"/>
+</g>
+<!-- proc~db5ink -->
+<g id="proc~~check_inputs~~CalledByGraph_node8" class="node">
+<title>proc~db5ink</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node8"><a xlink:href="../proc/db5ink.html" xlink:title="db5ink">
+<polygon fill="#d9534f" stroke="#d9534f" points="936.5,-150 882.5,-150 882.5,-126 936.5,-126 936.5,-150"/>
+<text text-anchor="middle" x="909.5" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db5ink</text>
+</a>
+</g>
+</g>
+<!-- proc~db5ink&#45;&gt;proc~check_inputs -->
+<g id="proc~~check_inputs~~CalledByGraph_edge7" class="edge">
+<title>proc~db5ink&#45;&gt;proc~check_inputs</title>
+<path fill="none" stroke="#000000" d="M919.17,-150.08C939.56,-178.52 990.79,-249.94 1016.21,-285.39"/>
+<polygon fill="#000000" stroke="#000000" points="1013.41,-287.49 1022.09,-293.57 1019.1,-283.41 1013.41,-287.49"/>
+</g>
+<!-- proc~db6ink -->
+<g id="proc~~check_inputs~~CalledByGraph_node9" class="node">
+<title>proc~db6ink</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node9"><a xlink:href="../proc/db6ink.html" xlink:title="db6ink">
+<polygon fill="#d9534f" stroke="#d9534f" points="936.5,-66 882.5,-66 882.5,-42 936.5,-42 936.5,-66"/>
+<text text-anchor="middle" x="909.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db6ink</text>
+</a>
+</g>
+</g>
+<!-- proc~db6ink&#45;&gt;proc~check_inputs -->
+<g id="proc~~check_inputs~~CalledByGraph_edge8" class="edge">
+<title>proc~db6ink&#45;&gt;proc~check_inputs</title>
+<path fill="none" stroke="#000000" d="M920.62,-66.46C930.3,-78.78 944.88,-98.42 955,-117 986.4,-174.67 1012.23,-248.11 1024.05,-284.1"/>
+<polygon fill="#000000" stroke="#000000" points="1020.73,-285.18 1027.14,-293.62 1027.38,-283.02 1020.73,-285.18"/>
+</g>
+<!-- interface~db1ink -->
+<g id="proc~~check_inputs~~CalledByGraph_node10" class="node">
+<title>interface~db1ink</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node10"><a xlink:href="../interface/db1ink.html" xlink:title="db1ink">
+<polygon fill="#a7506f" stroke="#a7506f" points="745.5,-444 691.5,-444 691.5,-420 745.5,-420 745.5,-444"/>
+<text text-anchor="middle" x="718.5" y="-429.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1ink</text>
+</a>
+</g>
+</g>
+<!-- interface~db1ink&#45;&gt;proc~db1ink_alt -->
+<g id="proc~~check_inputs~~CalledByGraph_edge9" class="edge">
+<title>interface~db1ink&#45;&gt;proc~db1ink_alt</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M745.78,-434.92C776.84,-438.37 828.95,-444.16 865.82,-448.26"/>
+<polygon fill="#000000" stroke="#000000" points="865.46,-451.74 875.79,-449.37 866.24,-444.78 865.46,-451.74"/>
+</g>
+<!-- interface~db1ink&#45;&gt;proc~db1ink_alt_2 -->
+<g id="proc~~check_inputs~~CalledByGraph_edge10" class="edge">
+<title>interface~db1ink&#45;&gt;proc~db1ink_alt_2</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M745.78,-429.08C775.04,-425.83 823,-420.5 859.29,-416.47"/>
+<polygon fill="#000000" stroke="#000000" points="860.11,-419.9 869.66,-415.32 859.34,-412.94 860.11,-419.9"/>
+</g>
+<!-- interface~db1ink&#45;&gt;proc~db1ink_default -->
+<g id="proc~~check_inputs~~CalledByGraph_edge11" class="edge">
+<title>interface~db1ink&#45;&gt;proc~db1ink_default</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M745.6,-429.45C768.01,-426.67 800.88,-421.2 828,-411 845.34,-404.48 847.61,-398.63 864,-390 866.87,-388.49 869.87,-386.96 872.9,-385.46"/>
+<polygon fill="#000000" stroke="#000000" points="874.49,-388.58 881.96,-381.06 871.43,-382.28 874.49,-388.58"/>
+</g>
+<!-- proc~initialize_2d_auto_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_node11" class="node">
+<title>proc~initialize_2d_auto_knots</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node11"><a xlink:href="../proc/initialize_2d_auto_knots.html" xlink:title="bspline_2d%initialize_2d_auto_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="821,-402 616,-402 616,-378 821,-378 821,-402"/>
+<text text-anchor="middle" x="718.5" y="-387.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_2d%initialize_2d_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_2d_auto_knots&#45;&gt;proc~db2ink -->
+<g id="proc~~check_inputs~~CalledByGraph_edge12" class="edge">
+<title>proc~initialize_2d_auto_knots&#45;&gt;proc~db2ink</title>
+<path fill="none" stroke="#000000" d="M798.6,-377.94C808.64,-375.46 818.66,-372.51 828,-369 845.34,-362.48 847.61,-356.63 864,-348 866.95,-346.45 870.03,-344.88 873.14,-343.34"/>
+<polygon fill="#000000" stroke="#000000" points="874.96,-346.35 882.43,-338.84 871.9,-340.05 874.96,-346.35"/>
+</g>
+<!-- proc~initialize_2d_specify_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_node12" class="node">
+<title>proc~initialize_2d_specify_knots</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node12"><a xlink:href="../proc/initialize_2d_specify_knots.html" xlink:title="bspline_2d%initialize_2d_specify_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="828,-360 609,-360 609,-336 828,-336 828,-360"/>
+<text text-anchor="middle" x="718.5" y="-345.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_2d%initialize_2d_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_2d_specify_knots&#45;&gt;proc~db2ink -->
+<g id="proc~~check_inputs~~CalledByGraph_edge13" class="edge">
+<title>proc~initialize_2d_specify_knots&#45;&gt;proc~db2ink</title>
+<path fill="none" stroke="#000000" d="M827.52,-336C843.71,-334.2 859.35,-332.46 872.5,-331"/>
+<polygon fill="#000000" stroke="#000000" points="872.92,-334.48 882.47,-329.89 872.15,-327.52 872.92,-334.48"/>
+</g>
+<!-- proc~initialize_3d_auto_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_node13" class="node">
+<title>proc~initialize_3d_auto_knots</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node13"><a xlink:href="../proc/initialize_3d_auto_knots.html" xlink:title="bspline_3d%initialize_3d_auto_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="821,-318 616,-318 616,-294 821,-294 821,-318"/>
+<text text-anchor="middle" x="718.5" y="-303.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_3d%initialize_3d_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_3d_auto_knots&#45;&gt;proc~db3ink -->
+<g id="proc~~check_inputs~~CalledByGraph_edge14" class="edge">
+<title>proc~initialize_3d_auto_knots&#45;&gt;proc~db3ink</title>
+<path fill="none" stroke="#000000" d="M821.19,-294.7C839.47,-292.67 857.39,-290.68 872.19,-289.03"/>
+<polygon fill="#000000" stroke="#000000" points="872.83,-292.49 882.38,-287.9 872.05,-285.53 872.83,-292.49"/>
+</g>
+<!-- proc~initialize_3d_specify_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_node14" class="node">
+<title>proc~initialize_3d_specify_knots</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node14"><a xlink:href="../proc/initialize_3d_specify_knots.html" xlink:title="bspline_3d%initialize_3d_specify_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="828,-276 609,-276 609,-252 828,-252 828,-276"/>
+<text text-anchor="middle" x="718.5" y="-261.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_3d%initialize_3d_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_3d_specify_knots&#45;&gt;proc~db3ink -->
+<g id="proc~~check_inputs~~CalledByGraph_edge15" class="edge">
+<title>proc~initialize_3d_specify_knots&#45;&gt;proc~db3ink</title>
+<path fill="none" stroke="#000000" d="M827.52,-276C843.71,-277.8 859.35,-279.54 872.5,-281"/>
+<polygon fill="#000000" stroke="#000000" points="872.15,-284.48 882.47,-282.11 872.92,-277.52 872.15,-284.48"/>
+</g>
+<!-- proc~initialize_4d_auto_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_node15" class="node">
+<title>proc~initialize_4d_auto_knots</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node15"><a xlink:href="../proc/initialize_4d_auto_knots.html" xlink:title="bspline_4d%initialize_4d_auto_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="821,-234 616,-234 616,-210 821,-210 821,-234"/>
+<text text-anchor="middle" x="718.5" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_4d%initialize_4d_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_4d_auto_knots&#45;&gt;proc~db4ink -->
+<g id="proc~~check_inputs~~CalledByGraph_edge16" class="edge">
+<title>proc~initialize_4d_auto_knots&#45;&gt;proc~db4ink</title>
+<path fill="none" stroke="#000000" d="M821.19,-222C839.47,-222 857.39,-222 872.19,-222"/>
+<polygon fill="#000000" stroke="#000000" points="872.38,-225.5 882.38,-222 872.38,-218.5 872.38,-225.5"/>
+</g>
+<!-- proc~initialize_4d_specify_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_node16" class="node">
+<title>proc~initialize_4d_specify_knots</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node16"><a xlink:href="../proc/initialize_4d_specify_knots.html" xlink:title="bspline_4d%initialize_4d_specify_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="828,-192 609,-192 609,-168 828,-168 828,-192"/>
+<text text-anchor="middle" x="718.5" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_4d%initialize_4d_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_4d_specify_knots&#45;&gt;proc~db4ink -->
+<g id="proc~~check_inputs~~CalledByGraph_edge17" class="edge">
+<title>proc~initialize_4d_specify_knots&#45;&gt;proc~db4ink</title>
+<path fill="none" stroke="#000000" d="M785.34,-192.04C799.45,-194.82 814.25,-197.88 828,-201 842.62,-204.32 858.62,-208.4 872.48,-212.08"/>
+<polygon fill="#000000" stroke="#000000" points="871.57,-215.46 882.14,-214.67 873.39,-208.7 871.57,-215.46"/>
+</g>
+<!-- proc~initialize_5d_auto_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_node17" class="node">
+<title>proc~initialize_5d_auto_knots</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node17"><a xlink:href="../proc/initialize_5d_auto_knots.html" xlink:title="bspline_5d%initialize_5d_auto_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="821,-150 616,-150 616,-126 821,-126 821,-150"/>
+<text text-anchor="middle" x="718.5" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_5d%initialize_5d_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_5d_auto_knots&#45;&gt;proc~db5ink -->
+<g id="proc~~check_inputs~~CalledByGraph_edge18" class="edge">
+<title>proc~initialize_5d_auto_knots&#45;&gt;proc~db5ink</title>
+<path fill="none" stroke="#000000" d="M821.19,-138C839.47,-138 857.39,-138 872.19,-138"/>
+<polygon fill="#000000" stroke="#000000" points="872.38,-141.5 882.38,-138 872.38,-134.5 872.38,-141.5"/>
+</g>
+<!-- proc~initialize_5d_specify_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_node18" class="node">
+<title>proc~initialize_5d_specify_knots</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node18"><a xlink:href="../proc/initialize_5d_specify_knots.html" xlink:title="bspline_5d%initialize_5d_specify_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="828,-108 609,-108 609,-84 828,-84 828,-108"/>
+<text text-anchor="middle" x="718.5" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_5d%initialize_5d_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_5d_specify_knots&#45;&gt;proc~db5ink -->
+<g id="proc~~check_inputs~~CalledByGraph_edge19" class="edge">
+<title>proc~initialize_5d_specify_knots&#45;&gt;proc~db5ink</title>
+<path fill="none" stroke="#000000" d="M785.34,-108.04C799.45,-110.82 814.25,-113.88 828,-117 842.62,-120.32 858.62,-124.4 872.48,-128.08"/>
+<polygon fill="#000000" stroke="#000000" points="871.57,-131.46 882.14,-130.67 873.39,-124.7 871.57,-131.46"/>
+</g>
+<!-- proc~initialize_6d_auto_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_node19" class="node">
+<title>proc~initialize_6d_auto_knots</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node19"><a xlink:href="../proc/initialize_6d_auto_knots.html" xlink:title="bspline_6d%initialize_6d_auto_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="821,-66 616,-66 616,-42 821,-42 821,-66"/>
+<text text-anchor="middle" x="718.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_6d%initialize_6d_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_6d_auto_knots&#45;&gt;proc~db6ink -->
+<g id="proc~~check_inputs~~CalledByGraph_edge20" class="edge">
+<title>proc~initialize_6d_auto_knots&#45;&gt;proc~db6ink</title>
+<path fill="none" stroke="#000000" d="M821.19,-54C839.47,-54 857.39,-54 872.19,-54"/>
+<polygon fill="#000000" stroke="#000000" points="872.38,-57.5 882.38,-54 872.38,-50.5 872.38,-57.5"/>
+</g>
+<!-- proc~initialize_6d_specify_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_node20" class="node">
+<title>proc~initialize_6d_specify_knots</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node20"><a xlink:href="../proc/initialize_6d_specify_knots.html" xlink:title="bspline_6d%initialize_6d_specify_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="828,-24 609,-24 609,0 828,0 828,-24"/>
+<text text-anchor="middle" x="718.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_6d%initialize_6d_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_6d_specify_knots&#45;&gt;proc~db6ink -->
+<g id="proc~~check_inputs~~CalledByGraph_edge21" class="edge">
+<title>proc~initialize_6d_specify_knots&#45;&gt;proc~db6ink</title>
+<path fill="none" stroke="#000000" d="M785.34,-24.04C799.45,-26.82 814.25,-29.88 828,-33 842.62,-36.32 858.62,-40.4 872.48,-44.08"/>
+<polygon fill="#000000" stroke="#000000" points="871.57,-47.46 882.14,-46.67 873.39,-40.7 871.57,-47.46"/>
+</g>
+<!-- proc~bspline_2d_constructor_auto_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_node21" class="node">
+<title>proc~bspline_2d_constructor_auto_knots</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node21"><a xlink:href="../proc/bspline_2d_constructor_auto_knots.html" xlink:title="bspline_2d_constructor_auto_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="563,-402 364,-402 364,-378 563,-378 563,-402"/>
+<text text-anchor="middle" x="463.5" y="-387.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_2d_constructor_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_2d_constructor_auto_knots&#45;&gt;proc~initialize_2d_auto_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_edge24" class="edge">
+<title>proc~bspline_2d_constructor_auto_knots&#45;&gt;proc~initialize_2d_auto_knots</title>
+<path fill="none" stroke="#000000" d="M563.04,-390C577,-390 591.43,-390 605.62,-390"/>
+<polygon fill="#000000" stroke="#000000" points="605.89,-393.5 615.89,-390 605.89,-386.5 605.89,-393.5"/>
+</g>
+<!-- proc~bspline_2d_constructor_specify_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_node22" class="node">
+<title>proc~bspline_2d_constructor_specify_knots</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node22"><a xlink:href="../proc/bspline_2d_constructor_specify_knots.html" xlink:title="bspline_2d_constructor_specify_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="569.5,-360 357.5,-360 357.5,-336 569.5,-336 569.5,-360"/>
+<text text-anchor="middle" x="463.5" y="-345.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_2d_constructor_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_2d_constructor_specify_knots&#45;&gt;proc~initialize_2d_specify_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_edge25" class="edge">
+<title>proc~bspline_2d_constructor_specify_knots&#45;&gt;proc~initialize_2d_specify_knots</title>
+<path fill="none" stroke="#000000" d="M569.6,-348C579.17,-348 588.91,-348 598.59,-348"/>
+<polygon fill="#000000" stroke="#000000" points="598.65,-351.5 608.65,-348 598.65,-344.5 598.65,-351.5"/>
+</g>
+<!-- proc~bspline_3d_constructor_auto_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_node23" class="node">
+<title>proc~bspline_3d_constructor_auto_knots</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node23"><a xlink:href="../proc/bspline_3d_constructor_auto_knots.html" xlink:title="bspline_3d_constructor_auto_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="563,-318 364,-318 364,-294 563,-294 563,-318"/>
+<text text-anchor="middle" x="463.5" y="-303.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_3d_constructor_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_3d_constructor_auto_knots&#45;&gt;proc~initialize_3d_auto_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_edge26" class="edge">
+<title>proc~bspline_3d_constructor_auto_knots&#45;&gt;proc~initialize_3d_auto_knots</title>
+<path fill="none" stroke="#000000" d="M563.04,-306C577,-306 591.43,-306 605.62,-306"/>
+<polygon fill="#000000" stroke="#000000" points="605.89,-309.5 615.89,-306 605.89,-302.5 605.89,-309.5"/>
+</g>
+<!-- proc~bspline_3d_constructor_specify_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_node24" class="node">
+<title>proc~bspline_3d_constructor_specify_knots</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node24"><a xlink:href="../proc/bspline_3d_constructor_specify_knots.html" xlink:title="bspline_3d_constructor_specify_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="569.5,-276 357.5,-276 357.5,-252 569.5,-252 569.5,-276"/>
+<text text-anchor="middle" x="463.5" y="-261.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_3d_constructor_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_3d_constructor_specify_knots&#45;&gt;proc~initialize_3d_specify_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_edge27" class="edge">
+<title>proc~bspline_3d_constructor_specify_knots&#45;&gt;proc~initialize_3d_specify_knots</title>
+<path fill="none" stroke="#000000" d="M569.6,-264C579.17,-264 588.91,-264 598.59,-264"/>
+<polygon fill="#000000" stroke="#000000" points="598.65,-267.5 608.65,-264 598.65,-260.5 598.65,-267.5"/>
+</g>
+<!-- proc~bspline_4d_constructor_auto_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_node25" class="node">
+<title>proc~bspline_4d_constructor_auto_knots</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node25"><a xlink:href="../proc/bspline_4d_constructor_auto_knots.html" xlink:title="bspline_4d_constructor_auto_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="563,-234 364,-234 364,-210 563,-210 563,-234"/>
+<text text-anchor="middle" x="463.5" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_4d_constructor_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_4d_constructor_auto_knots&#45;&gt;proc~initialize_4d_auto_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_edge28" class="edge">
+<title>proc~bspline_4d_constructor_auto_knots&#45;&gt;proc~initialize_4d_auto_knots</title>
+<path fill="none" stroke="#000000" d="M563.04,-222C577,-222 591.43,-222 605.62,-222"/>
+<polygon fill="#000000" stroke="#000000" points="605.89,-225.5 615.89,-222 605.89,-218.5 605.89,-225.5"/>
+</g>
+<!-- proc~bspline_4d_constructor_specify_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_node26" class="node">
+<title>proc~bspline_4d_constructor_specify_knots</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node26"><a xlink:href="../proc/bspline_4d_constructor_specify_knots.html" xlink:title="bspline_4d_constructor_specify_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="569.5,-192 357.5,-192 357.5,-168 569.5,-168 569.5,-192"/>
+<text text-anchor="middle" x="463.5" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_4d_constructor_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_4d_constructor_specify_knots&#45;&gt;proc~initialize_4d_specify_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_edge29" class="edge">
+<title>proc~bspline_4d_constructor_specify_knots&#45;&gt;proc~initialize_4d_specify_knots</title>
+<path fill="none" stroke="#000000" d="M569.6,-180C579.17,-180 588.91,-180 598.59,-180"/>
+<polygon fill="#000000" stroke="#000000" points="598.65,-183.5 608.65,-180 598.65,-176.5 598.65,-183.5"/>
+</g>
+<!-- proc~bspline_5d_constructor_auto_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_node27" class="node">
+<title>proc~bspline_5d_constructor_auto_knots</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node27"><a xlink:href="../proc/bspline_5d_constructor_auto_knots.html" xlink:title="bspline_5d_constructor_auto_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="563,-150 364,-150 364,-126 563,-126 563,-150"/>
+<text text-anchor="middle" x="463.5" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_5d_constructor_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_5d_constructor_auto_knots&#45;&gt;proc~initialize_5d_auto_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_edge30" class="edge">
+<title>proc~bspline_5d_constructor_auto_knots&#45;&gt;proc~initialize_5d_auto_knots</title>
+<path fill="none" stroke="#000000" d="M563.04,-138C577,-138 591.43,-138 605.62,-138"/>
+<polygon fill="#000000" stroke="#000000" points="605.89,-141.5 615.89,-138 605.89,-134.5 605.89,-141.5"/>
+</g>
+<!-- proc~bspline_5d_constructor_specify_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_node28" class="node">
+<title>proc~bspline_5d_constructor_specify_knots</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node28"><a xlink:href="../proc/bspline_5d_constructor_specify_knots.html" xlink:title="bspline_5d_constructor_specify_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="569.5,-108 357.5,-108 357.5,-84 569.5,-84 569.5,-108"/>
+<text text-anchor="middle" x="463.5" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_5d_constructor_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_5d_constructor_specify_knots&#45;&gt;proc~initialize_5d_specify_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_edge31" class="edge">
+<title>proc~bspline_5d_constructor_specify_knots&#45;&gt;proc~initialize_5d_specify_knots</title>
+<path fill="none" stroke="#000000" d="M569.6,-96C579.17,-96 588.91,-96 598.59,-96"/>
+<polygon fill="#000000" stroke="#000000" points="598.65,-99.5 608.65,-96 598.65,-92.5 598.65,-99.5"/>
+</g>
+<!-- proc~bspline_6d_constructor_auto_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_node29" class="node">
+<title>proc~bspline_6d_constructor_auto_knots</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node29"><a xlink:href="../proc/bspline_6d_constructor_auto_knots.html" xlink:title="bspline_6d_constructor_auto_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="563,-66 364,-66 364,-42 563,-42 563,-66"/>
+<text text-anchor="middle" x="463.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_6d_constructor_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_6d_constructor_auto_knots&#45;&gt;proc~initialize_6d_auto_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_edge32" class="edge">
+<title>proc~bspline_6d_constructor_auto_knots&#45;&gt;proc~initialize_6d_auto_knots</title>
+<path fill="none" stroke="#000000" d="M563.04,-54C577,-54 591.43,-54 605.62,-54"/>
+<polygon fill="#000000" stroke="#000000" points="605.89,-57.5 615.89,-54 605.89,-50.5 605.89,-57.5"/>
+</g>
+<!-- proc~bspline_6d_constructor_specify_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_node30" class="node">
+<title>proc~bspline_6d_constructor_specify_knots</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node30"><a xlink:href="../proc/bspline_6d_constructor_specify_knots.html" xlink:title="bspline_6d_constructor_specify_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="569.5,-24 357.5,-24 357.5,0 569.5,0 569.5,-24"/>
+<text text-anchor="middle" x="463.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_6d_constructor_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_6d_constructor_specify_knots&#45;&gt;proc~initialize_6d_specify_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_edge33" class="edge">
+<title>proc~bspline_6d_constructor_specify_knots&#45;&gt;proc~initialize_6d_specify_knots</title>
+<path fill="none" stroke="#000000" d="M569.6,-12C579.17,-12 588.91,-12 598.59,-12"/>
+<polygon fill="#000000" stroke="#000000" points="598.65,-15.5 608.65,-12 598.65,-8.5 598.65,-15.5"/>
+</g>
+<!-- proc~initialize_1d_auto_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_node31" class="node">
+<title>proc~initialize_1d_auto_knots</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node31"><a xlink:href="../proc/initialize_1d_auto_knots.html" xlink:title="bspline_1d%initialize_1d_auto_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="566,-486 361,-486 361,-462 566,-462 566,-486"/>
+<text text-anchor="middle" x="463.5" y="-471.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d%initialize_1d_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_1d_auto_knots&#45;&gt;interface~db1ink -->
+<g id="proc~~check_inputs~~CalledByGraph_edge22" class="edge">
+<title>proc~initialize_1d_auto_knots&#45;&gt;interface~db1ink</title>
+<path fill="none" stroke="#000000" d="M537,-461.96C584.25,-454.12 643.87,-444.22 681.35,-438"/>
+<polygon fill="#000000" stroke="#000000" points="682.02,-441.44 691.31,-436.35 680.87,-434.53 682.02,-441.44"/>
+</g>
+<!-- proc~initialize_1d_specify_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_node32" class="node">
+<title>proc~initialize_1d_specify_knots</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node32"><a xlink:href="../proc/initialize_1d_specify_knots.html" xlink:title="bspline_1d%initialize_1d_specify_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="573,-444 354,-444 354,-420 573,-420 573,-444"/>
+<text text-anchor="middle" x="463.5" y="-429.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d%initialize_1d_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_1d_specify_knots&#45;&gt;interface~db1ink -->
+<g id="proc~~check_inputs~~CalledByGraph_edge23" class="edge">
+<title>proc~initialize_1d_specify_knots&#45;&gt;interface~db1ink</title>
+<path fill="none" stroke="#000000" d="M573.26,-432C611.86,-432 652.7,-432 681.04,-432"/>
+<polygon fill="#000000" stroke="#000000" points="681.25,-435.5 691.25,-432 681.25,-428.5 681.25,-435.5"/>
+</g>
+<!-- interface~bspline_2d -->
+<g id="proc~~check_inputs~~CalledByGraph_node33" class="node">
+<title>interface~bspline_2d</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node33"><a xlink:href="../interface/bspline_2d.html" xlink:title="bspline_2d">
+<polygon fill="#a7506f" stroke="#a7506f" points="247,-381 177,-381 177,-357 247,-357 247,-381"/>
+<text text-anchor="middle" x="212" y="-366.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_2d</text>
+</a>
+</g>
+</g>
+<!-- interface~bspline_2d&#45;&gt;proc~bspline_2d_constructor_auto_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_edge34" class="edge">
+<title>interface~bspline_2d&#45;&gt;proc~bspline_2d_constructor_auto_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M247.17,-371.88C274.8,-374.2 315.28,-377.61 353.71,-380.84"/>
+<polygon fill="#000000" stroke="#000000" points="353.7,-384.35 363.95,-381.71 354.28,-377.38 353.7,-384.35"/>
+</g>
+<!-- interface~bspline_2d&#45;&gt;proc~bspline_2d_constructor_specify_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_edge35" class="edge">
+<title>interface~bspline_2d&#45;&gt;proc~bspline_2d_constructor_specify_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M247.17,-366.12C273.21,-363.93 310.69,-360.78 347.09,-357.71"/>
+<polygon fill="#000000" stroke="#000000" points="347.65,-361.18 357.32,-356.85 347.07,-354.2 347.65,-361.18"/>
+</g>
+<!-- interface~bspline_3d -->
+<g id="proc~~check_inputs~~CalledByGraph_node34" class="node">
+<title>interface~bspline_3d</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node34"><a xlink:href="../interface/bspline_3d.html" xlink:title="bspline_3d">
+<polygon fill="#a7506f" stroke="#a7506f" points="247,-297 177,-297 177,-273 247,-273 247,-297"/>
+<text text-anchor="middle" x="212" y="-282.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_3d</text>
+</a>
+</g>
+</g>
+<!-- interface~bspline_3d&#45;&gt;proc~bspline_3d_constructor_auto_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_edge36" class="edge">
+<title>interface~bspline_3d&#45;&gt;proc~bspline_3d_constructor_auto_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M247.17,-287.88C274.8,-290.2 315.28,-293.61 353.71,-296.84"/>
+<polygon fill="#000000" stroke="#000000" points="353.7,-300.35 363.95,-297.71 354.28,-293.38 353.7,-300.35"/>
+</g>
+<!-- interface~bspline_3d&#45;&gt;proc~bspline_3d_constructor_specify_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_edge37" class="edge">
+<title>interface~bspline_3d&#45;&gt;proc~bspline_3d_constructor_specify_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M247.17,-282.12C273.21,-279.93 310.69,-276.78 347.09,-273.71"/>
+<polygon fill="#000000" stroke="#000000" points="347.65,-277.18 357.32,-272.85 347.07,-270.2 347.65,-277.18"/>
+</g>
+<!-- interface~bspline_4d -->
+<g id="proc~~check_inputs~~CalledByGraph_node35" class="node">
+<title>interface~bspline_4d</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node35"><a xlink:href="../interface/bspline_4d.html" xlink:title="bspline_4d">
+<polygon fill="#a7506f" stroke="#a7506f" points="247,-213 177,-213 177,-189 247,-189 247,-213"/>
+<text text-anchor="middle" x="212" y="-198.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_4d</text>
+</a>
+</g>
+</g>
+<!-- interface~bspline_4d&#45;&gt;proc~bspline_4d_constructor_auto_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_edge38" class="edge">
+<title>interface~bspline_4d&#45;&gt;proc~bspline_4d_constructor_auto_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M247.17,-203.88C274.8,-206.2 315.28,-209.61 353.71,-212.84"/>
+<polygon fill="#000000" stroke="#000000" points="353.7,-216.35 363.95,-213.71 354.28,-209.38 353.7,-216.35"/>
+</g>
+<!-- interface~bspline_4d&#45;&gt;proc~bspline_4d_constructor_specify_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_edge39" class="edge">
+<title>interface~bspline_4d&#45;&gt;proc~bspline_4d_constructor_specify_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M247.17,-198.12C273.21,-195.93 310.69,-192.78 347.09,-189.71"/>
+<polygon fill="#000000" stroke="#000000" points="347.65,-193.18 357.32,-188.85 347.07,-186.2 347.65,-193.18"/>
+</g>
+<!-- interface~bspline_5d -->
+<g id="proc~~check_inputs~~CalledByGraph_node36" class="node">
+<title>interface~bspline_5d</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node36"><a xlink:href="../interface/bspline_5d.html" xlink:title="bspline_5d">
+<polygon fill="#a7506f" stroke="#a7506f" points="247,-129 177,-129 177,-105 247,-105 247,-129"/>
+<text text-anchor="middle" x="212" y="-114.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_5d</text>
+</a>
+</g>
+</g>
+<!-- interface~bspline_5d&#45;&gt;proc~bspline_5d_constructor_auto_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_edge40" class="edge">
+<title>interface~bspline_5d&#45;&gt;proc~bspline_5d_constructor_auto_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M247.17,-119.88C274.8,-122.2 315.28,-125.61 353.71,-128.84"/>
+<polygon fill="#000000" stroke="#000000" points="353.7,-132.35 363.95,-129.71 354.28,-125.38 353.7,-132.35"/>
+</g>
+<!-- interface~bspline_5d&#45;&gt;proc~bspline_5d_constructor_specify_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_edge41" class="edge">
+<title>interface~bspline_5d&#45;&gt;proc~bspline_5d_constructor_specify_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M247.17,-114.12C273.21,-111.93 310.69,-108.78 347.09,-105.71"/>
+<polygon fill="#000000" stroke="#000000" points="347.65,-109.18 357.32,-104.85 347.07,-102.2 347.65,-109.18"/>
+</g>
+<!-- interface~bspline_6d -->
+<g id="proc~~check_inputs~~CalledByGraph_node37" class="node">
+<title>interface~bspline_6d</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node37"><a xlink:href="../interface/bspline_6d.html" xlink:title="bspline_6d">
+<polygon fill="#a7506f" stroke="#a7506f" points="247,-45 177,-45 177,-21 247,-21 247,-45"/>
+<text text-anchor="middle" x="212" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_6d</text>
+</a>
+</g>
+</g>
+<!-- interface~bspline_6d&#45;&gt;proc~bspline_6d_constructor_auto_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_edge42" class="edge">
+<title>interface~bspline_6d&#45;&gt;proc~bspline_6d_constructor_auto_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M247.17,-35.88C274.8,-38.2 315.28,-41.61 353.71,-44.84"/>
+<polygon fill="#000000" stroke="#000000" points="353.7,-48.35 363.95,-45.71 354.28,-41.38 353.7,-48.35"/>
+</g>
+<!-- interface~bspline_6d&#45;&gt;proc~bspline_6d_constructor_specify_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_edge43" class="edge">
+<title>interface~bspline_6d&#45;&gt;proc~bspline_6d_constructor_specify_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M247.17,-30.12C273.21,-27.93 310.69,-24.78 347.09,-21.71"/>
+<polygon fill="#000000" stroke="#000000" points="347.65,-25.18 357.32,-20.85 347.07,-18.2 347.65,-25.18"/>
+</g>
+<!-- proc~bspline_1d_constructor_auto_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_node38" class="node">
+<title>proc~bspline_1d_constructor_auto_knots</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node38"><a xlink:href="../proc/bspline_1d_constructor_auto_knots.html" xlink:title="bspline_1d_constructor_auto_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="311.5,-486 112.5,-486 112.5,-462 311.5,-462 311.5,-486"/>
+<text text-anchor="middle" x="212" y="-471.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d_constructor_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_1d_constructor_auto_knots&#45;&gt;proc~initialize_1d_auto_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_edge44" class="edge">
+<title>proc~bspline_1d_constructor_auto_knots&#45;&gt;proc~initialize_1d_auto_knots</title>
+<path fill="none" stroke="#000000" d="M311.61,-474C324.4,-474 337.57,-474 350.56,-474"/>
+<polygon fill="#000000" stroke="#000000" points="350.92,-477.5 360.92,-474 350.92,-470.5 350.92,-477.5"/>
+</g>
+<!-- proc~bspline_1d_constructor_specify_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_node39" class="node">
+<title>proc~bspline_1d_constructor_specify_knots</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node39"><a xlink:href="../proc/bspline_1d_constructor_specify_knots.html" xlink:title="bspline_1d_constructor_specify_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="318,-444 106,-444 106,-420 318,-420 318,-444"/>
+<text text-anchor="middle" x="212" y="-429.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d_constructor_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_1d_constructor_specify_knots&#45;&gt;proc~initialize_1d_specify_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_edge45" class="edge">
+<title>proc~bspline_1d_constructor_specify_knots&#45;&gt;proc~initialize_1d_specify_knots</title>
+<path fill="none" stroke="#000000" d="M318.09,-432C326.61,-432 335.25,-432 343.86,-432"/>
+<polygon fill="#000000" stroke="#000000" points="343.93,-435.5 353.93,-432 343.93,-428.5 343.93,-435.5"/>
+</g>
+<!-- interface~bspline_1d -->
+<g id="proc~~check_inputs~~CalledByGraph_node40" class="node">
+<title>interface~bspline_1d</title>
+<g id="a_proc~~check_inputs~~CalledByGraph_node40"><a xlink:href="../interface/bspline_1d.html" xlink:title="bspline_1d">
+<polygon fill="#a7506f" stroke="#a7506f" points="70,-465 0,-465 0,-441 70,-441 70,-465"/>
+<text text-anchor="middle" x="35" y="-450.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d</text>
+</a>
+</g>
+</g>
+<!-- interface~bspline_1d&#45;&gt;proc~bspline_1d_constructor_auto_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_edge46" class="edge">
+<title>interface~bspline_1d&#45;&gt;proc~bspline_1d_constructor_auto_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M70.16,-457.1C79.7,-458.24 90.6,-459.55 102.03,-460.92"/>
+<polygon fill="#000000" stroke="#000000" points="101.84,-464.43 112.19,-462.14 102.68,-457.48 101.84,-464.43"/>
+</g>
+<!-- interface~bspline_1d&#45;&gt;proc~bspline_1d_constructor_specify_knots -->
+<g id="proc~~check_inputs~~CalledByGraph_edge47" class="edge">
+<title>interface~bspline_1d&#45;&gt;proc~bspline_1d_constructor_specify_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M70.16,-448.9C79.3,-447.8 89.69,-446.56 100.59,-445.25"/>
+<polygon fill="#000000" stroke="#000000" points="101.22,-448.7 110.73,-444.03 100.39,-441.75 101.22,-448.7"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panproccheck_inputsCalledByGraph = svgPanZoom('#proccheck_inputsCalledByGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">pure subroutine </span><span class="n">check_inputs</span><span class="p">(</span><span class="n">iknot</span><span class="p">,&amp;</span>
+<span class="w">                                 </span><span class="n">iflag</span><span class="p">,&amp;</span>
+<span class="w">                                 </span><span class="n">nx</span><span class="p">,</span><span class="n">ny</span><span class="p">,</span><span class="n">nz</span><span class="p">,</span><span class="n">nq</span><span class="p">,</span><span class="n">nr</span><span class="p">,</span><span class="n">ns</span><span class="p">,&amp;</span>
+<span class="w">                                 </span><span class="n">kx</span><span class="p">,</span><span class="n">ky</span><span class="p">,</span><span class="n">kz</span><span class="p">,</span><span class="n">kq</span><span class="p">,</span><span class="n">kr</span><span class="p">,</span><span class="n">ks</span><span class="p">,&amp;</span>
+<span class="w">                                 </span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">q</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">s</span><span class="p">,&amp;</span>
+<span class="w">                                 </span><span class="n">tx</span><span class="p">,</span><span class="n">ty</span><span class="p">,</span><span class="n">tz</span><span class="p">,</span><span class="n">tq</span><span class="p">,</span><span class="n">tr</span><span class="p">,</span><span class="n">ts</span><span class="p">,&amp;</span>
+<span class="w">                                 </span><span class="n">f1</span><span class="p">,</span><span class="n">f2</span><span class="p">,</span><span class="n">f3</span><span class="p">,</span><span class="n">f4</span><span class="p">,</span><span class="n">f5</span><span class="p">,</span><span class="n">f6</span><span class="p">,&amp;</span>
+<span class="w">                                 </span><span class="n">bcoef1</span><span class="p">,</span><span class="n">bcoef2</span><span class="p">,</span><span class="n">bcoef3</span><span class="p">,</span><span class="n">bcoef4</span><span class="p">,</span><span class="n">bcoef5</span><span class="p">,</span><span class="n">bcoef6</span><span class="p">,&amp;</span>
+<span class="w">                                 </span><span class="n">alt</span><span class="p">,&amp;</span>
+<span class="w">                                 </span><span class="n">status_ok</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">implicit none</span>
+
+<span class="k">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">                              </span><span class="kd">::</span><span class="w"> </span><span class="n">iknot</span><span class="w"> </span><span class="c">!! = 0 if the `INK` routine is computing the knots.</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">                             </span><span class="kd">::</span><span class="w"> </span><span class="n">iflag</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w">                     </span><span class="kd">::</span><span class="w"> </span><span class="n">nx</span><span class="p">,</span><span class="n">ny</span><span class="p">,</span><span class="n">nz</span><span class="p">,</span><span class="n">nq</span><span class="p">,</span><span class="n">nr</span><span class="p">,</span><span class="n">ns</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w">                     </span><span class="kd">::</span><span class="w"> </span><span class="n">kx</span><span class="p">,</span><span class="n">ky</span><span class="p">,</span><span class="n">kz</span><span class="p">,</span><span class="n">kq</span><span class="p">,</span><span class="n">kr</span><span class="p">,</span><span class="n">ks</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w">           </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">q</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">s</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w">           </span><span class="kd">::</span><span class="w"> </span><span class="n">tx</span><span class="p">,</span><span class="n">ty</span><span class="p">,</span><span class="n">tz</span><span class="p">,</span><span class="n">tq</span><span class="p">,</span><span class="n">tr</span><span class="p">,</span><span class="n">ts</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w">           </span><span class="kd">::</span><span class="w"> </span><span class="n">f1</span><span class="p">,</span><span class="n">bcoef1</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:,:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w">         </span><span class="kd">::</span><span class="w"> </span><span class="n">f2</span><span class="p">,</span><span class="n">bcoef2</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:,:,:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w">       </span><span class="kd">::</span><span class="w"> </span><span class="n">f3</span><span class="p">,</span><span class="n">bcoef3</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:,:,:,:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w">     </span><span class="kd">::</span><span class="w"> </span><span class="n">f4</span><span class="p">,</span><span class="n">bcoef4</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:,:,:,:,:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w">   </span><span class="kd">::</span><span class="w"> </span><span class="n">f5</span><span class="p">,</span><span class="n">bcoef5</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:,:,:,:,:,:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">f6</span><span class="p">,</span><span class="n">bcoef6</span>
+<span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w">                         </span><span class="kd">::</span><span class="w"> </span><span class="n">alt</span><span class="w"> </span><span class="c">!! using the alt routine where 1st or</span>
+<span class="w">                                                               </span><span class="c">!! 2nd deriv is fixed at endpoints</span>
+<span class="w">                                                               </span><span class="c">!! [default is False]</span>
+<span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">                                 </span><span class="kd">::</span><span class="w"> </span><span class="n">status_ok</span>
+
+<span class="w">    </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">error</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iex</span><span class="w">  </span><span class="c">!! extra points for the alt case (in `t` and `bcoef`)</span>
+<span class="w">                    </span><span class="c">!! [currently, only allowed for the 1D case &amp; `k=4`]</span>
+
+<span class="w">    </span><span class="n">status_ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+
+<span class="w">    </span><span class="n">iex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0_ip</span><span class="w"> </span><span class="c">! default</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">alt</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="n">alt</span><span class="p">)</span><span class="w"> </span><span class="n">iex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2_ip</span><span class="w">  </span><span class="c">! for &quot;alt&quot; mode</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">((</span><span class="n">iknot</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0_ip</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="p">(</span><span class="n">iknot</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1_ip</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+
+<span class="k">        </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2_ip</span><span class="w"> </span><span class="c">! iknot is out of range</span>
+
+<span class="w">    </span><span class="k">else</span>
+
+<span class="k">        call </span><span class="n">check</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">kx</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">tx</span><span class="p">,[</span><span class="mi">3_ip</span><span class="p">,</span><span class="w">  </span><span class="mi">4_ip</span><span class="p">,</span><span class="w"> </span><span class="mi">5_ip</span><span class="p">,</span><span class="w"> </span><span class="mi">6_ip</span><span class="p">,</span><span class="mi">706_ip</span><span class="p">,</span><span class="mi">712_ip</span><span class="p">],</span><span class="n">iflag</span><span class="p">,</span><span class="n">error</span><span class="p">,</span><span class="n">iex</span><span class="p">);</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+<span class="k">        call </span><span class="n">check</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="n">ny</span><span class="p">,</span><span class="n">ky</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">ty</span><span class="p">,[</span><span class="mi">7_ip</span><span class="p">,</span><span class="w">  </span><span class="mi">8_ip</span><span class="p">,</span><span class="w"> </span><span class="mi">9_ip</span><span class="p">,</span><span class="mi">10_ip</span><span class="p">,</span><span class="mi">707_ip</span><span class="p">,</span><span class="mi">713_ip</span><span class="p">],</span><span class="n">iflag</span><span class="p">,</span><span class="n">error</span><span class="p">,</span><span class="n">iex</span><span class="p">);</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+<span class="k">        call </span><span class="n">check</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span><span class="n">nz</span><span class="p">,</span><span class="n">kz</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">tz</span><span class="p">,[</span><span class="mi">11_ip</span><span class="p">,</span><span class="mi">12_ip</span><span class="p">,</span><span class="mi">13_ip</span><span class="p">,</span><span class="mi">14_ip</span><span class="p">,</span><span class="mi">708_ip</span><span class="p">,</span><span class="mi">714_ip</span><span class="p">],</span><span class="n">iflag</span><span class="p">,</span><span class="n">error</span><span class="p">,</span><span class="n">iex</span><span class="p">);</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+<span class="k">        call </span><span class="n">check</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">,</span><span class="n">nq</span><span class="p">,</span><span class="n">kq</span><span class="p">,</span><span class="n">q</span><span class="p">,</span><span class="n">tq</span><span class="p">,[</span><span class="mi">15_ip</span><span class="p">,</span><span class="mi">16_ip</span><span class="p">,</span><span class="mi">17_ip</span><span class="p">,</span><span class="mi">18_ip</span><span class="p">,</span><span class="mi">709_ip</span><span class="p">,</span><span class="mi">715_ip</span><span class="p">],</span><span class="n">iflag</span><span class="p">,</span><span class="n">error</span><span class="p">,</span><span class="n">iex</span><span class="p">);</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+<span class="k">        call </span><span class="n">check</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">,</span><span class="n">nr</span><span class="p">,</span><span class="n">kr</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">tr</span><span class="p">,[</span><span class="mi">19_ip</span><span class="p">,</span><span class="mi">20_ip</span><span class="p">,</span><span class="mi">21_ip</span><span class="p">,</span><span class="mi">22_ip</span><span class="p">,</span><span class="mi">710_ip</span><span class="p">,</span><span class="mi">716_ip</span><span class="p">],</span><span class="n">iflag</span><span class="p">,</span><span class="n">error</span><span class="p">,</span><span class="n">iex</span><span class="p">);</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+<span class="k">        call </span><span class="n">check</span><span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">,</span><span class="n">ns</span><span class="p">,</span><span class="n">ks</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">ts</span><span class="p">,[</span><span class="mi">23_ip</span><span class="p">,</span><span class="mi">24_ip</span><span class="p">,</span><span class="mi">25_ip</span><span class="p">,</span><span class="mi">26_ip</span><span class="p">,</span><span class="mi">711_ip</span><span class="p">,</span><span class="mi">717_ip</span><span class="p">],</span><span class="n">iflag</span><span class="p">,</span><span class="n">error</span><span class="p">,</span><span class="n">iex</span><span class="p">);</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">f1</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">bcoef1</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span><span class="mi">1_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w">         </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">700_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">+</span><span class="n">iex</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">bcoef1</span><span class="p">,</span><span class="mi">1_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w"> </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">800_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">        end if</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">f2</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">bcoef2</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">f2</span><span class="p">,</span><span class="mi">1_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w">         </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">700_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">f2</span><span class="p">,</span><span class="mi">2_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w">         </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">701_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">+</span><span class="n">iex</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">bcoef2</span><span class="p">,</span><span class="mi">1_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w"> </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">800_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">+</span><span class="n">iex</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">bcoef2</span><span class="p">,</span><span class="mi">2_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w"> </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">801_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">        end if</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">f3</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">            </span><span class="nb">present</span><span class="p">(</span><span class="n">bcoef3</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">f3</span><span class="p">,</span><span class="mi">1_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w">         </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">700_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">f3</span><span class="p">,</span><span class="mi">2_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w">         </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">701_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">f3</span><span class="p">,</span><span class="mi">3_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w">         </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">702_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">+</span><span class="n">iex</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">bcoef3</span><span class="p">,</span><span class="mi">1_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w"> </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">800_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">+</span><span class="n">iex</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">bcoef3</span><span class="p">,</span><span class="mi">2_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w"> </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">801_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">+</span><span class="n">iex</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">bcoef3</span><span class="p">,</span><span class="mi">3_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w"> </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">802_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">        end if</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">            </span><span class="nb">present</span><span class="p">(</span><span class="n">f4</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">bcoef4</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">f4</span><span class="p">,</span><span class="mi">1_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w">         </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">700_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">f4</span><span class="p">,</span><span class="mi">2_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w">         </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">701_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">f4</span><span class="p">,</span><span class="mi">3_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w">         </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">702_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">f4</span><span class="p">,</span><span class="mi">4_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w">         </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">703_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">+</span><span class="n">iex</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">bcoef4</span><span class="p">,</span><span class="mi">1_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w"> </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">800_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">+</span><span class="n">iex</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">bcoef4</span><span class="p">,</span><span class="mi">2_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w"> </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">801_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">+</span><span class="n">iex</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">bcoef4</span><span class="p">,</span><span class="mi">3_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w"> </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">802_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">+</span><span class="n">iex</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">bcoef4</span><span class="p">,</span><span class="mi">4_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w"> </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">803_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">        end if</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">            </span><span class="nb">present</span><span class="p">(</span><span class="n">r</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">f5</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">bcoef5</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">f5</span><span class="p">,</span><span class="mi">1_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w">         </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">700_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">f5</span><span class="p">,</span><span class="mi">2_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w">         </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">701_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">f5</span><span class="p">,</span><span class="mi">3_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w">         </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">702_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">f5</span><span class="p">,</span><span class="mi">4_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w">         </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">703_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">f5</span><span class="p">,</span><span class="mi">5_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w">         </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">704_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">+</span><span class="n">iex</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">bcoef5</span><span class="p">,</span><span class="mi">1_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w"> </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">800_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">+</span><span class="n">iex</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">bcoef5</span><span class="p">,</span><span class="mi">2_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w"> </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">801_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">+</span><span class="n">iex</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">bcoef5</span><span class="p">,</span><span class="mi">3_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w"> </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">802_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">+</span><span class="n">iex</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">bcoef5</span><span class="p">,</span><span class="mi">4_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w"> </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">803_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">+</span><span class="n">iex</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">bcoef5</span><span class="p">,</span><span class="mi">5_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w"> </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">804_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">        end if</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">            </span><span class="nb">present</span><span class="p">(</span><span class="n">r</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">f6</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">bcoef6</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">f6</span><span class="p">,</span><span class="mi">1_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w">         </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">700_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">f6</span><span class="p">,</span><span class="mi">2_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w">         </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">701_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">f6</span><span class="p">,</span><span class="mi">3_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w">         </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">702_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">f6</span><span class="p">,</span><span class="mi">4_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w">         </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">703_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">f6</span><span class="p">,</span><span class="mi">5_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w">         </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">704_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">f6</span><span class="p">,</span><span class="mi">6_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w">         </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">705_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">+</span><span class="n">iex</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">bcoef6</span><span class="p">,</span><span class="mi">1_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w"> </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">800_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">+</span><span class="n">iex</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">bcoef6</span><span class="p">,</span><span class="mi">2_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w"> </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">801_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">+</span><span class="n">iex</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">bcoef6</span><span class="p">,</span><span class="mi">3_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w"> </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">802_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">+</span><span class="n">iex</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">bcoef6</span><span class="p">,</span><span class="mi">4_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w"> </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">803_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">+</span><span class="n">iex</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">bcoef6</span><span class="p">,</span><span class="mi">5_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w"> </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">804_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span><span class="o">+</span><span class="n">iex</span><span class="o">/=</span><span class="n">size</span><span class="p">(</span><span class="n">bcoef6</span><span class="p">,</span><span class="mi">6_ip</span><span class="p">,</span><span class="nb">kind</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span><span class="w"> </span><span class="k">then</span><span class="p">;</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">805_ip</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="k">end if</span>
+
+<span class="k">        end if</span>
+
+<span class="k">        </span><span class="n">status_ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+<span class="w">        </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0_ip</span>
+
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    contains</span>
+
+<span class="k">        pure subroutine </span><span class="n">check</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">ierrs</span><span class="p">,</span><span class="n">iflag</span><span class="p">,</span><span class="n">error</span><span class="p">,</span><span class="n">ik</span><span class="p">)</span><span class="w">  </span><span class="c">!! check `t`,`x`,`n`,`k` for validity</span>
+
+<span class="w">        </span><span class="k">implicit none</span>
+
+<span class="k">        </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">               </span><span class="kd">::</span><span class="w"> </span><span class="n">s</span><span class="w">     </span><span class="c">!! coordinate string: &#39;x&#39;,&#39;y&#39;,&#39;z&#39;,&#39;q&#39;,&#39;r&#39;,&#39;s&#39;</span>
+<span class="w">        </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w">           </span><span class="kd">::</span><span class="w"> </span><span class="n">n</span><span class="w">     </span><span class="c">!! size of `x`</span>
+<span class="w">        </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w">           </span><span class="kd">::</span><span class="w"> </span><span class="n">k</span><span class="w">     </span><span class="c">!! order</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span><span class="w">     </span><span class="c">!! abcissae vector</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">t</span><span class="w">     </span><span class="c">!! knot vector `size(n+k)`</span>
+<span class="w">        </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">       </span><span class="kd">::</span><span class="w"> </span><span class="n">ierrs</span><span class="w"> </span><span class="c">!! int error codes for `n`,`k`,`x`,`t`,</span>
+<span class="w">                                                           </span><span class="c">!! `size(x)`,`size(t)` checks</span>
+<span class="w">        </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">                   </span><span class="kd">::</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="c">!! status return code</span>
+<span class="w">        </span><span class="kt">logical</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">                       </span><span class="kd">::</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="c">!! true if there was an error</span>
+<span class="w">        </span><span class="kt">integer</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">                        </span><span class="kd">::</span><span class="w"> </span><span class="n">ik</span><span class="w">    </span><span class="c">!! add this value to k</span>
+
+<span class="w">        </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">itmp</span><span class="w"> </span><span class="c">!! temp integer array</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">t</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">itmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">ierrs</span><span class="p">(</span><span class="mi">1_ip</span><span class="p">),</span><span class="n">ierrs</span><span class="p">(</span><span class="mi">5</span><span class="p">)]</span>
+<span class="w">            </span><span class="k">call </span><span class="n">check_n</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="o">//</span><span class="n">s</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">itmp</span><span class="p">,</span><span class="n">iflag</span><span class="p">,</span><span class="n">error</span><span class="p">);</span><span class="w">     </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+<span class="k">            call </span><span class="n">check_k</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="o">//</span><span class="n">s</span><span class="p">,</span><span class="n">k</span><span class="o">+</span><span class="n">ik</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">ierrs</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">iflag</span><span class="p">,</span><span class="n">error</span><span class="p">);</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+<span class="k">            call </span><span class="n">check_x</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">ierrs</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">iflag</span><span class="p">,</span><span class="n">error</span><span class="p">);</span><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">iknot</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="mi">0_ip</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                </span><span class="n">itmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">ierrs</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">ierrs</span><span class="p">(</span><span class="mi">6</span><span class="p">)]</span>
+<span class="w">                </span><span class="k">call </span><span class="n">check_t</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="o">//</span><span class="n">s</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">k</span><span class="o">+</span><span class="n">ik</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">itmp</span><span class="p">,</span><span class="n">iflag</span><span class="p">,</span><span class="n">error</span><span class="p">);</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+<span class="k">            end if</span>
+<span class="k">        end if</span>
+
+<span class="k">        end subroutine </span><span class="n">check</span>
+
+<span class="w">        </span><span class="k">pure subroutine </span><span class="n">check_n</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">ierr</span><span class="p">,</span><span class="n">iflag</span><span class="p">,</span><span class="n">error</span><span class="p">)</span>
+
+<span class="w">        </span><span class="k">implicit none</span>
+
+<span class="k">        </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">         </span><span class="kd">::</span><span class="w"> </span><span class="n">s</span>
+<span class="w">        </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">              </span><span class="kd">::</span><span class="w"> </span><span class="n">n</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">    </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span><span class="w">     </span><span class="c">!! abcissae vector</span>
+<span class="w">        </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ierr</span><span class="w">  </span><span class="c">!! [n&lt;3 check, size(x)==n check]</span>
+<span class="w">        </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">             </span><span class="kd">::</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="c">!! status return code</span>
+<span class="w">        </span><span class="kt">logical</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">                 </span><span class="kd">::</span><span class="w"> </span><span class="n">error</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">3_ip</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ierr</span><span class="p">(</span><span class="mi">1_ip</span><span class="p">)</span>
+<span class="w">            </span><span class="n">error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">/=</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ierr</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="w">                </span><span class="n">error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+<span class="w">            </span><span class="k">else</span>
+<span class="k">                </span><span class="n">error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+<span class="w">            </span><span class="k">end if</span>
+<span class="k">        end if</span>
+
+<span class="k">        end subroutine </span><span class="n">check_n</span>
+
+<span class="w">        </span><span class="k">pure subroutine </span><span class="n">check_k</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">ierr</span><span class="p">,</span><span class="n">iflag</span><span class="p">,</span><span class="n">error</span><span class="p">)</span>
+
+<span class="w">        </span><span class="k">implicit none</span>
+
+<span class="k">        </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">s</span>
+<span class="w">        </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">      </span><span class="kd">::</span><span class="w"> </span><span class="n">k</span>
+<span class="w">        </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">      </span><span class="kd">::</span><span class="w"> </span><span class="n">n</span>
+<span class="w">        </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">      </span><span class="kd">::</span><span class="w"> </span><span class="n">ierr</span>
+<span class="w">        </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">     </span><span class="kd">::</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="c">!! status return code</span>
+<span class="w">        </span><span class="kt">logical</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">         </span><span class="kd">::</span><span class="w"> </span><span class="n">error</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">k</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2_ip</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="p">(</span><span class="n">k</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">n</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ierr</span>
+<span class="w">            </span><span class="n">error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="k">            </span><span class="n">error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+<span class="w">        </span><span class="k">end if</span>
+
+<span class="k">        end subroutine </span><span class="n">check_k</span>
+
+<span class="w">        </span><span class="k">pure subroutine </span><span class="n">check_x</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">ierr</span><span class="p">,</span><span class="n">iflag</span><span class="p">,</span><span class="n">error</span><span class="p">)</span>
+
+<span class="w">        </span><span class="k">implicit none</span>
+
+<span class="k">        </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">       </span><span class="kd">::</span><span class="w"> </span><span class="n">s</span>
+<span class="w">        </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">            </span><span class="kd">::</span><span class="w"> </span><span class="n">n</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span>
+<span class="w">        </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">            </span><span class="kd">::</span><span class="w"> </span><span class="n">ierr</span>
+<span class="w">        </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">           </span><span class="kd">::</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="c">!! status return code</span>
+<span class="w">        </span><span class="kt">logical</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">               </span><span class="kd">::</span><span class="w"> </span><span class="n">error</span>
+
+<span class="w">        </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span>
+
+<span class="w">        </span><span class="n">error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+<span class="w">        </span><span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">2_ip</span><span class="p">,</span><span class="n">n</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">x</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1_ip</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ierr</span>
+<span class="w">                </span><span class="k">return</span>
+<span class="k">            end if</span>
+<span class="k">        end do</span>
+<span class="k">        </span><span class="n">error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+
+<span class="w">        </span><span class="k">end subroutine </span><span class="n">check_x</span>
+
+<span class="w">        </span><span class="k">pure subroutine </span><span class="n">check_t</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">ierr</span><span class="p">,</span><span class="n">iflag</span><span class="p">,</span><span class="n">error</span><span class="p">)</span>
+
+<span class="w">        </span><span class="k">implicit none</span>
+
+<span class="k">        </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">         </span><span class="kd">::</span><span class="w"> </span><span class="n">s</span>
+<span class="w">        </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">              </span><span class="kd">::</span><span class="w"> </span><span class="n">n</span>
+<span class="w">        </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">              </span><span class="kd">::</span><span class="w"> </span><span class="n">k</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">    </span><span class="kd">::</span><span class="w"> </span><span class="n">t</span>
+<span class="w">        </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ierr</span><span class="w">  </span><span class="c">!! [non-decreasing check, size check]</span>
+<span class="w">        </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">             </span><span class="kd">::</span><span class="w"> </span><span class="n">iflag</span><span class="w"> </span><span class="c">!! status return code</span>
+<span class="w">        </span><span class="kt">logical</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">                 </span><span class="kd">::</span><span class="w"> </span><span class="n">error</span>
+
+<span class="w">        </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span>
+
+<span class="w">        </span><span class="n">error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="o">/=</span><span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="n">k</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ierr</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span>
+<span class="k">        end if</span>
+
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="n">iex</span><span class="o">==</span><span class="mi">0_ip</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="c">! don&#39;t do this for &quot;alt&quot; mode since they haven&#39;t been computed yet</span>
+<span class="w">            </span><span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">2_ip</span><span class="p">,</span><span class="n">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">k</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">t</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1_ip</span><span class="p">))</span><span class="w">  </span><span class="k">then</span>
+<span class="k">                    </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ierr</span><span class="p">(</span><span class="mi">1_ip</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">return</span>
+<span class="k">                end if</span>
+<span class="k">            end do</span>
+<span class="k">        end if</span>
+
+<span class="k">        </span><span class="n">error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+
+<span class="w">        </span><span class="k">end subroutine </span><span class="n">check_t</span>
+
+<span class="w">    </span><span class="k">end subroutine </span><span class="n">check_inputs</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              bspline-fortran
+ was developed by Jacob Williams<br>              &copy; 2025 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

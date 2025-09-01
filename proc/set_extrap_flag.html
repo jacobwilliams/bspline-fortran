@@ -1,0 +1,866 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="BSPLINE-FORTRAN -- Multidimensional B-Spline Interpolation of Data on a Regular Grid">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>set_extrap_flag &ndash; bspline-fortran</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">bspline-fortran </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>set_extrap_flag
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.2% of total for procedures.">10 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/bspline_oo_module.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/bspline_oo_module.f90.html'>bspline_oo_module.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/bspline_oo_module.html'>bspline_oo_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">set_extrap_flag</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/set_extrap_flag.html#src">set_extrap_flag</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>private pure subroutine set_extrap_flag(me, extrap)  
+</h2>
+    
+
+    <p>Sets the <code>extrap</code> flag in the class.</p>
+
+    <h3>Type Bound</h3>
+    <p><a href='../type/bspline_class.html'>bspline_class</a></p>
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-me~25"></span>
+              class(<a href='../type/bspline_class.html'>bspline_class</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-extrap~2"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>extrap</strong></td>
+            <td>
+                <p>if not present, then False is used</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~set_extrap_flag~~CalledByGraph Pages: 1 -->
+<svg id="procset_extrap_flagCalledByGraph" width="641pt" height="401pt"
+ viewBox="0.00 0.00 641.00 401.34" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~set_extrap_flag~~CalledByGraph" class="graph" transform="scale(0.81 0.81) rotate(0) translate(4 490)">
+<title>proc~~set_extrap_flag~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-490 785,-490 785,4 -4,4"/>
+<!-- proc~set_extrap_flag -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node1" class="node">
+<title>proc~set_extrap_flag</title>
+<polygon fill="none" stroke="black" points="781,-255 609,-255 609,-231 781,-231 781,-255"/>
+<text text-anchor="middle" x="695" y="-240.6" font-family="Helvetica,sans-Serif" font-size="10.50">bspline_class%set_extrap_flag</text>
+</g>
+<!-- proc~initialize_1d_auto_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node2" class="node">
+<title>proc~initialize_1d_auto_knots</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node2"><a xlink:href="../proc/initialize_1d_auto_knots.html" xlink:title="bspline_1d%initialize_1d_auto_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="566,-486 361,-486 361,-462 566,-462 566,-486"/>
+<text text-anchor="middle" x="463.5" y="-471.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d%initialize_1d_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_1d_auto_knots&#45;&gt;proc~set_extrap_flag -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge1" class="edge">
+<title>proc~initialize_1d_auto_knots&#45;&gt;proc~set_extrap_flag</title>
+<path fill="none" stroke="#000000" d="M557.12,-461.97C562.73,-459.47 568.08,-456.51 573,-453 639.79,-405.36 675.03,-308.47 688.04,-264.99"/>
+<polygon fill="#000000" stroke="#000000" points="691.47,-265.72 690.87,-255.15 684.74,-263.79 691.47,-265.72"/>
+</g>
+<!-- proc~initialize_1d_specify_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node3" class="node">
+<title>proc~initialize_1d_specify_knots</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node3"><a xlink:href="../proc/initialize_1d_specify_knots.html" xlink:title="bspline_1d%initialize_1d_specify_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="573,-444 354,-444 354,-420 573,-420 573,-444"/>
+<text text-anchor="middle" x="463.5" y="-429.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d%initialize_1d_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_1d_specify_knots&#45;&gt;proc~set_extrap_flag -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge2" class="edge">
+<title>proc~initialize_1d_specify_knots&#45;&gt;proc~set_extrap_flag</title>
+<path fill="none" stroke="#000000" d="M555.37,-419.94C561.55,-417.47 567.5,-414.51 573,-411 630.02,-374.54 668.62,-300.82 685.05,-264.39"/>
+<polygon fill="#000000" stroke="#000000" points="688.29,-265.72 689.09,-255.16 681.88,-262.91 688.29,-265.72"/>
+</g>
+<!-- proc~initialize_2d_auto_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node4" class="node">
+<title>proc~initialize_2d_auto_knots</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node4"><a xlink:href="../proc/initialize_2d_auto_knots.html" xlink:title="bspline_2d%initialize_2d_auto_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="566,-402 361,-402 361,-378 566,-378 566,-402"/>
+<text text-anchor="middle" x="463.5" y="-387.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_2d%initialize_2d_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_2d_auto_knots&#45;&gt;proc~set_extrap_flag -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge3" class="edge">
+<title>proc~initialize_2d_auto_knots&#45;&gt;proc~set_extrap_flag</title>
+<path fill="none" stroke="#000000" d="M552.33,-377.93C559.52,-375.48 566.51,-372.53 573,-369 620.59,-343.1 660.69,-291.98 680.57,-263.46"/>
+<polygon fill="#000000" stroke="#000000" points="683.56,-265.29 686.3,-255.05 677.78,-261.34 683.56,-265.29"/>
+</g>
+<!-- proc~initialize_2d_specify_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node5" class="node">
+<title>proc~initialize_2d_specify_knots</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node5"><a xlink:href="../proc/initialize_2d_specify_knots.html" xlink:title="bspline_2d%initialize_2d_specify_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="573,-360 354,-360 354,-336 573,-336 573,-360"/>
+<text text-anchor="middle" x="463.5" y="-345.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_2d%initialize_2d_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_2d_specify_knots&#45;&gt;proc~set_extrap_flag -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge4" class="edge">
+<title>proc~initialize_2d_specify_knots&#45;&gt;proc~set_extrap_flag</title>
+<path fill="none" stroke="#000000" d="M546.47,-335.95C555.59,-333.49 564.6,-330.54 573,-327 611.41,-310.81 649.95,-281.19 672.9,-261.8"/>
+<polygon fill="#000000" stroke="#000000" points="675.31,-264.33 680.61,-255.16 670.75,-259.03 675.31,-264.33"/>
+</g>
+<!-- proc~initialize_3d_auto_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node6" class="node">
+<title>proc~initialize_3d_auto_knots</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node6"><a xlink:href="../proc/initialize_3d_auto_knots.html" xlink:title="bspline_3d%initialize_3d_auto_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="566,-318 361,-318 361,-294 566,-294 566,-318"/>
+<text text-anchor="middle" x="463.5" y="-303.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_3d%initialize_3d_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_3d_auto_knots&#45;&gt;proc~set_extrap_flag -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge5" class="edge">
+<title>proc~initialize_3d_auto_knots&#45;&gt;proc~set_extrap_flag</title>
+<path fill="none" stroke="#000000" d="M534.59,-293.96C547.44,-291.32 560.68,-288.31 573,-285 600.25,-277.68 630.21,-267.29 653.5,-258.69"/>
+<polygon fill="#000000" stroke="#000000" points="654.9,-261.9 663.04,-255.12 652.45,-255.34 654.9,-261.9"/>
+</g>
+<!-- proc~initialize_3d_specify_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node7" class="node">
+<title>proc~initialize_3d_specify_knots</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node7"><a xlink:href="../proc/initialize_3d_specify_knots.html" xlink:title="bspline_3d%initialize_3d_specify_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="573,-276 354,-276 354,-252 573,-252 573,-276"/>
+<text text-anchor="middle" x="463.5" y="-261.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_3d%initialize_3d_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_3d_specify_knots&#45;&gt;proc~set_extrap_flag -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge6" class="edge">
+<title>proc~initialize_3d_specify_knots&#45;&gt;proc~set_extrap_flag</title>
+<path fill="none" stroke="#000000" d="M573.2,-254.05C581.69,-253.28 590.21,-252.5 598.6,-251.73"/>
+<polygon fill="#000000" stroke="#000000" points="599.11,-255.2 608.75,-250.8 598.47,-248.23 599.11,-255.2"/>
+</g>
+<!-- proc~initialize_4d_auto_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node8" class="node">
+<title>proc~initialize_4d_auto_knots</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node8"><a xlink:href="../proc/initialize_4d_auto_knots.html" xlink:title="bspline_4d%initialize_4d_auto_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="566,-234 361,-234 361,-210 566,-210 566,-234"/>
+<text text-anchor="middle" x="463.5" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_4d%initialize_4d_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_4d_auto_knots&#45;&gt;proc~set_extrap_flag -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge7" class="edge">
+<title>proc~initialize_4d_auto_knots&#45;&gt;proc~set_extrap_flag</title>
+<path fill="none" stroke="#000000" d="M566.16,-231.3C576.98,-232.29 587.95,-233.3 598.68,-234.28"/>
+<polygon fill="#000000" stroke="#000000" points="598.61,-237.79 608.89,-235.21 599.25,-230.82 598.61,-237.79"/>
+</g>
+<!-- proc~initialize_4d_specify_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node9" class="node">
+<title>proc~initialize_4d_specify_knots</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node9"><a xlink:href="../proc/initialize_4d_specify_knots.html" xlink:title="bspline_4d%initialize_4d_specify_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="573,-192 354,-192 354,-168 573,-168 573,-192"/>
+<text text-anchor="middle" x="463.5" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_4d%initialize_4d_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_4d_specify_knots&#45;&gt;proc~set_extrap_flag -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge8" class="edge">
+<title>proc~initialize_4d_specify_knots&#45;&gt;proc~set_extrap_flag</title>
+<path fill="none" stroke="#000000" d="M534.59,-192.04C547.44,-194.68 560.68,-197.69 573,-201 600.25,-208.32 630.21,-218.71 653.5,-227.31"/>
+<polygon fill="#000000" stroke="#000000" points="652.45,-230.66 663.04,-230.88 654.9,-224.1 652.45,-230.66"/>
+</g>
+<!-- proc~initialize_5d_auto_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node10" class="node">
+<title>proc~initialize_5d_auto_knots</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node10"><a xlink:href="../proc/initialize_5d_auto_knots.html" xlink:title="bspline_5d%initialize_5d_auto_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="566,-150 361,-150 361,-126 566,-126 566,-150"/>
+<text text-anchor="middle" x="463.5" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_5d%initialize_5d_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_5d_auto_knots&#45;&gt;proc~set_extrap_flag -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge9" class="edge">
+<title>proc~initialize_5d_auto_knots&#45;&gt;proc~set_extrap_flag</title>
+<path fill="none" stroke="#000000" d="M546.47,-150.05C555.59,-152.51 564.6,-155.46 573,-159 611.41,-175.19 649.95,-204.81 672.9,-224.2"/>
+<polygon fill="#000000" stroke="#000000" points="670.75,-226.97 680.61,-230.84 675.31,-221.67 670.75,-226.97"/>
+</g>
+<!-- proc~initialize_5d_specify_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node11" class="node">
+<title>proc~initialize_5d_specify_knots</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node11"><a xlink:href="../proc/initialize_5d_specify_knots.html" xlink:title="bspline_5d%initialize_5d_specify_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="573,-108 354,-108 354,-84 573,-84 573,-108"/>
+<text text-anchor="middle" x="463.5" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_5d%initialize_5d_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_5d_specify_knots&#45;&gt;proc~set_extrap_flag -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge10" class="edge">
+<title>proc~initialize_5d_specify_knots&#45;&gt;proc~set_extrap_flag</title>
+<path fill="none" stroke="#000000" d="M552.33,-108.07C559.52,-110.52 566.51,-113.47 573,-117 620.59,-142.9 660.69,-194.02 680.57,-222.54"/>
+<polygon fill="#000000" stroke="#000000" points="677.78,-224.66 686.3,-230.95 683.56,-220.71 677.78,-224.66"/>
+</g>
+<!-- proc~initialize_6d_auto_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node12" class="node">
+<title>proc~initialize_6d_auto_knots</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node12"><a xlink:href="../proc/initialize_6d_auto_knots.html" xlink:title="bspline_6d%initialize_6d_auto_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="566,-66 361,-66 361,-42 566,-42 566,-66"/>
+<text text-anchor="middle" x="463.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_6d%initialize_6d_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_6d_auto_knots&#45;&gt;proc~set_extrap_flag -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge11" class="edge">
+<title>proc~initialize_6d_auto_knots&#45;&gt;proc~set_extrap_flag</title>
+<path fill="none" stroke="#000000" d="M555.37,-66.06C561.55,-68.53 567.5,-71.49 573,-75 630.02,-111.46 668.62,-185.18 685.05,-221.61"/>
+<polygon fill="#000000" stroke="#000000" points="681.88,-223.09 689.09,-230.84 688.29,-220.28 681.88,-223.09"/>
+</g>
+<!-- proc~initialize_6d_specify_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node13" class="node">
+<title>proc~initialize_6d_specify_knots</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node13"><a xlink:href="../proc/initialize_6d_specify_knots.html" xlink:title="bspline_6d%initialize_6d_specify_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="573,-24 354,-24 354,0 573,0 573,-24"/>
+<text text-anchor="middle" x="463.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_6d%initialize_6d_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_6d_specify_knots&#45;&gt;proc~set_extrap_flag -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge12" class="edge">
+<title>proc~initialize_6d_specify_knots&#45;&gt;proc~set_extrap_flag</title>
+<path fill="none" stroke="#000000" d="M557.12,-24.03C562.73,-26.53 568.08,-29.49 573,-33 639.79,-80.64 675.03,-177.53 688.04,-221.01"/>
+<polygon fill="#000000" stroke="#000000" points="684.74,-222.21 690.87,-230.85 691.47,-220.28 684.74,-222.21"/>
+</g>
+<!-- proc~bspline_1d_constructor_auto_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node14" class="node">
+<title>proc~bspline_1d_constructor_auto_knots</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node14"><a xlink:href="../proc/bspline_1d_constructor_auto_knots.html" xlink:title="bspline_1d_constructor_auto_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="311.5,-486 112.5,-486 112.5,-462 311.5,-462 311.5,-486"/>
+<text text-anchor="middle" x="212" y="-471.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d_constructor_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_1d_constructor_auto_knots&#45;&gt;proc~initialize_1d_auto_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge13" class="edge">
+<title>proc~bspline_1d_constructor_auto_knots&#45;&gt;proc~initialize_1d_auto_knots</title>
+<path fill="none" stroke="#000000" d="M311.61,-474C324.4,-474 337.57,-474 350.56,-474"/>
+<polygon fill="#000000" stroke="#000000" points="350.92,-477.5 360.92,-474 350.92,-470.5 350.92,-477.5"/>
+</g>
+<!-- proc~bspline_1d_constructor_specify_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node15" class="node">
+<title>proc~bspline_1d_constructor_specify_knots</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node15"><a xlink:href="../proc/bspline_1d_constructor_specify_knots.html" xlink:title="bspline_1d_constructor_specify_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="318,-444 106,-444 106,-420 318,-420 318,-444"/>
+<text text-anchor="middle" x="212" y="-429.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d_constructor_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_1d_constructor_specify_knots&#45;&gt;proc~initialize_1d_specify_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge14" class="edge">
+<title>proc~bspline_1d_constructor_specify_knots&#45;&gt;proc~initialize_1d_specify_knots</title>
+<path fill="none" stroke="#000000" d="M318.09,-432C326.61,-432 335.25,-432 343.86,-432"/>
+<polygon fill="#000000" stroke="#000000" points="343.93,-435.5 353.93,-432 343.93,-428.5 343.93,-435.5"/>
+</g>
+<!-- proc~bspline_2d_constructor_auto_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node16" class="node">
+<title>proc~bspline_2d_constructor_auto_knots</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node16"><a xlink:href="../proc/bspline_2d_constructor_auto_knots.html" xlink:title="bspline_2d_constructor_auto_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="311.5,-402 112.5,-402 112.5,-378 311.5,-378 311.5,-402"/>
+<text text-anchor="middle" x="212" y="-387.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_2d_constructor_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_2d_constructor_auto_knots&#45;&gt;proc~initialize_2d_auto_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge15" class="edge">
+<title>proc~bspline_2d_constructor_auto_knots&#45;&gt;proc~initialize_2d_auto_knots</title>
+<path fill="none" stroke="#000000" d="M311.61,-390C324.4,-390 337.57,-390 350.56,-390"/>
+<polygon fill="#000000" stroke="#000000" points="350.92,-393.5 360.92,-390 350.92,-386.5 350.92,-393.5"/>
+</g>
+<!-- proc~bspline_2d_constructor_specify_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node17" class="node">
+<title>proc~bspline_2d_constructor_specify_knots</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node17"><a xlink:href="../proc/bspline_2d_constructor_specify_knots.html" xlink:title="bspline_2d_constructor_specify_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="318,-360 106,-360 106,-336 318,-336 318,-360"/>
+<text text-anchor="middle" x="212" y="-345.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_2d_constructor_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_2d_constructor_specify_knots&#45;&gt;proc~initialize_2d_specify_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge16" class="edge">
+<title>proc~bspline_2d_constructor_specify_knots&#45;&gt;proc~initialize_2d_specify_knots</title>
+<path fill="none" stroke="#000000" d="M318.09,-348C326.61,-348 335.25,-348 343.86,-348"/>
+<polygon fill="#000000" stroke="#000000" points="343.93,-351.5 353.93,-348 343.93,-344.5 343.93,-351.5"/>
+</g>
+<!-- proc~bspline_3d_constructor_auto_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node18" class="node">
+<title>proc~bspline_3d_constructor_auto_knots</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node18"><a xlink:href="../proc/bspline_3d_constructor_auto_knots.html" xlink:title="bspline_3d_constructor_auto_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="311.5,-318 112.5,-318 112.5,-294 311.5,-294 311.5,-318"/>
+<text text-anchor="middle" x="212" y="-303.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_3d_constructor_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_3d_constructor_auto_knots&#45;&gt;proc~initialize_3d_auto_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge17" class="edge">
+<title>proc~bspline_3d_constructor_auto_knots&#45;&gt;proc~initialize_3d_auto_knots</title>
+<path fill="none" stroke="#000000" d="M311.61,-306C324.4,-306 337.57,-306 350.56,-306"/>
+<polygon fill="#000000" stroke="#000000" points="350.92,-309.5 360.92,-306 350.92,-302.5 350.92,-309.5"/>
+</g>
+<!-- proc~bspline_3d_constructor_specify_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node19" class="node">
+<title>proc~bspline_3d_constructor_specify_knots</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node19"><a xlink:href="../proc/bspline_3d_constructor_specify_knots.html" xlink:title="bspline_3d_constructor_specify_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="318,-276 106,-276 106,-252 318,-252 318,-276"/>
+<text text-anchor="middle" x="212" y="-261.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_3d_constructor_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_3d_constructor_specify_knots&#45;&gt;proc~initialize_3d_specify_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge18" class="edge">
+<title>proc~bspline_3d_constructor_specify_knots&#45;&gt;proc~initialize_3d_specify_knots</title>
+<path fill="none" stroke="#000000" d="M318.09,-264C326.61,-264 335.25,-264 343.86,-264"/>
+<polygon fill="#000000" stroke="#000000" points="343.93,-267.5 353.93,-264 343.93,-260.5 343.93,-267.5"/>
+</g>
+<!-- proc~bspline_4d_constructor_auto_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node20" class="node">
+<title>proc~bspline_4d_constructor_auto_knots</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node20"><a xlink:href="../proc/bspline_4d_constructor_auto_knots.html" xlink:title="bspline_4d_constructor_auto_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="311.5,-234 112.5,-234 112.5,-210 311.5,-210 311.5,-234"/>
+<text text-anchor="middle" x="212" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_4d_constructor_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_4d_constructor_auto_knots&#45;&gt;proc~initialize_4d_auto_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge19" class="edge">
+<title>proc~bspline_4d_constructor_auto_knots&#45;&gt;proc~initialize_4d_auto_knots</title>
+<path fill="none" stroke="#000000" d="M311.61,-222C324.4,-222 337.57,-222 350.56,-222"/>
+<polygon fill="#000000" stroke="#000000" points="350.92,-225.5 360.92,-222 350.92,-218.5 350.92,-225.5"/>
+</g>
+<!-- proc~bspline_4d_constructor_specify_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node21" class="node">
+<title>proc~bspline_4d_constructor_specify_knots</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node21"><a xlink:href="../proc/bspline_4d_constructor_specify_knots.html" xlink:title="bspline_4d_constructor_specify_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="318,-192 106,-192 106,-168 318,-168 318,-192"/>
+<text text-anchor="middle" x="212" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_4d_constructor_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_4d_constructor_specify_knots&#45;&gt;proc~initialize_4d_specify_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge20" class="edge">
+<title>proc~bspline_4d_constructor_specify_knots&#45;&gt;proc~initialize_4d_specify_knots</title>
+<path fill="none" stroke="#000000" d="M318.09,-180C326.61,-180 335.25,-180 343.86,-180"/>
+<polygon fill="#000000" stroke="#000000" points="343.93,-183.5 353.93,-180 343.93,-176.5 343.93,-183.5"/>
+</g>
+<!-- proc~bspline_5d_constructor_auto_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node22" class="node">
+<title>proc~bspline_5d_constructor_auto_knots</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node22"><a xlink:href="../proc/bspline_5d_constructor_auto_knots.html" xlink:title="bspline_5d_constructor_auto_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="311.5,-150 112.5,-150 112.5,-126 311.5,-126 311.5,-150"/>
+<text text-anchor="middle" x="212" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_5d_constructor_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_5d_constructor_auto_knots&#45;&gt;proc~initialize_5d_auto_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge21" class="edge">
+<title>proc~bspline_5d_constructor_auto_knots&#45;&gt;proc~initialize_5d_auto_knots</title>
+<path fill="none" stroke="#000000" d="M311.61,-138C324.4,-138 337.57,-138 350.56,-138"/>
+<polygon fill="#000000" stroke="#000000" points="350.92,-141.5 360.92,-138 350.92,-134.5 350.92,-141.5"/>
+</g>
+<!-- proc~bspline_5d_constructor_specify_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node23" class="node">
+<title>proc~bspline_5d_constructor_specify_knots</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node23"><a xlink:href="../proc/bspline_5d_constructor_specify_knots.html" xlink:title="bspline_5d_constructor_specify_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="318,-108 106,-108 106,-84 318,-84 318,-108"/>
+<text text-anchor="middle" x="212" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_5d_constructor_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_5d_constructor_specify_knots&#45;&gt;proc~initialize_5d_specify_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge22" class="edge">
+<title>proc~bspline_5d_constructor_specify_knots&#45;&gt;proc~initialize_5d_specify_knots</title>
+<path fill="none" stroke="#000000" d="M318.09,-96C326.61,-96 335.25,-96 343.86,-96"/>
+<polygon fill="#000000" stroke="#000000" points="343.93,-99.5 353.93,-96 343.93,-92.5 343.93,-99.5"/>
+</g>
+<!-- proc~bspline_6d_constructor_auto_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node24" class="node">
+<title>proc~bspline_6d_constructor_auto_knots</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node24"><a xlink:href="../proc/bspline_6d_constructor_auto_knots.html" xlink:title="bspline_6d_constructor_auto_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="311.5,-66 112.5,-66 112.5,-42 311.5,-42 311.5,-66"/>
+<text text-anchor="middle" x="212" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_6d_constructor_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_6d_constructor_auto_knots&#45;&gt;proc~initialize_6d_auto_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge23" class="edge">
+<title>proc~bspline_6d_constructor_auto_knots&#45;&gt;proc~initialize_6d_auto_knots</title>
+<path fill="none" stroke="#000000" d="M311.61,-54C324.4,-54 337.57,-54 350.56,-54"/>
+<polygon fill="#000000" stroke="#000000" points="350.92,-57.5 360.92,-54 350.92,-50.5 350.92,-57.5"/>
+</g>
+<!-- proc~bspline_6d_constructor_specify_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node25" class="node">
+<title>proc~bspline_6d_constructor_specify_knots</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node25"><a xlink:href="../proc/bspline_6d_constructor_specify_knots.html" xlink:title="bspline_6d_constructor_specify_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="318,-24 106,-24 106,0 318,0 318,-24"/>
+<text text-anchor="middle" x="212" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_6d_constructor_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_6d_constructor_specify_knots&#45;&gt;proc~initialize_6d_specify_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge24" class="edge">
+<title>proc~bspline_6d_constructor_specify_knots&#45;&gt;proc~initialize_6d_specify_knots</title>
+<path fill="none" stroke="#000000" d="M318.09,-12C326.61,-12 335.25,-12 343.86,-12"/>
+<polygon fill="#000000" stroke="#000000" points="343.93,-15.5 353.93,-12 343.93,-8.5 343.93,-15.5"/>
+</g>
+<!-- interface~bspline_1d -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node26" class="node">
+<title>interface~bspline_1d</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node26"><a xlink:href="../interface/bspline_1d.html" xlink:title="bspline_1d">
+<polygon fill="#a7506f" stroke="#a7506f" points="70,-454 0,-454 0,-430 70,-430 70,-454"/>
+<text text-anchor="middle" x="35" y="-439.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d</text>
+</a>
+</g>
+</g>
+<!-- interface~bspline_1d&#45;&gt;proc~bspline_1d_constructor_auto_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge25" class="edge">
+<title>interface~bspline_1d&#45;&gt;proc~bspline_1d_constructor_auto_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M70.16,-448.25C88.7,-451.64 112.41,-455.97 135.07,-460.12"/>
+<polygon fill="#000000" stroke="#000000" points="134.57,-463.58 145.04,-461.94 135.83,-456.7 134.57,-463.58"/>
+</g>
+<!-- interface~bspline_1d&#45;&gt;proc~bspline_1d_constructor_specify_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge26" class="edge">
+<title>interface~bspline_1d&#45;&gt;proc~bspline_1d_constructor_specify_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M70.16,-440.05C77.9,-439.61 86.54,-439.11 95.64,-438.59"/>
+<polygon fill="#000000" stroke="#000000" points="95.87,-442.08 105.66,-438.02 95.47,-435.1 95.87,-442.08"/>
+</g>
+<!-- interface~bspline_2d -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node27" class="node">
+<title>interface~bspline_2d</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node27"><a xlink:href="../interface/bspline_2d.html" xlink:title="bspline_2d">
+<polygon fill="#a7506f" stroke="#a7506f" points="70,-391 0,-391 0,-367 70,-367 70,-391"/>
+<text text-anchor="middle" x="35" y="-376.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_2d</text>
+</a>
+</g>
+</g>
+<!-- interface~bspline_2d&#45;&gt;proc~bspline_2d_constructor_auto_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge27" class="edge">
+<title>interface~bspline_2d&#45;&gt;proc~bspline_2d_constructor_auto_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M70.16,-381.15C79.7,-381.75 90.6,-382.43 102.03,-383.15"/>
+<polygon fill="#000000" stroke="#000000" points="101.99,-386.65 112.19,-383.79 102.43,-379.67 101.99,-386.65"/>
+</g>
+<!-- interface~bspline_2d&#45;&gt;proc~bspline_2d_constructor_specify_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge28" class="edge">
+<title>interface~bspline_2d&#45;&gt;proc~bspline_2d_constructor_specify_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M70.16,-372.95C88.19,-369.76 111.1,-365.7 133.18,-361.79"/>
+<polygon fill="#000000" stroke="#000000" points="134.01,-365.19 143.25,-360 132.79,-358.3 134.01,-365.19"/>
+</g>
+<!-- interface~bspline_3d -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node28" class="node">
+<title>interface~bspline_3d</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node28"><a xlink:href="../interface/bspline_3d.html" xlink:title="bspline_3d">
+<polygon fill="#a7506f" stroke="#a7506f" points="70,-297 0,-297 0,-273 70,-273 70,-297"/>
+<text text-anchor="middle" x="35" y="-282.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_3d</text>
+</a>
+</g>
+</g>
+<!-- interface~bspline_3d&#45;&gt;proc~bspline_3d_constructor_auto_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge29" class="edge">
+<title>interface~bspline_3d&#45;&gt;proc~bspline_3d_constructor_auto_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M70.16,-289.1C79.7,-290.24 90.6,-291.55 102.03,-292.92"/>
+<polygon fill="#000000" stroke="#000000" points="101.84,-296.43 112.19,-294.14 102.68,-289.48 101.84,-296.43"/>
+</g>
+<!-- interface~bspline_3d&#45;&gt;proc~bspline_3d_constructor_specify_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge30" class="edge">
+<title>interface~bspline_3d&#45;&gt;proc~bspline_3d_constructor_specify_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M70.16,-280.9C79.3,-279.8 89.69,-278.56 100.59,-277.25"/>
+<polygon fill="#000000" stroke="#000000" points="101.22,-280.7 110.73,-276.03 100.39,-273.75 101.22,-280.7"/>
+</g>
+<!-- interface~bspline_4d -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node29" class="node">
+<title>interface~bspline_4d</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node29"><a xlink:href="../interface/bspline_4d.html" xlink:title="bspline_4d">
+<polygon fill="#a7506f" stroke="#a7506f" points="70,-213 0,-213 0,-189 70,-189 70,-213"/>
+<text text-anchor="middle" x="35" y="-198.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_4d</text>
+</a>
+</g>
+</g>
+<!-- interface~bspline_4d&#45;&gt;proc~bspline_4d_constructor_auto_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge31" class="edge">
+<title>interface~bspline_4d&#45;&gt;proc~bspline_4d_constructor_auto_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M70.16,-205.1C79.7,-206.24 90.6,-207.55 102.03,-208.92"/>
+<polygon fill="#000000" stroke="#000000" points="101.84,-212.43 112.19,-210.14 102.68,-205.48 101.84,-212.43"/>
+</g>
+<!-- interface~bspline_4d&#45;&gt;proc~bspline_4d_constructor_specify_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge32" class="edge">
+<title>interface~bspline_4d&#45;&gt;proc~bspline_4d_constructor_specify_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M70.16,-196.9C79.3,-195.8 89.69,-194.56 100.59,-193.25"/>
+<polygon fill="#000000" stroke="#000000" points="101.22,-196.7 110.73,-192.03 100.39,-189.75 101.22,-196.7"/>
+</g>
+<!-- interface~bspline_5d -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node30" class="node">
+<title>interface~bspline_5d</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node30"><a xlink:href="../interface/bspline_5d.html" xlink:title="bspline_5d">
+<polygon fill="#a7506f" stroke="#a7506f" points="70,-129 0,-129 0,-105 70,-105 70,-129"/>
+<text text-anchor="middle" x="35" y="-114.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_5d</text>
+</a>
+</g>
+</g>
+<!-- interface~bspline_5d&#45;&gt;proc~bspline_5d_constructor_auto_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge33" class="edge">
+<title>interface~bspline_5d&#45;&gt;proc~bspline_5d_constructor_auto_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M70.16,-121.1C79.7,-122.24 90.6,-123.55 102.03,-124.92"/>
+<polygon fill="#000000" stroke="#000000" points="101.84,-128.43 112.19,-126.14 102.68,-121.48 101.84,-128.43"/>
+</g>
+<!-- interface~bspline_5d&#45;&gt;proc~bspline_5d_constructor_specify_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge34" class="edge">
+<title>interface~bspline_5d&#45;&gt;proc~bspline_5d_constructor_specify_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M70.16,-112.9C79.3,-111.8 89.69,-110.56 100.59,-109.25"/>
+<polygon fill="#000000" stroke="#000000" points="101.22,-112.7 110.73,-108.03 100.39,-105.75 101.22,-112.7"/>
+</g>
+<!-- interface~bspline_6d -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_node31" class="node">
+<title>interface~bspline_6d</title>
+<g id="a_proc~~set_extrap_flag~~CalledByGraph_node31"><a xlink:href="../interface/bspline_6d.html" xlink:title="bspline_6d">
+<polygon fill="#a7506f" stroke="#a7506f" points="70,-45 0,-45 0,-21 70,-21 70,-45"/>
+<text text-anchor="middle" x="35" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_6d</text>
+</a>
+</g>
+</g>
+<!-- interface~bspline_6d&#45;&gt;proc~bspline_6d_constructor_auto_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge35" class="edge">
+<title>interface~bspline_6d&#45;&gt;proc~bspline_6d_constructor_auto_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M70.16,-37.1C79.7,-38.24 90.6,-39.55 102.03,-40.92"/>
+<polygon fill="#000000" stroke="#000000" points="101.84,-44.43 112.19,-42.14 102.68,-37.48 101.84,-44.43"/>
+</g>
+<!-- interface~bspline_6d&#45;&gt;proc~bspline_6d_constructor_specify_knots -->
+<g id="proc~~set_extrap_flag~~CalledByGraph_edge36" class="edge">
+<title>interface~bspline_6d&#45;&gt;proc~bspline_6d_constructor_specify_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M70.16,-28.9C79.3,-27.8 89.69,-26.56 100.59,-25.25"/>
+<polygon fill="#000000" stroke="#000000" points="101.22,-28.7 110.73,-24.03 100.39,-21.75 101.22,-28.7"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocset_extrap_flagCalledByGraph = svgPanZoom('#procset_extrap_flagCalledByGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">pure subroutine </span><span class="n">set_extrap_flag</span><span class="p">(</span><span class="n">me</span><span class="p">,</span><span class="n">extrap</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">implicit none</span>
+
+<span class="k">    class</span><span class="p">(</span><span class="n">bspline_class</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">me</span>
+<span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">extrap</span><span class="w">  </span><span class="c">!! if not present, then False is used</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">extrap</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        </span><span class="n">me</span><span class="p">%</span><span class="n">extrap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">extrap</span>
+<span class="w">    </span><span class="k">else</span>
+<span class="k">        </span><span class="n">me</span><span class="p">%</span><span class="n">extrap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    end subroutine </span><span class="n">set_extrap_flag</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              bspline-fortran
+ was developed by Jacob Williams<br>              &copy; 2025 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

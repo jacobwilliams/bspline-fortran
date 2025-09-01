@@ -1,0 +1,382 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="BSPLINE-FORTRAN -- Multidimensional B-Spline Interpolation of Data on a Regular Grid">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="./favicon.png">
+
+    <title> bspline-fortran </title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="./css/fontawesome.min.css" rel="stylesheet">
+    <link href="./css/brands.min.css" rel="stylesheet">
+    <link href="./css/regular.min.css" rel="stylesheet">
+    <link href="./css/solid.min.css" rel="stylesheet">
+    <link href="./css/v4-font-face.min.css" rel="stylesheet">
+    <link href="./css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="./css/local.css" rel="stylesheet">
+    <link href="./css/pygments.css" rel="stylesheet">
+    <script src="./js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="./index.html">bspline-fortran </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="./lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="./lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="./lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="./lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="./lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="./search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <!-- Main component for a primary marketing message or call to action -->
+    <div class="p-5 mb-4 bg-light border rounded-3" id="jumbotron">
+      <p>BSPLINE-FORTRAN -- Multidimensional B-Spline Interpolation of Data on a Regular Grid</p>
+        <p> Find us on&hellip;</p>
+      <p>
+        <a class="btn btn-lg btn-primary" href="https://github.com/jacobwilliams/bspline-fortran" role="button">GitHub</a>
+        
+        
+        
+        
+      </p>
+    </div>
+
+      <div class="row" id='text'>
+        <div class=col-md-8>
+          <h1>bspline-fortran</h1>
+          <h1><img alt="bspline-fortran" src="media/bspline-fortran.png"></h1>
+<p>Multidimensional B-Spline Interpolation of Data on a Regular Grid.</p>
+<h2>Status</h2>
+<p><a href="https://github.com/topics/fortran"><img alt="Language" src="https://img.shields.io/badge/-Fortran-734f96?logo=fortran&amp;logoColor=white"></a>
+<a href="https://github.com/jacobwilliams/bspline-fortran/releases/latest"><img alt="GitHub release" src="https://img.shields.io/github/release/jacobwilliams/bspline-fortran.svg"></a>
+<a href="https://github.com/jacobwilliams/bspline-fortran/actions"><img alt="Build Status" src="https://github.com/jacobwilliams/bspline-fortran/actions/workflows/CI.yml/badge.svg"></a>
+<a href="https://codecov.io/gh/jacobwilliams/bspline-fortran"><img alt="codecov" src="https://codecov.io/gh/jacobwilliams/bspline-fortran/branch/master/graph/badge.svg"></a>
+<a href="https://github.com/jacobwilliams/bspline-fortran/commits/master"><img alt="last-commit" src="https://img.shields.io/github/last-commit/jacobwilliams/bspline-fortran"></a>
+<a href="https://zenodo.org/badge/latestdoi/31299552"><img alt="DOI" src="https://zenodo.org/badge/31299552.svg"></a></p>
+<h2>Brief description</h2>
+<p>The library provides subroutines for 1D-6D interpolation and extrapolation using B-splines. The code is written in modern Fortran (i.e., Fortran 2003+). There are two ways to use the module, via a basic subroutine interface and an object-oriented interface. Both are thread safe.</p>
+<h2>Subroutine interface</h2>
+<p>The core routines for the subroutine interface are:</p>
+<div class="codehilite"><pre><span></span><code><span class="c">!f(x)</span>
+<span class="k">subroutine </span><span class="n">db1ink</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">fcn</span><span class="p">,</span><span class="n">kx</span><span class="p">,</span><span class="n">iknot</span><span class="p">,</span><span class="n">tx</span><span class="p">,</span><span class="n">bcoef</span><span class="p">,</span><span class="n">iflag</span><span class="p">)</span>
+<span class="k">subroutine </span><span class="n">db1val</span><span class="p">(</span><span class="n">xval</span><span class="p">,</span><span class="n">idx</span><span class="p">,</span><span class="n">tx</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">kx</span><span class="p">,</span><span class="n">bcoef</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">iflag</span><span class="p">,</span><span class="n">inbvx</span><span class="p">,</span><span class="n">w0</span><span class="p">,</span><span class="n">extrap</span><span class="p">)</span>
+
+<span class="c">!f(x,y)</span>
+<span class="k">subroutine </span><span class="n">db2ink</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">ny</span><span class="p">,</span><span class="n">fcn</span><span class="p">,</span><span class="n">kx</span><span class="p">,</span><span class="n">ky</span><span class="p">,</span><span class="n">iknot</span><span class="p">,</span><span class="n">tx</span><span class="p">,</span><span class="n">ty</span><span class="p">,</span><span class="n">bcoef</span><span class="p">,</span><span class="n">iflag</span><span class="p">)</span>
+<span class="k">subroutine </span><span class="n">db2val</span><span class="p">(</span><span class="n">xval</span><span class="p">,</span><span class="n">yval</span><span class="p">,</span><span class="n">idx</span><span class="p">,</span><span class="n">idy</span><span class="p">,</span><span class="n">tx</span><span class="p">,</span><span class="n">ty</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">ny</span><span class="p">,</span><span class="n">kx</span><span class="p">,</span><span class="n">ky</span><span class="p">,</span><span class="n">bcoef</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">iflag</span><span class="p">,</span><span class="n">inbvx</span><span class="p">,</span><span class="n">inbvy</span><span class="p">,</span><span class="n">iloy</span><span class="p">,</span><span class="n">w1</span><span class="p">,</span><span class="n">w0</span><span class="p">,</span><span class="n">extrap</span><span class="p">)</span>
+
+<span class="c">!f(x,y,z)</span>
+<span class="k">subroutine </span><span class="n">db3ink</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">ny</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">nz</span><span class="p">,</span><span class="n">fcn</span><span class="p">,</span><span class="n">kx</span><span class="p">,</span><span class="n">ky</span><span class="p">,</span><span class="n">kz</span><span class="p">,</span><span class="n">iknot</span><span class="p">,</span><span class="n">tx</span><span class="p">,</span><span class="n">ty</span><span class="p">,</span><span class="n">tz</span><span class="p">,</span><span class="n">bcoef</span><span class="p">,</span><span class="n">iflag</span><span class="p">)</span>
+<span class="k">subroutine </span><span class="n">db3val</span><span class="p">(</span><span class="n">xval</span><span class="p">,</span><span class="n">yval</span><span class="p">,</span><span class="n">zval</span><span class="p">,</span><span class="n">idx</span><span class="p">,</span><span class="n">idy</span><span class="p">,</span><span class="n">idz</span><span class="p">,</span><span class="n">tx</span><span class="p">,</span><span class="n">ty</span><span class="p">,</span><span class="n">tz</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">ny</span><span class="p">,</span><span class="n">nz</span><span class="p">,</span><span class="n">kx</span><span class="p">,</span><span class="n">ky</span><span class="p">,</span><span class="n">kz</span><span class="p">,</span><span class="n">bcoef</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">iflag</span><span class="p">,</span><span class="n">inbvx</span><span class="p">,</span><span class="n">inbvy</span><span class="p">,</span><span class="n">inbvz</span><span class="p">,</span><span class="n">iloy</span><span class="p">,</span><span class="n">iloz</span><span class="p">,</span><span class="n">w2</span><span class="p">,</span><span class="n">w1</span><span class="p">,</span><span class="n">w0</span><span class="p">,</span><span class="n">extrap</span><span class="p">)</span>
+
+<span class="c">!f(x,y,z,q)</span>
+<span class="k">subroutine </span><span class="n">db4ink</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">ny</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">nz</span><span class="p">,</span><span class="n">q</span><span class="p">,</span><span class="n">nq</span><span class="p">,</span><span class="n">fcn</span><span class="p">,</span><span class="n">kx</span><span class="p">,</span><span class="n">ky</span><span class="p">,</span><span class="n">kz</span><span class="p">,</span><span class="n">kq</span><span class="p">,</span><span class="n">iknot</span><span class="p">,</span><span class="n">tx</span><span class="p">,</span><span class="n">ty</span><span class="p">,</span><span class="n">tz</span><span class="p">,</span><span class="n">tq</span><span class="p">,</span><span class="n">bcoef</span><span class="p">,</span><span class="n">iflag</span><span class="p">)</span>
+<span class="k">subroutine </span><span class="n">db4val</span><span class="p">(</span><span class="n">xval</span><span class="p">,</span><span class="n">yval</span><span class="p">,</span><span class="n">zval</span><span class="p">,</span><span class="n">qval</span><span class="p">,</span><span class="n">idx</span><span class="p">,</span><span class="n">idy</span><span class="p">,</span><span class="n">idz</span><span class="p">,</span><span class="n">idq</span><span class="p">,</span><span class="n">tx</span><span class="p">,</span><span class="n">ty</span><span class="p">,</span><span class="n">tz</span><span class="p">,</span><span class="n">tq</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">ny</span><span class="p">,</span><span class="n">nz</span><span class="p">,</span><span class="n">nq</span><span class="p">,</span><span class="n">kx</span><span class="p">,</span><span class="n">ky</span><span class="p">,</span><span class="n">kz</span><span class="p">,</span><span class="n">kq</span><span class="p">,</span><span class="n">bcoef</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">iflag</span><span class="p">,</span><span class="n">inbvx</span><span class="p">,</span><span class="n">inbvy</span><span class="p">,</span><span class="n">inbvz</span><span class="p">,</span><span class="n">inbvq</span><span class="p">,</span><span class="n">iloy</span><span class="p">,</span><span class="n">iloz</span><span class="p">,</span><span class="n">iloq</span><span class="p">,</span><span class="n">w3</span><span class="p">,</span><span class="n">w2</span><span class="p">,</span><span class="n">w1</span><span class="p">,</span><span class="n">w0</span><span class="p">,</span><span class="n">extrap</span><span class="p">)</span>
+
+<span class="c">!f(x,y,z,q,r)</span>
+<span class="k">subroutine </span><span class="n">db5ink</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">ny</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">nz</span><span class="p">,</span><span class="n">q</span><span class="p">,</span><span class="n">nq</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">nr</span><span class="p">,</span><span class="n">fcn</span><span class="p">,</span><span class="n">kx</span><span class="p">,</span><span class="n">ky</span><span class="p">,</span><span class="n">kz</span><span class="p">,</span><span class="n">kq</span><span class="p">,</span><span class="n">kr</span><span class="p">,</span><span class="n">iknot</span><span class="p">,</span><span class="n">tx</span><span class="p">,</span><span class="n">ty</span><span class="p">,</span><span class="n">tz</span><span class="p">,</span><span class="n">tq</span><span class="p">,</span><span class="n">tr</span><span class="p">,</span><span class="n">bcoef</span><span class="p">,</span><span class="n">iflag</span><span class="p">)</span>
+<span class="k">subroutine </span><span class="n">db5val</span><span class="p">(</span><span class="n">xval</span><span class="p">,</span><span class="n">yval</span><span class="p">,</span><span class="n">zval</span><span class="p">,</span><span class="n">qval</span><span class="p">,</span><span class="n">rval</span><span class="p">,</span><span class="n">idx</span><span class="p">,</span><span class="n">idy</span><span class="p">,</span><span class="n">idz</span><span class="p">,</span><span class="n">idq</span><span class="p">,</span><span class="n">idr</span><span class="p">,</span><span class="n">tx</span><span class="p">,</span><span class="n">ty</span><span class="p">,</span><span class="n">tz</span><span class="p">,</span><span class="n">tq</span><span class="p">,</span><span class="n">tr</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">ny</span><span class="p">,</span><span class="n">nz</span><span class="p">,</span><span class="n">nq</span><span class="p">,</span><span class="n">nr</span><span class="p">,</span><span class="n">kx</span><span class="p">,</span><span class="n">ky</span><span class="p">,</span><span class="n">kz</span><span class="p">,</span><span class="n">kq</span><span class="p">,</span><span class="n">kr</span><span class="p">,</span><span class="n">bcoef</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">iflag</span><span class="p">,</span><span class="n">inbvx</span><span class="p">,</span><span class="n">inbvy</span><span class="p">,</span><span class="n">inbvz</span><span class="p">,</span><span class="n">inbvq</span><span class="p">,</span><span class="n">inbvr</span><span class="p">,</span><span class="n">iloy</span><span class="p">,</span><span class="n">iloz</span><span class="p">,</span><span class="n">iloq</span><span class="p">,</span><span class="n">ilor</span><span class="p">,</span><span class="n">w4</span><span class="p">,</span><span class="n">w3</span><span class="p">,</span><span class="n">w2</span><span class="p">,</span><span class="n">w1</span><span class="p">,</span><span class="n">w0</span><span class="p">,</span><span class="n">extrap</span><span class="p">)</span>
+
+<span class="c">!f(x,y,z,q,r,s)</span>
+<span class="k">subroutine </span><span class="n">db6ink</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">ny</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">nz</span><span class="p">,</span><span class="n">q</span><span class="p">,</span><span class="n">nq</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">nr</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">ns</span><span class="p">,</span><span class="n">fcn</span><span class="p">,</span><span class="n">kx</span><span class="p">,</span><span class="n">ky</span><span class="p">,</span><span class="n">kz</span><span class="p">,</span><span class="n">kq</span><span class="p">,</span><span class="n">kr</span><span class="p">,</span><span class="n">ks</span><span class="p">,</span><span class="n">iknot</span><span class="p">,</span><span class="n">tx</span><span class="p">,</span><span class="n">ty</span><span class="p">,</span><span class="n">tz</span><span class="p">,</span><span class="n">tq</span><span class="p">,</span><span class="n">tr</span><span class="p">,</span><span class="n">ts</span><span class="p">,</span><span class="n">bcoef</span><span class="p">,</span><span class="n">iflag</span><span class="p">)</span>
+<span class="k">subroutine </span><span class="n">db6val</span><span class="p">(</span><span class="n">xval</span><span class="p">,</span><span class="n">yval</span><span class="p">,</span><span class="n">zval</span><span class="p">,</span><span class="n">qval</span><span class="p">,</span><span class="n">rval</span><span class="p">,</span><span class="n">sval</span><span class="p">,</span><span class="n">idx</span><span class="p">,</span><span class="n">idy</span><span class="p">,</span><span class="n">idz</span><span class="p">,</span><span class="n">idq</span><span class="p">,</span><span class="n">idr</span><span class="p">,</span><span class="n">ids</span><span class="p">,</span><span class="n">tx</span><span class="p">,</span><span class="n">ty</span><span class="p">,</span><span class="n">tz</span><span class="p">,</span><span class="n">tq</span><span class="p">,</span><span class="n">tr</span><span class="p">,</span><span class="n">ts</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">ny</span><span class="p">,</span><span class="n">nz</span><span class="p">,</span><span class="n">nq</span><span class="p">,</span><span class="n">nr</span><span class="p">,</span><span class="n">ns</span><span class="p">,</span><span class="n">kx</span><span class="p">,</span><span class="n">ky</span><span class="p">,</span><span class="n">kz</span><span class="p">,</span><span class="n">kq</span><span class="p">,</span><span class="n">kr</span><span class="p">,</span><span class="n">ks</span><span class="p">,</span><span class="n">bcoef</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">iflag</span><span class="p">,</span><span class="n">inbvx</span><span class="p">,</span><span class="n">inbvy</span><span class="p">,</span><span class="n">inbvz</span><span class="p">,</span><span class="n">inbvq</span><span class="p">,</span><span class="n">inbvr</span><span class="p">,</span><span class="n">inbvs</span><span class="p">,</span><span class="n">iloy</span><span class="p">,</span><span class="n">iloz</span><span class="p">,</span><span class="n">iloq</span><span class="p">,</span><span class="n">ilor</span><span class="p">,</span><span class="n">ilos</span><span class="p">,</span><span class="n">w5</span><span class="p">,</span><span class="n">w4</span><span class="p">,</span><span class="n">w3</span><span class="p">,</span><span class="n">w2</span><span class="p">,</span><span class="n">w1</span><span class="p">,</span><span class="n">w0</span><span class="p">,</span><span class="n">extrap</span><span class="p">)</span>
+</code></pre></div>
+
+<p>The <code>ink</code> routines compute the interpolant coefficients, and the <code>val</code> routines evalute the interpolant at the specified value of each coordinate. The 2D and 3D routines are extensively refactored versions of the original routines from the <a href="http://www.nist.gov/itl/math/mcsd-software.cfm">NIST Core Math Library</a>.  The others are new, and are simply extensions of the same algorithm into the other dimensions.</p>
+<h2>Object-oriented interface</h2>
+<p>In addition to the main subroutines, an object-oriented interface is also provided. For example, for the 3D case:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">type</span><span class="p">(</span><span class="n">bspline_3d</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">s</span>
+<span class="k">call </span><span class="n">s</span><span class="p">%</span><span class="n">initialize</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">fcn</span><span class="p">,</span><span class="n">kx</span><span class="p">,</span><span class="n">ky</span><span class="p">,</span><span class="n">kz</span><span class="p">,</span><span class="n">iflag</span><span class="p">,</span><span class="n">extrap</span><span class="p">)</span>
+<span class="k">call </span><span class="n">s</span><span class="p">%</span><span class="n">evaluate</span><span class="p">(</span><span class="n">xval</span><span class="p">,</span><span class="n">yval</span><span class="p">,</span><span class="n">zval</span><span class="p">,</span><span class="n">idx</span><span class="p">,</span><span class="n">idy</span><span class="p">,</span><span class="n">idz</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">iflag</span><span class="p">)</span>
+<span class="k">call </span><span class="n">s</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span>
+</code></pre></div>
+
+<p>Which uses the default "not-a-knot" end conditions. You can also specify the knot vectors (in this case, <code>tx</code>, <code>ty</code>, and <code>tz</code>) manually during class initialization:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">call </span><span class="n">s</span><span class="p">%</span><span class="n">initialize</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">fcn</span><span class="p">,</span><span class="n">kx</span><span class="p">,</span><span class="n">ky</span><span class="p">,</span><span class="n">kz</span><span class="p">,</span><span class="n">tx</span><span class="p">,</span><span class="n">ty</span><span class="p">,</span><span class="n">tz</span><span class="p">,</span><span class="n">iflag</span><span class="p">,</span><span class="n">extrap</span><span class="p">)</span>
+</code></pre></div>
+
+<p>The various bspline classes can also be initialized using constructors, which have similar interfaces as the <code>initialize</code> methods. For example:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">type</span><span class="p">(</span><span class="n">bspline_3d</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">s</span>
+<span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bspline_3d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">fcn</span><span class="p">,</span><span class="n">kx</span><span class="p">,</span><span class="n">ky</span><span class="p">,</span><span class="n">kz</span><span class="p">,</span><span class="n">iflag</span><span class="p">,</span><span class="n">extrap</span><span class="p">)</span>
+</code></pre></div>
+
+<h2>Spline order</h2>
+<p>The various <code>k</code> inputs (i.e., <code>kx</code>, <code>ky</code>, etc.) specify the spline order for each dimension. The order is the polynomial degree + 1. For example:</p>
+<ul>
+<li><code>k=2</code> : Linear</li>
+<li><code>k=3</code> : Quadratic</li>
+<li><code>k=4</code> : Cubic</li>
+<li>etc.</li>
+</ul>
+<h2>Extrapolation</h2>
+<p>The library optionally supports extrapolation for points outside the range of the coefficients. This is disabled by default (in which case an error code is returned for points outside the bounds). To enable extrapolation, use the optional <code>extrap</code> input to the various <code>db*val</code> subroutines or the <code>initialize</code> methods from the object-oriented interface.</p>
+<h2>Integration</h2>
+<p>The library also contains routines for computing definite integrals of bsplines. There are two methods (currently only for 1D):</p>
+<ul>
+<li>Basic version: <code>db1sqad</code> (<code>integral</code> in the object-oriented interface) -- Computes the integral on <code>(x1,x2)</code> of a b-spline by applying a 2, 6, or 10 point Gauss formula on subintervals of <code>(x1,x2)</code>. This is only valid for orders &lt;= 20.</li>
+<li>More general version: <code>db1fqad</code> (<code>fintegral</code> in the object-oriented interface) -- Computes the integral on <code>(x1,x2)</code> of a product of a user-defined function <code>fun(x)</code> and the ith derivative of a b-spline with an adaptive 8-point Legendre-Gauss algorithm.</li>
+</ul>
+<p>Note that extrapolation is not currently supported for these.</p>
+<h2>Least squares fitting</h2>
+<p>The BSpline-Fortran library also exports the <code>defc</code> subroutine, which can be used to fit B-spline polynomials to 1D data using a weighted least squares method. The <code>dfc</code> subroutine also allows for equality and inequality constraints to be imposed on the fitted curve. These procedures are not yet available in the object oriented interface.</p>
+<h2>Examples</h2>
+<p>See the <a href="https://github.com/jacobwilliams/bspline-fortran/tree/master/test">examples</a> for more details. Note that, to compile and run some of the test programs, the <a href="https://github.com/jacobwilliams/pyplot-fortran">pyplot-fortran</a> library  (which is used to generate plots) is required. This will automatically be downloaded by <code>FPM</code>.</p>
+<h2>Compiling</h2>
+<p>The library can be compiled with recent versions the Intel Fortran Compiler and GFortran (and presumably any other Fortran compiler that supports modern standards).</p>
+<h3>FPM</h3>
+<p>A <code>fpm.toml</code> file is provided for compiling bspline-fortran with the <a href="https://github.com/fortran-lang/fpm">Fortran Package Manager</a>. For example, to build:</p>
+<div class="codehilite"><pre><span></span><code>fpm build --profile release
+</code></pre></div>
+
+<p>By default, the library is built with double precision (<code>real64</code>) real values and single precision (<code>int32</code>) integer values. Explicitly specifying the real or integer kinds can be done using the following processor flags:</p>
+<table>
+<thead>
+<tr>
+<th>Preprocessor flag</th>
+<th>Kind</th>
+<th>Number of bytes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>REAL32</code></td>
+<td><code>real(kind=real32)</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>REAL64</code></td>
+<td><code>real(kind=real64)</code></td>
+<td>8</td>
+</tr>
+<tr>
+<td><code>REAL128</code></td>
+<td><code>real(kind=real128)</code></td>
+<td>16</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Preprocessor flag</th>
+<th>Kind</th>
+<th>Number of bytes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>INT8</code></td>
+<td><code>integer(kind=int8)</code></td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>INT16</code></td>
+<td><code>integer(kind=int16)</code></td>
+<td>2</td>
+</tr>
+<tr>
+<td><code>INT32</code></td>
+<td><code>integer(kind=int32)</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>INT64</code></td>
+<td><code>integer(kind=int64)</code></td>
+<td>8</td>
+</tr>
+</tbody>
+</table>
+<p>For example, to build a single precision version of the library, use:</p>
+<div class="codehilite"><pre><span></span><code>fpm build --profile release --flag &quot;-DREAL32&quot;
+</code></pre></div>
+
+<p>To run the unit tests:</p>
+<div class="codehilite"><pre><span></span><code>fpm test --profile release
+</code></pre></div>
+
+<p>To use <code>bspline-fortran</code> within your fpm project, add the following to your <code>fpm.toml</code> file:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">[dependencies]</span>
+<span class="n">bspline-fortran</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">git</span><span class="p">=</span><span class="s2">&quot;https://github.com/jacobwilliams/bspline-fortran.git&quot;</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+
+<p>or, to use a specific version:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">[dependencies]</span>
+<span class="n">bspline-fortran</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">git</span><span class="p">=</span><span class="s2">&quot;https://github.com/jacobwilliams/bspline-fortran.git&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">tag</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;7.3.0&quot;</span><span class="w">  </span><span class="p">}</span>
+</code></pre></div>
+
+<h3>CMake</h3>
+<p>A basic CMake configuration file is also included. For example, to build a static library:</p>
+<div class="codehilite"><pre><span></span><code><span class="w"> </span>cmake<span class="w"> </span>-S.<span class="w"> </span>-Bbuild
+<span class="w"> </span>cmake<span class="w"> </span>--build<span class="w"> </span>build
+</code></pre></div>
+
+<p>Or, to build a shared library, replace the first CMake command with:</p>
+<div class="codehilite"><pre><span></span><code><span class="w"> </span>cmake<span class="w"> </span>-S.<span class="w"> </span>-Bbuild<span class="w"> </span>-DBUILD_SHARED_LIBS<span class="o">=</span>ON<span class="w"> </span>..
+</code></pre></div>
+
+<p>For a debug build:</p>
+<div class="codehilite"><pre><span></span><code><span class="w"> </span>cmake<span class="w"> </span>-S.<span class="w"> </span>-Bbuild<span class="w"> </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>DEBUG<span class="w"> </span>..
+</code></pre></div>
+
+<h2>Dependencies</h2>
+<p>The library requires some <a href="https://netlib.org/blas/">BLAS</a> routines, which are included. However, the user may also choose to link to an external BLAS library. This can be done by using the <code>HAS_BLAS</code> compiler directive. For example:</p>
+<div class="codehilite"><pre><span></span><code>fpm build --compiler gfortran --flag &quot;-DHAS_BLAS -lblas&quot;
+</code></pre></div>
+
+<p>However, note that an external BLAS can only be used if the library is compiled with double precision (<code>real64</code>) reals.</p>
+<h2>Documentation</h2>
+<p>The latest API documentation can be found <a href="https://jacobwilliams.github.io/bspline-fortran/">here</a>. This was generated from the source code using <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a> (i.e. by running <code>ford ford.md</code>).</p>
+<h2>License</h2>
+<p>The bspline-fortran source code and related files and documentation are distributed under a permissive free software <a href="https://github.com/jacobwilliams/bspline-fortran/blob/master/LICENSE">license</a> (BSD-style).</p>
+<h3>Keywords</h3>
+<ul>
+<li>Bspline, spline, interpolation, data fitting, multivariate interpolation, multidimensional interpolation, integration</li>
+</ul>
+<h2>See also</h2>
+<ul>
+<li>This library includes the public domain DBSPLIN and DTENSBS code from the <a href="http://www.nist.gov/itl/math/mcsd-software.cfm">NIST Core Math Library</a> (CMLIB).</li>
+<li><a href="https://github.com/jacobwilliams/splpak">SPLPAK</a> Multidimensional least-squares cubic spline fitting</li>
+<li><a href="https://github.com/jacobwilliams/finterp">FINTERP</a> Multidimensional Linear Interpolation with Modern Fortran</li>
+<li><a href="https://github.com/jacobwilliams/PCHIP">PCHIP</a> Piecewise Cubic Hermite Interpolation.</li>
+<li><a href="https://github.com/jacobwilliams/regridpack">Regridpack</a> Linear or cubic interpolation for 1D-4D grids.</li>
+</ul>
+        </div>
+          <div class="col-md-4">
+            <div class="card card-body bg-light">
+              <h2 class="card-title">Developer Info</h2>
+              <h4 class="card-text">Jacob Williams</h4>
+              <p class="card-text"></p>
+                <div class="text-center"><div class="btn-group" role="group">
+                    
+                    <a class="btn btn-lg btn-primary" href="https://github.com/jacobwilliams"><i class="fa fa-github fa-lg"></i></a>
+                    
+                    
+                    
+                    
+                    
+                    
+                </div></div>
+            </div>
+          </div>
+      </div>
+        <div class="row">
+          <hr>
+          <div class="col-xs-6 col-sm-3">
+            <div>
+              <h3>Source Files</h3>
+              <ul><li><a href='sourcefile/bspline_blas_module.f90.html'>bspline_blas_module.F90</a></li><li><a href='sourcefile/bspline_defc_module.f90.html'>bspline_defc_module.F90</a></li><li><a href='sourcefile/bspline_kinds_module.f90.html'>bspline_kinds_module.F90</a></li><li><a href='sourcefile/bspline_module.f90.html'>bspline_module.f90</a></li><li><a href='sourcefile/bspline_oo_module.f90.html'>bspline_oo_module.f90</a></li><li><a href='sourcefile/bspline_sub_module.f90.html'>bspline_sub_module.f90</a></li></ul>
+            </div>
+            <div>
+              <ul>
+                <li><a href="./lists/files.html"><em>All source files&hellip;</em></a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-xs-6 col-sm-3">
+            <div>
+              <h3>Modules</h3>
+              <ul><li><a href='module/bspline_blas_module.html'>bspline_blas_module</a></li><li><a href='module/bspline_defc_module.html'>bspline_defc_module</a></li><li><a href='module/bspline_kinds_module.html'>bspline_kinds_module</a></li><li><a href='module/bspline_module.html'>bspline_module</a></li><li><a href='module/bspline_oo_module.html'>bspline_oo_module</a></li><li><a href='module/bspline_sub_module.html'>bspline_sub_module</a></li></ul>
+            </div>
+            <div>
+              <ul>
+                <li><a href="./lists/modules.html"><em>All modules&hellip;</em></a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-xs-6 col-sm-3">
+            <div>
+              <h3>Procedures</h3>
+              <ul><li><a href='interface/bspline_1d.html'>bspline_1d</a></li><li><a href='proc/bspline_1d_constructor_auto_knots.html'>bspline_1d_constructor_auto_knots</a></li><li><a href='proc/bspline_1d_constructor_empty.html'>bspline_1d_constructor_empty</a></li><li><a href='proc/bspline_1d_constructor_specify_knots.html'>bspline_1d_constructor_specify_knots</a></li><li><a href='interface/bspline_2d.html'>bspline_2d</a></li><li><a href='proc/bspline_2d_constructor_auto_knots.html'>bspline_2d_constructor_auto_knots</a></li><li><a href='proc/bspline_2d_constructor_empty.html'>bspline_2d_constructor_empty</a></li><li><a href='proc/bspline_2d_constructor_specify_knots.html'>bspline_2d_constructor_specify_knots</a></li><li><a href='interface/bspline_3d.html'>bspline_3d</a></li><li><a href='proc/bspline_3d_constructor_auto_knots.html'>bspline_3d_constructor_auto_knots</a></li></ul>
+            </div>
+            <div>
+              <ul>
+                <li><a href="./lists/procedures.html"><em>All procedures&hellip;</em></a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-xs-6 col-sm-3">
+            <div>
+              <h3>Derived Types</h3>
+              <ul><li><a href='type/bspline_1d.html'>bspline_1d</a></li><li><a href='type/bspline_2d.html'>bspline_2d</a></li><li><a href='type/bspline_3d.html'>bspline_3d</a></li><li><a href='type/bspline_4d.html'>bspline_4d</a></li><li><a href='type/bspline_5d.html'>bspline_5d</a></li><li><a href='type/bspline_6d.html'>bspline_6d</a></li><li><a href='type/bspline_class.html'>bspline_class</a></li></ul>
+            </div>
+            <div>
+              <ul>
+                <li><a href="./lists/types.html"><em>All derived types&hellip;</em></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              bspline-fortran
+ was developed by Jacob Williams<br>              &copy; 2025 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

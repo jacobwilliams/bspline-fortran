@@ -1,0 +1,405 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="BSPLINE-FORTRAN -- Multidimensional B-Spline Interpolation of Data on a Regular Grid">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>bspline_module.f90 &ndash; bspline-fortran</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">bspline-fortran </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>bspline_module.f90
+      <small>Source File</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.1% of total for source files.">8 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/bspline_module.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+            <li class="breadcrumb-item active" aria-current="page">bspline_module.f90</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+        <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#mods-0"
+         aria-expanded="false" aria-controls="mods-0">
+         <h4 class="card-header bg-primary text-white">Modules</h4>
+      </a>
+      <div id="mods-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/bspline_module.html">bspline_module</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../sourcefile/bspline_module.f90.html#src">bspline_module.f90</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    <div class="col-md-9" id='text'>
+      
+      <br>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">This file depends on</h3>
+          </div>
+          <div class="card-body">
+            <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: sourcefile~~bspline_module.f90~~EfferentGraph Pages: 1 -->
+<svg id="sourcefilebspline_modulef90EfferentGraph" width="641pt" height="135pt"
+ viewBox="0.00 0.00 641.00 135.01" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="sourcefile~~bspline_module.f90~~EfferentGraph" class="graph" transform="scale(0.94 0.94) rotate(0) translate(4 139.02)">
+<title>sourcefile~~bspline_module.f90~~EfferentGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-139.02 675,-139.02 675,4 -4,4"/>
+<!-- sourcefile~bspline_module.f90 -->
+<g id="sourcefile~~bspline_module.f90~~EfferentGraph_node1" class="node">
+<title>sourcefile~bspline_module.f90</title>
+<polygon fill="none" stroke="black" points="671,-60.18 554,-60.18 554,-36.18 671,-36.18 671,-60.18"/>
+<text text-anchor="middle" x="612.5" y="-45.78" font-family="Helvetica,sans-Serif" font-size="10.50">bspline_module.f90</text>
+</g>
+<!-- sourcefile~bspline_defc_module.f90 -->
+<g id="sourcefile~~bspline_module.f90~~EfferentGraph_node2" class="node">
+<title>sourcefile~bspline_defc_module.f90</title>
+<g id="a_sourcefile~~bspline_module.f90~~EfferentGraph_node2"><a xlink:href="../sourcefile/bspline_defc_module.f90.html" xlink:title="bspline_defc_module.F90">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="518,-120.18 370,-120.18 370,-96.18 518,-96.18 518,-120.18"/>
+<text text-anchor="middle" x="444" y="-105.78" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_defc_module.F90</text>
+</a>
+</g>
+</g>
+<!-- sourcefile~bspline_module.f90&#45;&gt;sourcefile~bspline_defc_module.f90 -->
+<g id="sourcefile~~bspline_module.f90~~EfferentGraph_edge1" class="edge">
+<title>sourcefile~bspline_module.f90&#45;&gt;sourcefile~bspline_defc_module.f90</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M578.63,-60.19C560.72,-66.72 538.15,-74.93 518,-82.18 508.51,-85.6 498.31,-89.24 488.64,-92.69"/>
+<polygon fill="#000000" stroke="#000000" points="487.43,-89.4 479.18,-96.06 489.78,-96 487.43,-89.4"/>
+</g>
+<!-- sourcefile~bspline_kinds_module.f90 -->
+<g id="sourcefile~~bspline_module.f90~~EfferentGraph_node3" class="node">
+<title>sourcefile~bspline_kinds_module.f90</title>
+<g id="a_sourcefile~~bspline_module.f90~~EfferentGraph_node3"><a xlink:href="../sourcefile/bspline_kinds_module.f90.html" xlink:title="bspline_kinds_module.F90">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="152,-100.18 0,-100.18 0,-76.18 152,-76.18 152,-100.18"/>
+<text text-anchor="middle" x="76" y="-85.78" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_kinds_module.F90</text>
+</a>
+</g>
+</g>
+<!-- sourcefile~bspline_module.f90&#45;&gt;sourcefile~bspline_kinds_module.f90 -->
+<g id="sourcefile~~bspline_module.f90~~EfferentGraph_edge2" class="edge">
+<title>sourcefile~bspline_module.f90&#45;&gt;sourcefile~bspline_kinds_module.f90</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M553.84,-49.67C484.43,-51.89 364.41,-57.05 262,-68.18"/>
+</g>
+<!-- sourcefile~bspline_oo_module.f90 -->
+<g id="sourcefile~~bspline_module.f90~~EfferentGraph_node4" class="node">
+<title>sourcefile~bspline_oo_module.f90</title>
+<g id="a_sourcefile~~bspline_module.f90~~EfferentGraph_node4"><a xlink:href="../sourcefile/bspline_oo_module.f90.html" xlink:title="bspline_oo_module.f90">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="512,-40.18 376,-40.18 376,-16.18 512,-16.18 512,-40.18"/>
+<text text-anchor="middle" x="444" y="-25.78" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_oo_module.f90</text>
+</a>
+</g>
+</g>
+<!-- sourcefile~bspline_module.f90&#45;&gt;sourcefile~bspline_oo_module.f90 -->
+<g id="sourcefile~~bspline_module.f90~~EfferentGraph_edge3" class="edge">
+<title>sourcefile~bspline_module.f90&#45;&gt;sourcefile~bspline_oo_module.f90</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M553.73,-41.24C543.56,-40.02 532.81,-38.73 522.21,-37.45"/>
+<polygon fill="#000000" stroke="#000000" points="522.44,-33.96 512.1,-36.24 521.61,-40.91 522.44,-33.96"/>
+</g>
+<!-- sourcefile~bspline_sub_module.f90 -->
+<g id="sourcefile~~bspline_module.f90~~EfferentGraph_node5" class="node">
+<title>sourcefile~bspline_sub_module.f90</title>
+<g id="a_sourcefile~~bspline_module.f90~~EfferentGraph_node5"><a xlink:href="../sourcefile/bspline_sub_module.f90.html" xlink:title="bspline_sub_module.f90">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="331.5,-40.18 190.5,-40.18 190.5,-16.18 331.5,-16.18 331.5,-40.18"/>
+<text text-anchor="middle" x="261" y="-25.78" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_sub_module.f90</text>
+</a>
+</g>
+</g>
+<!-- sourcefile~bspline_module.f90&#45;&gt;sourcefile~bspline_sub_module.f90 -->
+<g id="sourcefile~~bspline_module.f90~~EfferentGraph_edge4" class="edge">
+<title>sourcefile~bspline_module.f90&#45;&gt;sourcefile~bspline_sub_module.f90</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M590.8,-36.11C572.39,-26.12 544.37,-12.71 518,-7.18 450.9,6.89 372.05,-3.52 319.78,-14.07"/>
+<polygon fill="#000000" stroke="#000000" points="318.76,-10.71 309.69,-16.18 320.2,-17.56 318.76,-10.71"/>
+</g>
+<!-- sourcefile~bspline_defc_module.f90&#45;&gt;sourcefile~bspline_kinds_module.f90 -->
+<g id="sourcefile~~bspline_module.f90~~EfferentGraph_edge6" class="edge">
+<title>sourcefile~bspline_defc_module.f90&#45;&gt;sourcefile~bspline_kinds_module.f90</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M391.35,-120.2C339.57,-130.43 257.75,-141.65 188,-129.18 161.34,-124.41 132.71,-113.69 111.2,-104.4"/>
+<polygon fill="#000000" stroke="#000000" points="112.42,-101.11 101.85,-100.26 109.58,-107.51 112.42,-101.11"/>
+</g>
+<!-- sourcefile~bspline_blas_module.f90 -->
+<g id="sourcefile~~bspline_module.f90~~EfferentGraph_node6" class="node">
+<title>sourcefile~bspline_blas_module.f90</title>
+<g id="a_sourcefile~~bspline_module.f90~~EfferentGraph_node6"><a xlink:href="../sourcefile/bspline_blas_module.f90.html" xlink:title="bspline_blas_module.F90">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="334,-120.18 188,-120.18 188,-96.18 334,-96.18 334,-120.18"/>
+<text text-anchor="middle" x="261" y="-105.78" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_blas_module.F90</text>
+</a>
+</g>
+</g>
+<!-- sourcefile~bspline_defc_module.f90&#45;&gt;sourcefile~bspline_blas_module.f90 -->
+<g id="sourcefile~~bspline_module.f90~~EfferentGraph_edge5" class="edge">
+<title>sourcefile~bspline_defc_module.f90&#45;&gt;sourcefile~bspline_blas_module.f90</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M369.9,-108.18C361.53,-108.18 352.96,-108.18 344.47,-108.18"/>
+<polygon fill="#000000" stroke="#000000" points="344.19,-104.68 334.19,-108.18 344.19,-111.68 344.19,-104.68"/>
+</g>
+<!-- sourcefile~bspline_oo_module.f90&#45;&gt;sourcefile~bspline_kinds_module.f90 -->
+<g id="sourcefile~~bspline_module.f90~~EfferentGraph_edge7" class="edge">
+<title>sourcefile~bspline_oo_module.f90&#45;&gt;sourcefile~bspline_kinds_module.f90</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M401.01,-40.2C364.6,-49.95 310.31,-62.93 262,-68.18"/>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M260,-68.18C228.17,-71.64 193.23,-75.45 162.49,-78.82"/>
+<polygon fill="#000000" stroke="#000000" points="161.79,-75.37 152.23,-79.94 162.55,-82.33 161.79,-75.37"/>
+</g>
+<!-- sourcefile~bspline_oo_module.f90&#45;&gt;sourcefile~bspline_sub_module.f90 -->
+<g id="sourcefile~~bspline_module.f90~~EfferentGraph_edge8" class="edge">
+<title>sourcefile~bspline_oo_module.f90&#45;&gt;sourcefile~bspline_sub_module.f90</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M375.86,-28.18C364.84,-28.18 353.33,-28.18 342.04,-28.18"/>
+<polygon fill="#000000" stroke="#000000" points="341.76,-24.68 331.76,-28.18 341.76,-31.68 341.76,-24.68"/>
+</g>
+<!-- sourcefile~bspline_sub_module.f90&#45;&gt;sourcefile~bspline_kinds_module.f90 -->
+<g id="sourcefile~~bspline_module.f90~~EfferentGraph_edge9" class="edge">
+<title>sourcefile~bspline_sub_module.f90&#45;&gt;sourcefile~bspline_kinds_module.f90</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M222.97,-40.32C194.22,-49.75 154.21,-62.87 123.34,-72.99"/>
+<polygon fill="#000000" stroke="#000000" points="122.08,-69.72 113.66,-76.16 124.26,-76.37 122.08,-69.72"/>
+</g>
+<!-- sourcefile~bspline_blas_module.f90&#45;&gt;sourcefile~bspline_kinds_module.f90 -->
+<g id="sourcefile~~bspline_module.f90~~EfferentGraph_edge10" class="edge">
+<title>sourcefile~bspline_blas_module.f90&#45;&gt;sourcefile~bspline_kinds_module.f90</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M187.94,-100.3C179.45,-99.38 170.74,-98.42 162.1,-97.48"/>
+<polygon fill="#000000" stroke="#000000" points="162.33,-93.98 152.01,-96.38 161.57,-100.94 162.33,-93.98"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var pansourcefilebspline_modulef90EfferentGraph = svgPanZoom('#sourcefilebspline_modulef90EfferentGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#EfferentGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="EfferentGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="202pt" height="32pt"
+ viewBox="0.00 0.00 201.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 197.5,-28 197.5,4 -4,4"/>
+<!-- Source File -->
+<g id="node1" class="node">
+<title>Source File</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Source File</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node2" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="193.5,-24 88.5,-24 88.5,0 193.5,0 193.5,-24"/>
+<text text-anchor="middle" x="141" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a file to a file which it depends on. A file
+is dependent upon another if the latter must be compiled before the former
+can be.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+          </div>
+        </div>
+<br>
+      <section>
+        <h2><span class="anchor" id="src"></span>Source Code</h2>
+        <div class="hl codehilite"><pre><span></span><a id="ln-1" name="ln-1" href="#ln-1"></a><span class="c">!*****************************************************************************************</span>
+<a id="ln-2" name="ln-2" href="#ln-2"></a><span class="c">!&gt; author: Jacob Williams</span>
+<a id="ln-3" name="ln-3" href="#ln-3"></a><span class="c">!  license: BSD</span>
+<a id="ln-4" name="ln-4" href="#ln-4"></a><span class="c">!</span>
+<a id="ln-5" name="ln-5" href="#ln-5"></a><span class="c">!### Description</span>
+<a id="ln-6" name="ln-6" href="#ln-6"></a><span class="c">!</span>
+<a id="ln-7" name="ln-7" href="#ln-7"></a><span class="c">!  Multidimensional (1D-6D) B-Spline interpolation of data on a regular grid.</span>
+<a id="ln-8" name="ln-8" href="#ln-8"></a><span class="c">!  This module uses both the subroutine and object-oriented modules.</span>
+<a id="ln-9" name="ln-9" href="#ln-9"></a>
+<a id="ln-10" name="ln-10" href="#ln-10"></a><span class="w">    </span><span class="k">module </span><span class="n">bspline_module</span>
+<a id="ln-11" name="ln-11" href="#ln-11"></a>
+<a id="ln-12" name="ln-12" href="#ln-12"></a><span class="w">    </span><span class="k">use </span><span class="n">bspline_kinds_module</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="p">:</span><span class="w"> </span><span class="n">bspline_wp</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">wp</span>
+<a id="ln-13" name="ln-13" href="#ln-13"></a><span class="w">    </span><span class="k">use </span><span class="n">bspline_oo_module</span>
+<a id="ln-14" name="ln-14" href="#ln-14"></a><span class="w">    </span><span class="k">use </span><span class="n">bspline_sub_module</span>
+<a id="ln-15" name="ln-15" href="#ln-15"></a><span class="w">    </span><span class="k">use </span><span class="n">bspline_defc_module</span>
+<a id="ln-16" name="ln-16" href="#ln-16"></a>
+<a id="ln-17" name="ln-17" href="#ln-17"></a><span class="w">    </span><span class="k">implicit none</span>
+<a id="ln-18" name="ln-18" href="#ln-18"></a>
+<a id="ln-19" name="ln-19" href="#ln-19"></a><span class="k">    public</span>
+<a id="ln-20" name="ln-20" href="#ln-20"></a>
+<a id="ln-21" name="ln-21" href="#ln-21"></a><span class="c">!*****************************************************************************************</span>
+<a id="ln-22" name="ln-22" href="#ln-22"></a><span class="w">    </span><span class="k">end module </span><span class="n">bspline_module</span>
+<a id="ln-23" name="ln-23" href="#ln-23"></a><span class="c">!*****************************************************************************************</span>
+</pre></div>
+
+      </section>
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              bspline-fortran
+ was developed by Jacob Williams<br>              &copy; 2025 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

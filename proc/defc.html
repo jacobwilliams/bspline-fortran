@@ -1,0 +1,970 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="BSPLINE-FORTRAN -- Multidimensional B-Spline Interpolation of Data on a Regular Grid">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>defc &ndash; bspline-fortran</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">bspline-fortran </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>defc
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.4% of total for procedures.">24 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/bspline_defc_module.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/bspline_defc_module.f90.html'>bspline_defc_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/bspline_defc_module.html'>bspline_defc_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">defc</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/defc.html#src">defc</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>public  subroutine defc(Ndata, Xdata, Ydata, Sddata, Nord, Nbkpt, Bkpt, Mdein, Mdeout, Coeff, Lw, w)  
+</h2>
+    
+
+    <p>This subprogram fits a piecewise polynomial curve
+  to discrete data.  The piecewise polynomials are
+  represented as B-splines.
+  The fitting is done in a weighted least squares sense.</p>
+<p>The data can be processed in groups of modest size.
+  The size of the group is chosen by the user.  This feature
+  may be necessary for purposes of using constrained curve fitting
+  with subprogram <a href="../proc/dfc.html">dfc</a> on a very large data set.</p>
+<h3>Evaluating the Fitted Curve</h3>
+<p>To evaluate derivative number <code>IDER</code> at <code>XVAL</code>,
+  use the function subprogram <a href="../proc/dbvalu.html">dbvalu</a>.</p>
+<div class="codehilite"><pre><span></span><code><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dbvalu</span><span class="p">(</span><span class="n">bkpt</span><span class="p">,</span><span class="n">coeff</span><span class="p">,</span><span class="n">nbkpt</span><span class="o">-</span><span class="n">nord</span><span class="p">,</span><span class="n">nord</span><span class="p">,</span><span class="n">ider</span><span class="p">,</span><span class="n">xval</span><span class="p">,</span><span class="n">inbv</span><span class="p">,</span><span class="n">workb</span><span class="p">)</span>
+</code></pre></div>
+
+<p>The output of this subprogram will not be
+  defined unless an output value of <code>MDEOUT=1</code>
+  was obtained from <a href="../proc/defc.html">defc</a>, <code>XVAL</code> is in the data
+  interval, and <code>IDER</code> is nonnegative and <code>&lt; NORD</code>.</p>
+<p>The first time <a href="../proc/dbvalu.html">dbvalu</a> is called, <code>INBV=1</code>
+  must be specified.  This value of <code>INBV</code> is the
+  overwritten by <a href="../proc/dbvalu.html">dbvalu</a>.  The array <code>WORKB(*)</code>
+  must be of length at least <code>3*NORD</code>, and must
+  not be the same as the <code>W(*)</code> array used in the
+  call to <a href="../proc/defc.html">defc</a>.</p>
+<p><a href="../proc/dbvalu.html">dbvalu</a> expects the breakpoint array <code>BKPT(*)</code>
+  to be sorted.</p>
+<h3>Revision history</h3>
+<ul>
+<li>800801  DATE WRITTEN.
+     WRITTEN BY R. HANSON, SANDIA NATL. LABS.,
+     ALB., N. M., AUGUST-SEPTEMBER, 1980.</li>
+<li>890531  Changed all specific intrinsics to generic.  (WRB)</li>
+<li>890531  REVISION DATE from Version 3.2</li>
+<li>891214  Prologue converted to Version 4.0 format.  (BAB)</li>
+<li>900510  Change Prologue comments to refer to XERMSG.  (RWC)</li>
+<li>900607  Editorial changes to Prologue to make Prologues for EFC,
+     DEFC, FC, and DFC look as much the same as possible.  (RWC)</li>
+<li>920501  Reformatted the REFERENCES section.  (WRB)</li>
+<li>Jacob Williams, 2022 : modernized</li>
+</ul>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ndata"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>Ndata</strong></td>
+            <td>
+                <p>number of points (size of <code>xdata</code> and <code>ydata</code>).
+Any non-negative value of <code>NDATA</code> is allowed.
+A negative value of <code>NDATA</code> is an error.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-xdata"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(ndata)
+            </td>
+            <td>::</td>
+            <td><strong>Xdata</strong></td>
+            <td>
+                <p>X data array. No sorting of <code>XDATA(*)</code> is required.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ydata"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(ndata)
+            </td>
+            <td>::</td>
+            <td><strong>Ydata</strong></td>
+            <td>
+                <p>Y data array.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sddata"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(ndata)
+            </td>
+            <td>::</td>
+            <td><strong>Sddata</strong></td>
+            <td>
+                <p>Y value standard deviation or uncertainty.
+A zero value for any entry of
+<code>SDDATA(*)</code> will weight that data point as 1.
+Otherwise the weight of that data point is
+the reciprocal of this entry.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nord"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>Nord</strong></td>
+            <td>
+                <p>B-spline order.
+(The order of the spline is one more than the
+degree of the piecewise polynomial defined on
+each interval.  This is consistent with the
+B-spline package convention.  For example,
+<code>NORD=4</code> when we are using piecewise cubics.)
+<code>NORD</code> must be in the range <code>1 &lt;= NORD &lt;= 20</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nbkpt"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>Nbkpt</strong></td>
+            <td>
+                <p>The value of <code>NBKPT</code> must satisfy the condition <code>NBKPT &gt;= 2*NORD</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-bkpt"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>Bkpt</strong></td>
+            <td>
+                <p><code>NBKPT</code> knots of the B-spline.
+Normally the
+problem data interval will be included between
+the limits <code>BKPT(NORD)</code> and <code>BKPT(NBKPT-NORD+1)</code>.
+The additional end knots <code>BKPT(I),I=1,...,NORD-1</code>
+and <code>I=NBKPT-NORD+2,...,NBKPT</code>, are
+required to compute the functions used to fit
+the data.  No sorting of <code>BKPT(*)</code> is required.
+Internal to <a href="../proc/defc.html">defc</a> the extreme end knots may
+be reduced and increased respectively to
+accommodate any data values that are exterior
+to the given knot values.  The contents of
+<code>BKPT(*)</code> is not changed.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mdein"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>Mdein</strong></td>
+            <td>
+                <p>An integer flag, with one of two possible
+values (1 or 2), that directs the subprogram
+action with regard to new data points provided
+by the user:</p>
+<ul>
+<li><code>= 1</code>  The first time that <a href="../proc/defc.html">defc</a> has been
+  entered.  There are NDATA points to process.</li>
+<li><code>= 2</code>  This is another entry to DEFC().  The
+  subprogram <a href="../proc/defc.html">defc</a> has been entered with MDEIN=1
+  exactly once before for this problem.  There
+  are NDATA new additional points to merge and
+  process with any previous points.
+  (When using <a href="../proc/defc.html">defc</a> with MDEIN=2 it is
+  important that the set of knots remain fixed at the
+  same values for all entries to <a href="../proc/defc.html">defc</a>.)</li>
+</ul>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mdeout"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>Mdeout</strong></td>
+            <td>
+                <p>An output flag that indicates the status
+of the curve fit:</p>
+<ul>
+<li>
+<p><code>=-1</code>  A usage error of <a href="../proc/defc.html">defc</a> occurred.  The
+   offending condition is noted with the SLATEC
+   library error processor, <code>XERMSG( )</code>.  In case
+   the working array <code>W(*)</code> is not long enough, the
+   minimal acceptable length is printed.</p>
+</li>
+<li>
+<p><code>=1</code>  The B-spline coefficients for the fitted
+   curve have been returned in array <code>COEFF(*)</code>.</p>
+</li>
+<li>
+<p><code>=2</code>  Not enough data has been processed to
+   determine the B-spline coefficients.
+   The user has one of two options.  Continue
+   to process more data until a unique set
+   of coefficients is obtained, or use the
+   subprogram <a href="../proc/dfc.html">dfc</a> to obtain a specific
+   set of coefficients.  The user should read
+   the usage instructions for <a href="../proc/dfc.html">dfc</a> for further
+   details if this second option is chosen.</p>
+</li>
+</ul>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-coeff"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>Coeff</strong>(*)</td>
+            <td>
+                <p>If the output value of <code>MDEOUT=1</code>, this array
+contains the unknowns obtained from the least
+squares fitting process.  These <code>N=NBKPT-NORD</code>
+parameters are the B-spline coefficients.
+For <code>MDEOUT=2</code>, not enough data was processed to
+uniquely determine the B-spline coefficients.
+In this case, and also when <code>MDEOUT=-1</code>, all
+values of <code>COEFF(*)</code> are set to zero.</p>
+<p>If the user is not satisfied with the fitted
+curve returned by <a href="../proc/defc.html">defc</a>, the constrained
+least squares curve fitting subprogram <a href="../proc/dfc.html">dfc</a>
+may be required.  The work done within <a href="../proc/defc.html">defc</a>
+to accumulate the data can be utilized by
+the user, if so desired.  This involves
+saving the first <code>(NBKPT-NORD+3)*(NORD+1)</code>
+entries of <code>W(*)</code> and providing this data
+to <a href="../proc/dfc.html">dfc</a> with the "old problem" designation.
+The user should read the usage instructions
+for subprogram <a href="../proc/dfc.html">dfc</a> for further details.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-lw"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>Lw</strong></td>
+            <td>
+                <p>The amount of working storage actually
+ allocated for the working array <code>W(*)</code>.
+ This quantity is compared with the
+ actual amount of storage needed in <a href="../proc/defc.html">defc</a>.
+ Insufficient storage allocated for <code>W(*)</code> is
+ an error.  This feature was included in <a href="../proc/defc.html">defc</a>
+ because misreading the storage formula
+ for <code>W(*)</code> might very well lead to subtle
+ and hard-to-find programming bugs.</p>
+<p>The length of the array <code>W(*)</code> must satisfy</p>
+<div class="codehilite"><pre><span></span><code> LW &gt;= (NBKPT-NORD+3)*(NORD+1)+
+         (NBKPT+1)*(NORD+1)+
+       2*MAX(NDATA,NBKPT)+NBKPT+NORD**2
+</code></pre></div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-w"></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>w</strong>(*)</td>
+            <td>
+                <p>Working Array.
+Its length is specified as an input parameter
+in <code>LW</code> as noted above. The contents of <code>W(*)</code>
+must not be modified by the user between calls
+to <a href="../proc/defc.html">defc</a> with values of <code>MDEIN=1,2,2,...</code> .
+The first <code>(NBKPT-NORD+3)*(NORD+1)</code> entries of
+<code>W(*)</code> are acceptable as direct input to <a href="../proc/dfc.html">dfc</a>
+for an "old problem" only when <code>MDEOUT=1</code> or <code>2</code>.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~defc~~CallsGraph Pages: 1 -->
+<svg id="procdefcCallsGraph" width="461pt" height="284pt"
+ viewBox="0.00 0.00 461.00 284.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~defc~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 280)">
+<title>proc~~defc~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-280 457,-280 457,4 -4,4"/>
+<!-- proc~defc -->
+<g id="proc~~defc~~CallsGraph_node1" class="node">
+<title>proc~defc</title>
+<polygon fill="none" stroke="black" points="54,-129 0,-129 0,-105 54,-105 54,-129"/>
+<text text-anchor="middle" x="27" y="-114.6" font-family="Helvetica,sans-Serif" font-size="10.50">defc</text>
+</g>
+<!-- proc~defcmn -->
+<g id="proc~~defc~~CallsGraph_node2" class="node">
+<title>proc~defcmn</title>
+<g id="a_proc~~defc~~CallsGraph_node2"><a xlink:href="../proc/defcmn.html" xlink:title="defcmn">
+<polygon fill="#d9534f" stroke="#d9534f" points="144,-129 90,-129 90,-105 144,-105 144,-129"/>
+<text text-anchor="middle" x="117" y="-114.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">defcmn</text>
+</a>
+</g>
+</g>
+<!-- proc~defc&#45;&gt;proc~defcmn -->
+<g id="proc~~defc~~CallsGraph_edge1" class="edge">
+<title>proc~defc&#45;&gt;proc~defcmn</title>
+<path fill="none" stroke="#000000" d="M54.4,-117C62.39,-117 71.31,-117 79.82,-117"/>
+<polygon fill="#000000" stroke="#000000" points="79.92,-120.5 89.92,-117 79.92,-113.5 79.92,-120.5"/>
+</g>
+<!-- proc~dbndac -->
+<g id="proc~~defc~~CallsGraph_node3" class="node">
+<title>proc~dbndac</title>
+<g id="a_proc~~defc~~CallsGraph_node3"><a xlink:href="../proc/dbndac.html" xlink:title="dbndac">
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-234 180,-234 180,-210 234,-210 234,-234"/>
+<text text-anchor="middle" x="207" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbndac</text>
+</a>
+</g>
+</g>
+<!-- proc~defcmn&#45;&gt;proc~dbndac -->
+<g id="proc~~defc~~CallsGraph_edge2" class="edge">
+<title>proc~defcmn&#45;&gt;proc~dbndac</title>
+<path fill="none" stroke="#000000" d="M125.55,-129.15C136.43,-146.19 157.69,-177.69 180,-201 180.65,-201.68 181.32,-202.36 182.01,-203.03"/>
+<polygon fill="#000000" stroke="#000000" points="179.97,-205.9 189.76,-209.95 184.64,-200.68 179.97,-205.9"/>
+</g>
+<!-- proc~dbndsl -->
+<g id="proc~~defc~~CallsGraph_node4" class="node">
+<title>proc~dbndsl</title>
+<g id="a_proc~~defc~~CallsGraph_node4"><a xlink:href="../proc/dbndsl.html" xlink:title="dbndsl">
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-192 180,-192 180,-168 234,-168 234,-192"/>
+<text text-anchor="middle" x="207" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbndsl</text>
+</a>
+</g>
+</g>
+<!-- proc~defcmn&#45;&gt;proc~dbndsl -->
+<g id="proc~~defc~~CallsGraph_edge3" class="edge">
+<title>proc~defcmn&#45;&gt;proc~dbndsl</title>
+<path fill="none" stroke="#000000" d="M134.97,-129.15C147.99,-138.47 166.18,-151.49 180.89,-162.02"/>
+<polygon fill="#000000" stroke="#000000" points="178.92,-164.91 189.08,-167.89 182.99,-159.22 178.92,-164.91"/>
+</g>
+<!-- proc~dcopy -->
+<g id="proc~~defc~~CallsGraph_node5" class="node">
+<title>proc~dcopy</title>
+<g id="a_proc~~defc~~CallsGraph_node5"><a xlink:href="../proc/dcopy.html" xlink:title="dcopy">
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-150 180,-150 180,-126 234,-126 234,-150"/>
+<text text-anchor="middle" x="207" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dcopy</text>
+</a>
+</g>
+</g>
+<!-- proc~defcmn&#45;&gt;proc~dcopy -->
+<g id="proc~~defc~~CallsGraph_edge4" class="edge">
+<title>proc~defcmn&#45;&gt;proc~dcopy</title>
+<path fill="none" stroke="#000000" d="M144.4,-123.3C152.48,-125.23 161.51,-127.38 170.1,-129.43"/>
+<polygon fill="#000000" stroke="#000000" points="169.38,-132.86 179.92,-131.78 171,-126.05 169.38,-132.86"/>
+</g>
+<!-- proc~dfspvn -->
+<g id="proc~~defc~~CallsGraph_node6" class="node">
+<title>proc~dfspvn</title>
+<g id="a_proc~~defc~~CallsGraph_node6"><a xlink:href="../proc/dfspvn.html" xlink:title="dfspvn">
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-108 180,-108 180,-84 234,-84 234,-108"/>
+<text text-anchor="middle" x="207" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dfspvn</text>
+</a>
+</g>
+</g>
+<!-- proc~defcmn&#45;&gt;proc~dfspvn -->
+<g id="proc~~defc~~CallsGraph_edge5" class="edge">
+<title>proc~defcmn&#45;&gt;proc~dfspvn</title>
+<path fill="none" stroke="#000000" d="M144.4,-110.7C152.48,-108.77 161.51,-106.62 170.1,-104.57"/>
+<polygon fill="#000000" stroke="#000000" points="171,-107.95 179.92,-102.22 169.38,-101.14 171,-107.95"/>
+</g>
+<!-- proc~dscal -->
+<g id="proc~~defc~~CallsGraph_node7" class="node">
+<title>proc~dscal</title>
+<g id="a_proc~~defc~~CallsGraph_node7"><a xlink:href="../proc/dscal.html" xlink:title="dscal">
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-66 180,-66 180,-42 234,-42 234,-66"/>
+<text text-anchor="middle" x="207" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dscal</text>
+</a>
+</g>
+</g>
+<!-- proc~defcmn&#45;&gt;proc~dscal -->
+<g id="proc~~defc~~CallsGraph_edge6" class="edge">
+<title>proc~defcmn&#45;&gt;proc~dscal</title>
+<path fill="none" stroke="#000000" d="M134.97,-104.85C147.99,-95.53 166.18,-82.51 180.89,-71.98"/>
+<polygon fill="#000000" stroke="#000000" points="182.99,-74.78 189.08,-66.11 178.92,-69.09 182.99,-74.78"/>
+</g>
+<!-- proc~dsort -->
+<g id="proc~~defc~~CallsGraph_node8" class="node">
+<title>proc~dsort</title>
+<g id="a_proc~~defc~~CallsGraph_node8"><a xlink:href="../proc/dsort.html" xlink:title="dsort">
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-24 180,-24 180,0 234,0 234,-24"/>
+<text text-anchor="middle" x="207" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dsort</text>
+</a>
+</g>
+</g>
+<!-- proc~defcmn&#45;&gt;proc~dsort -->
+<g id="proc~~defc~~CallsGraph_edge7" class="edge">
+<title>proc~defcmn&#45;&gt;proc~dsort</title>
+<path fill="none" stroke="#000000" d="M125.55,-104.85C136.43,-87.81 157.69,-56.31 180,-33 180.65,-32.32 181.32,-31.64 182.01,-30.97"/>
+<polygon fill="#000000" stroke="#000000" points="184.64,-33.32 189.76,-24.05 179.97,-28.1 184.64,-33.32"/>
+</g>
+<!-- proc~dh12 -->
+<g id="proc~~defc~~CallsGraph_node9" class="node">
+<title>proc~dh12</title>
+<g id="a_proc~~defc~~CallsGraph_node9"><a xlink:href="../proc/dh12.html" xlink:title="dh12">
+<polygon fill="#d9534f" stroke="#d9534f" points="343.5,-234 289.5,-234 289.5,-210 343.5,-210 343.5,-234"/>
+<text text-anchor="middle" x="316.5" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dh12</text>
+</a>
+</g>
+</g>
+<!-- proc~dbndac&#45;&gt;proc~dh12 -->
+<g id="proc~~defc~~CallsGraph_edge8" class="edge">
+<title>proc~dbndac&#45;&gt;proc~dh12</title>
+<path fill="none" stroke="#000000" d="M234.02,-222C247.52,-222 264.24,-222 279.01,-222"/>
+<polygon fill="#000000" stroke="#000000" points="279.34,-225.5 289.34,-222 279.34,-218.5 279.34,-225.5"/>
+</g>
+<!-- proc~sort_ascending -->
+<g id="proc~~defc~~CallsGraph_node10" class="node">
+<title>proc~sort_ascending</title>
+<g id="a_proc~~defc~~CallsGraph_node10"><a xlink:href="../proc/sort_ascending.html" xlink:title="sort_ascending">
+<polygon fill="#d9534f" stroke="#d9534f" points="363,-24 270,-24 270,0 363,0 363,-24"/>
+<text text-anchor="middle" x="316.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">sort_ascending</text>
+</a>
+</g>
+</g>
+<!-- proc~dsort&#45;&gt;proc~sort_ascending -->
+<g id="proc~~defc~~CallsGraph_edge9" class="edge">
+<title>proc~dsort&#45;&gt;proc~sort_ascending</title>
+<path fill="none" stroke="#000000" d="M234.02,-12C241.88,-12 250.82,-12 259.84,-12"/>
+<polygon fill="#000000" stroke="#000000" points="259.99,-15.5 269.99,-12 259.99,-8.5 259.99,-15.5"/>
+</g>
+<!-- proc~daxpy -->
+<g id="proc~~defc~~CallsGraph_node11" class="node">
+<title>proc~daxpy</title>
+<g id="a_proc~~defc~~CallsGraph_node11"><a xlink:href="../proc/daxpy.html" xlink:title="daxpy">
+<polygon fill="#d9534f" stroke="#d9534f" points="453,-276 399,-276 399,-252 453,-252 453,-276"/>
+<text text-anchor="middle" x="426" y="-261.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">daxpy</text>
+</a>
+</g>
+</g>
+<!-- proc~dh12&#45;&gt;proc~daxpy -->
+<g id="proc~~defc~~CallsGraph_edge10" class="edge">
+<title>proc~dh12&#45;&gt;proc~daxpy</title>
+<path fill="none" stroke="#000000" d="M343.52,-232.17C357.29,-237.54 374.39,-244.23 389.37,-250.08"/>
+<polygon fill="#000000" stroke="#000000" points="388.26,-253.4 398.84,-253.78 390.8,-246.88 388.26,-253.4"/>
+</g>
+<!-- proc~ddot -->
+<g id="proc~~defc~~CallsGraph_node12" class="node">
+<title>proc~ddot</title>
+<g id="a_proc~~defc~~CallsGraph_node12"><a xlink:href="../proc/ddot.html" xlink:title="ddot">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="453,-234 399,-234 399,-210 453,-210 453,-234"/>
+<text text-anchor="middle" x="426" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">ddot</text>
+</a>
+</g>
+</g>
+<!-- proc~dh12&#45;&gt;proc~ddot -->
+<g id="proc~~defc~~CallsGraph_edge11" class="edge">
+<title>proc~dh12&#45;&gt;proc~ddot</title>
+<path fill="none" stroke="#000000" d="M343.52,-222C357.02,-222 373.74,-222 388.51,-222"/>
+<polygon fill="#000000" stroke="#000000" points="388.84,-225.5 398.84,-222 388.84,-218.5 388.84,-225.5"/>
+</g>
+<!-- proc~dswap -->
+<g id="proc~~defc~~CallsGraph_node13" class="node">
+<title>proc~dswap</title>
+<g id="a_proc~~defc~~CallsGraph_node13"><a xlink:href="../proc/dswap.html" xlink:title="dswap">
+<polygon fill="#d9534f" stroke="#d9534f" points="453,-192 399,-192 399,-168 453,-168 453,-192"/>
+<text text-anchor="middle" x="426" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dswap</text>
+</a>
+</g>
+</g>
+<!-- proc~dh12&#45;&gt;proc~dswap -->
+<g id="proc~~defc~~CallsGraph_edge12" class="edge">
+<title>proc~dh12&#45;&gt;proc~dswap</title>
+<path fill="none" stroke="#000000" d="M343.52,-211.83C357.29,-206.46 374.39,-199.77 389.37,-193.92"/>
+<polygon fill="#000000" stroke="#000000" points="390.8,-197.12 398.84,-190.22 388.26,-190.6 390.8,-197.12"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">subroutine </span><span class="n">defc</span><span class="p">(</span><span class="n">Ndata</span><span class="p">,</span><span class="w"> </span><span class="n">Xdata</span><span class="p">,</span><span class="w"> </span><span class="n">Ydata</span><span class="p">,</span><span class="w"> </span><span class="n">Sddata</span><span class="p">,</span><span class="w"> </span><span class="n">Nord</span><span class="p">,</span><span class="w"> </span><span class="n">Nbkpt</span><span class="p">,</span><span class="w"> </span><span class="n">Bkpt</span><span class="p">,</span><span class="w"> </span><span class="n">Mdein</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                   </span><span class="n">Mdeout</span><span class="p">,</span><span class="w"> </span><span class="n">Coeff</span><span class="p">,</span><span class="w"> </span><span class="n">Lw</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">)</span>
+
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">Ndata</span><span class="w"> </span><span class="c">!! number of points (size of `xdata` and `ydata`).</span>
+<span class="w">                                  </span><span class="c">!! Any non-negative value of `NDATA` is allowed.</span>
+<span class="w">                                  </span><span class="c">!! A negative value of `NDATA` is an error.</span>
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="n">ndata</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">Xdata</span><span class="w"> </span><span class="c">!! X data array. No sorting of `XDATA(*)` is required.</span>
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="n">ndata</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">Ydata</span><span class="w"> </span><span class="c">!! Y data array.</span>
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="n">ndata</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">Sddata</span><span class="w"> </span><span class="c">!! Y value standard deviation or uncertainty.</span>
+<span class="w">                                                      </span><span class="c">!! A zero value for any entry of</span>
+<span class="w">                                                      </span><span class="c">!! `SDDATA(*)` will weight that data point as 1.</span>
+<span class="w">                                                      </span><span class="c">!! Otherwise the weight of that data point is</span>
+<span class="w">                                                      </span><span class="c">!! the reciprocal of this entry.</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">Nord</span><span class="w"> </span><span class="c">!! B-spline order.</span>
+<span class="w">                                 </span><span class="c">!! (The order of the spline is one more than the</span>
+<span class="w">                                 </span><span class="c">!! degree of the piecewise polynomial defined on</span>
+<span class="w">                                 </span><span class="c">!! each interval.  This is consistent with the</span>
+<span class="w">                                 </span><span class="c">!! B-spline package convention.  For example,</span>
+<span class="w">                                 </span><span class="c">!! `NORD=4` when we are using piecewise cubics.)</span>
+<span class="w">                                 </span><span class="c">!! `NORD` must be in the range `1 &lt;= NORD &lt;= 20`.</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">Nbkpt</span><span class="w"> </span><span class="c">!! The value of `NBKPT` must satisfy the condition `NBKPT &gt;= 2*NORD`.</span>
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">Bkpt</span><span class="w"> </span><span class="c">!! `NBKPT` knots of the B-spline.</span>
+<span class="w">                                     </span><span class="c">!! Normally the</span>
+<span class="w">                                     </span><span class="c">!! problem data interval will be included between</span>
+<span class="w">                                     </span><span class="c">!! the limits `BKPT(NORD)` and `BKPT(NBKPT-NORD+1)`.</span>
+<span class="w">                                     </span><span class="c">!! The additional end knots `BKPT(I),I=1,...,NORD-1`</span>
+<span class="w">                                     </span><span class="c">!! and `I=NBKPT-NORD+2,...,NBKPT`, are</span>
+<span class="w">                                     </span><span class="c">!! required to compute the functions used to fit</span>
+<span class="w">                                     </span><span class="c">!! the data.  No sorting of `BKPT(*)` is required.</span>
+<span class="w">                                     </span><span class="c">!! Internal to [[DEFC]] the extreme end knots may</span>
+<span class="w">                                     </span><span class="c">!! be reduced and increased respectively to</span>
+<span class="w">                                     </span><span class="c">!! accommodate any data values that are exterior</span>
+<span class="w">                                     </span><span class="c">!! to the given knot values.  The contents of</span>
+<span class="w">                                     </span><span class="c">!! `BKPT(*)` is not changed.</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">Mdein</span><span class="w"> </span><span class="c">!! An integer flag, with one of two possible</span>
+<span class="w">                                  </span><span class="c">!! values (1 or 2), that directs the subprogram</span>
+<span class="w">                                  </span><span class="c">!! action with regard to new data points provided</span>
+<span class="w">                                  </span><span class="c">!! by the user:</span>
+<span class="w">                                  </span><span class="c">!!</span>
+<span class="w">                                  </span><span class="c">!! * `= 1`  The first time that [[DEFC]] has been</span>
+<span class="w">                                  </span><span class="c">!!   entered.  There are NDATA points to process.</span>
+<span class="w">                                  </span><span class="c">!! * `= 2`  This is another entry to DEFC().  The</span>
+<span class="w">                                  </span><span class="c">!!   subprogram [[DEFC]] has been entered with MDEIN=1</span>
+<span class="w">                                  </span><span class="c">!!   exactly once before for this problem.  There</span>
+<span class="w">                                  </span><span class="c">!!   are NDATA new additional points to merge and</span>
+<span class="w">                                  </span><span class="c">!!   process with any previous points.</span>
+<span class="w">                                  </span><span class="c">!!   (When using [[DEFC]] with MDEIN=2 it is</span>
+<span class="w">                                  </span><span class="c">!!   important that the set of knots remain fixed at the</span>
+<span class="w">                                  </span><span class="c">!!   same values for all entries to [[DEFC]].)</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">Mdeout</span><span class="w"> </span><span class="c">!! An output flag that indicates the status</span>
+<span class="w">                                    </span><span class="c">!! of the curve fit:</span>
+<span class="w">                                    </span><span class="c">!!</span>
+<span class="w">                                    </span><span class="c">!!  * `=-1`  A usage error of [[DEFC]] occurred.  The</span>
+<span class="w">                                    </span><span class="c">!!    offending condition is noted with the SLATEC</span>
+<span class="w">                                    </span><span class="c">!!    library error processor, `XERMSG( )`.  In case</span>
+<span class="w">                                    </span><span class="c">!!    the working array `W(*)` is not long enough, the</span>
+<span class="w">                                    </span><span class="c">!!    minimal acceptable length is printed.</span>
+<span class="w">                                    </span><span class="c">!!</span>
+<span class="w">                                    </span><span class="c">!!  * `=1`  The B-spline coefficients for the fitted</span>
+<span class="w">                                    </span><span class="c">!!    curve have been returned in array `COEFF(*)`.</span>
+<span class="w">                                    </span><span class="c">!!</span>
+<span class="w">                                    </span><span class="c">!!  * `=2`  Not enough data has been processed to</span>
+<span class="w">                                    </span><span class="c">!!    determine the B-spline coefficients.</span>
+<span class="w">                                    </span><span class="c">!!    The user has one of two options.  Continue</span>
+<span class="w">                                    </span><span class="c">!!    to process more data until a unique set</span>
+<span class="w">                                    </span><span class="c">!!    of coefficients is obtained, or use the</span>
+<span class="w">                                    </span><span class="c">!!    subprogram [[DFC]] to obtain a specific</span>
+<span class="w">                                    </span><span class="c">!!    set of coefficients.  The user should read</span>
+<span class="w">                                    </span><span class="c">!!    the usage instructions for [[DFC]] for further</span>
+<span class="w">                                    </span><span class="c">!!    details if this second option is chosen.</span>
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">Coeff</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="c">!! If the output value of `MDEOUT=1`, this array</span>
+<span class="w">                                       </span><span class="c">!! contains the unknowns obtained from the least</span>
+<span class="w">                                       </span><span class="c">!! squares fitting process.  These `N=NBKPT-NORD`</span>
+<span class="w">                                       </span><span class="c">!! parameters are the B-spline coefficients.</span>
+<span class="w">                                       </span><span class="c">!! For `MDEOUT=2`, not enough data was processed to</span>
+<span class="w">                                       </span><span class="c">!! uniquely determine the B-spline coefficients.</span>
+<span class="w">                                       </span><span class="c">!! In this case, and also when `MDEOUT=-1`, all</span>
+<span class="w">                                       </span><span class="c">!! values of `COEFF(*)` are set to zero.</span>
+<span class="w">                                       </span><span class="c">!!</span>
+<span class="w">                                       </span><span class="c">!! If the user is not satisfied with the fitted</span>
+<span class="w">                                       </span><span class="c">!! curve returned by [[DEFC]], the constrained</span>
+<span class="w">                                       </span><span class="c">!! least squares curve fitting subprogram [[DFC]]</span>
+<span class="w">                                       </span><span class="c">!! may be required.  The work done within [[DEFC]]</span>
+<span class="w">                                       </span><span class="c">!! to accumulate the data can be utilized by</span>
+<span class="w">                                       </span><span class="c">!! the user, if so desired.  This involves</span>
+<span class="w">                                       </span><span class="c">!! saving the first `(NBKPT-NORD+3)*(NORD+1)`</span>
+<span class="w">                                       </span><span class="c">!! entries of `W(*)` and providing this data</span>
+<span class="w">                                       </span><span class="c">!! to [[DFC]] with the &quot;old problem&quot; designation.</span>
+<span class="w">                                       </span><span class="c">!! The user should read the usage instructions</span>
+<span class="w">                                       </span><span class="c">!! for subprogram [[DFC]] for further details.</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">Lw</span><span class="w"> </span><span class="c">!! The amount of working storage actually</span>
+<span class="w">                               </span><span class="c">!! allocated for the working array `W(*)`.</span>
+<span class="w">                               </span><span class="c">!! This quantity is compared with the</span>
+<span class="w">                               </span><span class="c">!! actual amount of storage needed in [[DEFC]].</span>
+<span class="w">                               </span><span class="c">!! Insufficient storage allocated for `W(*)` is</span>
+<span class="w">                               </span><span class="c">!! an error.  This feature was included in [[DEFC]]</span>
+<span class="w">                               </span><span class="c">!! because misreading the storage formula</span>
+<span class="w">                               </span><span class="c">!! for `W(*)` might very well lead to subtle</span>
+<span class="w">                               </span><span class="c">!! and hard-to-find programming bugs.</span>
+<span class="w">                               </span><span class="c">!!</span>
+<span class="w">                               </span><span class="c">!! The length of the array `W(*)` must satisfy</span>
+<span class="w">                               </span><span class="c">!!```</span>
+<span class="w">                               </span><span class="c">!! LW &gt;= (NBKPT-NORD+3)*(NORD+1)+</span>
+<span class="w">                               </span><span class="c">!!         (NBKPT+1)*(NORD+1)+</span>
+<span class="w">                               </span><span class="c">!!       2*MAX(NDATA,NBKPT)+NBKPT+NORD**2</span>
+<span class="w">                               </span><span class="c">!!```</span>
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="c">!! Working Array.</span>
+<span class="w">                       </span><span class="c">!! Its length is specified as an input parameter</span>
+<span class="w">                       </span><span class="c">!! in `LW` as noted above. The contents of `W(*)`</span>
+<span class="w">                       </span><span class="c">!! must not be modified by the user between calls</span>
+<span class="w">                       </span><span class="c">!! to [[DEFC]] with values of `MDEIN=1,2,2,...` .</span>
+<span class="w">                       </span><span class="c">!! The first `(NBKPT-NORD+3)*(NORD+1)` entries of</span>
+<span class="w">                       </span><span class="c">!! `W(*)` are acceptable as direct input to [[DFC]]</span>
+<span class="w">                       </span><span class="c">!! for an &quot;old problem&quot; only when `MDEOUT=1` or `2`.</span>
+
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">lbf</span><span class="p">,</span><span class="w"> </span><span class="n">lbkpt</span><span class="p">,</span><span class="w"> </span><span class="n">lg</span><span class="p">,</span><span class="w"> </span><span class="n">lptemp</span><span class="p">,</span><span class="w"> </span><span class="n">lww</span><span class="p">,</span><span class="w"> </span><span class="n">lxtemp</span><span class="p">,</span><span class="w"> </span><span class="n">mdg</span><span class="p">,</span><span class="w"> </span><span class="n">mdw</span>
+
+<span class="w">      </span><span class="c">! LWW=1               USAGE IN DEFCMN( ) OF W(*)..</span>
+<span class="w">      </span><span class="c">! LWW,...,LG-1        W(*,*)</span>
+<span class="w">      </span><span class="c">! LG,...,LXTEMP-1     G(*,*)</span>
+<span class="w">      </span><span class="c">! LXTEMP,...,LPTEMP-1 XTEMP(*)</span>
+<span class="w">      </span><span class="c">! LPTEMP,...,LBKPT-1  PTEMP(*)</span>
+<span class="w">      </span><span class="c">! LBKPT,...,LBF       BKPT(*) (LOCAL TO DEFCMN( ))</span>
+<span class="w">      </span><span class="c">! LBF,...,LBF+NORD**2 BF(*,*)</span>
+
+<span class="w">      </span><span class="n">mdg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Nbkpt</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="n">mdw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Nbkpt</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Nord</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">      </span><span class="n">lww</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="n">lg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lww</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">mdw</span><span class="o">*</span><span class="p">(</span><span class="n">Nord</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">      </span><span class="n">lxtemp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lg</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">mdg</span><span class="o">*</span><span class="p">(</span><span class="n">Nord</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">      </span><span class="n">lptemp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lxtemp</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">max</span><span class="p">(</span><span class="n">Ndata</span><span class="p">,</span><span class="w"> </span><span class="n">Nbkpt</span><span class="p">)</span>
+<span class="w">      </span><span class="n">lbkpt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lptemp</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">max</span><span class="p">(</span><span class="n">Ndata</span><span class="p">,</span><span class="w"> </span><span class="n">Nbkpt</span><span class="p">)</span>
+<span class="w">      </span><span class="n">lbf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lbkpt</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Nbkpt</span>
+
+<span class="w">      </span><span class="k">call </span><span class="n">defcmn</span><span class="p">(</span><span class="n">Ndata</span><span class="p">,</span><span class="w"> </span><span class="n">Xdata</span><span class="p">,</span><span class="w"> </span><span class="n">Ydata</span><span class="p">,</span><span class="w"> </span><span class="n">Sddata</span><span class="p">,</span><span class="w"> </span><span class="n">Nord</span><span class="p">,</span><span class="w"> </span><span class="n">Nbkpt</span><span class="p">,</span><span class="w"> </span><span class="n">Bkpt</span><span class="p">,</span><span class="w"> </span><span class="n">Mdein</span><span class="p">,</span><span class="w"> </span><span class="n">Mdeout</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                  </span><span class="n">Coeff</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">lbf</span><span class="p">),</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">lxtemp</span><span class="p">),</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">lptemp</span><span class="p">),</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">lbkpt</span><span class="p">),</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">lg</span><span class="p">),</span><span class="w"> </span><span class="n">mdg</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                  </span><span class="n">w</span><span class="p">(</span><span class="n">lww</span><span class="p">),</span><span class="w"> </span><span class="n">mdw</span><span class="p">,</span><span class="w"> </span><span class="n">Lw</span><span class="p">)</span>
+
+<span class="w">   </span><span class="k">end subroutine </span><span class="n">defc</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              bspline-fortran
+ was developed by Jacob Williams<br>              &copy; 2025 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

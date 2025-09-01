@@ -1,0 +1,1199 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="BSPLINE-FORTRAN -- Multidimensional B-Spline Interpolation of Data on a Regular Grid">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>dlpdp &ndash; bspline-fortran</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">bspline-fortran </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>dlpdp
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 1.8% of total for procedures.">114 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/bspline_defc_module.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/bspline_defc_module.f90.html'>bspline_defc_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/bspline_defc_module.html'>bspline_defc_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">dlpdp</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/dlpdp.html#src">dlpdp</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>private  subroutine dlpdp(a, mda, m, n1, n2, prgopt, x, wnorm, mode, ws, is)  
+</h2>
+    
+
+    <p>Determine an N1-vector W, and
+            an N2-vector Z
+  which minimizes the Euclidean length of W
+  subject to G<em>W+H</em>Z &gt;= Y.
+  This is the least projected distance problem, LPDP.
+  The matrices G and H are of respective
+  dimensions M by N1 and M by N2.</p>
+<p>Called by subprogram <a href="../proc/dlsi.html">dlsi</a>.</p>
+<div class="codehilite"><pre><span></span><code>  The matrix
+             (G H Y)
+
+  occupies rows 1,...,M and cols 1,...,N1+N2+1 of A(*,*).
+
+  The solution (W) is returned in X(*).
+               (Z)
+</code></pre></div>
+
+<h3>Revision history</h3>
+<ul>
+<li>790701  DATE WRITTEN. Hanson, R. J., (SNLA), Haskell, K. H., (SNLA)</li>
+<li>890531  Changed all specific intrinsics to generic.  (WRB)</li>
+<li>891214  Prologue converted to Version 4.0 format.  (BAB)</li>
+<li>900328  Added TYPE section.  (WRB)</li>
+<li>910408  Updated the AUTHOR section.  (WRB)</li>
+</ul>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~3"></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>a</strong>(mda,*)</td>
+            <td>
+                <p><code>A(MDA,N+1)</code>, where <code>N=N1+N2</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mda~2"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mda</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-m~4"></span>
+              integer(kind=ip)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>m</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n1"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n1</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n2"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n2</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-prgopt~2"></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>prgopt</strong>(*)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~28"></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong>(*)</td>
+            <td>
+                <p><code>X(N)</code>, where <code>N=N1+N2</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-wnorm"></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>wnorm</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mode~3"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mode</strong></td>
+            <td>
+                <p>The value of MODE indicates the status of
+the computation after returning to the user.</p>
+<ul>
+<li><code>MODE=1</code> The solution was successfully obtained.</li>
+<li><code>MODE=2</code> The inequalities are inconsistent.</li>
+</ul>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ws"></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ws</strong>(*)</td>
+            <td>
+                <p><code>WS((M+2)*(N+7))</code>, where <code>N=N1+N2</code>. This is a slight overestimate for WS(*).</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-is"></span>
+              integer(kind=ip)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>is</strong>(*)</td>
+            <td>
+                <p><code>IS(M+N+1)</code>, where <code>N=N1+N2</code>.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~dlpdp~~CallsGraph Pages: 1 -->
+<svg id="procdlpdpCallsGraph" width="512pt" height="620pt"
+ viewBox="0.00 0.00 512.00 620.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~dlpdp~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 616)">
+<title>proc~~dlpdp~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-616 508,-616 508,4 -4,4"/>
+<!-- proc~dlpdp -->
+<g id="proc~~dlpdp~~CallsGraph_node1" class="node">
+<title>proc~dlpdp</title>
+<polygon fill="none" stroke="black" points="54,-388 0,-388 0,-364 54,-364 54,-388"/>
+<text text-anchor="middle" x="27" y="-373.6" font-family="Helvetica,sans-Serif" font-size="10.50">dlpdp</text>
+</g>
+<!-- proc~dcopy -->
+<g id="proc~~dlpdp~~CallsGraph_node2" class="node">
+<title>proc~dcopy</title>
+<g id="a_proc~~dlpdp~~CallsGraph_node2"><a xlink:href="../proc/dcopy.html" xlink:title="dcopy">
+<polygon fill="#d9534f" stroke="#d9534f" points="414,-66 360,-66 360,-42 414,-42 414,-66"/>
+<text text-anchor="middle" x="387" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dcopy</text>
+</a>
+</g>
+</g>
+<!-- proc~dlpdp&#45;&gt;proc~dcopy -->
+<g id="proc~~dlpdp~~CallsGraph_edge1" class="edge">
+<title>proc~dlpdp&#45;&gt;proc~dcopy</title>
+<path fill="none" stroke="#000000" d="M35.67,-363.78C62.71,-321.62 157.96,-180.49 270,-101 294.35,-83.73 325.97,-71.46 350.04,-63.8"/>
+<polygon fill="#000000" stroke="#000000" points="351.32,-67.07 359.86,-60.79 349.27,-60.37 351.32,-67.07"/>
+</g>
+<!-- proc~ddot -->
+<g id="proc~~dlpdp~~CallsGraph_node3" class="node">
+<title>proc~ddot</title>
+<g id="a_proc~~dlpdp~~CallsGraph_node3"><a xlink:href="../proc/ddot.html" xlink:title="ddot">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="504,-557 450,-557 450,-533 504,-533 504,-557"/>
+<text text-anchor="middle" x="477" y="-542.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">ddot</text>
+</a>
+</g>
+</g>
+<!-- proc~dlpdp&#45;&gt;proc~ddot -->
+<g id="proc~~dlpdp~~CallsGraph_edge2" class="edge">
+<title>proc~dlpdp&#45;&gt;proc~ddot</title>
+<path fill="none" stroke="#000000" d="M30.71,-388.03C42.33,-436.12 92.58,-612 206,-612 206,-612 206,-612 298,-612 354.29,-612 414.54,-582.29 448.52,-562.44"/>
+<polygon fill="#000000" stroke="#000000" points="450.6,-565.27 457.38,-557.13 447,-559.27 450.6,-565.27"/>
+</g>
+<!-- proc~dnrm2 -->
+<g id="proc~~dlpdp~~CallsGraph_node4" class="node">
+<title>proc~dnrm2</title>
+<g id="a_proc~~dlpdp~~CallsGraph_node4"><a xlink:href="../proc/dnrm2.html" xlink:title="dnrm2">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="324,-584 270,-584 270,-560 324,-560 324,-584"/>
+<text text-anchor="middle" x="297" y="-569.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dnrm2</text>
+</a>
+</g>
+</g>
+<!-- proc~dlpdp&#45;&gt;proc~dnrm2 -->
+<g id="proc~~dlpdp~~CallsGraph_edge3" class="edge">
+<title>proc~dlpdp&#45;&gt;proc~dnrm2</title>
+<path fill="none" stroke="#000000" d="M44.76,-388.26C90.46,-421.68 217.39,-514.51 271.29,-553.93"/>
+<polygon fill="#000000" stroke="#000000" points="269.45,-556.92 279.58,-559.99 273.58,-551.27 269.45,-556.92"/>
+</g>
+<!-- proc~dscal -->
+<g id="proc~~dlpdp~~CallsGraph_node5" class="node">
+<title>proc~dscal</title>
+<g id="a_proc~~dlpdp~~CallsGraph_node5"><a xlink:href="../proc/dscal.html" xlink:title="dscal">
+<polygon fill="#d9534f" stroke="#d9534f" points="414,-24 360,-24 360,0 414,0 414,-24"/>
+<text text-anchor="middle" x="387" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dscal</text>
+</a>
+</g>
+</g>
+<!-- proc~dlpdp&#45;&gt;proc~dscal -->
+<g id="proc~~dlpdp~~CallsGraph_edge4" class="edge">
+<title>proc~dlpdp&#45;&gt;proc~dscal</title>
+<path fill="none" stroke="#000000" d="M31.01,-363.8C38.15,-336.3 57.98,-268.09 90,-219 155.2,-119.04 287.05,-53.3 350.42,-26.15"/>
+<polygon fill="#000000" stroke="#000000" points="352.12,-29.23 359.98,-22.12 349.41,-22.78 352.12,-29.23"/>
+</g>
+<!-- proc~dwnnls -->
+<g id="proc~~dlpdp~~CallsGraph_node6" class="node">
+<title>proc~dwnnls</title>
+<g id="a_proc~~dlpdp~~CallsGraph_node6"><a xlink:href="../proc/dwnnls.html" xlink:title="dwnnls">
+<polygon fill="#d9534f" stroke="#d9534f" points="144,-388 90,-388 90,-364 144,-364 144,-388"/>
+<text text-anchor="middle" x="117" y="-373.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dwnnls</text>
+</a>
+</g>
+</g>
+<!-- proc~dlpdp&#45;&gt;proc~dwnnls -->
+<g id="proc~~dlpdp~~CallsGraph_edge5" class="edge">
+<title>proc~dlpdp&#45;&gt;proc~dwnnls</title>
+<path fill="none" stroke="#000000" d="M54.4,-376C62.39,-376 71.31,-376 79.82,-376"/>
+<polygon fill="#000000" stroke="#000000" points="79.92,-379.5 89.92,-376 79.92,-372.5 79.92,-379.5"/>
+</g>
+<!-- proc~dwnlsm -->
+<g id="proc~~dlpdp~~CallsGraph_node7" class="node">
+<title>proc~dwnlsm</title>
+<g id="a_proc~~dlpdp~~CallsGraph_node7"><a xlink:href="../proc/dwnlsm.html" xlink:title="dwnlsm">
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-388 180,-388 180,-364 234,-364 234,-388"/>
+<text text-anchor="middle" x="207" y="-373.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dwnlsm</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnnls&#45;&gt;proc~dwnlsm -->
+<g id="proc~~dlpdp~~CallsGraph_edge6" class="edge">
+<title>proc~dwnnls&#45;&gt;proc~dwnlsm</title>
+<path fill="none" stroke="#000000" d="M144.4,-376C152.39,-376 161.31,-376 169.82,-376"/>
+<polygon fill="#000000" stroke="#000000" points="169.92,-379.5 179.92,-376 169.92,-372.5 169.92,-379.5"/>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~dcopy -->
+<g id="proc~~dlpdp~~CallsGraph_edge9" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~dcopy</title>
+<path fill="none" stroke="#000000" d="M208.78,-363.94C211.56,-328.37 223.52,-221.94 270,-150 276.32,-140.22 329.98,-97.59 362.06,-72.55"/>
+<polygon fill="#000000" stroke="#000000" points="364.36,-75.2 370.09,-66.29 360.05,-69.67 364.36,-75.2"/>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~dnrm2 -->
+<g id="proc~~dlpdp~~CallsGraph_edge11" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~dnrm2</title>
+<path fill="none" stroke="#000000" d="M209.93,-388.08C215.2,-418.07 232.01,-497.33 270,-551 270.36,-551.5 270.73,-552 271.11,-552.49"/>
+<polygon fill="#000000" stroke="#000000" points="268.76,-555.09 278.22,-559.87 273.8,-550.24 268.76,-555.09"/>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~dscal -->
+<g id="proc~~dlpdp~~CallsGraph_edge14" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~dscal</title>
+<path fill="none" stroke="#000000" d="M207.93,-363.97C208.24,-323.6 213.7,-190.47 270,-102 290.44,-69.88 326.53,-44.6 353.04,-29.11"/>
+<polygon fill="#000000" stroke="#000000" points="355,-32.02 361.97,-24.05 351.55,-25.93 355,-32.02"/>
+</g>
+<!-- proc~dasum -->
+<g id="proc~~dlpdp~~CallsGraph_node8" class="node">
+<title>proc~dasum</title>
+<g id="a_proc~~dlpdp~~CallsGraph_node8"><a xlink:href="../proc/dasum.html" xlink:title="dasum">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="324,-542 270,-542 270,-518 324,-518 324,-542"/>
+<text text-anchor="middle" x="297" y="-527.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dasum</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~dasum -->
+<g id="proc~~dlpdp~~CallsGraph_edge7" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~dasum</title>
+<path fill="none" stroke="#000000" d="M212.26,-388.02C220.95,-411.58 242.24,-464.96 270,-504 271.52,-506.14 273.23,-508.26 275.01,-510.32"/>
+<polygon fill="#000000" stroke="#000000" points="272.7,-512.97 282.12,-517.82 277.78,-508.15 272.7,-512.97"/>
+</g>
+<!-- proc~daxpy -->
+<g id="proc~~dlpdp~~CallsGraph_node9" class="node">
+<title>proc~daxpy</title>
+<g id="a_proc~~dlpdp~~CallsGraph_node9"><a xlink:href="../proc/daxpy.html" xlink:title="daxpy">
+<polygon fill="#d9534f" stroke="#d9534f" points="504,-449 450,-449 450,-425 504,-425 504,-449"/>
+<text text-anchor="middle" x="477" y="-434.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">daxpy</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~daxpy -->
+<g id="proc~~dlpdp~~CallsGraph_edge8" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~daxpy</title>
+<path fill="none" stroke="#000000" d="M219.01,-388.2C230.78,-400.76 250.4,-420.36 270,-434 306.71,-459.54 316.47,-468.73 360,-479 383.36,-484.51 391.06,-486.04 414,-479 429.05,-474.38 443.74,-464.73 455.04,-455.84"/>
+<polygon fill="#000000" stroke="#000000" points="457.49,-458.36 462.97,-449.29 453.03,-452.96 457.49,-458.36"/>
+</g>
+<!-- proc~dh12 -->
+<g id="proc~~dlpdp~~CallsGraph_node10" class="node">
+<title>proc~dh12</title>
+<g id="a_proc~~dlpdp~~CallsGraph_node10"><a xlink:href="../proc/dh12.html" xlink:title="dh12">
+<polygon fill="#d9534f" stroke="#d9534f" points="414,-428 360,-428 360,-404 414,-404 414,-428"/>
+<text text-anchor="middle" x="387" y="-413.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dh12</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~dh12 -->
+<g id="proc~~dlpdp~~CallsGraph_edge10" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~dh12</title>
+<path fill="none" stroke="#000000" d="M234.24,-381.94C245.28,-384.43 258.27,-387.36 270,-390 296.72,-396.01 326.9,-402.77 349.78,-407.9"/>
+<polygon fill="#000000" stroke="#000000" points="349.21,-411.36 359.74,-410.13 350.74,-404.53 349.21,-411.36"/>
+</g>
+<!-- proc~drotm -->
+<g id="proc~~dlpdp~~CallsGraph_node11" class="node">
+<title>proc~drotm</title>
+<g id="a_proc~~dlpdp~~CallsGraph_node11"><a xlink:href="../proc/drotm.html" xlink:title="drotm">
+<polygon fill="#d9534f" stroke="#d9534f" points="414,-470 360,-470 360,-446 414,-446 414,-470"/>
+<text text-anchor="middle" x="387" y="-455.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">drotm</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~drotm -->
+<g id="proc~~dlpdp~~CallsGraph_edge12" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~drotm</title>
+<path fill="none" stroke="#000000" d="M229.56,-388.09C241.38,-394.55 256.35,-402.5 270,-409 296.6,-421.66 327.33,-434.57 350.48,-443.96"/>
+<polygon fill="#000000" stroke="#000000" points="349.32,-447.26 359.91,-447.76 351.94,-440.77 349.32,-447.26"/>
+</g>
+<!-- proc~drotmg -->
+<g id="proc~~dlpdp~~CallsGraph_node12" class="node">
+<title>proc~drotmg</title>
+<g id="a_proc~~dlpdp~~CallsGraph_node12"><a xlink:href="../proc/drotmg.html" xlink:title="drotmg">
+<polygon fill="#d9534f" stroke="#d9534f" points="414,-348 360,-348 360,-324 414,-324 414,-348"/>
+<text text-anchor="middle" x="387" y="-333.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">drotmg</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~drotmg -->
+<g id="proc~~dlpdp~~CallsGraph_edge13" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~drotmg</title>
+<path fill="none" stroke="#000000" d="M234.24,-370.06C245.28,-367.57 258.27,-364.64 270,-362 296.72,-355.99 326.9,-349.23 349.78,-344.1"/>
+<polygon fill="#000000" stroke="#000000" points="350.74,-347.47 359.74,-341.87 349.21,-340.64 350.74,-347.47"/>
+</g>
+<!-- proc~dswap -->
+<g id="proc~~dlpdp~~CallsGraph_node13" class="node">
+<title>proc~dswap</title>
+<g id="a_proc~~dlpdp~~CallsGraph_node13"><a xlink:href="../proc/dswap.html" xlink:title="dswap">
+<polygon fill="#d9534f" stroke="#d9534f" points="504,-367 450,-367 450,-343 504,-343 504,-367"/>
+<text text-anchor="middle" x="477" y="-352.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dswap</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~dswap -->
+<g id="proc~~dlpdp~~CallsGraph_edge15" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~dswap</title>
+<path fill="none" stroke="#000000" d="M234.18,-373.95C282.32,-370.18 384.93,-362.14 439.74,-357.84"/>
+<polygon fill="#000000" stroke="#000000" points="440.01,-361.33 449.71,-357.06 439.47,-354.35 440.01,-361.33"/>
+</g>
+<!-- proc~dwnlit -->
+<g id="proc~~dlpdp~~CallsGraph_node14" class="node">
+<title>proc~dwnlit</title>
+<g id="a_proc~~dlpdp~~CallsGraph_node14"><a xlink:href="../proc/dwnlit.html" xlink:title="dwnlit">
+<polygon fill="#d9534f" stroke="#d9534f" points="324,-264 270,-264 270,-240 324,-240 324,-264"/>
+<text text-anchor="middle" x="297" y="-249.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dwnlit</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~dwnlit -->
+<g id="proc~~dlpdp~~CallsGraph_edge16" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~dwnlit</title>
+<path fill="none" stroke="#000000" d="M216.76,-363.66C231.85,-342.4 262.89,-298.65 281.33,-272.67"/>
+<polygon fill="#000000" stroke="#000000" points="284.34,-274.47 287.28,-264.29 278.63,-270.42 284.34,-274.47"/>
+</g>
+<!-- proc~idamax -->
+<g id="proc~~dlpdp~~CallsGraph_node15" class="node">
+<title>proc~idamax</title>
+<g id="a_proc~~dlpdp~~CallsGraph_node15"><a xlink:href="../proc/idamax.html" xlink:title="idamax">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="504,-144 450,-144 450,-120 504,-120 504,-144"/>
+<text text-anchor="middle" x="477" y="-129.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">idamax</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlsm&#45;&gt;proc~idamax -->
+<g id="proc~~dlpdp~~CallsGraph_edge17" class="edge">
+<title>proc~dwnlsm&#45;&gt;proc~idamax</title>
+<path fill="none" stroke="#000000" d="M210.51,-363.98C220.26,-320.84 260.18,-174.05 360,-129 384.95,-117.74 416.1,-119.28 439.83,-123.2"/>
+<polygon fill="#000000" stroke="#000000" points="439.37,-126.68 449.84,-125.07 440.65,-119.79 439.37,-126.68"/>
+</g>
+<!-- proc~dh12&#45;&gt;proc~ddot -->
+<g id="proc~~dlpdp~~CallsGraph_edge19" class="edge">
+<title>proc~dh12&#45;&gt;proc~ddot</title>
+<path fill="none" stroke="#000000" d="M404.78,-428.03C408.05,-430.77 411.29,-433.82 414,-437 436.98,-463.94 455.93,-500.61 466.6,-523.53"/>
+<polygon fill="#000000" stroke="#000000" points="463.46,-525.08 470.78,-532.73 469.83,-522.18 463.46,-525.08"/>
+</g>
+<!-- proc~dh12&#45;&gt;proc~daxpy -->
+<g id="proc~~dlpdp~~CallsGraph_edge18" class="edge">
+<title>proc~dh12&#45;&gt;proc~daxpy</title>
+<path fill="none" stroke="#000000" d="M414.4,-422.3C422.48,-424.23 431.51,-426.38 440.1,-428.43"/>
+<polygon fill="#000000" stroke="#000000" points="439.38,-431.86 449.92,-430.78 441,-425.05 439.38,-431.86"/>
+</g>
+<!-- proc~dh12&#45;&gt;proc~dswap -->
+<g id="proc~~dlpdp~~CallsGraph_edge20" class="edge">
+<title>proc~dh12&#45;&gt;proc~dswap</title>
+<path fill="none" stroke="#000000" d="M405.39,-403.95C418.16,-395.09 435.73,-382.91 450.15,-372.92"/>
+<polygon fill="#000000" stroke="#000000" points="452.43,-375.6 458.65,-367.03 448.44,-369.85 452.43,-375.6"/>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~dcopy -->
+<g id="proc~~dlpdp~~CallsGraph_edge21" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~dcopy</title>
+<path fill="none" stroke="#000000" d="M303.37,-239.91C317.89,-207.26 358.03,-116.93 376.49,-75.4"/>
+<polygon fill="#000000" stroke="#000000" points="379.72,-76.74 380.59,-66.18 373.33,-73.9 379.72,-76.74"/>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~dscal -->
+<g id="proc~~dlpdp~~CallsGraph_edge25" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~dscal</title>
+<path fill="none" stroke="#000000" d="M298.88,-239.79C301.91,-204.76 314.38,-102.08 360,-33 360.34,-32.49 360.7,-31.98 361.07,-31.48"/>
+<polygon fill="#000000" stroke="#000000" points="363.77,-33.71 368.05,-24.02 358.66,-28.93 363.77,-33.71"/>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~dh12 -->
+<g id="proc~~dlpdp~~CallsGraph_edge22" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~dh12</title>
+<path fill="none" stroke="#000000" d="M304.47,-264.06C319.35,-291.78 356.13,-360.33 374.77,-395.08"/>
+<polygon fill="#000000" stroke="#000000" points="371.71,-396.77 379.52,-403.92 377.88,-393.46 371.71,-396.77"/>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~drotm -->
+<g id="proc~~dlpdp~~CallsGraph_edge23" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~drotm</title>
+<path fill="none" stroke="#000000" d="M299.68,-264.31C304.45,-295.65 320.37,-379.98 360,-437 360.35,-437.51 360.72,-438.01 361.1,-438.5"/>
+<polygon fill="#000000" stroke="#000000" points="358.73,-441.09 368.17,-445.9 363.79,-436.25 358.73,-441.09"/>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~drotmg -->
+<g id="proc~~dlpdp~~CallsGraph_edge24" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~drotmg</title>
+<path fill="none" stroke="#000000" d="M309.04,-264.01C321.15,-277 341.35,-298.1 360,-315 360.82,-315.74 361.66,-316.49 362.51,-317.23"/>
+<polygon fill="#000000" stroke="#000000" points="360.46,-320.08 370.36,-323.85 364.97,-314.73 360.46,-320.08"/>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~dswap -->
+<g id="proc~~dlpdp~~CallsGraph_edge26" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~dswap</title>
+<path fill="none" stroke="#000000" d="M319.33,-239.85C343.93,-227.62 384.75,-212.92 414,-231 449.95,-253.22 465.75,-303.28 472.13,-332.55"/>
+<polygon fill="#000000" stroke="#000000" points="468.75,-333.52 474.14,-342.65 475.62,-332.16 468.75,-333.52"/>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~idamax -->
+<g id="proc~~dlpdp~~CallsGraph_edge30" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~idamax</title>
+<path fill="none" stroke="#000000" d="M301.77,-239.67C309.11,-217.87 327.54,-172.79 360,-151 383.32,-135.34 415.09,-131.03 439.49,-130.39"/>
+<polygon fill="#000000" stroke="#000000" points="439.81,-133.89 449.79,-130.32 439.76,-126.89 439.81,-133.89"/>
+</g>
+<!-- proc~dwnlt1 -->
+<g id="proc~~dlpdp~~CallsGraph_node16" class="node">
+<title>proc~dwnlt1</title>
+<g id="a_proc~~dlpdp~~CallsGraph_node16"><a xlink:href="../proc/dwnlt1.html" xlink:title="dwnlt1">
+<polygon fill="#d9534f" stroke="#d9534f" points="414,-184 360,-184 360,-160 414,-160 414,-184"/>
+<text text-anchor="middle" x="387" y="-169.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dwnlt1</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~dwnlt1 -->
+<g id="proc~~dlpdp~~CallsGraph_edge27" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~dwnlt1</title>
+<path fill="none" stroke="#000000" d="M311.37,-239.85C325.66,-226.85 348.53,-206.07 365.18,-190.92"/>
+<polygon fill="#000000" stroke="#000000" points="367.75,-193.32 372.8,-184 363.04,-188.14 367.75,-193.32"/>
+</g>
+<!-- proc~dwnlt2 -->
+<g id="proc~~dlpdp~~CallsGraph_node17" class="node">
+<title>proc~dwnlt2</title>
+<g id="a_proc~~dlpdp~~CallsGraph_node17"><a xlink:href="../proc/dwnlt2.html" xlink:title="dwnlt2">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="414,-264 360,-264 360,-240 414,-240 414,-264"/>
+<text text-anchor="middle" x="387" y="-249.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dwnlt2</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~dwnlt2 -->
+<g id="proc~~dlpdp~~CallsGraph_edge28" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~dwnlt2</title>
+<path fill="none" stroke="#000000" d="M324.4,-252C332.39,-252 341.31,-252 349.82,-252"/>
+<polygon fill="#000000" stroke="#000000" points="349.92,-255.5 359.92,-252 349.92,-248.5 349.92,-255.5"/>
+</g>
+<!-- proc~dwnlt3 -->
+<g id="proc~~dlpdp~~CallsGraph_node18" class="node">
+<title>proc~dwnlt3</title>
+<g id="a_proc~~dlpdp~~CallsGraph_node18"><a xlink:href="../proc/dwnlt3.html" xlink:title="dwnlt3">
+<polygon fill="#d9534f" stroke="#d9534f" points="414,-306 360,-306 360,-282 414,-282 414,-306"/>
+<text text-anchor="middle" x="387" y="-291.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dwnlt3</text>
+</a>
+</g>
+</g>
+<!-- proc~dwnlit&#45;&gt;proc~dwnlt3 -->
+<g id="proc~~dlpdp~~CallsGraph_edge29" class="edge">
+<title>proc~dwnlit&#45;&gt;proc~dwnlt3</title>
+<path fill="none" stroke="#000000" d="M323.45,-264.15C332.21,-268.33 342.17,-273.08 351.52,-277.54"/>
+<polygon fill="#000000" stroke="#000000" points="350.07,-280.73 360.6,-281.88 353.09,-274.41 350.07,-280.73"/>
+</g>
+<!-- proc~dwnlt1&#45;&gt;proc~idamax -->
+<g id="proc~~dlpdp~~CallsGraph_edge31" class="edge">
+<title>proc~dwnlt1&#45;&gt;proc~idamax</title>
+<path fill="none" stroke="#000000" d="M414.4,-160C422.66,-156.25 431.9,-152.05 440.66,-148.06"/>
+<polygon fill="#000000" stroke="#000000" points="442.26,-151.18 449.92,-143.86 439.37,-144.81 442.26,-151.18"/>
+</g>
+<!-- proc~dwnlt3&#45;&gt;proc~dswap -->
+<g id="proc~~dlpdp~~CallsGraph_edge32" class="edge">
+<title>proc~dwnlt3&#45;&gt;proc~dswap</title>
+<path fill="none" stroke="#000000" d="M405.39,-306.05C418.16,-314.91 435.73,-327.09 450.15,-337.08"/>
+<polygon fill="#000000" stroke="#000000" points="448.44,-340.15 458.65,-342.97 452.43,-334.4 448.44,-340.15"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~dlpdp~~CalledByGraph Pages: 1 -->
+<svg id="procdlpdpCalledByGraph" width="422pt" height="32pt"
+ viewBox="0.00 0.00 422.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~dlpdp~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>proc~~dlpdp~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 418,-28 418,4 -4,4"/>
+<!-- proc~dlpdp -->
+<g id="proc~~dlpdp~~CalledByGraph_node1" class="node">
+<title>proc~dlpdp</title>
+<polygon fill="none" stroke="black" points="414,-24 360,-24 360,0 414,0 414,-24"/>
+<text text-anchor="middle" x="387" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">dlpdp</text>
+</g>
+<!-- proc~dlsi -->
+<g id="proc~~dlpdp~~CalledByGraph_node2" class="node">
+<title>proc~dlsi</title>
+<g id="a_proc~~dlpdp~~CalledByGraph_node2"><a xlink:href="../proc/dlsi.html" xlink:title="dlsi">
+<polygon fill="#d9534f" stroke="#d9534f" points="324,-24 270,-24 270,0 324,0 324,-24"/>
+<text text-anchor="middle" x="297" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dlsi</text>
+</a>
+</g>
+</g>
+<!-- proc~dlsi&#45;&gt;proc~dlpdp -->
+<g id="proc~~dlpdp~~CalledByGraph_edge1" class="edge">
+<title>proc~dlsi&#45;&gt;proc~dlpdp</title>
+<path fill="none" stroke="#000000" d="M324.4,-12C332.39,-12 341.31,-12 349.82,-12"/>
+<polygon fill="#000000" stroke="#000000" points="349.92,-15.5 359.92,-12 349.92,-8.5 349.92,-15.5"/>
+</g>
+<!-- proc~dlsei -->
+<g id="proc~~dlpdp~~CalledByGraph_node3" class="node">
+<title>proc~dlsei</title>
+<g id="a_proc~~dlpdp~~CalledByGraph_node3"><a xlink:href="../proc/dlsei.html" xlink:title="dlsei">
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-24 180,-24 180,0 234,0 234,-24"/>
+<text text-anchor="middle" x="207" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dlsei</text>
+</a>
+</g>
+</g>
+<!-- proc~dlsei&#45;&gt;proc~dlsi -->
+<g id="proc~~dlpdp~~CalledByGraph_edge2" class="edge">
+<title>proc~dlsei&#45;&gt;proc~dlsi</title>
+<path fill="none" stroke="#000000" d="M234.4,-12C242.39,-12 251.31,-12 259.82,-12"/>
+<polygon fill="#000000" stroke="#000000" points="259.92,-15.5 269.92,-12 259.92,-8.5 259.92,-15.5"/>
+</g>
+<!-- proc~dfcmn -->
+<g id="proc~~dlpdp~~CalledByGraph_node4" class="node">
+<title>proc~dfcmn</title>
+<g id="a_proc~~dlpdp~~CalledByGraph_node4"><a xlink:href="../proc/dfcmn.html" xlink:title="dfcmn">
+<polygon fill="#d9534f" stroke="#d9534f" points="144,-24 90,-24 90,0 144,0 144,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dfcmn</text>
+</a>
+</g>
+</g>
+<!-- proc~dfcmn&#45;&gt;proc~dlsei -->
+<g id="proc~~dlpdp~~CalledByGraph_edge3" class="edge">
+<title>proc~dfcmn&#45;&gt;proc~dlsei</title>
+<path fill="none" stroke="#000000" d="M144.4,-12C152.39,-12 161.31,-12 169.82,-12"/>
+<polygon fill="#000000" stroke="#000000" points="169.92,-15.5 179.92,-12 169.92,-8.5 169.92,-15.5"/>
+</g>
+<!-- proc~dfc -->
+<g id="proc~~dlpdp~~CalledByGraph_node5" class="node">
+<title>proc~dfc</title>
+<g id="a_proc~~dlpdp~~CalledByGraph_node5"><a xlink:href="../proc/dfc.html" xlink:title="dfc">
+<polygon fill="#d9534f" stroke="#d9534f" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dfc</text>
+</a>
+</g>
+</g>
+<!-- proc~dfc&#45;&gt;proc~dfcmn -->
+<g id="proc~~dlpdp~~CalledByGraph_edge4" class="edge">
+<title>proc~dfc&#45;&gt;proc~dfcmn</title>
+<path fill="none" stroke="#000000" d="M54.4,-12C62.39,-12 71.31,-12 79.82,-12"/>
+<polygon fill="#000000" stroke="#000000" points="79.92,-15.5 89.92,-12 79.92,-8.5 79.92,-15.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">subroutine </span><span class="n">dlpdp</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">mda</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">n1</span><span class="p">,</span><span class="w"> </span><span class="n">n2</span><span class="p">,</span><span class="w"> </span><span class="n">prgopt</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">wnorm</span><span class="p">,</span><span class="w"> </span><span class="n">mode</span><span class="p">,</span><span class="w"> </span><span class="n">ws</span><span class="p">,</span><span class="w"> </span><span class="k">is</span><span class="p">)</span>
+
+<span class="w">   </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">mda</span>
+<span class="w">   </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">m</span>
+<span class="w">   </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n1</span>
+<span class="w">   </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n2</span>
+<span class="w">   </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">a</span><span class="p">(</span><span class="n">mda</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="c">!! `A(MDA,N+1)`, where `N=N1+N2`.</span>
+<span class="w">   </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">prgopt</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+<span class="w">   </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="c">!! `X(N)`, where `N=N1+N2`.</span>
+<span class="w">   </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">wnorm</span>
+<span class="w">   </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">mode</span><span class="w"> </span><span class="c">!! The value of MODE indicates the status of</span>
+<span class="w">                               </span><span class="c">!! the computation after returning to the user.</span>
+<span class="w">                               </span><span class="c">!!</span>
+<span class="w">                               </span><span class="c">!!  * `MODE=1` The solution was successfully obtained.</span>
+<span class="w">                               </span><span class="c">!!  * `MODE=2` The inequalities are inconsistent.</span>
+<span class="w">   </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ws</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="c">!! `WS((M+2)*(N+7))`, where `N=N1+N2`. This is a slight overestimate for WS(*).</span>
+<span class="w">   </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="k">is</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="c">!! `IS(M+N+1)`, where `N=N1+N2`.</span>
+
+<span class="w">   </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">iw</span><span class="p">,</span><span class="w"> </span><span class="n">ix</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">,</span><span class="w"> </span><span class="n">modew</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">np1</span>
+<span class="w">   </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">rnorm</span><span class="p">,</span><span class="w"> </span><span class="n">sc</span><span class="p">,</span><span class="w"> </span><span class="n">ynorm</span>
+
+<span class="w">   </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">zero</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0_wp</span>
+<span class="w">   </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0_wp</span>
+<span class="w">   </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">fac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1_wp</span>
+
+<span class="w">   </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n2</span>
+<span class="w">   </span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         </span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span>
+<span class="w">         </span><span class="k">call </span><span class="n">dcopy</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="mi">0_ip</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="mi">1_ip</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end if</span>
+<span class="k">      </span><span class="n">wnorm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span>
+<span class="w">      </span><span class="k">return</span>
+<span class="k">   end if</span>
+
+<span class="k">      </span><span class="n">np1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+
+<span class="w">      </span><span class="c">! SCALE NONZERO ROWS OF INEQUALITY MATRIX TO HAVE LENGTH ONE.</span>
+<span class="w">      </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">m</span>
+<span class="w">         </span><span class="n">sc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dnrm2</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">a</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">mda</span><span class="p">)</span>
+<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sc</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="n">zero</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">sc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">one</span><span class="o">/</span><span class="n">sc</span>
+<span class="w">            </span><span class="k">call </span><span class="n">dscal</span><span class="p">(</span><span class="n">np1</span><span class="p">,</span><span class="n">sc</span><span class="p">,</span><span class="n">a</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">mda</span><span class="p">)</span>
+<span class="w">         </span><span class="k">end if</span>
+<span class="k">      end do</span>
+
+<span class="w">      </span><span class="c">! SCALE RT.-SIDE VECTOR TO HAVE LENGTH ONE (OR ZERO).</span>
+<span class="w">      </span><span class="n">ynorm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dnrm2</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="n">a</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">np1</span><span class="p">),</span><span class="mi">1_ip</span><span class="p">)</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ynorm</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="n">zero</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         </span><span class="n">sc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">one</span><span class="o">/</span><span class="n">ynorm</span>
+<span class="w">         </span><span class="k">call </span><span class="n">dscal</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="n">sc</span><span class="p">,</span><span class="n">a</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">np1</span><span class="p">),</span><span class="mi">1_ip</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end if</span>
+
+<span class="w">      </span><span class="c">! SCALE COLS OF MATRIX H.</span>
+<span class="w">      </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="k">do</span>
+<span class="k">         if</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="k">exit</span>
+<span class="k">         </span><span class="n">sc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dnrm2</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="n">a</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="p">),</span><span class="mi">1_ip</span><span class="p">)</span>
+<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sc</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="n">zero</span><span class="p">)</span><span class="w"> </span><span class="n">sc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">one</span><span class="o">/</span><span class="n">sc</span>
+<span class="w">         </span><span class="k">call </span><span class="n">dscal</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="n">sc</span><span class="p">,</span><span class="n">a</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="p">),</span><span class="mi">1_ip</span><span class="p">)</span>
+<span class="w">         </span><span class="n">x</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sc</span>
+<span class="w">         </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="k">end do</span>
+
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">n1</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+
+<span class="w">         </span><span class="c">! COPY TRANSPOSE OF (H G Y) TO WORK ARRAY WS(*).</span>
+<span class="w">         </span><span class="n">iw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">         </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">m</span>
+
+<span class="w">            </span><span class="c">! MOVE COL OF TRANSPOSE OF H INTO WORK ARRAY.</span>
+<span class="w">            </span><span class="k">call </span><span class="n">dcopy</span><span class="p">(</span><span class="n">n2</span><span class="p">,</span><span class="n">a</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">n1</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="n">mda</span><span class="p">,</span><span class="n">ws</span><span class="p">(</span><span class="n">iw</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="mi">1_ip</span><span class="p">)</span>
+<span class="w">            </span><span class="n">iw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iw</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n2</span>
+
+<span class="w">            </span><span class="c">! MOVE COL OF TRANSPOSE OF G INTO WORK ARRAY.</span>
+<span class="w">            </span><span class="k">call </span><span class="n">dcopy</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span><span class="n">a</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">mda</span><span class="p">,</span><span class="n">ws</span><span class="p">(</span><span class="n">iw</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="mi">1_ip</span><span class="p">)</span>
+<span class="w">            </span><span class="n">iw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iw</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n1</span>
+
+<span class="w">            </span><span class="c">! MOVE COMPONENT OF VECTOR Y INTO WORK ARRAY.</span>
+<span class="w">            </span><span class="n">ws</span><span class="p">(</span><span class="n">iw</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">np1</span><span class="p">)</span>
+<span class="w">            </span><span class="n">iw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iw</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">         </span><span class="k">end do</span>
+<span class="k">         </span><span class="n">ws</span><span class="p">(</span><span class="n">iw</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span>
+<span class="w">         </span><span class="k">call </span><span class="n">dcopy</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">ws</span><span class="p">(</span><span class="n">iw</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="mi">0_ip</span><span class="p">,</span><span class="n">ws</span><span class="p">(</span><span class="n">iw</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="mi">1_ip</span><span class="p">)</span>
+<span class="w">         </span><span class="n">iw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iw</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n</span>
+<span class="w">         </span><span class="n">ws</span><span class="p">(</span><span class="n">iw</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">one</span>
+<span class="w">         </span><span class="n">iw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iw</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span>
+
+<span class="w">         </span><span class="c">! SOLVE EU=F SUBJECT TO (TRANSPOSE OF H)U=0, U&gt;=0.  THE</span>
+<span class="w">         </span><span class="c">! MATRIX E = TRANSPOSE OF (G Y), AND THE (N+1)-VECTOR</span>
+<span class="w">         </span><span class="c">! F = TRANSPOSE OF (0,...,0,1).</span>
+<span class="w">         </span><span class="n">ix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iw</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">         </span><span class="n">iw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iw</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">m</span>
+
+<span class="w">         </span><span class="c">! DO NOT CHECK LENGTHS OF WORK ARRAYS IN THIS USAGE OF</span>
+<span class="w">         </span><span class="c">! DWNNLS( ).</span>
+<span class="w">         </span><span class="k">is</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0_ip</span>
+<span class="w">         </span><span class="k">is</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0_ip</span>
+<span class="w">         </span><span class="k">call </span><span class="n">dwnnls</span><span class="p">(</span><span class="n">ws</span><span class="p">,</span><span class="n">np1</span><span class="p">,</span><span class="n">n2</span><span class="p">,</span><span class="n">np1</span><span class="o">-</span><span class="n">n2</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="mi">0_ip</span><span class="p">,</span><span class="n">prgopt</span><span class="p">,</span><span class="n">ws</span><span class="p">(</span><span class="n">ix</span><span class="p">),</span><span class="n">rnorm</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                     </span><span class="n">modew</span><span class="p">,</span><span class="k">is</span><span class="p">,</span><span class="n">ws</span><span class="p">(</span><span class="n">iw</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="w">         </span><span class="c">! COMPUTE THE COMPONENTS OF THE SOLN DENOTED ABOVE BY W.</span>
+<span class="w">         </span><span class="n">sc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">ddot</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="n">a</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">np1</span><span class="p">),</span><span class="mi">1_ip</span><span class="p">,</span><span class="n">ws</span><span class="p">(</span><span class="n">ix</span><span class="p">),</span><span class="mi">1_ip</span><span class="p">)</span>
+<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">one</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">fac</span><span class="o">*</span><span class="nb">abs</span><span class="p">(</span><span class="n">sc</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">rnorm</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">zero</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">            </span><span class="k">return</span>
+<span class="k">         end if</span>
+<span class="k">         </span><span class="n">sc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">one</span><span class="o">/</span><span class="n">sc</span>
+<span class="w">         </span><span class="k">do </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">n1</span>
+<span class="w">            </span><span class="n">x</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sc</span><span class="o">*</span><span class="n">ddot</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="n">a</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="p">),</span><span class="mi">1_ip</span><span class="p">,</span><span class="n">ws</span><span class="p">(</span><span class="n">ix</span><span class="p">),</span><span class="mi">1_ip</span><span class="p">)</span>
+<span class="w">         </span><span class="k">end do</span>
+<span class="w">         </span><span class="c">! COMPUTE THE VECTOR Q=Y-GW.  OVERWRITE Y WITH THIS</span>
+<span class="w">         </span><span class="c">! VECTOR.</span>
+<span class="w">         </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">m</span>
+<span class="w">            </span><span class="n">a</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">np1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">np1</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">ddot</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span><span class="n">a</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">mda</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="mi">1_ip</span><span class="p">)</span>
+<span class="w">         </span><span class="k">end do</span>
+
+<span class="k">      end if</span>
+
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">n2</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+
+<span class="w">         </span><span class="c">! COPY TRANSPOSE OF (H Q) TO WORK ARRAY WS(*).</span>
+<span class="w">         </span><span class="n">iw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">         </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">m</span>
+<span class="w">            </span><span class="k">call </span><span class="n">dcopy</span><span class="p">(</span><span class="n">n2</span><span class="p">,</span><span class="n">a</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">n1</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="n">mda</span><span class="p">,</span><span class="n">ws</span><span class="p">(</span><span class="n">iw</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="mi">1_ip</span><span class="p">)</span>
+<span class="w">            </span><span class="n">iw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iw</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n2</span>
+<span class="w">            </span><span class="n">ws</span><span class="p">(</span><span class="n">iw</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">np1</span><span class="p">)</span>
+<span class="w">            </span><span class="n">iw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iw</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">         </span><span class="k">end do</span>
+<span class="k">         </span><span class="n">ws</span><span class="p">(</span><span class="n">iw</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span>
+<span class="w">         </span><span class="k">call </span><span class="n">dcopy</span><span class="p">(</span><span class="n">n2</span><span class="p">,</span><span class="n">ws</span><span class="p">(</span><span class="n">iw</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="mi">0_ip</span><span class="p">,</span><span class="n">ws</span><span class="p">(</span><span class="n">iw</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="mi">1_ip</span><span class="p">)</span>
+<span class="w">         </span><span class="n">iw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iw</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n2</span>
+<span class="w">         </span><span class="n">ws</span><span class="p">(</span><span class="n">iw</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">one</span>
+<span class="w">         </span><span class="n">iw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iw</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">         </span><span class="n">ix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iw</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">         </span><span class="n">iw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iw</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">m</span>
+
+<span class="w">         </span><span class="c">! SOLVE RV=S SUBJECT TO V&gt;=0.  THE MATRIX R =(TRANSPOSE</span>
+<span class="w">         </span><span class="c">! OF (H Q)), WHERE Q=Y-GW.  THE (N2+1)-VECTOR S =(TRANSPOSE</span>
+<span class="w">         </span><span class="c">! OF (0,...,0,1)).</span>
+<span class="w">         </span><span class="c">!</span>
+<span class="w">         </span><span class="c">! DO NOT CHECK LENGTHS OF WORK ARRAYS IN THIS USAGE OF</span>
+<span class="w">         </span><span class="c">! DWNNLS( ).</span>
+<span class="w">         </span><span class="k">is</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0_ip</span>
+<span class="w">         </span><span class="k">is</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0_ip</span>
+<span class="w">         </span><span class="k">call </span><span class="n">dwnnls</span><span class="p">(</span><span class="n">ws</span><span class="p">,</span><span class="n">n2</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">0_ip</span><span class="p">,</span><span class="n">n2</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="mi">0_ip</span><span class="p">,</span><span class="n">prgopt</span><span class="p">,</span><span class="n">ws</span><span class="p">(</span><span class="n">ix</span><span class="p">),</span><span class="n">rnorm</span><span class="p">,</span><span class="n">modew</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                     </span><span class="k">is</span><span class="p">,</span><span class="n">ws</span><span class="p">(</span><span class="n">iw</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="w">         </span><span class="c">! COMPUTE THE COMPONENTS OF THE SOLN DENOTED ABOVE BY Z.</span>
+<span class="w">         </span><span class="n">sc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">ddot</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="n">a</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">np1</span><span class="p">),</span><span class="mi">1_ip</span><span class="p">,</span><span class="n">ws</span><span class="p">(</span><span class="n">ix</span><span class="p">),</span><span class="mi">1_ip</span><span class="p">)</span>
+<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">one</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">fac</span><span class="o">*</span><span class="nb">abs</span><span class="p">(</span><span class="n">sc</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">rnorm</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">zero</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">            </span><span class="k">return</span>
+<span class="k">         end if</span>
+<span class="k">         </span><span class="n">sc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">one</span><span class="o">/</span><span class="n">sc</span>
+<span class="w">         </span><span class="k">do </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">n2</span>
+<span class="w">            </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">j</span>
+<span class="w">            </span><span class="n">x</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sc</span><span class="o">*</span><span class="n">ddot</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="n">a</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">l</span><span class="p">),</span><span class="mi">1_ip</span><span class="p">,</span><span class="n">ws</span><span class="p">(</span><span class="n">ix</span><span class="p">),</span><span class="mi">1_ip</span><span class="p">)</span><span class="o">*</span><span class="n">x</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+<span class="w">         </span><span class="k">end do</span>
+<span class="k">      end if</span>
+
+<span class="w">      </span><span class="c">! ACCOUNT FOR SCALING OF RT.-SIDE VECTOR IN SOLUTION.</span>
+<span class="w">      </span><span class="k">call </span><span class="n">dscal</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">ynorm</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="mi">1_ip</span><span class="p">)</span>
+<span class="w">      </span><span class="n">wnorm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dnrm2</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="mi">1_ip</span><span class="p">)</span>
+
+<span class="w">   </span><span class="k">end subroutine </span><span class="n">dlpdp</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              bspline-fortran
+ was developed by Jacob Williams<br>              &copy; 2025 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

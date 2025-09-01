@@ -1,0 +1,608 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="BSPLINE-FORTRAN -- Multidimensional B-Spline Interpolation of Data on a Regular Grid">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>dfspvn &ndash; bspline-fortran</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">bspline-fortran </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>dfspvn
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.5% of total for procedures.">34 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/bspline_defc_module.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/bspline_defc_module.f90.html'>bspline_defc_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/bspline_defc_module.html'>bspline_defc_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">dfspvn</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/dfspvn.html#src">dfspvn</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>private  subroutine dfspvn(t, Jhigh, Index, x, Ileft, Vnikx, j, deltam, deltap)  
+</h2>
+    
+
+    <p>Calculates the value of all possibly nonzero B-splines at <code>X</code> of
+  order <code>MAX(JHIGH,(J+1)(INDEX-1))</code> on <code>T</code>.</p>
+<h3>Revision history</h3>
+<ul>
+<li>780801  DATE WRITTEN</li>
+<li>891214  Prologue converted to Version 4.0 format.  (BAB)</li>
+<li>900328  Added TYPE section.  (WRB)</li>
+<li>JW : made threadsafe. See also <a href="../proc/dbspvn.html">dbspvn</a></li>
+</ul>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-t"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>t</strong>(*)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-jhigh"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>Jhigh</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-index"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>Index</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~26"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ileft"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>Ileft</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-vnikx"></span>
+              real(kind=wp)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>Vnikx</strong>(*)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-j~3"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>j</strong></td>
+            <td>
+                <p>JW : added</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-deltam"></span>
+              real(kind=wp),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              dimension(20)
+            </td>
+            <td>::</td>
+            <td><strong>deltam</strong></td>
+            <td>
+                <p>JW : added</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-deltap"></span>
+              real(kind=wp),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              dimension(20)
+            </td>
+            <td>::</td>
+            <td><strong>deltap</strong></td>
+            <td>
+                <p>JW : added</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~dfspvn~~CalledByGraph Pages: 1 -->
+<svg id="procdfspvnCalledByGraph" width="332pt" height="154pt"
+ viewBox="0.00 0.00 332.00 154.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~dfspvn~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 150)">
+<title>proc~~dfspvn~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-150 328,-150 328,4 -4,4"/>
+<!-- proc~dfspvn -->
+<g id="proc~~dfspvn~~CalledByGraph_node1" class="node">
+<title>proc~dfspvn</title>
+<polygon fill="none" stroke="black" points="324,-84 270,-84 270,-60 324,-60 324,-84"/>
+<text text-anchor="middle" x="297" y="-69.6" font-family="Helvetica,sans-Serif" font-size="10.50">dfspvn</text>
+</g>
+<!-- proc~dcv -->
+<g id="proc~~dfspvn~~CalledByGraph_node2" class="node">
+<title>proc~dcv</title>
+<g id="a_proc~~dfspvn~~CalledByGraph_node2"><a xlink:href="../proc/dcv.html" xlink:title="dcv">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="234,-146 180,-146 180,-122 234,-122 234,-146"/>
+<text text-anchor="middle" x="207" y="-131.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dcv</text>
+</a>
+</g>
+</g>
+<!-- proc~dcv&#45;&gt;proc~dfspvn -->
+<g id="proc~~dfspvn~~CalledByGraph_edge1" class="edge">
+<title>proc~dcv&#45;&gt;proc~dfspvn</title>
+<path fill="none" stroke="#000000" d="M225.39,-121.75C238.24,-112.69 255.96,-100.21 270.43,-90.01"/>
+<polygon fill="#000000" stroke="#000000" points="272.79,-92.63 278.95,-84.01 268.76,-86.91 272.79,-92.63"/>
+</g>
+<!-- proc~defcmn -->
+<g id="proc~~dfspvn~~CalledByGraph_node3" class="node">
+<title>proc~defcmn</title>
+<g id="a_proc~~dfspvn~~CalledByGraph_node3"><a xlink:href="../proc/defcmn.html" xlink:title="defcmn">
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-104 180,-104 180,-80 234,-80 234,-104"/>
+<text text-anchor="middle" x="207" y="-89.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">defcmn</text>
+</a>
+</g>
+</g>
+<!-- proc~defcmn&#45;&gt;proc~dfspvn -->
+<g id="proc~~dfspvn~~CalledByGraph_edge2" class="edge">
+<title>proc~defcmn&#45;&gt;proc~dfspvn</title>
+<path fill="none" stroke="#000000" d="M234.4,-86C242.48,-84.16 251.51,-82.11 260.1,-80.16"/>
+<polygon fill="#000000" stroke="#000000" points="260.94,-83.56 269.92,-77.93 259.39,-76.73 260.94,-83.56"/>
+</g>
+<!-- proc~dfcmn -->
+<g id="proc~~dfspvn~~CalledByGraph_node4" class="node">
+<title>proc~dfcmn</title>
+<g id="a_proc~~dfspvn~~CalledByGraph_node4"><a xlink:href="../proc/dfcmn.html" xlink:title="dfcmn">
+<polygon fill="#d9534f" stroke="#d9534f" points="144,-43 90,-43 90,-19 144,-19 144,-43"/>
+<text text-anchor="middle" x="117" y="-28.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dfcmn</text>
+</a>
+</g>
+</g>
+<!-- proc~dfcmn&#45;&gt;proc~dfspvn -->
+<g id="proc~~dfspvn~~CalledByGraph_edge3" class="edge">
+<title>proc~dfcmn&#45;&gt;proc~dfspvn</title>
+<path fill="none" stroke="#000000" d="M144.26,-37.05C174.85,-44.09 225.55,-55.77 259.84,-63.67"/>
+<polygon fill="#000000" stroke="#000000" points="259.39,-67.16 269.92,-65.99 260.96,-60.34 259.39,-67.16"/>
+</g>
+<!-- proc~dfspvd -->
+<g id="proc~~dfspvn~~CalledByGraph_node5" class="node">
+<title>proc~dfspvd</title>
+<g id="a_proc~~dfspvn~~CalledByGraph_node5"><a xlink:href="../proc/dfspvd.html" xlink:title="dfspvd">
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-24 180,-24 180,0 234,0 234,-24"/>
+<text text-anchor="middle" x="207" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dfspvd</text>
+</a>
+</g>
+</g>
+<!-- proc~dfcmn&#45;&gt;proc~dfspvd -->
+<g id="proc~~dfspvn~~CalledByGraph_edge7" class="edge">
+<title>proc~dfcmn&#45;&gt;proc~dfspvd</title>
+<path fill="none" stroke="#000000" d="M144.4,-25.3C152.48,-23.56 161.51,-21.61 170.1,-19.75"/>
+<polygon fill="#000000" stroke="#000000" points="170.88,-23.16 179.92,-17.63 169.41,-16.32 170.88,-23.16"/>
+</g>
+<!-- proc~dfspvd&#45;&gt;proc~dfspvn -->
+<g id="proc~~dfspvn~~CalledByGraph_edge4" class="edge">
+<title>proc~dfspvd&#45;&gt;proc~dfspvn</title>
+<path fill="none" stroke="#000000" d="M225.81,-24.14C238.45,-32.76 255.63,-44.48 269.83,-54.16"/>
+<polygon fill="#000000" stroke="#000000" points="267.98,-57.13 278.22,-59.88 271.93,-51.35 267.98,-57.13"/>
+</g>
+<!-- proc~defc -->
+<g id="proc~~dfspvn~~CalledByGraph_node6" class="node">
+<title>proc~defc</title>
+<g id="a_proc~~dfspvn~~CalledByGraph_node6"><a xlink:href="../proc/defc.html" xlink:title="defc">
+<polygon fill="#d9534f" stroke="#d9534f" points="144,-104 90,-104 90,-80 144,-80 144,-104"/>
+<text text-anchor="middle" x="117" y="-89.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">defc</text>
+</a>
+</g>
+</g>
+<!-- proc~defc&#45;&gt;proc~defcmn -->
+<g id="proc~~dfspvn~~CalledByGraph_edge5" class="edge">
+<title>proc~defc&#45;&gt;proc~defcmn</title>
+<path fill="none" stroke="#000000" d="M144.4,-92C152.39,-92 161.31,-92 169.82,-92"/>
+<polygon fill="#000000" stroke="#000000" points="169.92,-95.5 179.92,-92 169.92,-88.5 169.92,-95.5"/>
+</g>
+<!-- proc~dfc -->
+<g id="proc~~dfspvn~~CalledByGraph_node7" class="node">
+<title>proc~dfc</title>
+<g id="a_proc~~dfspvn~~CalledByGraph_node7"><a xlink:href="../proc/dfc.html" xlink:title="dfc">
+<polygon fill="#d9534f" stroke="#d9534f" points="54,-43 0,-43 0,-19 54,-19 54,-43"/>
+<text text-anchor="middle" x="27" y="-28.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dfc</text>
+</a>
+</g>
+</g>
+<!-- proc~dfc&#45;&gt;proc~dfcmn -->
+<g id="proc~~dfspvn~~CalledByGraph_edge6" class="edge">
+<title>proc~dfc&#45;&gt;proc~dfcmn</title>
+<path fill="none" stroke="#000000" d="M54.4,-31C62.39,-31 71.31,-31 79.82,-31"/>
+<polygon fill="#000000" stroke="#000000" points="79.92,-34.5 89.92,-31 79.92,-27.5 79.92,-34.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">subroutine </span><span class="n">dfspvn</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="w"> </span><span class="n">Jhigh</span><span class="p">,</span><span class="w"> </span><span class="nb">Index</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">Ileft</span><span class="p">,</span><span class="w"> </span><span class="n">Vnikx</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">deltam</span><span class="p">,</span><span class="w"> </span><span class="n">deltap</span><span class="p">)</span>
+
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">Jhigh</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">Index</span>
+<span class="nb">      </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">Ileft</span>
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">Vnikx</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="c">!! JW : added</span>
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="w"> </span><span class="k">dimension</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">deltam</span><span class="p">,</span><span class="w"> </span><span class="n">deltap</span><span class="w"> </span><span class="c">!! JW : added</span>
+
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">vm</span><span class="p">,</span><span class="w"> </span><span class="n">vmprev</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">imjp1</span><span class="p">,</span><span class="w"> </span><span class="n">ipj</span><span class="p">,</span><span class="w"> </span><span class="n">jp1</span><span class="p">,</span><span class="w"> </span><span class="n">jp1ml</span><span class="p">,</span><span class="w"> </span><span class="n">l</span>
+
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">Index</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">         </span><span class="n">Vnikx</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0_wp</span>
+<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">Jhigh</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+<span class="k">      end if</span>
+
+<span class="k">      do</span>
+<span class="k">         </span><span class="n">ipj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Ileft</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">j</span>
+<span class="w">         </span><span class="n">deltap</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="n">ipj</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">x</span>
+<span class="w">         </span><span class="n">imjp1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Ileft</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">         </span><span class="n">deltam</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="n">imjp1</span><span class="p">)</span>
+<span class="w">         </span><span class="n">vmprev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0_wp</span>
+<span class="w">         </span><span class="n">jp1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">         </span><span class="k">do </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">j</span>
+<span class="w">            </span><span class="n">jp1ml</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">jp1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">l</span>
+<span class="w">            </span><span class="n">vm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Vnikx</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">deltap</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">deltam</span><span class="p">(</span><span class="n">jp1ml</span><span class="p">))</span>
+<span class="w">            </span><span class="n">Vnikx</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vm</span><span class="o">*</span><span class="n">deltap</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">vmprev</span>
+<span class="w">            </span><span class="n">vmprev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vm</span><span class="o">*</span><span class="n">deltam</span><span class="p">(</span><span class="n">jp1ml</span><span class="p">)</span>
+<span class="w">         </span><span class="k">end do</span>
+<span class="k">         </span><span class="n">Vnikx</span><span class="p">(</span><span class="n">jp1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vmprev</span>
+<span class="w">         </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">jp1</span>
+<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">Jhigh</span><span class="p">)</span><span class="w"> </span><span class="k">exit</span>
+<span class="k">      end do</span>
+
+<span class="k">   end subroutine </span><span class="n">dfspvn</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              bspline-fortran
+ was developed by Jacob Williams<br>              &copy; 2025 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>
