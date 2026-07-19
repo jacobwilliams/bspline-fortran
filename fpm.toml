@@ -21,3 +21,13 @@ source-dir = "src"
 
 [install]
 library = true
+
+[extra.fortitude.check]
+ignore = [
+  "C003",  # implicit none(external)
+  "C061",  # missing intent attribute
+  "C121",  # use without explicit only
+  "S241",  # allow single quotes
+  "C071",  # allow assumed size
+]
+line-length = 132

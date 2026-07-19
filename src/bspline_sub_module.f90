@@ -3679,7 +3679,7 @@
                 t(np+i) = t(np+i-1) + xl
             end do
         end if
-    case(3)
+    case(3_ip)
         ! set up knot array less than x(1) and greater than x(ndata) to be
         ! supplied by user in tleft & tright when kntopt=3
         t(1:3)             = tleft
@@ -3690,6 +3690,9 @@
                 return
             end if
         end do
+    case default
+        ! can never happen
+        error stop 'invalid kntopt value'
     end select
 
     w = 0.0_wp
@@ -4194,9 +4197,9 @@
     err = tol
     if ( k<1_ip ) then
         iflag = 1001_ip     ! error
-    elseif ( n<k ) then
+    else if ( n<k ) then
         iflag = 1002_ip     ! error
-    elseif ( id<0_ip .or. id>=k ) then
+    else if ( id<0_ip .or. id>=k ) then
         iflag = 1003_ip     ! error
     else
         if ( tol>=min_tol .and. tol<=0.1_wp ) then
@@ -4715,7 +4718,11 @@
 
     case default
         write(istr,fmt='(I10)',iostat=istat) iflag
-        msg = 'Unknown status flag: '//trim(adjustl(istr))
+        if (istat/=0_ip) then
+            msg = 'Unknown status flag'
+        else
+            msg = 'Unknown status flag: '//trim(adjustl(istr))
+        end if
     end select
 
     end function get_status_message
