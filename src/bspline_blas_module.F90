@@ -17,12 +17,81 @@
 
 module bspline_blas_module
 
-#ifndef HAS_BLAS
-
    use bspline_kinds_module, only: wp, ip
 
    implicit none
    private
+
+#ifdef HAS_BLAS
+
+   interface
+      subroutine daxpy(n, da, dx, incx, dy, incy)
+         import
+         implicit none
+         real(wp) :: da
+         integer(ip) :: incx, incy, n
+         real(wp) :: dx(*), dy(*)
+      end subroutine daxpy
+      subroutine dcopy(n, dx, incx, dy, incy)
+         import
+         implicit none
+         integer(ip) :: incx, incy, n
+         real(wp) :: dx(*), dy(*)
+      end subroutine dcopy
+      subroutine dscal(n, da, dx, incx)
+         import
+         implicit none
+         real(wp) :: da
+         integer(ip) :: incx, n
+         real(wp) :: dx(*)
+      end subroutine dscal
+      subroutine dswap(n, dx, incx, dy, incy)
+         import
+         implicit none
+         integer(ip) :: incx, incy, n
+         real(wp) :: dx(*), dy(*)
+      end subroutine dswap
+      real(wp) function ddot(n, dx, incx, dy, incy)
+         import
+         implicit none
+         integer(ip) :: incx, incy, n
+         real(wp) :: dx(*), dy(*)
+      end function ddot
+      real(wp) function dnrm2(n, x, incx)
+         import
+         implicit none
+         integer(ip) :: incx, n
+         real(wp) :: x(*)
+      end function dnrm2
+      real(wp) function dasum(n, dx, incx)
+         import
+         implicit none
+         integer(ip) :: incx, n
+         real(wp) :: dx(*)
+      end function dasum
+      integer(ip) function idamax(n, dx, incx)
+         import
+         implicit none
+         integer(ip) :: incx, n
+         real(wp) :: dx(*)
+      end function idamax
+      subroutine drotm(n, dx, incx, dy, incy, dparam)
+         import
+         implicit none
+         integer(ip) :: incx, incy, n
+         real(wp) :: dparam(5), dx(*), dy(*)
+      end subroutine drotm
+      subroutine drotmg(d1, d2, x1, y1, dparam)
+         import
+         implicit none
+         real(wp) :: d1, d2, x1, y1
+         real(wp) :: dparam(5)
+      end subroutine drotmg
+   end interface
+
+   public :: daxpy,dcopy,dscal,dswap,ddot,dnrm2,dasum,idamax,drotm,drotmg
+
+#else
 
    public :: daxpy,dcopy,dscal,dswap,ddot,dnrm2,dasum,idamax,drotm,drotmg
 
@@ -127,7 +196,7 @@ contains
       integer(ip) :: incx, n
       real(wp) :: dx(*)
 
-      integer i, m, mp1, nincx
+      integer(ip) :: i, m, mp1, nincx
 
       if (n <= 0_ip .or. incx <= 0_ip) return
       if (incx == 1_ip) then
@@ -360,7 +429,7 @@ contains
          end if
          DNRM2 = scl*sqrt( sumsq )
          return
-   end function
+   end function dnrm2
 
    real(wp) function dasum(n,dx,incx)
          !! dasum takes the sum of the absolute values.
@@ -368,8 +437,8 @@ contains
          integer(ip) :: incx,n
          real(wp) :: dx(*)
 
-         real(wp) dtemp
-         integer(ip) i,m,mp1,nincx
+         real(wp) :: dtemp
+         integer(ip) :: i,m,mp1,nincx
 
          dasum = 0.0_wp
          dtemp = 0.0_wp
@@ -641,7 +710,7 @@ contains
                      dh11 = dh11*gam
                      dh12 = dh12*gam
                   end if
-               enddo
+               end do
             end if
 
             if (dd2/=zero) then

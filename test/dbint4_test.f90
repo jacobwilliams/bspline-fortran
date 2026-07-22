@@ -141,6 +141,8 @@
                 tleft  = [0.0_wp,0.0_wp,0.0_wp]
                 tright = [8.0_wp, 8.0_wp, 8.0_wp]
                 call db1ink(x,nx,fcn_1d,kx,ibcl,ibcr,fbcl,fbcr,tleft,tright,tx,bcoef,iflag)
+            case default
+                error stop 'invalid icase'
             end select
 
             ! write(*,*) ''

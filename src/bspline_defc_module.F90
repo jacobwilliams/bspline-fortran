@@ -27,22 +27,13 @@
 module bspline_defc_module
 
    use bspline_kinds_module, only: wp, ip
-#ifndef HAS_BLAS
    use bspline_blas_module
-#endif
 
    implicit none
 
    private
 
    real(wp),parameter :: drelpr = epsilon(1.0_wp) !! machine precision (`d1mach(4)`)
-
-#ifdef HAS_BLAS
-   ! user is linking against an external BLAS library
-   double precision,external :: ddot, dasum
-   integer(ip),external :: idamax
-   external :: daxpy,dcopy,dscal,dswap,dnrm2,drotm,drotmg
-#endif
 
    public :: defc, dfc, dcv
 
@@ -774,6 +765,8 @@ module bspline_defc_module
                x(j) = (x(j) - s)/g(j, l + 1)
             end do
             return
+         case default
+            error stop 'invalid value of MODE in DBNDSL. Must be 1, 2, or 3.'
          end select
 
          ! MODE = 3
@@ -924,7 +917,7 @@ module bspline_defc_module
             Up = u(1, Lpivot) - cl
             u(1, Lpivot) = cl
             ! ****** APPLY THE TRANSFORMATION  I+U*(U**T)/B  TO C. ******
-         elseif (cl <= 0.0_wp) then
+         else if (cl <= 0.0_wp) then
             return
          end if
 
@@ -1490,17 +1483,17 @@ module bspline_defc_module
       write(*,*) 'IN DFC, THE ORDER OF THE B-SPLINE MUST BE 1 THRU 20.'
       mode = -1
       return
-   elseif (nbkpt<2*nord) then
+   else if (nbkpt<2*nord) then
       write(*,*) 'IN DFC, THE NUMBER OF KNOTS MUST BE AT LEAST TWICE ' // &
                  'THE B-SPLINE ORDER.'
       mode = -1
       return
-   endif
+   end if
    if (ndata<0) then
       write(*,*) 'IN DFC, THE NUMBER OF DATA POINTS MUST BE NONNEGATIVE.'
       mode = -1
       return
-   endif
+   end if
 
    ! Amount of storage allocated for W(*), IW(*).
 
@@ -1516,7 +1509,7 @@ module bspline_defc_module
       write(*,*) 'IN DFC, INSUFFICIENT STORAGE FOR W(*).  CHECK NB = ' // xern1
       mode = -1
       return
-   endif
+   end if
 
    select case (mode)
    case (1)
@@ -1558,7 +1551,7 @@ module bspline_defc_module
          nincon = nincon + 1
       else
          neqcon = neqcon + 1
-      endif
+      end if
    end do
    ! set up variables for dfspvn
    dfspvn_j = 1
@@ -1599,7 +1592,7 @@ module bspline_defc_module
       prgopt(3) = 1
    else
       prgopt(3) = 0
-   endif
+   end if
 
    ! Increase the rank determination tolerances for both equality
    ! constraint equations and least squares equations.
@@ -1633,7 +1626,7 @@ module bspline_defc_module
          call dsort (ndata, 2_ip, xtemp, ptemp)
          xmin = min(xmin,xtemp(1))
          xmax = max(xmax,xtemp(ndata))
-      endif
+      end if
 
       ! Fix breakpoint array if needed.
 
@@ -1672,10 +1665,10 @@ module bspline_defc_module
                   ileft = ileft + 1
                else
                   exit
-               endif
+               end if
             end do
 
-         endif
+         end if
 
          ! Obtain B-spline function value.
 
@@ -1699,7 +1692,7 @@ module bspline_defc_module
          if (irow==mdg-1) then
             call dbndac (g, mdg, nord, ipp, ir, mt, ileft-nordm1)
             mt = 0
-         endif
+         end if
       end do
 
       ! Process last block of equations.
@@ -1710,7 +1703,7 @@ module bspline_defc_module
 
       call dcopy (nordp1, [0.0_wp], 0_ip, g(ir,1), mdg)
       call dbndac (g, mdg, nord, ipp, ir, 1_ip, np1)
-   endif
+   end if
 
    band = band .and. nconst==0
    do i = 1,n
@@ -1722,7 +1715,7 @@ module bspline_defc_module
    if (band) then
       call dbndsl (1_ip, g, mdg, nord, ipp, ir, coeff, n, rnorm)
       return
-   endif
+   end if
 
    ! Check further for sufficient storage in working arrays.
 
@@ -1731,14 +1724,14 @@ module bspline_defc_module
       write(*,*) 'IN DFC, INSUFFICIENT STORAGE FOR W(*).  CHECK LW = ' // xern1
       mode = -1
       return
-   endif
+   end if
 
    if (iw2<intw1) then
       write (xern1, '(I8)') intw1
       write(*,*) 'IN DFC, INSUFFICIENT STORAGE FOR IW(*).  CHECK IW1 = ' // xern1
       mode = -1
       return
-   endif
+   end if
 
    ! Write equality constraints.
    ! Analyze constraint indicators for an equality constraint.
@@ -1777,8 +1770,8 @@ module bspline_defc_module
             call dfspvd (bkpt, nord, yval, ileft, bf, ideriv+1)
             call daxpy (nord, -1.0_wp, bf(1_ip, ideriv+1), 1_ip, &
                         w(neqcon, ileft-nordm1), mdw)
-         endif
-      endif
+         end if
+      end if
    end do
 
    ! Transfer least squares data.
@@ -1819,8 +1812,8 @@ module bspline_defc_module
          else
             w(irow,np1) = -yconst(idata)
             call dscal (nord, -1.0_wp, w(irow, intrvl), mdw)
-         endif
-      endif
+         end if
+      end if
    end do
 
    ! Solve constrained least squares equations.
@@ -2192,7 +2185,7 @@ module bspline_defc_module
 
             end if
 
-         elseif (nb >= 1) then
+         else if (nb >= 1) then
            do jb = 1, nb
               do i = 1, n
                  b(i,jb) = szero
@@ -2818,7 +2811,7 @@ module bspline_defc_module
                  ', MA = ' // trim(adjustl(xern3)) // &
                  ', MG = ' // trim(adjustl(xern4))
       return
-   endif
+   end if
 
    if (ipp(1)>0) then
       lchk = 2*(me+n) + max(ma+mg,n) + (mg+2)*(n+7)
@@ -2827,8 +2820,8 @@ module bspline_defc_module
          write(*,*) 'INSUFFICIENT STORAGE ' // &
                     'ALLOCATED FOR WS(*), NEED LW = ' // xern1
          return
-      endif
-   endif
+      end if
+   end if
 
    if (ipp(2)>0) then
       lchk = mg + 2*n + 2
@@ -2837,8 +2830,8 @@ module bspline_defc_module
          write(*,*) 'INSUFFICIENT STORAGE ' // &
                     'ALLOCATED FOR ipp(*), NEED LIP = ' // xern1
          return
-      endif
-   endif
+      end if
+   end if
 
    ! Compute number of possible right multiplying Householder
    ! transformations.
@@ -2849,12 +2842,12 @@ module bspline_defc_module
       rnorme = 0
       rnorml = 0
       return
-   endif
+   end if
 
    if (mdw<m) then
       write(*,*) 'MDW < ME+MA+MG IS AN ERROR'
       return
-   endif
+   end if
 
    np1 = n + 1
    kranke = min(me,n)
@@ -2886,7 +2879,7 @@ module bspline_defc_module
    if (link==0 .or. link>nlink) then
       write(*,*) 'THE OPTION VECTOR IS UNDEFINED'
       return
-   endif
+   end if
 
    do
       if (link<=1) exit
@@ -2894,28 +2887,28 @@ module bspline_defc_module
       if (ntimes>nopt) then
          write(*,*) 'THE LINKS IN THE OPTION VECTOR ARE CYCLING.'
          return
-      endif
+      end if
 
       key = prgopt(last+1)
       if (key==1) then
          cov = prgopt(last+2) /= 0.0_wp
-      elseif (key==2 .and. prgopt(last+2)/=0.0_wp) then
+      else if (key==2 .and. prgopt(last+2)/=0.0_wp) then
          do j = 1,n
             t = dnrm2(m,w(1,j),1_ip)
             if (t/=0.0_wp) t = 1.0_wp/t
             ws(j+n1-1) = t
          end do
-      elseif (key==3) then
+      else if (key==3) then
          call dcopy (n, prgopt(last+2), 1_ip, ws(n1), 1_ip)
-      elseif (key==4) then
+      else if (key==4) then
          tau = max(drelpr,prgopt(last+2))
-      endif
+      end if
 
       next = prgopt(link)
       if (next<=0 .or. next>nlink) then
          write(*,*) 'THE OPTION VECTOR IS UNDEFINED'
          return
-      endif
+      end if
 
       last = link
       link = next
@@ -2928,7 +2921,7 @@ module bspline_defc_module
    if (cov .and. mdw<n) then
       write(*,*) 'MDW < N WHEN COV MATRIX NEEDED, IS AN ERROR'
       return
-   endif
+   end if
 
    ! Problem definition and option vector OK.
 
@@ -2955,11 +2948,11 @@ module bspline_defc_module
          if (rn==0.0_wp .and. sn>snmax) then
             snmax = sn
             imax = k
-         elseif (k==i .or. sn*rnmax>rn*snmax) then
+         else if (k==i .or. sn*rnmax>rn*snmax) then
             snmax = sn
             rnmax = rn
             imax = k
-         endif
+         end if
       end do
 
       ! Interchange rows if necessary.
@@ -2971,7 +2964,7 @@ module bspline_defc_module
       else
          kranke = i - 1
          exit
-      endif
+      end if
    end do
 
    ! Save diagonal terms of lower trapezoidal matrix.
@@ -2988,7 +2981,7 @@ module bspline_defc_module
          ! Apply to rt side vector.
          call dh12 (2_ip, k, kranke+1, me, w(1,k), 1_ip, up, w(1,np1), 1_ip, 1_ip, 1_ip)
       end do
-   endif
+   end if
 
    ! Solve for variables 1,...,KRANKE in new coordinates.
 
@@ -3005,8 +2998,9 @@ module bspline_defc_module
       w(i,np1) = w(i,np1) - ddot(kranke,w(i,1),mdw,x,1_ip)
       sn = ddot(kranke,w(i,1),mdw,w(i,1),mdw)
       rn = ddot(n-kranke,w(i,kranke+1),mdw,w(i,kranke+1),mdw)
-      if (rn<=sn*tau**2 .and. kranke<n) &
+      if (rn<=sn*tau**2 .and. kranke<n) then
          call dcopy (n-kranke, [0.0_wp], 0_ip, w(i,kranke+1), mdw)
+      end if
    end do
 
    ! Compute equality constraint equations residual length.
@@ -3019,7 +3013,7 @@ module bspline_defc_module
       do j = 1,np1
          call dcopy (m-me, w(me+1,j), 1_ip, w(kranke+1,j), 1_ip)
       end do
-   endif
+   end if
 
    ! Compute solution of reduced problem.
 
@@ -3048,10 +3042,10 @@ module bspline_defc_module
                mode = mode + 2
                done = .true.
                exit
-            endif
+            end if
          end do
-      endif
-   endif
+      end if
+   end if
 
    if (.not. done) then
       ! Replace diagonal terms of lower trapezoidal matrix.
@@ -3089,8 +3083,8 @@ module bspline_defc_module
                end do
                call dcopy (n-j, w(j, jp1), mdw, w(jp1,j), 1_ip)
             end do
-         endif
-      endif
+         end if
+      end if
 
       ! Apply the scaling to the covariance matrix.
 
@@ -3099,7 +3093,7 @@ module bspline_defc_module
             call dscal (n, ws(i+n1-1), w(i,1), mdw)
             call dscal (n, ws(i+n1-1), w(1,i), 1_ip)
          end do
-      endif
+      end if
 
    end if
 
@@ -3109,7 +3103,7 @@ module bspline_defc_module
       do j = 1,n
          x(j) = x(j)*ws(n1+j-1)
       end do
-   endif
+   end if
 
    ipp(1) = kranke
    ipp(3) = ipp(3) + 2*kranke + n
@@ -3254,7 +3248,7 @@ module bspline_defc_module
                   call dh12 (2_ip, i, krank+1, n, w(i,1), mdw, ws(n1+i-1), &
                              w(map1,1), mdw, 1_ip, mg)
                end do
-            endif
+            end if
 
             ! Compute permuted inequality constraint matrix times r-inv.
 
@@ -3263,7 +3257,7 @@ module bspline_defc_module
                   w(i,j) = (w(i,j)-ddot(j-1,w(1,j),1_ip,w(i,1),mdw))/w(j,j)
                end do
          end do
-         endif
+         end if
 
          ! Solve the reduced problem with DLPDP algorithm,
          ! the least projected distance problem.
@@ -3285,7 +3279,7 @@ module bspline_defc_module
                   call dh12 (2_ip, i, krank+1, n, w(i,1), mdw, ws(n1+i-1), &
                              x, 1_ip, 1_ip, 1_ip)
                end do
-            endif
+            end if
 
             ! Repermute variables to their input order.
 
@@ -3304,13 +3298,13 @@ module bspline_defc_module
                ! Compute the residual vector norm.
 
                rnorm = sqrt(rnorm**2+xnorm**2)
-            endif
+            end if
          else
             mode = 2
-         endif
+         end if
       else
          call dcopy (n, ws, 1_ip, x, 1_ip)
-      endif
+      end if
 
       ! Compute covariance matrix based on the orthogonal decomposition
       ! from DHFTI( ).
@@ -3337,7 +3331,7 @@ module bspline_defc_module
                w(i,j) = -ddot(j-i,w(i,i),mdw,w(i,j),1_ip)*w(j,j)
             end do
          end do
-      endif
+      end if
 
       ! Compute the inverted factor times its transpose.
 
@@ -3399,7 +3393,7 @@ module bspline_defc_module
                      w(j,l) = w(j,l) + ws(j)*ws(n3+l-1)+ws(l)*ws(n3+j-1)
                   end do
                end do
-            endif
+            end if
          end do
 
          ! Copy lower triangle to upper triangle to symmetrize the
@@ -3408,7 +3402,7 @@ module bspline_defc_module
          do i = 1,n
             call dcopy (i, w(i,1), mdw, w(1,i), 1_ip)
          end do
-      endif
+      end if
 
       ! Repermute rows and columns.
 
@@ -3419,7 +3413,7 @@ module bspline_defc_module
             call dswap (i-1_ip, w(1,i), 1_ip, w(1,k), 1_ip)
             call dswap (k-i-1_ip, w(i,i+1), mdw, w(i+1,k), 1_ip)
             call dswap (n-k, w(i, k+1), mdw, w(k, k+1), mdw)
-         endif
+         end if
       end do
 
       ! Put in normalized residual sum of squares scale factor
@@ -3519,17 +3513,17 @@ module bspline_defc_module
                         if (t>amax) then
                            imax = jp
                            amax = t
-                        endif
+                        end if
                      end do
                      jp = imax
-                  endif
+                  end if
                   if (w(j,i)/=0.0_wp) then
                      call drotmg (scale(jp), scale(j), w(jp,i), w(j,i), &
                                  sparam)
                      w(j,i) = 0.0_wp
                      call drotm (n+1-i, w(jp,i+1), mdw, w(j,i+1), mdw, &
                                  sparam)
-                  endif
+                  end if
                end do
                exit
             else if (lend>i) then
@@ -3543,7 +3537,7 @@ module bspline_defc_module
             else
                krank = i - 1
                exit main
-            endif
+            end if
          end do
 
       end do
@@ -3582,7 +3576,7 @@ module bspline_defc_module
                w(j,i) = 0.0_wp
                call drotm (n+1-i, w(j-1,i+1), mdw,w(j,i+1), mdw, &
                            sparam)
-            endif
+            end if
          end do
 
          ! I=column being eliminated.
@@ -3602,9 +3596,9 @@ module bspline_defc_module
             ! constraints.
             me = jj - 1
             exit
-         endif
+         end if
       end do
-   endif
+   end if
 
    ! Try to determine the variables KRANK+1 through L1 from the
    ! least squares equations.  Continue the triangularization with
@@ -3633,7 +3627,7 @@ module bspline_defc_module
                call drotmg (scale(j-1), scale(j), w(j-1,i), w(j,i), sparam)
                w(j,i) = 0.0_wp
                call drotm (n+1-i, w(j-1,i+1),  mdw, w(j,i+1), mdw, sparam)
-            endif
+            end if
          end do
 
          ! Test if new pivot element is near zero.
@@ -3649,7 +3643,7 @@ module bspline_defc_module
                end do
             end do
             indep = t > rn*tau**2
-         endif
+         end if
 
          ! If independent, swap the IR-th and KRANK+1-th rows to
          ! maintain the triangular form.  Update the rank indicator
@@ -3667,7 +3661,7 @@ module bspline_defc_module
          me = me+1
          krank = krank+1
       end do
-   endif
+   end if
 
    ! If pseudorank is less than L, apply Householder transformation.
    ! from right.
@@ -3676,7 +3670,7 @@ module bspline_defc_module
          call dh12 (1_ip, j, krank+1, l, w(j,1), mdw, h(j), w, mdw, 1_ip, &
                     j-1_ip)
       end do
-   endif
+   end if
 
    niv = krank + nsoln - l
    if (l==n) done = .true.
@@ -3788,7 +3782,7 @@ module bspline_defc_module
    if (link<=0 .or. link>nlink) then
       write(*,*) 'IN DWNNLS, THE OPTION VECTOR IS UNDEFINED'
       return
-   endif
+   end if
 
    do
       if (link<=1) exit
@@ -3796,7 +3790,7 @@ module bspline_defc_module
       if (ntimes>nopt) then
          write(*,*) 'IN DWNNLS, THE LINKS IN THE OPTION VECTOR ARE CYCLING.'
          return
-      endif
+      end if
 
       key = prgopt(last+1)
       if (key==6 .and. prgopt(last+2)/=0.0_wp) then
@@ -3805,7 +3799,7 @@ module bspline_defc_module
             if (t/=0.0_wp) t = 1.0_wp/t
             d(j) = t
          end do
-      endif
+      end if
 
       if (key==7) call dcopy (n, prgopt(last+2), 1_ip, d, 1_ip)
       if (key==8) tau = max(drelpr,prgopt(last+2))
@@ -3815,7 +3809,7 @@ module bspline_defc_module
       if (next<=0 .or. next>nlink) then
          write(*,*) 'IN DWNNLS, THE OPTION VECTOR IS UNDEFINED'
          return
-      endif
+      end if
 
       last = link
       link = next
@@ -3861,7 +3855,7 @@ module bspline_defc_module
       else
          t = 1.0_wp
          itemp = 1
-      endif
+      end if
       scale(i) = t
       itype(i) = itemp
    end do
@@ -3921,15 +3915,15 @@ module bspline_defc_module
                i = niv - nsoln + j
             else
                i = j
-            endif
+            end if
             if (j>krank .and. j<=l) then
                z(j) = 0.0_wp
             else
                z(j) = temp(i)/w(i,j)
                call daxpy (i-1_ip, -z(j), w(1,j), 1_ip, temp, 1_ip)
-            endif
+            end if
          end do
-      endif
+      end if
 
       ! Increment iteration counter and check against maximum number
       ! of iterations.
@@ -3937,7 +3931,7 @@ module bspline_defc_module
       if (iter>itmax) then
          mode = 1
          done = .true.
-      endif
+      end if
 
       ! Check to see if any constraints have become active.
       ! If so, calculate an interpolation factor so that all
@@ -3951,9 +3945,9 @@ module bspline_defc_module
             if (t<alpha) then
                alpha = t
                jcon = j
-            endif
+            end if
             hitcon = .true.
-         endif
+         end if
       end do
 
       ! Compute search direction and feasible point
@@ -4003,8 +3997,8 @@ module bspline_defc_module
                      w(i+1,j) = 0.0_wp
                      call drotm (n+1-j, w(i,j+1), mdw, w(i+1,j+1), mdw, &
                                  sparam)
-                  endif
-               elseif (itype(i)==1 .and. itype(i+1)==1) then
+                  end if
+               else if (itype(i)==1 .and. itype(i+1)==1) then
                   ! Zero IP1 to I in column J
                   if (w(i+1,j)/=0.0_wp) then
                      call drotmg (scale(i), scale(i+1), w(i,j), w(i+1,j), &
@@ -4012,8 +4006,8 @@ module bspline_defc_module
                      w(i+1,j) = 0.0_wp
                      call drotm (n+1-j, w(i,j+1), mdw, w(i+1,j+1), mdw, &
                                  sparam)
-                  endif
-               elseif (itype(i)==1 .and. itype(i+1)==0) then
+                  end if
+               else if (itype(i)==1 .and. itype(i+1)==0) then
                   call dswap (n+1_ip, w(i,1), mdw, w(i+1,1), mdw)
                   call dswap (1_ip, scale(i), 1_ip, scale(i+1), 1_ip)
                   itemp = itype(i+1)
@@ -4028,8 +4022,8 @@ module bspline_defc_module
                      w(i+1,j) = 0.0_wp
                      call drotm (n+1-j, w(i,j+1), mdw, w(i+1,j+1), mdw, &
                                  sparam)
-                  endif
-               elseif (itype(i)==0 .and. itype(i+1)==1) then
+                  end if
+               else if (itype(i)==0 .and. itype(i+1)==1) then
                   if (scale(i)*w(i,j)**2/alsq>(tau*eanorm)**2) then
                      ! Zero IP1 to I in column J
                      if (w(i+1,j)/=0.0_wp) then
@@ -4038,7 +4032,7 @@ module bspline_defc_module
                         w(i+1,j) = 0.0_wp
                         call drotm (n+1-j, w(i,j+1), mdw, w(i+1,j+1), mdw, &
                                     sparam)
-                     endif
+                     end if
                   else
                      call dswap (n+1_ip, w(i,1), mdw, w(i+1,1), mdw)
                      call dswap (1_ip, scale(i), 1_ip, scale(i+1), 1_ip)
@@ -4046,8 +4040,8 @@ module bspline_defc_module
                      itype(i+1) = itype(i)
                      itype(i) = itemp
                      w(i+1,j) = 0.0_wp
-                  endif
-               endif
+                  end if
+               end if
                i = i + 1
             end do
 
@@ -4085,7 +4079,7 @@ module bspline_defc_module
                itype(i) = itype(me)
                itype(me) = itemp
                me = me - 1
-            endif
+            end if
          end do
 
          ! Form inner product vector WD(*) of dual coefficients.
@@ -4107,7 +4101,7 @@ module bspline_defc_module
                if (wd(j)>wmax) then
                   wmax = wd(j)
                   iwmax = j
-               endif
+               end if
             end do
             if (wmax<=0.0_wp) exit main
 
@@ -4130,7 +4124,7 @@ module bspline_defc_module
                itemp = ipivot(nsoln)
                ipivot(nsoln) = ipivot(iwmax)
                ipivot(iwmax) = itemp
-            endif
+            end if
 
             ! Reduce column NSOLN so that the matrix of nonactive constraints
             ! variables is triangular.
@@ -4149,16 +4143,16 @@ module bspline_defc_module
                      if (t>amax) then
                         imax = jp
                         amax = t
-                     endif
+                     end if
                   end do
                   jp = imax
-               endif
+               end if
 
                if (w(j,nsoln)/=0.0_wp) then
                   call drotmg (scale(jp), scale(j), w(jp,nsoln), w(j,nsoln), sparam)
                   w(j,nsoln) = 0.0_wp
                   call drotm (n+1-nsoln, w(jp,nsoln+1), mdw, w(j,nsoln+1), mdw, sparam)
-               endif
+               end if
             end do
 
             ! Solve for Z(NSOLN)=proposed new value for X(NSOLN).  Test if
@@ -4171,9 +4165,9 @@ module bspline_defc_module
                pos = z2 > 0.0_wp
                if (z2*eanorm>=bnorm .and. pos) then
                   pos = .not. (blowup*z2*eanorm>=bnorm)
-               endif
+               end if
 
-            elseif (niv<=me .and. w(me+1,nsoln)/=0.0_wp) then
+            else if (niv<=me .and. w(me+1,nsoln)/=0.0_wp) then
                ! Try to add row ME+1 as an additional equality constraint.
                ! Check size of proposed new solution component.
                ! Reject it if it is too large.
@@ -4186,19 +4180,19 @@ module bspline_defc_module
                   itype(me+1) = itype(niv)
                   itype(niv) = itemp
                   me = me + 1
-               endif
+               end if
             else
                pos = .false.
-            endif
+            end if
 
             if (.not.pos) then
                nsoln = nsoln - 1
                niv = niv - 1
-            endif
+            end if
             if (pos.or.done) exit
          end do
 
-      endif
+      end if
 
    end do main
 
@@ -4214,15 +4208,15 @@ module bspline_defc_module
             i = niv - nsoln + j
          else
             i = j
-         endif
+         end if
          if (j>krank .and. j<=l) then
             z(j) = 0.0_wp
          else
             z(j) = temp(i)/w(i,j)
             call daxpy (i-1, -z(j), w(1,j), 1_ip, temp, 1_ip)
-         endif
+         end if
       end do
-   endif
+   end if
 
    ! Solve system.
    call dcopy (nsoln, z, 1_ip, x, 1_ip)
@@ -4232,7 +4226,7 @@ module bspline_defc_module
       do i = 1,krank
          call dh12 (2_ip, i, krank+1, l, w(i,1), mdw, h(i), x, 1_ip, 1_ip, 1_ip)
       end do
-   endif
+   end if
 
    ! Fill in trailing zeroes for constrained variables not in solution.
    if (nsoln<n) call dcopy (n-nsoln, [0.0_wp], 0_ip, x(nsoln+1), 1_ip)
@@ -4294,7 +4288,7 @@ module bspline_defc_module
       ! Test for numerical accuracy.
       imax = idamax(lend-i+1, h(i), 1_ip) + i - 1_ip
       recalc = (hbar+1.e-3*h(imax)) == hbar
-   endif
+   end if
 
    ! If required, recalculate column SS, using rows IR through MEND.
    if (recalc) then
@@ -4307,7 +4301,7 @@ module bspline_defc_module
       ! Find column with largest SS.
       imax = idamax(lend-i+1, h(i), 1_ip) + i - 1_ip
       hbar = h(imax)
-   endif
+   end if
 
    end subroutine dwnlt1
 !*****************************************************************************************
@@ -4360,7 +4354,7 @@ module bspline_defc_module
          sn = sn + t
       else
          rn = rn + t
-      endif
+      end if
    end do
    dwnlt2 = rn > sn*tau**2
 
@@ -4399,7 +4393,7 @@ module bspline_defc_module
       t       = h(imax)
       h(imax) = h(i)
       h(i)    = t
-   endif
+   end if
 
    end subroutine dwnlt3
 !*****************************************************************************************
@@ -4677,8 +4671,8 @@ module bspline_defc_module
                     'ALLOCATED FOR WORK(*), NEED LW = ' // xern1
          mode = 2
          return
-      endif
-   endif
+      end if
+   end if
 
    if (iwork(2)>0) then
       liw = me + ma + n
@@ -4688,20 +4682,20 @@ module bspline_defc_module
                     'ALLOCATED FOR IWORK(*), NEED LIW = ' // xern1
          mode = 2
          return
-      endif
-   endif
+      end if
+   end if
 
    if (mdw<me+ma) then
       write(*,*) 'THE VALUE MDW<ME+MA IS AN ERROR'
       mode = 2
       return
-   endif
+   end if
 
    if (l<0 .or. l>n) then
       write(*,*) 'L>=0 .AND. L<=N IS REQUIRED'
       mode = 2
       return
-   endif
+   end if
 
    ! THE PURPOSE OF THIS SUBROUTINE IS TO BREAK UP THE ARRAYS
    ! WORK(*) AND IWORK(*) INTO SEPARATE WORK ARRAYS
