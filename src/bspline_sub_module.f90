@@ -5184,12 +5184,16 @@
                                                 !! * 404: `x` is not greater than or equal to `t(k)`
                                                 !! * 405: `x` is not less than or equal to `t(n+1)`
                                                 !! * 406: a left limiting value cannot be obtained at `t(k)`
+                                                !! * 407: zero denominator in the de Boor recursion
+                                                !!   (`x` is too far outside the knot interval for
+                                                !!   extrapolation to be evaluated in floating point)
     logical,intent(in),optional :: extrap   !! if extrapolation is allowed
                                             !! (if not present, default is False)
 
     integer(ip) :: i,iderp1,ihi,ihmkmj,ilo,imk,imkpj,ipj,&
                ip1,ip1mj,j,jj,j1,j2,kmider,kmj,km1,kpk,mflag
     real(wp) :: fkmj
+    real(wp) :: den  !! denominator in the de Boor recursion
     real(wp) :: xt
     logical :: extrapolation_allowed  !! if extrapolation is allowed
 
@@ -5302,8 +5306,18 @@
             kmj = k - j
             ilo = kmj
             do jj=1_ip,kmj
+                ! for x far outside the knot interval (with extrapolation),
+                ! the two terms can cancel to exactly zero in floating point
+                ! even though the exact denominator is a positive knot
+                ! difference. return an error flag instead of dividing.
+                den = work(kpk+ilo)+work(k+jj)
+                if (den==0.0_wp) then
+                    iflag = 407_ip  ! dbvalu - zero denominator in the de boor recursion
+                    val = 0.0_wp
+                    return
+                end if
                 work(jj) = (work(jj+1_ip)*work(kpk+ilo)+work(jj)*&
-                            work(k+jj))/(work(kpk+ilo)+work(k+jj))
+                            work(k+jj))/den
                 ilo = ilo - 1
             end do
         end do
@@ -6956,6 +6970,8 @@
     case(404_ip); msg='Error in dbvalu: x is not greater than or equal to t(k)'
     case(405_ip); msg='Error in dbvalu: x is not less than or equal to t(n+1)'
     case(406_ip); msg='Error in dbvalu: a left limiting value cannot be obtained at t(k)'
+    case(407_ip); msg='Error in dbvalu: zero denominator in the de Boor recursion '//&
+                      '(x too far outside the knot interval for extrapolation)'
 
     case(501_ip); msg='Error in initialize_*d_specify_knots: tx is not the correct size (kx+nx)'
     case(502_ip); msg='Error in initialize_*d_specify_knots: ty is not the correct size (ky+ny)'
