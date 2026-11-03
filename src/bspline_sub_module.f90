@@ -724,35 +724,40 @@
     integer(ip),intent(inout)            :: inbvx    !! initialization parameter which must be set to 1
                                                      !! the first time this routine is called,
                                                      !! and must not be changed by the user.
-    integer(ip),intent(inout)            :: inbvy    !! initialization parameter which must be set to 1
-                                                     !! the first time this routine is called,
-                                                     !! and must not be changed by the user.
+    integer(ip),intent(inout)            :: inbvy    !! not used (kept for backward compatibility)
     integer(ip),intent(inout)            :: iloy     !! initialization parameter which must be set to 1
                                                      !! the first time this routine is called,
                                                      !! and must not be changed by the user.
     real(wp),dimension(ky),intent(inout)              :: w1 !! work array
-    real(wp),dimension(3_ip*max(kx,ky)),intent(inout) :: w0 !! work array
+    real(wp),dimension(3_ip*max(kx,ky)),intent(inout) :: w0 !! not used (kept for backward compatibility)
     logical,intent(in),optional          :: extrap   !! if extrapolation is allowed
                                                      !! (if not present, default is False)
 
-    integer(ip) :: k, lefty, kcol
+    integer(ip) :: leftx, lefty  !! interval indices
+    integer(ip) :: ix, iy  !! coefficient offsets
+    integer(ip) :: j  !! counter
+    real(wp),dimension(kx) :: bx  !! basis function weights in x
+    real(wp),dimension(ky) :: by  !! basis function weights in y
 
     f = 0.0_wp
 
     iflag = check_value(xval,tx,1_ip,extrap); if (iflag/=0_ip) return
     iflag = check_value(yval,ty,2_ip,extrap); if (iflag/=0_ip) return
 
-    call dintrv(ty,ny+ky,yval,iloy,lefty,iflag,extrap); if (iflag/=0_ip) return
+    ! interval and basis function weights in each direction
+    call dbvalu_weights(tx,nx,kx,idx,xval,inbvx,leftx,bx,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(ty,ny,ky,idy,yval,iloy,lefty,by,iflag,extrap)
+    if (iflag/=0_ip) return
 
-    kcol = lefty - ky
-    do k=1_ip,ky
-        kcol = kcol + 1_ip
-        call dbvalu(tx,bcoef(:,kcol),nx,kx,idx,xval,inbvx,w0,iflag,w1(k),extrap)
-        if (iflag/=0_ip) return !error
+    ix = leftx - kx
+    iy = lefty - ky
+
+    ! contract the coefficients one direction at a time
+    do j=1_ip,ky
+        w1(j) = dot_product(bx,bcoef(ix+1_ip:leftx,iy+j))
     end do
-
-    kcol = lefty - ky + 1_ip
-    call dbvalu(ty(kcol:),w1,ky,ky,idy,yval,inbvy,w0,iflag,f,extrap)
+    f = dot_product(by,w1)
 
     end subroutine db2val
 !*****************************************************************************************
@@ -890,7 +895,6 @@
     real(wp),dimension(:),allocatable :: temp !! work array of length `nx*ny*nz`
     real(wp),dimension(:),allocatable :: work !! work array of length `max(2*kx*(nx+1),
                                               !! 2*ky*(ny+1),2*kz*(nz+1))`
-    integer(ip) :: i, j, k, ii !! counter
 
     ! check validity of input
 
@@ -916,22 +920,9 @@
         allocate(temp(nx*ny*nz))
         allocate(work(max(2_ip*kx*(nx+1_ip),2_ip*ky*(ny+1_ip),2_ip*kz*(nz+1_ip))))
 
-        ! copy fcn to work in packed for dbtpcf
-        !temp = reshape( fcn, [nx*ny*nz] )
-        ! replaced with loops to avoid stack
-        ! overflow for large data set:
-        ii = 0_ip
-        do k = 1_ip, nz
-            do j = 1_ip, ny
-                do i = 1_ip, nx
-                    ii = ii + 1_ip
-                    temp(ii) = fcn(i,j,k)
-                end do
-            end do
-        end do
-
         ! construct b-spline coefficients
-                         call dbtpcf(x,nx,temp, nx,ny*nz,tx,kx,bcoef,work,iflag)
+        ! (odd number of passes, so start in bcoef to end up there)
+                         call dbtpcf(x,nx,fcn,  nx,ny*nz,tx,kx,bcoef,work,iflag)
         if (iflag==0_ip) call dbtpcf(y,ny,bcoef,ny,nx*nz,ty,ky,temp, work,iflag)
         if (iflag==0_ip) call dbtpcf(z,nz,temp, nz,nx*ny,tz,kz,bcoef,work,iflag)
 
@@ -1021,12 +1012,8 @@
     integer(ip),intent(inout)               :: inbvx    !! initialization parameter which must be
                                                         !! set to 1 the first time this routine is called,
                                                         !! and must not be changed by the user.
-    integer(ip),intent(inout)               :: inbvy    !! initialization parameter which must be
-                                                        !! set to 1 the first time this routine is called,
-                                                        !! and must not be changed by the user.
-    integer(ip),intent(inout)               :: inbvz    !! initialization parameter which must be
-                                                        !! set to 1 the first time this routine is called,
-                                                        !! and must not be changed by the user.
+    integer(ip),intent(inout)               :: inbvy    !! not used (kept for backward compatibility)
+    integer(ip),intent(inout)               :: inbvz    !! not used (kept for backward compatibility)
     integer(ip),intent(inout)               :: iloy     !! initialization parameter which must be
                                                         !! set to 1 the first time this routine is called,
                                                         !! and must not be changed by the user.
@@ -1035,11 +1022,16 @@
                                                         !! and must not be changed by the user.
     real(wp),dimension(ky,kz),intent(inout)              :: w2  !! work array
     real(wp),dimension(kz),intent(inout)                 :: w1  !! work array
-    real(wp),dimension(3_ip*max(kx,ky,kz)),intent(inout) :: w0  !! work array
+    real(wp),dimension(3_ip*max(kx,ky,kz)),intent(inout) :: w0  !! not used (kept for backward compatibility)
     logical,intent(in),optional             :: extrap   !! if extrapolation is allowed
                                                         !! (if not present, default is False)
 
-    integer(ip) :: lefty, leftz, kcoly, kcolz, j, k
+    integer(ip) :: leftx, lefty, leftz  !! interval indices
+    integer(ip) :: ix, iy, iz  !! coefficient offsets
+    integer(ip) :: j, k  !! counters
+    real(wp),dimension(kx) :: bx  !! basis function weights in x
+    real(wp),dimension(ky) :: by  !! basis function weights in y
+    real(wp),dimension(kz) :: bz  !! basis function weights in z
 
     f = 0.0_wp
 
@@ -1047,30 +1039,26 @@
     iflag = check_value(yval,ty,2_ip,extrap); if (iflag/=0_ip) return
     iflag = check_value(zval,tz,3_ip,extrap); if (iflag/=0_ip) return
 
-    call dintrv(ty,ny+ky,yval,iloy,lefty,iflag,extrap); if (iflag/=0_ip) return
-    call dintrv(tz,nz+kz,zval,iloz,leftz,iflag,extrap); if (iflag/=0_ip) return
+    ! interval and basis function weights in each direction
+    call dbvalu_weights(tx,nx,kx,idx,xval,inbvx,leftx,bx,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(ty,ny,ky,idy,yval,iloy,lefty,by,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(tz,nz,kz,idz,zval,iloz,leftz,bz,iflag,extrap)
+    if (iflag/=0_ip) return
 
-    iflag = 0_ip
+    ix = leftx - kx
+    iy = lefty - ky
+    iz = leftz - kz
 
-    kcolz = leftz - kz
+    ! contract the coefficients one direction at a time
     do k=1_ip,kz
-        kcolz = kcolz + 1_ip
-        kcoly = lefty - ky
         do j=1_ip,ky
-            kcoly = kcoly + 1_ip
-            call dbvalu(tx,bcoef(:,kcoly,kcolz),nx,kx,idx,xval,inbvx,w0,iflag,w2(j,k),extrap)
-            if (iflag/=0_ip) return
+            w2(j,k) = dot_product(bx,bcoef(ix+1_ip:leftx,iy+j,iz+k))
         end do
+        w1(k) = dot_product(by,w2(:,k))
     end do
-
-    kcoly = lefty - ky + 1_ip
-    do k=1_ip,kz
-        call dbvalu(ty(kcoly:),w2(:,k),ky,ky,idy,yval,inbvy,w0,iflag,w1(k),extrap)
-        if (iflag/=0_ip) return
-    end do
-
-    kcolz = leftz - kz + 1_ip
-    call dbvalu(tz(kcolz:),w1,kz,kz,idz,zval,inbvz,w0,iflag,f,extrap)
+    f = dot_product(bz,w1)
 
     end subroutine db3val
 !*****************************************************************************************
@@ -1306,15 +1294,9 @@
     integer(ip),intent(inout)                  :: inbvx    !! initialization parameter which must be set
                                                            !! to 1 the first time this routine is called,
                                                            !! and must not be changed by the user.
-    integer(ip),intent(inout)                  :: inbvy    !! initialization parameter which must be set
-                                                           !! to 1 the first time this routine is called,
-                                                           !! and must not be changed by the user.
-    integer(ip),intent(inout)                  :: inbvz    !! initialization parameter which must be set
-                                                           !! to 1 the first time this routine is called,
-                                                           !! and must not be changed by the user.
-    integer(ip),intent(inout)                  :: inbvq    !! initialization parameter which must be set
-                                                           !! to 1 the first time this routine is called,
-                                                           !! and must not be changed by the user.
+    integer(ip),intent(inout)                  :: inbvy    !! not used (kept for backward compatibility)
+    integer(ip),intent(inout)                  :: inbvz    !! not used (kept for backward compatibility)
+    integer(ip),intent(inout)                  :: inbvq    !! not used (kept for backward compatibility)
     integer(ip),intent(inout)                  :: iloy     !! initialization parameter which must be set
                                                            !! to 1 the first time this routine is called,
                                                            !! and must not be changed by the user.
@@ -1327,12 +1309,17 @@
     real(wp),dimension(ky,kz,kq),intent(inout)           :: w3 !! work array
     real(wp),dimension(kz,kq),intent(inout)              :: w2 !! work array
     real(wp),dimension(kq),intent(inout)                 :: w1 !! work array
-    real(wp),dimension(3_ip*max(kx,ky,kz,kq)),intent(inout) :: w0 !! work array
+    real(wp),dimension(3_ip*max(kx,ky,kz,kq)),intent(inout) :: w0 !! not used (kept for backward compatibility)
     logical,intent(in),optional                :: extrap   !! if extrapolation is allowed
                                                            !! (if not present, default is False)
 
-    integer(ip) :: lefty, leftz, leftq, &
-               kcoly, kcolz, kcolq, j, k, q
+    integer(ip) :: leftx, lefty, leftz, leftq  !! interval indices
+    integer(ip) :: ix, iy, iz, iq  !! coefficient offsets
+    integer(ip) :: j, k, q  !! counters
+    real(wp),dimension(kx) :: bx  !! basis function weights in x
+    real(wp),dimension(ky) :: by  !! basis function weights in y
+    real(wp),dimension(kz) :: bz  !! basis function weights in z
+    real(wp),dimension(kq) :: bq  !! basis function weights in q
 
     f = 0.0_wp
 
@@ -1341,53 +1328,32 @@
     iflag = check_value(zval,tz,3_ip,extrap); if (iflag/=0_ip) return
     iflag = check_value(qval,tq,4_ip,extrap); if (iflag/=0_ip) return
 
-    call dintrv(ty,ny+ky,yval,iloy,lefty,iflag,extrap); if (iflag/=0_ip) return
-    call dintrv(tz,nz+kz,zval,iloz,leftz,iflag,extrap); if (iflag/=0_ip) return
-    call dintrv(tq,nq+kq,qval,iloq,leftq,iflag,extrap); if (iflag/=0_ip) return
+    ! interval and basis function weights in each direction
+    call dbvalu_weights(tx,nx,kx,idx,xval,inbvx,leftx,bx,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(ty,ny,ky,idy,yval,iloy,lefty,by,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(tz,nz,kz,idz,zval,iloz,leftz,bz,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(tq,nq,kq,idq,qval,iloq,leftq,bq,iflag,extrap)
+    if (iflag/=0_ip) return
 
-    iflag = 0_ip
+    ix = leftx - kx
+    iy = lefty - ky
+    iz = leftz - kz
+    iq = leftq - kq
 
-    ! x -> y, z, q
-    kcolq = leftq - kq
+    ! contract the coefficients one direction at a time
     do q=1_ip,kq
-        kcolq = kcolq + 1_ip
-        kcolz = leftz - kz
         do k=1_ip,kz
-            kcolz = kcolz + 1_ip
-            kcoly = lefty - ky
             do j=1_ip,ky
-                kcoly = kcoly + 1_ip
-                call dbvalu(tx,bcoef(:,kcoly,kcolz,kcolq),&
-                                     nx,kx,idx,xval,inbvx,w0,iflag,&
-                                     w3(j,k,q),extrap)
-                if (iflag/=0_ip) return
+                w3(j,k,q) = dot_product(bx,bcoef(ix+1_ip:leftx,iy+j,iz+k,iq+q))
             end do
+            w2(k,q) = dot_product(by,w3(:,k,q))
         end do
+        w1(q) = dot_product(bz,w2(:,q))
     end do
-
-    ! y -> z, q
-    kcoly = lefty - ky + 1_ip
-    do q=1_ip,kq
-        do k=1_ip,kz
-            call dbvalu(ty(kcoly:),w3(:,k,q),&
-                        ky,ky,idy,yval,inbvy,w0,iflag,&
-                        w2(k,q),extrap)
-            if (iflag/=0_ip) return
-        end do
-    end do
-
-    ! z -> q
-    kcolz = leftz - kz + 1_ip
-    do q=1_ip,kq
-        call dbvalu(tz(kcolz:),w2(:,q),&
-                    kz,kz,idz,zval,inbvz,w0,iflag,&
-                    w1(q),extrap)
-        if (iflag/=0_ip) return
-    end do
-
-    ! q
-    kcolq = leftq - kq + 1_ip
-    call dbvalu(tq(kcolq:),w1,kq,kq,idq,qval,inbvq,w0,iflag,f,extrap)
+    f = dot_product(bq,w1)
 
     end subroutine db4val
 !*****************************************************************************************
@@ -1537,7 +1503,6 @@
     real(wp),dimension(:),allocatable :: temp !! work array of length `nx*ny*nz*nq*nr`
     real(wp),dimension(:),allocatable :: work !! work array of length `max(2*kx*(nx+1),
                                               !! 2*ky*(ny+1),2*kz*(nz+1),2*kq*(nq+1),2*kr*(nr+1))`
-    integer(ip) :: i, j, k, l, m, ii !! counter
 
     !  check validity of input
     call check_inputs(  iknot,&
@@ -1564,26 +1529,9 @@
         allocate(temp(nx*ny*nz*nq*nr))
         allocate(work(max(2_ip*kx*(nx+1_ip),2_ip*ky*(ny+1_ip),2_ip*kz*(nz+1_ip),2_ip*kq*(nq+1_ip),2_ip*kr*(nr+1_ip))))
 
-        ! copy fcn to work in packed for dbtpcf
-        !temp(1:nx*ny*nz*nq*nr) = reshape( fcn, [nx*ny*nz*nq*nr] )
-        ! replaced with loops to avoid stack
-        ! overflow for large data set:
-        ii = 0_ip
-        do m = 1_ip, nr
-            do l = 1_ip, nq
-                do k = 1_ip, nz
-                    do j = 1_ip, ny
-                        do i = 1_ip, nx
-                            ii = ii + 1_ip
-                            temp(ii) = fcn(i,j,k,l,m)
-                        end do
-                    end do
-                end do
-            end do
-        end do
-
         !  construct b-spline coefficients
-                         call dbtpcf(x,nx,temp,  nx,ny*nz*nq*nr,tx,kx,bcoef,work,iflag)
+        !  (odd number of passes, so start in bcoef to end up there)
+                         call dbtpcf(x,nx,fcn,   nx,ny*nz*nq*nr,tx,kx,bcoef,work,iflag)
         if (iflag==0_ip) call dbtpcf(y,ny,bcoef, ny,nx*nz*nq*nr,ty,ky,temp, work,iflag)
         if (iflag==0_ip) call dbtpcf(z,nz,temp,  nz,nx*ny*nq*nr,tz,kz,bcoef,work,iflag)
         if (iflag==0_ip) call dbtpcf(q,nq,bcoef, nq,nx*ny*nz*nr,tq,kq,temp, work,iflag)
@@ -1678,18 +1626,10 @@
     integer(ip),intent(inout)                     :: inbvx    !! initialization parameter which must be set
                                                               !! to 1 the first time this routine is called,
                                                               !! and must not be changed by the user.
-    integer(ip),intent(inout)                     :: inbvy    !! initialization parameter which must be set
-                                                              !! to 1 the first time this routine is called,
-                                                              !! and must not be changed by the user.
-    integer(ip),intent(inout)                     :: inbvz    !! initialization parameter which must be set
-                                                              !! to 1 the first time this routine is called,
-                                                              !! and must not be changed by the user.
-    integer(ip),intent(inout)                     :: inbvq    !! initialization parameter which must be set
-                                                              !! to 1 the first time this routine is called,
-                                                              !! and must not be changed by the user.
-    integer(ip),intent(inout)                     :: inbvr    !! initialization parameter which must be set
-                                                              !! to 1 the first time this routine is called,
-                                                              !! and must not be changed by the user.
+    integer(ip),intent(inout)                     :: inbvy    !! not used (kept for backward compatibility)
+    integer(ip),intent(inout)                     :: inbvz    !! not used (kept for backward compatibility)
+    integer(ip),intent(inout)                     :: inbvq    !! not used (kept for backward compatibility)
+    integer(ip),intent(inout)                     :: inbvr    !! not used (kept for backward compatibility)
     integer(ip),intent(inout)                     :: iloy     !! initialization parameter which must be set
                                                               !! to 1 the first time this routine is called,
                                                               !! and must not be changed by the user.
@@ -1706,12 +1646,18 @@
     real(wp),dimension(kz,kq,kr),intent(inout)              :: w3  !! work array
     real(wp),dimension(kq,kr),intent(inout)                 :: w2  !! work array
     real(wp),dimension(kr),intent(inout)                    :: w1  !! work array
-    real(wp),dimension(3_ip*max(kx,ky,kz,kq,kr)),intent(inout) :: w0  !! work array
+    real(wp),dimension(3_ip*max(kx,ky,kz,kq,kr)),intent(inout) :: w0  !! not used (kept for backward compatibility)
     logical,intent(in),optional                   :: extrap   !! if extrapolation is allowed
                                                               !! (if not present, default is False)
 
-    integer(ip) :: lefty, leftz, leftq, leftr, &
-               kcoly, kcolz, kcolq, kcolr, j, k, q, r
+    integer(ip) :: leftx, lefty, leftz, leftq, leftr  !! interval indices
+    integer(ip) :: ix, iy, iz, iq, ir  !! coefficient offsets
+    integer(ip) :: j, k, q, r  !! counters
+    real(wp),dimension(kx) :: bx  !! basis function weights in x
+    real(wp),dimension(ky) :: by  !! basis function weights in y
+    real(wp),dimension(kz) :: bz  !! basis function weights in z
+    real(wp),dimension(kq) :: bq  !! basis function weights in q
+    real(wp),dimension(kr) :: br  !! basis function weights in r
 
     f = 0.0_wp
 
@@ -1721,68 +1667,38 @@
     iflag = check_value(qval,tq,4_ip,extrap); if (iflag/=0_ip) return
     iflag = check_value(rval,tr,5_ip,extrap); if (iflag/=0_ip) return
 
-    call dintrv(ty,ny+ky,yval,iloy,lefty,iflag,extrap); if (iflag/=0_ip) return
-    call dintrv(tz,nz+kz,zval,iloz,leftz,iflag,extrap); if (iflag/=0_ip) return
-    call dintrv(tq,nq+kq,qval,iloq,leftq,iflag,extrap); if (iflag/=0_ip) return
-    call dintrv(tr,nr+kr,rval,ilor,leftr,iflag,extrap); if (iflag/=0_ip) return
+    ! interval and basis function weights in each direction
+    call dbvalu_weights(tx,nx,kx,idx,xval,inbvx,leftx,bx,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(ty,ny,ky,idy,yval,iloy,lefty,by,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(tz,nz,kz,idz,zval,iloz,leftz,bz,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(tq,nq,kq,idq,qval,iloq,leftq,bq,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(tr,nr,kr,idr,rval,ilor,leftr,br,iflag,extrap)
+    if (iflag/=0_ip) return
 
-    iflag = 0_ip
+    ix = leftx - kx
+    iy = lefty - ky
+    iz = leftz - kz
+    iq = leftq - kq
+    ir = leftr - kr
 
-    ! x -> y, z, q, r
-    kcolr = leftr - kr
+    ! contract the coefficients one direction at a time
     do r=1_ip,kr
-        kcolr = kcolr + 1_ip
-        kcolq = leftq - kq
         do q=1_ip,kq
-            kcolq = kcolq + 1_ip
-            kcolz = leftz - kz
             do k=1_ip,kz
-                kcolz = kcolz + 1_ip
-                kcoly = lefty - ky
                 do j=1_ip,ky
-                    kcoly = kcoly + 1_ip
-                    call dbvalu(tx,bcoef(:,kcoly,kcolz,kcolq,kcolr),&
-                                nx,kx,idx,xval,inbvx,w0,iflag,w4(j,k,q,r),&
-                                extrap)
-                    if (iflag/=0_ip) return
+                    w4(j,k,q,r) = dot_product(bx,bcoef(ix+1_ip:leftx,iy+j,iz+k,iq+q,ir+r))
                 end do
+                w3(k,q,r) = dot_product(by,w4(:,k,q,r))
             end do
+            w2(q,r) = dot_product(bz,w3(:,q,r))
         end do
+        w1(r) = dot_product(bq,w2(:,r))
     end do
-
-    ! y -> z, q, r
-    kcoly = lefty - ky + 1_ip
-    do r=1_ip,kr
-        do q=1_ip,kq
-            do k=1_ip,kz
-                call dbvalu(ty(kcoly:),w4(:,k,q,r),ky,ky,idy,yval,inbvy,&
-                            w0,iflag,w3(k,q,r),extrap)
-                if (iflag/=0_ip) return
-            end do
-        end do
-    end do
-
-    ! z -> q, r
-    kcolz = leftz - kz + 1_ip
-    do r=1_ip,kr
-        do q=1_ip,kq
-            call dbvalu(tz(kcolz:),w3(:,q,r),kz,kz,idz,zval,inbvz,&
-                        w0,iflag,w2(q,r),extrap)
-            if (iflag/=0_ip) return
-        end do
-    end do
-
-    ! q -> r
-    kcolq = leftq - kq + 1_ip
-    do r=1_ip,kr
-        call dbvalu(tq(kcolq:),w2(:,r),kq,kq,idq,qval,inbvq,&
-                    w0,iflag,w1(r),extrap)
-        if (iflag/=0_ip) return
-    end do
-
-    ! r
-    kcolr = leftr - kr + 1_ip
-    call dbvalu(tr(kcolr:),w1,kr,kr,idr,rval,inbvr,w0,iflag,f,extrap)
+    f = dot_product(br,w1)
 
     end subroutine db5val
 !*****************************************************************************************
@@ -2094,21 +2010,11 @@
     integer(ip),intent(inout)                        :: inbvx    !! initialization parameter which must be set
                                                                  !! to 1 the first time this routine is called,
                                                                  !! and must not be changed by the user.
-    integer(ip),intent(inout)                        :: inbvy    !! initialization parameter which must be set
-                                                                 !! to 1 the first time this routine is called,
-                                                                 !! and must not be changed by the user.
-    integer(ip),intent(inout)                        :: inbvz    !! initialization parameter which must be set
-                                                                 !! to 1 the first time this routine is called,
-                                                                 !! and must not be changed by the user.
-    integer(ip),intent(inout)                        :: inbvq    !! initialization parameter which must be set
-                                                                 !! to 1 the first time this routine is called,
-                                                                 !! and must not be changed by the user.
-    integer(ip),intent(inout)                        :: inbvr    !! initialization parameter which must be set
-                                                                 !! to 1 the first time this routine is called,
-                                                                 !! and must not be changed by the user.
-    integer(ip),intent(inout)                        :: inbvs    !! initialization parameter which must be set
-                                                                 !! to 1 the first time this routine is called,
-                                                                 !! and must not be changed by the user.
+    integer(ip),intent(inout)                        :: inbvy    !! not used (kept for backward compatibility)
+    integer(ip),intent(inout)                        :: inbvz    !! not used (kept for backward compatibility)
+    integer(ip),intent(inout)                        :: inbvq    !! not used (kept for backward compatibility)
+    integer(ip),intent(inout)                        :: inbvr    !! not used (kept for backward compatibility)
+    integer(ip),intent(inout)                        :: inbvs    !! not used (kept for backward compatibility)
     integer(ip),intent(inout)                        :: iloy     !! initialization parameter which must be set
                                                                  !! to 1 the first time this routine is called,
                                                                  !! and must not be changed by the user.
@@ -2129,13 +2035,19 @@
     real(wp),dimension(kq,kr,ks),intent(inout)                    :: w3 !! work array
     real(wp),dimension(kr,ks),intent(inout)                       :: w2 !! work array
     real(wp),dimension(ks),intent(inout)                          :: w1 !! work array
-    real(wp),dimension(3_ip*max(kx,ky,kz,kq,kr,ks)),intent(inout) :: w0 !! work array
+    real(wp),dimension(3_ip*max(kx,ky,kz,kq,kr,ks)),intent(inout) :: w0 !! not used (kept for backward compatibility)
     logical,intent(in),optional                      :: extrap   !! if extrapolation is allowed
                                                                  !! (if not present, default is False)
 
-    integer(ip) :: lefty,leftz,leftq,leftr,lefts,&
-                   kcoly,kcolz,kcolq,kcolr,kcols,&
-                   j,k,q,r,s
+    integer(ip) :: leftx, lefty, leftz, leftq, leftr, lefts  !! interval indices
+    integer(ip) :: ix, iy, iz, iq, ir, is  !! coefficient offsets
+    integer(ip) :: j, k, q, r, s  !! counters
+    real(wp),dimension(kx) :: bx  !! basis function weights in x
+    real(wp),dimension(ky) :: by  !! basis function weights in y
+    real(wp),dimension(kz) :: bz  !! basis function weights in z
+    real(wp),dimension(kq) :: bq  !! basis function weights in q
+    real(wp),dimension(kr) :: br  !! basis function weights in r
+    real(wp),dimension(ks) :: bs  !! basis function weights in s
 
     f = 0.0_wp
 
@@ -2146,91 +2058,44 @@
     iflag = check_value(rval,tr,5_ip,extrap); if (iflag/=0_ip) return
     iflag = check_value(sval,ts,6_ip,extrap); if (iflag/=0_ip) return
 
-    call dintrv(ty,ny+ky,yval,iloy,lefty,iflag,extrap); if (iflag/=0_ip) return
-    call dintrv(tz,nz+kz,zval,iloz,leftz,iflag,extrap); if (iflag/=0_ip) return
-    call dintrv(tq,nq+kq,qval,iloq,leftq,iflag,extrap); if (iflag/=0_ip) return
-    call dintrv(tr,nr+kr,rval,ilor,leftr,iflag,extrap); if (iflag/=0_ip) return
-    call dintrv(ts,ns+ks,sval,ilos,lefts,iflag,extrap); if (iflag/=0_ip) return
+    ! interval and basis function weights in each direction
+    call dbvalu_weights(tx,nx,kx,idx,xval,inbvx,leftx,bx,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(ty,ny,ky,idy,yval,iloy,lefty,by,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(tz,nz,kz,idz,zval,iloz,leftz,bz,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(tq,nq,kq,idq,qval,iloq,leftq,bq,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(tr,nr,kr,idr,rval,ilor,leftr,br,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(ts,ns,ks,ids,sval,ilos,lefts,bs,iflag,extrap)
+    if (iflag/=0_ip) return
 
-    iflag = 0_ip
+    ix = leftx - kx
+    iy = lefty - ky
+    iz = leftz - kz
+    iq = leftq - kq
+    ir = leftr - kr
+    is = lefts - ks
 
-    ! x -> y, z, q, r, s
-    kcols = lefts - ks
+    ! contract the coefficients one direction at a time
     do s=1_ip,ks
-        kcols = kcols + 1_ip
-        kcolr = leftr - kr
         do r=1_ip,kr
-            kcolr = kcolr + 1_ip
-            kcolq = leftq - kq
             do q=1_ip,kq
-                kcolq = kcolq + 1_ip
-                kcolz = leftz - kz
                 do k=1_ip,kz
-                    kcolz = kcolz + 1_ip
-                    kcoly = lefty - ky
                     do j=1_ip,ky
-                        kcoly = kcoly + 1_ip
-                        call dbvalu(tx,bcoef(:,kcoly,kcolz,kcolq,kcolr,kcols),&
-                                             nx,kx,idx,xval,inbvx,w0,iflag,&
-                                             w5(j,k,q,r,s),extrap)
-                        if (iflag/=0_ip) return
+                        w5(j,k,q,r,s) = dot_product(bx,bcoef(ix+1_ip:leftx,iy+j,iz+k,iq+q,ir+r,is+s))
                     end do
+                    w4(k,q,r,s) = dot_product(by,w5(:,k,q,r,s))
                 end do
+                w3(q,r,s) = dot_product(bz,w4(:,q,r,s))
             end do
+            w2(r,s) = dot_product(bq,w3(:,r,s))
         end do
+        w1(s) = dot_product(br,w2(:,s))
     end do
-
-    ! y -> z, q, r, s
-    kcoly = lefty - ky + 1_ip
-    do s=1_ip,ks
-        do r=1_ip,kr
-            do q=1_ip,kq
-                do k=1_ip,kz
-                    call dbvalu(ty(kcoly:),w5(:,k,q,r,s),&
-                                ky,ky,idy,yval,inbvy,w0,iflag,&
-                                w4(k,q,r,s),extrap)
-                    if (iflag/=0_ip) return
-                end do
-            end do
-        end do
-    end do
-
-    ! z -> q, r, s
-    kcolz = leftz - kz + 1_ip
-    do s=1_ip,ks
-        do r=1_ip,kr
-            do q=1_ip,kq
-                call dbvalu(tz(kcolz:),w4(:,q,r,s),&
-                            kz,kz,idz,zval,inbvz,w0,iflag,&
-                            w3(q,r,s),extrap)
-                if (iflag/=0_ip) return
-            end do
-        end do
-    end do
-
-    ! q -> r, s
-    kcolq = leftq - kq + 1_ip
-    do s=1_ip,ks
-        do r=1_ip,kr
-            call dbvalu(tq(kcolq:),w3(:,r,s),&
-                        kq,kq,idq,qval,inbvq,w0,iflag,&
-                        w2(r,s),extrap)
-            if (iflag/=0_ip) return
-        end do
-    end do
-
-    ! r -> s
-    kcolr = leftr - kr + 1_ip
-    do s=1_ip,ks
-        call dbvalu(tr(kcolr:),w2(:,s),&
-                    kr,kr,idr,rval,inbvr,w0,iflag,&
-                    w1(s),extrap)
-        if (iflag/=0_ip) return
-    end do
-
-    ! s
-    kcols = lefts - ks + 1_ip
-    call dbvalu(ts(kcols:),w1,ks,ks,ids,sval,inbvs,w0,iflag,f,extrap)
+    f = dot_product(bs,w1)
 
     end subroutine db6val
 !*****************************************************************************************
@@ -2430,7 +2295,13 @@
         if (present(n) .and. present(k) .and. present(x) .and. present(t)) then
             itmp = [ierrs(1_ip),ierrs(5)]
             call check_n('n'//s,n,x,itmp,iflag,error);     if (error) return
-            call check_k('k'//s,k+ik,n,ierrs(2),iflag,error); if (error) return
+            if (ik > 0) then
+                ! alt mode: there are `n+ik` coefficients, so `k <= n+ik` is allowed
+                call check_k('k'//s,k,n+ik,ierrs(2),iflag,error)
+            else
+                call check_k('k'//s,k,n-1_ip,ierrs(2),iflag,error)
+            end if
+            if (error) return
             call check_x(s,n,x,ierrs(3),iflag,error);      if (error) return
             if (iknot /= 0_ip) then
                 itmp = [ierrs(4),ierrs(6)]
@@ -2447,11 +2318,16 @@
         character(len=*),intent(in)         :: s
         integer(ip),intent(in)              :: n
         real(wp),dimension(:),intent(in)    :: x     !! abcissae vector
-        integer(ip),dimension(2),intent(in) :: ierr  !! [n<3 check, size(x)==n check]
+        integer(ip),dimension(2),intent(in) :: ierr  !! [n<nmin check, size(x)==n check]
         integer(ip),intent(out)             :: iflag !! status return code
         logical,intent(out)                 :: error
 
-        if (n < 3_ip) then
+        integer(ip) :: nmin !! minimum number of points
+
+        ! [[dbint4]] (alt mode) only requires 2 points
+        nmin = merge(2_ip, 3_ip, iex>0_ip)
+
+        if (n < nmin) then
             iflag = ierr(1_ip)
             error = .true.
         else
@@ -2465,18 +2341,18 @@
 
         end subroutine check_n
 
-        pure subroutine check_k(s,k,n,ierr,iflag,error)
+        pure subroutine check_k(s,k,kmax,ierr,iflag,error)
 
         implicit none
 
         character(len=*),intent(in) :: s
         integer(ip),intent(in)      :: k
-        integer(ip),intent(in)      :: n
+        integer(ip),intent(in)      :: kmax  !! maximum allowed value of `k`
         integer(ip),intent(in)      :: ierr
         integer(ip),intent(out)     :: iflag !! status return code
         logical,intent(out)         :: error
 
-        if ((k < 2_ip) .or. (k >= n)) then
+        if ((k < 2_ip) .or. (k > kmax)) then
             iflag = ierr
             error = .true.
         else
@@ -3393,6 +3269,133 @@
 
 !*****************************************************************************************
 !>
+!  Computes the interval index `left` and weights `b` such that the
+!  `ideriv`-th derivative of the b-spline (`t`,`a`,`n`,`k`) at `x` is
+!
+!```fortran
+!  sum(b(1:k)*a(left-k+1:left))
+!```
+!
+!  This gives the same result as [[dbvalu]], but since the weights only
+!  depend on the knots, they can be reused for every coefficient vector
+!  with the same knots. This is used by the multidimensional `db*val`
+!  routines so that the work in each direction is only done once.
+!
+!  The interval selection (including left limiting values at `t(n+1)`),
+!  extrapolation behavior, and error codes are the same as [[dbvalu]].
+
+    pure subroutine dbvalu_weights(t,n,k,ideriv,x,inbv,left,b,iflag,extrap)
+
+    implicit none
+
+    real(wp),dimension(:),intent(in)  :: t       !! knot vector of length `n+k`
+    integer(ip),intent(in)            :: n       !! number of b-spline coefficients.
+    integer(ip),intent(in)            :: k       !! order of the b-spline, `k >= 1`
+    integer(ip),intent(in)            :: ideriv  !! order of the derivative, `0 <= ideriv <= k-1`.
+    real(wp),intent(in)               :: x       !! argument, `t(k) <= x <= t(n+1)`
+                                                 !! (unless extrapolation is allowed)
+    integer(ip),intent(inout)         :: inbv    !! an initialization parameter which must be set
+                                                 !! to 1 the first time this routine is called.
+                                                 !! (see [[dbvalu]])
+    integer(ip),intent(out)           :: left    !! the interval index, `k <= left <= n`
+    real(wp),dimension(k),intent(out) :: b       !! weights for coefficients `left-k+1:left`
+    integer(ip),intent(out)           :: iflag   !! status flag (same codes as [[dbvalu]])
+    logical,intent(in),optional       :: extrap  !! if extrapolation is allowed
+                                                 !! (if not present, default is False)
+
+    integer(ip) :: i,j,jj,kmider,kmj,mflag
+    real(wp) :: xt,saved,term,fac
+    real(wp),dimension(k) :: dr  !! `t(i+j) - x`
+    real(wp),dimension(k) :: dl  !! `x - t(i+1-j)`
+    logical :: extrapolation_allowed  !! if extrapolation is allowed
+
+    b = 0.0_wp
+    left = k
+
+    if (k<1_ip) then
+        iflag = 401_ip  ! k does not satisfy k>=1
+        return
+    end if
+
+    if (n<k) then
+        iflag = 402_ip  ! n does not satisfy n>=k
+        return
+    end if
+
+    if (ideriv<0_ip .or. ideriv>=k) then
+        iflag = 403_ip  ! ideriv does not satisfy 0<=ideriv<k
+        return
+    end if
+
+    if (present(extrap)) then
+        extrapolation_allowed = extrap
+    else
+        extrapolation_allowed = .false.
+    end if
+
+    ! temp copy of x for computing the interval
+    ! (clamped if extrapolation is allowed)
+    xt = x
+    if (extrapolation_allowed) xt = min(max(x,t(k)),t(n+1_ip))
+
+    ! find *i* in (k,n) such that t(i) <= x < t(i+1)
+    ! (or, <= t(i+1) if t(i) < t(i+1) = t(n+1)).
+    call dintrv(t, n+1_ip, xt, inbv, i, mflag)
+    if (xt<t(k)) then
+        iflag = 404_ip  ! x is not greater than or equal to t(k)
+        return
+    end if
+    if (mflag/=0_ip) then
+        if (xt>t(i)) then
+            iflag = 405_ip  ! x is not less than or equal to t(n+1)
+            return
+        end if
+        do
+            if (i==k) then
+                iflag = 406_ip  ! a left limiting value cannot be obtained at t(k)
+                return
+            end if
+            i = i - 1_ip
+            if (xt/=t(i)) exit
+        end do
+    end if
+
+    ! values at x of the k-ideriv nonzero b-splines of order k-ideriv
+    ! (the recurrence is a polynomial in x, so this also works when extrapolating)
+    kmider = k - ideriv
+    b(1_ip) = 1.0_wp
+    do j=1_ip,kmider-1_ip
+        dr(j) = t(i+j) - x
+        dl(j) = x - t(i+1_ip-j)
+        saved = 0.0_wp
+        do jj=1_ip,j
+            term = b(jj)/(dr(jj)+dl(j+1_ip-jj))
+            b(jj) = saved + dr(jj)*term
+            saved = dl(j+1_ip-jj)*term
+        end do
+        b(j+1_ip) = saved
+    end do
+
+    ! apply the transpose of the coefficient differencing in [[dbvalu]]
+    ! so the weights apply to the original coefficients
+    do j=ideriv,1_ip,-1_ip
+        kmj = k - j
+        b(kmj+1_ip) = 0.0_wp
+        do jj=kmj,1_ip,-1_ip
+            fac = b(jj)*real(kmj,wp)/(t(i+jj)-t(i+jj-kmj))
+            b(jj+1_ip) = b(jj+1_ip) + fac
+            b(jj) = -fac
+        end do
+    end do
+
+    left = i
+    iflag = 0_ip
+
+    end subroutine dbvalu_weights
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
 !  Computes the largest integer `ileft` in 1 \( \le \) `ileft` \( \le \) `lxt`
 !  such that `xt(ileft)` \( \le \) `x` where `xt(*)` is a subdivision of
 !  the `x` interval.
@@ -4223,12 +4226,15 @@
                             a = max(aa,ta)
                             b = min(bb,tb)
                             call dbsgq8(f,t,bcoef,n,k,id,a,b,inbv,err,ans,iflag,work)
-                            if ( iflag/=0_ip .and. iflag/=1101_ip ) return
+                            if ( iflag==1101_ip ) iflag = 0_ip  ! negligible subinterval
+                            if ( iflag/=0_ip ) return
                             q = q + ans
                         end if
                     end do
                     if ( x1>x2 ) q = -q
                     quad = q
+                else
+                    iflag = 1004_ip  ! error
                 end if
             else
                 iflag = 1004_ip  ! error
@@ -4328,6 +4334,7 @@
 
     if ( a==b ) then
         if ( err<0.0_wp ) err = ce
+        return
     else
         lmx = nlmx
         lmn = nlmn
