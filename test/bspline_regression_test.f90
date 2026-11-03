@@ -6,6 +6,7 @@
 !  * integral with upper limit exactly on an interior knot ([[dbsgq8]])
 !  * integral with upper limit past the end of the spline ([[dbfqad]])
 !  * integral with upper limit just above a knot ([[dbfqad]] flag 1101)
+!  * integral over an interval only a few ulps wide ([[dbfqad]] flag 1101)
 !  * 2D-6D evaluation at the last knot in every direction
 !  * 2D-6D evaluation with knots that are not clamped (out of bounds access)
 !  * [[db1ink]] alt mode with a small number of points
@@ -36,6 +37,7 @@
     call test_integral_to_interior_knot()
     call test_integral_past_end()
     call test_integral_just_above_knot()
+    call test_integral_tiny_interval()
     call test_eval_at_last_knot()
     call test_eval_open_knots()
     call test_db1ink_alt_small_n()
@@ -149,7 +151,8 @@
 !>
 !  `fintegral` with the upper limit a few ulps above a knot.
 !  The last subinterval is too small for [[dbsgq8]] (flag 1101), which
-!  [[dbfqad]] treats as negligible, but the flag used to be returned anyway.
+!  [[dbfqad]] now integrates with the midpoint rule, but the flag used to
+!  be returned anyway.
 
     subroutine test_integral_just_above_knot()
 
@@ -165,6 +168,42 @@
     call check('integral just above knot: value', abs(f-exact)<tol)
 
     end subroutine test_integral_just_above_knot
+
+!*****************************************************************************************
+!>
+!  `fintegral` over an interval only a few ulps wide, where every
+!  subinterval is too small for [[dbsgq8]] (flag 1101). The result used
+!  to be zero, even though the integral is significant for a large integrand.
+
+    subroutine test_integral_tiny_interval()
+
+    type(bspline_1d) :: s
+    integer(ip) :: iflag
+    real(wp) :: f, a, b, exact
+    real(wp),parameter :: c = 1.0e15_wp  !! constant spline value
+
+    call s%initialize(x,[(c, i=1,n)],k,t_clamped,iflag)
+    call check('integral tiny interval: initialize', iflag==0)
+
+    ! whole interval inside one knot interval
+    a = 1.0_wp
+    b = 1.0_wp + 4.0_wp*spacing(1.0_wp)
+    exact = c*(b-a)
+    call s%fintegral(one,0_ip,a,b,1.0e-12_wp,f,iflag)
+    call check('integral tiny interval: iflag', iflag==0)
+    call check('integral tiny interval: value', abs(f-exact)<=1.0e-12_wp*exact)
+    call s%fintegral(one,0_ip,b,a,1.0e-12_wp,f,iflag)
+    call check('integral tiny interval: reversed value', iflag==0 .and. abs(f+exact)<=1.0e-12_wp*exact)
+
+    ! interval straddling the interior knot at 3
+    a = 3.0_wp - 2.0_wp*spacing(3.0_wp)
+    b = 3.0_wp + 2.0_wp*spacing(3.0_wp)
+    exact = c*(b-a)
+    call s%fintegral(one,0_ip,a,b,1.0e-12_wp,f,iflag)
+    call check('integral tiny interval across knot: iflag', iflag==0)
+    call check('integral tiny interval across knot: value', abs(f-exact)<=1.0e-12_wp*exact)
+
+    end subroutine test_integral_tiny_interval
 
 !*****************************************************************************************
 !>

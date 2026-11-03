@@ -4191,7 +4191,7 @@
                                                   !!   or greater than 0.1
 
     integer(ip) :: inbv,ilo,il1,il2,left,mflag,npk,np1
-    real(wp) :: a,aa,ans,b,bb,q,ta,tb,err
+    real(wp) :: a,aa,ans,b,bb,q,ta,tb,err,m,fm
 
     real(wp),parameter :: min_tol = max(epsilon(1.0_wp),1.0e-300_wp) !! minimum allowed `tol`
 
@@ -4226,7 +4226,14 @@
                             a = max(aa,ta)
                             b = min(bb,tb)
                             call dbsgq8(f,t,bcoef,n,k,id,a,b,inbv,err,ans,iflag,work)
-                            if ( iflag==1101_ip ) iflag = 0_ip  ! negligible subinterval
+                            if ( iflag==1101_ip ) then
+                                ! interval too short for dbsgq8 (a few ulps wide), so the
+                                ! integrand is effectively constant: use the midpoint rule
+                                m = a + 0.5_wp*(b-a)
+                                call dbvalu(t,bcoef,n,k,id,m,inbv,work,iflag,fm)
+                                if ( iflag/=0_ip ) return
+                                ans = (b-a) * f(m) * fm
+                            end if
                             if ( iflag/=0_ip ) return
                             q = q + ans
                         end if
