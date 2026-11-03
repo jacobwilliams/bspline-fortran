@@ -46,6 +46,7 @@ jobs:
       if: contains( matrix.os, 'ubuntu')
       run: |
         sudo apt-get install lcov
+        sudo apt-get install -y liblapack-dev libblas-dev  # for the polyroots-fortran dev-dependency
         sudo add-apt-repository ppa:ubuntu-toolchain-r/test
         sudo apt-get update
         sudo apt-get install -y gcc-${{ matrix.gcc_v }} gfortran-${{ matrix.gcc_v }}

@@ -92,6 +92,14 @@ The library also contains routines for computing definite integrals of bsplines.
 
 Note that extrapolation is not currently supported for these.
 
+## Roots and extrema
+
+There are also routines for finding roots and extrema of 1D b-splines (orders >= 2):
+
+* `db1root` (`roots` in the object-oriented interface) -- Finds all the roots of `s(x) = a` on the spline domain. Knot intervals are screened with the convex hull property of the b-spline coefficients, and the roots in each polynomial piece are isolated by Bernstein subdivision (closed form for linear and quadratic pieces). Roots of even multiplicity (where the spline touches `a`) are also found.
+* `db1min` and `db1max` (`minimum` and `maximum` in the object-oriented interface) -- Find the global minimum or maximum on an interval, from the roots of the derivative (computed in closed form for cubic splines), the interior knots, and the end points.
+* `inverse` (object-oriented interface only) -- Finds the unique `x` with `s(x) = y`, for example for a monotonic spline.
+
 ## Least squares fitting
 
 The BSpline-Fortran library also exports the `defc` subroutine, which can be used to fit B-spline polynomials to 1D data using a weighted least squares method. The `dfc` subroutine also allows for equality and inequality constraints to be imposed on the fitted curve. These procedures are not yet available in the object oriented interface.

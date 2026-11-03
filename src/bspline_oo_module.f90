@@ -63,8 +63,8 @@
     type,extends(bspline_class),public :: bspline_1d
         !! Class for 1d b-spline interpolation.
         !!
-        !!@note The 1D class also contains two methods
-        !!      for computing definite integrals.
+        !!@note The 1D class also contains methods for computing
+        !!      definite integrals, roots, and the minimum and maximum.
         private
         integer(ip) :: nx = 0_ip  !! Number of \(x\) abcissae
         integer(ip) :: kx = 0_ip  !! The order of spline pieces in \(x\)
@@ -81,6 +81,10 @@
         procedure,public :: size_of => size_1d
         procedure,public :: integral => integral_1d
         procedure,public :: fintegral => fintegral_1d
+        procedure,public :: roots => roots_1d
+        procedure,public :: inverse => inverse_1d
+        procedure,public :: minimum => minimum_1d
+        procedure,public :: maximum => maximum_1d
         final :: finalize_1d
     end type bspline_1d
 
@@ -1110,6 +1114,161 @@
     me%iflag = iflag
 
     end subroutine fintegral_1d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  All the roots of \( s(x) = a \) for a [[bspline_1d]].
+!  This is a wrapper for [[db1root]].
+
+    pure subroutine roots_1d(me,a,x,iflag)
+
+    implicit none
+
+    class(bspline_1d),intent(inout)               :: me  !! the spline
+    real(wp),intent(in)                           :: a      !! the value to solve for
+    real(wp),dimension(:),allocatable,intent(out) :: x      !! the roots, in increasing order
+                                                            !! (size 0 if there are none)
+    integer(ip),intent(out)                       :: iflag  !! status flag (see [[db1root]])
+
+    if (me%initialized) then
+        call db1root(me%tx,me%nx,me%kx,me%bcoef,a,x,iflag)
+    else
+        allocate(x(0))
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine roots_1d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  The unique \( x \) with \( s(x) = y \) for a [[bspline_1d]]
+!  (for example, a monotonic spline). This is a wrapper for [[db1root]].
+!
+!  Returns `iflag=4005` if there is no solution, and `iflag=4006`
+!  if there is more than one (in which case `x` is the smallest).
+
+    pure subroutine inverse_1d(me,y,x,iflag)
+
+    implicit none
+
+    class(bspline_1d),intent(inout) :: me  !! the spline
+    real(wp),intent(in)             :: y      !! the spline value
+    real(wp),intent(out)            :: x      !! the solution of \( s(x) = y \)
+    integer(ip),intent(out)         :: iflag  !! status flag (see [[db1root]])
+
+    real(wp),dimension(:),allocatable :: roots  !! all the roots of \( s(x) = y \)
+
+    x = 0.0_wp
+    call me%roots(y,roots,iflag)
+    if (iflag==0_ip .or. iflag==4004_ip) then
+        if (size(roots)>0) x = roots(1)
+        if (iflag==4004_ip .or. size(roots)>1) then
+            iflag = 4006_ip  ! s(x) = y on a whole interval, or more than one root
+        else if (size(roots)==0) then
+            iflag = 4005_ip
+        end if
+    end if
+    me%iflag = iflag
+
+    end subroutine inverse_1d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  The global minimum of a [[bspline_1d]] on \( [x_a, x_b] \)
+!  (the whole spline domain if `xa` and `xb` are not present).
+!  This is a wrapper for [[db1min]].
+
+    pure subroutine minimum_1d(me,xmin,fmin,iflag,xa,xb)
+
+    implicit none
+
+    class(bspline_1d),intent(inout) :: me  !! the spline
+    real(wp),intent(out)            :: xmin   !! location of the minimum
+    real(wp),intent(out)            :: fmin   !! minimum value
+    integer(ip),intent(out)         :: iflag  !! status flag (see [[db1min]])
+    real(wp),intent(in),optional    :: xa     !! left end of the interval (default `tx(kx)`)
+    real(wp),intent(in),optional    :: xb     !! right end of the interval (default `tx(nx+1)`)
+
+    real(wp) :: x1  !! left end of the interval
+    real(wp) :: x2  !! right end of the interval
+
+    if (me%initialized) then
+        call get_interval_1d(me,xa,xb,x1,x2)
+        call db1min(me%tx,me%nx,me%kx,me%bcoef,x1,x2,xmin,fmin,iflag)
+    else
+        xmin = 0.0_wp
+        fmin = 0.0_wp
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine minimum_1d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  The global maximum of a [[bspline_1d]] on \( [x_a, x_b] \)
+!  (the whole spline domain if `xa` and `xb` are not present).
+!  This is a wrapper for [[db1max]].
+
+    pure subroutine maximum_1d(me,xmax,fmax,iflag,xa,xb)
+
+    implicit none
+
+    class(bspline_1d),intent(inout) :: me  !! the spline
+    real(wp),intent(out)            :: xmax   !! location of the maximum
+    real(wp),intent(out)            :: fmax   !! maximum value
+    integer(ip),intent(out)         :: iflag  !! status flag (see [[db1max]])
+    real(wp),intent(in),optional    :: xa     !! left end of the interval (default `tx(kx)`)
+    real(wp),intent(in),optional    :: xb     !! right end of the interval (default `tx(nx+1)`)
+
+    real(wp) :: x1  !! left end of the interval
+    real(wp) :: x2  !! right end of the interval
+
+    if (me%initialized) then
+        call get_interval_1d(me,xa,xb,x1,x2)
+        call db1max(me%tx,me%nx,me%kx,me%bcoef,x1,x2,xmax,fmax,iflag)
+    else
+        xmax = 0.0_wp
+        fmax = 0.0_wp
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine maximum_1d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  The interval for [[minimum_1d]] and [[maximum_1d]]
+!  (the whole spline domain by default).
+
+    pure subroutine get_interval_1d(me,xa,xb,x1,x2)
+
+    implicit none
+
+    class(bspline_1d),intent(in) :: me  !! the spline
+    real(wp),intent(in),optional :: xa  !! left end of the interval
+    real(wp),intent(in),optional :: xb  !! right end of the interval
+    real(wp),intent(out)         :: x1  !! `xa`, or `tx(kx)` if not present
+    real(wp),intent(out)         :: x2  !! `xb`, or `tx(nx+1)` if not present
+
+    if (present(xa)) then
+        x1 = xa
+    else
+        x1 = me%tx(me%kx)
+    end if
+    if (present(xb)) then
+        x2 = xb
+    else
+        x2 = me%tx(me%nx+1_ip)
+    end if
+
+    end subroutine get_interval_1d
 !*****************************************************************************************
 
 !*****************************************************************************************
