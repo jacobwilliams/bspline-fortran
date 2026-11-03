@@ -40,3 +40,5 @@ install
 
 # vscode
 /.vscode
+
+/*.png
