@@ -975,11 +975,12 @@
     contains
 
         pure function pow2(x) result(p)
-        !! A power of 2 near `x` (1 if `x` is 0).
+        !! The largest power of 2 not greater than `x` (1 if `x` is 0).
+        !! (so it is representable for any finite `x`)
         real(wp),intent(in) :: x  !! the value (`x >= 0`)
         real(wp) :: p             !! the power of 2
         if (x>0.0_wp) then
-            p = scale(1.0_wp, exponent(x))
+            p = scale(1.0_wp, exponent(x)-1)
         else
             p = 1.0_wp
         end if
@@ -4778,16 +4779,17 @@
     ! also scale each column (unknown), since a basis function can be small
     ! at all of the data points (e.g., when the data spacing near an end is
     ! very uneven), and its pivot would then look singular. The scale factors
-    ! are powers of 2 near the largest entry of each column, so the scaling is
-    ! exact and does not change the solution (partial pivoting is not affected
-    ! by column scaling). The solution is unscaled below.
+    ! are the largest powers of 2 not greater than the largest entry of each
+    ! column, so the scaling is exact and does not change the solution (partial
+    ! pivoting is not affected by column scaling), and does not enlarge the
+    ! scaled solution (which could overflow). The solution is unscaled below.
     allocate(colmax(n))
     do j=1_ip,n
         colmax(j) = maxval(abs(abd(:,j)))
         if (colmax(j)==0.0_wp) then
             colmax(j) = 1.0_wp
         else
-            colmax(j) = scale(1.0_wp, exponent(colmax(j)))
+            colmax(j) = scale(1.0_wp, exponent(colmax(j))-1)
         end if
         abd(:,j) = abd(:,j) / colmax(j)
     end do
@@ -5462,6 +5464,11 @@
         !! ulps wide), so the spline is evaluated at the exact offsets from the
         !! midpoint, from its Taylor expansion there. `f` is evaluated at the
         !! nearest representable points.
+        !!
+        !!@note For orders above 16, the rule is not exact for the spline part
+        !!      (but is still accurate to better than about `1e-8`). The
+        !!      derivatives in the Taylor expansion can overflow if the knot
+        !!      interval is extremely small (e.g., about `1e-200` wide).
 
         real(wp),intent(in)     :: a      !! left end of the subinterval
         real(wp),intent(in)     :: b      !! right end of the subinterval
@@ -5477,7 +5484,8 @@
                                           !! about the midpoint
         real(wp) :: c   !! midpoint of the subinterval
         real(wp) :: h   !! half width of the subinterval
-        real(wp) :: dx  !! offset of a node from the midpoint
+        real(wp) :: r   !! rounding error of `c` (the true midpoint is `c+r`)
+        real(wp) :: dx  !! offset of a node from `c`
         real(wp) :: fs  !! spline (or derivative) value at a node
         integer(ip) :: i   !! counter
         integer(ip) :: j   !! side of the midpoint (-1 or 1)
@@ -5486,6 +5494,7 @@
 
         c = a + 0.5_wp*(b-a)
         h = 0.5_wp*(b-a)
+        r = (a - c) + h  ! the true midpoint minus the rounded one
         m = k - 1_ip - id
         call dbspvd(t,k,k,c,l,k,vnikx,wrk,iflag)
         if (iflag/=0_ip) return
@@ -5496,7 +5505,7 @@
         ans = 0.0_wp
         do i = 1_ip, 4_ip
             do j = -1_ip, 1_ip, 2_ip
-                dx = real(j,wp)*h*xg(i)
+                dx = r + real(j,wp)*h*xg(i)
                 fs = dc(m)
                 do jj = m-1_ip, 0_ip, -1_ip
                     fs = fs*dx + dc(jj)

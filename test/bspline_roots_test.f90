@@ -692,6 +692,12 @@
     call check('scaled minimum: location', abs(xmin-xref*1.0e-10_wp)<=1.0e-12_wp*1.0e-10_wp)
     call check('scaled minimum: value', abs(fmin-fref*1.0e300_wp)<=1.0e-12_wp*abs(fref)*1.0e300_wp)
 
+    ! coefficients near the largest double: the derivative scale factor overflowed
+    call db1min([0,0,0,1,1,1]*1.0_wp, 3_ip, 3_ip, [1.0e308_wp,9.0e307_wp,1.0e308_wp], &
+                0.0_wp, 1.0_wp, xmin, fmin, iflag)
+    call check('huge coefficients minimum', iflag==0 .and. abs(xmin-0.5_wp)<1.0e-14_wp .and. &
+               abs(fmin/9.5e307_wp-1.0_wp)<1.0e-14_wp)
+
     ! a domain wider than huge(): the duplicate tolerance overflowed
     call db1root([-1,-1,0,1,1]*1.0e308_wp, 3_ip, 2_ip, [1,-1,1]*1.0_wp, 0.0_wp, roots, iflag)
     call check_roots('domain wider than huge()', roots, [-0.5e308_wp, 0.5e308_wp], 1.0e294_wp)

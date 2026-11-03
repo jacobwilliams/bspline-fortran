@@ -468,6 +468,13 @@
     call check('narrow cubic intervals: iflag', iflag==0)
     call check('narrow cubic intervals: value', abs(f-exact)<=1.0e-12_wp*abs(exact))
 
+    ! a one-ulp interval, where the midpoint is not representable:
+    ! s(x) = (x-1)/h on [1,1+h], so the integral is h/2
+    h = spacing(1.0_wp)
+    call db1fqad(one,[1.0_wp,1.0_wp,1.0_wp+h,1.0_wp+h],[0.0_wp,1.0_wp], &
+                 2_ip,2_ip,0_ip,1.0_wp,1.0_wp+h,1.0e-12_wp,f,iflag,w0)
+    call check('one-ulp interval: value', iflag==0 .and. abs(f-0.5_wp*h)<=1.0e-12_wp*h)
+
     end subroutine test_integral_narrow_knot_intervals
 
 !*****************************************************************************************
@@ -505,6 +512,12 @@
         call db1val(xd(1),1_ip,tx,5_ip,4_ip,bcoef,f,iflag,inbvx,w0)
         call check('alt mode, uneven spacing: left derivative', abs(f-0.3_wp)<1.0e-6_wp)
     end if
+
+    ! coefficients near the largest double: the column scaling must not
+    ! enlarge them (the solution is the constant 1e308)
+    call db1ink([0.0_wp,1.0_wp],2_ip,[1.0e308_wp,1.0e308_wp],4_ip,1_ip,1_ip,0.0_wp,0.0_wp,1_ip, &
+                tx(1:8),bcoef(1:4),iflag)
+    call check('alt mode, huge values', iflag==0 .and. all(abs(bcoef(1:4)/1.0e308_wp-1.0_wp)<1.0e-14_wp))
 
     end subroutine test_db1ink_alt_uneven_spacing
 !*****************************************************************************************
