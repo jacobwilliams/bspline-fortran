@@ -678,6 +678,8 @@
 
     class(bspline_4d),intent(inout) :: me
 
+    call me%destroy_base()
+
     me%nx    = 0_ip
     me%ny    = 0_ip
     me%nz    = 0_ip
@@ -714,6 +716,8 @@
     implicit none
 
     class(bspline_5d),intent(inout) :: me
+
+    call me%destroy_base()
 
     me%nx    = 0_ip
     me%ny    = 0_ip
@@ -757,6 +761,8 @@
     implicit none
 
     class(bspline_6d),intent(inout) :: me
+
+    call me%destroy_base()
 
     me%nx    = 0_ip
     me%ny    = 0_ip
