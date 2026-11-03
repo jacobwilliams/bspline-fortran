@@ -83,6 +83,10 @@
                                                                    !! (for input to the `db*ink` routines)
                                                                    !! [order = polynomial degree + 1]
 
+    real(wp),parameter :: root_ftol = 100.0_wp*epsilon(1.0_wp) !! relative tolerance on \( |s(x)-a| \)
+                                                                !! for roots of even multiplicity in [[db1root]]
+    real(wp),parameter :: root_xtol = 64.0_wp*epsilon(1.0_wp)  !! relative tolerance for duplicate roots
+
     interface db1ink
         !! 1D initialization routines.
         module procedure :: db1ink_default, db1ink_alt, db1ink_alt_2
@@ -94,6 +98,7 @@
 
     !main routines:
     public :: db1ink, db1val, db1sqad, db1fqad
+    public :: db1root, db1min, db1max
     public :: db2ink, db2val
     public :: db3ink, db3val
     public :: db4ink, db4val
@@ -488,6 +493,710 @@
     call dbfqad(fun,tx,bcoef,nx,kx,idx,x1,x2,tol,f,iflag,w0)
 
     end subroutine db1fqad
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Finds all the real roots of \( s(x) = a \) on \( t(k) \le x \le t(n+1) \),
+!  where \( s(x) \) is a 1D b-spline of order `kx` (`kx >= 2`).
+!
+!  Each knot interval is examined separately:
+!
+!  * By the convex hull property, if the `kx` coefficients that are
+!    nonzero on an interval are all above (or all below) `a`, the
+!    interval has no root and is skipped.
+!  * Otherwise, the polynomial piece is converted to Bernstein form.
+!    Pieces of degree one or two are solved in closed form. Higher
+!    degree roots are isolated by Bernstein subdivision (Descartes'
+!    rule of signs) and refined with a safeguarded Newton iteration.
+!  * Roots of even multiplicity (where the spline touches `a` without
+!    crossing it) are found as the roots of \( s'(x) \) at which
+!    \( |s(x) - a| \) is within a small tolerance.
+!
+!  If \( s(x) = a \) over a whole knot interval, the roots inside
+!  it are not returned (its end points may be), and `iflag` is set to 4004.
+!
+!### Reference
+!  * K. Morken, M. Reimers, "An unconditionally convergent method for
+!    computing zeros of splines and polynomials",
+!    Mathematics of Computation, 76 (2007), 845-865.
+!
+!### See also
+!  * [[db1min]], [[db1max]]
+
+    pure subroutine db1root(tx,nx,kx,bcoef,a,roots,iflag)
+
+    implicit none
+
+    integer(ip),intent(in)                        :: nx     !! number of b-spline coefficients
+    integer(ip),intent(in)                        :: kx     !! order of the b-spline, `kx >= 2`
+    real(wp),dimension(nx+kx),intent(in)          :: tx     !! knot array
+    real(wp),dimension(nx),intent(in)             :: bcoef  !! b-spline coefficient array
+    real(wp),intent(in)                           :: a      !! the value to solve for
+    real(wp),dimension(:),allocatable,intent(out) :: roots  !! the roots, in increasing order
+                                                            !! (size 0 if there are none)
+    integer(ip),intent(out)                       :: iflag  !! status flag:
+                                                            !!
+                                                            !! * 0: no errors
+                                                            !! * 4001: `kx` does not satisfy `kx >= 2`
+                                                            !! * 4002: `nx` does not satisfy `nx >= kx`
+                                                            !! * 4004: \( s(x) = a \) over a whole knot
+                                                            !!   interval (other roots are still returned)
+
+    real(wp),dimension(:),allocatable :: crit  !! critical points (roots of \( s'(x) \))
+    real(wp),dimension(:),allocatable :: td    !! knots of \( s'(x) \)
+    real(wp),dimension(:),allocatable :: d     !! coefficients of \( s'(x) \)
+    real(wp),dimension(3*kx) :: work  !! work array for [[dbvalu]]
+    integer(ip) :: i, inbv, iflag2
+    real(wp) :: f, ftol, xtol
+
+    call check_root_inputs(nx,kx,iflag)
+    if (iflag/=0_ip) then
+        allocate(roots(0))
+        return
+    end if
+
+    call spline_roots(tx,bcoef,nx,kx,a,roots,iflag)
+
+    ! roots of even multiplicity: critical points where s(x) is equal to a
+    if (kx>=3_ip) then
+        call spline_derivative(tx,bcoef,nx,kx,td,d)
+        call spline_roots(td,d,nx-1_ip,kx-1_ip,0.0_wp,crit,iflag2)
+        ftol = root_ftol * max(abs(a),maxval(abs(bcoef)))
+        xtol = sqrt(epsilon(1.0_wp)) * (tx(nx+1_ip)-tx(kx)) + &
+               root_xtol * max(abs(tx(kx)),abs(tx(nx+1_ip)))
+        inbv = 1_ip
+        do i = 1_ip, size(crit,kind=ip)
+            call dbvalu(tx,bcoef,nx,kx,0_ip,crit(i),inbv,work,iflag2,f)
+            if (iflag2/=0_ip) cycle
+            if (abs(f-a)<=ftol) then
+                if (iflag==4004_ip) then
+                    if (in_flat_region(tx,bcoef,nx,kx,a,ftol,crit(i))) cycle
+                end if
+                if (all(abs(roots-crit(i))>xtol)) roots = [roots, crit(i)]
+            end if
+        end do
+        call sort_unique(roots, root_xtol*max(abs(tx(kx)),abs(tx(nx+1_ip))))
+
+        ! a root of even multiplicity may be split by rounding into a
+        ! close pair of simple roots: merge them if the spline is
+        ! within the noise level of `a` between them
+        i = 1_ip
+        do while (i<size(roots,kind=ip))
+            if (roots(i+1_ip)-roots(i)<=xtol) then
+                call dbvalu(tx,bcoef,nx,kx,0_ip,0.5_wp*(roots(i)+roots(i+1_ip)),inbv,work,iflag2,f)
+                if (iflag2==0_ip .and. abs(f-a)<=ftol) then
+                    roots(i) = 0.5_wp*(roots(i)+roots(i+1_ip))
+                    roots = [roots(1_ip:i), roots(i+2_ip:)]
+                    cycle
+                end if
+            end if
+            i = i + 1_ip
+        end do
+    end if
+
+    end subroutine db1root
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Finds the global minimum of a 1D b-spline on \( [x_a, x_b] \).
+!
+!  The candidates are the end points, the interior knots (where the
+!  derivative may be discontinuous), and the roots of \( s'(x) \).
+!  For `kx = 4` (cubic) the derivative pieces are quadratic, so the
+!  candidates are found in closed form.
+!
+!### See also
+!  * [[db1max]], [[db1root]]
+
+    pure subroutine db1min(tx,nx,kx,bcoef,xa,xb,xmin,fmin,iflag)
+
+    implicit none
+
+    integer(ip),intent(in)               :: nx     !! number of b-spline coefficients
+    integer(ip),intent(in)               :: kx     !! order of the b-spline, `kx >= 2`
+    real(wp),dimension(nx+kx),intent(in) :: tx     !! knot array
+    real(wp),dimension(nx),intent(in)    :: bcoef  !! b-spline coefficient array
+    real(wp),intent(in)                  :: xa     !! left end of the interval, in `t(kx) <= x <= t(nx+1)`
+    real(wp),intent(in)                  :: xb     !! right end of the interval, in `t(kx) <= x <= t(nx+1)`
+    real(wp),intent(out)                 :: xmin   !! location of the minimum
+    real(wp),intent(out)                 :: fmin   !! minimum value of the spline
+    integer(ip),intent(out)              :: iflag  !! status flag:
+                                                   !!
+                                                   !! * 0: no errors
+                                                   !! * 4001: `kx` does not satisfy `kx >= 2`
+                                                   !! * 4002: `nx` does not satisfy `nx >= kx`
+                                                   !! * 4003: `xa` or `xb` or both do not
+                                                   !!   satisfy `t(kx) <= x <= t(nx+1)`
+
+    call db1extremum(tx,nx,kx,bcoef,xa,xb,.false.,xmin,fmin,iflag)
+
+    end subroutine db1min
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Finds the global maximum of a 1D b-spline on \( [x_a, x_b] \).
+!
+!### See also
+!  * [[db1min]], [[db1root]]
+
+    pure subroutine db1max(tx,nx,kx,bcoef,xa,xb,xmax,fmax,iflag)
+
+    implicit none
+
+    integer(ip),intent(in)               :: nx     !! number of b-spline coefficients
+    integer(ip),intent(in)               :: kx     !! order of the b-spline, `kx >= 2`
+    real(wp),dimension(nx+kx),intent(in) :: tx     !! knot array
+    real(wp),dimension(nx),intent(in)    :: bcoef  !! b-spline coefficient array
+    real(wp),intent(in)                  :: xa     !! left end of the interval, in `t(kx) <= x <= t(nx+1)`
+    real(wp),intent(in)                  :: xb     !! right end of the interval, in `t(kx) <= x <= t(nx+1)`
+    real(wp),intent(out)                 :: xmax   !! location of the maximum
+    real(wp),intent(out)                 :: fmax   !! maximum value of the spline
+    integer(ip),intent(out)              :: iflag  !! status flag (see [[db1min]])
+
+    call db1extremum(tx,nx,kx,bcoef,xa,xb,.true.,xmax,fmax,iflag)
+
+    end subroutine db1max
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Global minimum or maximum of a 1D b-spline on \( [x_a, x_b] \).
+!  Used by [[db1min]] and [[db1max]].
+
+    pure subroutine db1extremum(tx,nx,kx,bcoef,xa,xb,find_max,xopt,fopt,iflag)
+
+    implicit none
+
+    integer(ip),intent(in)               :: nx       !! number of b-spline coefficients
+    integer(ip),intent(in)               :: kx       !! order of the b-spline, `kx >= 2`
+    real(wp),dimension(nx+kx),intent(in) :: tx       !! knot array
+    real(wp),dimension(nx),intent(in)    :: bcoef    !! b-spline coefficient array
+    real(wp),intent(in)                  :: xa       !! one end of the interval
+    real(wp),intent(in)                  :: xb       !! other end of the interval
+    logical,intent(in)                   :: find_max !! find the maximum (otherwise the minimum)
+    real(wp),intent(out)                 :: xopt     !! location of the extremum
+    real(wp),intent(out)                 :: fopt     !! value of the spline at `xopt`
+    integer(ip),intent(out)              :: iflag    !! status flag (see [[db1min]])
+
+    real(wp),dimension(:),allocatable :: crit  !! critical points (roots of \( s'(x) \))
+    real(wp),dimension(:),allocatable :: td    !! knots of \( s'(x) \)
+    real(wp),dimension(:),allocatable :: d     !! coefficients of \( s'(x) \)
+    real(wp),dimension(:),allocatable :: xc    !! candidate points
+    real(wp),dimension(3*kx) :: work  !! work array for [[dbvalu]]
+    integer(ip) :: i, inbv, iflag2
+    real(wp) :: x1, x2, f
+
+    xopt = 0.0_wp
+    fopt = 0.0_wp
+
+    call check_root_inputs(nx,kx,iflag); if (iflag/=0_ip) return
+
+    x1 = min(xa,xb)
+    x2 = max(xa,xb)
+    if (x1<tx(kx) .or. x2>tx(nx+1_ip)) then
+        iflag = 4003_ip
+        return
+    end if
+
+    ! candidates: the end points, the interior knots (the derivative
+    ! may be discontinuous there), and the critical points
+    xc = [x1, x2, pack(tx(kx+1_ip:nx), tx(kx+1_ip:nx)>x1 .and. tx(kx+1_ip:nx)<x2)]
+    if (kx>=3_ip) then
+        call spline_derivative(tx,bcoef,nx,kx,td,d)
+        call spline_roots(td,d,nx-1_ip,kx-1_ip,0.0_wp,crit,iflag2)  ! flat intervals are covered by the knots
+        xc = [xc, pack(crit, crit>x1 .and. crit<x2)]
+    end if
+
+    inbv = 1_ip
+    do i = 1_ip, size(xc,kind=ip)
+        call dbvalu(tx,bcoef,nx,kx,0_ip,xc(i),inbv,work,iflag,f)
+        if (iflag/=0_ip) return
+        if (i==1_ip .or. (find_max .and. f>fopt) .or. (.not. find_max .and. f<fopt)) then
+            xopt = xc(i)
+            fopt = f
+        end if
+    end do
+
+    end subroutine db1extremum
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Check the inputs to [[db1root]], [[db1min]], and [[db1max]].
+
+    pure subroutine check_root_inputs(nx,kx,iflag)
+
+    implicit none
+
+    integer(ip),intent(in)  :: nx     !! number of b-spline coefficients
+    integer(ip),intent(in)  :: kx     !! order of the b-spline
+    integer(ip),intent(out) :: iflag  !! status flag
+
+    if (kx<2_ip) then
+        iflag = 4001_ip
+    else if (nx<kx) then
+        iflag = 4002_ip
+    else
+        iflag = 0_ip
+    end if
+
+    end subroutine check_root_inputs
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  The derivative of a b-spline, as a b-spline of order `k-1`
+!  with `n-1` coefficients and knots `t(2:n+k-1)`.
+
+    pure subroutine spline_derivative(t,c,n,k,td,d)
+
+    implicit none
+
+    integer(ip),intent(in)                        :: n   !! number of b-spline coefficients
+    integer(ip),intent(in)                        :: k   !! order of the b-spline, `k >= 2`
+    real(wp),dimension(n+k),intent(in)            :: t   !! knot array
+    real(wp),dimension(n),intent(in)              :: c   !! b-spline coefficient array
+    real(wp),dimension(:),allocatable,intent(out) :: td  !! knots of the derivative (size `n+k-2`)
+    real(wp),dimension(:),allocatable,intent(out) :: d   !! coefficients of the derivative (size `n-1`)
+
+    integer(ip) :: i
+    real(wp) :: dt
+
+    td = t(2_ip:n+k-1_ip)
+    allocate(d(n-1_ip))
+    do i = 2_ip, n
+        dt = t(i+k-1_ip) - t(i)
+        if (dt>0.0_wp) then
+            d(i-1_ip) = real(k-1_ip,wp) * (c(i)-c(i-1_ip)) / dt
+        else
+            d(i-1_ip) = 0.0_wp  ! the basis function is identically zero
+        end if
+    end do
+
+    end subroutine spline_derivative
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Roots of \( s(x) = a \) where the spline crosses `a` (or where a
+!  root lies exactly on a knot). Roots of even multiplicity may be
+!  missed. Used by [[db1root]].
+
+    pure subroutine spline_roots(t,c,n,k,a,roots,iflag)
+
+    implicit none
+
+    integer(ip),intent(in)                        :: n      !! number of b-spline coefficients
+    integer(ip),intent(in)                        :: k      !! order of the b-spline, `k >= 1`
+    real(wp),dimension(n+k),intent(in)            :: t      !! knot array
+    real(wp),dimension(n),intent(in)              :: c      !! b-spline coefficient array
+    real(wp),intent(in)                           :: a      !! the value to solve for
+    real(wp),dimension(:),allocatable,intent(out) :: roots  !! the roots, in increasing order
+    integer(ip),intent(out)                       :: iflag  !! 0, or 4004 if \( s(x) = a \) on a whole interval
+
+    real(wp),dimension(0:k-1) :: p   !! power basis coefficients of a piece, on \( u \in [0,1] \)
+    real(wp),dimension(0:k-1) :: b   !! Bernstein coefficients of a piece
+    real(wp),dimension(k) :: cl      !! local b-spline coefficients minus `a`
+    real(wp),dimension(3*k) :: work  !! work array for [[dbvalu]]
+    real(wp),dimension(:),allocatable :: u  !! roots of a piece, on \( u \in [0,1] \)
+    logical,dimension(:),allocatable :: keep  !! roots to keep
+    integer(ip) :: l, i, j, m, inbv, ierr
+    real(wp) :: h, fac, val, ftol
+
+    real(wp),parameter :: utol = 16.0_wp*epsilon(1.0_wp)  !! accept roots just outside the interval
+
+    iflag = 0_ip
+    allocate(roots(0))
+    m = k - 1_ip  ! polynomial degree
+    ftol = root_ftol * max(abs(a),maxval(abs(c)))
+    inbv = 1_ip
+
+    ! end points (a root here may not be a sign change after rounding)
+    call dbvalu(t,c,n,k,0_ip,t(k),inbv,work,ierr,val)
+    if (ierr==0_ip .and. abs(val-a)<=ftol) roots = [roots, t(k)]
+    call dbvalu(t,c,n,k,0_ip,t(n+1_ip),inbv,work,ierr,val)
+    if (ierr==0_ip .and. abs(val-a)<=ftol) roots = [roots, t(n+1_ip)]
+
+    do l = k, n
+        if (t(l)>=t(l+1_ip)) cycle  ! empty interval
+        cl = c(l-k+1_ip:l) - a
+
+        ! s(x) = a on the whole interval
+        if (maxval(abs(cl))<=ftol) then
+            iflag = 4004_ip
+            cycle
+        end if
+
+        ! convex hull: no root in this interval
+        if (all(cl>ftol) .or. all(cl<-ftol)) cycle
+
+        ! power basis on u in [0,1], with x = t(l) + h*u
+        h = t(l+1_ip) - t(l)
+        fac = 1.0_wp
+        do j = 0_ip, m
+            call dbvalu(t,c,n,k,j,t(l),inbv,work,ierr,val)
+            if (j>0_ip) fac = fac * h / real(j,wp)
+            p(j) = val * fac
+        end do
+        p(0) = p(0) - a
+        ! root at the knot (the pieces on either side are computed
+        ! separately, so it may not be a sign change after rounding)
+        if (abs(p(0))<=ftol) roots = [roots, t(l)]
+
+        select case (m)
+        case(1_ip)
+            u = linear_root()
+        case(2_ip)
+            u = quadratic_roots()
+        case(3_ip:)
+            ! Bernstein coefficients
+            do i = 0_ip, m
+                b(i) = 0.0_wp
+                do j = 0_ip, i
+                    b(i) = b(i) + binomial(i,j) / binomial(m,j) * p(j)
+                end do
+            end do
+            u = bernstein_roots()
+        case default
+            u = [real(wp) ::]  ! constant piece
+        end select
+
+        ! keep the roots in the interval (allowing for rounding at the ends)
+        u = pack(u, u>=-utol .and. u<=1.0_wp+utol)
+        roots = [roots, t(l) + h*min(1.0_wp,max(0.0_wp,u))]
+    end do
+
+    call sort_unique(roots, root_xtol*max(abs(t(k)),abs(t(n+1_ip))))
+
+    ! remove the roots inside regions where s(x) = a (only the ends are kept)
+    if (iflag==4004_ip) then
+        allocate(keep(size(roots)))
+        do i = 1_ip, size(roots,kind=ip)
+            keep(i) = .not. in_flat_region(t,c,n,k,a,ftol,roots(i))
+        end do
+        roots = pack(roots, keep)
+    end if
+
+    contains
+
+        pure function linear_root() result(ur)
+
+        !! root of a linear piece
+
+        real(wp),dimension(:),allocatable :: ur
+
+        if (p(1)/=0.0_wp) then
+            ur = [-p(0)/p(1)]
+        else
+            allocate(ur(0))
+        end if
+
+        end function linear_root
+
+        pure function quadratic_roots() result(ur)
+
+        !! roots of a quadratic piece (numerically stable form)
+
+        real(wp),dimension(:),allocatable :: ur
+
+        real(wp) :: disc, q
+
+        if (p(2)==0.0_wp) then
+            ur = linear_root()
+            return
+        end if
+        allocate(ur(0))
+        disc = p(1)**2 - 4.0_wp*p(2)*p(0)
+        if (disc<0.0_wp) return
+        q = -0.5_wp * (p(1) + sign(sqrt(disc),p(1)))
+        ur = [q/p(2)]
+        if (q/=0.0_wp) ur = [ur, p(0)/q]
+
+        end function quadratic_roots
+
+        pure function bernstein_roots() result(ur)
+
+        !! isolate the roots of a piece by Bernstein subdivision,
+        !! and refine each with a safeguarded Newton iteration
+
+        real(wp),dimension(:),allocatable :: ur
+
+        integer(ip),parameter :: max_depth = 52_ip  !! maximum number of subdivisions
+
+        real(wp),dimension(0:m,max_depth+2) :: bs   !! stack of Bernstein coefficients
+        real(wp),dimension(max_depth+2) :: uas, ubs !! stack of intervals
+        integer(ip),dimension(max_depth+2) :: deps  !! stack of subdivision depths
+        real(wp),dimension(0:m) :: bb, left, right
+        real(wp),dimension(0:m) :: tmp
+        integer(ip) :: top, nsign, dep, r, s
+        real(wp) :: ua, ub, um, sprev
+
+        allocate(ur(0))
+        top = 1_ip
+        bs(:,1) = b
+        uas(1) = 0.0_wp
+        ubs(1) = 1.0_wp
+        deps(1) = 0_ip
+
+        do while (top>0_ip)
+            bb = bs(:,top)
+            ua = uas(top)
+            ub = ubs(top)
+            dep = deps(top)
+            top = top - 1_ip
+
+            ! the piece is within the noise level of zero on this interval
+            ! (a multiple root): keep it if the sign changes across the
+            ! interval (odd multiplicity), otherwise it is found by db1root
+            if (maxval(abs(bb))<=ftol) then
+                if (bb(0)*bb(m)<0.0_wp) ur = [ur, 0.5_wp*(ua+ub)]
+                cycle
+            end if
+
+            ! number of sign changes (Descartes' rule of signs),
+            ! where coefficients within the noise level count as zero
+            nsign = 0_ip
+            sprev = 0.0_wp
+            do r = 0_ip, m
+                if (abs(bb(r))>ftol) then
+                    if (sprev/=0.0_wp .and. sign(1.0_wp,bb(r))/=sprev) nsign = nsign + 1_ip
+                    sprev = sign(1.0_wp,bb(r))
+                end if
+            end do
+
+            if (nsign==0_ip) cycle
+            if (nsign==1_ip .and. abs(bb(0))>ftol .and. abs(bb(m))>ftol) then
+                ! exactly one simple root (and none at the ends)
+                ur = [ur, newton(ua,ub)]
+                cycle
+            end if
+            if (dep>=max_depth) then
+                ur = [ur, 0.5_wp*(ua+ub)]  ! cluster of roots
+                cycle
+            end if
+
+            ! subdivide at the midpoint (de Casteljau)
+            tmp = bb
+            do r = 1_ip, m
+                left(r-1_ip) = tmp(0)
+                right(m-r+1_ip) = tmp(m-r+1_ip)
+                do s = 0_ip, m-r
+                    tmp(s) = 0.5_wp*(tmp(s)+tmp(s+1_ip))
+                end do
+            end do
+            left(m) = tmp(0)
+            right(0) = tmp(0)
+            um = 0.5_wp*(ua+ub)
+            if (abs(tmp(0))<=ftol) ur = [ur, um]  ! root at the midpoint
+
+            top = top + 1_ip
+            bs(:,top) = right
+            uas(top) = um
+            ubs(top) = ub
+            deps(top) = dep + 1_ip
+            top = top + 1_ip
+            bs(:,top) = left
+            uas(top) = ua
+            ubs(top) = um
+            deps(top) = dep + 1_ip
+        end do
+
+        end function bernstein_roots
+
+        pure function newton(ua,ub) result(u)
+
+        !! safeguarded Newton iteration for the single root of the
+        !! piece in `[ua,ub]` (bisection when Newton leaves the bracket)
+
+        real(wp),intent(in) :: ua, ub
+        real(wp) :: u
+
+        integer(ip),parameter :: max_iter = 200_ip
+
+        integer(ip) :: iter
+        real(wp) :: xl, xh, f, df, fl, fh, dx, dxold, temp
+
+        call horner(ua,fl,df)
+        call horner(ub,fh,df)
+        if (fl==0.0_wp) then
+            u = ua; return
+        else if (fh==0.0_wp) then
+            u = ub; return
+        else if (fl*fh>0.0_wp) then
+            ! no sign change after rounding: take the closest end
+            u = merge(ua,ub,abs(fl)<abs(fh)); return
+        end if
+        if (fl<0.0_wp) then
+            xl = ua; xh = ub
+        else
+            xl = ub; xh = ua
+        end if
+
+        u = 0.5_wp*(ua+ub)
+        dxold = abs(ub-ua)
+        dx = dxold
+        call horner(u,f,df)
+        do iter = 1_ip, max_iter
+            if (((u-xh)*df-f)*((u-xl)*df-f)>0.0_wp .or. abs(2.0_wp*f)>abs(dxold*df)) then
+                dxold = dx
+                dx = 0.5_wp*(xh-xl)
+                u = xl + dx
+                if (xl==u) exit
+            else
+                dxold = dx
+                dx = f/df
+                temp = u
+                u = u - dx
+                if (temp==u) exit
+            end if
+            if (abs(dx)*h<=2.0_wp*epsilon(1.0_wp)*abs(t(l)+h*u)) exit
+            call horner(u,f,df)
+            if (f==0.0_wp) exit
+            if (f<0.0_wp) then
+                xl = u
+            else
+                xh = u
+            end if
+        end do
+
+        end function newton
+
+        pure subroutine horner(u,f,df)
+
+        !! value and derivative of the piece at `u`
+
+        real(wp),intent(in)  :: u
+        real(wp),intent(out) :: f
+        real(wp),intent(out) :: df
+
+        integer(ip) :: jj
+
+        f = p(m)
+        df = 0.0_wp
+        do jj = m-1_ip, 0_ip, -1_ip
+            df = df*u + f
+            f = f*u + p(jj)
+        end do
+
+        end subroutine horner
+
+    end subroutine spline_roots
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Returns true if `x` is inside a region where the spline is equal
+!  to `a` (to within `ftol`). The ends of such a region are not inside.
+!  Used by [[db1root]].
+
+    pure function in_flat_region(t,c,n,k,a,ftol,x) result(inside)
+
+    implicit none
+
+    integer(ip),intent(in)             :: n     !! number of b-spline coefficients
+    integer(ip),intent(in)             :: k     !! order of the b-spline
+    real(wp),dimension(n+k),intent(in) :: t     !! knot array
+    real(wp),dimension(n),intent(in)   :: c     !! b-spline coefficient array
+    real(wp),intent(in)                :: a     !! the value
+    real(wp),intent(in)                :: ftol  !! tolerance on \( |s(x)-a| \)
+    real(wp),intent(in)                :: x     !! the point to check
+    logical                            :: inside
+
+    integer(ip) :: l, j, ilo, mflag
+
+    inside = .false.
+    if (x<=t(k) .or. x>=t(n+1_ip)) return
+
+    ! knot interval containing x: t(l) <= x < t(l+1)
+    ilo = 1_ip
+    call dintrv(t,n+k,x,ilo,l,mflag)
+    l = min(max(l,k),n)
+    inside = flat(l)
+
+    if (inside .and. x==t(l)) then
+        ! at a knot: also check the previous (nonempty) interval
+        j = l - 1_ip
+        do while (j>=k)
+            if (t(j)<t(j+1_ip)) exit
+            j = j - 1_ip
+        end do
+        inside = j>=k
+        if (inside) inside = flat(j)
+    end if
+
+    contains
+
+        pure logical function flat(i)
+        !! if the spline is equal to `a` on interval `i`
+        integer(ip),intent(in) :: i
+        flat = maxval(abs(c(i-k+1_ip:i)-a))<=ftol
+        end function flat
+
+    end function in_flat_region
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Sort an array in increasing order, and remove values that
+!  are within `tol` of the previous one.
+
+    pure subroutine sort_unique(x,tol)
+
+    implicit none
+
+    real(wp),dimension(:),allocatable,intent(inout) :: x    !! the array
+    real(wp),intent(in)                             :: tol  !! duplicate tolerance
+
+    integer(ip) :: i, j, nu
+    real(wp) :: tmp
+
+    ! insertion sort (the arrays are small and nearly sorted)
+    do i = 2_ip, size(x,kind=ip)
+        tmp = x(i)
+        j = i - 1_ip
+        do while (j>=1_ip)
+            if (x(j)<=tmp) exit
+            x(j+1_ip) = x(j)
+            j = j - 1_ip
+        end do
+        x(j+1_ip) = tmp
+    end do
+
+    nu = min(1_ip,size(x,kind=ip))
+    do i = 2_ip, size(x,kind=ip)
+        if (x(i)-x(nu)>tol) then
+            nu = nu + 1_ip
+            x(nu) = x(i)
+        end if
+    end do
+    x = x(1_ip:nu)
+
+    end subroutine sort_unique
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Binomial coefficient \( \binom{n}{r} \), as a real number.
+
+    pure function binomial(n,r) result(c)
+
+    implicit none
+
+    integer(ip),intent(in) :: n
+    integer(ip),intent(in) :: r
+    real(wp) :: c
+
+    integer(ip) :: i
+
+    c = 1.0_wp
+    do i = 1_ip, min(r,n-r)
+        c = c * real(n-min(r,n-r)+i,wp) / real(i,wp)
+    end do
+
+    end function binomial
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -4881,6 +5590,13 @@
     case(2006_ip); msg='Error in dbint4: knot input through tleft, tright is not ordered properly'
     case(2007_ip); msg='Error in dbint4: the system of equations is singular'
     case(2008_ip); msg='Error in dbint4: tleft or tright does not have size k-1'
+
+    case(4001_ip); msg='Error in db1root/db1min/db1max: k does not satisfy k>=2'
+    case(4002_ip); msg='Error in db1root/db1min/db1max: n does not satisfy n>=k'
+    case(4003_ip); msg='Error in db1min/db1max: xa or xb or both do not satisfy t(k)<=x<=t(n+1)'
+    case(4004_ip); msg='Warning in db1root: the spline is equal to a over a whole knot interval'
+    case(4005_ip); msg='Error in inverse: there is no x with s(x)=y'
+    case(4006_ip); msg='Error in inverse: there is more than one x with s(x)=y'
 
     case(3001_ip); msg='Error in dbspvd: k does not satisfy k>=1'
     case(3002_ip); msg='Error in dbspvd: nderiv does not satisfy 1<=nderiv<=k'
