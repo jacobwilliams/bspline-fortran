@@ -100,6 +100,23 @@ There are also routines for finding roots and extrema of 1D b-splines (orders >=
 * `db1min` and `db1max` (`minimum` and `maximum` in the object-oriented interface) -- Find the global minimum or maximum on an interval, from the roots of the derivative (computed in closed form for cubic splines), the interior knots, and the end points.
 * `inverse` (object-oriented interface only) -- Finds the unique `x` with `s(x) = y`, for example for a monotonic spline.
 
+## Knots, coefficients, and control points
+
+The subroutine interface returns the knots and b-spline coefficients from the `db*ink` routines. In the object-oriented interface, they can be retrieved with the `get_knots` and `get_coefficients` methods, and a class can be initialized directly from them (without interpolating any data) with `initialize_from_coefficients`. This can be used to save a spline and load it later. For example, in 2D:
+
+```Fortran
+type(bspline_2d) :: s1, s2
+real(wp),dimension(:),allocatable :: tx, ty
+real(wp),dimension(:,:),allocatable :: bcoef
+call s1%initialize(x,y,fcn,kx,ky,iflag)
+call s1%get_knots(tx,ty,iflag)
+call s1%get_coefficients(bcoef,iflag)
+! ... save tx, ty, bcoef, kx, ky, and then later:
+call s2%initialize_from_coefficients(tx,ty,bcoef,kx,ky,iflag)
+```
+
+The coefficients are the values of the control points of the spline. Their locations are the Greville abscissae (the average of the `k-1` interior knots of each basis function), which are computed by the `greville_abscissae` subroutine. For a 1D spline, the `control_points` method returns both. The spline lies within the convex hull of its control points. In more than one dimension, the control net is the tensor product of the Greville abscissae in each direction, with the coefficient array.
+
 ## Least squares fitting
 
 The BSpline-Fortran library also exports the `defc` subroutine, which can be used to fit B-spline polynomials to 1D data using a weighted least squares method. The `dfc` subroutine also allows for equality and inequality constraints to be imposed on the fitted curve. These procedures are not yet available in the object oriented interface.
