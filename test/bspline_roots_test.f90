@@ -254,20 +254,34 @@
 
     real(wp),dimension(:),allocatable :: tx, bcoef, roots
     real(wp),dimension(11) :: x
-    integer(ip) :: k, iflag
+    integer(ip) :: k, iflag, i
+    real(wp) :: c
+
+    real(wp),dimension(*),parameter :: centers = [0.37_wp, 1.3_wp, 2.11_wp, 3.0_wp, 3.6789_wp]
 
     x = linspace(0.0_wp, 4.0_wp, 11_ip)
     do k = 4, 6
         ! double root at 1.3, simple root at 3
         call make_spline(x, (x-1.3_wp)**2*(x-3.0_wp), k, tx, bcoef)
         call db1root(tx,11_ip,k,bcoef,0.0_wp,roots,iflag)
-        call check_roots('double root k='//istr(k), roots, [1.3_wp, 3.0_wp], 1.0e-7_wp)
+        call check_roots('double root k='//istr(k), roots, [1.3_wp, 3.0_wp], 1.0e-12_wp)
 
         ! triple root at 1.3 (conditioning limits the accuracy to about eps**(1/3))
         call make_spline(x, (x-1.3_wp)**3, k, tx, bcoef)
         call db1root(tx,11_ip,k,bcoef,0.0_wp,roots,iflag)
         call check('triple root k='//istr(k)//': found', size(roots)>=1)
         if (size(roots)>=1) call check('triple root k='//istr(k)//': values', all(abs(roots-1.3_wp)<1.0e-4_wp))
+    end do
+
+    ! a touching root at a level a /= 0 must be accurate to about eps
+    ! (it is the root of s'), not just sqrt(eps)
+    do k = 4, 8
+        do i = 1, size(centers)
+            c = centers(i)
+            call make_spline(x, (x-c)**2*(1.0_wp+0.1_wp*x) + 0.25_wp, k, tx, bcoef)
+            call db1root(tx,11_ip,k,bcoef,0.25_wp,roots,iflag)
+            call check_roots('touching root k='//istr(k)//' c='//istr(i), roots, [c], 1.0e-12_wp)
+        end do
     end do
 
     end subroutine test_multiple_roots

@@ -551,14 +551,22 @@
     real(wp),dimension(:),allocatable :: td    !! knots of \( s'(x) \)
     real(wp),dimension(:),allocatable :: d     !! coefficients of \( s'(x) \)
     real(wp),dimension(3*kx) :: work  !! work array for [[dbvalu]]
+    logical,dimension(:),allocatable :: keep  !! roots to keep (those not replaced
+                                              !! by a critical point)
     integer(ip) :: i       !! counter
+    integer(ip) :: j       !! counter
     integer(ip) :: inbv    !! initialization parameter for [[dbvalu]]
     integer(ip) :: iflag2  !! status flag from [[dbvalu]] and [[spline_roots]]
                            !! for \( s'(x) \) (not returned)
     real(wp) :: f          !! spline value \( s(x) \)
+    real(wp) :: f2         !! second derivative \( s''(x) \) at a critical point
     real(wp) :: ftol       !! absolute tolerance on \( |s(x)-a| \)
     real(wp) :: xtol       !! distance below which two roots may be merged
                            !! into a single root of even multiplicity
+    real(wp) :: dmax       !! distance from a root of even multiplicity within which
+                           !! other roots are replaced by it
+    real(wp) :: band_max   !! upper bound on `dmax` (for a root of higher multiplicity,
+                           !! where \( s''(x) = 0 \))
 
     call check_root_inputs(nx,kx,iflag)
     if (iflag/=0_ip) then
@@ -575,6 +583,7 @@
         ftol = root_ftol * max(abs(a),maxval(abs(bcoef)))
         xtol = sqrt(epsilon(1.0_wp)) * (tx(nx+1_ip)-tx(kx)) + &
                root_xtol * max(abs(tx(kx)),abs(tx(nx+1_ip)))
+        band_max = sqrt(sqrt(epsilon(1.0_wp))) * (tx(nx+1_ip)-tx(kx))
         inbv = 1_ip
         do i = 1_ip, size(crit,kind=ip)
             call dbvalu(tx,bcoef,nx,kx,0_ip,crit(i),inbv,work,iflag2,f)
@@ -583,7 +592,29 @@
                 if (iflag==4004_ip) then
                     if (in_flat_region(tx,bcoef,nx,kx,a,ftol,crit(i))) cycle
                 end if
-                if (all(abs(roots-crit(i))>xtol)) roots = [roots, crit(i)]
+                ! near a root of even multiplicity, the roots found above
+                ! are only accurate to about sqrt(eps), but the critical
+                ! point is accurate to about eps: replace any of them that
+                ! are within the band around it where s(x) is within the
+                ! noise level of `a`. For a double root, the half width
+                ! of the band where |s(x)-a| <= ftol is sqrt(2*ftol/|s''|).
+                ! Twice this is used, where |s(x)-a| <= 4*ftol.
+                call dbvalu(tx,bcoef,nx,kx,2_ip,crit(i),inbv,work,iflag2,f2)
+                dmax = band_max
+                if (iflag2==0_ip .and. abs(f2)>0.0_wp) dmax = min(dmax, 2.0_wp*sqrt(2.0_wp*ftol/abs(f2)))
+                dmax = max(dmax, xtol)
+                allocate(keep(size(roots)))
+                do j = 1_ip, size(roots,kind=ip)
+                    keep(j) = .true.
+                    if (abs(roots(j)-crit(i))<=dmax) then
+                        ! check that the spline is within the band between
+                        ! them (so they are not distinct roots)
+                        call dbvalu(tx,bcoef,nx,kx,0_ip,0.5_wp*(roots(j)+crit(i)),inbv,work,iflag2,f)
+                        keep(j) = .not. (iflag2==0_ip .and. abs(f-a)<=4.0_wp*ftol)
+                    end if
+                end do
+                roots = [pack(roots, keep), crit(i)]
+                deallocate(keep)
             end if
         end do
         call sort_unique(roots, root_xtol*max(abs(tx(kx)),abs(tx(nx+1_ip))))
