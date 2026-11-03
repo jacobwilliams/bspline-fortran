@@ -83,9 +83,13 @@
                                                                    !! (for input to the `db*ink` routines)
                                                                    !! [order = polynomial degree + 1]
 
-    real(wp),parameter :: root_ftol = 100.0_wp*epsilon(1.0_wp) !! relative tolerance on \( |s(x)-a| \)
-                                                                !! for roots of even multiplicity in [[db1root]]
-    real(wp),parameter :: root_xtol = 64.0_wp*epsilon(1.0_wp)  !! relative tolerance for duplicate roots
+    real(wp),parameter :: root_ftol = 100.0_wp*epsilon(1.0_wp) !! relative tolerance on \( |s(x)-a| \) in
+                                                                !! [[db1root]] (scaled by the largest of \( |a| \)
+                                                                !! and the coefficient magnitudes): a value
+                                                                !! below it is treated as zero
+    real(wp),parameter :: root_xtol = 64.0_wp*epsilon(1.0_wp)  !! relative tolerance for duplicate roots in
+                                                                !! [[db1root]] (scaled by the largest magnitude
+                                                                !! of the ends of the domain)
 
     interface db1ink
         !! 1D initialization routines.
@@ -547,8 +551,14 @@
     real(wp),dimension(:),allocatable :: td    !! knots of \( s'(x) \)
     real(wp),dimension(:),allocatable :: d     !! coefficients of \( s'(x) \)
     real(wp),dimension(3*kx) :: work  !! work array for [[dbvalu]]
-    integer(ip) :: i, inbv, iflag2
-    real(wp) :: f, ftol, xtol
+    integer(ip) :: i       !! counter
+    integer(ip) :: inbv    !! initialization parameter for [[dbvalu]]
+    integer(ip) :: iflag2  !! status flag from [[dbvalu]] and [[spline_roots]]
+                           !! for \( s'(x) \) (not returned)
+    real(wp) :: f          !! spline value \( s(x) \)
+    real(wp) :: ftol       !! absolute tolerance on \( |s(x)-a| \)
+    real(wp) :: xtol       !! distance below which two roots may be merged
+                           !! into a single root of even multiplicity
 
     call check_root_inputs(nx,kx,iflag)
     if (iflag/=0_ip) then
@@ -686,8 +696,12 @@
     real(wp),dimension(:),allocatable :: d     !! coefficients of \( s'(x) \)
     real(wp),dimension(:),allocatable :: xc    !! candidate points
     real(wp),dimension(3*kx) :: work  !! work array for [[dbvalu]]
-    integer(ip) :: i, inbv, iflag2
-    real(wp) :: x1, x2, f
+    integer(ip) :: i       !! counter
+    integer(ip) :: inbv    !! initialization parameter for [[dbvalu]]
+    integer(ip) :: iflag2  !! status flag from [[spline_roots]] for \( s'(x) \) (not returned)
+    real(wp) :: x1         !! left end of the interval: `min(xa,xb)`
+    real(wp) :: x2         !! right end of the interval: `max(xa,xb)`
+    real(wp) :: f          !! spline value at a candidate point
 
     xopt = 0.0_wp
     fopt = 0.0_wp
@@ -762,8 +776,8 @@
     real(wp),dimension(:),allocatable,intent(out) :: td  !! knots of the derivative (size `n+k-2`)
     real(wp),dimension(:),allocatable,intent(out) :: d   !! coefficients of the derivative (size `n-1`)
 
-    integer(ip) :: i
-    real(wp) :: dt
+    integer(ip) :: i   !! counter
+    real(wp) :: dt     !! support width of a b-spline basis function: `t(i+k-1) - t(i)`
 
     td = t(2_ip:n+k-1_ip)
     allocate(d(n-1_ip))
@@ -803,10 +817,19 @@
     real(wp),dimension(3*k) :: work  !! work array for [[dbvalu]]
     real(wp),dimension(:),allocatable :: u  !! roots of a piece, on \( u \in [0,1] \)
     logical,dimension(:),allocatable :: keep  !! roots to keep
-    integer(ip) :: l, i, j, m, inbv, ierr
-    real(wp) :: h, fac, val, ftol
+    integer(ip) :: l     !! knot interval index: `t(l) <= x < t(l+1)`
+    integer(ip) :: i     !! counter
+    integer(ip) :: j     !! counter
+    integer(ip) :: m     !! polynomial degree of the pieces: `k-1`
+    integer(ip) :: inbv  !! initialization parameter for [[dbvalu]]
+    integer(ip) :: ierr  !! status flag from [[dbvalu]]
+    real(wp) :: h        !! width of the knot interval: `t(l+1) - t(l)`
+    real(wp) :: fac      !! scale factor \( h^j / j! \) for the `j`-th power basis coefficient
+    real(wp) :: val      !! spline value (or derivative) from [[dbvalu]]
+    real(wp) :: ftol     !! absolute tolerance on \( |s(x)-a| \)
 
     real(wp),parameter :: utol = 16.0_wp*epsilon(1.0_wp)  !! accept roots just outside the interval
+                                                           !! \( [0,1] \) (they are moved to the end)
 
     iflag = 0_ip
     allocate(roots(0))
@@ -884,9 +907,9 @@
 
         pure function linear_root() result(ur)
 
-        !! root of a linear piece
+        !! Root of a linear piece \( p_0 + p_1 u \).
 
-        real(wp),dimension(:),allocatable :: ur
+        real(wp),dimension(:),allocatable :: ur  !! the root, on \( u \) (size 0 if \( p_1 = 0 \))
 
         if (p(1)/=0.0_wp) then
             ur = [-p(0)/p(1)]
@@ -898,11 +921,14 @@
 
         pure function quadratic_roots() result(ur)
 
-        !! roots of a quadratic piece (numerically stable form)
+        !! Roots of a quadratic piece \( p_0 + p_1 u + p_2 u^2 \)
+        !! (numerically stable form of the quadratic formula).
 
-        real(wp),dimension(:),allocatable :: ur
+        real(wp),dimension(:),allocatable :: ur  !! the real roots, on \( u \) (size 0, 1, or 2)
 
-        real(wp) :: disc, q
+        real(wp) :: disc  !! discriminant: \( p_1^2 - 4 p_2 p_0 \)
+        real(wp) :: q     !! \( -\frac{1}{2} \left( p_1 + \mathrm{sign}(p_1) \sqrt{disc} \right) \)
+                          !! (the roots are \( q/p_2 \) and \( p_0/q \))
 
         if (p(2)==0.0_wp) then
             ur = linear_root()
@@ -919,20 +945,37 @@
 
         pure function bernstein_roots() result(ur)
 
-        !! isolate the roots of a piece by Bernstein subdivision,
-        !! and refine each with a safeguarded Newton iteration
+        !! Isolate the roots of a piece by Bernstein subdivision,
+        !! and refine each with a safeguarded Newton iteration.
+        !!
+        !! Subintervals are processed from a stack. The left half of a
+        !! divided subinterval is processed first, so at most one right
+        !! half per depth is waiting, and the stack never holds more
+        !! than `max_depth+2` entries.
 
-        real(wp),dimension(:),allocatable :: ur
+        real(wp),dimension(:),allocatable :: ur  !! the roots, on \( u \in [0,1] \)
 
         integer(ip),parameter :: max_depth = 52_ip  !! maximum number of subdivisions
+                                                    !! (the interval width is then \( 2^{-52} \))
 
         real(wp),dimension(0:m,max_depth+2) :: bs   !! stack of Bernstein coefficients
-        real(wp),dimension(max_depth+2) :: uas, ubs !! stack of intervals
+        real(wp),dimension(max_depth+2) :: uas      !! stack of left ends of the subintervals
+        real(wp),dimension(max_depth+2) :: ubs      !! stack of right ends of the subintervals
         integer(ip),dimension(max_depth+2) :: deps  !! stack of subdivision depths
-        real(wp),dimension(0:m) :: bb, left, right
-        real(wp),dimension(0:m) :: tmp
-        integer(ip) :: top, nsign, dep, r, s
-        real(wp) :: ua, ub, um, sprev
+        real(wp),dimension(0:m) :: bb     !! Bernstein coefficients on the current subinterval
+        real(wp),dimension(0:m) :: left   !! Bernstein coefficients on the left half
+        real(wp),dimension(0:m) :: right  !! Bernstein coefficients on the right half
+        real(wp),dimension(0:m) :: tmp    !! work array for de Casteljau's algorithm
+        integer(ip) :: top    !! top of the stack (0 if empty)
+        integer(ip) :: nsign  !! number of sign changes in `bb` (an upper bound
+                              !! on the number of roots in the subinterval)
+        integer(ip) :: dep    !! subdivision depth of the current subinterval
+        integer(ip) :: r      !! counter
+        integer(ip) :: s      !! counter
+        real(wp) :: ua        !! left end of the current subinterval
+        real(wp) :: ub        !! right end of the current subinterval
+        real(wp) :: um        !! midpoint of the current subinterval
+        real(wp) :: sprev     !! sign of the previous nonzero coefficient (0 if none yet)
 
         allocate(ur(0))
         top = 1_ip
@@ -1008,16 +1051,26 @@
 
         pure function newton(ua,ub) result(u)
 
-        !! safeguarded Newton iteration for the single root of the
-        !! piece in `[ua,ub]` (bisection when Newton leaves the bracket)
+        !! Safeguarded Newton iteration for the single root of the
+        !! piece in `[ua,ub]` (bisection when the Newton step leaves
+        !! the bracket, or does not reduce it quickly enough).
 
-        real(wp),intent(in) :: ua, ub
-        real(wp) :: u
+        real(wp),intent(in) :: ua  !! left end of the bracket
+        real(wp),intent(in) :: ub  !! right end of the bracket
+        real(wp) :: u              !! the root, on \( u \in [u_a,u_b] \)
 
-        integer(ip),parameter :: max_iter = 200_ip
+        integer(ip),parameter :: max_iter = 200_ip  !! maximum number of iterations
 
-        integer(ip) :: iter
-        real(wp) :: xl, xh, f, df, fl, fh, dx, dxold, temp
+        integer(ip) :: iter  !! iteration counter
+        real(wp) :: xl       !! end of the bracket where the piece is negative
+        real(wp) :: xh       !! end of the bracket where the piece is positive
+        real(wp) :: f        !! value of the piece at `u`
+        real(wp) :: df       !! derivative of the piece at `u`
+        real(wp) :: fl       !! value of the piece at `ua`
+        real(wp) :: fh       !! value of the piece at `ub`
+        real(wp) :: dx       !! the last step
+        real(wp) :: dxold    !! the step before the last one
+        real(wp) :: temp     !! previous value of `u`
 
         call horner(ua,fl,df)
         call horner(ub,fh,df)
@@ -1066,13 +1119,14 @@
 
         pure subroutine horner(u,f,df)
 
-        !! value and derivative of the piece at `u`
+        !! Value and derivative of the piece at `u`
+        !! (from the power basis coefficients, by Horner's rule).
 
-        real(wp),intent(in)  :: u
-        real(wp),intent(out) :: f
-        real(wp),intent(out) :: df
+        real(wp),intent(in)  :: u   !! the point, on \( u \in [0,1] \)
+        real(wp),intent(out) :: f   !! value of the piece
+        real(wp),intent(out) :: df  !! derivative of the piece with respect to `u`
 
-        integer(ip) :: jj
+        integer(ip) :: jj  !! counter
 
         f = p(m)
         df = 0.0_wp
@@ -1100,12 +1154,16 @@
     integer(ip),intent(in)             :: k     !! order of the b-spline
     real(wp),dimension(n+k),intent(in) :: t     !! knot array
     real(wp),dimension(n),intent(in)   :: c     !! b-spline coefficient array
-    real(wp),intent(in)                :: a     !! the value
+    real(wp),intent(in)                :: a     !! the value to solve for
     real(wp),intent(in)                :: ftol  !! tolerance on \( |s(x)-a| \)
     real(wp),intent(in)                :: x     !! the point to check
-    logical                            :: inside
+    logical                            :: inside  !! true if `x` is inside a region where
+                                                  !! \( s(x) = a \) (to within `ftol`)
 
-    integer(ip) :: l, j, ilo, mflag
+    integer(ip) :: l      !! knot interval containing `x`: `t(l) <= x < t(l+1)`
+    integer(ip) :: j      !! previous nonempty knot interval
+    integer(ip) :: ilo    !! initial guess for [[dintrv]]
+    integer(ip) :: mflag  !! status flag from [[dintrv]] (not used: `x` is in the domain)
 
     inside = .false.
     if (x<=t(k) .or. x>=t(n+1_ip)) return
@@ -1129,10 +1187,17 @@
 
     contains
 
-        pure logical function flat(i)
-        !! if the spline is equal to `a` on interval `i`
-        integer(ip),intent(in) :: i
+        pure function flat(i)
+
+        !! True if the spline is equal to `a` (to within `ftol`) on knot
+        !! interval `i`, which is the case if all of the `k` b-spline
+        !! coefficients that are nonzero on it are.
+
+        integer(ip),intent(in) :: i  !! knot interval index: `t(i) <= x < t(i+1)`
+        logical :: flat              !! true if \( s(x) = a \) on the interval
+
         flat = maxval(abs(c(i-k+1_ip:i)-a))<=ftol
+
         end function flat
 
     end function in_flat_region
@@ -1150,8 +1215,10 @@
     real(wp),dimension(:),allocatable,intent(inout) :: x    !! the array
     real(wp),intent(in)                             :: tol  !! duplicate tolerance
 
-    integer(ip) :: i, j, nu
-    real(wp) :: tmp
+    integer(ip) :: i    !! counter
+    integer(ip) :: j    !! counter
+    integer(ip) :: nu   !! number of unique values
+    real(wp) :: tmp     !! the value being inserted
 
     ! insertion sort (the arrays are small and nearly sorted)
     do i = 2_ip, size(x,kind=ip)
@@ -1185,11 +1252,11 @@
 
     implicit none
 
-    integer(ip),intent(in) :: n
-    integer(ip),intent(in) :: r
-    real(wp) :: c
+    integer(ip),intent(in) :: n  !! number of items, `n >= 0`
+    integer(ip),intent(in) :: r  !! number chosen, `0 <= r <= n`
+    real(wp) :: c                !! \( \binom{n}{r} = \frac{n!}{r!(n-r)!} \)
 
-    integer(ip) :: i
+    integer(ip) :: i  !! counter
 
     c = 1.0_wp
     do i = 1_ip, min(r,n-r)

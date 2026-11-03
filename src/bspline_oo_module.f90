@@ -1125,7 +1125,7 @@
 
     implicit none
 
-    class(bspline_1d),intent(inout)               :: me
+    class(bspline_1d),intent(inout)               :: me  !! the spline
     real(wp),intent(in)                           :: a      !! the value to solve for
     real(wp),dimension(:),allocatable,intent(out) :: x      !! the roots, in increasing order
                                                             !! (size 0 if there are none)
@@ -1154,12 +1154,12 @@
 
     implicit none
 
-    class(bspline_1d),intent(inout) :: me
+    class(bspline_1d),intent(inout) :: me  !! the spline
     real(wp),intent(in)             :: y      !! the spline value
     real(wp),intent(out)            :: x      !! the solution of \( s(x) = y \)
     integer(ip),intent(out)         :: iflag  !! status flag (see [[db1root]])
 
-    real(wp),dimension(:),allocatable :: roots
+    real(wp),dimension(:),allocatable :: roots  !! all the roots of \( s(x) = y \)
 
     x = 0.0_wp
     call me%roots(y,roots,iflag)
@@ -1186,14 +1186,15 @@
 
     implicit none
 
-    class(bspline_1d),intent(inout) :: me
+    class(bspline_1d),intent(inout) :: me  !! the spline
     real(wp),intent(out)            :: xmin   !! location of the minimum
     real(wp),intent(out)            :: fmin   !! minimum value
     integer(ip),intent(out)         :: iflag  !! status flag (see [[db1min]])
     real(wp),intent(in),optional    :: xa     !! left end of the interval (default `tx(kx)`)
     real(wp),intent(in),optional    :: xb     !! right end of the interval (default `tx(nx+1)`)
 
-    real(wp) :: x1, x2
+    real(wp) :: x1  !! left end of the interval
+    real(wp) :: x2  !! right end of the interval
 
     if (me%initialized) then
         call get_interval_1d(me,xa,xb,x1,x2)
@@ -1218,14 +1219,15 @@
 
     implicit none
 
-    class(bspline_1d),intent(inout) :: me
+    class(bspline_1d),intent(inout) :: me  !! the spline
     real(wp),intent(out)            :: xmax   !! location of the maximum
     real(wp),intent(out)            :: fmax   !! maximum value
     integer(ip),intent(out)         :: iflag  !! status flag (see [[db1max]])
     real(wp),intent(in),optional    :: xa     !! left end of the interval (default `tx(kx)`)
     real(wp),intent(in),optional    :: xb     !! right end of the interval (default `tx(nx+1)`)
 
-    real(wp) :: x1, x2
+    real(wp) :: x1  !! left end of the interval
+    real(wp) :: x2  !! right end of the interval
 
     if (me%initialized) then
         call get_interval_1d(me,xa,xb,x1,x2)
@@ -1249,7 +1251,7 @@
 
     implicit none
 
-    class(bspline_1d),intent(in) :: me
+    class(bspline_1d),intent(in) :: me  !! the spline
     real(wp),intent(in),optional :: xa  !! left end of the interval
     real(wp),intent(in),optional :: xb  !! right end of the interval
     real(wp),intent(out)         :: x1  !! `xa`, or `tx(kx)` if not present
