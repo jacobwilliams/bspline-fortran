@@ -64,7 +64,8 @@
         !! Class for 1d b-spline interpolation.
         !!
         !!@note The 1D class also contains methods for computing
-        !!      definite integrals, roots, and the minimum and maximum.
+        !!      definite integrals, roots, the minimum and maximum,
+        !!      and the control points.
         private
         integer(ip) :: nx = 0_ip  !! Number of \(x\) abcissae
         integer(ip) :: kx = 0_ip  !! The order of spline pieces in \(x\)
@@ -79,6 +80,10 @@
         procedure,public :: evaluate => evaluate_1d
         procedure,public :: destroy => destroy_1d
         procedure,public :: size_of => size_1d
+        procedure,public :: initialize_from_coefficients => initialize_from_coefficients_1d
+        procedure,public :: get_knots => get_knots_1d
+        procedure,public :: get_coefficients => get_coefficients_1d
+        procedure,public :: control_points => control_points_1d
         procedure,public :: integral => integral_1d
         procedure,public :: fintegral => fintegral_1d
         procedure,public :: roots => roots_1d
@@ -110,6 +115,9 @@
         procedure,public :: evaluate => evaluate_2d
         procedure,public :: destroy => destroy_2d
         procedure,public :: size_of => size_2d
+        procedure,public :: initialize_from_coefficients => initialize_from_coefficients_2d
+        procedure,public :: get_knots => get_knots_2d
+        procedure,public :: get_coefficients => get_coefficients_2d
         final :: finalize_2d
     end type bspline_2d
 
@@ -141,6 +149,9 @@
         procedure,public :: evaluate => evaluate_3d
         procedure,public :: destroy => destroy_3d
         procedure,public :: size_of => size_3d
+        procedure,public :: initialize_from_coefficients => initialize_from_coefficients_3d
+        procedure,public :: get_knots => get_knots_3d
+        procedure,public :: get_coefficients => get_coefficients_3d
         final :: finalize_3d
     end type bspline_3d
 
@@ -178,6 +189,9 @@
         procedure,public :: evaluate => evaluate_4d
         procedure,public :: destroy => destroy_4d
         procedure,public :: size_of => size_4d
+        procedure,public :: initialize_from_coefficients => initialize_from_coefficients_4d
+        procedure,public :: get_knots => get_knots_4d
+        procedure,public :: get_coefficients => get_coefficients_4d
         final :: finalize_4d
     end type bspline_4d
 
@@ -221,6 +235,9 @@
         procedure,public :: evaluate => evaluate_5d
         procedure,public :: destroy => destroy_5d
         procedure,public :: size_of => size_5d
+        procedure,public :: initialize_from_coefficients => initialize_from_coefficients_5d
+        procedure,public :: get_knots => get_knots_5d
+        procedure,public :: get_coefficients => get_coefficients_5d
         final :: finalize_5d
     end type bspline_5d
 
@@ -270,6 +287,9 @@
         procedure,public :: evaluate => evaluate_6d
         procedure,public :: destroy => destroy_6d
         procedure,public :: size_of => size_6d
+        procedure,public :: initialize_from_coefficients => initialize_from_coefficients_6d
+        procedure,public :: get_knots => get_knots_6d
+        procedure,public :: get_coefficients => get_coefficients_6d
         final :: finalize_6d
     end type bspline_6d
 
@@ -2981,6 +3001,901 @@
     end if
 
     end subroutine check_knot_vectors_sizes
+!*****************************************************************************************
+
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_1d]] type directly from its knots and b-spline
+!  coefficients (for example, those saved from another object with
+!  `get_knots` and `get_coefficients`), without interpolating any data.
+!
+!  The number of coefficients in each direction is taken from the
+!  shape of `bcoef`.
+
+    pure subroutine initialize_from_coefficients_1d(me,tx,bcoef,kx,iflag,extrap)
+
+    implicit none
+
+    class(bspline_1d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),intent(in) :: tx  !! The `(nx+kx)` knots in the \(x\) direction.
+                                            !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in) :: bcoef  !! `(nx)` array of b-spline coefficients
+    integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
+                                  !! ( \( 1 \le k_x \le n_x \) )
+                                  !! (order = polynomial degree + 1)
+    integer(ip),intent(out) :: iflag  !! status flag:
+                                      !!
+                                      !! * 0: no errors
+                                      !! * 5001-5005: invalid knots or coefficients
+                                      !!   (see [[get_status_message]])
+    logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
+                                           !! (default is false)
+
+    integer(ip),dimension(1) :: n  !! number of coefficients in each direction
+
+    call me%destroy()
+
+    n = shape(bcoef,kind=ip)
+    call check_coefficients(n(1),kx,tx,iflag)
+
+    if (iflag == 0_ip) then
+
+        me%nx = n(1)
+        me%kx = kx
+        me%bcoef = bcoef
+        me%tx = tx
+        allocate(me%work_val_1(3_ip*kx))
+
+        call me%set_extrap_flag(extrap)
+
+    end if
+
+    me%initialized = iflag==0_ip
+    me%iflag = iflag
+
+    end subroutine initialize_from_coefficients_1d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Returns the knot vectors of a [[bspline_1d]].
+
+    pure subroutine get_knots_1d(me,tx,iflag)
+
+    implicit none
+
+    class(bspline_1d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),allocatable,intent(out) :: tx  !! the `(nx+kx)` knots in the \(x\) direction
+    integer(ip),intent(out) :: iflag  !! status flag: 0 if no errors,
+                                      !! 1 if the class is not initialized
+
+    if (me%initialized) then
+        tx = me%tx
+        iflag = 0_ip
+    else
+        allocate(tx(0))
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine get_knots_1d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Returns the b-spline coefficients of a [[bspline_1d]].
+!  These are the values of the control points (see [[greville_abscissae]]
+!  for their locations).
+
+    pure subroutine get_coefficients_1d(me,bcoef,iflag)
+
+    implicit none
+
+    class(bspline_1d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),allocatable,intent(out) :: bcoef  !! `(nx)` array of b-spline coefficients
+    integer(ip),intent(out) :: iflag  !! status flag: 0 if no errors,
+                                      !! 1 if the class is not initialized
+
+    if (me%initialized) then
+        bcoef = me%bcoef
+        iflag = 0_ip
+    else
+        allocate(bcoef(0))
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine get_coefficients_1d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_2d]] type directly from its knots and b-spline
+!  coefficients (for example, those saved from another object with
+!  `get_knots` and `get_coefficients`), without interpolating any data.
+!
+!  The number of coefficients in each direction is taken from the
+!  shape of `bcoef`.
+
+    pure subroutine initialize_from_coefficients_2d(me,tx,ty,bcoef,kx,ky,iflag,extrap)
+
+    implicit none
+
+    class(bspline_2d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),intent(in) :: tx  !! The `(nx+kx)` knots in the \(x\) direction.
+                                            !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in) :: ty  !! The `(ny+ky)` knots in the \(y\) direction.
+                                            !! Must be non-decreasing.
+    real(wp),dimension(:,:),intent(in) :: bcoef  !! `(nx,ny)` array of b-spline coefficients
+    integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
+                                  !! ( \( 1 \le k_x \le n_x \) )
+                                  !! (order = polynomial degree + 1)
+    integer(ip),intent(in) :: ky  !! The order of spline pieces in \(y\)
+                                  !! ( \( 1 \le k_y \le n_y \) )
+                                  !! (order = polynomial degree + 1)
+    integer(ip),intent(out) :: iflag  !! status flag:
+                                      !!
+                                      !! * 0: no errors
+                                      !! * 5001-5005: invalid knots or coefficients
+                                      !!   (see [[get_status_message]])
+    logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
+                                           !! (default is false)
+
+    integer(ip),dimension(2) :: n  !! number of coefficients in each direction
+
+    call me%destroy()
+
+    n = shape(bcoef,kind=ip)
+    call check_coefficients(n(1),kx,tx,iflag)
+    if (iflag==0_ip) call check_coefficients(n(2),ky,ty,iflag)
+
+    if (iflag == 0_ip) then
+
+        me%nx = n(1)
+        me%ny = n(2)
+        me%kx = kx
+        me%ky = ky
+        me%bcoef = bcoef
+        me%tx = tx
+        me%ty = ty
+        allocate(me%work_val_1(ky))
+        allocate(me%work_val_2(3_ip*max(kx,ky)))
+
+        call me%set_extrap_flag(extrap)
+
+    end if
+
+    me%initialized = iflag==0_ip
+    me%iflag = iflag
+
+    end subroutine initialize_from_coefficients_2d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Returns the knot vectors of a [[bspline_2d]].
+
+    pure subroutine get_knots_2d(me,tx,ty,iflag)
+
+    implicit none
+
+    class(bspline_2d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),allocatable,intent(out) :: tx  !! the `(nx+kx)` knots in the \(x\) direction
+    real(wp),dimension(:),allocatable,intent(out) :: ty  !! the `(ny+ky)` knots in the \(y\) direction
+    integer(ip),intent(out) :: iflag  !! status flag: 0 if no errors,
+                                      !! 1 if the class is not initialized
+
+    if (me%initialized) then
+        tx = me%tx
+        ty = me%ty
+        iflag = 0_ip
+    else
+        allocate(tx(0))
+        allocate(ty(0))
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine get_knots_2d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Returns the b-spline coefficients of a [[bspline_2d]].
+!  These are the values of the control points (see [[greville_abscissae]]
+!  for their locations).
+
+    pure subroutine get_coefficients_2d(me,bcoef,iflag)
+
+    implicit none
+
+    class(bspline_2d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:,:),allocatable,intent(out) :: bcoef  !! `(nx,ny)` array of b-spline coefficients
+    integer(ip),intent(out) :: iflag  !! status flag: 0 if no errors,
+                                      !! 1 if the class is not initialized
+
+    if (me%initialized) then
+        bcoef = me%bcoef
+        iflag = 0_ip
+    else
+        allocate(bcoef(0,0))
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine get_coefficients_2d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_3d]] type directly from its knots and b-spline
+!  coefficients (for example, those saved from another object with
+!  `get_knots` and `get_coefficients`), without interpolating any data.
+!
+!  The number of coefficients in each direction is taken from the
+!  shape of `bcoef`.
+
+    pure subroutine initialize_from_coefficients_3d(me,tx,ty,tz,bcoef,kx,ky,kz,iflag,extrap)
+
+    implicit none
+
+    class(bspline_3d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),intent(in) :: tx  !! The `(nx+kx)` knots in the \(x\) direction.
+                                            !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in) :: ty  !! The `(ny+ky)` knots in the \(y\) direction.
+                                            !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in) :: tz  !! The `(nz+kz)` knots in the \(z\) direction.
+                                            !! Must be non-decreasing.
+    real(wp),dimension(:,:,:),intent(in) :: bcoef  !! `(nx,ny,nz)` array of b-spline coefficients
+    integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
+                                  !! ( \( 1 \le k_x \le n_x \) )
+                                  !! (order = polynomial degree + 1)
+    integer(ip),intent(in) :: ky  !! The order of spline pieces in \(y\)
+                                  !! ( \( 1 \le k_y \le n_y \) )
+                                  !! (order = polynomial degree + 1)
+    integer(ip),intent(in) :: kz  !! The order of spline pieces in \(z\)
+                                  !! ( \( 1 \le k_z \le n_z \) )
+                                  !! (order = polynomial degree + 1)
+    integer(ip),intent(out) :: iflag  !! status flag:
+                                      !!
+                                      !! * 0: no errors
+                                      !! * 5001-5005: invalid knots or coefficients
+                                      !!   (see [[get_status_message]])
+    logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
+                                           !! (default is false)
+
+    integer(ip),dimension(3) :: n  !! number of coefficients in each direction
+
+    call me%destroy()
+
+    n = shape(bcoef,kind=ip)
+    call check_coefficients(n(1),kx,tx,iflag)
+    if (iflag==0_ip) call check_coefficients(n(2),ky,ty,iflag)
+    if (iflag==0_ip) call check_coefficients(n(3),kz,tz,iflag)
+
+    if (iflag == 0_ip) then
+
+        me%nx = n(1)
+        me%ny = n(2)
+        me%nz = n(3)
+        me%kx = kx
+        me%ky = ky
+        me%kz = kz
+        me%bcoef = bcoef
+        me%tx = tx
+        me%ty = ty
+        me%tz = tz
+        allocate(me%work_val_1(ky,kz))
+        allocate(me%work_val_2(kz))
+        allocate(me%work_val_3(3_ip*max(kx,ky,kz)))
+
+        call me%set_extrap_flag(extrap)
+
+    end if
+
+    me%initialized = iflag==0_ip
+    me%iflag = iflag
+
+    end subroutine initialize_from_coefficients_3d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Returns the knot vectors of a [[bspline_3d]].
+
+    pure subroutine get_knots_3d(me,tx,ty,tz,iflag)
+
+    implicit none
+
+    class(bspline_3d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),allocatable,intent(out) :: tx  !! the `(nx+kx)` knots in the \(x\) direction
+    real(wp),dimension(:),allocatable,intent(out) :: ty  !! the `(ny+ky)` knots in the \(y\) direction
+    real(wp),dimension(:),allocatable,intent(out) :: tz  !! the `(nz+kz)` knots in the \(z\) direction
+    integer(ip),intent(out) :: iflag  !! status flag: 0 if no errors,
+                                      !! 1 if the class is not initialized
+
+    if (me%initialized) then
+        tx = me%tx
+        ty = me%ty
+        tz = me%tz
+        iflag = 0_ip
+    else
+        allocate(tx(0))
+        allocate(ty(0))
+        allocate(tz(0))
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine get_knots_3d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Returns the b-spline coefficients of a [[bspline_3d]].
+!  These are the values of the control points (see [[greville_abscissae]]
+!  for their locations).
+
+    pure subroutine get_coefficients_3d(me,bcoef,iflag)
+
+    implicit none
+
+    class(bspline_3d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:,:,:),allocatable,intent(out) :: bcoef  !! `(nx,ny,nz)` array of b-spline coefficients
+    integer(ip),intent(out) :: iflag  !! status flag: 0 if no errors,
+                                      !! 1 if the class is not initialized
+
+    if (me%initialized) then
+        bcoef = me%bcoef
+        iflag = 0_ip
+    else
+        allocate(bcoef(0,0,0))
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine get_coefficients_3d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_4d]] type directly from its knots and b-spline
+!  coefficients (for example, those saved from another object with
+!  `get_knots` and `get_coefficients`), without interpolating any data.
+!
+!  The number of coefficients in each direction is taken from the
+!  shape of `bcoef`.
+
+    pure subroutine initialize_from_coefficients_4d(me,tx,ty,tz,tq,bcoef,kx,ky,kz,kq,iflag,extrap)
+
+    implicit none
+
+    class(bspline_4d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),intent(in) :: tx  !! The `(nx+kx)` knots in the \(x\) direction.
+                                            !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in) :: ty  !! The `(ny+ky)` knots in the \(y\) direction.
+                                            !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in) :: tz  !! The `(nz+kz)` knots in the \(z\) direction.
+                                            !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in) :: tq  !! The `(nq+kq)` knots in the \(q\) direction.
+                                            !! Must be non-decreasing.
+    real(wp),dimension(:,:,:,:),intent(in) :: bcoef  !! `(nx,ny,nz,nq)` array of b-spline coefficients
+    integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
+                                  !! ( \( 1 \le k_x \le n_x \) )
+                                  !! (order = polynomial degree + 1)
+    integer(ip),intent(in) :: ky  !! The order of spline pieces in \(y\)
+                                  !! ( \( 1 \le k_y \le n_y \) )
+                                  !! (order = polynomial degree + 1)
+    integer(ip),intent(in) :: kz  !! The order of spline pieces in \(z\)
+                                  !! ( \( 1 \le k_z \le n_z \) )
+                                  !! (order = polynomial degree + 1)
+    integer(ip),intent(in) :: kq  !! The order of spline pieces in \(q\)
+                                  !! ( \( 1 \le k_q \le n_q \) )
+                                  !! (order = polynomial degree + 1)
+    integer(ip),intent(out) :: iflag  !! status flag:
+                                      !!
+                                      !! * 0: no errors
+                                      !! * 5001-5005: invalid knots or coefficients
+                                      !!   (see [[get_status_message]])
+    logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
+                                           !! (default is false)
+
+    integer(ip),dimension(4) :: n  !! number of coefficients in each direction
+
+    call me%destroy()
+
+    n = shape(bcoef,kind=ip)
+    call check_coefficients(n(1),kx,tx,iflag)
+    if (iflag==0_ip) call check_coefficients(n(2),ky,ty,iflag)
+    if (iflag==0_ip) call check_coefficients(n(3),kz,tz,iflag)
+    if (iflag==0_ip) call check_coefficients(n(4),kq,tq,iflag)
+
+    if (iflag == 0_ip) then
+
+        me%nx = n(1)
+        me%ny = n(2)
+        me%nz = n(3)
+        me%nq = n(4)
+        me%kx = kx
+        me%ky = ky
+        me%kz = kz
+        me%kq = kq
+        me%bcoef = bcoef
+        me%tx = tx
+        me%ty = ty
+        me%tz = tz
+        me%tq = tq
+        allocate(me%work_val_1(ky,kz,kq))
+        allocate(me%work_val_2(kz,kq))
+        allocate(me%work_val_3(kq))
+        allocate(me%work_val_4(3_ip*max(kx,ky,kz,kq)))
+
+        call me%set_extrap_flag(extrap)
+
+    end if
+
+    me%initialized = iflag==0_ip
+    me%iflag = iflag
+
+    end subroutine initialize_from_coefficients_4d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Returns the knot vectors of a [[bspline_4d]].
+
+    pure subroutine get_knots_4d(me,tx,ty,tz,tq,iflag)
+
+    implicit none
+
+    class(bspline_4d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),allocatable,intent(out) :: tx  !! the `(nx+kx)` knots in the \(x\) direction
+    real(wp),dimension(:),allocatable,intent(out) :: ty  !! the `(ny+ky)` knots in the \(y\) direction
+    real(wp),dimension(:),allocatable,intent(out) :: tz  !! the `(nz+kz)` knots in the \(z\) direction
+    real(wp),dimension(:),allocatable,intent(out) :: tq  !! the `(nq+kq)` knots in the \(q\) direction
+    integer(ip),intent(out) :: iflag  !! status flag: 0 if no errors,
+                                      !! 1 if the class is not initialized
+
+    if (me%initialized) then
+        tx = me%tx
+        ty = me%ty
+        tz = me%tz
+        tq = me%tq
+        iflag = 0_ip
+    else
+        allocate(tx(0))
+        allocate(ty(0))
+        allocate(tz(0))
+        allocate(tq(0))
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine get_knots_4d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Returns the b-spline coefficients of a [[bspline_4d]].
+!  These are the values of the control points (see [[greville_abscissae]]
+!  for their locations).
+
+    pure subroutine get_coefficients_4d(me,bcoef,iflag)
+
+    implicit none
+
+    class(bspline_4d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:,:,:,:),allocatable,intent(out) :: bcoef  !! `(nx,ny,nz,nq)` array of b-spline coefficients
+    integer(ip),intent(out) :: iflag  !! status flag: 0 if no errors,
+                                      !! 1 if the class is not initialized
+
+    if (me%initialized) then
+        bcoef = me%bcoef
+        iflag = 0_ip
+    else
+        allocate(bcoef(0,0,0,0))
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine get_coefficients_4d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_5d]] type directly from its knots and b-spline
+!  coefficients (for example, those saved from another object with
+!  `get_knots` and `get_coefficients`), without interpolating any data.
+!
+!  The number of coefficients in each direction is taken from the
+!  shape of `bcoef`.
+
+    pure subroutine initialize_from_coefficients_5d(me,tx,ty,tz,tq,tr,bcoef,kx,ky,kz,kq,kr,iflag,extrap)
+
+    implicit none
+
+    class(bspline_5d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),intent(in) :: tx  !! The `(nx+kx)` knots in the \(x\) direction.
+                                            !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in) :: ty  !! The `(ny+ky)` knots in the \(y\) direction.
+                                            !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in) :: tz  !! The `(nz+kz)` knots in the \(z\) direction.
+                                            !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in) :: tq  !! The `(nq+kq)` knots in the \(q\) direction.
+                                            !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in) :: tr  !! The `(nr+kr)` knots in the \(r\) direction.
+                                            !! Must be non-decreasing.
+    real(wp),dimension(:,:,:,:,:),intent(in) :: bcoef  !! `(nx,ny,nz,nq,nr)` array of b-spline coefficients
+    integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
+                                  !! ( \( 1 \le k_x \le n_x \) )
+                                  !! (order = polynomial degree + 1)
+    integer(ip),intent(in) :: ky  !! The order of spline pieces in \(y\)
+                                  !! ( \( 1 \le k_y \le n_y \) )
+                                  !! (order = polynomial degree + 1)
+    integer(ip),intent(in) :: kz  !! The order of spline pieces in \(z\)
+                                  !! ( \( 1 \le k_z \le n_z \) )
+                                  !! (order = polynomial degree + 1)
+    integer(ip),intent(in) :: kq  !! The order of spline pieces in \(q\)
+                                  !! ( \( 1 \le k_q \le n_q \) )
+                                  !! (order = polynomial degree + 1)
+    integer(ip),intent(in) :: kr  !! The order of spline pieces in \(r\)
+                                  !! ( \( 1 \le k_r \le n_r \) )
+                                  !! (order = polynomial degree + 1)
+    integer(ip),intent(out) :: iflag  !! status flag:
+                                      !!
+                                      !! * 0: no errors
+                                      !! * 5001-5005: invalid knots or coefficients
+                                      !!   (see [[get_status_message]])
+    logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
+                                           !! (default is false)
+
+    integer(ip),dimension(5) :: n  !! number of coefficients in each direction
+
+    call me%destroy()
+
+    n = shape(bcoef,kind=ip)
+    call check_coefficients(n(1),kx,tx,iflag)
+    if (iflag==0_ip) call check_coefficients(n(2),ky,ty,iflag)
+    if (iflag==0_ip) call check_coefficients(n(3),kz,tz,iflag)
+    if (iflag==0_ip) call check_coefficients(n(4),kq,tq,iflag)
+    if (iflag==0_ip) call check_coefficients(n(5),kr,tr,iflag)
+
+    if (iflag == 0_ip) then
+
+        me%nx = n(1)
+        me%ny = n(2)
+        me%nz = n(3)
+        me%nq = n(4)
+        me%nr = n(5)
+        me%kx = kx
+        me%ky = ky
+        me%kz = kz
+        me%kq = kq
+        me%kr = kr
+        me%bcoef = bcoef
+        me%tx = tx
+        me%ty = ty
+        me%tz = tz
+        me%tq = tq
+        me%tr = tr
+        allocate(me%work_val_1(ky,kz,kq,kr))
+        allocate(me%work_val_2(kz,kq,kr))
+        allocate(me%work_val_3(kq,kr))
+        allocate(me%work_val_4(kr))
+        allocate(me%work_val_5(3_ip*max(kx,ky,kz,kq,kr)))
+
+        call me%set_extrap_flag(extrap)
+
+    end if
+
+    me%initialized = iflag==0_ip
+    me%iflag = iflag
+
+    end subroutine initialize_from_coefficients_5d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Returns the knot vectors of a [[bspline_5d]].
+
+    pure subroutine get_knots_5d(me,tx,ty,tz,tq,tr,iflag)
+
+    implicit none
+
+    class(bspline_5d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),allocatable,intent(out) :: tx  !! the `(nx+kx)` knots in the \(x\) direction
+    real(wp),dimension(:),allocatable,intent(out) :: ty  !! the `(ny+ky)` knots in the \(y\) direction
+    real(wp),dimension(:),allocatable,intent(out) :: tz  !! the `(nz+kz)` knots in the \(z\) direction
+    real(wp),dimension(:),allocatable,intent(out) :: tq  !! the `(nq+kq)` knots in the \(q\) direction
+    real(wp),dimension(:),allocatable,intent(out) :: tr  !! the `(nr+kr)` knots in the \(r\) direction
+    integer(ip),intent(out) :: iflag  !! status flag: 0 if no errors,
+                                      !! 1 if the class is not initialized
+
+    if (me%initialized) then
+        tx = me%tx
+        ty = me%ty
+        tz = me%tz
+        tq = me%tq
+        tr = me%tr
+        iflag = 0_ip
+    else
+        allocate(tx(0))
+        allocate(ty(0))
+        allocate(tz(0))
+        allocate(tq(0))
+        allocate(tr(0))
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine get_knots_5d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Returns the b-spline coefficients of a [[bspline_5d]].
+!  These are the values of the control points (see [[greville_abscissae]]
+!  for their locations).
+
+    pure subroutine get_coefficients_5d(me,bcoef,iflag)
+
+    implicit none
+
+    class(bspline_5d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:,:,:,:,:),allocatable,intent(out) :: bcoef  !! `(nx,ny,nz,nq,nr)` array of b-spline coefficients
+    integer(ip),intent(out) :: iflag  !! status flag: 0 if no errors,
+                                      !! 1 if the class is not initialized
+
+    if (me%initialized) then
+        bcoef = me%bcoef
+        iflag = 0_ip
+    else
+        allocate(bcoef(0,0,0,0,0))
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine get_coefficients_5d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_6d]] type directly from its knots and b-spline
+!  coefficients (for example, those saved from another object with
+!  `get_knots` and `get_coefficients`), without interpolating any data.
+!
+!  The number of coefficients in each direction is taken from the
+!  shape of `bcoef`.
+
+    pure subroutine initialize_from_coefficients_6d(me,tx,ty,tz,tq,tr,ts,bcoef,kx,ky,kz,kq,kr,ks,iflag,extrap)
+
+    implicit none
+
+    class(bspline_6d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),intent(in) :: tx  !! The `(nx+kx)` knots in the \(x\) direction.
+                                            !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in) :: ty  !! The `(ny+ky)` knots in the \(y\) direction.
+                                            !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in) :: tz  !! The `(nz+kz)` knots in the \(z\) direction.
+                                            !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in) :: tq  !! The `(nq+kq)` knots in the \(q\) direction.
+                                            !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in) :: tr  !! The `(nr+kr)` knots in the \(r\) direction.
+                                            !! Must be non-decreasing.
+    real(wp),dimension(:),intent(in) :: ts  !! The `(ns+ks)` knots in the \(s\) direction.
+                                            !! Must be non-decreasing.
+    real(wp),dimension(:,:,:,:,:,:),intent(in) :: bcoef  !! `(nx,ny,nz,nq,nr,ns)` array of b-spline coefficients
+    integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
+                                  !! ( \( 1 \le k_x \le n_x \) )
+                                  !! (order = polynomial degree + 1)
+    integer(ip),intent(in) :: ky  !! The order of spline pieces in \(y\)
+                                  !! ( \( 1 \le k_y \le n_y \) )
+                                  !! (order = polynomial degree + 1)
+    integer(ip),intent(in) :: kz  !! The order of spline pieces in \(z\)
+                                  !! ( \( 1 \le k_z \le n_z \) )
+                                  !! (order = polynomial degree + 1)
+    integer(ip),intent(in) :: kq  !! The order of spline pieces in \(q\)
+                                  !! ( \( 1 \le k_q \le n_q \) )
+                                  !! (order = polynomial degree + 1)
+    integer(ip),intent(in) :: kr  !! The order of spline pieces in \(r\)
+                                  !! ( \( 1 \le k_r \le n_r \) )
+                                  !! (order = polynomial degree + 1)
+    integer(ip),intent(in) :: ks  !! The order of spline pieces in \(s\)
+                                  !! ( \( 1 \le k_s \le n_s \) )
+                                  !! (order = polynomial degree + 1)
+    integer(ip),intent(out) :: iflag  !! status flag:
+                                      !!
+                                      !! * 0: no errors
+                                      !! * 5001-5005: invalid knots or coefficients
+                                      !!   (see [[get_status_message]])
+    logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
+                                           !! (default is false)
+
+    integer(ip),dimension(6) :: n  !! number of coefficients in each direction
+
+    call me%destroy()
+
+    n = shape(bcoef,kind=ip)
+    call check_coefficients(n(1),kx,tx,iflag)
+    if (iflag==0_ip) call check_coefficients(n(2),ky,ty,iflag)
+    if (iflag==0_ip) call check_coefficients(n(3),kz,tz,iflag)
+    if (iflag==0_ip) call check_coefficients(n(4),kq,tq,iflag)
+    if (iflag==0_ip) call check_coefficients(n(5),kr,tr,iflag)
+    if (iflag==0_ip) call check_coefficients(n(6),ks,ts,iflag)
+
+    if (iflag == 0_ip) then
+
+        me%nx = n(1)
+        me%ny = n(2)
+        me%nz = n(3)
+        me%nq = n(4)
+        me%nr = n(5)
+        me%ns = n(6)
+        me%kx = kx
+        me%ky = ky
+        me%kz = kz
+        me%kq = kq
+        me%kr = kr
+        me%ks = ks
+        me%bcoef = bcoef
+        me%tx = tx
+        me%ty = ty
+        me%tz = tz
+        me%tq = tq
+        me%tr = tr
+        me%ts = ts
+        allocate(me%work_val_1(ky,kz,kq,kr,ks))
+        allocate(me%work_val_2(kz,kq,kr,ks))
+        allocate(me%work_val_3(kq,kr,ks))
+        allocate(me%work_val_4(kr,ks))
+        allocate(me%work_val_5(ks))
+        allocate(me%work_val_6(3_ip*max(kx,ky,kz,kq,kr,ks)))
+
+        call me%set_extrap_flag(extrap)
+
+    end if
+
+    me%initialized = iflag==0_ip
+    me%iflag = iflag
+
+    end subroutine initialize_from_coefficients_6d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Returns the knot vectors of a [[bspline_6d]].
+
+    pure subroutine get_knots_6d(me,tx,ty,tz,tq,tr,ts,iflag)
+
+    implicit none
+
+    class(bspline_6d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),allocatable,intent(out) :: tx  !! the `(nx+kx)` knots in the \(x\) direction
+    real(wp),dimension(:),allocatable,intent(out) :: ty  !! the `(ny+ky)` knots in the \(y\) direction
+    real(wp),dimension(:),allocatable,intent(out) :: tz  !! the `(nz+kz)` knots in the \(z\) direction
+    real(wp),dimension(:),allocatable,intent(out) :: tq  !! the `(nq+kq)` knots in the \(q\) direction
+    real(wp),dimension(:),allocatable,intent(out) :: tr  !! the `(nr+kr)` knots in the \(r\) direction
+    real(wp),dimension(:),allocatable,intent(out) :: ts  !! the `(ns+ks)` knots in the \(s\) direction
+    integer(ip),intent(out) :: iflag  !! status flag: 0 if no errors,
+                                      !! 1 if the class is not initialized
+
+    if (me%initialized) then
+        tx = me%tx
+        ty = me%ty
+        tz = me%tz
+        tq = me%tq
+        tr = me%tr
+        ts = me%ts
+        iflag = 0_ip
+    else
+        allocate(tx(0))
+        allocate(ty(0))
+        allocate(tz(0))
+        allocate(tq(0))
+        allocate(tr(0))
+        allocate(ts(0))
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine get_knots_6d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Returns the b-spline coefficients of a [[bspline_6d]].
+!  These are the values of the control points (see [[greville_abscissae]]
+!  for their locations).
+
+    pure subroutine get_coefficients_6d(me,bcoef,iflag)
+
+    implicit none
+
+    class(bspline_6d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:,:,:,:,:,:),allocatable,intent(out) :: bcoef  !! `(nx,ny,nz,nq,nr,ns)` array of b-spline coefficients
+    integer(ip),intent(out) :: iflag  !! status flag: 0 if no errors,
+                                      !! 1 if the class is not initialized
+
+    if (me%initialized) then
+        bcoef = me%bcoef
+        iflag = 0_ip
+    else
+        allocate(bcoef(0,0,0,0,0,0))
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine get_coefficients_6d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  The control points of a [[bspline_1d]]: the Greville abscissae
+!  (see [[greville_abscissae]]) and the b-spline coefficients.
+!
+!  The spline lies within the convex hull of its control points, and
+!  the control polygon (the control points joined by straight lines)
+!  approximates the spline.
+
+    pure subroutine control_points_1d(me,x,y,iflag)
+
+    implicit none
+
+    class(bspline_1d),intent(inout)               :: me
+    real(wp),dimension(:),allocatable,intent(out) :: x      !! `(nx)` locations of the control points
+                                                            !! (the Greville abscissae)
+    real(wp),dimension(:),allocatable,intent(out) :: y      !! `(nx)` values of the control points
+                                                            !! (the b-spline coefficients)
+    integer(ip),intent(out)                       :: iflag  !! status flag: 0 if no errors,
+                                                            !! 1 if the class is not initialized
+
+    if (me%initialized) then
+        allocate(x(me%nx))
+        call greville_abscissae(me%tx,me%nx,me%kx,x)
+        y = me%bcoef
+        iflag = 0_ip
+    else
+        allocate(x(0), y(0))
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine control_points_1d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Check the knots and coefficients for one direction in the
+!  `initialize_from_coefficients` methods.
+
+    pure subroutine check_coefficients(n,k,t,iflag)
+
+    implicit none
+
+    integer(ip),intent(in)           :: n      !! number of b-spline coefficients
+    integer(ip),intent(in)           :: k      !! order of the b-spline
+    real(wp),dimension(:),intent(in) :: t      !! knot vector
+    integer(ip),intent(out)          :: iflag  !! status flag (0 if everything is OK)
+
+    integer(ip) :: nt  !! number of knots
+
+    nt = size(t,kind=ip)
+    if (k<1_ip) then
+        iflag = 5001_ip
+    else if (n<k) then
+        iflag = 5002_ip
+    else if (nt/=n+k) then
+        iflag = 5003_ip
+    else if (any(t(2_ip:nt)<t(1_ip:nt-1_ip))) then
+        iflag = 5004_ip
+    else if (t(k)>=t(n+1_ip)) then
+        iflag = 5005_ip
+    else
+        iflag = 0_ip
+    end if
+
+    end subroutine check_coefficients
 !*****************************************************************************************
 
 !*****************************************************************************************

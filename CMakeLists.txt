@@ -125,6 +125,7 @@ if(BSPLINE_BUILD_TESTING)
   enable_testing()
   foreach(prog_name
           # bspline_extrap_test
+          bspline_control_points_test
           bspline_test_2
           bspline_test
           # dbint4_test

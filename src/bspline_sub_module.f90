@@ -103,6 +103,7 @@
     !main routines:
     public :: db1ink, db1val, db1sqad, db1fqad
     public :: db1root, db1min, db1max
+    public :: greville_abscissae
     public :: db2ink, db2val
     public :: db3ink, db3val
     public :: db4ink, db4val
@@ -771,6 +772,52 @@
     end do
 
     end subroutine db1extremum
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Greville abscissae of a b-spline: the average of the `k-1` interior
+!  knots of the support of each b-spline basis function,
+!  $$ \xi_i = \frac{t_{i+1} + \cdots + t_{i+k-1}}{k-1}, \quad i=1,\dots,n $$
+!
+!  The control points of a 1D b-spline are \( (\xi_i, c_i) \), where
+!  \( c_i \) are its coefficients. The spline lies within their convex
+!  hull, and the control polygon approximates the spline. In more than
+!  one dimension, the control net is the tensor product of the Greville
+!  abscissae in each direction, with the coefficient array.
+!
+!  The Greville abscissae are also the coefficients of \( s(x) = x \)
+!  (for `k >= 2`), and are in \( [t_k, t_{n+1}] \) for clamped knots.
+!  For `k = 1`, the midpoints of the supports, \( (t_i + t_{i+1})/2 \),
+!  are returned.
+!
+!### See also
+!  * The `control_points` method of [[bspline_1d]].
+
+    pure subroutine greville_abscissae(t,n,k,xi)
+
+    implicit none
+
+    integer(ip),intent(in)              :: n   !! number of b-spline coefficients
+    integer(ip),intent(in)              :: k   !! order of the b-spline, `k >= 1`
+    real(wp),dimension(n+k),intent(in)  :: t   !! knot array
+    real(wp),dimension(n),intent(out)   :: xi  !! the Greville abscissae
+
+    integer(ip) :: i  !! counter
+
+    if (k==1_ip) then
+        xi = 0.5_wp*(t(1_ip:n) + t(2_ip:n+1_ip))
+    else
+        do i = 1_ip, n
+            ! the average, as an offset from the first knot (so it is exact
+            ! for repeated knots, such as clamped ends), kept within the
+            ! knots in case of rounding
+            xi(i) = t(i+1_ip) + sum(t(i+2_ip:i+k-1_ip)-t(i+1_ip)) / real(k-1_ip,wp)
+            xi(i) = min(max(xi(i), t(i+1_ip)), t(i+k-1_ip))
+        end do
+    end if
+
+    end subroutine greville_abscissae
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -5750,6 +5797,12 @@
     case(4004_ip); msg='Warning in db1root: the spline is equal to a over a whole knot interval'
     case(4005_ip); msg='Error in inverse: there is no x with s(x)=y'
     case(4006_ip); msg='Error in inverse: there is more than one x with s(x)=y'
+
+    case(5001_ip); msg='Error in initialize_from_coefficients: k does not satisfy k>=1'
+    case(5002_ip); msg='Error in initialize_from_coefficients: n does not satisfy n>=k'
+    case(5003_ip); msg='Error in initialize_from_coefficients: a knot vector is not the correct size (n+k)'
+    case(5004_ip); msg='Error in initialize_from_coefficients: a knot vector is not non-decreasing'
+    case(5005_ip); msg='Error in initialize_from_coefficients: a knot vector does not satisfy t(k)<t(n+1)'
 
     case(3001_ip); msg='Error in dbspvd: k does not satisfy k>=1'
     case(3002_ip); msg='Error in dbspvd: nderiv does not satisfy 1<=nderiv<=k'
