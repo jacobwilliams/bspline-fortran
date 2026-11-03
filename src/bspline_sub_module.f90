@@ -196,7 +196,7 @@
 !### See also
 !  * [[dbint4]] -- the main routine that is called here.
 !
-!@note Currently, this only works for 3rd order (k=4).
+!@note The spline order `kx` must be at least 3.
 
     pure subroutine db1ink_alt(x,nx,fcn,kx,ibcl,ibcr,fbcl,fbcr,kntopt,tx,bcoef,iflag)
 
@@ -204,43 +204,35 @@
 
     real(wp),dimension(:),intent(in)   :: x       !! \(x\) vector of abscissae of length `nx`, distinct
                                                   !! and in increasing order
-    integer(ip),intent(in)             :: nx      !! number of data points, \( n_x \ge 2 \)
+    integer(ip),intent(in)             :: nx      !! number of data points, \( n_x \ge \max(2,k_x-2) \)
     real(wp),dimension(:),intent(in)   :: fcn     !! \(y\) vector of ordinates of length `nx`
-    integer(ip),intent(in)             :: kx      !! spline order (Currently, this must be `4`)
+    integer(ip),intent(in)             :: kx      !! spline order (`kx >= 3`)
     integer(ip),intent(in)             :: ibcl    !! selection parameter for left boundary condition:
-                                                  !!
-                                                  !! * `ibcl = 1` constrain the first derivative at `x(1)` to `fbcl`
-                                                  !! * `ibcl = 2` constrain the second derivative at `x(1)` to `fbcl`
+                                                  !! constrain the `ibcl`-th derivative at `x(1)` to `fbcl`
+                                                  !! (`1 <= ibcl <= kx-1`, e.g. `ibcl = 2` for a natural spline)
     integer(ip),intent(in)             :: ibcr    !! selection parameter for right boundary condition:
-                                                  !!
-                                                  !! * `ibcr = 1` constrain first derivative at `x(nx)` to `fbcr`
-                                                  !! * `ibcr = 2` constrain second derivative at `x(nx)` to `fbcr`
+                                                  !! constrain the `ibcr`-th derivative at `x(nx)` to `fbcr`
+                                                  !! (`1 <= ibcr <= kx-1`, e.g. `ibcr = 2` for a natural spline)
     real(wp),intent(in)                :: fbcl    !! left boundary values governed by `ibcl`
     real(wp),intent(in)                :: fbcr    !! right boundary values governed by `ibcr`
     integer(ip),intent(in)             :: kntopt  !! knot selection parameter:
                                                   !!
-                                                  !! * `kntopt = 1` sets knot multiplicity at `t(4)` and
-                                                  !!   `t(nx+3)` to 4
+                                                  !! * `kntopt = 1` sets knot multiplicity at `t(kx)` and
+                                                  !!   `t(nx+3)` to `kx`
                                                   !! * `kntopt = 2` sets a symmetric placement of knots
-                                                  !!   about `t(4)` and `t(nx+3)`
-    real(wp),dimension(:),intent(out)  :: tx      !! knot array of length `nx+6`
+                                                  !!   about `t(kx)` and `t(nx+3)`
+    real(wp),dimension(:),intent(out)  :: tx      !! knot array of length `nx+kx+2`
     real(wp),dimension(:),intent(out)  :: bcoef   !! b spline coefficient array of length `nx+2`
-    integer(ip),intent(out)            :: iflag   !! status flag:
-                                                  !!
-                                                  !! * 0: no errors
-                                                  !! * 806: [[dbint4]] can only be used when `k=4`
+    integer(ip),intent(out)            :: iflag   !! status flag (see [[dbint4]])
 
-    real(wp),dimension(:,:),allocatable :: w         !! work array of dimension `5,nx+2`
     integer(ip)                         :: n         !! number of coefficients (n=nx+2)
-    integer(ip)                         :: k         !! order of spline (k=4)
     logical                             :: status_ok !! status flag for error checking
 
-    real(wp),dimension(3),parameter :: tleft = 0.0_wp   !! not used for this case (see [[dbint4]])
-    real(wp),dimension(3),parameter :: tright = 0.0_wp  !! not used for this case (see [[dbint4]])
+    real(wp),dimension(0),parameter :: tleft = 0.0_wp   !! not used for this case (see [[dbint4]])
+    real(wp),dimension(0),parameter :: tright = 0.0_wp  !! not used for this case (see [[dbint4]])
 
-
-    if (kx /= 4_ip) then
-        iflag = 806_ip
+    if (kntopt /= 1_ip .and. kntopt /= 2_ip) then
+        iflag = 2005_ip ! use db1ink_alt_2 to specify the end knots
     else
 
         call check_inputs(  1_ip,& ! so it will check size of t
@@ -255,9 +247,7 @@
                             alt=.true.)
 
         if (status_ok) then
-            allocate(w(5_ip,nx+2_ip))
-            call dbint4(x,fcn,nx,ibcl,ibcr,fbcl,fbcr,kntopt,tleft,tright,tx,bcoef,n,k,w,iflag)
-            deallocate(w)
+            call dbint4(x,fcn,nx,ibcl,ibcr,fbcl,fbcr,kntopt,tleft,tright,tx,bcoef,n,kx,iflag)
         end if
 
     end if
@@ -268,7 +258,7 @@
 !*****************************************************************************************
 !>
 !  Alternate version of [[db1ink_alt]], where the first and
-!  last 3 knots are specified by the user.
+!  last `kx-1` knots are specified by the user.
 !
 !### History
 !  * Jacob Williams, 9/4/2018 : created this routine.
@@ -276,7 +266,7 @@
 !### See also
 !  * [[dbint4]] -- the main routine that is called here.
 !
-!@note Currently, this only works for 3rd order (k=4).
+!@note The spline order `kx` must be at least 3.
 
     pure subroutine db1ink_alt_2(x,nx,fcn,kx,ibcl,ibcr,fbcl,fbcr,tleft,tright,tx,bcoef,iflag)
 
@@ -284,56 +274,41 @@
 
     real(wp),dimension(:),intent(in)   :: x       !! \(x\) vector of abscissae of length `nx`, distinct
                                                   !! and in increasing order
-    integer(ip),intent(in)             :: nx      !! number of data points, \( n_x \ge 2 \)
+    integer(ip),intent(in)             :: nx      !! number of data points, \( n_x \ge \max(2,k_x-2) \)
     real(wp),dimension(:),intent(in)   :: fcn     !! \(y\) vector of ordinates of length `nx`
-    integer(ip),intent(in)             :: kx      !! spline order (Currently, this must be `4`)
+    integer(ip),intent(in)             :: kx      !! spline order (`kx >= 3`)
     integer(ip),intent(in)             :: ibcl    !! selection parameter for left boundary condition:
-                                                  !!
-                                                  !! * `ibcl = 1` constrain the first derivative at `x(1)` to `fbcl`
-                                                  !! * `ibcl = 2` constrain the second derivative at `x(1)` to `fbcl`
+                                                  !! constrain the `ibcl`-th derivative at `x(1)` to `fbcl`
+                                                  !! (`1 <= ibcl <= kx-1`, e.g. `ibcl = 2` for a natural spline)
     integer(ip),intent(in)             :: ibcr    !! selection parameter for right boundary condition:
-                                                  !!
-                                                  !! * `ibcr = 1` constrain first derivative at `x(nx)` to `fbcr`
-                                                  !! * `ibcr = 2` constrain second derivative at `x(nx)` to `fbcr`
+                                                  !! constrain the `ibcr`-th derivative at `x(nx)` to `fbcr`
+                                                  !! (`1 <= ibcr <= kx-1`, e.g. `ibcr = 2` for a natural spline)
     real(wp),intent(in)                :: fbcl    !! left boundary values governed by `ibcl`
     real(wp),intent(in)                :: fbcr    !! right boundary values governed by `ibcr`
-    real(wp),dimension(3),intent(in)   :: tleft   !! `t(1:3)` in increasing order supplied by the user.
-    real(wp),dimension(3),intent(in)   :: tright  !! `t(nx+4:nx+6)` in increasing order supplied by the user.
-    real(wp),dimension(:),intent(out)  :: tx      !! knot array of length `nx+6`
+    real(wp),dimension(:),intent(in)   :: tleft   !! `t(1:kx-1)` in increasing order supplied by the user.
+    real(wp),dimension(:),intent(in)   :: tright  !! `t(nx+4:nx+kx+2)` in increasing order supplied by the user.
+    real(wp),dimension(:),intent(out)  :: tx      !! knot array of length `nx+kx+2`
     real(wp),dimension(:),intent(out)  :: bcoef   !! b spline coefficient array of length `nx+2`
-    integer(ip),intent(out)            :: iflag   !! status flag:
-                                                  !!
-                                                  !! * 0: no errors
-                                                  !! * 806: [[dbint4]] can only be used when k=4
+    integer(ip),intent(out)            :: iflag   !! status flag (see [[dbint4]])
 
-    real(wp),dimension(:,:),allocatable :: w         !! work array of dimension `5,nx+2`
     integer(ip)                         :: n         !! number of coefficients (`n=nx+2`)
-    integer(ip)                         :: k         !! order of spline (`k=4`)
     logical                             :: status_ok !! status flag for error checking
 
     integer(ip),parameter :: kntopt = 3 !! use `tleft` and `tright` in [[dbint4]]
 
-    if (kx /= 4_ip) then
-        iflag = 806_ip
-    else
+    call check_inputs(  1_ip,& ! so it will check size of t
+                        iflag,&
+                        nx=nx,&
+                        kx=kx,&
+                        x=x,&
+                        f1=fcn,&
+                        bcoef1=bcoef,&
+                        tx=tx,&
+                        status_ok=status_ok,&
+                        alt=.true.)
 
-        call check_inputs(  1_ip,& ! so it will check size of t
-                            iflag,&
-                            nx=nx,&
-                            kx=kx,&
-                            x=x,&
-                            f1=fcn,&
-                            bcoef1=bcoef,&
-                            tx=tx,&
-                            status_ok=status_ok,&
-                            alt=.true.)
-
-        if (status_ok) then
-            allocate(w(5,nx+2))
-            call dbint4(x,fcn,nx,ibcl,ibcr,fbcl,fbcr,kntopt,tleft,tright,tx,bcoef,n,k,w,iflag)
-            deallocate(w)
-        end if
-
+    if (status_ok) then
+        call dbint4(x,fcn,nx,ibcl,ibcr,fbcl,fbcr,kntopt,tleft,tright,tx,bcoef,n,kx,iflag)
     end if
 
     end subroutine db1ink_alt_2
@@ -2321,7 +2296,7 @@
 
     logical :: error
     integer :: iex  !! extra points for the alt case (in `t` and `bcoef`)
-                    !! [currently, only allowed for the 1D case & `k=4`]
+                    !! [currently, only allowed for the 1D case]
 
     status_ok = .false.
 
@@ -2451,7 +2426,12 @@
         integer(ip),intent(out)             :: iflag !! status return code
         logical,intent(out)                 :: error
 
-        if (n < 3_ip) then
+        integer(ip) :: nmin !! minimum number of points
+
+        ! [[dbint4]] (alt mode) only requires 2 points (and `k <= n+2`, checked below)
+        nmin = merge(2_ip, 3_ip, iex>0_ip)
+
+        if (n < nmin) then
             iflag = ierr(1_ip)
             error = .true.
         else
@@ -3525,29 +3505,32 @@
 !*****************************************************************************************
 !>
 !  DBINT4 computes the B representation (`t`,`bcoef`,`n`,`k`) of a
-!  cubic spline (`k=4`) which interpolates data (`x(i)`,`y(i)`),`i=1,ndata`.
+!  spline of order `k` which interpolates data (`x(i)`,`y(i)`),`i=1,ndata`.
 !
-!  Parameters `ibcl`, `ibcr`, `fbcl`, `fbcr` allow the specification of the spline
-!  first or second derivative at both `x(1)` and `x(ndata)`.  When this data is not specified
-!  by the problem, it is common practice to use a natural spline by setting second
-!  derivatives at `x(1)` and `x(ndata)` to zero (`ibcl=ibcr=2`,`fbcl=fbcr=0.0`).
+!  Parameters `ibcl`, `ibcr`, `fbcl`, `fbcr` allow the specification of one
+!  derivative of the spline (of order `1` to `k-1`) at both `x(1)` and `x(ndata)`.
+!  When this data is not specified by the problem, it is common practice to use
+!  a natural spline by setting second derivatives at `x(1)` and `x(ndata)` to zero
+!  (`ibcl=ibcr=2`,`fbcl=fbcr=0.0`).
 !
-!  The spline is defined on `t(4) <= x <= t(n+1)` with (ordered) interior knots at
-!  `x(i)` values where n=ndata+2.  The knots `t(1)`,`t(2)`,`t(3)` lie to the left of
-!  `t(4)=x(1)` and the knots `t(n+2)`, `t(n+3)`, `t(n+4)` lie to the right of `t(n+1)=x(ndata)`
-!  in increasing order.
+!  The spline has `n=ndata+2` coefficients and is defined on `t(k) <= x <= t(n+1)`,
+!  where `t(k)=x(1)` and `t(n+1)=x(ndata)`. The interior knots are placed at the
+!  interior `x(i)` values for even `k`, and at midpoints between them for odd `k`
+!  (for `k=4` the interior knots are `x(2),...,x(ndata-1)`).
+!  The knots `t(1),...,t(k-1)` lie to the left of `t(k)=x(1)` and the knots
+!  `t(n+2),...,t(n+k)` lie to the right of `t(n+1)=x(ndata)` in increasing order.
 !
 !  * If no extrapolation outside (`x(1)`,`x(ndata)`) is anticipated, the
-!    knots `t(1)=t(2)=t(3)=t(4)=x(1)` and `t(n+2)=t(n+3)=t(n+4)=t(n+1)=x(ndata)`
+!    knots `t(1)=...=t(k)=x(1)` and `t(n+1)=...=t(n+k)=x(ndata)`
 !    can be specified by `kntopt=1`.
-!  * `kntopt=2` selects a knot placement for `t(1)`, `t(2)`, `t(3)` to make the
-!    first 7 knots symmetric about `t(4)=x(1)` and similarly for
-!    `t(n+2)`, `t(n+3)`, `t(n+4)` about `t(n+1)=x(ndata)`.
-!  * `kntopt=3` allows the user to make his own selection, in increasing order,
-!    for `t(1)`, `t(2)`, `t(3)` to the left of `x(1)` and `t(n+2)`, `t(n+3)`, `t(n+4)` to
-!    the right of x(ndata).
+!  * `kntopt=2` selects a knot placement for `t(1),...,t(k-1)` to make the
+!    first `2k-1` knots symmetric about `t(k)=x(1)` and similarly for
+!    `t(n+2),...,t(n+k)` about `t(n+1)=x(ndata)`.
+!  * `kntopt=3` allows the user to make their own selection, in increasing order,
+!    for `t(1),...,t(k-1)` to the left of `x(1)` and `t(n+2),...,t(n+k)` to
+!    the right of `x(ndata)`.
 !
-!  In any case, the interpolation on `t(4) <= x <= t(n+1)`
+!  In any case, the interpolation on `t(k) <= x <= t(n+1)`
 !  by using function [[dbvalu]] is unique for given boundary
 !  conditions.
 !
@@ -3564,82 +3547,92 @@
 !  * revision date 820801
 !  * 000330  Modified array declarations.  (JEC)
 !  * Jacob Williams, 8/30/2018 : refactored to modern Fortran.
+!  * Generalized from cubic (`k=4`) to any order `k >= 3`.
 
-    pure subroutine dbint4(x,y,ndata,ibcl,ibcr,fbcl,fbcr,kntopt,tleft,tright,t,bcoef,n,k,w,iflag)
+    pure subroutine dbint4(x,y,ndata,ibcl,ibcr,fbcl,fbcr,kntopt,tleft,tright,t,bcoef,n,k,iflag)
 
     implicit none
 
     real(wp),dimension(:),intent(in)   :: x       !! x vector of abscissae of length `ndata`, distinct
                                                   !! and in increasing order
     real(wp),dimension(:),intent(in)   :: y       !! y vector of ordinates of length ndata
-    integer(ip),intent(in)             :: ndata   !! number of data points, `ndata >= 2`
+    integer(ip),intent(in)             :: ndata   !! number of data points, `ndata >= max(2,k-2)`
     integer(ip),intent(in)             :: ibcl    !! selection parameter for left boundary condition:
-                                                  !!
-                                                  !! * `ibcl = 1` constrain the first derivative at `x(1)` to `fbcl`
-                                                  !! * `ibcl = 2` constrain the second derivative at `x(1)` to `fbcl`
+                                                  !! constrain the `ibcl`-th derivative at `x(1)` to `fbcl`
+                                                  !! (`1 <= ibcl <= k-1`)
     integer(ip),intent(in)             :: ibcr    !! selection parameter for right boundary condition:
-                                                  !!
-                                                  !! * `ibcr = 1` constrain first derivative at `x(ndata)` to `fbcr`
-                                                  !! * `ibcr = 2` constrain second derivative at `x(ndata)` to `fbcr`
+                                                  !! constrain the `ibcr`-th derivative at `x(ndata)` to `fbcr`
+                                                  !! (`1 <= ibcr <= k-1`)
     real(wp),intent(in)                :: fbcl    !! left boundary values governed by `ibcl`
     real(wp),intent(in)                :: fbcr    !! right boundary values governed by `ibcr`
     integer(ip),intent(in)             :: kntopt  !! knot selection parameter:
                                                   !!
-                                                  !! * `kntopt = 1` sets knot multiplicity at `t(4)` and
-                                                  !!   `t(n+1)` to 4
+                                                  !! * `kntopt = 1` sets knot multiplicity at `t(k)` and
+                                                  !!   `t(n+1)` to `k`
                                                   !! * `kntopt = 2` sets a symmetric placement of knots
-                                                  !!   about `t(4)` and `t(n+1)`
+                                                  !!   about `t(k)` and `t(n+1)`
                                                   !! * `kntopt = 3` sets `t(i)=tleft(i)` and
-                                                  !!   `t(n+1+i)=tright(i)`,`i=1,3`
-    real(wp),dimension(3),intent(in)  :: tleft    !! when `kntopt = 3`: `t(1:3)` in increasing
+                                                  !!   `t(n+1+i)=tright(i)`,`i=1,k-1`
+    real(wp),dimension(:),intent(in)  :: tleft    !! when `kntopt = 3`: `t(1:k-1)` in increasing
                                                   !! order to be supplied by the user.
-    real(wp),dimension(3),intent(in)  :: tright   !! when `kntopt = 3`: `t(n+2:n+4)` in increasing
+                                                  !! (not used for other `kntopt` values)
+    real(wp),dimension(:),intent(in)  :: tright   !! when `kntopt = 3`: `t(n+2:n+k)` in increasing
                                                   !! order to be supplied by the user.
-    real(wp),dimension(:),intent(out)  :: t       !! knot array of length `n+4`
+                                                  !! (not used for other `kntopt` values)
+    real(wp),dimension(:),intent(out)  :: t       !! knot array of length `n+k`
     real(wp),dimension(:),intent(out)  :: bcoef   !! b spline coefficient array of length `n`
     integer(ip),intent(out)            :: n       !! number of coefficients, `n=ndata+2`
-    integer(ip),intent(out)            :: k       !! order of spline, `k=4`
-    real(wp),dimension(5,ndata+2),intent(inout) :: w  !! work array
+    integer(ip),intent(in)             :: k       !! order of spline, `k >= 3`
     integer(ip),intent(out)            :: iflag   !! status flag:
                                                   !!
                                                   !! * 0: no errors
-                                                  !! * 2001: `ndata` is less than 2
+                                                  !! * 806: `k` is less than 3
+                                                  !! * 2001: `ndata` is less than `max(2,k-2)`
                                                   !! * 2002: `x` values are not distinct or not ordered
-                                                  !! * 2003: `ibcl` is not 1 or 2
-                                                  !! * 2004: `ibcr` is not 1 or 2
+                                                  !! * 2003: `ibcl` is not in the range `1` to `k-1`
+                                                  !! * 2004: `ibcr` is not in the range `1` to `k-1`
                                                   !! * 2005: `kntopt` is not 1, 2, or 3
                                                   !! * 2006: knot input through `tleft`, `tright` is
                                                   !!   not ordered properly
                                                   !! * 2007: the system of equations is singular
+                                                  !! * 2008: `tleft` or `tright` does not have size `k-1`
 
-    integer(ip)  :: i, ilb, ileft, it, iub, iw, iwp, j, jw, ndm, np, nwrow
-    real(wp) :: txn, tx1, xl
-    real(wp),dimension(4,4) :: vnikx
-    real(wp),dimension(15) :: work  !! work array for [[dbspvd]] -- length `(k+1)*(k+2)/2`
+    integer(ip) :: i, j, ilo, mflag, np, ml, mu, m, nderiv, icol
+    real(wp) :: xl, rowmax
+    real(wp),dimension(:),allocatable :: tau       !! abscissa of each equation
+    integer(ip),dimension(:),allocatable :: ider   !! derivative order of each equation
+    integer(ip),dimension(:),allocatable :: ileft  !! knot interval of each equation
+    real(wp),dimension(:,:),allocatable :: abd     !! banded matrix of the system
+    integer(ip),dimension(:),allocatable :: ipvt   !! pivot indices
+    real(wp),dimension(:,:),allocatable :: vnikx   !! basis function values from [[dbspvd]]
+    real(wp),dimension(:),allocatable :: work      !! work array for [[dbspvd]]
 
-    real(wp),parameter :: wdtol = epsilon(1.0_wp) !! d1mach(4)
-    real(wp),parameter :: tol = sqrt(wdtol)
+    n = ndata + 2_ip
 
-    if (ndata<2_ip) then
-        iflag = 2001_ip ! ndata is less than 2
+    if (k<3_ip) then
+        iflag = 806_ip ! k is less than 3
         return
     end if
 
-    ndm = ndata - 1_ip
-    do i=1_ip,ndm
+    if (ndata<max(2_ip,k-2_ip)) then
+        iflag = 2001_ip ! ndata is less than max(2,k-2)
+        return
+    end if
+
+    do i=1_ip,ndata-1_ip
         if (x(i)>=x(i+1_ip)) then
             iflag = 2002_ip ! x values are not distinct or not ordered
             return
         end if
     end do
 
-    if (ibcl<1_ip .or. ibcl>2_ip) then
-        iflag = 2003_ip ! ibcl is not 1 or 2
+    if (ibcl<1_ip .or. ibcl>k-1_ip) then
+        iflag = 2003_ip ! ibcl is not in the range 1 to k-1
         return
     end if
 
-    if (ibcr<1_ip .or. ibcr>2_ip) then
-        iflag = 2004_ip ! ibcr is not 1 or 2
+    if (ibcr<1_ip .or. ibcr>k-1_ip) then
+        iflag = 2004_ip ! ibcr is not in the range 1 to k-1
         return
     end if
 
@@ -3648,109 +3641,276 @@
         return
     end if
 
+    if (kntopt==3_ip) then
+        if (size(tleft,kind=ip)/=k-1_ip .or. size(tright,kind=ip)/=k-1_ip) then
+            iflag = 2008_ip ! tleft or tright does not have size k-1
+            return
+        end if
+    end if
+
     iflag = 0_ip
-    k = 4_ip
-    n = ndata + 2_ip
     np = n + 1_ip
-    do i=1_ip,ndata
-        t(i+3) = x(i)
+
+    ! the equations, in order: f(x(1)), the left boundary condition,
+    ! f(x(2)),...,f(x(ndata-1)), the right boundary condition, f(x(ndata))
+    allocate(tau(n), ider(n), ileft(n))
+    tau(1:2) = x(1)
+    tau(3:ndata) = x(2:ndata-1)
+    tau(n-1:n) = x(ndata)
+    ider = 0_ip
+    ider(2) = ibcl
+    ider(n-1) = ibcr
+
+    ! interior knots, centered on the equation abscissae
+    t(k) = x(1)
+    t(np) = x(ndata)
+    do i=1_ip,n-k
+        if (mod(k,2_ip)==0_ip) then
+            t(k+i) = tau(i+k/2_ip)
+        else
+            t(k+i) = 0.5_wp*(tau(i+(k-1_ip)/2_ip)+tau(i+(k+1_ip)/2_ip))
+        end if
     end do
 
     select case (kntopt)
     case(1_ip)
-        ! set up knot array with multiplicity 4 at x(1) and x(ndata)
-        do i=1,3_ip
-            t(4-i) = x(1)
+        ! set up knot array with multiplicity k at x(1) and x(ndata)
+        do i=1_ip,k-1_ip
+            t(k-i) = x(1)
             t(np+i) = x(ndata)
         end do
     case(2_ip)
-        !set up knot array with symmetric placement about end points
-        if (ndata>3) then
-            tx1 = x(1) + x(1)
-            txn = x(ndata) + x(ndata)
-            do i=1,3
-                t(4-i) = tx1 - x(i+1)
-                t(np+i) = txn - x(ndata-i)
+        ! set up knot array with symmetric placement about end points
+        if (n>=2_ip*k-2_ip) then
+            do i=1_ip,k-1_ip
+                t(k-i) = 2.0_wp*t(k) - t(k+i)
+                t(np+i) = 2.0_wp*t(np) - t(np-i)
             end do
         else
-            xl = (x(ndata)-x(1))/3.0_wp
-            do i=1,3
-                t(4-i) = t(5-i) - xl
-                t(np+i) = t(np+i-1) + xl
+            xl = (x(ndata)-x(1))/real(k-1_ip,wp)
+            do i=1_ip,k-1_ip
+                t(k-i) = t(k-i+1_ip) - xl
+                t(np+i) = t(np+i-1_ip) + xl
             end do
         end if
     case(3_ip)
         ! set up knot array less than x(1) and greater than x(ndata) to be
         ! supplied by user in tleft & tright when kntopt=3
-        t(1:3)             = tleft
-        t(ndata+4:ndata+6) = tright
-        do i=1,3
-            if ((t(4-i)>t(5-i)) .or. (t(np+i)<t(np+i-1))) then
+        t(1:k-1) = tleft
+        t(n+2:n+k) = tright
+        do i=1_ip,k-1_ip
+            if ((t(k-i)>t(k-i+1_ip)) .or. (t(np+i)<t(np+i-1_ip))) then
                 iflag = 2006_ip ! knot input through tleft, tright is not ordered properly
                 return
             end if
         end do
-    case default
-        ! can never happen
-        error stop 'invalid kntopt value'
     end select
 
-    w = 0.0_wp
-
-    ! set up left interpolation point and left boundary condition for
-    ! right limits
-    it = ibcl + 1
-    call dbspvd(t, k, it, x(1), k, 4_ip, vnikx, work, iflag)
-    if (iflag/=0_ip) return ! error check
-    iw = 0_ip
-    if (abs(vnikx(3,1))<tol) iw = 1_ip
-    do j=1,3
-        w(j+1,4-j) = vnikx(4-j,it)
-        w(j,4-j) = vnikx(4-j,1)
+    ! knot interval for each equation. right limits at x(1) and
+    ! left limits at x(ndata), so the end intervals are k and n.
+    ilo = 1_ip
+    do i=1_ip,n
+        if (i<=2_ip) then
+            ileft(i) = k
+        else if (i>=n-1_ip) then
+            ileft(i) = n
+        else
+            call dintrv(t,np,tau(i),ilo,ileft(i),mflag)
+        end if
     end do
+
+    ! bandwidth of the system (row i has nonzeros in columns ileft-k+1:ileft)
+    ml = 0_ip
+    mu = 0_ip
+    do i=1_ip,n
+        ml = max(ml, i-(ileft(i)-k+1_ip))
+        mu = max(mu, ileft(i)-i)
+    end do
+    m = ml + mu + 1_ip
+
+    ! set up the banded system: A(i,j) is stored in abd(i-j+m,j)
+    allocate(abd(2_ip*ml+mu+1_ip,n), ipvt(n))
+    allocate(vnikx(k,k), work((k+1_ip)*(k+2_ip)/2_ip))
+    ! right hand side
     bcoef(1) = y(1)
     bcoef(2) = fbcl
-    ! set up interpolation equations for points i=2 to i=ndata-1
-    ileft = 4_ip
-    if (ndm>=2) then
-        do i=2,ndm
-            ileft = ileft + 1_ip
-            call dbspvd(t, k, 1_ip, x(i), ileft, 4_ip, vnikx, work, iflag)
-            if (iflag/=0_ip) return ! error check
-            do j=1,3
-                w(j+1,3+i-j) = vnikx(4-j,1)
-            end do
-            bcoef(i+1) = y(i)
-        end do
-    end if
-
-    ! set up right interpolation point and right boundary condition for
-    ! left limits(ileft is associated with t(n)=x(ndata-1))
-    it = ibcr + 1_ip
-    call dbspvd(t, k, it, x(ndata), ileft, 4_ip, vnikx, work, iflag)
-    if (iflag/=0_ip) return ! error check
-    jw = 0_ip
-    if (abs(vnikx(2,1))<tol) jw = 1_ip
-    do j=1,3
-        w(j+1,3+ndata-j) = vnikx(5-j,it)
-        w(j+2,3+ndata-j) = vnikx(5-j,1)
-    end do
+    bcoef(3:ndata) = y(2:ndata-1)
     bcoef(n-1) = fbcr
     bcoef(n) = y(ndata)
+
+    abd = 0.0_wp
+    do i=1_ip,n
+        nderiv = ider(i) + 1_ip
+        call dbspvd(t,k,nderiv,tau(i),ileft(i),k,vnikx,work,iflag)
+        if (iflag/=0_ip) return
+        ! scale each equation by its largest coefficient, since the derivative
+        ! rows can be orders of magnitude larger than the interpolation rows
+        rowmax = maxval(abs(vnikx(:,nderiv)))
+        if (rowmax==0.0_wp) rowmax = 1.0_wp
+        do j=1_ip,k
+            icol = ileft(i) - k + j
+            abd(i-icol+m,icol) = vnikx(j,nderiv) / rowmax
+        end do
+        bcoef(i) = bcoef(i) / rowmax
+    end do
+
     ! solve system of equations
-    ilb = 2_ip - jw
-    iub = 2_ip - iw
-    nwrow = 5_ip
-    iwp = iw + 1_ip
-    call dbnfac(w(iwp,1), nwrow, n, ilb, iub, iflag)
-    if (iflag==2_ip) then
+    ! (the rows are scaled so the largest entry of each is 1, so an
+    !  absolute tolerance on the pivots detects a numerically singular system)
+    call dgbfa(abd,n,ml,mu,ipvt,1000.0_wp*epsilon(1.0_wp),iflag)
+    if (iflag/=0_ip) then
         iflag = 2007_ip  ! the system of equations is singular
     else
-        iflag = 0_ip  ! success
-        call dbnslv(w(iwp,1), nwrow, n, ilb, iub, bcoef)
+        call dgbsl(abd,n,ml,mu,ipvt,bcoef(1:n))
     end if
 
     end subroutine dbint4
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Factors a banded matrix by Gaussian elimination with partial pivoting.
+!  The matrix `A` is stored in `abd` with `A(i,j)` in `abd(i-j+ml+mu+1,j)`.
+!  Rows `1:ml` of `abd` are used for the fill-in generated by pivoting.
+!
+!### History
+!  * Based on the LINPACK routine `DGBFA` (Cleve Moler, 1978).
+!    Added the `tol` argument for detecting singular matrices.
+
+    pure subroutine dgbfa(abd,n,ml,mu,ipvt,tol,info)
+
+    implicit none
+
+    integer(ip),intent(in)                :: n     !! order of the matrix
+    integer(ip),intent(in)                :: ml    !! number of diagonals below the main diagonal
+    integer(ip),intent(in)                :: mu    !! number of diagonals above the main diagonal
+    real(wp),dimension(2_ip*ml+mu+1_ip,n),intent(inout) :: abd  !! **IN:** the matrix in band storage.
+                                                                !! **OUT:** its LU factorization.
+    integer(ip),dimension(n),intent(out)  :: ipvt  !! pivot indices
+    real(wp),intent(in)                   :: tol   !! a pivot with `abs(u(k,k)) <= tol` is
+                                                   !! treated as zero (`tol=0` gives the
+                                                   !! original LINPACK behavior)
+    integer(ip),intent(out)               :: info  !! 0 if successful, otherwise `k` if `u(k,k)`
+                                                   !! is zero (the matrix is singular)
+
+    integer(ip) :: i, j, jk, ju, jz, l, lm, m, mm
+    real(wp) :: tmp
+
+    m = ml + mu + 1_ip
+    info = 0_ip
+
+    ! zero the initial fill-in columns
+    do jz = mu+2_ip, min(n,m)-1_ip
+        abd(m+1_ip-jz:ml,jz) = 0.0_wp
+    end do
+    jz = min(n,m) - 1_ip
+    ju = 0_ip
+
+    do jk = 1_ip, n-1_ip
+
+        ! zero the next fill-in column
+        jz = jz + 1_ip
+        if (jz<=n .and. ml>=1_ip) abd(1:ml,jz) = 0.0_wp
+
+        ! find the pivot
+        lm = min(ml,n-jk)
+        l = maxloc(abs(abd(m:m+lm,jk)),dim=1,kind=ip) + m - 1_ip
+        ipvt(jk) = l + jk - m
+
+        if (abs(abd(l,jk))<=tol) then
+            ! this column is already triangularized
+            info = jk
+            cycle
+        end if
+
+        ! interchange if necessary
+        if (l/=m) then
+            tmp = abd(l,jk)
+            abd(l,jk) = abd(m,jk)
+            abd(m,jk) = tmp
+        end if
+
+        ! compute the multipliers
+        abd(m+1_ip:m+lm,jk) = abd(m+1_ip:m+lm,jk) * (-1.0_wp/abd(m,jk))
+
+        ! row elimination with column indexing
+        ju = min(max(ju,mu+ipvt(jk)),n)
+        mm = m
+        do j = jk+1_ip, ju
+            l = l - 1_ip
+            mm = mm - 1_ip
+            tmp = abd(l,j)
+            if (l/=mm) then
+                abd(l,j) = abd(mm,j)
+                abd(mm,j) = tmp
+            end if
+            do i = 1_ip, lm
+                abd(mm+i,j) = abd(mm+i,j) + tmp*abd(m+i,jk)
+            end do
+        end do
+
+    end do
+
+    ipvt(n) = n
+    if (abs(abd(m,n))<=tol) info = n
+
+    end subroutine dgbfa
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Solves the banded system `A*x = b` using the factorization from [[dgbfa]].
+!
+!### History
+!  * Based on the LINPACK routine `DGBSL` (Cleve Moler, 1978).
+
+    pure subroutine dgbsl(abd,n,ml,mu,ipvt,b)
+
+    implicit none
+
+    integer(ip),intent(in)               :: n     !! order of the matrix
+    integer(ip),intent(in)               :: ml    !! number of diagonals below the main diagonal
+    integer(ip),intent(in)               :: mu    !! number of diagonals above the main diagonal
+    real(wp),dimension(2_ip*ml+mu+1_ip,n),intent(in) :: abd  !! the factorization from [[dgbfa]]
+    integer(ip),dimension(n),intent(in)  :: ipvt  !! the pivot indices from [[dgbfa]]
+    real(wp),dimension(n),intent(inout)  :: b     !! **IN:** the right hand side.
+                                                  !! **OUT:** the solution.
+
+    integer(ip) :: i, jk, l, la, lb, lm, m
+    real(wp) :: tmp
+
+    m = mu + ml + 1_ip
+
+    ! solve L*y = b
+    if (ml/=0_ip) then
+        do jk = 1_ip, n-1_ip
+            lm = min(ml,n-jk)
+            l = ipvt(jk)
+            tmp = b(l)
+            if (l/=jk) then
+                b(l) = b(jk)
+                b(jk) = tmp
+            end if
+            do i = 1_ip, lm
+                b(jk+i) = b(jk+i) + tmp*abd(m+i,jk)
+            end do
+        end do
+    end if
+
+    ! solve U*x = y
+    do jk = n, 1_ip, -1_ip
+        b(jk) = b(jk)/abd(m,jk)
+        lm = min(jk,m) - 1_ip
+        la = m - lm
+        lb = jk - lm
+        tmp = -b(jk)
+        do i = 0_ip, lm-1_ip
+            b(lb+i) = b(lb+i) + tmp*abd(la+i,jk)
+        end do
+    end do
+
+    end subroutine dgbsl
+!*****************************************************************************************
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -4653,7 +4813,7 @@
     case(804_ip); msg='Error in db*ink: size(r) /= size(bcoef,5)'
     case(805_ip); msg='Error in db*ink: size(s) /= size(bcoef,6)'
 
-    case(806_ip); msg='Error in dbint4: currently, only k=4 can be used'
+    case(806_ip); msg='Error in dbint4: k must be >= 3'
 
     case(100_ip); msg='Error in dbintk: k does not satisfy k>=1'
     case(101_ip); msg='Error in dbintk: n does not satisfy n>=k'
@@ -4704,13 +4864,14 @@
     case(1101_ip); msg='Warning in dbsgq8: a and b are too nearly equal to allow normal integration.'
     case(1102_ip); msg='Error in dbsgq8: ans is probably insufficiently accurate.'
 
-    case(2001_ip); msg='Error in dbint4: ndata is less than 2'
+    case(2001_ip); msg='Error in dbint4: ndata is less than max(2,k-2)'
     case(2002_ip); msg='Error in dbint4: x values are not distinct or not ordered'
-    case(2003_ip); msg='Error in dbint4: ibcl is not 1 or 2'
-    case(2004_ip); msg='Error in dbint4: ibcr is not 1 or 2'
+    case(2003_ip); msg='Error in dbint4: ibcl is not in the range 1 to k-1'
+    case(2004_ip); msg='Error in dbint4: ibcr is not in the range 1 to k-1'
     case(2005_ip); msg='Error in dbint4: kntopt is not 1, 2, or 3'
     case(2006_ip); msg='Error in dbint4: knot input through tleft, tright is not ordered properly'
     case(2007_ip); msg='Error in dbint4: the system of equations is singular'
+    case(2008_ip); msg='Error in dbint4: tleft or tright does not have size k-1'
 
     case(3001_ip); msg='Error in dbspvd: k does not satisfy k>=1'
     case(3002_ip); msg='Error in dbspvd: nderiv does not satisfy 1<=nderiv<=k'
