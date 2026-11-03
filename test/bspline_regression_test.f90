@@ -11,6 +11,10 @@
 !  * 2D-6D evaluation with knots that are not clamped (out of bounds access)
 !  * [[db1ink]] alt mode with a small number of points
 !  * 4D-6D destructors resetting the class state
+!  * integral over whole knot intervals that are narrow relative to `|x|`
+!    ([[dbfqad]], which used the midpoint rule for these)
+!  * [[db1ink]] alt mode with very uneven data spacing near an end
+!    (reported as singular, 2007)
 
     program bspline_regression_test
 
@@ -42,6 +46,8 @@
     call test_eval_open_knots()
     call test_db1ink_alt_small_n()
     call test_destroy()
+    call test_integral_narrow_knot_intervals()
+    call test_db1ink_alt_uneven_spacing()
 
     write(*,*) ''
     if (nfail > 0) then
@@ -417,6 +423,104 @@
     call check('destroy 6D: evaluate returns error', iflag/=0)
 
     end subroutine test_destroy
+
+!*****************************************************************************************
+!>
+!  Integrals over whole knot intervals that are narrow relative to `|x|`
+!  (too narrow for [[dbsgq8]]): the spline is not constant on them, so the
+!  midpoint rule (used in an earlier version) gave the wrong result with
+!  no error flag.
+
+    subroutine test_integral_narrow_knot_intervals()
+
+    real(wp) :: h         !! width of the knot interval
+    real(wp) :: f         !! integral
+    real(wp) :: x0        !! offset of the knots
+    real(wp) :: exact     !! exact integral
+    real(wp),dimension(3*4) :: w0  !! work array
+    real(wp),dimension(15) :: tx      !! knots for the offset cubic
+    real(wp),dimension(11) :: bcoef   !! coefficients for the offset cubic
+    integer(ip) :: iflag  !! status flag
+    integer(ip) :: i      !! counter
+
+    ! s(x) = ((x-1)/h)**2 on [1,1+h] (k=3): the integral is h/3
+    h = 64.0_wp*spacing(1.0_wp)
+    call db1fqad(one,[1.0_wp,1.0_wp,1.0_wp,1.0_wp+h,1.0_wp+h,1.0_wp+h],[0.0_wp,0.0_wp,1.0_wp], &
+                 3_ip,3_ip,0_ip,1.0_wp,1.0_wp+h,1.0e-12_wp,f,iflag,w0)
+    call check('narrow quadratic interval: iflag', iflag==0)
+    call check('narrow quadratic interval: value', abs(f-h/3.0_wp)<=1.0e-12_wp*h)
+
+    ! cubic spline with knots near 1e9, spaced 2**-12 apart (exactly
+    ! representable, and every knot interval is too narrow for dbsgq8).
+    ! The integral over the whole domain is sum(c(i)*(t(i+k)-t(i))/k).
+    x0 = 1.0e9_wp
+    tx(1:4) = x0
+    do i = 5, 11
+        tx(i) = x0 + real(i-4,wp)*2.0_wp**(-12)
+    end do
+    tx(12:15) = x0 + 8.0_wp*2.0_wp**(-12)
+    bcoef = [(sin(real(i,wp)), i=1,11)]
+    exact = 0.0_wp
+    do i = 1, 11
+        exact = exact + bcoef(i)*(tx(i+4)-tx(i))/4.0_wp
+    end do
+    call db1fqad(one,tx,bcoef,11_ip,4_ip,0_ip,tx(4),tx(12),1.0e-12_wp,f,iflag,w0)
+    call check('narrow cubic intervals: iflag', iflag==0)
+    call check('narrow cubic intervals: value', abs(f-exact)<=1.0e-12_wp*abs(exact))
+
+    ! a one-ulp interval, where the midpoint is not representable:
+    ! s(x) = (x-1)/h on [1,1+h], so the integral is h/2
+    h = spacing(1.0_wp)
+    call db1fqad(one,[1.0_wp,1.0_wp,1.0_wp+h,1.0_wp+h],[0.0_wp,1.0_wp], &
+                 2_ip,2_ip,0_ip,1.0_wp,1.0_wp+h,1.0e-12_wp,f,iflag,w0)
+    call check('one-ulp interval: value', iflag==0 .and. abs(f-0.5_wp*h)<=1.0e-12_wp*h)
+
+    end subroutine test_integral_narrow_knot_intervals
+
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Interpolation with end derivative conditions when the data spacing
+!  near an end is very uneven: an outer basis function is small at all
+!  of the data points, which made the system look singular (2007).
+
+    subroutine test_db1ink_alt_uneven_spacing()
+
+    real(wp),dimension(3) :: xd = [0.0_wp, 1.0_wp, 1.0_wp+1.0e-7_wp]  !! data abscissae
+    real(wp),dimension(3) :: yd = [1.0_wp, 2.0_wp, 0.5_wp]  !! data
+    real(wp),dimension(3+6) :: tx    !! knots
+    real(wp),dimension(3+2) :: bcoef !! coefficients
+    real(wp),dimension(3*4) :: w0    !! work array
+    real(wp) :: f        !! spline value
+    real(wp) :: err      !! maximum interpolation error
+    integer(ip) :: iflag !! status flag
+    integer(ip) :: inbvx !! initialization parameter for [[db1val]]
+    integer(ip) :: i     !! counter
+
+    call db1ink(xd,3_ip,yd,4_ip,1_ip,1_ip,0.3_wp,-0.7_wp,2_ip,tx,bcoef,iflag)
+    call check('alt mode, uneven spacing: iflag', iflag==0)
+    if (iflag==0) then
+        err = 0.0_wp
+        do i = 1, 3
+            inbvx = 1
+            call db1val(xd(i),0_ip,tx,5_ip,4_ip,bcoef,f,iflag,inbvx,w0)
+            err = max(err, abs(f-yd(i)))
+        end do
+        call check('alt mode, uneven spacing: interpolates', err<1.0e-8_wp)
+        inbvx = 1
+        call db1val(xd(1),1_ip,tx,5_ip,4_ip,bcoef,f,iflag,inbvx,w0)
+        call check('alt mode, uneven spacing: left derivative', abs(f-0.3_wp)<1.0e-6_wp)
+    end if
+
+    ! coefficients near the largest double: the column scaling must not
+    ! enlarge them (the solution is the constant 1e308)
+    call db1ink([0.0_wp,1.0_wp],2_ip,[1.0e308_wp,1.0e308_wp],4_ip,1_ip,1_ip,0.0_wp,0.0_wp,1_ip, &
+                tx(1:8),bcoef(1:4),iflag)
+    call check('alt mode, huge values', iflag==0 .and. all(abs(bcoef(1:4)/1.0e308_wp-1.0_wp)<1.0e-14_wp))
+
+    end subroutine test_db1ink_alt_uneven_spacing
+!*****************************************************************************************
 
     end program bspline_regression_test
 !*****************************************************************************************

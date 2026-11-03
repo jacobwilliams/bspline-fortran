@@ -39,6 +39,7 @@
     call test_errors()
     call test_oo()
     call test_review_cases()
+    call test_review_cases_2()
 
     write(*,*) ''
     write(*,*) ncheck, ' checks'
@@ -653,6 +654,55 @@
     call check_roots('double and simple root', roots, [1.0_wp/3.0_wp, 0.75_wp], 1.0e-14_wp)
 
     end subroutine test_review_cases
+
+!*****************************************************************************************
+!>
+!  Cases from the review of the changes since 7.5.1.
+
+    subroutine test_review_cases_2()
+
+    real(wp),dimension(:),allocatable :: roots
+    real(wp) :: xmin, fmin, xmax, fmax, xref, fref
+    integer(ip) :: iflag
+
+    ! discontinuous quadratic: (1-x)**2 on [0,1), 2 on [1,2]. The minimum is
+    ! the limit from the left at x=1 (0, not attained)
+    call db1min([0,0,0,1,1,1,2,2,2]*1.0_wp, 6_ip, 3_ip, [1,0,0,2,2,2]*1.0_wp, 0.0_wp, 2.0_wp, xmin, fmin, iflag)
+    call check('discontinuous minimum: left limit', iflag==4007 .and. xmin==1.0_wp .and. fmin==0.0_wp)
+    call db1max([0,0,0,1,1,1,2,2,2]*1.0_wp, 6_ip, 3_ip, [1,0,0,2,2,2]*1.0_wp, 0.0_wp, 2.0_wp, xmax, fmax, iflag)
+    call check('discontinuous maximum: attained', iflag==0 .and. fmax==2.0_wp)
+    ! the maximum is the limit from the left: 3*x**2 on [0,1), 0 on [1,2]
+    call db1max([0,0,0,1,1,1,2,2,2]*1.0_wp, 6_ip, 3_ip, [0,0,3,0,0,0]*1.0_wp, 0.0_wp, 2.0_wp, xmax, fmax, iflag)
+    call check('discontinuous maximum: left limit', iflag==4007 .and. xmax==1.0_wp .and. fmax==3.0_wp)
+    ! the jump is at the right end of [xa,xb]: the limit from the left counts
+    call db1min([0,0,0,1,1,1,2,2,2]*1.0_wp, 6_ip, 3_ip, [1,0,0,2,2,2]*1.0_wp, 0.5_wp, 1.0_wp, xmin, fmin, iflag)
+    call check('discontinuous minimum: jump at xb', iflag==4007 .and. fmin==0.0_wp)
+    ! but not at the left end (only the value from the right is in [xa,xb])
+    call db1min([0,0,0,1,1,1,2,2,2]*1.0_wp, 6_ip, 3_ip, [1,0,0,2,2,2]*1.0_wp, 1.0_wp, 2.0_wp, xmin, fmin, iflag)
+    call check('discontinuous minimum: jump at xa', iflag==0 .and. fmin==2.0_wp)
+    call check('4007 message', index(get_status_message(4007_ip),'limit from the left')>0)
+
+    ! large coefficients on a narrow interval: the derivative coefficients
+    ! overflowed. The minimum is the same as for the unscaled spline.
+    call db1min([0,0,0,0,1,1,1,1]*1.0_wp, 4_ip, 4_ip, [1.0_wp,-0.2_wp,-0.6_wp,1.0_wp], &
+                0.0_wp, 1.0_wp, xref, fref, iflag)
+    call db1min([0,0,0,0,1,1,1,1]*1.0e-10_wp, 4_ip, 4_ip, [1.0_wp,-0.2_wp,-0.6_wp,1.0_wp]*1.0e300_wp, &
+                0.0_wp, 1.0e-10_wp, xmin, fmin, iflag)
+    call check('scaled minimum: iflag', iflag==0)
+    call check('scaled minimum: location', abs(xmin-xref*1.0e-10_wp)<=1.0e-12_wp*1.0e-10_wp)
+    call check('scaled minimum: value', abs(fmin-fref*1.0e300_wp)<=1.0e-12_wp*abs(fref)*1.0e300_wp)
+
+    ! coefficients near the largest double: the derivative scale factor overflowed
+    call db1min([0,0,0,1,1,1]*1.0_wp, 3_ip, 3_ip, [1.0e308_wp,9.0e307_wp,1.0e308_wp], &
+                0.0_wp, 1.0_wp, xmin, fmin, iflag)
+    call check('huge coefficients minimum', iflag==0 .and. abs(xmin-0.5_wp)<1.0e-14_wp .and. &
+               abs(fmin/9.5e307_wp-1.0_wp)<1.0e-14_wp)
+
+    ! a domain wider than huge(): the duplicate tolerance overflowed
+    call db1root([-1,-1,0,1,1]*1.0e308_wp, 3_ip, 2_ip, [1,-1,1]*1.0_wp, 0.0_wp, roots, iflag)
+    call check_roots('domain wider than huge()', roots, [-0.5e308_wp, 0.5e308_wp], 1.0e294_wp)
+
+    end subroutine test_review_cases_2
 
     end program bspline_roots_test
 !*****************************************************************************************
