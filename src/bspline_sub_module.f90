@@ -91,6 +91,59 @@
                                                                 !! [[db1root]] (scaled by the width of the
                                                                 !! domain, see [[root_dup_tol]])
 
+    ! 8-point Gauss-Legendre abscissae (positive half) and weights on [-1,1],
+    ! used by [[dbsgq8]] and [[dbfqad]]. These are the higher precision versions
+    ! (about 300 digits) from http://pomax.github.io/bezierinfo/legendre-gauss.html,
+    ! so more precision is obtained if `wp` is changed to, say, `real128`.
+    real(wp),parameter :: gl8_x1 = &  !! 8-point Gauss-Legendre abscissa 1
+    &0.1834346424956498049394761423601839806667578129129737823171884736992044&
+    &742215421141160682237111233537452676587642867666089196012523876865683788&
+    &569995160663568104475551617138501966385810764205532370882654749492812314&
+    &961247764619363562770645716456613159405134052985058171969174306064445289&
+    &638150514997832_wp
+    real(wp),parameter :: gl8_x2 = &  !! 8-point Gauss-Legendre abscissa 2
+    &0.5255324099163289858177390491892463490419642431203928577508570992724548&
+    &207685612725239614001936319820619096829248252608507108793766638779939805&
+    &395303668253631119018273032402360060717470006127901479587576756241288895&
+    &336619643528330825624263470540184224603688817537938539658502113876953598&
+    &879150514997832_wp
+    real(wp),parameter :: gl8_x3 = &  !! 8-point Gauss-Legendre abscissa 3
+    &0.7966664774136267395915539364758304368371717316159648320701702950392173&
+    &056764730921471519272957259390191974534530973092653656494917010859602772&
+    &562074621689676153935016290342325645582634205301545856060095727342603557&
+    &415761265140428851957341933710803722783136113628137267630651413319993338&
+    &002150514997832_wp
+    real(wp),parameter :: gl8_x4 = &  !! 8-point Gauss-Legendre abscissa 4
+    &0.9602898564975362316835608685694729904282352343014520382716397773724248&
+    &977434192844394389592633122683104243928172941762102389581552171285479373&
+    &642204909699700433982618326637346808781263553346927867359663480870597542&
+    &547603929318533866568132868842613474896289232087639988952409772489387324&
+    &25615051499783203_wp
+    real(wp),parameter :: gl8_w1 = &  !! 8-point Gauss-Legendre weight 1
+    &0.3626837833783619829651504492771956121941460398943305405248230675666867&
+    &347239066773243660420848285095502587699262967065529258215569895173844995&
+    &576007862076842778350382862546305771007553373269714714894268328780431822&
+    &779077846722965535548199601402487767505928976560993309027632737537826127&
+    &502150514997832_wp
+    real(wp),parameter :: gl8_w2 = &  !! 8-point Gauss-Legendre weight 2
+    &0.3137066458778872873379622019866013132603289990027349376902639450749562&
+    &719421734969616980762339285560494275746410778086162472468322655616056890&
+    &624276469758994622503118776562559463287222021520431626467794721603822601&
+    &295276898652509723185157998353156062419751736972560423953923732838789657&
+    &919150514997832_wp
+    real(wp),parameter :: gl8_w3 = &  !! 8-point Gauss-Legendre weight 3
+    &0.2223810344533744705443559944262408844301308700512495647259092892936168&
+    &145704490408536531423771979278421592661012122181231114375798525722419381&
+    &826674532090577908613289536840402789398648876004385697202157482063253247&
+    &195590228631570651319965589733545440605952819880671616779621183704306688&
+    &233150514997832_wp
+    real(wp),parameter :: gl8_w4 = &  !! 8-point Gauss-Legendre weight 4
+    &0.1012285362903762591525313543099621901153940910516849570590036980647401&
+    &787634707848602827393040450065581543893314132667077154940308923487678731&
+    &973041136073584690533208824050731976306575729205467961435779467552492328&
+    &730055025992954089946676810510810729468366466585774650346143712142008566&
+    &866150514997832_wp
+
     interface db1ink
         !! 1D initialization routines.
         module procedure :: db1ink_default, db1ink_alt, db1ink_alt_2
@@ -588,8 +641,10 @@
         call spline_derivative(tx,bcoef,nx,kx,td,d)
         call spline_roots(td,d,nx-1_ip,kx-1_ip,0.0_wp,crit,iflag2)
         ftol = root_ftol * max(abs(a),maxval(abs(bcoef)))
-        xtol = sqrt(epsilon(1.0_wp)) * (tx(nx+1_ip)-tx(kx)) + root_dup_tol(tx(kx),tx(nx+1_ip))
-        band_max = sqrt(sqrt(epsilon(1.0_wp))) * (tx(nx+1_ip)-tx(kx))
+        ! (the domain width is scaled before the subtraction, so it does not overflow)
+        xtol = (sqrt(epsilon(1.0_wp))*tx(nx+1_ip) - sqrt(epsilon(1.0_wp))*tx(kx)) + &
+               root_dup_tol(tx(kx),tx(nx+1_ip))
+        band_max = sqrt(sqrt(epsilon(1.0_wp)))*tx(nx+1_ip) - sqrt(sqrt(epsilon(1.0_wp)))*tx(kx)
         inbv = 1_ip
         do i = 1_ip, size(crit,kind=ip)
             call dbvalu(tx,bcoef,nx,kx,0_ip,crit(i),inbv,work,iflag2,f)
@@ -654,6 +709,12 @@
 !  For `kx = 4` (cubic) the derivative pieces are quadratic, so the
 !  candidates are found in closed form.
 !
+!  At an interior knot where the spline itself is discontinuous (a knot
+!  of multiplicity `kx` or more), \( s(x) \) is the value from the right,
+!  and the limit from the left is not attained. If that limit is the
+!  extremum, it is returned (with `xmin` at the knot) and `iflag` is set
+!  to 4007.
+!
 !### See also
 !  * [[db1max]], [[db1root]]
 
@@ -676,6 +737,8 @@
                                                    !! * 4002: `nx` does not satisfy `nx >= kx`
                                                    !! * 4003: `xa` or `xb` or both do not
                                                    !!   satisfy `t(kx) <= x <= t(nx+1)`
+                                                   !! * 4007: the minimum is the limit from the
+                                                   !!   left at a discontinuity (not attained)
 
     call db1extremum(tx,nx,kx,bcoef,xa,xb,.false.,xmin,fmin,iflag)
 
@@ -685,6 +748,7 @@
 !*****************************************************************************************
 !>
 !  Finds the global maximum of a 1D b-spline on \( [x_a, x_b] \).
+!  See [[db1min]] for the method, and for discontinuous splines.
 !
 !### See also
 !  * [[db1min]], [[db1root]]
@@ -733,7 +797,10 @@
     real(wp),dimension(:),allocatable :: d     !! coefficients of \( s'(x) \)
     real(wp),dimension(:),allocatable :: xc    !! candidate points
     real(wp),dimension(3*kx) :: work  !! work array for [[dbvalu]]
+    real(wp),dimension(kx,1) :: vnikx  !! basis function values from [[dbspvd]]
+    real(wp),dimension((kx+1)*(kx+2)/2) :: work2  !! work array for [[dbspvd]]
     integer(ip) :: i       !! counter
+    integer(ip) :: m       !! multiplicity of an interior knot
     integer(ip) :: inbv    !! initialization parameter for [[dbvalu]]
     integer(ip) :: iflag2  !! status flag from [[spline_roots]] for \( s'(x) \) (not returned)
     real(wp) :: x1         !! left end of the interval: `min(xa,xb)`
@@ -768,6 +835,29 @@
         if (i==1_ip .or. (find_max .and. f>fopt) .or. (.not. find_max .and. f<fopt)) then
             xopt = xc(i)
             fopt = f
+        end if
+    end do
+
+    ! the limits from the left at interior knots where the spline is
+    ! discontinuous (multiplicity >= kx), in (x1,x2]. Each such knot is
+    ! processed at the first of its copies, i, so interval i-1 is the
+    ! nonempty interval to its left.
+    do i = kx+1_ip, nx
+        if (tx(i)<=x1 .or. tx(i)>x2 .or. tx(i)==tx(i-1_ip)) cycle
+        m = 1_ip
+        do while (i+m<=nx+kx)
+            if (tx(i+m)/=tx(i)) exit
+            m = m + 1_ip
+        end do
+        if (m<kx .or. tx(i)>=tx(nx+1_ip)) cycle  ! continuous, or the right end (where
+                                                 ! s(x) is already the limit from the left)
+        call dbspvd(tx,kx,1_ip,tx(i),i-1_ip,kx,vnikx,work2,iflag2)
+        if (iflag2/=0_ip) cycle
+        f = dot_product(vnikx(:,1), bcoef(i-kx:i-1_ip))
+        if ((find_max .and. f>fopt) .or. (.not. find_max .and. f<fopt)) then
+            xopt = tx(i)
+            fopt = f
+            iflag = 4007_ip
         end if
     end do
 
@@ -846,7 +936,12 @@
 !*****************************************************************************************
 !>
 !  The derivative of a b-spline, as a b-spline of order `k-1`
-!  with `n-1` coefficients and knots `t(2:n+k-1)`.
+!  with `n-1` coefficients and knots `t(2:n+k-1)`, times a positive
+!  constant (so it has the same roots).
+!
+!  The constant is chosen (as a power of 2, so the scaling is exact) to
+!  avoid overflow for large coefficients or closely spaced knots. It is
+!  only used for the roots of \( s'(x) \).
 
     pure subroutine spline_derivative(t,c,n,k,td,d)
 
@@ -860,18 +955,35 @@
     real(wp),dimension(:),allocatable,intent(out) :: d   !! coefficients of the derivative (size `n-1`)
 
     integer(ip) :: i   !! counter
-    real(wp) :: dt     !! support width of a b-spline basis function: `t(i+k-1) - t(i)`
+    real(wp) :: dt     !! support width of a b-spline basis function: `t(i+k-1) - t(i)` (scaled)
+    real(wp) :: cs     !! scale factor for the coefficients (a power of 2)
+    real(wp) :: ts     !! scale factor for the knots (a power of 2)
 
+    cs = pow2(maxval(abs(c)))
+    ts = pow2(max(abs(t(1)),abs(t(n+k))))
     td = t(2_ip:n+k-1_ip)
     allocate(d(n-1_ip))
     do i = 2_ip, n
-        dt = t(i+k-1_ip) - t(i)
+        dt = t(i+k-1_ip)/ts - t(i)/ts
         if (dt>0.0_wp) then
-            d(i-1_ip) = real(k-1_ip,wp) * (c(i)-c(i-1_ip)) / dt
+            d(i-1_ip) = real(k-1_ip,wp) * (c(i)/cs - c(i-1_ip)/cs) / dt
         else
             d(i-1_ip) = 0.0_wp  ! the basis function is identically zero
         end if
     end do
+
+    contains
+
+        pure function pow2(x) result(p)
+        !! A power of 2 near `x` (1 if `x` is 0).
+        real(wp),intent(in) :: x  !! the value (`x >= 0`)
+        real(wp) :: p             !! the power of 2
+        if (x>0.0_wp) then
+            p = scale(1.0_wp, exponent(x))
+        else
+            p = 1.0_wp
+        end if
+        end function pow2
 
     end subroutine spline_derivative
 !*****************************************************************************************
@@ -1353,7 +1465,8 @@
     real(wp),intent(in) :: x2   !! right end of the domain: `t(n+1)`
     real(wp)            :: tol  !! the duplicate tolerance
 
-    tol = root_xtol*(x2-x1) + spacing(max(abs(x1),abs(x2)))
+    ! (the domain width is scaled before the subtraction, so it does not overflow)
+    tol = (root_xtol*x2 - root_xtol*x1) + spacing(max(abs(x1),abs(x2)))
 
     end function root_dup_tol
 !*****************************************************************************************
@@ -4513,6 +4626,7 @@
     integer(ip),dimension(:),allocatable :: ipvt   !! pivot indices
     real(wp),dimension(:,:),allocatable :: vnikx   !! basis function values from [[dbspvd]]
     real(wp),dimension(:),allocatable :: work      !! work array for [[dbspvd]]
+    real(wp),dimension(:),allocatable :: colmax    !! scale factor of each column of the system
 
     n = ndata + 2_ip
 
@@ -4661,14 +4775,32 @@
         bcoef(i) = bcoef(i) / rowmax
     end do
 
+    ! also scale each column (unknown), since a basis function can be small
+    ! at all of the data points (e.g., when the data spacing near an end is
+    ! very uneven), and its pivot would then look singular. The scale factors
+    ! are powers of 2 near the largest entry of each column, so the scaling is
+    ! exact and does not change the solution (partial pivoting is not affected
+    ! by column scaling). The solution is unscaled below.
+    allocate(colmax(n))
+    do j=1_ip,n
+        colmax(j) = maxval(abs(abd(:,j)))
+        if (colmax(j)==0.0_wp) then
+            colmax(j) = 1.0_wp
+        else
+            colmax(j) = scale(1.0_wp, exponent(colmax(j)))
+        end if
+        abd(:,j) = abd(:,j) / colmax(j)
+    end do
+
     ! solve system of equations
-    ! (the rows are scaled so the largest entry of each is 1, so an
-    !  absolute tolerance on the pivots detects a numerically singular system)
+    ! (the rows and columns are scaled so the largest entry of each is about 1,
+    !  so an absolute tolerance on the pivots detects a numerically singular system)
     call dgbfa(abd,n,ml,mu,ipvt,1000.0_wp*epsilon(1.0_wp),iflag)
     if (iflag/=0_ip) then
         iflag = 2007_ip  ! the system of equations is singular
     else
         call dgbsl(abd,n,ml,mu,ipvt,bcoef(1:n))
+        bcoef(1:n) = bcoef(1:n) / colmax
     end if
 
     end subroutine dbint4
@@ -5255,9 +5387,11 @@
                                                   !!   or greater than 0.1
 
     integer(ip) :: inbv,ilo,il1,il2,left,mflag,npk,np1
-    real(wp) :: a,aa,ans,b,bb,q,ta,tb,err,m,fm
+    real(wp) :: a,aa,ans,b,bb,q,ta,tb,err
 
     real(wp),parameter :: min_tol = max(epsilon(1.0_wp),1.0e-300_wp) !! minimum allowed `tol`
+    real(wp),parameter :: narrow = 2.0_wp**(-40) !! a subinterval narrower than this relative to `|x|`
+                                                 !! is integrated with a fixed Gauss rule
 
     iflag = 0_ip
     quad = 0.0_wp
@@ -5289,14 +5423,13 @@
                         if ( ta/=tb ) then
                             a = max(aa,ta)
                             b = min(bb,tb)
-                            call dbsgq8(f,t,bcoef,n,k,id,a,b,inbv,err,ans,iflag,work)
-                            if ( iflag==1101_ip ) then
-                                ! interval too short for dbsgq8 (a few ulps wide), so the
-                                ! integrand is effectively constant: use the midpoint rule
-                                m = a + 0.5_wp*(b-a)
-                                call dbvalu(t,bcoef,n,k,id,m,inbv,work,iflag,fm)
-                                if ( iflag/=0_ip ) return
-                                ans = (b-a) * f(m) * fm
+                            if ( abs(b-a) <= narrow*max(abs(a),abs(b)) ) then
+                                ! too narrow relative to |x| for dbsgq8 (which returns
+                                ! 1101, or 0 if a/b rounds to 1)
+                                call gauss8(a,b,left,ans,iflag)
+                            else
+                                call dbsgq8(f,t,bcoef,n,k,id,a,b,inbv,err,ans,iflag,work)
+                                if ( iflag==1101_ip ) call gauss8(a,b,left,ans,iflag)
                             end if
                             if ( iflag/=0_ip ) return
                             q = q + ans
@@ -5314,6 +5447,66 @@
             iflag = 1005_ip  ! error
         end if
     end if
+
+    contains
+
+        subroutine gauss8(a,b,l,ans,iflag)
+
+        !! 8-point Gauss-Legendre rule on `[a,b]`, for a subinterval that is too
+        !! narrow (relative to `|x|`) for [[dbsgq8]]. `[a,b]` is inside knot
+        !! interval `l`, where the spline is a polynomial, so the rule is exact
+        !! for the spline part for orders up to 16 (and very accurate for a
+        !! smooth `f` over such a narrow interval).
+        !!
+        !! The nodes may not be representable (the interval may be only a few
+        !! ulps wide), so the spline is evaluated at the exact offsets from the
+        !! midpoint, from its Taylor expansion there. `f` is evaluated at the
+        !! nearest representable points.
+
+        real(wp),intent(in)     :: a      !! left end of the subinterval
+        real(wp),intent(in)     :: b      !! right end of the subinterval
+        integer(ip),intent(in)  :: l      !! knot interval containing `[a,b]`: `t(l) <= a < b <= t(l+1)`
+        real(wp),intent(out)    :: ans    !! the integral
+        integer(ip),intent(out) :: iflag  !! status flag from [[dbspvd]]
+
+        real(wp),dimension(4),parameter :: xg = [gl8_x1, gl8_x2, gl8_x3, gl8_x4]  !! nodes (positive half)
+        real(wp),dimension(4),parameter :: wg = [gl8_w1, gl8_w2, gl8_w3, gl8_w4]  !! weights
+        real(wp),dimension(k,k) :: vnikx  !! basis functions and their derivatives at the midpoint
+        real(wp),dimension((k+1)*(k+2)/2) :: wrk  !! work array for [[dbspvd]]
+        real(wp),dimension(0:k-1) :: dc   !! Taylor coefficients of the spline (or its derivative)
+                                          !! about the midpoint
+        real(wp) :: c   !! midpoint of the subinterval
+        real(wp) :: h   !! half width of the subinterval
+        real(wp) :: dx  !! offset of a node from the midpoint
+        real(wp) :: fs  !! spline (or derivative) value at a node
+        integer(ip) :: i   !! counter
+        integer(ip) :: j   !! side of the midpoint (-1 or 1)
+        integer(ip) :: m   !! degree of the Taylor expansion: `k-1-id`
+        integer(ip) :: jj  !! counter
+
+        c = a + 0.5_wp*(b-a)
+        h = 0.5_wp*(b-a)
+        m = k - 1_ip - id
+        call dbspvd(t,k,k,c,l,k,vnikx,wrk,iflag)
+        if (iflag/=0_ip) return
+        do jj = 0_ip, m
+            dc(jj) = dot_product(vnikx(:,id+jj+1_ip), bcoef(l-k+1_ip:l))
+            if (jj>1_ip) dc(jj) = dc(jj) / product([(real(i,wp), i=2_ip,jj)])
+        end do
+        ans = 0.0_wp
+        do i = 1_ip, 4_ip
+            do j = -1_ip, 1_ip, 2_ip
+                dx = real(j,wp)*h*xg(i)
+                fs = dc(m)
+                do jj = m-1_ip, 0_ip, -1_ip
+                    fs = fs*dx + dc(jj)
+                end do
+                ans = ans + wg(i) * f(min(b, max(a, c + dx))) * fs
+            end do
+        end do
+        ans = h * ans
+
+        end subroutine gauss8
 
     end subroutine dbfqad
 !*****************************************************************************************
@@ -5515,11 +5708,11 @@
 
         !! 8-point formula.
         !!
-        !!@note Replaced the original double precision abscissa and weight
-        !!      coefficients with the higher precision versions from here:
+        !!@note The abscissa and weight coefficients (`gl8_x1`, ..., `gl8_w4`)
+        !!      are the higher precision versions (about 300 digits) from here:
         !!      http://pomax.github.io/bezierinfo/legendre-gauss.html
         !!      So, if `wp` is changed to say, `real128`, more precision
-        !!      can be obtained. These coefficients have about 300 digits.
+        !!      can be obtained.
 
         implicit none
 
@@ -5531,66 +5724,16 @@
         real(wp),dimension(8) :: f
         real(wp),dimension(8) :: v
 
-        ! abscissa and weight coefficients:
-        real(wp),parameter :: x1 = &
-        &0.1834346424956498049394761423601839806667578129129737823171884736992044&
-        &742215421141160682237111233537452676587642867666089196012523876865683788&
-        &569995160663568104475551617138501966385810764205532370882654749492812314&
-        &961247764619363562770645716456613159405134052985058171969174306064445289&
-        &638150514997832_wp
-        real(wp),parameter :: x2 = &
-        &0.5255324099163289858177390491892463490419642431203928577508570992724548&
-        &207685612725239614001936319820619096829248252608507108793766638779939805&
-        &395303668253631119018273032402360060717470006127901479587576756241288895&
-        &336619643528330825624263470540184224603688817537938539658502113876953598&
-        &879150514997832_wp
-        real(wp),parameter :: x3 = &
-        &0.7966664774136267395915539364758304368371717316159648320701702950392173&
-        &056764730921471519272957259390191974534530973092653656494917010859602772&
-        &562074621689676153935016290342325645582634205301545856060095727342603557&
-        &415761265140428851957341933710803722783136113628137267630651413319993338&
-        &002150514997832_wp
-        real(wp),parameter :: x4 = &
-        &0.9602898564975362316835608685694729904282352343014520382716397773724248&
-        &977434192844394389592633122683104243928172941762102389581552171285479373&
-        &642204909699700433982618326637346808781263553346927867359663480870597542&
-        &547603929318533866568132868842613474896289232087639988952409772489387324&
-        &25615051499783203_wp
-        real(wp),parameter :: w1 = &
-        &0.3626837833783619829651504492771956121941460398943305405248230675666867&
-        &347239066773243660420848285095502587699262967065529258215569895173844995&
-        &576007862076842778350382862546305771007553373269714714894268328780431822&
-        &779077846722965535548199601402487767505928976560993309027632737537826127&
-        &502150514997832_wp
-        real(wp),parameter :: w2 = &
-        &0.3137066458778872873379622019866013132603289990027349376902639450749562&
-        &719421734969616980762339285560494275746410778086162472468322655616056890&
-        &624276469758994622503118776562559463287222021520431626467794721603822601&
-        &295276898652509723185157998353156062419751736972560423953923732838789657&
-        &919150514997832_wp
-        real(wp),parameter :: w3 = &
-        &0.2223810344533744705443559944262408844301308700512495647259092892936168&
-        &145704490408536531423771979278421592661012122181231114375798525722419381&
-        &826674532090577908613289536840402789398648876004385697202157482063253247&
-        &195590228631570651319965589733545440605952819880671616779621183704306688&
-        &233150514997832_wp
-        real(wp),parameter :: w4 = &
-        &0.1012285362903762591525313543099621901153940910516849570590036980647401&
-        &787634707848602827393040450065581543893314132667077154940308923487678731&
-        &973041136073584690533208824050731976306575729205467961435779467552492328&
-        &730055025992954089946676810510810729468366466585774650346143712142008566&
-        &866150514997832_wp
-
         res = 0.0_wp
 
-        v(1_ip) = x-x1*h
-        v(2_ip) = x+x1*h
-        v(3_ip) = x-x2*h
-        v(4_ip) = x+x2*h
-        v(5_ip) = x-x3*h
-        v(6_ip) = x+x3*h
-        v(7_ip) = x-x4*h
-        v(8_ip) = x+x4*h
+        v(1_ip) = x-gl8_x1*h
+        v(2_ip) = x+gl8_x1*h
+        v(3_ip) = x-gl8_x2*h
+        v(4_ip) = x+gl8_x2*h
+        v(5_ip) = x-gl8_x3*h
+        v(6_ip) = x+gl8_x3*h
+        v(7_ip) = x-gl8_x4*h
+        v(8_ip) = x+gl8_x4*h
 
         call dbvalu(xt,bc,n,kk,id,v(1_ip),inbv,work,iflag,f(1_ip)); if (iflag/=0_ip) return
         call dbvalu(xt,bc,n,kk,id,v(2_ip),inbv,work,iflag,f(2_ip)); if (iflag/=0_ip) return
@@ -5601,10 +5744,10 @@
         call dbvalu(xt,bc,n,kk,id,v(7_ip),inbv,work,iflag,f(7_ip)); if (iflag/=0_ip) return
         call dbvalu(xt,bc,n,kk,id,v(8_ip),inbv,work,iflag,f(8_ip)); if (iflag/=0_ip) return
 
-        res = h*((w1*(fun(v(1_ip))*f(1_ip) + fun(v(2_ip))*f(2_ip))  + &
-                  w2*(fun(v(3_ip))*f(3_ip) + fun(v(4_ip))*f(4_ip))) + &
-                 (w3*(fun(v(5_ip))*f(5_ip) + fun(v(6_ip))*f(6_ip))  + &
-                  w4*(fun(v(7_ip))*f(7_ip) + fun(v(8_ip))*f(8_ip))))
+        res = h*((gl8_w1*(fun(v(1_ip))*f(1_ip) + fun(v(2_ip))*f(2_ip))  + &
+                  gl8_w2*(fun(v(3_ip))*f(3_ip) + fun(v(4_ip))*f(4_ip))) + &
+                 (gl8_w3*(fun(v(5_ip))*f(5_ip) + fun(v(6_ip))*f(6_ip))  + &
+                  gl8_w4*(fun(v(7_ip))*f(7_ip) + fun(v(8_ip))*f(8_ip))))
 
         end subroutine g8
 
@@ -5797,6 +5940,7 @@
     case(4004_ip); msg='Warning in db1root: the spline is equal to a over a whole knot interval'
     case(4005_ip); msg='Error in inverse: there is no x with s(x)=y'
     case(4006_ip); msg='Error in inverse: there is more than one x with s(x)=y'
+    case(4007_ip); msg='Warning in db1min/db1max: the extremum is the limit from the left at a discontinuity'
 
     case(5001_ip); msg='Error in initialize_from_coefficients: k does not satisfy k>=1'
     case(5002_ip); msg='Error in initialize_from_coefficients: n does not satisfy n>=k'

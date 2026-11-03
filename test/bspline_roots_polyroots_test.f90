@@ -20,8 +20,9 @@
 !    (a root of even multiplicity, which is not a sign change), the
 !    extremum must be found, and no other root may be returned near it;
 !  * the minimum and maximum from [[db1min]] and [[db1max]] must match the
-!    best of the end points, the interior knots, and the real roots of the
-!    derivative pieces computed by `rpoly`.
+!    best of the end points, the interior knots, the real roots of the
+!    derivative pieces computed by `rpoly`, and the limits from the left at
+!    discontinuities.
 !
 !  Some interior knots are repeated, up to multiplicity `k` (where the
 !  spline is discontinuous). The level `a` is a random value, the value
@@ -143,6 +144,8 @@
     integer(ip) :: nntouch !! number of local extremum cases tested
     integer(ip) :: nref    !! number of reference roots compared
     integer(ip) :: next    !! number of extrema that do not match the reference
+    logical :: min_limit   !! the minimum is a limit from the left (iflag=4007)
+    logical :: max_limit   !! the maximum is a limit from the left (iflag=4007)
     integer(ip) :: nres    !! number of roots found with \( |s(x)-a| \) above `res_tol`
     integer(ip) :: ndup    !! number of pairs of roots found that are duplicates
 
@@ -257,11 +260,15 @@
             end if
         end select
 
-        ! extrema: the best of the ends, the interior knots, and the critical points
+        ! extrema: the best of the ends, the interior knots, the critical
+        ! points, and the limits from the left at discontinuities (where
+        ! iflag=4007 is returned if one of these is the extremum)
         call db1min(tx,n,k,bcoef,tx(k),tx(n+1_ip),xmin,fmin,iflag)
-        call check('k='//istr(k)//' db1min iflag', iflag==0_ip)
+        call check('k='//istr(k)//' db1min iflag', iflag==0_ip .or. iflag==4007_ip)
+        min_limit = iflag==4007_ip
         call db1max(tx,n,k,bcoef,tx(k),tx(n+1_ip),xmax,fmax,iflag)
-        call check('k='//istr(k)//' db1max iflag', iflag==0_ip)
+        call check('k='//istr(k)//' db1max iflag', iflag==0_ip .or. iflag==4007_ip)
+        max_limit = iflag==4007_ip
         call derivative_roots(tx,bcoef,n,k,xcrit,interior=.false.)
         xcrit = [tx(k:n+1_ip), xcrit]
         fref_min = huge(1.0_wp)
@@ -271,9 +278,17 @@
             fref_min = min(fref_min, f)
             fref_max = max(fref_max, f)
         end do
+        do l = k, n-1_ip
+            ! left limit at the end of interval l, if the spline is discontinuous there
+            if (tx(l)<tx(l+1_ip) .and. count(tx==tx(l+1_ip))>=k .and. tx(l+1_ip)<tx(n+1_ip)) then
+                f = piece_end_value(tx,bcoef,n,k,l)
+                fref_min = min(fref_min, f)
+                fref_max = max(fref_max, f)
+            end if
+        end do
         if (abs(fmin-fref_min)>f_tol .or. abs(fmax-fref_max)>f_tol .or. &
-            abs(spline_value(tx,bcoef,k,xmin)-fmin)>f_tol .or. &
-            abs(spline_value(tx,bcoef,k,xmax)-fmax)>f_tol) then
+            (.not. min_limit .and. abs(spline_value(tx,bcoef,k,xmin)-fmin)>f_tol) .or. &
+            (.not. max_limit .and. abs(spline_value(tx,bcoef,k,xmax)-fmax)>f_tol)) then
             next = next + 1_ip
             write(*,*) '   k=',k,' trial=',itrial,' extrema: ', fmin-fref_min, fmax-fref_max
         end if
@@ -366,6 +381,44 @@
     z = cmplx(zr, zi, kind=wp)
 
     end subroutine piece_roots
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  The value of the piece on knot interval `l` at its right end (the limit
+!  from the left at `tx(l+1)`), from its expansion about the midpoint.
+
+    function piece_end_value(tx,bcoef,n,k,l) result(f)
+
+    integer(ip),intent(in)             :: n      !! number of b-spline coefficients
+    integer(ip),intent(in)             :: k      !! spline order
+    real(wp),dimension(n+k),intent(in) :: tx     !! knot array
+    real(wp),dimension(n),intent(in)   :: bcoef  !! b-spline coefficients
+    integer(ip),intent(in)             :: l      !! knot interval index
+    real(wp)                           :: f      !! the limit from the left at `tx(l+1)`
+
+    real(wp),dimension(3*k) :: work  !! work array for [[db1val]]
+    real(wp) :: xm      !! midpoint of the interval
+    real(wp) :: hh      !! half width of the interval
+    real(wp) :: fac     !! \( (h/2)^j / j! \)
+    real(wp) :: val     !! derivative of the spline
+    integer(ip) :: j     !! counter
+    integer(ip) :: inbv  !! initialization parameter for [[db1val]]
+    integer(ip) :: iflag !! status flag from [[db1val]]
+
+    xm = 0.5_wp*(tx(l)+tx(l+1_ip))
+    hh = 0.5_wp*(tx(l+1_ip)-tx(l))
+    inbv = 1_ip
+    fac = 1.0_wp
+    f = 0.0_wp
+    do j = 0_ip, k-1_ip
+        call db1val(xm,j,tx,n,k,bcoef,val,iflag,inbv,work)
+        if (iflag/=0_ip) error stop 'db1val error'
+        if (j>0_ip) fac = fac*hh/real(j,wp)
+        f = f + val*fac  ! the expansion at w = 1
+    end do
+
+    end function piece_end_value
 !*****************************************************************************************
 
 !*****************************************************************************************
