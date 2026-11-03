@@ -13,7 +13,9 @@
 !  * every simple, well separated real root of a piece inside its
 !    interval must be found by [[db1root]];
 !  * every root found by [[db1root]] must be close to a real (or nearly
-!    real) root of a piece;
+!    real) root of a piece, must satisfy \( s(x) \approx a \) (at a
+!    discontinuity, \( s(x) \) is the value from the right), and must
+!    not be returned twice;
 !  * when the level `a` is the value of the spline at a local extremum
 !    (a root of even multiplicity, which is not a sign change), the
 !    extremum must be found, and no other root may be returned near it;
@@ -21,8 +23,9 @@
 !    best of the end points, the interior knots, and the real roots of the
 !    derivative pieces computed by `rpoly`.
 !
-!  The level `a` is a random value, the value at a random interior knot,
-!  or the value at a random local extremum.
+!  Some interior knots are repeated, up to multiplicity `k` (where the
+!  spline is discontinuous). The level `a` is a random value, the value
+!  at a random interior knot, or the value at a random local extremum.
 
     program bspline_roots_polyroots_test
 
@@ -47,6 +50,8 @@
     real(wp),parameter :: x_tol    = 1.0e-10_wp  !! relative tolerance (scaled by the domain width)
                                                  !! for matching a root
     real(wp),parameter :: f_tol    = 1.0e-13_wp  !! tolerance for matching an extremum value
+    real(wp),parameter :: res_tol  = 1.0e-10_wp  !! tolerance on \( |s(x)-a| \) for a root found
+                                                 !! (the coefficients are in \( [-1,1] \))
 
     integer :: nfail   !! number of failed checks
     integer :: ncheck  !! number of checks
@@ -138,20 +143,24 @@
     integer(ip) :: nntouch !! number of local extremum cases tested
     integer(ip) :: nref    !! number of reference roots compared
     integer(ip) :: next    !! number of extrema that do not match the reference
+    integer(ip) :: nres    !! number of roots found with \( |s(x)-a| \) above `res_tol`
+    integer(ip) :: ndup    !! number of pairs of roots found that are duplicates
 
     nmissed = 0; nextra = 0; nknot = 0; ntouch = 0; nntouch = 0; nref = 0; next = 0
+    nres = 0; ndup = 0
 
     do itrial = 1_ip, ntrial
 
-        ! random clamped knots (some interior knots repeated), random coefficients
+        ! random clamped knots (some interior knots repeated, up to
+        ! multiplicity k, where the spline is discontinuous), random coefficients
         call random_number(u)
         n = k + int(u*16.0_wp, ip)
         allocate(tx(n+k), bcoef(n))
         tx(1:k) = 0.0_wp
         do i = k+1_ip, n
             call random_number(u)
-            if (k>=3_ip .and. i>k+1_ip .and. u<0.1_wp .and. tx(i-1_ip)>tx(max(1_ip,i-k+1_ip))) then
-                tx(i) = tx(i-1_ip)  ! double knot (lower continuity)
+            if (i>k+1_ip .and. u<0.12_wp .and. count(tx(k+1_ip:i-1_ip)==tx(i-1_ip))<k) then
+                tx(i) = tx(i-1_ip)  ! repeated knot (lower continuity)
             else
                 tx(i) = tx(i-1_ip) + 0.05_wp + u
             end if
@@ -212,11 +221,25 @@
             end if
         end do
 
-        ! every root found is near a reference root
+        ! every root found is near a reference root, and is a root
+        ! (at a discontinuity, s(x) is the value from the right)
         do i = 1_ip, size(roots,kind=ip)
             if (.not. any(abs(xnear-roots(i))<=sqrt(x_tol)*span)) then
                 nextra = nextra + 1_ip
                 write(*,*) '   k=',k,' trial=',itrial,' root with no reference: ', roots(i)
+            end if
+            if (abs(spline_value(tx,bcoef,k,roots(i))-a)>res_tol) then
+                nres = nres + 1_ip
+                write(*,*) '   k=',k,' trial=',itrial,' not a root: ', roots(i), &
+                           ' s(x)-a = ', spline_value(tx,bcoef,k,roots(i))-a
+            end if
+        end do
+
+        ! no root is returned twice
+        do i = 1_ip, size(roots,kind=ip)-1_ip
+            if (roots(i+1_ip)-roots(i)<=1.0e-9_wp*span) then
+                ndup = ndup + 1_ip
+                write(*,*) '   k=',k,' trial=',itrial,' duplicate roots: ', roots(i), roots(i+1_ip)
             end if
         end do
 
@@ -260,6 +283,8 @@
 
     call check('k='//istr(k)//': all reference roots found', nmissed==0_ip)
     call check('k='//istr(k)//': no roots without a reference root', nextra==0_ip)
+    call check('k='//istr(k)//': all roots found are roots', nres==0_ip)
+    call check('k='//istr(k)//': no duplicate roots', ndup==0_ip)
     call check('k='//istr(k)//': knot roots found', nknot==0_ip)
     call check('k='//istr(k)//': local extremum roots found', ntouch==0_ip)
     call check('k='//istr(k)//': extrema match reference', next==0_ip)

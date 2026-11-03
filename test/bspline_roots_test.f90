@@ -38,6 +38,7 @@
     call test_random()
     call test_errors()
     call test_oo()
+    call test_review_cases()
 
     write(*,*) ''
     write(*,*) ncheck, ' checks'
@@ -587,6 +588,71 @@
     call check('oo minimum: not initialized', iflag==1)
 
     end subroutine test_oo
+
+!*****************************************************************************************
+!>
+!  Cases from the code review of PR #107.
+
+    subroutine test_review_cases()
+
+    real(wp),dimension(:),allocatable :: roots
+    real(wp) :: z, xmin, fmin, xmax, fmax
+    integer(ip) :: iflag
+
+    ! the left end of a flat region is a root, even if the spline reaches
+    ! it with a root of high multiplicity: s(x) = (1-x)**4 on [0,1], 0 on [1,2]
+    call db1root([0,0,0,0,0,1,2,2,2,2,2]*1.0_wp, 6_ip, 5_ip, [1,0,0,0,0,0]*1.0_wp, 0.0_wp, roots, iflag)
+    call check('flat region after high multiplicity root: iflag', iflag==4004)
+    call check_roots('flat region after high multiplicity root', roots, [1.0_wp, 2.0_wp], 0.0_wp)
+    ! same, with the flat region in the middle of the domain
+    call db1root([0,0,0,0,0,1,2,3,3,3,3,3]*1.0_wp, 7_ip, 5_ip, [1,0,0,0,0,0,1]*1.0_wp, 0.0_wp, roots, iflag)
+    call check_roots('flat region in the middle', roots, [1.0_wp, 2.0_wp], 0.0_wp)
+
+    ! discontinuous linear spline: -1 -> 0 on [0,1), 1 -> 2 on [1,2].
+    ! s(1) = 1 (the value from the right), so there is no root
+    call db1root([0,0,1,1,2,2]*1.0_wp, 4_ip, 2_ip, [-1,0,1,2]*1.0_wp, 0.0_wp, roots, iflag)
+    call check('discontinuous: left limit is not a root', iflag==0 .and. size(roots)==0)
+    ! but a root of the right piece at the knot is a root
+    call db1root([0,0,1,1,2,2]*1.0_wp, 4_ip, 2_ip, [-1,-2,0,1]*1.0_wp, 0.0_wp, roots, iflag)
+    call check_roots('discontinuous: right value is a root', roots, [1.0_wp], 0.0_wp)
+    ! jump across the level: no root
+    call db1root([0,0,1,1,2,2]*1.0_wp, 4_ip, 2_ip, [-2,-1,1,2]*1.0_wp, 0.0_wp, roots, iflag)
+    call check('discontinuous: jump across the level is not a root', size(roots)==0)
+    ! quadratic with a discontinuity (triple knot): left piece ends at zero
+    call db1root([0,0,0,1,1,1,2,2,2]*1.0_wp, 6_ip, 3_ip, [-1,-1,0,1,1,2]*1.0_wp, 0.0_wp, roots, iflag)
+    call check('discontinuous quadratic: left limit is not a root', size(roots)==0)
+
+    ! narrow domain far from zero: the roots z+2 and z+6 are distinct
+    z = 1.0e16_wp
+    call db1root([z,z,z+4,z+8,z+8], 3_ip, 2_ip, [1,-1,1]*1.0_wp, 0.0_wp, roots, iflag)
+    call check_roots('narrow domain far from zero', roots, [z+2.0_wp, z+6.0_wp], 0.0_wp)
+    z = 1.0e6_wp
+    call db1root([z,z,z+1.0e-9_wp,z+2.0e-9_wp,z+2.0e-9_wp], 3_ip, 2_ip, [1,-1,1]*1.0_wp, 0.0_wp, roots, iflag)
+    call check('narrow domain far from zero (2): two roots', size(roots)==2)
+
+    ! tiny coefficients: 1e-200*(x-0.25)*(x-0.75) on [0,1] (Bernstein form)
+    call db1root([0,0,0,1,1,1]*1.0_wp, 3_ip, 3_ip, 1.0e-200_wp*[0.1875_wp,-0.3125_wp,0.1875_wp], &
+                 0.0_wp, roots, iflag)
+    call check_roots('tiny quadratic', roots, [0.25_wp, 0.75_wp], 1.0e-15_wp)
+    ! huge coefficients
+    call db1root([0,0,0,1,1,1]*1.0_wp, 3_ip, 3_ip, 1.0e200_wp*[0.1875_wp,-0.3125_wp,0.1875_wp], &
+                 0.0_wp, roots, iflag)
+    call check_roots('huge quadratic', roots, [0.25_wp, 0.75_wp], 1.0e-15_wp)
+    ! extrema of a tiny cubic (quadratic derivative): Bernstein [0,1,-1,0]*1e-200,
+    ! minimum -sqrt(3)/6*1e-200 at (3+sqrt(3))/6, maximum at (3-sqrt(3))/6
+    call db1min([0,0,0,0,1,1,1,1]*1.0_wp, 4_ip, 4_ip, 1.0e-200_wp*[0,1,-1,0], 0.0_wp, 1.0_wp, xmin, fmin, iflag)
+    call check('tiny cubic minimum', iflag==0 .and. abs(xmin-(3.0_wp+sqrt(3.0_wp))/6.0_wp)<1.0e-14_wp .and. &
+               abs(fmin/1.0e-200_wp+sqrt(3.0_wp)/6.0_wp)<1.0e-14_wp)
+    call db1max([0,0,0,0,1,1,1,1]*1.0_wp, 4_ip, 4_ip, 1.0e-200_wp*[0,1,-1,0], 0.0_wp, 1.0_wp, xmax, fmax, iflag)
+    call check('tiny cubic maximum', iflag==0 .and. abs(xmax-(3.0_wp-sqrt(3.0_wp))/6.0_wp)<1.0e-14_wp .and. &
+               abs(fmax/1.0e-200_wp-sqrt(3.0_wp)/6.0_wp)<1.0e-14_wp)
+
+    ! double root at 1/3 and simple root at 0.75: no extra root near 1/3
+    ! (Bernstein coefficients [-9,13,-16,12] are 108*(x-1/3)**2*(x-3/4) on [0,1])
+    call db1root([0,0,0,0,1,1,1,1]*1.0_wp, 4_ip, 4_ip, [-9,13,-16,12]*1.0_wp, 0.0_wp, roots, iflag)
+    call check_roots('double and simple root', roots, [1.0_wp/3.0_wp, 0.75_wp], 1.0e-14_wp)
+
+    end subroutine test_review_cases
 
     end program bspline_roots_test
 !*****************************************************************************************

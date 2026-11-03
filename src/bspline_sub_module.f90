@@ -88,8 +88,8 @@
                                                                 !! and the coefficient magnitudes): a value
                                                                 !! below it is treated as zero
     real(wp),parameter :: root_xtol = 64.0_wp*epsilon(1.0_wp)  !! relative tolerance for duplicate roots in
-                                                                !! [[db1root]] (scaled by the largest magnitude
-                                                                !! of the ends of the domain)
+                                                                !! [[db1root]] (scaled by the width of the
+                                                                !! domain, see [[root_dup_tol]])
 
     interface db1ink
         !! 1D initialization routines.
@@ -509,16 +509,22 @@
 !  * By the convex hull property, if the `kx` coefficients that are
 !    nonzero on an interval are all above (or all below) `a`, the
 !    interval has no root and is skipped.
-!  * Otherwise, the polynomial piece is converted to Bernstein form.
-!    Pieces of degree one or two are solved in closed form. Higher
-!    degree roots are isolated by Bernstein subdivision (Descartes'
-!    rule of signs) and refined with a safeguarded Newton iteration.
+!  * Otherwise, the polynomial piece is converted to Bernstein form
+!    (directly from the b-spline coefficients by blossoming, which is
+!    numerically stable for any order). Pieces of degree one or two are
+!    solved in closed form. Higher degree roots are isolated by Bernstein
+!    subdivision (Descartes' rule of signs) and refined with a
+!    safeguarded Newton iteration.
 !  * Roots of even multiplicity (where the spline touches `a` without
 !    crossing it) are found as the roots of \( s'(x) \) at which
 !    \( |s(x) - a| \) is within a small tolerance.
 !
 !  If \( s(x) = a \) over a whole knot interval, the roots inside
-!  it are not returned (its end points may be), and `iflag` is set to 4004.
+!  it are not returned (its end points are), and `iflag` is set to 4004.
+!
+!  At an interior knot where the spline is discontinuous, \( s(x) \) is
+!  the value from the right (as for [[db1val]]), so a root of the piece
+!  on the left at the knot is not a root of the spline.
 !
 !### Reference
 !  * K. Morken, M. Reimers, "An unconditionally convergent method for
@@ -581,8 +587,7 @@
         call spline_derivative(tx,bcoef,nx,kx,td,d)
         call spline_roots(td,d,nx-1_ip,kx-1_ip,0.0_wp,crit,iflag2)
         ftol = root_ftol * max(abs(a),maxval(abs(bcoef)))
-        xtol = sqrt(epsilon(1.0_wp)) * (tx(nx+1_ip)-tx(kx)) + &
-               root_xtol * max(abs(tx(kx)),abs(tx(nx+1_ip)))
+        xtol = sqrt(epsilon(1.0_wp)) * (tx(nx+1_ip)-tx(kx)) + root_dup_tol(tx(kx),tx(nx+1_ip))
         band_max = sqrt(sqrt(epsilon(1.0_wp))) * (tx(nx+1_ip)-tx(kx))
         inbv = 1_ip
         do i = 1_ip, size(crit,kind=ip)
@@ -617,7 +622,7 @@
                 deallocate(keep)
             end if
         end do
-        call sort_unique(roots, root_xtol*max(abs(tx(kx)),abs(tx(nx+1_ip))))
+        call sort_unique(roots, root_dup_tol(tx(kx),tx(nx+1_ip)))
 
         ! a root of even multiplicity may be split by rounding into a
         ! close pair of simple roots: merge them if the spline is
@@ -843,20 +848,20 @@
     integer(ip),intent(out)                       :: iflag  !! 0, or 4004 if \( s(x) = a \) on a whole interval
 
     real(wp),dimension(0:k-1) :: p   !! power basis coefficients of a piece, on \( u \in [0,1] \)
-    real(wp),dimension(0:k-1) :: b   !! Bernstein coefficients of a piece
+                                     !! (for the closed form roots of degree 1 and 2)
+    real(wp),dimension(0:k-1) :: b   !! Bernstein coefficients of a piece minus `a`, on \( u \in [0,1] \)
     real(wp),dimension(k) :: cl      !! local b-spline coefficients minus `a`
     real(wp),dimension(3*k) :: work  !! work array for [[dbvalu]]
     real(wp),dimension(:),allocatable :: u  !! roots of a piece, on \( u \in [0,1] \)
+    real(wp),dimension(:),allocatable :: xr !! roots of a piece, on \( x \in [t_l, t_{l+1}] \)
     logical,dimension(:),allocatable :: keep  !! roots to keep
     integer(ip) :: l     !! knot interval index: `t(l) <= x < t(l+1)`
     integer(ip) :: i     !! counter
-    integer(ip) :: j     !! counter
     integer(ip) :: m     !! polynomial degree of the pieces: `k-1`
     integer(ip) :: inbv  !! initialization parameter for [[dbvalu]]
     integer(ip) :: ierr  !! status flag from [[dbvalu]]
     real(wp) :: h        !! width of the knot interval: `t(l+1) - t(l)`
-    real(wp) :: fac      !! scale factor \( h^j / j! \) for the `j`-th power basis coefficient
-    real(wp) :: val      !! spline value (or derivative) from [[dbvalu]]
+    real(wp) :: val      !! spline value from [[dbvalu]]
     real(wp) :: ftol     !! absolute tolerance on \( |s(x)-a| \)
 
     real(wp),parameter :: utol = 16.0_wp*epsilon(1.0_wp)  !! accept roots just outside the interval
@@ -878,41 +883,35 @@
         if (t(l)>=t(l+1_ip)) cycle  ! empty interval
         cl = c(l-k+1_ip:l) - a
 
-        ! s(x) = a on the whole interval
+        ! s(x) = a on the whole interval. Its left end is a root (it may
+        ! not be found from the previous interval, where it may be a
+        ! root of high multiplicity). The right end is found from the
+        ! next interval (or is the end of the domain). The roots inside
+        ! a flat region are removed below.
         if (maxval(abs(cl))<=ftol) then
             iflag = 4004_ip
+            roots = [roots, t(l)]
             cycle
         end if
 
         ! convex hull: no root in this interval
         if (all(cl>ftol) .or. all(cl<-ftol)) cycle
 
-        ! power basis on u in [0,1], with x = t(l) + h*u
+        ! Bernstein form of the piece on u in [0,1], with x = t(l) + h*u
         h = t(l+1_ip) - t(l)
-        fac = 1.0_wp
-        do j = 0_ip, m
-            call dbvalu(t,c,n,k,j,t(l),inbv,work,ierr,val)
-            if (j>0_ip) fac = fac * h / real(j,wp)
-            p(j) = val * fac
-        end do
-        p(0) = p(0) - a
+        b = bernstein_coefficients()
         ! root at the knot (the pieces on either side are computed
         ! separately, so it may not be a sign change after rounding)
-        if (abs(p(0))<=ftol) roots = [roots, t(l)]
+        if (abs(b(0))<=ftol) roots = [roots, t(l)]
 
         select case (m)
         case(1_ip)
+            p(0:1) = [b(0), b(1)-b(0)]
             u = linear_root()
         case(2_ip)
+            p(0:2) = [b(0), 2.0_wp*(b(1)-b(0)), b(0)-2.0_wp*b(1)+b(2)]
             u = quadratic_roots()
         case(3_ip:)
-            ! Bernstein coefficients
-            do i = 0_ip, m
-                b(i) = 0.0_wp
-                do j = 0_ip, i
-                    b(i) = b(i) + binomial(i,j) / binomial(m,j) * p(j)
-                end do
-            end do
             u = bernstein_roots()
         case default
             u = [real(wp) ::]  ! constant piece
@@ -920,10 +919,18 @@
 
         ! keep the roots in the interval (allowing for rounding at the ends)
         u = pack(u, u>=-utol .and. u<=1.0_wp+utol)
-        roots = [roots, t(l) + h*min(1.0_wp,max(0.0_wp,u))]
+        xr = min(t(l+1_ip), t(l) + h*min(1.0_wp,max(0.0_wp,u)))
+        if (t(l+1_ip)<t(n+1_ip)) then
+            ! a root at the right end is the limit from the left. At an
+            ! interior knot, s(x) is the value from the right, which is
+            ! different if the spline is discontinuous there. A root at
+            ! the knot is found from the next nonempty interval instead.
+            xr = pack(xr, xr<t(l+1_ip))
+        end if
+        roots = [roots, xr]
     end do
 
-    call sort_unique(roots, root_xtol*max(abs(t(k)),abs(t(n+1_ip))))
+    call sort_unique(roots, root_dup_tol(t(k),t(n+1_ip)))
 
     ! remove the roots inside regions where s(x) = a (only the ends are kept)
     if (iflag==4004_ip) then
@@ -935,6 +942,43 @@
     end if
 
     contains
+
+        pure function bernstein_coefficients() result(bc)
+
+        !! Bernstein coefficients of the piece on knot interval `l`, minus `a`.
+        !!
+        !! The `i`-th coefficient is the blossom of the piece evaluated at
+        !! `m-i` copies of `t(l)` and `i` copies of `t(l+1)`, computed with
+        !! de Boor's algorithm using these as the arguments at each level.
+        !! Every step is a convex combination, so the coefficients are
+        !! accurate to about `eps*max(|c|)` for any order (unlike the power
+        !! basis computed from the derivatives, which loses accuracy at the
+        !! right end of the interval for high orders).
+
+        real(wp),dimension(0:m) :: bc  !! the Bernstein coefficients
+
+        real(wp),dimension(0:m) :: w  !! de Boor triangle (`w(i)` is for coefficient `l-m+i`)
+        real(wp) :: x       !! the argument at the current level
+        real(wp) :: alpha   !! interpolation weight
+        integer(ip) :: ib   !! index of the Bernstein coefficient
+        integer(ip) :: r    !! level of the de Boor triangle
+        integer(ip) :: jj   !! counter
+        integer(ip) :: jc   !! b-spline coefficient index: `l-m+jj`
+
+        do ib = 0_ip, m
+            w = cl
+            do r = 1_ip, m
+                x = merge(t(l), t(l+1_ip), r<=m-ib)
+                do jj = m, r, -1_ip
+                    jc = l - m + jj
+                    alpha = (x - t(jc)) / (t(jc+m+1_ip-r) - t(jc))
+                    w(jj) = alpha*w(jj) + (1.0_wp-alpha)*w(jj-1_ip)
+                end do
+            end do
+            bc(ib) = w(m)
+        end do
+
+        end function bernstein_coefficients
 
         pure function linear_root() result(ur)
 
@@ -957,20 +1001,24 @@
 
         real(wp),dimension(:),allocatable :: ur  !! the real roots, on \( u \) (size 0, 1, or 2)
 
-        real(wp) :: disc  !! discriminant: \( p_1^2 - 4 p_2 p_0 \)
+        real(wp),dimension(0:2) :: ps  !! the coefficients, scaled so the largest
+                                       !! magnitude is 1 (so that the discriminant
+                                       !! does not overflow or underflow)
+        real(wp) :: disc  !! discriminant: \( p_1^2 - 4 p_2 p_0 \) (scaled)
         real(wp) :: q     !! \( -\frac{1}{2} \left( p_1 + \mathrm{sign}(p_1) \sqrt{disc} \right) \)
-                          !! (the roots are \( q/p_2 \) and \( p_0/q \))
+                          !! (the roots are \( q/p_2 \) and \( p_0/q \)) (scaled)
 
         if (p(2)==0.0_wp) then
             ur = linear_root()
             return
         end if
         allocate(ur(0))
-        disc = p(1)**2 - 4.0_wp*p(2)*p(0)
+        ps = p(0:2) / maxval(abs(p(0:2)))
+        disc = ps(1)**2 - 4.0_wp*ps(2)*ps(0)
         if (disc<0.0_wp) return
-        q = -0.5_wp * (p(1) + sign(sqrt(disc),p(1)))
-        ur = [q/p(2)]
-        if (q/=0.0_wp) ur = [ur, p(0)/q]
+        q = -0.5_wp * (ps(1) + sign(sqrt(disc),ps(1)))
+        ur = [q/ps(2)]
+        if (q/=0.0_wp) ur = [ur, ps(0)/q]
 
         end function quadratic_roots
 
@@ -1103,8 +1151,8 @@
         real(wp) :: dxold    !! the step before the last one
         real(wp) :: temp     !! previous value of `u`
 
-        call horner(ua,fl,df)
-        call horner(ub,fh,df)
+        call bernstein_eval(ua,fl,df)
+        call bernstein_eval(ub,fh,df)
         if (fl==0.0_wp) then
             u = ua; return
         else if (fh==0.0_wp) then
@@ -1122,7 +1170,7 @@
         u = 0.5_wp*(ua+ub)
         dxold = abs(ub-ua)
         dx = dxold
-        call horner(u,f,df)
+        call bernstein_eval(u,f,df)
         do iter = 1_ip, max_iter
             if (((u-xh)*df-f)*((u-xl)*df-f)>0.0_wp .or. abs(2.0_wp*f)>abs(dxold*df)) then
                 dxold = dx
@@ -1137,7 +1185,7 @@
                 if (temp==u) exit
             end if
             if (abs(dx)*h<=2.0_wp*epsilon(1.0_wp)*abs(t(l)+h*u)) exit
-            call horner(u,f,df)
+            call bernstein_eval(u,f,df)
             if (f==0.0_wp) exit
             if (f<0.0_wp) then
                 xl = u
@@ -1148,25 +1196,30 @@
 
         end function newton
 
-        pure subroutine horner(u,f,df)
+        pure subroutine bernstein_eval(u,f,df)
 
         !! Value and derivative of the piece at `u`
-        !! (from the power basis coefficients, by Horner's rule).
+        !! (from the Bernstein coefficients, by de Casteljau's algorithm).
 
         real(wp),intent(in)  :: u   !! the point, on \( u \in [0,1] \)
         real(wp),intent(out) :: f   !! value of the piece
         real(wp),intent(out) :: df  !! derivative of the piece with respect to `u`
 
+        real(wp),dimension(0:m) :: w  !! de Casteljau triangle
+        integer(ip) :: r   !! level of the triangle
         integer(ip) :: jj  !! counter
 
-        f = p(m)
-        df = 0.0_wp
-        do jj = m-1_ip, 0_ip, -1_ip
-            df = df*u + f
-            f = f*u + p(jj)
+        w = b
+        do r = 1_ip, m-1_ip
+            do jj = 0_ip, m-r
+                w(jj) = (1.0_wp-u)*w(jj) + u*w(jj+1_ip)
+            end do
         end do
+        ! the last level gives the value, and its two inputs the derivative
+        df = real(m,wp)*(w(1)-w(0))
+        f = (1.0_wp-u)*w(0) + u*w(1)
 
-        end subroutine horner
+        end subroutine bernstein_eval
 
     end subroutine spline_roots
 !*****************************************************************************************
@@ -1236,6 +1289,30 @@
 
 !*****************************************************************************************
 !>
+!  Tolerance for removing duplicate roots in [[db1root]]: two roots
+!  closer than this are the same root (found twice, e.g. at a knot).
+!
+!  It is relative to the width of the domain (the resolution of the
+!  roots found in the knot intervals), plus one unit in the last place
+!  of the coordinates. It is not relative to the coordinates
+!  themselves, which would merge distinct roots for a narrow domain
+!  far from zero.
+
+    pure function root_dup_tol(x1,x2) result(tol)
+
+    implicit none
+
+    real(wp),intent(in) :: x1   !! left end of the domain: `t(k)`
+    real(wp),intent(in) :: x2   !! right end of the domain: `t(n+1)`
+    real(wp)            :: tol  !! the duplicate tolerance
+
+    tol = root_xtol*(x2-x1) + spacing(max(abs(x1),abs(x2)))
+
+    end function root_dup_tol
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
 !  Sort an array in increasing order, and remove values that
 !  are within `tol` of the previous one.
 
@@ -1273,28 +1350,6 @@
     x = x(1_ip:nu)
 
     end subroutine sort_unique
-!*****************************************************************************************
-
-!*****************************************************************************************
-!>
-!  Binomial coefficient \( \binom{n}{r} \), as a real number.
-
-    pure function binomial(n,r) result(c)
-
-    implicit none
-
-    integer(ip),intent(in) :: n  !! number of items, `n >= 0`
-    integer(ip),intent(in) :: r  !! number chosen, `0 <= r <= n`
-    real(wp) :: c                !! \( \binom{n}{r} = \frac{n!}{r!(n-r)!} \)
-
-    integer(ip) :: i  !! counter
-
-    c = 1.0_wp
-    do i = 1_ip, min(r,n-r)
-        c = c * real(n-min(r,n-r)+i,wp) / real(i,wp)
-    end do
-
-    end function binomial
 !*****************************************************************************************
 
 !*****************************************************************************************
