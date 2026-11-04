@@ -1104,7 +1104,7 @@
 !  The interval search and the basis functions in each direction are
 !  only computed once, for all of the outputs.
 
-    pure subroutine db2val_multi(xval,yval,idx,idy,tx,ty,nx,ny,kx,ky,bcoef,f,iflag,inbvx,iloy,extrap)
+    pure subroutine db2val_multi(xval,yval,idx,idy,tx,ty,nx,ny,kx,ky,bcoef,f,iflag,inbvx,iloy,w1,extrap)
 
     implicit none
 
@@ -1141,7 +1141,7 @@
     integer(ip) :: iy     !! coefficient offset in \(y\)
     real(wp),dimension(kx) :: bx  !! basis function weights in \(x\)
     real(wp),dimension(ky) :: by  !! basis function weights in \(y\)
-    real(wp),dimension(ky) :: w1  !! work array for the contraction
+    real(wp),dimension(ky),intent(inout) :: w1  !! work array of dimension `(ky)`
     integer(ip) :: j  !! counter in \(y\)
     integer(ip) :: jf  !! output index
 
@@ -1233,7 +1233,7 @@
 !  The interval search and the basis functions in each direction are
 !  only computed once, for all of the outputs.
 
-    pure subroutine db3val_multi(xval,yval,zval,idx,idy,idz,tx,ty,tz,nx,ny,nz,kx,ky,kz,bcoef,f,iflag,inbvx,iloy,iloz,extrap)
+    pure subroutine db3val_multi(xval,yval,zval,idx,idy,idz,tx,ty,tz,nx,ny,nz,kx,ky,kz,bcoef,f,iflag,inbvx,iloy,iloz,w2,w1,extrap)
 
     implicit none
 
@@ -1281,8 +1281,8 @@
     real(wp),dimension(kx) :: bx  !! basis function weights in \(x\)
     real(wp),dimension(ky) :: by  !! basis function weights in \(y\)
     real(wp),dimension(kz) :: bz  !! basis function weights in \(z\)
-    real(wp),dimension(ky,kz) :: w2  !! work array for the contraction
-    real(wp),dimension(kz) :: w1  !! work array for the contraction
+    real(wp),dimension(ky,kz),intent(inout) :: w2  !! work array of dimension `(ky,kz)`
+    real(wp),dimension(kz),intent(inout) :: w1  !! work array of dimension `(kz)`
     integer(ip) :: j  !! counter in \(y\)
     integer(ip) :: k  !! counter in \(z\)
     integer(ip) :: jf  !! output index
@@ -1386,7 +1386,7 @@
 !  The interval search and the basis functions in each direction are
 !  only computed once, for all of the outputs.
 
-    pure subroutine db4val_multi(xval,yval,zval,qval,idx,idy,idz,idq,tx,ty,tz,tq,nx,ny,nz,nq,kx,ky,kz,kq,bcoef,f,iflag,inbvx,iloy,iloz,iloq,extrap)
+    pure subroutine db4val_multi(xval,yval,zval,qval,idx,idy,idz,idq,tx,ty,tz,tq,nx,ny,nz,nq,kx,ky,kz,kq,bcoef,f,iflag,inbvx,iloy,iloz,iloq,w3,w2,w1,extrap)
 
     implicit none
 
@@ -1445,9 +1445,9 @@
     real(wp),dimension(ky) :: by  !! basis function weights in \(y\)
     real(wp),dimension(kz) :: bz  !! basis function weights in \(z\)
     real(wp),dimension(kq) :: bq  !! basis function weights in \(q\)
-    real(wp),dimension(ky,kz,kq) :: w3  !! work array for the contraction
-    real(wp),dimension(kz,kq) :: w2  !! work array for the contraction
-    real(wp),dimension(kq) :: w1  !! work array for the contraction
+    real(wp),dimension(ky,kz,kq),intent(inout) :: w3  !! work array of dimension `(ky,kz,kq)`
+    real(wp),dimension(kz,kq),intent(inout) :: w2  !! work array of dimension `(kz,kq)`
+    real(wp),dimension(kq),intent(inout) :: w1  !! work array of dimension `(kq)`
     integer(ip) :: j  !! counter in \(y\)
     integer(ip) :: k  !! counter in \(z\)
     integer(ip) :: q  !! counter in \(q\)
@@ -1563,7 +1563,7 @@
 !  The interval search and the basis functions in each direction are
 !  only computed once, for all of the outputs.
 
-    pure subroutine db5val_multi(xval,yval,zval,qval,rval,idx,idy,idz,idq,idr,tx,ty,tz,tq,tr,nx,ny,nz,nq,nr,kx,ky,kz,kq,kr,bcoef,f,iflag,inbvx,iloy,iloz,iloq,ilor,extrap)
+    pure subroutine db5val_multi(xval,yval,zval,qval,rval,idx,idy,idz,idq,idr,tx,ty,tz,tq,tr,nx,ny,nz,nq,nr,kx,ky,kz,kq,kr,bcoef,f,iflag,inbvx,iloy,iloz,iloq,ilor,w4,w3,w2,w1,extrap)
 
     implicit none
 
@@ -1633,10 +1633,10 @@
     real(wp),dimension(kz) :: bz  !! basis function weights in \(z\)
     real(wp),dimension(kq) :: bq  !! basis function weights in \(q\)
     real(wp),dimension(kr) :: br  !! basis function weights in \(r\)
-    real(wp),dimension(ky,kz,kq,kr) :: w4  !! work array for the contraction
-    real(wp),dimension(kz,kq,kr) :: w3  !! work array for the contraction
-    real(wp),dimension(kq,kr) :: w2  !! work array for the contraction
-    real(wp),dimension(kr) :: w1  !! work array for the contraction
+    real(wp),dimension(ky,kz,kq,kr),intent(inout) :: w4  !! work array of dimension `(ky,kz,kq,kr)`
+    real(wp),dimension(kz,kq,kr),intent(inout) :: w3  !! work array of dimension `(kz,kq,kr)`
+    real(wp),dimension(kq,kr),intent(inout) :: w2  !! work array of dimension `(kq,kr)`
+    real(wp),dimension(kr),intent(inout) :: w1  !! work array of dimension `(kr)`
     integer(ip) :: j  !! counter in \(y\)
     integer(ip) :: k  !! counter in \(z\)
     integer(ip) :: q  !! counter in \(q\)
@@ -1764,7 +1764,7 @@
 !  The interval search and the basis functions in each direction are
 !  only computed once, for all of the outputs.
 
-    pure subroutine db6val_multi(xval,yval,zval,qval,rval,sval,idx,idy,idz,idq,idr,ids,tx,ty,tz,tq,tr,ts,nx,ny,nz,nq,nr,ns,kx,ky,kz,kq,kr,ks,bcoef,f,iflag,inbvx,iloy,iloz,iloq,ilor,ilos,extrap)
+    pure subroutine db6val_multi(xval,yval,zval,qval,rval,sval,idx,idy,idz,idq,idr,ids,tx,ty,tz,tq,tr,ts,nx,ny,nz,nq,nr,ns,kx,ky,kz,kq,kr,ks,bcoef,f,iflag,inbvx,iloy,iloz,iloq,ilor,ilos,w5,w4,w3,w2,w1,extrap)
 
     implicit none
 
@@ -1845,11 +1845,11 @@
     real(wp),dimension(kq) :: bq  !! basis function weights in \(q\)
     real(wp),dimension(kr) :: br  !! basis function weights in \(r\)
     real(wp),dimension(ks) :: bs  !! basis function weights in \(s\)
-    real(wp),dimension(ky,kz,kq,kr,ks) :: w5  !! work array for the contraction
-    real(wp),dimension(kz,kq,kr,ks) :: w4  !! work array for the contraction
-    real(wp),dimension(kq,kr,ks) :: w3  !! work array for the contraction
-    real(wp),dimension(kr,ks) :: w2  !! work array for the contraction
-    real(wp),dimension(ks) :: w1  !! work array for the contraction
+    real(wp),dimension(ky,kz,kq,kr,ks),intent(inout) :: w5  !! work array of dimension `(ky,kz,kq,kr,ks)`
+    real(wp),dimension(kz,kq,kr,ks),intent(inout) :: w4  !! work array of dimension `(kz,kq,kr,ks)`
+    real(wp),dimension(kq,kr,ks),intent(inout) :: w3  !! work array of dimension `(kq,kr,ks)`
+    real(wp),dimension(kr,ks),intent(inout) :: w2  !! work array of dimension `(kr,ks)`
+    real(wp),dimension(ks),intent(inout) :: w1  !! work array of dimension `(ks)`
     integer(ip) :: j  !! counter in \(y\)
     integer(ip) :: k  !! counter in \(z\)
     integer(ip) :: q  !! counter in \(q\)

@@ -215,6 +215,7 @@
     real(wp),dimension(2) :: v  !! evaluation point
     integer(ip),dimension(2) :: n, k, id  !! number of points, orders, derivatives
     integer(ip) :: iflag, j, i, itrial, inbvx, iloy  !! status flag, counters, and search state
+    real(wp),dimension(:),allocatable :: w1  !! work array for [[db2val]]
     logical :: same  !! all values are the same
 
     do itrial = 1, 5
@@ -226,6 +227,7 @@
         y = grid(n(2))
         allocate(fcn(n(1),n(2),nf))
         call random_number(fcn)
+        allocate(w1(k(2)))
         allocate(tx(n(1)+k(1)))
         allocate(ty(n(2)+k(2)))
 
@@ -253,7 +255,7 @@
             if (iflag/=0) call check('2d multi evaluate iflag', .false.)
             call sm2%evaluate(v(1),v(2),id(1),id(2),fm2,iflag)
             same = same .and. all(fm2==fm)
-            call db2val(v(1),v(2),id(1),id(2),tx,ty,n(1),n(2),k(1),k(2),bcoef2,fm2,iflag,inbvx,iloy)
+            call db2val(v(1),v(2),id(1),id(2),tx,ty,n(1),n(2),k(1),k(2),bcoef2,fm2,iflag,inbvx,iloy,w1)
             err2 = max(err2, maxval(abs(fm2-fm)))
             do j = 1, nf
                 call s1(j)%evaluate(v(1),v(2),id(1),id(2),f1,iflag)
@@ -285,7 +287,7 @@
         call check('2d db2ink multi with mismatched outputs returns 6001', iflag==6001)
         call sm%destroy()
         call check('2d destroy resets the number of outputs', sm%number_of_outputs()==0)
-        deallocate(fcn, bcoef2, tx, ty)
+        deallocate(fcn, bcoef2, tx, ty, w1)
     end do
 
     end subroutine test_2d
@@ -317,6 +319,8 @@
     real(wp),dimension(3) :: v  !! evaluation point
     integer(ip),dimension(3) :: n, k, id  !! number of points, orders, derivatives
     integer(ip) :: iflag, j, i, itrial, inbvx, iloy, iloz  !! status flag, counters, and search state
+    real(wp),dimension(:,:),allocatable :: w2  !! work array for [[db3val]]
+    real(wp),dimension(:),allocatable :: w1  !! work array for [[db3val]]
     logical :: same  !! all values are the same
 
     do itrial = 1, 5
@@ -329,6 +333,8 @@
         z = grid(n(3))
         allocate(fcn(n(1),n(2),n(3),nf))
         call random_number(fcn)
+        allocate(w2(k(2),k(3)))
+        allocate(w1(k(3)))
         allocate(tx(n(1)+k(1)))
         allocate(ty(n(2)+k(2)))
         allocate(tz(n(3)+k(3)))
@@ -358,7 +364,7 @@
             if (iflag/=0) call check('3d multi evaluate iflag', .false.)
             call sm2%evaluate(v(1),v(2),v(3),id(1),id(2),id(3),fm2,iflag)
             same = same .and. all(fm2==fm)
-            call db3val(v(1),v(2),v(3),id(1),id(2),id(3),tx,ty,tz,n(1),n(2),n(3),k(1),k(2),k(3),bcoef2,fm2,iflag,inbvx,iloy,iloz)
+            call db3val(v(1),v(2),v(3),id(1),id(2),id(3),tx,ty,tz,n(1),n(2),n(3),k(1),k(2),k(3),bcoef2,fm2,iflag,inbvx,iloy,iloz,w2,w1)
             err2 = max(err2, maxval(abs(fm2-fm)))
             do j = 1, nf
                 call s1(j)%evaluate(v(1),v(2),v(3),id(1),id(2),id(3),f1,iflag)
@@ -390,7 +396,7 @@
         call check('3d db3ink multi with mismatched outputs returns 6001', iflag==6001)
         call sm%destroy()
         call check('3d destroy resets the number of outputs', sm%number_of_outputs()==0)
-        deallocate(fcn, bcoef2, tx, ty, tz)
+        deallocate(fcn, bcoef2, tx, ty, tz, w2, w1)
     end do
 
     end subroutine test_3d
@@ -423,6 +429,9 @@
     real(wp),dimension(4) :: v  !! evaluation point
     integer(ip),dimension(4) :: n, k, id  !! number of points, orders, derivatives
     integer(ip) :: iflag, j, i, itrial, inbvx, iloy, iloz, iloq  !! status flag, counters, and search state
+    real(wp),dimension(:,:,:),allocatable :: w3  !! work array for [[db4val]]
+    real(wp),dimension(:,:),allocatable :: w2  !! work array for [[db4val]]
+    real(wp),dimension(:),allocatable :: w1  !! work array for [[db4val]]
     logical :: same  !! all values are the same
 
     do itrial = 1, 5
@@ -436,6 +445,9 @@
         q = grid(n(4))
         allocate(fcn(n(1),n(2),n(3),n(4),nf))
         call random_number(fcn)
+        allocate(w3(k(2),k(3),k(4)))
+        allocate(w2(k(3),k(4)))
+        allocate(w1(k(4)))
         allocate(tx(n(1)+k(1)))
         allocate(ty(n(2)+k(2)))
         allocate(tz(n(3)+k(3)))
@@ -467,7 +479,7 @@
             if (iflag/=0) call check('4d multi evaluate iflag', .false.)
             call sm2%evaluate(v(1),v(2),v(3),v(4),id(1),id(2),id(3),id(4),fm2,iflag)
             same = same .and. all(fm2==fm)
-            call db4val(v(1),v(2),v(3),v(4),id(1),id(2),id(3),id(4),tx,ty,tz,tq,n(1),n(2),n(3),n(4),k(1),k(2),k(3),k(4),bcoef2,fm2,iflag,inbvx,iloy,iloz,iloq)
+            call db4val(v(1),v(2),v(3),v(4),id(1),id(2),id(3),id(4),tx,ty,tz,tq,n(1),n(2),n(3),n(4),k(1),k(2),k(3),k(4),bcoef2,fm2,iflag,inbvx,iloy,iloz,iloq,w3,w2,w1)
             err2 = max(err2, maxval(abs(fm2-fm)))
             do j = 1, nf
                 call s1(j)%evaluate(v(1),v(2),v(3),v(4),id(1),id(2),id(3),id(4),f1,iflag)
@@ -499,7 +511,7 @@
         call check('4d db4ink multi with mismatched outputs returns 6001', iflag==6001)
         call sm%destroy()
         call check('4d destroy resets the number of outputs', sm%number_of_outputs()==0)
-        deallocate(fcn, bcoef2, tx, ty, tz, tq)
+        deallocate(fcn, bcoef2, tx, ty, tz, tq, w3, w2, w1)
     end do
 
     end subroutine test_4d
@@ -533,6 +545,10 @@
     real(wp),dimension(5) :: v  !! evaluation point
     integer(ip),dimension(5) :: n, k, id  !! number of points, orders, derivatives
     integer(ip) :: iflag, j, i, itrial, inbvx, iloy, iloz, iloq, ilor  !! status flag, counters, and search state
+    real(wp),dimension(:,:,:,:),allocatable :: w4  !! work array for [[db5val]]
+    real(wp),dimension(:,:,:),allocatable :: w3  !! work array for [[db5val]]
+    real(wp),dimension(:,:),allocatable :: w2  !! work array for [[db5val]]
+    real(wp),dimension(:),allocatable :: w1  !! work array for [[db5val]]
     logical :: same  !! all values are the same
 
     do itrial = 1, 5
@@ -547,6 +563,10 @@
         r = grid(n(5))
         allocate(fcn(n(1),n(2),n(3),n(4),n(5),nf))
         call random_number(fcn)
+        allocate(w4(k(2),k(3),k(4),k(5)))
+        allocate(w3(k(3),k(4),k(5)))
+        allocate(w2(k(4),k(5)))
+        allocate(w1(k(5)))
         allocate(tx(n(1)+k(1)))
         allocate(ty(n(2)+k(2)))
         allocate(tz(n(3)+k(3)))
@@ -580,7 +600,7 @@
             if (iflag/=0) call check('5d multi evaluate iflag', .false.)
             call sm2%evaluate(v(1),v(2),v(3),v(4),v(5),id(1),id(2),id(3),id(4),id(5),fm2,iflag)
             same = same .and. all(fm2==fm)
-            call db5val(v(1),v(2),v(3),v(4),v(5),id(1),id(2),id(3),id(4),id(5),tx,ty,tz,tq,tr,n(1),n(2),n(3),n(4),n(5),k(1),k(2),k(3),k(4),k(5),bcoef2,fm2,iflag,inbvx,iloy,iloz,iloq,ilor)
+            call db5val(v(1),v(2),v(3),v(4),v(5),id(1),id(2),id(3),id(4),id(5),tx,ty,tz,tq,tr,n(1),n(2),n(3),n(4),n(5),k(1),k(2),k(3),k(4),k(5),bcoef2,fm2,iflag,inbvx,iloy,iloz,iloq,ilor,w4,w3,w2,w1)
             err2 = max(err2, maxval(abs(fm2-fm)))
             do j = 1, nf
                 call s1(j)%evaluate(v(1),v(2),v(3),v(4),v(5),id(1),id(2),id(3),id(4),id(5),f1,iflag)
@@ -612,7 +632,7 @@
         call check('5d db5ink multi with mismatched outputs returns 6001', iflag==6001)
         call sm%destroy()
         call check('5d destroy resets the number of outputs', sm%number_of_outputs()==0)
-        deallocate(fcn, bcoef2, tx, ty, tz, tq, tr)
+        deallocate(fcn, bcoef2, tx, ty, tz, tq, tr, w4, w3, w2, w1)
     end do
 
     end subroutine test_5d
@@ -647,6 +667,11 @@
     real(wp),dimension(6) :: v  !! evaluation point
     integer(ip),dimension(6) :: n, k, id  !! number of points, orders, derivatives
     integer(ip) :: iflag, j, i, itrial, inbvx, iloy, iloz, iloq, ilor, ilos  !! status flag, counters, and search state
+    real(wp),dimension(:,:,:,:,:),allocatable :: w5  !! work array for [[db6val]]
+    real(wp),dimension(:,:,:,:),allocatable :: w4  !! work array for [[db6val]]
+    real(wp),dimension(:,:,:),allocatable :: w3  !! work array for [[db6val]]
+    real(wp),dimension(:,:),allocatable :: w2  !! work array for [[db6val]]
+    real(wp),dimension(:),allocatable :: w1  !! work array for [[db6val]]
     logical :: same  !! all values are the same
 
     do itrial = 1, 5
@@ -662,6 +687,11 @@
         s = grid(n(6))
         allocate(fcn(n(1),n(2),n(3),n(4),n(5),n(6),nf))
         call random_number(fcn)
+        allocate(w5(k(2),k(3),k(4),k(5),k(6)))
+        allocate(w4(k(3),k(4),k(5),k(6)))
+        allocate(w3(k(4),k(5),k(6)))
+        allocate(w2(k(5),k(6)))
+        allocate(w1(k(6)))
         allocate(tx(n(1)+k(1)))
         allocate(ty(n(2)+k(2)))
         allocate(tz(n(3)+k(3)))
@@ -697,7 +727,7 @@
             if (iflag/=0) call check('6d multi evaluate iflag', .false.)
             call sm2%evaluate(v(1),v(2),v(3),v(4),v(5),v(6),id(1),id(2),id(3),id(4),id(5),id(6),fm2,iflag)
             same = same .and. all(fm2==fm)
-            call db6val(v(1),v(2),v(3),v(4),v(5),v(6),id(1),id(2),id(3),id(4),id(5),id(6),tx,ty,tz,tq,tr,ts,n(1),n(2),n(3),n(4),n(5),n(6),k(1),k(2),k(3),k(4),k(5),k(6),bcoef2,fm2,iflag,inbvx,iloy,iloz,iloq,ilor,ilos)
+            call db6val(v(1),v(2),v(3),v(4),v(5),v(6),id(1),id(2),id(3),id(4),id(5),id(6),tx,ty,tz,tq,tr,ts,n(1),n(2),n(3),n(4),n(5),n(6),k(1),k(2),k(3),k(4),k(5),k(6),bcoef2,fm2,iflag,inbvx,iloy,iloz,iloq,ilor,ilos,w5,w4,w3,w2,w1)
             err2 = max(err2, maxval(abs(fm2-fm)))
             do j = 1, nf
                 call s1(j)%evaluate(v(1),v(2),v(3),v(4),v(5),v(6),id(1),id(2),id(3),id(4),id(5),id(6),f1,iflag)
@@ -729,7 +759,7 @@
         call check('6d db6ink multi with mismatched outputs returns 6001', iflag==6001)
         call sm%destroy()
         call check('6d destroy resets the number of outputs', sm%number_of_outputs()==0)
-        deallocate(fcn, bcoef2, tx, ty, tz, tq, tr, ts)
+        deallocate(fcn, bcoef2, tx, ty, tz, tq, tr, ts, w5, w4, w3, w2, w1)
     end do
 
     end subroutine test_6d

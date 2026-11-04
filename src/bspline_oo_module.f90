@@ -3155,7 +3155,8 @@
 
         me%nx = n(1)
         me%kx = kx
-        me%bcoef = reshape(bcoef, [shape(bcoef,kind=ip), 1_ip])
+        allocate(me%bcoef(n(1),1_ip))  ! (assigned below: no temporary array)
+        me%bcoef(:,1) = bcoef
         me%nf = 1_ip
         me%tx = tx
         allocate(me%work_val_1(3_ip*kx))
@@ -3272,7 +3273,8 @@
         me%ny = n(2)
         me%kx = kx
         me%ky = ky
-        me%bcoef = reshape(bcoef, [shape(bcoef,kind=ip), 1_ip])
+        allocate(me%bcoef(n(1),n(2),1_ip))  ! (assigned below: no temporary array)
+        me%bcoef(:,:,1) = bcoef
         me%nf = 1_ip
         me%tx = tx
         me%ty = ty
@@ -3402,7 +3404,8 @@
         me%kx = kx
         me%ky = ky
         me%kz = kz
-        me%bcoef = reshape(bcoef, [shape(bcoef,kind=ip), 1_ip])
+        allocate(me%bcoef(n(1),n(2),n(3),1_ip))  ! (assigned below: no temporary array)
+        me%bcoef(:,:,:,1) = bcoef
         me%nf = 1_ip
         me%tx = tx
         me%ty = ty
@@ -3545,7 +3548,8 @@
         me%ky = ky
         me%kz = kz
         me%kq = kq
-        me%bcoef = reshape(bcoef, [shape(bcoef,kind=ip), 1_ip])
+        allocate(me%bcoef(n(1),n(2),n(3),n(4),1_ip))  ! (assigned below: no temporary array)
+        me%bcoef(:,:,:,:,1) = bcoef
         me%nf = 1_ip
         me%tx = tx
         me%ty = ty
@@ -3701,7 +3705,8 @@
         me%kz = kz
         me%kq = kq
         me%kr = kr
-        me%bcoef = reshape(bcoef, [shape(bcoef,kind=ip), 1_ip])
+        allocate(me%bcoef(n(1),n(2),n(3),n(4),n(5),1_ip))  ! (assigned below: no temporary array)
+        me%bcoef(:,:,:,:,:,1) = bcoef
         me%nf = 1_ip
         me%tx = tx
         me%ty = ty
@@ -3870,7 +3875,8 @@
         me%kq = kq
         me%kr = kr
         me%ks = ks
-        me%bcoef = reshape(bcoef, [shape(bcoef,kind=ip), 1_ip])
+        allocate(me%bcoef(n(1),n(2),n(3),n(4),n(5),n(6),1_ip))  ! (assigned below: no temporary array)
+        me%bcoef(:,:,:,:,:,:,1) = bcoef
         me%nf = 1_ip
         me%tx = tx
         me%ty = ty
@@ -4287,7 +4293,8 @@
     if (me%initialized) then
         call db2val(xval,yval,idx,idy,me%tx,me%ty,&
                     me%nx,me%ny,me%kx,me%ky,&
-                    me%bcoef,f,iflag,me%inbvx,me%iloy,extrap=me%extrap)
+                    me%bcoef,f,iflag,me%inbvx,me%iloy,&
+                    me%work_val_1,extrap=me%extrap)
     else
         iflag = 1_ip
     end if
@@ -4508,7 +4515,8 @@
     if (me%initialized) then
         call db3val(xval,yval,zval,idx,idy,idz,me%tx,me%ty,me%tz,&
                     me%nx,me%ny,me%nz,me%kx,me%ky,me%kz,&
-                    me%bcoef,f,iflag,me%inbvx,me%iloy,me%iloz,extrap=me%extrap)
+                    me%bcoef,f,iflag,me%inbvx,me%iloy,me%iloz,&
+                    me%work_val_1,me%work_val_2,extrap=me%extrap)
     else
         iflag = 1_ip
     end if
@@ -4749,7 +4757,8 @@
     if (me%initialized) then
         call db4val(xval,yval,zval,qval,idx,idy,idz,idq,me%tx,me%ty,me%tz,me%tq,&
                     me%nx,me%ny,me%nz,me%nq,me%kx,me%ky,me%kz,me%kq,&
-                    me%bcoef,f,iflag,me%inbvx,me%iloy,me%iloz,me%iloq,extrap=me%extrap)
+                    me%bcoef,f,iflag,me%inbvx,me%iloy,me%iloz,me%iloq,&
+                    me%work_val_1,me%work_val_2,me%work_val_3,extrap=me%extrap)
     else
         iflag = 1_ip
     end if
@@ -5010,7 +5019,8 @@
     if (me%initialized) then
         call db5val(xval,yval,zval,qval,rval,idx,idy,idz,idq,idr,me%tx,me%ty,me%tz,me%tq,me%tr,&
                     me%nx,me%ny,me%nz,me%nq,me%nr,me%kx,me%ky,me%kz,me%kq,me%kr,&
-                    me%bcoef,f,iflag,me%inbvx,me%iloy,me%iloz,me%iloq,me%ilor,extrap=me%extrap)
+                    me%bcoef,f,iflag,me%inbvx,me%iloy,me%iloz,me%iloq,me%ilor,&
+                    me%work_val_1,me%work_val_2,me%work_val_3,me%work_val_4,extrap=me%extrap)
     else
         iflag = 1_ip
     end if
@@ -5291,7 +5301,8 @@
     if (me%initialized) then
         call db6val(xval,yval,zval,qval,rval,sval,idx,idy,idz,idq,idr,ids,me%tx,me%ty,me%tz,me%tq,me%tr,me%ts,&
                     me%nx,me%ny,me%nz,me%nq,me%nr,me%ns,me%kx,me%ky,me%kz,me%kq,me%kr,me%ks,&
-                    me%bcoef,f,iflag,me%inbvx,me%iloy,me%iloz,me%iloq,me%ilor,me%ilos,extrap=me%extrap)
+                    me%bcoef,f,iflag,me%inbvx,me%iloy,me%iloz,me%iloq,me%ilor,me%ilos,&
+                    me%work_val_1,me%work_val_2,me%work_val_3,me%work_val_4,me%work_val_5,extrap=me%extrap)
     else
         iflag = 1_ip
     end if

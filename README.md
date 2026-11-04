@@ -129,7 +129,7 @@ call s%initialize(x,y,fcn,kx,ky,iflag)
 call s%evaluate(xval,yval,idx,idy,f,iflag)  ! f(j) is output j
 ```
 
-The subroutine interface has the same overloads: `db*ink` with an extra dimension of `fcn` and `bcoef`, and `db*val` with an extra dimension of `bcoef` and an array `f`. The `number_of_outputs` method returns `nf`. The methods that require a single output (e.g., `integral` and `roots` in 1D) return an error for a spline with more than one output.
+The subroutine interface has the same overloads: `db*ink` with an extra dimension of `fcn` and `bcoef`, and `db*val` with an extra dimension of `bcoef` and an array `f` (and the same work arrays as the single-output versions). The `number_of_outputs` method returns `nf`. The methods that require a single output (e.g., `integral` and `roots` in 1D) return an error for a spline with more than one output.
 
 ## Least squares fitting
 
