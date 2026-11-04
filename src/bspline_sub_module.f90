@@ -146,11 +146,51 @@
 
     interface db1ink
         !! 1D initialization routines.
-        module procedure :: db1ink_default, db1ink_alt, db1ink_alt_2
+        module procedure :: db1ink_default, db1ink_alt, db1ink_alt_2, db1ink_multi
     end interface
     interface db1val
         !! 1D evaluation routines.
-        module procedure :: db1val_default, db1val_alt
+        module procedure :: db1val_default, db1val_alt, db1val_multi
+    end interface
+    interface db2ink
+        !! 2D initialization routines.
+        module procedure :: db2ink_default, db2ink_multi
+    end interface
+    interface db2val
+        !! 2D evaluation routines.
+        module procedure :: db2val_default, db2val_multi
+    end interface
+    interface db3ink
+        !! 3D initialization routines.
+        module procedure :: db3ink_default, db3ink_multi
+    end interface
+    interface db3val
+        !! 3D evaluation routines.
+        module procedure :: db3val_default, db3val_multi
+    end interface
+    interface db4ink
+        !! 4D initialization routines.
+        module procedure :: db4ink_default, db4ink_multi
+    end interface
+    interface db4val
+        !! 4D evaluation routines.
+        module procedure :: db4val_default, db4val_multi
+    end interface
+    interface db5ink
+        !! 5D initialization routines.
+        module procedure :: db5ink_default, db5ink_multi
+    end interface
+    interface db5val
+        !! 5D evaluation routines.
+        module procedure :: db5val_default, db5val_multi
+    end interface
+    interface db6ink
+        !! 6D initialization routines.
+        module procedure :: db6ink_default, db6ink_multi
+    end interface
+    interface db6val
+        !! 6D evaluation routines.
+        module procedure :: db6val_default, db6val_multi
     end interface
 
     !main routines:
@@ -912,6 +952,971 @@
 
 !*****************************************************************************************
 !>
+!  Multiple-output version of [[db1ink]]: interpolates `nf` functions
+!  on the same grid, with the same knots. The last dimension of `fcn`
+!  and `bcoef` is the output index. Evaluate them with [[db1val]]
+!  (multiple-output version).
+
+    pure subroutine db1ink_multi(x,nx,fcn,kx,iknot,tx,bcoef,iflag)
+
+    implicit none
+
+    integer(ip),intent(in)              :: nx     !! Number of \(x\) abcissae
+    integer(ip),intent(in)              :: kx     !! The order of spline pieces in \(x\)
+    real(wp),dimension(:),intent(in)    :: x      !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:),intent(in) :: fcn  !! `(nx,nf)` array of function values to interpolate:
+                                                   !! `fcn(i1,j)` is output `j` at grid point
+                                                   !! (`x(i1)`)
+    integer(ip),intent(in)              :: iknot  !! knot sequence flag (see [[db1ink_default]])
+    real(wp),dimension(:),intent(inout) :: tx     !! The `(nx+kx)` knots in the \(x\) direction
+    real(wp),dimension(:,:),intent(out) :: bcoef  !! `(nx,nf)` array of b-spline coefficients
+    integer(ip),intent(out)             :: iflag  !! status flag (see [[db1ink_default]]),
+                                                  !! or 6001 if `fcn` and `bcoef` do not have the
+                                                  !! same number of outputs (or it is zero)
+
+    integer(ip) :: nf  !! number of outputs
+    integer(ip) :: j   !! output index
+
+    nf = size(fcn,2,kind=ip)
+    if (nf<1_ip .or. size(bcoef,2,kind=ip)/=nf) then
+        iflag = 6001_ip
+        return
+    end if
+
+    ! the knots are computed (if iknot=0) for the first output, and then reused
+    do j = 1_ip, nf
+        call db1ink_default(x,nx,fcn(:,j),kx,merge(iknot,1_ip,j==1_ip),&
+                  tx,bcoef(:,j),iflag)
+        if (iflag/=0_ip) return
+    end do
+
+    end subroutine db1ink_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Multiple-output version of [[db1val]]: evaluates all `nf` outputs
+!  of a spline from [[db1ink]] (multiple-output version) at one point.
+!  The interval search and the basis functions in each direction are
+!  only computed once, for all of the outputs.
+
+    pure subroutine db1val_multi(xval,idx,tx,nx,kx,bcoef,f,iflag,inbvx,extrap)
+
+    implicit none
+
+    real(wp),intent(in)                 :: xval   !! \(x\) coordinate of evaluation point.
+    integer(ip),intent(in)              :: idx    !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)              :: nx     !! the number of interpolation points in \(x\).
+    integer(ip),intent(in)              :: kx     !! order of polynomial pieces in \(x\).
+    real(wp),dimension(nx+kx),intent(in) :: tx !! knots in the \(x\) direction.
+    real(wp),dimension(:,:),intent(in) :: bcoef  !! `(nx,nf)` b-spline coefficients
+                                                  !! from [[db1ink]] (multiple-output version).
+    real(wp),dimension(:),intent(out)   :: f      !! `(nf)` interpolated values of the outputs
+    integer(ip),intent(out)             :: iflag  !! status flag:
+                                                  !!
+                                                  !! * \( = 0 \)   : no errors
+                                                  !! * 6002: `size(f)` is not the number of outputs
+                                                  !! * other \( \ne 0 \) : error (see [[db1val]])
+    integer(ip),intent(inout)           :: inbvx  !! initialization parameter which must be
+                                                  !! set to 1 the first time this routine is called,
+                                                  !! and must not be changed by the user.
+    logical,intent(in),optional         :: extrap !! if extrapolation is allowed
+                                                  !! (if not present, default is False)
+
+    integer(ip) :: leftx  !! interval index in \(x\)
+    integer(ip) :: ix     !! coefficient offset in \(x\)
+    real(wp),dimension(kx) :: bx  !! basis function weights in \(x\)
+    integer(ip) :: jf  !! output index
+
+    f = 0.0_wp
+
+    if (size(f,kind=ip)/=size(bcoef,2,kind=ip)) then
+        iflag = 6002_ip
+        return
+    end if
+
+    iflag = check_value(xval,tx,1_ip,extrap); if (iflag/=0_ip) return
+
+    ! interval and basis function weights in each direction (once for all outputs)
+    call dbvalu_weights(tx,nx,kx,idx,xval,inbvx,leftx,bx,iflag,extrap)
+    if (iflag/=0_ip) return
+
+    ix = leftx - kx
+
+    do jf = 1_ip, size(f,kind=ip)
+        f(jf) = dot_product(bx,bcoef(ix+1_ip:leftx,jf))
+    end do
+
+    end subroutine db1val_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Multiple-output version of [[db2ink]]: interpolates `nf` functions
+!  on the same grid, with the same knots. The last dimension of `fcn`
+!  and `bcoef` is the output index. Evaluate them with [[db2val]]
+!  (multiple-output version).
+
+    pure subroutine db2ink_multi(x,nx,y,ny,fcn,kx,ky,iknot,tx,ty,bcoef,iflag)
+
+    implicit none
+
+    integer(ip),intent(in)              :: nx     !! Number of \(x\) abcissae
+    integer(ip),intent(in)              :: ny     !! Number of \(y\) abcissae
+    integer(ip),intent(in)              :: kx     !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)              :: ky     !! The order of spline pieces in \(y\)
+    real(wp),dimension(:),intent(in)    :: x      !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)    :: y      !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:),intent(in) :: fcn  !! `(nx,ny,nf)` array of function values to interpolate:
+                                                   !! `fcn(i1,i2,j)` is output `j` at grid point
+                                                   !! (`x(i1)`,`y(i2)`)
+    integer(ip),intent(in)              :: iknot  !! knot sequence flag (see [[db2ink_default]])
+    real(wp),dimension(:),intent(inout) :: tx     !! The `(nx+kx)` knots in the \(x\) direction
+    real(wp),dimension(:),intent(inout) :: ty     !! The `(ny+ky)` knots in the \(y\) direction
+    real(wp),dimension(:,:,:),intent(out) :: bcoef  !! `(nx,ny,nf)` array of b-spline coefficients
+    integer(ip),intent(out)             :: iflag  !! status flag (see [[db2ink_default]]),
+                                                  !! or 6001 if `fcn` and `bcoef` do not have the
+                                                  !! same number of outputs (or it is zero)
+
+    integer(ip) :: nf  !! number of outputs
+    integer(ip) :: j   !! output index
+
+    nf = size(fcn,3,kind=ip)
+    if (nf<1_ip .or. size(bcoef,3,kind=ip)/=nf) then
+        iflag = 6001_ip
+        return
+    end if
+
+    ! the knots are computed (if iknot=0) for the first output, and then reused
+    do j = 1_ip, nf
+        call db2ink_default(x,nx,y,ny,fcn(:,:,j),kx,ky,merge(iknot,1_ip,j==1_ip),&
+                  tx,ty,bcoef(:,:,j),iflag)
+        if (iflag/=0_ip) return
+    end do
+
+    end subroutine db2ink_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Multiple-output version of [[db2val]]: evaluates all `nf` outputs
+!  of a spline from [[db2ink]] (multiple-output version) at one point.
+!  The interval search and the basis functions in each direction are
+!  only computed once, for all of the outputs.
+
+    pure subroutine db2val_multi(xval,yval,idx,idy,tx,ty,nx,ny,kx,ky,bcoef,f,iflag,inbvx,iloy,extrap)
+
+    implicit none
+
+    real(wp),intent(in)                 :: xval   !! \(x\) coordinate of evaluation point.
+    real(wp),intent(in)                 :: yval   !! \(y\) coordinate of evaluation point.
+    integer(ip),intent(in)              :: idx    !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)              :: idy    !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)              :: nx     !! the number of interpolation points in \(x\).
+    integer(ip),intent(in)              :: ny     !! the number of interpolation points in \(y\).
+    integer(ip),intent(in)              :: kx     !! order of polynomial pieces in \(x\).
+    integer(ip),intent(in)              :: ky     !! order of polynomial pieces in \(y\).
+    real(wp),dimension(nx+kx),intent(in) :: tx !! knots in the \(x\) direction.
+    real(wp),dimension(ny+ky),intent(in) :: ty !! knots in the \(y\) direction.
+    real(wp),dimension(:,:,:),intent(in) :: bcoef  !! `(nx,ny,nf)` b-spline coefficients
+                                                  !! from [[db2ink]] (multiple-output version).
+    real(wp),dimension(:),intent(out)   :: f      !! `(nf)` interpolated values of the outputs
+    integer(ip),intent(out)             :: iflag  !! status flag:
+                                                  !!
+                                                  !! * \( = 0 \)   : no errors
+                                                  !! * 6002: `size(f)` is not the number of outputs
+                                                  !! * other \( \ne 0 \) : error (see [[db2val]])
+    integer(ip),intent(inout)           :: inbvx  !! initialization parameter which must be
+                                                  !! set to 1 the first time this routine is called,
+                                                  !! and must not be changed by the user.
+    integer(ip),intent(inout)           :: iloy   !! initialization parameter which must be
+                                                  !! set to 1 the first time this routine is called,
+                                                  !! and must not be changed by the user.
+    logical,intent(in),optional         :: extrap !! if extrapolation is allowed
+                                                  !! (if not present, default is False)
+
+    integer(ip) :: leftx  !! interval index in \(x\)
+    integer(ip) :: lefty  !! interval index in \(y\)
+    integer(ip) :: ix     !! coefficient offset in \(x\)
+    integer(ip) :: iy     !! coefficient offset in \(y\)
+    real(wp),dimension(kx) :: bx  !! basis function weights in \(x\)
+    real(wp),dimension(ky) :: by  !! basis function weights in \(y\)
+    real(wp),dimension(ky) :: w1  !! work array for the contraction
+    integer(ip) :: j  !! counter in \(y\)
+    integer(ip) :: jf  !! output index
+
+    f = 0.0_wp
+
+    if (size(f,kind=ip)/=size(bcoef,3,kind=ip)) then
+        iflag = 6002_ip
+        return
+    end if
+
+    iflag = check_value(xval,tx,1_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(yval,ty,2_ip,extrap); if (iflag/=0_ip) return
+
+    ! interval and basis function weights in each direction (once for all outputs)
+    call dbvalu_weights(tx,nx,kx,idx,xval,inbvx,leftx,bx,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(ty,ny,ky,idy,yval,iloy,lefty,by,iflag,extrap)
+    if (iflag/=0_ip) return
+
+    ix = leftx - kx
+    iy = lefty - ky
+
+    do jf = 1_ip, size(f,kind=ip)
+        ! contract the coefficients one direction at a time
+        do j=1_ip,ky
+            w1(j) = dot_product(bx,bcoef(ix+1_ip:leftx,iy+j,jf))
+        end do
+        f(jf) = dot_product(by,w1)
+    end do
+
+    end subroutine db2val_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Multiple-output version of [[db3ink]]: interpolates `nf` functions
+!  on the same grid, with the same knots. The last dimension of `fcn`
+!  and `bcoef` is the output index. Evaluate them with [[db3val]]
+!  (multiple-output version).
+
+    pure subroutine db3ink_multi(x,nx,y,ny,z,nz,fcn,kx,ky,kz,iknot,tx,ty,tz,bcoef,iflag)
+
+    implicit none
+
+    integer(ip),intent(in)              :: nx     !! Number of \(x\) abcissae
+    integer(ip),intent(in)              :: ny     !! Number of \(y\) abcissae
+    integer(ip),intent(in)              :: nz     !! Number of \(z\) abcissae
+    integer(ip),intent(in)              :: kx     !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)              :: ky     !! The order of spline pieces in \(y\)
+    integer(ip),intent(in)              :: kz     !! The order of spline pieces in \(z\)
+    real(wp),dimension(:),intent(in)    :: x      !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)    :: y      !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)    :: z      !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:,:),intent(in) :: fcn  !! `(nx,ny,nz,nf)` array of function values to interpolate:
+                                                   !! `fcn(i1,i2,i3,j)` is output `j` at grid point
+                                                   !! (`x(i1)`,`y(i2)`,`z(i3)`)
+    integer(ip),intent(in)              :: iknot  !! knot sequence flag (see [[db3ink_default]])
+    real(wp),dimension(:),intent(inout) :: tx     !! The `(nx+kx)` knots in the \(x\) direction
+    real(wp),dimension(:),intent(inout) :: ty     !! The `(ny+ky)` knots in the \(y\) direction
+    real(wp),dimension(:),intent(inout) :: tz     !! The `(nz+kz)` knots in the \(z\) direction
+    real(wp),dimension(:,:,:,:),intent(out) :: bcoef  !! `(nx,ny,nz,nf)` array of b-spline coefficients
+    integer(ip),intent(out)             :: iflag  !! status flag (see [[db3ink_default]]),
+                                                  !! or 6001 if `fcn` and `bcoef` do not have the
+                                                  !! same number of outputs (or it is zero)
+
+    integer(ip) :: nf  !! number of outputs
+    integer(ip) :: j   !! output index
+
+    nf = size(fcn,4,kind=ip)
+    if (nf<1_ip .or. size(bcoef,4,kind=ip)/=nf) then
+        iflag = 6001_ip
+        return
+    end if
+
+    ! the knots are computed (if iknot=0) for the first output, and then reused
+    do j = 1_ip, nf
+        call db3ink_default(x,nx,y,ny,z,nz,fcn(:,:,:,j),kx,ky,kz,merge(iknot,1_ip,j==1_ip),&
+                  tx,ty,tz,bcoef(:,:,:,j),iflag)
+        if (iflag/=0_ip) return
+    end do
+
+    end subroutine db3ink_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Multiple-output version of [[db3val]]: evaluates all `nf` outputs
+!  of a spline from [[db3ink]] (multiple-output version) at one point.
+!  The interval search and the basis functions in each direction are
+!  only computed once, for all of the outputs.
+
+    pure subroutine db3val_multi(xval,yval,zval,idx,idy,idz,tx,ty,tz,nx,ny,nz,kx,ky,kz,bcoef,f,iflag,inbvx,iloy,iloz,extrap)
+
+    implicit none
+
+    real(wp),intent(in)                 :: xval   !! \(x\) coordinate of evaluation point.
+    real(wp),intent(in)                 :: yval   !! \(y\) coordinate of evaluation point.
+    real(wp),intent(in)                 :: zval   !! \(z\) coordinate of evaluation point.
+    integer(ip),intent(in)              :: idx    !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)              :: idy    !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)              :: idz    !! \(z\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)              :: nx     !! the number of interpolation points in \(x\).
+    integer(ip),intent(in)              :: ny     !! the number of interpolation points in \(y\).
+    integer(ip),intent(in)              :: nz     !! the number of interpolation points in \(z\).
+    integer(ip),intent(in)              :: kx     !! order of polynomial pieces in \(x\).
+    integer(ip),intent(in)              :: ky     !! order of polynomial pieces in \(y\).
+    integer(ip),intent(in)              :: kz     !! order of polynomial pieces in \(z\).
+    real(wp),dimension(nx+kx),intent(in) :: tx !! knots in the \(x\) direction.
+    real(wp),dimension(ny+ky),intent(in) :: ty !! knots in the \(y\) direction.
+    real(wp),dimension(nz+kz),intent(in) :: tz !! knots in the \(z\) direction.
+    real(wp),dimension(:,:,:,:),intent(in) :: bcoef  !! `(nx,ny,nz,nf)` b-spline coefficients
+                                                  !! from [[db3ink]] (multiple-output version).
+    real(wp),dimension(:),intent(out)   :: f      !! `(nf)` interpolated values of the outputs
+    integer(ip),intent(out)             :: iflag  !! status flag:
+                                                  !!
+                                                  !! * \( = 0 \)   : no errors
+                                                  !! * 6002: `size(f)` is not the number of outputs
+                                                  !! * other \( \ne 0 \) : error (see [[db3val]])
+    integer(ip),intent(inout)           :: inbvx  !! initialization parameter which must be
+                                                  !! set to 1 the first time this routine is called,
+                                                  !! and must not be changed by the user.
+    integer(ip),intent(inout)           :: iloy   !! initialization parameter which must be
+                                                  !! set to 1 the first time this routine is called,
+                                                  !! and must not be changed by the user.
+    integer(ip),intent(inout)           :: iloz   !! initialization parameter which must be
+                                                  !! set to 1 the first time this routine is called,
+                                                  !! and must not be changed by the user.
+    logical,intent(in),optional         :: extrap !! if extrapolation is allowed
+                                                  !! (if not present, default is False)
+
+    integer(ip) :: leftx  !! interval index in \(x\)
+    integer(ip) :: lefty  !! interval index in \(y\)
+    integer(ip) :: leftz  !! interval index in \(z\)
+    integer(ip) :: ix     !! coefficient offset in \(x\)
+    integer(ip) :: iy     !! coefficient offset in \(y\)
+    integer(ip) :: iz     !! coefficient offset in \(z\)
+    real(wp),dimension(kx) :: bx  !! basis function weights in \(x\)
+    real(wp),dimension(ky) :: by  !! basis function weights in \(y\)
+    real(wp),dimension(kz) :: bz  !! basis function weights in \(z\)
+    real(wp),dimension(ky,kz) :: w2  !! work array for the contraction
+    real(wp),dimension(kz) :: w1  !! work array for the contraction
+    integer(ip) :: j  !! counter in \(y\)
+    integer(ip) :: k  !! counter in \(z\)
+    integer(ip) :: jf  !! output index
+
+    f = 0.0_wp
+
+    if (size(f,kind=ip)/=size(bcoef,4,kind=ip)) then
+        iflag = 6002_ip
+        return
+    end if
+
+    iflag = check_value(xval,tx,1_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(yval,ty,2_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(zval,tz,3_ip,extrap); if (iflag/=0_ip) return
+
+    ! interval and basis function weights in each direction (once for all outputs)
+    call dbvalu_weights(tx,nx,kx,idx,xval,inbvx,leftx,bx,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(ty,ny,ky,idy,yval,iloy,lefty,by,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(tz,nz,kz,idz,zval,iloz,leftz,bz,iflag,extrap)
+    if (iflag/=0_ip) return
+
+    ix = leftx - kx
+    iy = lefty - ky
+    iz = leftz - kz
+
+    do jf = 1_ip, size(f,kind=ip)
+        ! contract the coefficients one direction at a time
+        do k=1_ip,kz
+            do j=1_ip,ky
+                w2(j,k) = dot_product(bx,bcoef(ix+1_ip:leftx,iy+j,iz+k,jf))
+            end do
+            w1(k) = dot_product(by,w2(:,k))
+        end do
+        f(jf) = dot_product(bz,w1)
+    end do
+
+    end subroutine db3val_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Multiple-output version of [[db4ink]]: interpolates `nf` functions
+!  on the same grid, with the same knots. The last dimension of `fcn`
+!  and `bcoef` is the output index. Evaluate them with [[db4val]]
+!  (multiple-output version).
+
+    pure subroutine db4ink_multi(x,nx,y,ny,z,nz,q,nq,fcn,kx,ky,kz,kq,iknot,tx,ty,tz,tq,bcoef,iflag)
+
+    implicit none
+
+    integer(ip),intent(in)              :: nx     !! Number of \(x\) abcissae
+    integer(ip),intent(in)              :: ny     !! Number of \(y\) abcissae
+    integer(ip),intent(in)              :: nz     !! Number of \(z\) abcissae
+    integer(ip),intent(in)              :: nq     !! Number of \(q\) abcissae
+    integer(ip),intent(in)              :: kx     !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)              :: ky     !! The order of spline pieces in \(y\)
+    integer(ip),intent(in)              :: kz     !! The order of spline pieces in \(z\)
+    integer(ip),intent(in)              :: kq     !! The order of spline pieces in \(q\)
+    real(wp),dimension(:),intent(in)    :: x      !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)    :: y      !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)    :: z      !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)    :: q      !! `(nq)` array of \(q\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:,:,:),intent(in) :: fcn  !! `(nx,ny,nz,nq,nf)` array of function values to interpolate:
+                                                   !! `fcn(i1,i2,i3,i4,j)` is output `j` at grid point
+                                                   !! (`x(i1)`,`y(i2)`,`z(i3)`,`q(i4)`)
+    integer(ip),intent(in)              :: iknot  !! knot sequence flag (see [[db4ink_default]])
+    real(wp),dimension(:),intent(inout) :: tx     !! The `(nx+kx)` knots in the \(x\) direction
+    real(wp),dimension(:),intent(inout) :: ty     !! The `(ny+ky)` knots in the \(y\) direction
+    real(wp),dimension(:),intent(inout) :: tz     !! The `(nz+kz)` knots in the \(z\) direction
+    real(wp),dimension(:),intent(inout) :: tq     !! The `(nq+kq)` knots in the \(q\) direction
+    real(wp),dimension(:,:,:,:,:),intent(out) :: bcoef  !! `(nx,ny,nz,nq,nf)` array of b-spline coefficients
+    integer(ip),intent(out)             :: iflag  !! status flag (see [[db4ink_default]]),
+                                                  !! or 6001 if `fcn` and `bcoef` do not have the
+                                                  !! same number of outputs (or it is zero)
+
+    integer(ip) :: nf  !! number of outputs
+    integer(ip) :: j   !! output index
+
+    nf = size(fcn,5,kind=ip)
+    if (nf<1_ip .or. size(bcoef,5,kind=ip)/=nf) then
+        iflag = 6001_ip
+        return
+    end if
+
+    ! the knots are computed (if iknot=0) for the first output, and then reused
+    do j = 1_ip, nf
+        call db4ink_default(x,nx,y,ny,z,nz,q,nq,fcn(:,:,:,:,j),kx,ky,kz,kq,merge(iknot,1_ip,j==1_ip),&
+                  tx,ty,tz,tq,bcoef(:,:,:,:,j),iflag)
+        if (iflag/=0_ip) return
+    end do
+
+    end subroutine db4ink_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Multiple-output version of [[db4val]]: evaluates all `nf` outputs
+!  of a spline from [[db4ink]] (multiple-output version) at one point.
+!  The interval search and the basis functions in each direction are
+!  only computed once, for all of the outputs.
+
+    pure subroutine db4val_multi(xval,yval,zval,qval,idx,idy,idz,idq,tx,ty,tz,tq,nx,ny,nz,nq,kx,ky,kz,kq,bcoef,f,iflag,inbvx,iloy,iloz,iloq,extrap)
+
+    implicit none
+
+    real(wp),intent(in)                 :: xval   !! \(x\) coordinate of evaluation point.
+    real(wp),intent(in)                 :: yval   !! \(y\) coordinate of evaluation point.
+    real(wp),intent(in)                 :: zval   !! \(z\) coordinate of evaluation point.
+    real(wp),intent(in)                 :: qval   !! \(q\) coordinate of evaluation point.
+    integer(ip),intent(in)              :: idx    !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)              :: idy    !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)              :: idz    !! \(z\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)              :: idq    !! \(q\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)              :: nx     !! the number of interpolation points in \(x\).
+    integer(ip),intent(in)              :: ny     !! the number of interpolation points in \(y\).
+    integer(ip),intent(in)              :: nz     !! the number of interpolation points in \(z\).
+    integer(ip),intent(in)              :: nq     !! the number of interpolation points in \(q\).
+    integer(ip),intent(in)              :: kx     !! order of polynomial pieces in \(x\).
+    integer(ip),intent(in)              :: ky     !! order of polynomial pieces in \(y\).
+    integer(ip),intent(in)              :: kz     !! order of polynomial pieces in \(z\).
+    integer(ip),intent(in)              :: kq     !! order of polynomial pieces in \(q\).
+    real(wp),dimension(nx+kx),intent(in) :: tx !! knots in the \(x\) direction.
+    real(wp),dimension(ny+ky),intent(in) :: ty !! knots in the \(y\) direction.
+    real(wp),dimension(nz+kz),intent(in) :: tz !! knots in the \(z\) direction.
+    real(wp),dimension(nq+kq),intent(in) :: tq !! knots in the \(q\) direction.
+    real(wp),dimension(:,:,:,:,:),intent(in) :: bcoef  !! `(nx,ny,nz,nq,nf)` b-spline coefficients
+                                                  !! from [[db4ink]] (multiple-output version).
+    real(wp),dimension(:),intent(out)   :: f      !! `(nf)` interpolated values of the outputs
+    integer(ip),intent(out)             :: iflag  !! status flag:
+                                                  !!
+                                                  !! * \( = 0 \)   : no errors
+                                                  !! * 6002: `size(f)` is not the number of outputs
+                                                  !! * other \( \ne 0 \) : error (see [[db4val]])
+    integer(ip),intent(inout)           :: inbvx  !! initialization parameter which must be
+                                                  !! set to 1 the first time this routine is called,
+                                                  !! and must not be changed by the user.
+    integer(ip),intent(inout)           :: iloy   !! initialization parameter which must be
+                                                  !! set to 1 the first time this routine is called,
+                                                  !! and must not be changed by the user.
+    integer(ip),intent(inout)           :: iloz   !! initialization parameter which must be
+                                                  !! set to 1 the first time this routine is called,
+                                                  !! and must not be changed by the user.
+    integer(ip),intent(inout)           :: iloq   !! initialization parameter which must be
+                                                  !! set to 1 the first time this routine is called,
+                                                  !! and must not be changed by the user.
+    logical,intent(in),optional         :: extrap !! if extrapolation is allowed
+                                                  !! (if not present, default is False)
+
+    integer(ip) :: leftx  !! interval index in \(x\)
+    integer(ip) :: lefty  !! interval index in \(y\)
+    integer(ip) :: leftz  !! interval index in \(z\)
+    integer(ip) :: leftq  !! interval index in \(q\)
+    integer(ip) :: ix     !! coefficient offset in \(x\)
+    integer(ip) :: iy     !! coefficient offset in \(y\)
+    integer(ip) :: iz     !! coefficient offset in \(z\)
+    integer(ip) :: iq     !! coefficient offset in \(q\)
+    real(wp),dimension(kx) :: bx  !! basis function weights in \(x\)
+    real(wp),dimension(ky) :: by  !! basis function weights in \(y\)
+    real(wp),dimension(kz) :: bz  !! basis function weights in \(z\)
+    real(wp),dimension(kq) :: bq  !! basis function weights in \(q\)
+    real(wp),dimension(ky,kz,kq) :: w3  !! work array for the contraction
+    real(wp),dimension(kz,kq) :: w2  !! work array for the contraction
+    real(wp),dimension(kq) :: w1  !! work array for the contraction
+    integer(ip) :: j  !! counter in \(y\)
+    integer(ip) :: k  !! counter in \(z\)
+    integer(ip) :: q  !! counter in \(q\)
+    integer(ip) :: jf  !! output index
+
+    f = 0.0_wp
+
+    if (size(f,kind=ip)/=size(bcoef,5,kind=ip)) then
+        iflag = 6002_ip
+        return
+    end if
+
+    iflag = check_value(xval,tx,1_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(yval,ty,2_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(zval,tz,3_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(qval,tq,4_ip,extrap); if (iflag/=0_ip) return
+
+    ! interval and basis function weights in each direction (once for all outputs)
+    call dbvalu_weights(tx,nx,kx,idx,xval,inbvx,leftx,bx,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(ty,ny,ky,idy,yval,iloy,lefty,by,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(tz,nz,kz,idz,zval,iloz,leftz,bz,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(tq,nq,kq,idq,qval,iloq,leftq,bq,iflag,extrap)
+    if (iflag/=0_ip) return
+
+    ix = leftx - kx
+    iy = lefty - ky
+    iz = leftz - kz
+    iq = leftq - kq
+
+    do jf = 1_ip, size(f,kind=ip)
+        ! contract the coefficients one direction at a time
+        do q=1_ip,kq
+            do k=1_ip,kz
+                do j=1_ip,ky
+                    w3(j,k,q) = dot_product(bx,bcoef(ix+1_ip:leftx,iy+j,iz+k,iq+q,jf))
+                end do
+                w2(k,q) = dot_product(by,w3(:,k,q))
+            end do
+            w1(q) = dot_product(bz,w2(:,q))
+        end do
+        f(jf) = dot_product(bq,w1)
+    end do
+
+    end subroutine db4val_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Multiple-output version of [[db5ink]]: interpolates `nf` functions
+!  on the same grid, with the same knots. The last dimension of `fcn`
+!  and `bcoef` is the output index. Evaluate them with [[db5val]]
+!  (multiple-output version).
+
+    pure subroutine db5ink_multi(x,nx,y,ny,z,nz,q,nq,r,nr,fcn,kx,ky,kz,kq,kr,iknot,tx,ty,tz,tq,tr,bcoef,iflag)
+
+    implicit none
+
+    integer(ip),intent(in)              :: nx     !! Number of \(x\) abcissae
+    integer(ip),intent(in)              :: ny     !! Number of \(y\) abcissae
+    integer(ip),intent(in)              :: nz     !! Number of \(z\) abcissae
+    integer(ip),intent(in)              :: nq     !! Number of \(q\) abcissae
+    integer(ip),intent(in)              :: nr     !! Number of \(r\) abcissae
+    integer(ip),intent(in)              :: kx     !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)              :: ky     !! The order of spline pieces in \(y\)
+    integer(ip),intent(in)              :: kz     !! The order of spline pieces in \(z\)
+    integer(ip),intent(in)              :: kq     !! The order of spline pieces in \(q\)
+    integer(ip),intent(in)              :: kr     !! The order of spline pieces in \(r\)
+    real(wp),dimension(:),intent(in)    :: x      !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)    :: y      !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)    :: z      !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)    :: q      !! `(nq)` array of \(q\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)    :: r      !! `(nr)` array of \(r\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:,:,:,:),intent(in) :: fcn  !! `(nx,ny,nz,nq,nr,nf)` array of function values to interpolate:
+                                                   !! `fcn(i1,i2,i3,i4,i5,j)` is output `j` at grid point
+                                                   !! (`x(i1)`,`y(i2)`,`z(i3)`,`q(i4)`,`r(i5)`)
+    integer(ip),intent(in)              :: iknot  !! knot sequence flag (see [[db5ink_default]])
+    real(wp),dimension(:),intent(inout) :: tx     !! The `(nx+kx)` knots in the \(x\) direction
+    real(wp),dimension(:),intent(inout) :: ty     !! The `(ny+ky)` knots in the \(y\) direction
+    real(wp),dimension(:),intent(inout) :: tz     !! The `(nz+kz)` knots in the \(z\) direction
+    real(wp),dimension(:),intent(inout) :: tq     !! The `(nq+kq)` knots in the \(q\) direction
+    real(wp),dimension(:),intent(inout) :: tr     !! The `(nr+kr)` knots in the \(r\) direction
+    real(wp),dimension(:,:,:,:,:,:),intent(out) :: bcoef  !! `(nx,ny,nz,nq,nr,nf)` array of b-spline coefficients
+    integer(ip),intent(out)             :: iflag  !! status flag (see [[db5ink_default]]),
+                                                  !! or 6001 if `fcn` and `bcoef` do not have the
+                                                  !! same number of outputs (or it is zero)
+
+    integer(ip) :: nf  !! number of outputs
+    integer(ip) :: j   !! output index
+
+    nf = size(fcn,6,kind=ip)
+    if (nf<1_ip .or. size(bcoef,6,kind=ip)/=nf) then
+        iflag = 6001_ip
+        return
+    end if
+
+    ! the knots are computed (if iknot=0) for the first output, and then reused
+    do j = 1_ip, nf
+        call db5ink_default(x,nx,y,ny,z,nz,q,nq,r,nr,fcn(:,:,:,:,:,j),kx,ky,kz,kq,kr,merge(iknot,1_ip,j==1_ip),&
+                  tx,ty,tz,tq,tr,bcoef(:,:,:,:,:,j),iflag)
+        if (iflag/=0_ip) return
+    end do
+
+    end subroutine db5ink_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Multiple-output version of [[db5val]]: evaluates all `nf` outputs
+!  of a spline from [[db5ink]] (multiple-output version) at one point.
+!  The interval search and the basis functions in each direction are
+!  only computed once, for all of the outputs.
+
+    pure subroutine db5val_multi(xval,yval,zval,qval,rval,idx,idy,idz,idq,idr,tx,ty,tz,tq,tr,nx,ny,nz,nq,nr,kx,ky,kz,kq,kr,bcoef,f,iflag,inbvx,iloy,iloz,iloq,ilor,extrap)
+
+    implicit none
+
+    real(wp),intent(in)                 :: xval   !! \(x\) coordinate of evaluation point.
+    real(wp),intent(in)                 :: yval   !! \(y\) coordinate of evaluation point.
+    real(wp),intent(in)                 :: zval   !! \(z\) coordinate of evaluation point.
+    real(wp),intent(in)                 :: qval   !! \(q\) coordinate of evaluation point.
+    real(wp),intent(in)                 :: rval   !! \(r\) coordinate of evaluation point.
+    integer(ip),intent(in)              :: idx    !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)              :: idy    !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)              :: idz    !! \(z\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)              :: idq    !! \(q\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)              :: idr    !! \(r\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)              :: nx     !! the number of interpolation points in \(x\).
+    integer(ip),intent(in)              :: ny     !! the number of interpolation points in \(y\).
+    integer(ip),intent(in)              :: nz     !! the number of interpolation points in \(z\).
+    integer(ip),intent(in)              :: nq     !! the number of interpolation points in \(q\).
+    integer(ip),intent(in)              :: nr     !! the number of interpolation points in \(r\).
+    integer(ip),intent(in)              :: kx     !! order of polynomial pieces in \(x\).
+    integer(ip),intent(in)              :: ky     !! order of polynomial pieces in \(y\).
+    integer(ip),intent(in)              :: kz     !! order of polynomial pieces in \(z\).
+    integer(ip),intent(in)              :: kq     !! order of polynomial pieces in \(q\).
+    integer(ip),intent(in)              :: kr     !! order of polynomial pieces in \(r\).
+    real(wp),dimension(nx+kx),intent(in) :: tx !! knots in the \(x\) direction.
+    real(wp),dimension(ny+ky),intent(in) :: ty !! knots in the \(y\) direction.
+    real(wp),dimension(nz+kz),intent(in) :: tz !! knots in the \(z\) direction.
+    real(wp),dimension(nq+kq),intent(in) :: tq !! knots in the \(q\) direction.
+    real(wp),dimension(nr+kr),intent(in) :: tr !! knots in the \(r\) direction.
+    real(wp),dimension(:,:,:,:,:,:),intent(in) :: bcoef  !! `(nx,ny,nz,nq,nr,nf)` b-spline coefficients
+                                                  !! from [[db5ink]] (multiple-output version).
+    real(wp),dimension(:),intent(out)   :: f      !! `(nf)` interpolated values of the outputs
+    integer(ip),intent(out)             :: iflag  !! status flag:
+                                                  !!
+                                                  !! * \( = 0 \)   : no errors
+                                                  !! * 6002: `size(f)` is not the number of outputs
+                                                  !! * other \( \ne 0 \) : error (see [[db5val]])
+    integer(ip),intent(inout)           :: inbvx  !! initialization parameter which must be
+                                                  !! set to 1 the first time this routine is called,
+                                                  !! and must not be changed by the user.
+    integer(ip),intent(inout)           :: iloy   !! initialization parameter which must be
+                                                  !! set to 1 the first time this routine is called,
+                                                  !! and must not be changed by the user.
+    integer(ip),intent(inout)           :: iloz   !! initialization parameter which must be
+                                                  !! set to 1 the first time this routine is called,
+                                                  !! and must not be changed by the user.
+    integer(ip),intent(inout)           :: iloq   !! initialization parameter which must be
+                                                  !! set to 1 the first time this routine is called,
+                                                  !! and must not be changed by the user.
+    integer(ip),intent(inout)           :: ilor   !! initialization parameter which must be
+                                                  !! set to 1 the first time this routine is called,
+                                                  !! and must not be changed by the user.
+    logical,intent(in),optional         :: extrap !! if extrapolation is allowed
+                                                  !! (if not present, default is False)
+
+    integer(ip) :: leftx  !! interval index in \(x\)
+    integer(ip) :: lefty  !! interval index in \(y\)
+    integer(ip) :: leftz  !! interval index in \(z\)
+    integer(ip) :: leftq  !! interval index in \(q\)
+    integer(ip) :: leftr  !! interval index in \(r\)
+    integer(ip) :: ix     !! coefficient offset in \(x\)
+    integer(ip) :: iy     !! coefficient offset in \(y\)
+    integer(ip) :: iz     !! coefficient offset in \(z\)
+    integer(ip) :: iq     !! coefficient offset in \(q\)
+    integer(ip) :: ir     !! coefficient offset in \(r\)
+    real(wp),dimension(kx) :: bx  !! basis function weights in \(x\)
+    real(wp),dimension(ky) :: by  !! basis function weights in \(y\)
+    real(wp),dimension(kz) :: bz  !! basis function weights in \(z\)
+    real(wp),dimension(kq) :: bq  !! basis function weights in \(q\)
+    real(wp),dimension(kr) :: br  !! basis function weights in \(r\)
+    real(wp),dimension(ky,kz,kq,kr) :: w4  !! work array for the contraction
+    real(wp),dimension(kz,kq,kr) :: w3  !! work array for the contraction
+    real(wp),dimension(kq,kr) :: w2  !! work array for the contraction
+    real(wp),dimension(kr) :: w1  !! work array for the contraction
+    integer(ip) :: j  !! counter in \(y\)
+    integer(ip) :: k  !! counter in \(z\)
+    integer(ip) :: q  !! counter in \(q\)
+    integer(ip) :: r  !! counter in \(r\)
+    integer(ip) :: jf  !! output index
+
+    f = 0.0_wp
+
+    if (size(f,kind=ip)/=size(bcoef,6,kind=ip)) then
+        iflag = 6002_ip
+        return
+    end if
+
+    iflag = check_value(xval,tx,1_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(yval,ty,2_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(zval,tz,3_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(qval,tq,4_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(rval,tr,5_ip,extrap); if (iflag/=0_ip) return
+
+    ! interval and basis function weights in each direction (once for all outputs)
+    call dbvalu_weights(tx,nx,kx,idx,xval,inbvx,leftx,bx,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(ty,ny,ky,idy,yval,iloy,lefty,by,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(tz,nz,kz,idz,zval,iloz,leftz,bz,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(tq,nq,kq,idq,qval,iloq,leftq,bq,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(tr,nr,kr,idr,rval,ilor,leftr,br,iflag,extrap)
+    if (iflag/=0_ip) return
+
+    ix = leftx - kx
+    iy = lefty - ky
+    iz = leftz - kz
+    iq = leftq - kq
+    ir = leftr - kr
+
+    do jf = 1_ip, size(f,kind=ip)
+        ! contract the coefficients one direction at a time
+        do r=1_ip,kr
+            do q=1_ip,kq
+                do k=1_ip,kz
+                    do j=1_ip,ky
+                        w4(j,k,q,r) = dot_product(bx,bcoef(ix+1_ip:leftx,iy+j,iz+k,iq+q,ir+r,jf))
+                    end do
+                    w3(k,q,r) = dot_product(by,w4(:,k,q,r))
+                end do
+                w2(q,r) = dot_product(bz,w3(:,q,r))
+            end do
+            w1(r) = dot_product(bq,w2(:,r))
+        end do
+        f(jf) = dot_product(br,w1)
+    end do
+
+    end subroutine db5val_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Multiple-output version of [[db6ink]]: interpolates `nf` functions
+!  on the same grid, with the same knots. The last dimension of `fcn`
+!  and `bcoef` is the output index. Evaluate them with [[db6val]]
+!  (multiple-output version).
+
+    pure subroutine db6ink_multi(x,nx,y,ny,z,nz,q,nq,r,nr,s,ns,fcn,kx,ky,kz,kq,kr,ks,iknot,tx,ty,tz,tq,tr,ts,bcoef,iflag)
+
+    implicit none
+
+    integer(ip),intent(in)              :: nx     !! Number of \(x\) abcissae
+    integer(ip),intent(in)              :: ny     !! Number of \(y\) abcissae
+    integer(ip),intent(in)              :: nz     !! Number of \(z\) abcissae
+    integer(ip),intent(in)              :: nq     !! Number of \(q\) abcissae
+    integer(ip),intent(in)              :: nr     !! Number of \(r\) abcissae
+    integer(ip),intent(in)              :: ns     !! Number of \(s\) abcissae
+    integer(ip),intent(in)              :: kx     !! The order of spline pieces in \(x\)
+    integer(ip),intent(in)              :: ky     !! The order of spline pieces in \(y\)
+    integer(ip),intent(in)              :: kz     !! The order of spline pieces in \(z\)
+    integer(ip),intent(in)              :: kq     !! The order of spline pieces in \(q\)
+    integer(ip),intent(in)              :: kr     !! The order of spline pieces in \(r\)
+    integer(ip),intent(in)              :: ks     !! The order of spline pieces in \(s\)
+    real(wp),dimension(:),intent(in)    :: x      !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)    :: y      !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)    :: z      !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)    :: q      !! `(nq)` array of \(q\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)    :: r      !! `(nr)` array of \(r\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in)    :: s      !! `(ns)` array of \(s\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:,:,:,:,:),intent(in) :: fcn  !! `(nx,ny,nz,nq,nr,ns,nf)` array of function values to interpolate:
+                                                   !! `fcn(i1,i2,i3,i4,i5,i6,j)` is output `j` at grid point
+                                                   !! (`x(i1)`,`y(i2)`,`z(i3)`,`q(i4)`,`r(i5)`,`s(i6)`)
+    integer(ip),intent(in)              :: iknot  !! knot sequence flag (see [[db6ink_default]])
+    real(wp),dimension(:),intent(inout) :: tx     !! The `(nx+kx)` knots in the \(x\) direction
+    real(wp),dimension(:),intent(inout) :: ty     !! The `(ny+ky)` knots in the \(y\) direction
+    real(wp),dimension(:),intent(inout) :: tz     !! The `(nz+kz)` knots in the \(z\) direction
+    real(wp),dimension(:),intent(inout) :: tq     !! The `(nq+kq)` knots in the \(q\) direction
+    real(wp),dimension(:),intent(inout) :: tr     !! The `(nr+kr)` knots in the \(r\) direction
+    real(wp),dimension(:),intent(inout) :: ts     !! The `(ns+ks)` knots in the \(s\) direction
+    real(wp),dimension(:,:,:,:,:,:,:),intent(out) :: bcoef  !! `(nx,ny,nz,nq,nr,ns,nf)` array of b-spline coefficients
+    integer(ip),intent(out)             :: iflag  !! status flag (see [[db6ink_default]]),
+                                                  !! or 6001 if `fcn` and `bcoef` do not have the
+                                                  !! same number of outputs (or it is zero)
+
+    integer(ip) :: nf  !! number of outputs
+    integer(ip) :: j   !! output index
+
+    nf = size(fcn,7,kind=ip)
+    if (nf<1_ip .or. size(bcoef,7,kind=ip)/=nf) then
+        iflag = 6001_ip
+        return
+    end if
+
+    ! the knots are computed (if iknot=0) for the first output, and then reused
+    do j = 1_ip, nf
+        call db6ink_default(x,nx,y,ny,z,nz,q,nq,r,nr,s,ns,fcn(:,:,:,:,:,:,j),kx,ky,kz,kq,kr,ks,merge(iknot,1_ip,j==1_ip),&
+                  tx,ty,tz,tq,tr,ts,bcoef(:,:,:,:,:,:,j),iflag)
+        if (iflag/=0_ip) return
+    end do
+
+    end subroutine db6ink_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Multiple-output version of [[db6val]]: evaluates all `nf` outputs
+!  of a spline from [[db6ink]] (multiple-output version) at one point.
+!  The interval search and the basis functions in each direction are
+!  only computed once, for all of the outputs.
+
+    pure subroutine db6val_multi(xval,yval,zval,qval,rval,sval,idx,idy,idz,idq,idr,ids,tx,ty,tz,tq,tr,ts,nx,ny,nz,nq,nr,ns,kx,ky,kz,kq,kr,ks,bcoef,f,iflag,inbvx,iloy,iloz,iloq,ilor,ilos,extrap)
+
+    implicit none
+
+    real(wp),intent(in)                 :: xval   !! \(x\) coordinate of evaluation point.
+    real(wp),intent(in)                 :: yval   !! \(y\) coordinate of evaluation point.
+    real(wp),intent(in)                 :: zval   !! \(z\) coordinate of evaluation point.
+    real(wp),intent(in)                 :: qval   !! \(q\) coordinate of evaluation point.
+    real(wp),intent(in)                 :: rval   !! \(r\) coordinate of evaluation point.
+    real(wp),intent(in)                 :: sval   !! \(s\) coordinate of evaluation point.
+    integer(ip),intent(in)              :: idx    !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)              :: idy    !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)              :: idz    !! \(z\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)              :: idq    !! \(q\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)              :: idr    !! \(r\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)              :: ids    !! \(s\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in)              :: nx     !! the number of interpolation points in \(x\).
+    integer(ip),intent(in)              :: ny     !! the number of interpolation points in \(y\).
+    integer(ip),intent(in)              :: nz     !! the number of interpolation points in \(z\).
+    integer(ip),intent(in)              :: nq     !! the number of interpolation points in \(q\).
+    integer(ip),intent(in)              :: nr     !! the number of interpolation points in \(r\).
+    integer(ip),intent(in)              :: ns     !! the number of interpolation points in \(s\).
+    integer(ip),intent(in)              :: kx     !! order of polynomial pieces in \(x\).
+    integer(ip),intent(in)              :: ky     !! order of polynomial pieces in \(y\).
+    integer(ip),intent(in)              :: kz     !! order of polynomial pieces in \(z\).
+    integer(ip),intent(in)              :: kq     !! order of polynomial pieces in \(q\).
+    integer(ip),intent(in)              :: kr     !! order of polynomial pieces in \(r\).
+    integer(ip),intent(in)              :: ks     !! order of polynomial pieces in \(s\).
+    real(wp),dimension(nx+kx),intent(in) :: tx !! knots in the \(x\) direction.
+    real(wp),dimension(ny+ky),intent(in) :: ty !! knots in the \(y\) direction.
+    real(wp),dimension(nz+kz),intent(in) :: tz !! knots in the \(z\) direction.
+    real(wp),dimension(nq+kq),intent(in) :: tq !! knots in the \(q\) direction.
+    real(wp),dimension(nr+kr),intent(in) :: tr !! knots in the \(r\) direction.
+    real(wp),dimension(ns+ks),intent(in) :: ts !! knots in the \(s\) direction.
+    real(wp),dimension(:,:,:,:,:,:,:),intent(in) :: bcoef  !! `(nx,ny,nz,nq,nr,ns,nf)` b-spline coefficients
+                                                  !! from [[db6ink]] (multiple-output version).
+    real(wp),dimension(:),intent(out)   :: f      !! `(nf)` interpolated values of the outputs
+    integer(ip),intent(out)             :: iflag  !! status flag:
+                                                  !!
+                                                  !! * \( = 0 \)   : no errors
+                                                  !! * 6002: `size(f)` is not the number of outputs
+                                                  !! * other \( \ne 0 \) : error (see [[db6val]])
+    integer(ip),intent(inout)           :: inbvx  !! initialization parameter which must be
+                                                  !! set to 1 the first time this routine is called,
+                                                  !! and must not be changed by the user.
+    integer(ip),intent(inout)           :: iloy   !! initialization parameter which must be
+                                                  !! set to 1 the first time this routine is called,
+                                                  !! and must not be changed by the user.
+    integer(ip),intent(inout)           :: iloz   !! initialization parameter which must be
+                                                  !! set to 1 the first time this routine is called,
+                                                  !! and must not be changed by the user.
+    integer(ip),intent(inout)           :: iloq   !! initialization parameter which must be
+                                                  !! set to 1 the first time this routine is called,
+                                                  !! and must not be changed by the user.
+    integer(ip),intent(inout)           :: ilor   !! initialization parameter which must be
+                                                  !! set to 1 the first time this routine is called,
+                                                  !! and must not be changed by the user.
+    integer(ip),intent(inout)           :: ilos   !! initialization parameter which must be
+                                                  !! set to 1 the first time this routine is called,
+                                                  !! and must not be changed by the user.
+    logical,intent(in),optional         :: extrap !! if extrapolation is allowed
+                                                  !! (if not present, default is False)
+
+    integer(ip) :: leftx  !! interval index in \(x\)
+    integer(ip) :: lefty  !! interval index in \(y\)
+    integer(ip) :: leftz  !! interval index in \(z\)
+    integer(ip) :: leftq  !! interval index in \(q\)
+    integer(ip) :: leftr  !! interval index in \(r\)
+    integer(ip) :: lefts  !! interval index in \(s\)
+    integer(ip) :: ix     !! coefficient offset in \(x\)
+    integer(ip) :: iy     !! coefficient offset in \(y\)
+    integer(ip) :: iz     !! coefficient offset in \(z\)
+    integer(ip) :: iq     !! coefficient offset in \(q\)
+    integer(ip) :: ir     !! coefficient offset in \(r\)
+    integer(ip) :: is     !! coefficient offset in \(s\)
+    real(wp),dimension(kx) :: bx  !! basis function weights in \(x\)
+    real(wp),dimension(ky) :: by  !! basis function weights in \(y\)
+    real(wp),dimension(kz) :: bz  !! basis function weights in \(z\)
+    real(wp),dimension(kq) :: bq  !! basis function weights in \(q\)
+    real(wp),dimension(kr) :: br  !! basis function weights in \(r\)
+    real(wp),dimension(ks) :: bs  !! basis function weights in \(s\)
+    real(wp),dimension(ky,kz,kq,kr,ks) :: w5  !! work array for the contraction
+    real(wp),dimension(kz,kq,kr,ks) :: w4  !! work array for the contraction
+    real(wp),dimension(kq,kr,ks) :: w3  !! work array for the contraction
+    real(wp),dimension(kr,ks) :: w2  !! work array for the contraction
+    real(wp),dimension(ks) :: w1  !! work array for the contraction
+    integer(ip) :: j  !! counter in \(y\)
+    integer(ip) :: k  !! counter in \(z\)
+    integer(ip) :: q  !! counter in \(q\)
+    integer(ip) :: r  !! counter in \(r\)
+    integer(ip) :: s  !! counter in \(s\)
+    integer(ip) :: jf  !! output index
+
+    f = 0.0_wp
+
+    if (size(f,kind=ip)/=size(bcoef,7,kind=ip)) then
+        iflag = 6002_ip
+        return
+    end if
+
+    iflag = check_value(xval,tx,1_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(yval,ty,2_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(zval,tz,3_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(qval,tq,4_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(rval,tr,5_ip,extrap); if (iflag/=0_ip) return
+    iflag = check_value(sval,ts,6_ip,extrap); if (iflag/=0_ip) return
+
+    ! interval and basis function weights in each direction (once for all outputs)
+    call dbvalu_weights(tx,nx,kx,idx,xval,inbvx,leftx,bx,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(ty,ny,ky,idy,yval,iloy,lefty,by,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(tz,nz,kz,idz,zval,iloz,leftz,bz,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(tq,nq,kq,idq,qval,iloq,leftq,bq,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(tr,nr,kr,idr,rval,ilor,leftr,br,iflag,extrap)
+    if (iflag/=0_ip) return
+    call dbvalu_weights(ts,ns,ks,ids,sval,ilos,lefts,bs,iflag,extrap)
+    if (iflag/=0_ip) return
+
+    ix = leftx - kx
+    iy = lefty - ky
+    iz = leftz - kz
+    iq = leftq - kq
+    ir = leftr - kr
+    is = lefts - ks
+
+    do jf = 1_ip, size(f,kind=ip)
+        ! contract the coefficients one direction at a time
+        do s=1_ip,ks
+            do r=1_ip,kr
+                do q=1_ip,kq
+                    do k=1_ip,kz
+                        do j=1_ip,ky
+                            w5(j,k,q,r,s) = dot_product(bx,bcoef(ix+1_ip:leftx,iy+j,iz+k,iq+q,ir+r,is+s,jf))
+                        end do
+                        w4(k,q,r,s) = dot_product(by,w5(:,k,q,r,s))
+                    end do
+                    w3(q,r,s) = dot_product(bz,w4(:,q,r,s))
+                end do
+                w2(r,s) = dot_product(bq,w3(:,r,s))
+            end do
+            w1(s) = dot_product(br,w2(:,s))
+        end do
+        f(jf) = dot_product(bs,w1)
+    end do
+
+    end subroutine db6val_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
 !  Check the inputs to [[db1root]], [[db1min]], and [[db1max]].
 
     pure subroutine check_root_inputs(nx,kx,iflag)
@@ -1563,7 +2568,7 @@
 !  * JEC : 000330 modified array declarations.
 !  * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
 
-    pure subroutine db2ink(x,nx,y,ny,fcn,kx,ky,iknot,tx,ty,bcoef,iflag)
+    pure subroutine db2ink_default(x,nx,y,ny,fcn,kx,ky,iknot,tx,ty,bcoef,iflag)
 
     implicit none
 
@@ -1654,7 +2659,7 @@
 
     end if
 
-    end subroutine db2ink
+    end subroutine db2ink_default
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -1691,7 +2696,7 @@
 !  * JEC : 000330 modified array declarations.
 !  * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
 
-    pure subroutine db2val(xval,yval,idx,idy,tx,ty,nx,ny,kx,ky,bcoef,f,iflag,inbvx,inbvy,iloy,w1,w0,extrap)
+    pure subroutine db2val_default(xval,yval,idx,idy,tx,ty,nx,ny,kx,ky,bcoef,f,iflag,inbvx,inbvy,iloy,w1,w0,extrap)
 
     implicit none
 
@@ -1757,7 +2762,7 @@
     end do
     f = dot_product(by,w1)
 
-    end subroutine db2val
+    end subroutine db2val_default
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -1815,7 +2820,7 @@
 !  * JEC : 000330 modified array declarations.
 !  * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
 
-    pure subroutine db3ink(x,nx,y,ny,z,nz,fcn,kx,ky,kz,iknot,tx,ty,tz,bcoef,iflag)
+    pure subroutine db3ink_default(x,nx,y,ny,z,nz,fcn,kx,ky,kz,iknot,tx,ty,tz,bcoef,iflag)
 
     implicit none
 
@@ -1929,7 +2934,7 @@
 
     end if
 
-    end subroutine db3ink
+    end subroutine db3ink_default
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -1970,7 +2975,7 @@
 !  * JEC : 000330 modified array declarations.
 !  * Jacob Williams, 2/24/2015 : extensive refactoring of CMLIB routine.
 
-    pure subroutine db3val(xval,yval,zval,idx,idy,idz,&
+    pure subroutine db3val_default(xval,yval,zval,idx,idy,idz,&
                            tx,ty,tz,&
                            nx,ny,nz,kx,ky,kz,bcoef,f,iflag,&
                            inbvx,inbvy,inbvz,iloy,iloz,w2,w1,w0,extrap)
@@ -2058,7 +3063,7 @@
     end do
     f = dot_product(bz,w1)
 
-    end subroutine db3val
+    end subroutine db3val_default
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -2076,7 +3081,7 @@
 !### History
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
-    pure subroutine db4ink(x,nx,y,ny,z,nz,q,nq,&
+    pure subroutine db4ink_default(x,nx,y,ny,z,nz,q,nq,&
                            fcn,&
                            kx,ky,kz,kq,&
                            iknot,&
@@ -2218,7 +3223,7 @@
 
      end if
 
-    end subroutine db4ink
+    end subroutine db4ink_default
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -2236,7 +3241,7 @@
 !### History
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
-    pure subroutine db4val(xval,yval,zval,qval,&
+    pure subroutine db4val_default(xval,yval,zval,qval,&
                            idx,idy,idz,idq,&
                            tx,ty,tz,tq,&
                            nx,ny,nz,nq,&
@@ -2353,7 +3358,7 @@
     end do
     f = dot_product(bq,w1)
 
-    end subroutine db4val
+    end subroutine db4val_default
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -2376,7 +3381,7 @@
 !### History
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
-    pure subroutine db5ink(x,nx,y,ny,z,nz,q,nq,r,nr,&
+    pure subroutine db5ink_default(x,nx,y,ny,z,nz,q,nq,r,nr,&
                            fcn,&
                            kx,ky,kz,kq,kr,&
                            iknot,&
@@ -2540,7 +3545,7 @@
 
     end if
 
-    end subroutine db5ink
+    end subroutine db5ink_default
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -2558,7 +3563,7 @@
 !### History
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
-    pure subroutine db5val(xval,yval,zval,qval,rval,&
+    pure subroutine db5val_default(xval,yval,zval,qval,rval,&
                            idx,idy,idz,idq,idr,&
                            tx,ty,tz,tq,tr,&
                            nx,ny,nz,nq,nr,&
@@ -2698,7 +3703,7 @@
     end do
     f = dot_product(br,w1)
 
-    end subroutine db5val
+    end subroutine db5val_default
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -2720,7 +3725,7 @@
 !### History
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
-    pure subroutine db6ink(x,nx,y,ny,z,nz,q,nq,r,nr,s,ns,&
+    pure subroutine db6ink_default(x,nx,y,ny,z,nz,q,nq,r,nr,s,ns,&
                            fcn,&
                            kx,ky,kz,kq,kr,ks,&
                            iknot,&
@@ -2915,7 +3920,7 @@
 
      end if
 
-    end subroutine db6ink
+    end subroutine db6ink_default
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -2933,7 +3938,7 @@
 !### History
 !  * Jacob Williams, 2/24/2015 : Created this routine.
 
-    pure subroutine db6val(xval,yval,zval,qval,rval,sval,&
+    pure subroutine db6val_default(xval,yval,zval,qval,rval,sval,&
                            idx,idy,idz,idq,idr,ids,&
                            tx,ty,tz,tq,tr,ts,&
                            nx,ny,nz,nq,nr,ns,&
@@ -3095,7 +4100,7 @@
     end do
     f = dot_product(bs,w1)
 
-    end subroutine db6val
+    end subroutine db6val_default
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -5956,6 +6961,10 @@
     case(5003_ip); msg='Error in initialize_from_coefficients: a knot vector is not the correct size (n+k)'
     case(5004_ip); msg='Error in initialize_from_coefficients: a knot vector is not non-decreasing'
     case(5005_ip); msg='Error in initialize_from_coefficients: a knot vector does not satisfy t(k)<t(n+1)'
+
+    case(6001_ip); msg='Error in db*ink (multiple outputs): fcn and bcoef do not have the same number of outputs'
+    case(6002_ip); msg='Error in db*val (multiple outputs): size(f) is not the number of outputs'
+    case(6003_ip); msg='Error: this method requires a spline with a single output'
 
     case(3001_ip); msg='Error in dbspvd: k does not satisfy k>=1'
     case(3002_ip); msg='Error in dbspvd: nderiv does not satisfy 1<=nderiv<=k'

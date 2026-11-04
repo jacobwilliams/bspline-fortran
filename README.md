@@ -117,6 +117,20 @@ call s2%initialize_from_coefficients(tx,ty,bcoef,kx,ky,iflag)
 
 The coefficients are the values of the control points of the spline. Their locations are the Greville abscissae (the average of the `k-1` interior knots of each basis function), which are computed by the `greville_abscissae` subroutine. For a 1D spline, the `control_points` method returns both. The spline lies within the convex hull of its control points. In more than one dimension, the control net is the tensor product of the Greville abscissae in each direction, with the coefficient array.
 
+## Multiple outputs
+
+Several functions of the same inputs (on the same grid) can be interpolated with a single spline. The last dimension of `fcn` (and `bcoef`) is the output index. The interval search and the basis functions are then only computed once for all of the outputs when evaluating, which is faster than using a separate spline for each output (about 3x for 10 outputs in 1D and 3D). For example, in 2D with `nf` outputs:
+
+```Fortran
+type(bspline_2d) :: s
+real(wp),dimension(nx,ny,nf) :: fcn  ! fcn(:,:,j) is output j
+real(wp),dimension(nf) :: f
+call s%initialize(x,y,fcn,kx,ky,iflag)
+call s%evaluate(xval,yval,idx,idy,f,iflag)  ! f(j) is output j
+```
+
+The subroutine interface has the same overloads: `db*ink` with an extra dimension of `fcn` and `bcoef`, and `db*val` with an extra dimension of `bcoef` and an array `f`. The `number_of_outputs` method returns `nf`. The methods that require a single output (e.g., `integral` and `roots` in 1D) return an error for a spline with more than one output.
+
 ## Least squares fitting
 
 The BSpline-Fortran library also exports the `defc` subroutine, which can be used to fit B-spline polynomials to 1D data using a weighted least squares method. The `dfc` subroutine also allows for equality and inequality constraints to be imposed on the fitted curve. These procedures are not yet available in the object oriented interface.
