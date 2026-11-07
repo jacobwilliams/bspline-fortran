@@ -1,0 +1,801 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="BSPLINE-FORTRAN -- Multidimensional B-Spline Interpolation of Data on a Regular Grid">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>db1max &ndash; bspline-fortran</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">bspline-fortran </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>db1max
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.1% of total for procedures.">13 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/bspline_sub_module.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/bspline_sub_module.f90.html'>bspline_sub_module.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/bspline_sub_module.html'>bspline_sub_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">db1max</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/db1max.html#src">db1max</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>public pure subroutine db1max(tx, nx, kx, bcoef, xa, xb, xmax, fmax, iflag)  
+</h2>
+    
+
+    <p>Finds the global maximum of a 1D b-spline on <script type="math/tex"> [x_a, x_b] </script>.
+  See <a href="../proc/db1min.html">db1min</a> for the method, and for discontinuous splines.</p>
+<h3>See also</h3>
+<ul>
+<li><a href="../proc/db1min.html">db1min</a>, <a href="../proc/db1root.html">db1root</a></li>
+</ul>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tx~10"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(nx+kx)
+            </td>
+            <td>::</td>
+            <td><strong>tx</strong></td>
+            <td>
+                <p>knot array</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nx~10"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nx</strong></td>
+            <td>
+                <p>number of b-spline coefficients</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-kx~11"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>kx</strong></td>
+            <td>
+                <p>order of the b-spline, <code>kx &gt;= 2</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-bcoef~10"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(nx)
+            </td>
+            <td>::</td>
+            <td><strong>bcoef</strong></td>
+            <td>
+                <p>b-spline coefficient array</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-xa~2"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>xa</strong></td>
+            <td>
+                <p>left end of the interval, in <code>t(kx) &lt;= x &lt;= t(nx+1)</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-xb~2"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>xb</strong></td>
+            <td>
+                <p>right end of the interval, in <code>t(kx) &lt;= x &lt;= t(nx+1)</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-xmax"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>xmax</strong></td>
+            <td>
+                <p>location of the maximum</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fmax"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fmax</strong></td>
+            <td>
+                <p>maximum value of the spline</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-iflag~10"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iflag</strong></td>
+            <td>
+                <p>status flag (see <a href="../proc/db1min.html">db1min</a>)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~db1max~~CallsGraph Pages: 1 -->
+<svg id="procdb1maxCallsGraph" width="641pt" height="218pt"
+ viewBox="0.00 0.00 641.00 217.58" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~db1max~~CallsGraph" class="graph" transform="scale(0.9 0.9) rotate(0) translate(4 237)">
+<title>proc~~db1max~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-237 706,-237 706,4 -4,4"/>
+<!-- proc~db1max -->
+<g id="proc~~db1max~~CallsGraph_node1" class="node">
+<title>proc~db1max</title>
+<polygon fill="none" stroke="black" points="56,-151 0,-151 0,-127 56,-127 56,-151"/>
+<text text-anchor="middle" x="28" y="-136.6" font-family="Helvetica,sans-Serif" font-size="10.50">db1max</text>
+</g>
+<!-- proc~db1extremum -->
+<g id="proc~~db1max~~CallsGraph_node2" class="node">
+<title>proc~db1extremum</title>
+<g id="a_proc~~db1max~~CallsGraph_node2"><a xlink:href="../proc/db1extremum.html" xlink:title="db1extremum">
+<polygon fill="#d9534f" stroke="#d9534f" points="179,-151 92,-151 92,-127 179,-127 179,-151"/>
+<text text-anchor="middle" x="135.5" y="-136.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1extremum</text>
+</a>
+</g>
+</g>
+<!-- proc~db1max&#45;&gt;proc~db1extremum -->
+<g id="proc~~db1max~~CallsGraph_edge1" class="edge">
+<title>proc~db1max&#45;&gt;proc~db1extremum</title>
+<path fill="none" stroke="#000000" d="M56.17,-139C63.98,-139 72.78,-139 81.58,-139"/>
+<polygon fill="#000000" stroke="#000000" points="81.86,-142.5 91.86,-139 81.86,-135.5 81.86,-142.5"/>
+</g>
+<!-- proc~check_root_inputs -->
+<g id="proc~~db1max~~CallsGraph_node3" class="node">
+<title>proc~check_root_inputs</title>
+<g id="a_proc~~db1max~~CallsGraph_node3"><a xlink:href="../proc/check_root_inputs.html" xlink:title="check_root_inputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="323,-233 215,-233 215,-209 323,-209 323,-233"/>
+<text text-anchor="middle" x="269" y="-218.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">check_root_inputs</text>
+</a>
+</g>
+</g>
+<!-- proc~db1extremum&#45;&gt;proc~check_root_inputs -->
+<g id="proc~~db1max~~CallsGraph_edge2" class="edge">
+<title>proc~db1extremum&#45;&gt;proc~check_root_inputs</title>
+<path fill="none" stroke="#000000" d="M149.56,-151.05C164.5,-164.36 190.12,-185.79 215,-200 217.88,-201.64 220.91,-203.22 224.01,-204.71"/>
+<polygon fill="#000000" stroke="#000000" points="222.85,-208.03 233.41,-208.94 225.72,-201.64 222.85,-208.03"/>
+</g>
+<!-- proc~dbspvd -->
+<g id="proc~~db1max~~CallsGraph_node4" class="node">
+<title>proc~dbspvd</title>
+<g id="a_proc~~db1max~~CallsGraph_node4"><a xlink:href="../proc/dbspvd.html" xlink:title="dbspvd">
+<polygon fill="#d9534f" stroke="#d9534f" points="296,-191 242,-191 242,-167 296,-167 296,-191"/>
+<text text-anchor="middle" x="269" y="-176.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbspvd</text>
+</a>
+</g>
+</g>
+<!-- proc~db1extremum&#45;&gt;proc~dbspvd -->
+<g id="proc~~db1max~~CallsGraph_edge3" class="edge">
+<title>proc~db1extremum&#45;&gt;proc~dbspvd</title>
+<path fill="none" stroke="#000000" d="M175.95,-151C193.79,-156.43 214.71,-162.79 232.1,-168.08"/>
+<polygon fill="#000000" stroke="#000000" points="231.29,-171.49 241.88,-171.05 233.33,-164.8 231.29,-171.49"/>
+</g>
+<!-- proc~dbvalu -->
+<g id="proc~~db1max~~CallsGraph_node5" class="node">
+<title>proc~dbvalu</title>
+<g id="a_proc~~db1max~~CallsGraph_node5"><a xlink:href="../proc/dbvalu.html" xlink:title="dbvalu">
+<polygon fill="#d9534f" stroke="#d9534f" points="428,-150 374,-150 374,-126 428,-126 428,-150"/>
+<text text-anchor="middle" x="401" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbvalu</text>
+</a>
+</g>
+</g>
+<!-- proc~db1extremum&#45;&gt;proc~dbvalu -->
+<g id="proc~~db1max~~CallsGraph_edge4" class="edge">
+<title>proc~db1extremum&#45;&gt;proc~dbvalu</title>
+<path fill="none" stroke="#000000" d="M179.13,-138.84C230.32,-138.64 315.29,-138.32 363.56,-138.14"/>
+<polygon fill="#000000" stroke="#000000" points="363.86,-141.64 373.85,-138.1 363.83,-134.64 363.86,-141.64"/>
+</g>
+<!-- proc~spline_derivative -->
+<g id="proc~~db1max~~CallsGraph_node6" class="node">
+<title>proc~spline_derivative</title>
+<g id="a_proc~~db1max~~CallsGraph_node6"><a xlink:href="../proc/spline_derivative.html" xlink:title="spline_derivative">
+<polygon fill="#d9534f" stroke="#d9534f" points="320.5,-111 217.5,-111 217.5,-87 320.5,-87 320.5,-111"/>
+<text text-anchor="middle" x="269" y="-96.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">spline_derivative</text>
+</a>
+</g>
+</g>
+<!-- proc~db1extremum&#45;&gt;proc~spline_derivative -->
+<g id="proc~~db1max~~CallsGraph_edge5" class="edge">
+<title>proc~db1extremum&#45;&gt;proc~spline_derivative</title>
+<path fill="none" stroke="#000000" d="M175.95,-127C189.23,-122.96 204.21,-118.4 218.17,-114.16"/>
+<polygon fill="#000000" stroke="#000000" points="219.57,-117.39 228.12,-111.13 217.53,-110.69 219.57,-117.39"/>
+</g>
+<!-- proc~spline_roots -->
+<g id="proc~~db1max~~CallsGraph_node7" class="node">
+<title>proc~spline_roots</title>
+<g id="a_proc~~db1max~~CallsGraph_node7"><a xlink:href="../proc/spline_roots.html" xlink:title="spline_roots">
+<polygon fill="#d9534f" stroke="#d9534f" points="307,-69 231,-69 231,-45 307,-45 307,-69"/>
+<text text-anchor="middle" x="269" y="-54.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">spline_roots</text>
+</a>
+</g>
+</g>
+<!-- proc~db1extremum&#45;&gt;proc~spline_roots -->
+<g id="proc~~db1max~~CallsGraph_edge6" class="edge">
+<title>proc~db1extremum&#45;&gt;proc~spline_roots</title>
+<path fill="none" stroke="#000000" d="M149.56,-126.95C164.5,-113.64 190.12,-92.21 215,-78 217.88,-76.36 220.91,-74.78 224.01,-73.29"/>
+<polygon fill="#000000" stroke="#000000" points="225.72,-76.36 233.41,-69.06 222.85,-69.97 225.72,-76.36"/>
+</g>
+<!-- proc~dbspvn -->
+<g id="proc~~db1max~~CallsGraph_node8" class="node">
+<title>proc~dbspvn</title>
+<g id="a_proc~~db1max~~CallsGraph_node8"><a xlink:href="../proc/dbspvn.html" xlink:title="dbspvn">
+<polygon fill="#d9534f" stroke="#d9534f" points="428,-192 374,-192 374,-168 428,-168 428,-192"/>
+<text text-anchor="middle" x="401" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbspvn</text>
+</a>
+</g>
+</g>
+<!-- proc~dbspvd&#45;&gt;proc~dbspvn -->
+<g id="proc~~db1max~~CallsGraph_edge7" class="edge">
+<title>proc~dbspvd&#45;&gt;proc~dbspvn</title>
+<path fill="none" stroke="#000000" d="M296.31,-179.2C315.69,-179.35 342.29,-179.56 363.7,-179.72"/>
+<polygon fill="#000000" stroke="#000000" points="363.71,-183.22 373.73,-179.8 363.76,-176.22 363.71,-183.22"/>
+</g>
+<!-- proc~dintrv -->
+<g id="proc~~db1max~~CallsGraph_node9" class="node">
+<title>proc~dintrv</title>
+<g id="a_proc~~db1max~~CallsGraph_node9"><a xlink:href="../proc/dintrv.html" xlink:title="dintrv">
+<polygon fill="#d9534f" stroke="#d9534f" points="533,-129 479,-129 479,-105 533,-105 533,-129"/>
+<text text-anchor="middle" x="506" y="-114.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dintrv</text>
+</a>
+</g>
+</g>
+<!-- proc~dbvalu&#45;&gt;proc~dintrv -->
+<g id="proc~~db1max~~CallsGraph_edge8" class="edge">
+<title>proc~dbvalu&#45;&gt;proc~dintrv</title>
+<path fill="none" stroke="#000000" d="M428.26,-132.65C440.61,-130.13 455.53,-127.09 468.92,-124.36"/>
+<polygon fill="#000000" stroke="#000000" points="469.69,-127.77 478.79,-122.34 468.29,-120.91 469.69,-127.77"/>
+</g>
+<!-- proc~spline_roots&#45;&gt;proc~dbvalu -->
+<g id="proc~~db1max~~CallsGraph_edge9" class="edge">
+<title>proc~spline_roots&#45;&gt;proc~dbvalu</title>
+<path fill="none" stroke="#000000" d="M306.74,-69.05C312.41,-71.6 318.02,-74.58 323,-78 342.45,-91.34 340.21,-102.74 359,-117 360.81,-118.38 362.73,-119.7 364.7,-120.98"/>
+<polygon fill="#000000" stroke="#000000" points="363.19,-124.15 373.58,-126.21 366.74,-118.12 363.19,-124.15"/>
+</g>
+<!-- proc~in_flat_region -->
+<g id="proc~~db1max~~CallsGraph_node10" class="node">
+<title>proc~in_flat_region</title>
+<g id="a_proc~~db1max~~CallsGraph_node10"><a xlink:href="../proc/in_flat_region.html" xlink:title="in_flat_region">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="443,-108 359,-108 359,-84 443,-84 443,-108"/>
+<text text-anchor="middle" x="401" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">in_flat_region</text>
+</a>
+</g>
+</g>
+<!-- proc~spline_roots&#45;&gt;proc~in_flat_region -->
+<g id="proc~~db1max~~CallsGraph_edge10" class="edge">
+<title>proc~spline_roots&#45;&gt;proc~in_flat_region</title>
+<path fill="none" stroke="#000000" d="M307.25,-68.18C320.54,-72.16 335.74,-76.72 349.93,-80.98"/>
+<polygon fill="#000000" stroke="#000000" points="348.97,-84.35 359.56,-83.87 350.98,-77.64 348.97,-84.35"/>
+</g>
+<!-- proc~root_dup_tol -->
+<g id="proc~~db1max~~CallsGraph_node11" class="node">
+<title>proc~root_dup_tol</title>
+<g id="a_proc~~db1max~~CallsGraph_node11"><a xlink:href="../proc/root_dup_tol.html" xlink:title="root_dup_tol">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="440,-66 362,-66 362,-42 440,-42 440,-66"/>
+<text text-anchor="middle" x="401" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">root_dup_tol</text>
+</a>
+</g>
+</g>
+<!-- proc~spline_roots&#45;&gt;proc~root_dup_tol -->
+<g id="proc~~db1max~~CallsGraph_edge11" class="edge">
+<title>proc~spline_roots&#45;&gt;proc~root_dup_tol</title>
+<path fill="none" stroke="#000000" d="M307.25,-56.14C321.02,-55.82 336.83,-55.46 351.45,-55.12"/>
+<polygon fill="#000000" stroke="#000000" points="351.92,-58.61 361.84,-54.88 351.76,-51.61 351.92,-58.61"/>
+</g>
+<!-- proc~sort_unique -->
+<g id="proc~~db1max~~CallsGraph_node12" class="node">
+<title>proc~sort_unique</title>
+<g id="a_proc~~db1max~~CallsGraph_node12"><a xlink:href="../proc/sort_unique.html" xlink:title="sort_unique">
+<polygon fill="#d9534f" stroke="#d9534f" points="438.5,-24 363.5,-24 363.5,0 438.5,0 438.5,-24"/>
+<text text-anchor="middle" x="401" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">sort_unique</text>
+</a>
+</g>
+</g>
+<!-- proc~spline_roots&#45;&gt;proc~sort_unique -->
+<g id="proc~~db1max~~CallsGraph_edge12" class="edge">
+<title>proc~spline_roots&#45;&gt;proc~sort_unique</title>
+<path fill="none" stroke="#000000" d="M304.84,-44.94C320.43,-39.54 339,-33.12 355.57,-27.38"/>
+<polygon fill="#000000" stroke="#000000" points="356.76,-30.67 365.07,-24.09 354.47,-24.06 356.76,-30.67"/>
+</g>
+<!-- proc~get_temp_x_for_extrap -->
+<g id="proc~~db1max~~CallsGraph_node13" class="node">
+<title>proc~get_temp_x_for_extrap</title>
+<g id="a_proc~~db1max~~CallsGraph_node13"><a xlink:href="../proc/get_temp_x_for_extrap.html" xlink:title="get_temp_x_for_extrap">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="702,-129 569,-129 569,-105 702,-105 702,-129"/>
+<text text-anchor="middle" x="635.5" y="-114.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_temp_x_for_extrap</text>
+</a>
+</g>
+</g>
+<!-- proc~dintrv&#45;&gt;proc~get_temp_x_for_extrap -->
+<g id="proc~~db1max~~CallsGraph_edge13" class="edge">
+<title>proc~dintrv&#45;&gt;proc~get_temp_x_for_extrap</title>
+<path fill="none" stroke="#000000" d="M533.11,-117C540.81,-117 549.66,-117 558.85,-117"/>
+<polygon fill="#000000" stroke="#000000" points="558.92,-120.5 568.92,-117 558.92,-113.5 558.92,-120.5"/>
+</g>
+<!-- proc~in_flat_region&#45;&gt;proc~dintrv -->
+<g id="proc~~db1max~~CallsGraph_edge14" class="edge">
+<title>proc~in_flat_region&#45;&gt;proc~dintrv</title>
+<path fill="none" stroke="#000000" d="M443,-104.36C451.62,-106.12 460.64,-107.96 469.06,-109.67"/>
+<polygon fill="#000000" stroke="#000000" points="468.45,-113.12 478.95,-111.69 469.85,-106.26 468.45,-113.12"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocdb1maxCallsGraph = svgPanZoom('#procdb1maxCallsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~db1max~~CalledByGraph Pages: 1 -->
+<svg id="procdb1maxCalledByGraph" width="252pt" height="32pt"
+ viewBox="0.00 0.00 252.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~db1max~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>proc~~db1max~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 248,-28 248,4 -4,4"/>
+<!-- proc~db1max -->
+<g id="proc~~db1max~~CalledByGraph_node1" class="node">
+<title>proc~db1max</title>
+<polygon fill="none" stroke="black" points="244,-24 188,-24 188,0 244,0 244,-24"/>
+<text text-anchor="middle" x="216" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">db1max</text>
+</g>
+<!-- proc~maximum_1d -->
+<g id="proc~~db1max~~CalledByGraph_node2" class="node">
+<title>proc~maximum_1d</title>
+<g id="a_proc~~db1max~~CalledByGraph_node2"><a xlink:href="../proc/maximum_1d.html" xlink:title="bspline_1d%maximum_1d">
+<polygon fill="#d9534f" stroke="#d9534f" points="152,-24 0,-24 0,0 152,0 152,-24"/>
+<text text-anchor="middle" x="76" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d%maximum_1d</text>
+</a>
+</g>
+</g>
+<!-- proc~maximum_1d&#45;&gt;proc~db1max -->
+<g id="proc~~db1max~~CalledByGraph_edge1" class="edge">
+<title>proc~maximum_1d&#45;&gt;proc~db1max</title>
+<path fill="none" stroke="#000000" d="M152.06,-12C160.94,-12 169.68,-12 177.7,-12"/>
+<polygon fill="#000000" stroke="#000000" points="177.76,-15.5 187.76,-12 177.76,-8.5 177.76,-15.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">pure subroutine </span><span class="n">db1max</span><span class="p">(</span><span class="n">tx</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">kx</span><span class="p">,</span><span class="n">bcoef</span><span class="p">,</span><span class="n">xa</span><span class="p">,</span><span class="n">xb</span><span class="p">,</span><span class="n">xmax</span><span class="p">,</span><span class="n">fmax</span><span class="p">,</span><span class="n">iflag</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">implicit none</span>
+
+<span class="k">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">               </span><span class="kd">::</span><span class="w"> </span><span class="n">nx</span><span class="w">     </span><span class="c">!! number of b-spline coefficients</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">               </span><span class="kd">::</span><span class="w"> </span><span class="n">kx</span><span class="w">     </span><span class="c">!! order of the b-spline, `kx &gt;= 2`</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="n">nx</span><span class="o">+</span><span class="n">kx</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tx</span><span class="w">     </span><span class="c">!! knot array</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="n">nx</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">    </span><span class="kd">::</span><span class="w"> </span><span class="n">bcoef</span><span class="w">  </span><span class="c">!! b-spline coefficient array</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">                  </span><span class="kd">::</span><span class="w"> </span><span class="n">xa</span><span class="w">     </span><span class="c">!! left end of the interval, in `t(kx) &lt;= x &lt;= t(nx+1)`</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">                  </span><span class="kd">::</span><span class="w"> </span><span class="n">xb</span><span class="w">     </span><span class="c">!! right end of the interval, in `t(kx) &lt;= x &lt;= t(nx+1)`</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">                 </span><span class="kd">::</span><span class="w"> </span><span class="n">xmax</span><span class="w">   </span><span class="c">!! location of the maximum</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">                 </span><span class="kd">::</span><span class="w"> </span><span class="n">fmax</span><span class="w">   </span><span class="c">!! maximum value of the spline</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">              </span><span class="kd">::</span><span class="w"> </span><span class="n">iflag</span><span class="w">  </span><span class="c">!! status flag (see [[db1min]])</span>
+
+<span class="w">    </span><span class="k">call </span><span class="n">db1extremum</span><span class="p">(</span><span class="n">tx</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">kx</span><span class="p">,</span><span class="n">bcoef</span><span class="p">,</span><span class="n">xa</span><span class="p">,</span><span class="n">xb</span><span class="p">,.</span><span class="n">true</span><span class="p">.,</span><span class="n">xmax</span><span class="p">,</span><span class="n">fmax</span><span class="p">,</span><span class="n">iflag</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">end subroutine </span><span class="n">db1max</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              bspline-fortran
+ was developed by Jacob Williams<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

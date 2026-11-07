@@ -1,0 +1,1696 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="BSPLINE-FORTRAN -- Multidimensional B-Spline Interpolation of Data on a Regular Grid">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>dintrv &ndash; bspline-fortran</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">bspline-fortran </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>dintrv
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.9% of total for procedures.">83 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/bspline_sub_module.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/bspline_sub_module.f90.html'>bspline_sub_module.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/bspline_sub_module.html'>bspline_sub_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">dintrv</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/dintrv.html#src">dintrv</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>private pure subroutine dintrv(xt, lxt, xx, ilo, ileft, mflag, extrap)  
+</h2>
+    
+
+    <p>Computes the largest integer <code>ileft</code> in 1 <script type="math/tex"> \le </script>
+<code>ileft</code> <script type="math/tex"> \le </script>
+<code>lxt</code>
+  such that <code>xt(ileft)</code> <script type="math/tex"> \le </script>
+<code>x</code> where <code>xt(*)</code> is a subdivision of
+  the <code>x</code> interval.
+  precisely,</p>
+<div class="codehilite"><pre><span></span><code><span class="w">         </span><span class="k">if            </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">xt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w">   </span><span class="k">then </span><span class="n">ileft</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="w">   </span><span class="n">mflag</span><span class="o">=-</span><span class="mi">1</span>
+<span class="w">         </span><span class="k">if   </span><span class="n">xt</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">xt</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">then </span><span class="n">ileft</span><span class="o">=</span><span class="n">i</span><span class="p">,</span><span class="w">   </span><span class="n">mflag</span><span class="o">=</span><span class="mi">0</span>
+<span class="w">         </span><span class="k">if </span><span class="n">xt</span><span class="p">(</span><span class="n">lxt</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">x</span><span class="w">           </span><span class="k">then </span><span class="n">ileft</span><span class="o">=</span><span class="n">lxt</span><span class="p">,</span><span class="w"> </span><span class="n">mflag</span><span class="o">=-</span><span class="mi">2</span>
+</code></pre></div>
+
+<p>that is, when multiplicities are present in the break point
+  to the left of <code>x</code>, the largest index is taken for <code>ileft</code>.</p>
+<h3>History</h3>
+<ul>
+<li>interv written by carl de boor [5]</li>
+<li>dintrv author: amos, d. e., (snla) : date written 800901</li>
+<li>revision date 820801</li>
+<li>Jacob Williams, 2/24/2015 : updated to free-form Fortran.</li>
+<li>Jacob Williams, 2/17/2016 : additional refactoring (eliminated GOTOs).</li>
+<li>Jacob Williams, 3/4/2017 : added extrapolation option.</li>
+</ul>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-xt~3"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>xt</strong></td>
+            <td>
+                <p>a knot or break point vector of length <code>lxt</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-lxt"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>lxt</strong></td>
+            <td>
+                <p>length of the <code>xt</code> vector</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-xx"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>xx</strong></td>
+            <td>
+                <p>argument</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ilo~3"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ilo</strong></td>
+            <td>
+                <p>an initialization parameter which must be set
+to 1 the first time the spline array <code>xt</code> is
+processed by dintrv. <code>ilo</code> contains information for
+efficient processing after the initial call and <code>ilo</code>
+must not be changed by the user.  distinct splines
+require distinct <code>ilo</code> parameters.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ileft~2"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ileft</strong></td>
+            <td>
+                <p>largest integer satisfying <code>xt(ileft)</code> <script type="math/tex"> \le </script>
+<code>x</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mflag~4"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mflag</strong></td>
+            <td>
+                <p>signals when <code>x</code> lies out of bounds</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-extrap~17"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>extrap</strong></td>
+            <td>
+                <p>if extrapolation is allowed
+(if not present, default is False)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~dintrv~~CallsGraph Pages: 1 -->
+<svg id="procdintrvCallsGraph" width="231pt" height="32pt"
+ viewBox="0.00 0.00 231.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~dintrv~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>proc~~dintrv~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 227,-28 227,4 -4,4"/>
+<!-- proc~dintrv -->
+<g id="proc~~dintrv~~CallsGraph_node1" class="node">
+<title>proc~dintrv</title>
+<polygon fill="none" stroke="black" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">dintrv</text>
+</g>
+<!-- proc~get_temp_x_for_extrap -->
+<g id="proc~~dintrv~~CallsGraph_node2" class="node">
+<title>proc~get_temp_x_for_extrap</title>
+<g id="a_proc~~dintrv~~CallsGraph_node2"><a xlink:href="../proc/get_temp_x_for_extrap.html" xlink:title="get_temp_x_for_extrap">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="223,-24 90,-24 90,0 223,0 223,-24"/>
+<text text-anchor="middle" x="156.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_temp_x_for_extrap</text>
+</a>
+</g>
+</g>
+<!-- proc~dintrv&#45;&gt;proc~get_temp_x_for_extrap -->
+<g id="proc~~dintrv~~CallsGraph_edge1" class="edge">
+<title>proc~dintrv&#45;&gt;proc~get_temp_x_for_extrap</title>
+<path fill="none" stroke="#000000" d="M54.11,-12C61.81,-12 70.66,-12 79.85,-12"/>
+<polygon fill="#000000" stroke="#000000" points="79.92,-15.5 89.92,-12 79.92,-8.5 79.92,-15.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~dintrv~~CalledByGraph Pages: 1 -->
+<svg id="procdintrvCalledByGraph" width="641pt" height="569pt"
+ viewBox="0.00 0.00 641.00 569.38" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~dintrv~~CalledByGraph" class="graph" transform="scale(0.59 0.59) rotate(0) translate(4 958)">
+<title>proc~~dintrv~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-958 1079,-958 1079,4 -4,4"/>
+<!-- proc~dintrv -->
+<g id="proc~~dintrv~~CalledByGraph_node1" class="node">
+<title>proc~dintrv</title>
+<polygon fill="none" stroke="black" points="1075,-692 1021,-692 1021,-668 1075,-668 1075,-692"/>
+<text text-anchor="middle" x="1048" y="-677.6" font-family="Helvetica,sans-Serif" font-size="10.50">dintrv</text>
+</g>
+<!-- proc~dbfqad -->
+<g id="proc~~dintrv~~CalledByGraph_node2" class="node">
+<title>proc~dbfqad</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node2"><a xlink:href="../proc/dbfqad.html" xlink:title="dbfqad">
+<polygon fill="#d9534f" stroke="#d9534f" points="711.5,-630 657.5,-630 657.5,-606 711.5,-606 711.5,-630"/>
+<text text-anchor="middle" x="684.5" y="-615.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbfqad</text>
+</a>
+</g>
+</g>
+<!-- proc~dbfqad&#45;&gt;proc~dintrv -->
+<g id="proc~~dintrv~~CalledByGraph_edge1" class="edge">
+<title>proc~dbfqad&#45;&gt;proc~dintrv</title>
+<path fill="none" stroke="#000000" d="M711.68,-609.16C726.78,-604.52 746.24,-599.34 764,-597 804.1,-591.73 815.39,-588.81 855,-597 915.72,-609.56 980.85,-642.29 1017.5,-662.69"/>
+<polygon fill="#000000" stroke="#000000" points="1016.19,-665.97 1026.62,-667.85 1019.64,-659.88 1016.19,-665.97"/>
+</g>
+<!-- proc~dbsgq8 -->
+<g id="proc~~dintrv~~CalledByGraph_node27" class="node">
+<title>proc~dbsgq8</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node27"><a xlink:href="../proc/dbsgq8.html" xlink:title="dbsgq8">
+<polygon fill="#d9534f" stroke="#d9534f" points="836.5,-630 782.5,-630 782.5,-606 836.5,-606 836.5,-630"/>
+<text text-anchor="middle" x="809.5" y="-615.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbsgq8</text>
+</a>
+</g>
+</g>
+<!-- proc~dbfqad&#45;&gt;proc~dbsgq8 -->
+<g id="proc~~dintrv~~CalledByGraph_edge51" class="edge">
+<title>proc~dbfqad&#45;&gt;proc~dbsgq8</title>
+<path fill="none" stroke="#000000" d="M711.59,-618C729.28,-618 752.9,-618 772.4,-618"/>
+<polygon fill="#000000" stroke="#000000" points="772.45,-621.5 782.45,-618 772.45,-614.5 772.45,-621.5"/>
+</g>
+<!-- proc~dbint4 -->
+<g id="proc~~dintrv~~CalledByGraph_node3" class="node">
+<title>proc~dbint4</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node3"><a xlink:href="../proc/dbint4.html" xlink:title="dbint4">
+<polygon fill="#d9534f" stroke="#d9534f" points="965,-130 911,-130 911,-106 965,-106 965,-130"/>
+<text text-anchor="middle" x="938" y="-115.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbint4</text>
+</a>
+</g>
+</g>
+<!-- proc~dbint4&#45;&gt;proc~dintrv -->
+<g id="proc~~dintrv~~CalledByGraph_edge2" class="edge">
+<title>proc~dbint4&#45;&gt;proc~dintrv</title>
+<path fill="none" stroke="#000000" d="M941.36,-130.26C955.08,-201.68 1024.73,-564.09 1042.74,-657.84"/>
+<polygon fill="#000000" stroke="#000000" points="1039.35,-658.74 1044.67,-667.9 1046.22,-657.42 1039.35,-658.74"/>
+</g>
+<!-- proc~dbsqad -->
+<g id="proc~~dintrv~~CalledByGraph_node4" class="node">
+<title>proc~dbsqad</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node4"><a xlink:href="../proc/dbsqad.html" xlink:title="dbsqad">
+<polygon fill="#d9534f" stroke="#d9534f" points="836.5,-954 782.5,-954 782.5,-930 836.5,-930 836.5,-954"/>
+<text text-anchor="middle" x="809.5" y="-939.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbsqad</text>
+</a>
+</g>
+</g>
+<!-- proc~dbsqad&#45;&gt;proc~dintrv -->
+<g id="proc~~dintrv~~CalledByGraph_edge3" class="edge">
+<title>proc~dbsqad&#45;&gt;proc~dintrv</title>
+<path fill="none" stroke="#000000" d="M836.74,-933.92C874.54,-921.01 944.26,-892.26 985,-845 1021.6,-802.54 1037.57,-736.37 1043.69,-702.15"/>
+<polygon fill="#000000" stroke="#000000" points="1047.15,-702.68 1045.34,-692.24 1040.24,-701.53 1047.15,-702.68"/>
+</g>
+<!-- proc~dbvalu -->
+<g id="proc~~dintrv~~CalledByGraph_node5" class="node">
+<title>proc~dbvalu</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node5"><a xlink:href="../proc/dbvalu.html" xlink:title="dbvalu">
+<polygon fill="#d9534f" stroke="#d9534f" points="965,-775 911,-775 911,-751 965,-751 965,-775"/>
+<text text-anchor="middle" x="938" y="-760.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbvalu</text>
+</a>
+</g>
+</g>
+<!-- proc~dbsqad&#45;&gt;proc~dbvalu -->
+<g id="proc~~dintrv~~CalledByGraph_edge16" class="edge">
+<title>proc~dbsqad&#45;&gt;proc~dbvalu</title>
+<path fill="none" stroke="#000000" d="M819.98,-929.64C829.44,-917.03 844.1,-896.71 855,-878 873.61,-846.05 868.59,-832.41 891,-803 896.94,-795.21 904.59,-787.83 911.95,-781.57"/>
+<polygon fill="#000000" stroke="#000000" points="914.16,-784.29 919.71,-775.26 909.75,-778.85 914.16,-784.29"/>
+</g>
+<!-- proc~dbvalu&#45;&gt;proc~dintrv -->
+<g id="proc~~dintrv~~CalledByGraph_edge4" class="edge">
+<title>proc~dbvalu&#45;&gt;proc~dintrv</title>
+<path fill="none" stroke="#000000" d="M954.94,-750.75C972.99,-736.88 1002.58,-714.14 1023.33,-698.19"/>
+<polygon fill="#000000" stroke="#000000" points="1025.55,-700.9 1031.35,-692.03 1021.29,-695.35 1025.55,-700.9"/>
+</g>
+<!-- proc~dbvalu_weights -->
+<g id="proc~~dintrv~~CalledByGraph_node6" class="node">
+<title>proc~dbvalu_weights</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node6"><a xlink:href="../proc/dbvalu_weights.html" xlink:title="dbvalu_weights">
+<polygon fill="#d9534f" stroke="#d9534f" points="985,-403 891,-403 891,-379 985,-379 985,-403"/>
+<text text-anchor="middle" x="938" y="-388.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dbvalu_weights</text>
+</a>
+</g>
+</g>
+<!-- proc~dbvalu_weights&#45;&gt;proc~dintrv -->
+<g id="proc~~dintrv~~CalledByGraph_edge5" class="edge">
+<title>proc~dbvalu_weights&#45;&gt;proc~dintrv</title>
+<path fill="none" stroke="#000000" d="M943.5,-403.05C960.04,-447.3 1017.56,-601.22 1038.93,-658.4"/>
+<polygon fill="#000000" stroke="#000000" points="1035.7,-659.76 1042.48,-667.9 1042.26,-657.31 1035.7,-659.76"/>
+</g>
+<!-- proc~in_flat_region -->
+<g id="proc~~dintrv~~CalledByGraph_node7" class="node">
+<title>proc~in_flat_region</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node7"><a xlink:href="../proc/in_flat_region.html" xlink:title="in_flat_region">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="980,-836 896,-836 896,-812 980,-812 980,-836"/>
+<text text-anchor="middle" x="938" y="-821.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">in_flat_region</text>
+</a>
+</g>
+</g>
+<!-- proc~in_flat_region&#45;&gt;proc~dintrv -->
+<g id="proc~~dintrv~~CalledByGraph_edge6" class="edge">
+<title>proc~in_flat_region&#45;&gt;proc~dintrv</title>
+<path fill="none" stroke="#000000" d="M955.48,-811.79C964.81,-804.39 976.31,-794.39 985,-784 1006.86,-757.85 1025.91,-723.1 1036.93,-701.13"/>
+<polygon fill="#000000" stroke="#000000" points="1040.14,-702.54 1041.41,-692.02 1033.86,-699.45 1040.14,-702.54"/>
+</g>
+<!-- proc~db1extremum -->
+<g id="proc~~dintrv~~CalledByGraph_node8" class="node">
+<title>proc~db1extremum</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node8"><a xlink:href="../proc/db1extremum.html" xlink:title="db1extremum">
+<polygon fill="#d9534f" stroke="#d9534f" points="728,-815 641,-815 641,-791 728,-791 728,-815"/>
+<text text-anchor="middle" x="684.5" y="-800.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1extremum</text>
+</a>
+</g>
+</g>
+<!-- proc~db1extremum&#45;&gt;proc~dbvalu -->
+<g id="proc~~dintrv~~CalledByGraph_edge11" class="edge">
+<title>proc~db1extremum&#45;&gt;proc~dbvalu</title>
+<path fill="none" stroke="#000000" d="M728.16,-796.21C776.66,-788.5 855,-776.04 900.69,-768.78"/>
+<polygon fill="#000000" stroke="#000000" points="901.41,-772.2 910.74,-767.18 900.31,-765.29 901.41,-772.2"/>
+</g>
+<!-- proc~spline_roots -->
+<g id="proc~~dintrv~~CalledByGraph_node28" class="node">
+<title>proc~spline_roots</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node28"><a xlink:href="../proc/spline_roots.html" xlink:title="spline_roots">
+<polygon fill="#d9534f" stroke="#d9534f" points="847.5,-836 771.5,-836 771.5,-812 847.5,-812 847.5,-836"/>
+<text text-anchor="middle" x="809.5" y="-821.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">spline_roots</text>
+</a>
+</g>
+</g>
+<!-- proc~db1extremum&#45;&gt;proc~spline_roots -->
+<g id="proc~~dintrv~~CalledByGraph_edge52" class="edge">
+<title>proc~db1extremum&#45;&gt;proc~spline_roots</title>
+<path fill="none" stroke="#000000" d="M728.17,-810.29C738.8,-812.1 750.25,-814.05 761.08,-815.9"/>
+<polygon fill="#000000" stroke="#000000" points="760.79,-819.4 771.23,-817.64 761.96,-812.5 760.79,-819.4"/>
+</g>
+<!-- proc~db1fqad -->
+<g id="proc~~dintrv~~CalledByGraph_node9" class="node">
+<title>proc~db1fqad</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node9"><a xlink:href="../proc/db1fqad.html" xlink:title="db1fqad">
+<polygon fill="#d9534f" stroke="#d9534f" points="508,-630 451,-630 451,-606 508,-606 508,-630"/>
+<text text-anchor="middle" x="479.5" y="-615.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1fqad</text>
+</a>
+</g>
+</g>
+<!-- proc~db1fqad&#45;&gt;proc~dbfqad -->
+<g id="proc~~dintrv~~CalledByGraph_edge7" class="edge">
+<title>proc~db1fqad&#45;&gt;proc~dbfqad</title>
+<path fill="none" stroke="#000000" d="M508.3,-618C544.38,-618 607.43,-618 647.24,-618"/>
+<polygon fill="#000000" stroke="#000000" points="647.32,-621.5 657.32,-618 647.32,-614.5 647.32,-621.5"/>
+</g>
+<!-- proc~db1ink_alt -->
+<g id="proc~~dintrv~~CalledByGraph_node10" class="node">
+<title>proc~db1ink_alt</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node10"><a xlink:href="../proc/db1ink_alt.html" xlink:title="db1ink_alt">
+<polygon fill="#d9534f" stroke="#d9534f" points="843,-130 776,-130 776,-106 843,-106 843,-130"/>
+<text text-anchor="middle" x="809.5" y="-115.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1ink_alt</text>
+</a>
+</g>
+</g>
+<!-- proc~db1ink_alt&#45;&gt;proc~dbint4 -->
+<g id="proc~~dintrv~~CalledByGraph_edge8" class="edge">
+<title>proc~db1ink_alt&#45;&gt;proc~dbint4</title>
+<path fill="none" stroke="#000000" d="M843.08,-118C860.7,-118 882.52,-118 900.69,-118"/>
+<polygon fill="#000000" stroke="#000000" points="900.9,-121.5 910.9,-118 900.9,-114.5 900.9,-121.5"/>
+</g>
+<!-- proc~db1ink_alt_2 -->
+<g id="proc~~dintrv~~CalledByGraph_node11" class="node">
+<title>proc~db1ink_alt_2</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node11"><a xlink:href="../proc/db1ink_alt_2.html" xlink:title="db1ink_alt_2">
+<polygon fill="#d9534f" stroke="#d9534f" points="849,-88 770,-88 770,-64 849,-64 849,-88"/>
+<text text-anchor="middle" x="809.5" y="-73.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1ink_alt_2</text>
+</a>
+</g>
+</g>
+<!-- proc~db1ink_alt_2&#45;&gt;proc~dbint4 -->
+<g id="proc~~dintrv~~CalledByGraph_edge9" class="edge">
+<title>proc~db1ink_alt_2&#45;&gt;proc~dbint4</title>
+<path fill="none" stroke="#000000" d="M846.75,-88.04C863.84,-93.71 884.16,-100.46 901.2,-106.11"/>
+<polygon fill="#000000" stroke="#000000" points="900.2,-109.47 910.79,-109.3 902.41,-102.83 900.2,-109.47"/>
+</g>
+<!-- proc~db1root -->
+<g id="proc~~dintrv~~CalledByGraph_node12" class="node">
+<title>proc~db1root</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node12"><a xlink:href="../proc/db1root.html" xlink:title="db1root">
+<polygon fill="#d9534f" stroke="#d9534f" points="711.5,-876 657.5,-876 657.5,-852 711.5,-852 711.5,-876"/>
+<text text-anchor="middle" x="684.5" y="-861.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1root</text>
+</a>
+</g>
+</g>
+<!-- proc~db1root&#45;&gt;proc~dbvalu -->
+<g id="proc~~dintrv~~CalledByGraph_edge12" class="edge">
+<title>proc~db1root&#45;&gt;proc~dbvalu</title>
+<path fill="none" stroke="#000000" d="M711.62,-866.76C746.45,-869.22 809.07,-869.32 855,-845 876.73,-833.5 873.68,-820.45 891,-803 898.23,-795.72 906.58,-788.22 914.16,-781.71"/>
+<polygon fill="#000000" stroke="#000000" points="916.62,-784.21 922.01,-775.09 912.11,-778.86 916.62,-784.21"/>
+</g>
+<!-- proc~db1root&#45;&gt;proc~in_flat_region -->
+<g id="proc~~dintrv~~CalledByGraph_edge29" class="edge">
+<title>proc~db1root&#45;&gt;proc~in_flat_region</title>
+<path fill="none" stroke="#000000" d="M711.67,-872.01C745.52,-881.05 805.93,-892.71 855,-878 878.01,-871.1 900.53,-855.44 916.13,-842.75"/>
+<polygon fill="#000000" stroke="#000000" points="918.65,-845.2 924.05,-836.08 914.14,-839.85 918.65,-845.2"/>
+</g>
+<!-- proc~db1root&#45;&gt;proc~spline_roots -->
+<g id="proc~~dintrv~~CalledByGraph_edge53" class="edge">
+<title>proc~db1root&#45;&gt;proc~spline_roots</title>
+<path fill="none" stroke="#000000" d="M711.59,-855.52C726.09,-850.8 744.57,-844.79 761.5,-839.28"/>
+<polygon fill="#000000" stroke="#000000" points="762.82,-842.53 771.25,-836.11 760.66,-835.88 762.82,-842.53"/>
+</g>
+<!-- proc~db1sqad -->
+<g id="proc~~dintrv~~CalledByGraph_node13" class="node">
+<title>proc~db1sqad</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node13"><a xlink:href="../proc/db1sqad.html" xlink:title="db1sqad">
+<polygon fill="#d9534f" stroke="#d9534f" points="713.5,-954 655.5,-954 655.5,-930 713.5,-930 713.5,-954"/>
+<text text-anchor="middle" x="684.5" y="-939.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1sqad</text>
+</a>
+</g>
+</g>
+<!-- proc~db1sqad&#45;&gt;proc~dbsqad -->
+<g id="proc~~dintrv~~CalledByGraph_edge10" class="edge">
+<title>proc~db1sqad&#45;&gt;proc~dbsqad</title>
+<path fill="none" stroke="#000000" d="M713.72,-942C730.99,-942 753.28,-942 771.9,-942"/>
+<polygon fill="#000000" stroke="#000000" points="772.1,-945.5 782.1,-942 772.1,-938.5 772.1,-945.5"/>
+</g>
+<!-- proc~db1val_alt -->
+<g id="proc~~dintrv~~CalledByGraph_node14" class="node">
+<title>proc~db1val_alt</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node14"><a xlink:href="../proc/db1val_alt.html" xlink:title="db1val_alt">
+<polygon fill="#d9534f" stroke="#d9534f" points="843,-756 776,-756 776,-732 843,-732 843,-756"/>
+<text text-anchor="middle" x="809.5" y="-741.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1val_alt</text>
+</a>
+</g>
+</g>
+<!-- proc~db1val_alt&#45;&gt;proc~dbvalu -->
+<g id="proc~~dintrv~~CalledByGraph_edge13" class="edge">
+<title>proc~db1val_alt&#45;&gt;proc~dbvalu</title>
+<path fill="none" stroke="#000000" d="M843.08,-748.89C860.78,-751.55 882.72,-754.85 900.94,-757.58"/>
+<polygon fill="#000000" stroke="#000000" points="900.5,-761.06 910.9,-759.08 901.53,-754.13 900.5,-761.06"/>
+</g>
+<!-- proc~db1val_default -->
+<g id="proc~~dintrv~~CalledByGraph_node15" class="node">
+<title>proc~db1val_default</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node15"><a xlink:href="../proc/db1val_default.html" xlink:title="db1val_default">
+<polygon fill="#d9534f" stroke="#d9534f" points="855,-714 764,-714 764,-690 855,-690 855,-714"/>
+<text text-anchor="middle" x="809.5" y="-699.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1val_default</text>
+</a>
+</g>
+</g>
+<!-- proc~db1val_default&#45;&gt;proc~dbvalu -->
+<g id="proc~~dintrv~~CalledByGraph_edge14" class="edge">
+<title>proc~db1val_default&#45;&gt;proc~dbvalu</title>
+<path fill="none" stroke="#000000" d="M836.41,-714.16C842.51,-717.04 848.99,-720.12 855,-723 870.81,-730.59 888.29,-739.1 903.03,-746.31"/>
+<polygon fill="#000000" stroke="#000000" points="901.76,-749.58 912.28,-750.84 904.84,-743.3 901.76,-749.58"/>
+</g>
+<!-- proc~db1val_multi -->
+<g id="proc~~dintrv~~CalledByGraph_node16" class="node">
+<title>proc~db1val_multi</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node16"><a xlink:href="../proc/db1val_multi.html" xlink:title="db1val_multi">
+<polygon fill="#d9534f" stroke="#d9534f" points="850,-672 769,-672 769,-648 850,-648 850,-672"/>
+<text text-anchor="middle" x="809.5" y="-657.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1val_multi</text>
+</a>
+</g>
+</g>
+<!-- proc~db1val_multi&#45;&gt;proc~dbvalu_weights -->
+<g id="proc~~dintrv~~CalledByGraph_edge18" class="edge">
+<title>proc~db1val_multi&#45;&gt;proc~dbvalu_weights</title>
+<path fill="none" stroke="#000000" d="M844.18,-647.86C848.19,-645.39 851.94,-642.45 855,-639 914.41,-571.89 930.96,-460.57 935.42,-413.32"/>
+<polygon fill="#000000" stroke="#000000" points="938.92,-413.5 936.28,-403.24 931.94,-412.91 938.92,-413.5"/>
+</g>
+<!-- proc~db2val_default -->
+<g id="proc~~dintrv~~CalledByGraph_node17" class="node">
+<title>proc~db2val_default</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node17"><a xlink:href="../proc/db2val_default.html" xlink:title="db2val_default">
+<polygon fill="#d9534f" stroke="#d9534f" points="855,-340 764,-340 764,-316 855,-316 855,-340"/>
+<text text-anchor="middle" x="809.5" y="-325.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db2val_default</text>
+</a>
+</g>
+</g>
+<!-- proc~db2val_default&#45;&gt;proc~dbvalu_weights -->
+<g id="proc~~dintrv~~CalledByGraph_edge19" class="edge">
+<title>proc~db2val_default&#45;&gt;proc~dbvalu_weights</title>
+<path fill="none" stroke="#000000" d="M836.45,-340.07C842.55,-342.96 849.02,-346.06 855,-349 871.52,-357.13 889.76,-366.44 904.84,-374.22"/>
+<polygon fill="#000000" stroke="#000000" points="903.28,-377.36 913.77,-378.85 906.5,-371.14 903.28,-377.36"/>
+</g>
+<!-- proc~db2val_multi -->
+<g id="proc~~dintrv~~CalledByGraph_node18" class="node">
+<title>proc~db2val_multi</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node18"><a xlink:href="../proc/db2val_multi.html" xlink:title="db2val_multi">
+<polygon fill="#d9534f" stroke="#d9534f" points="850,-382 769,-382 769,-358 850,-358 850,-382"/>
+<text text-anchor="middle" x="809.5" y="-367.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db2val_multi</text>
+</a>
+</g>
+</g>
+<!-- proc~db2val_multi&#45;&gt;proc~dbvalu_weights -->
+<g id="proc~~dintrv~~CalledByGraph_edge20" class="edge">
+<title>proc~db2val_multi&#45;&gt;proc~dbvalu_weights</title>
+<path fill="none" stroke="#000000" d="M850.18,-376.59C859.85,-378.19 870.38,-379.94 880.67,-381.65"/>
+<polygon fill="#000000" stroke="#000000" points="880.39,-385.15 890.83,-383.34 881.54,-378.24 880.39,-385.15"/>
+</g>
+<!-- proc~db3val_default -->
+<g id="proc~~dintrv~~CalledByGraph_node19" class="node">
+<title>proc~db3val_default</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node19"><a xlink:href="../proc/db3val_default.html" xlink:title="db3val_default">
+<polygon fill="#d9534f" stroke="#d9534f" points="855,-256 764,-256 764,-232 855,-232 855,-256"/>
+<text text-anchor="middle" x="809.5" y="-241.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db3val_default</text>
+</a>
+</g>
+</g>
+<!-- proc~db3val_default&#45;&gt;proc~dbvalu_weights -->
+<g id="proc~~dintrv~~CalledByGraph_edge21" class="edge">
+<title>proc~db3val_default&#45;&gt;proc~dbvalu_weights</title>
+<path fill="none" stroke="#000000" d="M842.02,-256.15C846.64,-258.69 851.14,-261.63 855,-265 889.16,-294.8 914.71,-342.16 927.61,-369.53"/>
+<polygon fill="#000000" stroke="#000000" points="924.44,-371.01 931.78,-378.65 930.8,-368.1 924.44,-371.01"/>
+</g>
+<!-- proc~db3val_multi -->
+<g id="proc~~dintrv~~CalledByGraph_node20" class="node">
+<title>proc~db3val_multi</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node20"><a xlink:href="../proc/db3val_multi.html" xlink:title="db3val_multi">
+<polygon fill="#d9534f" stroke="#d9534f" points="850,-298 769,-298 769,-274 850,-274 850,-298"/>
+<text text-anchor="middle" x="809.5" y="-283.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db3val_multi</text>
+</a>
+</g>
+</g>
+<!-- proc~db3val_multi&#45;&gt;proc~dbvalu_weights -->
+<g id="proc~~dintrv~~CalledByGraph_edge22" class="edge">
+<title>proc~db3val_multi&#45;&gt;proc~dbvalu_weights</title>
+<path fill="none" stroke="#000000" d="M840.06,-298.12C845.23,-300.75 850.41,-303.73 855,-307 880.91,-325.46 905.71,-352.64 921.12,-371.04"/>
+<polygon fill="#000000" stroke="#000000" points="918.45,-373.31 927.51,-378.81 923.86,-368.87 918.45,-373.31"/>
+</g>
+<!-- proc~db4val_default -->
+<g id="proc~~dintrv~~CalledByGraph_node21" class="node">
+<title>proc~db4val_default</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node21"><a xlink:href="../proc/db4val_default.html" xlink:title="db4val_default">
+<polygon fill="#d9534f" stroke="#d9534f" points="855,-550 764,-550 764,-526 855,-526 855,-550"/>
+<text text-anchor="middle" x="809.5" y="-535.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db4val_default</text>
+</a>
+</g>
+</g>
+<!-- proc~db4val_default&#45;&gt;proc~dbvalu_weights -->
+<g id="proc~~dintrv~~CalledByGraph_edge23" class="edge">
+<title>proc~db4val_default&#45;&gt;proc~dbvalu_weights</title>
+<path fill="none" stroke="#000000" d="M842.02,-525.85C846.64,-523.31 851.14,-520.37 855,-517 889.16,-487.2 914.71,-439.84 927.61,-412.47"/>
+<polygon fill="#000000" stroke="#000000" points="930.8,-413.9 931.78,-403.35 924.44,-410.99 930.8,-413.9"/>
+</g>
+<!-- proc~db4val_multi -->
+<g id="proc~~dintrv~~CalledByGraph_node22" class="node">
+<title>proc~db4val_multi</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node22"><a xlink:href="../proc/db4val_multi.html" xlink:title="db4val_multi">
+<polygon fill="#d9534f" stroke="#d9534f" points="850,-508 769,-508 769,-484 850,-484 850,-508"/>
+<text text-anchor="middle" x="809.5" y="-493.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db4val_multi</text>
+</a>
+</g>
+</g>
+<!-- proc~db4val_multi&#45;&gt;proc~dbvalu_weights -->
+<g id="proc~~dintrv~~CalledByGraph_edge24" class="edge">
+<title>proc~db4val_multi&#45;&gt;proc~dbvalu_weights</title>
+<path fill="none" stroke="#000000" d="M840.06,-483.88C845.23,-481.25 850.41,-478.27 855,-475 880.91,-456.54 905.71,-429.36 921.12,-410.96"/>
+<polygon fill="#000000" stroke="#000000" points="923.86,-413.13 927.51,-403.19 918.45,-408.69 923.86,-413.13"/>
+</g>
+<!-- proc~db5val_default -->
+<g id="proc~~dintrv~~CalledByGraph_node23" class="node">
+<title>proc~db5val_default</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node23"><a xlink:href="../proc/db5val_default.html" xlink:title="db5val_default">
+<polygon fill="#d9534f" stroke="#d9534f" points="855,-466 764,-466 764,-442 855,-442 855,-466"/>
+<text text-anchor="middle" x="809.5" y="-451.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db5val_default</text>
+</a>
+</g>
+</g>
+<!-- proc~db5val_default&#45;&gt;proc~dbvalu_weights -->
+<g id="proc~~dintrv~~CalledByGraph_edge25" class="edge">
+<title>proc~db5val_default&#45;&gt;proc~dbvalu_weights</title>
+<path fill="none" stroke="#000000" d="M836.45,-441.93C842.55,-439.04 849.02,-435.94 855,-433 871.52,-424.87 889.76,-415.56 904.84,-407.78"/>
+<polygon fill="#000000" stroke="#000000" points="906.5,-410.86 913.77,-403.15 903.28,-404.64 906.5,-410.86"/>
+</g>
+<!-- proc~db5val_multi -->
+<g id="proc~~dintrv~~CalledByGraph_node24" class="node">
+<title>proc~db5val_multi</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node24"><a xlink:href="../proc/db5val_multi.html" xlink:title="db5val_multi">
+<polygon fill="#d9534f" stroke="#d9534f" points="850,-424 769,-424 769,-400 850,-400 850,-424"/>
+<text text-anchor="middle" x="809.5" y="-409.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db5val_multi</text>
+</a>
+</g>
+</g>
+<!-- proc~db5val_multi&#45;&gt;proc~dbvalu_weights -->
+<g id="proc~~dintrv~~CalledByGraph_edge26" class="edge">
+<title>proc~db5val_multi&#45;&gt;proc~dbvalu_weights</title>
+<path fill="none" stroke="#000000" d="M850.18,-405.41C859.85,-403.81 870.38,-402.06 880.67,-400.35"/>
+<polygon fill="#000000" stroke="#000000" points="881.54,-403.76 890.83,-398.66 880.39,-396.85 881.54,-403.76"/>
+</g>
+<!-- proc~db6val_default -->
+<g id="proc~~dintrv~~CalledByGraph_node25" class="node">
+<title>proc~db6val_default</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node25"><a xlink:href="../proc/db6val_default.html" xlink:title="db6val_default">
+<polygon fill="#d9534f" stroke="#d9534f" points="855,-214 764,-214 764,-190 855,-190 855,-214"/>
+<text text-anchor="middle" x="809.5" y="-199.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db6val_default</text>
+</a>
+</g>
+</g>
+<!-- proc~db6val_default&#45;&gt;proc~dbvalu_weights -->
+<g id="proc~~dintrv~~CalledByGraph_edge27" class="edge">
+<title>proc~db6val_default&#45;&gt;proc~dbvalu_weights</title>
+<path fill="none" stroke="#000000" d="M842.85,-214.01C847.26,-216.54 851.47,-219.52 855,-223 897.71,-265.15 921.5,-334.04 931.42,-369.06"/>
+<polygon fill="#000000" stroke="#000000" points="928.06,-370.05 934.06,-378.78 934.81,-368.21 928.06,-370.05"/>
+</g>
+<!-- proc~db6val_multi -->
+<g id="proc~~dintrv~~CalledByGraph_node26" class="node">
+<title>proc~db6val_multi</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node26"><a xlink:href="../proc/db6val_multi.html" xlink:title="db6val_multi">
+<polygon fill="#d9534f" stroke="#d9534f" points="850,-172 769,-172 769,-148 850,-148 850,-172"/>
+<text text-anchor="middle" x="809.5" y="-157.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db6val_multi</text>
+</a>
+</g>
+</g>
+<!-- proc~db6val_multi&#45;&gt;proc~dbvalu_weights -->
+<g id="proc~~dintrv~~CalledByGraph_edge28" class="edge">
+<title>proc~db6val_multi&#45;&gt;proc~dbvalu_weights</title>
+<path fill="none" stroke="#000000" d="M843.57,-172.02C847.77,-174.53 851.74,-177.5 855,-181 906.49,-236.15 926.93,-327.32 933.89,-368.99"/>
+<polygon fill="#000000" stroke="#000000" points="930.44,-369.58 935.44,-378.91 937.35,-368.49 930.44,-369.58"/>
+</g>
+<!-- proc~dbsgq8&#45;&gt;proc~dbvalu -->
+<g id="proc~~dintrv~~CalledByGraph_edge15" class="edge">
+<title>proc~dbsgq8&#45;&gt;proc~dbvalu</title>
+<path fill="none" stroke="#000000" d="M836.89,-627.56C843.24,-630.61 849.7,-634.41 855,-639 888.73,-668.22 914.31,-714.53 927.35,-741.52"/>
+<polygon fill="#000000" stroke="#000000" points="924.31,-743.28 931.73,-750.85 930.65,-740.31 924.31,-743.28"/>
+</g>
+<!-- proc~spline_roots&#45;&gt;proc~dbvalu -->
+<g id="proc~~dintrv~~CalledByGraph_edge17" class="edge">
+<title>proc~spline_roots&#45;&gt;proc~dbvalu</title>
+<path fill="none" stroke="#000000" d="M835.49,-811.95C854.81,-802.63 881.76,-789.64 903.03,-779.38"/>
+<polygon fill="#000000" stroke="#000000" points="904.57,-782.52 912.06,-775.03 901.53,-776.22 904.57,-782.52"/>
+</g>
+<!-- proc~spline_roots&#45;&gt;proc~in_flat_region -->
+<g id="proc~~dintrv~~CalledByGraph_edge30" class="edge">
+<title>proc~spline_roots&#45;&gt;proc~in_flat_region</title>
+<path fill="none" stroke="#000000" d="M847.77,-824C859.5,-824 872.67,-824 885.22,-824"/>
+<polygon fill="#000000" stroke="#000000" points="885.57,-827.5 895.57,-824 885.57,-820.5 885.57,-827.5"/>
+</g>
+<!-- interface~db1ink -->
+<g id="proc~~dintrv~~CalledByGraph_node29" class="node">
+<title>interface~db1ink</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node29"><a xlink:href="../interface/db1ink.html" xlink:title="db1ink">
+<polygon fill="#a7506f" stroke="#a7506f" points="711.5,-107 657.5,-107 657.5,-83 711.5,-83 711.5,-107"/>
+<text text-anchor="middle" x="684.5" y="-92.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1ink</text>
+</a>
+</g>
+</g>
+<!-- interface~db1ink&#45;&gt;proc~db1ink_alt -->
+<g id="proc~~dintrv~~CalledByGraph_edge34" class="edge">
+<title>interface~db1ink&#45;&gt;proc~db1ink_alt</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M711.59,-99.88C727.34,-102.82 747.8,-106.65 765.85,-110.03"/>
+<polygon fill="#000000" stroke="#000000" points="765.4,-113.5 775.87,-111.9 766.68,-106.62 765.4,-113.5"/>
+</g>
+<!-- interface~db1ink&#45;&gt;proc~db1ink_alt_2 -->
+<g id="proc~~dintrv~~CalledByGraph_edge35" class="edge">
+<title>interface~db1ink&#45;&gt;proc~db1ink_alt_2</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M711.59,-90.97C725.6,-88.81 743.34,-86.07 759.8,-83.52"/>
+<polygon fill="#000000" stroke="#000000" points="760.49,-86.96 769.84,-81.97 759.42,-80.04 760.49,-86.96"/>
+</g>
+<!-- interface~db1val -->
+<g id="proc~~dintrv~~CalledByGraph_node30" class="node">
+<title>interface~db1val</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node30"><a xlink:href="../interface/db1val.html" xlink:title="db1val">
+<polygon fill="#a7506f" stroke="#a7506f" points="711.5,-714 657.5,-714 657.5,-690 711.5,-690 711.5,-714"/>
+<text text-anchor="middle" x="684.5" y="-699.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1val</text>
+</a>
+</g>
+</g>
+<!-- interface~db1val&#45;&gt;proc~db1val_alt -->
+<g id="proc~~dintrv~~CalledByGraph_edge38" class="edge">
+<title>interface~db1val&#45;&gt;proc~db1val_alt</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M711.59,-710.91C727.49,-716.34 748.18,-723.4 766.36,-729.61"/>
+<polygon fill="#000000" stroke="#000000" points="765.28,-732.94 775.87,-732.86 767.54,-726.31 765.28,-732.94"/>
+</g>
+<!-- interface~db1val&#45;&gt;proc~db1val_default -->
+<g id="proc~~dintrv~~CalledByGraph_edge39" class="edge">
+<title>interface~db1val&#45;&gt;proc~db1val_default</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M711.59,-702C723.73,-702 738.67,-702 753.15,-702"/>
+<polygon fill="#000000" stroke="#000000" points="753.56,-705.5 763.56,-702 753.56,-698.5 753.56,-705.5"/>
+</g>
+<!-- interface~db1val&#45;&gt;proc~db1val_multi -->
+<g id="proc~~dintrv~~CalledByGraph_edge40" class="edge">
+<title>interface~db1val&#45;&gt;proc~db1val_multi</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M711.59,-693.09C726.7,-687.93 746.14,-681.29 763.64,-675.32"/>
+<polygon fill="#000000" stroke="#000000" points="764.79,-678.62 773.12,-672.08 762.52,-672 764.79,-678.62"/>
+</g>
+<!-- interface~db2val -->
+<g id="proc~~dintrv~~CalledByGraph_node31" class="node">
+<title>interface~db2val</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node31"><a xlink:href="../interface/db2val.html" xlink:title="db2val">
+<polygon fill="#a7506f" stroke="#a7506f" points="711.5,-379 657.5,-379 657.5,-355 711.5,-355 711.5,-379"/>
+<text text-anchor="middle" x="684.5" y="-364.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db2val</text>
+</a>
+</g>
+</g>
+<!-- interface~db2val&#45;&gt;proc~db2val_default -->
+<g id="proc~~dintrv~~CalledByGraph_edge41" class="edge">
+<title>interface~db2val&#45;&gt;proc~db2val_default</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M711.59,-358.73C725.85,-354.21 743.97,-348.46 760.68,-343.16"/>
+<polygon fill="#000000" stroke="#000000" points="761.83,-346.47 770.31,-340.11 759.72,-339.8 761.83,-346.47"/>
+</g>
+<!-- interface~db2val&#45;&gt;proc~db2val_multi -->
+<g id="proc~~dintrv~~CalledByGraph_edge42" class="edge">
+<title>interface~db2val&#45;&gt;proc~db2val_multi</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M711.59,-367.64C725.24,-367.97 742.42,-368.39 758.51,-368.78"/>
+<polygon fill="#000000" stroke="#000000" points="758.8,-372.29 768.88,-369.03 758.97,-365.29 758.8,-372.29"/>
+</g>
+<!-- interface~db3val -->
+<g id="proc~~dintrv~~CalledByGraph_node32" class="node">
+<title>interface~db3val</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node32"><a xlink:href="../interface/db3val.html" xlink:title="db3val">
+<polygon fill="#a7506f" stroke="#a7506f" points="711.5,-294 657.5,-294 657.5,-270 711.5,-270 711.5,-294"/>
+<text text-anchor="middle" x="684.5" y="-279.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db3val</text>
+</a>
+</g>
+</g>
+<!-- interface~db3val&#45;&gt;proc~db3val_default -->
+<g id="proc~~dintrv~~CalledByGraph_edge43" class="edge">
+<title>interface~db3val&#45;&gt;proc~db3val_default</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M711.59,-273.94C725.48,-269.65 743.04,-264.22 759.39,-259.17"/>
+<polygon fill="#000000" stroke="#000000" points="760.84,-262.39 769.36,-256.09 758.77,-255.7 760.84,-262.39"/>
+</g>
+<!-- interface~db3val&#45;&gt;proc~db3val_multi -->
+<g id="proc~~dintrv~~CalledByGraph_edge44" class="edge">
+<title>interface~db3val&#45;&gt;proc~db3val_multi</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M711.59,-282.85C725.24,-283.29 742.42,-283.85 758.51,-284.37"/>
+<polygon fill="#000000" stroke="#000000" points="758.78,-287.88 768.88,-284.71 759,-280.89 758.78,-287.88"/>
+</g>
+<!-- interface~db4val -->
+<g id="proc~~dintrv~~CalledByGraph_node33" class="node">
+<title>interface~db4val</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node33"><a xlink:href="../interface/db4val.html" xlink:title="db4val">
+<polygon fill="#a7506f" stroke="#a7506f" points="711.5,-548 657.5,-548 657.5,-524 711.5,-524 711.5,-548"/>
+<text text-anchor="middle" x="684.5" y="-533.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db4val</text>
+</a>
+</g>
+</g>
+<!-- interface~db4val&#45;&gt;proc~db4val_default -->
+<g id="proc~~dintrv~~CalledByGraph_edge45" class="edge">
+<title>interface~db4val&#45;&gt;proc~db4val_default</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M711.59,-536.42C723.73,-536.62 738.67,-536.86 753.15,-537.1"/>
+<polygon fill="#000000" stroke="#000000" points="753.51,-540.61 763.56,-537.27 753.62,-533.61 753.51,-540.61"/>
+</g>
+<!-- interface~db4val&#45;&gt;proc~db4val_multi -->
+<g id="proc~~dintrv~~CalledByGraph_edge46" class="edge">
+<title>interface~db4val&#45;&gt;proc~db4val_multi</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M711.59,-527.52C726.09,-522.8 744.57,-516.79 761.5,-511.28"/>
+<polygon fill="#000000" stroke="#000000" points="762.82,-514.53 771.25,-508.11 760.66,-507.88 762.82,-514.53"/>
+</g>
+<!-- interface~db5val -->
+<g id="proc~~dintrv~~CalledByGraph_node34" class="node">
+<title>interface~db5val</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node34"><a xlink:href="../interface/db5val.html" xlink:title="db5val">
+<polygon fill="#a7506f" stroke="#a7506f" points="711.5,-463 657.5,-463 657.5,-439 711.5,-439 711.5,-463"/>
+<text text-anchor="middle" x="684.5" y="-448.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db5val</text>
+</a>
+</g>
+</g>
+<!-- interface~db5val&#45;&gt;proc~db5val_default -->
+<g id="proc~~dintrv~~CalledByGraph_edge47" class="edge">
+<title>interface~db5val&#45;&gt;proc~db5val_default</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M711.59,-451.64C723.73,-451.93 738.67,-452.3 753.15,-452.65"/>
+<polygon fill="#000000" stroke="#000000" points="753.48,-456.16 763.56,-452.9 753.65,-449.16 753.48,-456.16"/>
+</g>
+<!-- interface~db5val&#45;&gt;proc~db5val_multi -->
+<g id="proc~~dintrv~~CalledByGraph_edge48" class="edge">
+<title>interface~db5val&#45;&gt;proc~db5val_multi</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M711.59,-442.73C725.85,-438.21 743.97,-432.46 760.68,-427.16"/>
+<polygon fill="#000000" stroke="#000000" points="761.83,-430.47 770.31,-424.11 759.72,-423.8 761.83,-430.47"/>
+</g>
+<!-- interface~db6val -->
+<g id="proc~~dintrv~~CalledByGraph_node35" class="node">
+<title>interface~db6val</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node35"><a xlink:href="../interface/db6val.html" xlink:title="db6val">
+<polygon fill="#a7506f" stroke="#a7506f" points="711.5,-208 657.5,-208 657.5,-184 711.5,-184 711.5,-208"/>
+<text text-anchor="middle" x="684.5" y="-193.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db6val</text>
+</a>
+</g>
+</g>
+<!-- interface~db6val&#45;&gt;proc~db6val_default -->
+<g id="proc~~dintrv~~CalledByGraph_edge49" class="edge">
+<title>interface~db6val&#45;&gt;proc~db6val_default</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M711.59,-197.27C723.85,-197.87 738.96,-198.61 753.57,-199.32"/>
+<polygon fill="#000000" stroke="#000000" points="753.4,-202.82 763.56,-199.81 753.74,-195.82 753.4,-202.82"/>
+</g>
+<!-- interface~db6val&#45;&gt;proc~db6val_multi -->
+<g id="proc~~dintrv~~CalledByGraph_edge50" class="edge">
+<title>interface~db6val&#45;&gt;proc~db6val_multi</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M711.59,-188.37C725.37,-184.33 742.75,-179.24 758.97,-174.5"/>
+<polygon fill="#000000" stroke="#000000" points="760.27,-177.76 768.88,-171.59 758.3,-171.04 760.27,-177.76"/>
+</g>
+<!-- proc~db1max -->
+<g id="proc~~dintrv~~CalledByGraph_node36" class="node">
+<title>proc~db1max</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node36"><a xlink:href="../proc/db1max.html" xlink:title="db1max">
+<polygon fill="#d9534f" stroke="#d9534f" points="507.5,-783 451.5,-783 451.5,-759 507.5,-759 507.5,-783"/>
+<text text-anchor="middle" x="479.5" y="-768.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1max</text>
+</a>
+</g>
+</g>
+<!-- proc~db1max&#45;&gt;proc~db1extremum -->
+<g id="proc~~dintrv~~CalledByGraph_edge31" class="edge">
+<title>proc~db1max&#45;&gt;proc~db1extremum</title>
+<path fill="none" stroke="#000000" d="M507.88,-775.32C539.24,-780.26 591.36,-788.47 630.69,-794.68"/>
+<polygon fill="#000000" stroke="#000000" points="630.23,-798.15 640.65,-796.25 631.32,-791.23 630.23,-798.15"/>
+</g>
+<!-- proc~db1min -->
+<g id="proc~~dintrv~~CalledByGraph_node37" class="node">
+<title>proc~db1min</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node37"><a xlink:href="../proc/db1min.html" xlink:title="db1min">
+<polygon fill="#d9534f" stroke="#d9534f" points="506.5,-825 452.5,-825 452.5,-801 506.5,-801 506.5,-825"/>
+<text text-anchor="middle" x="479.5" y="-810.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1min</text>
+</a>
+</g>
+</g>
+<!-- proc~db1min&#45;&gt;proc~db1extremum -->
+<g id="proc~~dintrv~~CalledByGraph_edge32" class="edge">
+<title>proc~db1min&#45;&gt;proc~db1extremum</title>
+<path fill="none" stroke="#000000" d="M506.62,-811.71C537.85,-810.17 590.88,-807.56 630.76,-805.6"/>
+<polygon fill="#000000" stroke="#000000" points="631.03,-809.09 640.84,-805.1 630.68,-802.1 631.03,-809.09"/>
+</g>
+<!-- proc~fintegral_1d -->
+<g id="proc~~dintrv~~CalledByGraph_node38" class="node">
+<title>proc~fintegral_1d</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node38"><a xlink:href="../proc/fintegral_1d.html" xlink:title="bspline_1d%fintegral_1d">
+<polygon fill="#d9534f" stroke="#d9534f" points="283.5,-630 140.5,-630 140.5,-606 283.5,-606 283.5,-630"/>
+<text text-anchor="middle" x="212" y="-615.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d%fintegral_1d</text>
+</a>
+</g>
+</g>
+<!-- proc~fintegral_1d&#45;&gt;proc~db1fqad -->
+<g id="proc~~dintrv~~CalledByGraph_edge33" class="edge">
+<title>proc~fintegral_1d&#45;&gt;proc~db1fqad</title>
+<path fill="none" stroke="#000000" d="M283.8,-618C334.25,-618 400.08,-618 440.81,-618"/>
+<polygon fill="#000000" stroke="#000000" points="440.85,-621.5 450.85,-618 440.85,-614.5 440.85,-621.5"/>
+</g>
+<!-- proc~integral_1d -->
+<g id="proc~~dintrv~~CalledByGraph_node39" class="node">
+<title>proc~integral_1d</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node39"><a xlink:href="../proc/integral_1d.html" xlink:title="bspline_1d%integral_1d">
+<polygon fill="#d9534f" stroke="#d9534f" points="549,-954 410,-954 410,-930 549,-930 549,-954"/>
+<text text-anchor="middle" x="479.5" y="-939.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d%integral_1d</text>
+</a>
+</g>
+</g>
+<!-- proc~integral_1d&#45;&gt;proc~db1sqad -->
+<g id="proc~~dintrv~~CalledByGraph_edge37" class="edge">
+<title>proc~integral_1d&#45;&gt;proc~db1sqad</title>
+<path fill="none" stroke="#000000" d="M549.23,-942C581.21,-942 618.06,-942 645.06,-942"/>
+<polygon fill="#000000" stroke="#000000" points="645.25,-945.5 655.25,-942 645.25,-938.5 645.25,-945.5"/>
+</g>
+<!-- proc~roots_1d -->
+<g id="proc~~dintrv~~CalledByGraph_node40" class="node">
+<title>proc~roots_1d</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node40"><a xlink:href="../proc/roots_1d.html" xlink:title="bspline_1d%roots_1d">
+<polygon fill="#d9534f" stroke="#d9534f" points="541.5,-876 417.5,-876 417.5,-852 541.5,-852 541.5,-876"/>
+<text text-anchor="middle" x="479.5" y="-861.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d%roots_1d</text>
+</a>
+</g>
+</g>
+<!-- proc~roots_1d&#45;&gt;proc~db1root -->
+<g id="proc~~dintrv~~CalledByGraph_edge36" class="edge">
+<title>proc~roots_1d&#45;&gt;proc~db1root</title>
+<path fill="none" stroke="#000000" d="M541.68,-864C576.1,-864 617.9,-864 647.17,-864"/>
+<polygon fill="#000000" stroke="#000000" points="647.35,-867.5 657.35,-864 647.35,-860.5 647.35,-867.5"/>
+</g>
+<!-- proc~evaluate_1d -->
+<g id="proc~~dintrv~~CalledByGraph_node41" class="node">
+<title>proc~evaluate_1d</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node41"><a xlink:href="../proc/evaluate_1d.html" xlink:title="bspline_1d%evaluate_1d">
+<polygon fill="#d9534f" stroke="#d9534f" points="552,-723 407,-723 407,-699 552,-699 552,-723"/>
+<text text-anchor="middle" x="479.5" y="-708.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d%evaluate_1d</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_1d&#45;&gt;interface~db1val -->
+<g id="proc~~dintrv~~CalledByGraph_edge58" class="edge">
+<title>proc~evaluate_1d&#45;&gt;interface~db1val</title>
+<path fill="none" stroke="#000000" d="M552.07,-707.83C584.17,-706.4 620.67,-704.79 647.04,-703.62"/>
+<polygon fill="#000000" stroke="#000000" points="647.49,-707.1 657.33,-703.16 647.18,-700.11 647.49,-707.1"/>
+</g>
+<!-- proc~evaluate_1d_multi -->
+<g id="proc~~dintrv~~CalledByGraph_node42" class="node">
+<title>proc~evaluate_1d_multi</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node42"><a xlink:href="../proc/evaluate_1d_multi.html" xlink:title="bspline_1d%evaluate_1d_multi">
+<polygon fill="#d9534f" stroke="#d9534f" points="568,-681 391,-681 391,-657 568,-657 568,-681"/>
+<text text-anchor="middle" x="479.5" y="-666.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d%evaluate_1d_multi</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_1d_multi&#45;&gt;interface~db1val -->
+<g id="proc~~dintrv~~CalledByGraph_edge59" class="edge">
+<title>proc~evaluate_1d_multi&#45;&gt;interface~db1val</title>
+<path fill="none" stroke="#000000" d="M554.36,-681.01C586.05,-686.16 621.62,-691.94 647.4,-696.13"/>
+<polygon fill="#000000" stroke="#000000" points="647.02,-699.62 657.46,-697.77 648.15,-692.71 647.02,-699.62"/>
+</g>
+<!-- proc~evaluate_2d -->
+<g id="proc~~dintrv~~CalledByGraph_node43" class="node">
+<title>proc~evaluate_2d</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node43"><a xlink:href="../proc/evaluate_2d.html" xlink:title="bspline_2d%evaluate_2d">
+<polygon fill="#d9534f" stroke="#d9534f" points="552,-418 407,-418 407,-394 552,-394 552,-418"/>
+<text text-anchor="middle" x="479.5" y="-403.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_2d%evaluate_2d</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_2d&#45;&gt;interface~db2val -->
+<g id="proc~~dintrv~~CalledByGraph_edge60" class="edge">
+<title>proc~evaluate_2d&#45;&gt;interface~db2val</title>
+<path fill="none" stroke="#000000" d="M552.06,-394.66C569.43,-391.71 587.91,-388.4 605,-385 618.99,-382.22 634.29,-378.8 647.64,-375.69"/>
+<polygon fill="#000000" stroke="#000000" points="648.48,-379.08 657.42,-373.38 646.88,-372.27 648.48,-379.08"/>
+</g>
+<!-- proc~evaluate_2d_multi -->
+<g id="proc~~dintrv~~CalledByGraph_node44" class="node">
+<title>proc~evaluate_2d_multi</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node44"><a xlink:href="../proc/evaluate_2d_multi.html" xlink:title="bspline_2d%evaluate_2d_multi">
+<polygon fill="#d9534f" stroke="#d9534f" points="568,-376 391,-376 391,-352 568,-352 568,-376"/>
+<text text-anchor="middle" x="479.5" y="-361.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_2d%evaluate_2d_multi</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_2d_multi&#45;&gt;interface~db2val -->
+<g id="proc~~dintrv~~CalledByGraph_edge61" class="edge">
+<title>proc~evaluate_2d_multi&#45;&gt;interface~db2val</title>
+<path fill="none" stroke="#000000" d="M568.06,-365.29C595.73,-365.7 624.8,-366.13 646.85,-366.46"/>
+<polygon fill="#000000" stroke="#000000" points="647.02,-369.96 657.07,-366.61 647.13,-362.96 647.02,-369.96"/>
+</g>
+<!-- proc~evaluate_3d -->
+<g id="proc~~dintrv~~CalledByGraph_node45" class="node">
+<title>proc~evaluate_3d</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node45"><a xlink:href="../proc/evaluate_3d.html" xlink:title="bspline_3d%evaluate_3d">
+<polygon fill="#d9534f" stroke="#d9534f" points="552,-332 407,-332 407,-308 552,-308 552,-332"/>
+<text text-anchor="middle" x="479.5" y="-317.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_3d%evaluate_3d</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_3d&#45;&gt;interface~db3val -->
+<g id="proc~~dintrv~~CalledByGraph_edge62" class="edge">
+<title>proc~evaluate_3d&#45;&gt;interface~db3val</title>
+<path fill="none" stroke="#000000" d="M552.03,-308.52C569.4,-305.57 587.89,-302.29 605,-299 618.97,-296.31 634.27,-293.07 647.62,-290.14"/>
+<polygon fill="#000000" stroke="#000000" points="648.39,-293.55 657.4,-287.97 646.87,-286.72 648.39,-293.55"/>
+</g>
+<!-- proc~evaluate_3d_multi -->
+<g id="proc~~dintrv~~CalledByGraph_node46" class="node">
+<title>proc~evaluate_3d_multi</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node46"><a xlink:href="../proc/evaluate_3d_multi.html" xlink:title="bspline_3d%evaluate_3d_multi">
+<polygon fill="#d9534f" stroke="#d9534f" points="568,-290 391,-290 391,-266 568,-266 568,-290"/>
+<text text-anchor="middle" x="479.5" y="-275.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_3d%evaluate_3d_multi</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_3d_multi&#45;&gt;interface~db3val -->
+<g id="proc~~dintrv~~CalledByGraph_edge63" class="edge">
+<title>proc~evaluate_3d_multi&#45;&gt;interface~db3val</title>
+<path fill="none" stroke="#000000" d="M568.06,-279.73C595.73,-280.27 624.8,-280.84 646.85,-281.28"/>
+<polygon fill="#000000" stroke="#000000" points="647.01,-284.78 657.07,-281.48 647.14,-277.78 647.01,-284.78"/>
+</g>
+<!-- proc~evaluate_4d -->
+<g id="proc~~dintrv~~CalledByGraph_node47" class="node">
+<title>proc~evaluate_4d</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node47"><a xlink:href="../proc/evaluate_4d.html" xlink:title="bspline_4d%evaluate_4d">
+<polygon fill="#d9534f" stroke="#d9534f" points="552,-546 407,-546 407,-522 552,-522 552,-546"/>
+<text text-anchor="middle" x="479.5" y="-531.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_4d%evaluate_4d</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_4d&#45;&gt;interface~db4val -->
+<g id="proc~~dintrv~~CalledByGraph_edge64" class="edge">
+<title>proc~evaluate_4d&#45;&gt;interface~db4val</title>
+<path fill="none" stroke="#000000" d="M552.07,-534.71C584.17,-535.02 620.67,-535.38 647.04,-535.64"/>
+<polygon fill="#000000" stroke="#000000" points="647.29,-539.14 657.33,-535.74 647.36,-532.14 647.29,-539.14"/>
+</g>
+<!-- proc~evaluate_4d_multi -->
+<g id="proc~~dintrv~~CalledByGraph_node48" class="node">
+<title>proc~evaluate_4d_multi</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node48"><a xlink:href="../proc/evaluate_4d_multi.html" xlink:title="bspline_4d%evaluate_4d_multi">
+<polygon fill="#d9534f" stroke="#d9534f" points="568,-588 391,-588 391,-564 568,-564 568,-588"/>
+<text text-anchor="middle" x="479.5" y="-573.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_4d%evaluate_4d_multi</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_4d_multi&#45;&gt;interface~db4val -->
+<g id="proc~~dintrv~~CalledByGraph_edge65" class="edge">
+<title>proc~evaluate_4d_multi&#45;&gt;interface~db4val</title>
+<path fill="none" stroke="#000000" d="M557.03,-563.96C572.93,-561.22 589.54,-558.17 605,-555 619.01,-552.13 634.32,-548.53 647.67,-545.24"/>
+<polygon fill="#000000" stroke="#000000" points="648.58,-548.61 657.44,-542.8 646.89,-541.82 648.58,-548.61"/>
+</g>
+<!-- proc~evaluate_5d -->
+<g id="proc~~dintrv~~CalledByGraph_node49" class="node">
+<title>proc~evaluate_5d</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node49"><a xlink:href="../proc/evaluate_5d.html" xlink:title="bspline_5d%evaluate_5d">
+<polygon fill="#d9534f" stroke="#d9534f" points="552,-461 407,-461 407,-437 552,-437 552,-461"/>
+<text text-anchor="middle" x="479.5" y="-446.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_5d%evaluate_5d</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_5d&#45;&gt;interface~db5val -->
+<g id="proc~~dintrv~~CalledByGraph_edge66" class="edge">
+<title>proc~evaluate_5d&#45;&gt;interface~db5val</title>
+<path fill="none" stroke="#000000" d="M552.07,-449.71C584.17,-450.02 620.67,-450.38 647.04,-450.64"/>
+<polygon fill="#000000" stroke="#000000" points="647.29,-454.14 657.33,-450.74 647.36,-447.14 647.29,-454.14"/>
+</g>
+<!-- proc~evaluate_5d_multi -->
+<g id="proc~~dintrv~~CalledByGraph_node50" class="node">
+<title>proc~evaluate_5d_multi</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node50"><a xlink:href="../proc/evaluate_5d_multi.html" xlink:title="bspline_5d%evaluate_5d_multi">
+<polygon fill="#d9534f" stroke="#d9534f" points="568,-503 391,-503 391,-479 568,-479 568,-503"/>
+<text text-anchor="middle" x="479.5" y="-488.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_5d%evaluate_5d_multi</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_5d_multi&#45;&gt;interface~db5val -->
+<g id="proc~~dintrv~~CalledByGraph_edge67" class="edge">
+<title>proc~evaluate_5d_multi&#45;&gt;interface~db5val</title>
+<path fill="none" stroke="#000000" d="M557.03,-478.96C572.93,-476.22 589.54,-473.17 605,-470 619.01,-467.13 634.32,-463.53 647.67,-460.24"/>
+<polygon fill="#000000" stroke="#000000" points="648.58,-463.61 657.44,-457.8 646.89,-456.82 648.58,-463.61"/>
+</g>
+<!-- proc~evaluate_6d -->
+<g id="proc~~dintrv~~CalledByGraph_node51" class="node">
+<title>proc~evaluate_6d</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node51"><a xlink:href="../proc/evaluate_6d.html" xlink:title="bspline_6d%evaluate_6d">
+<polygon fill="#d9534f" stroke="#d9534f" points="552,-243 407,-243 407,-219 552,-219 552,-243"/>
+<text text-anchor="middle" x="479.5" y="-228.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_6d%evaluate_6d</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_6d&#45;&gt;interface~db6val -->
+<g id="proc~~dintrv~~CalledByGraph_edge68" class="edge">
+<title>proc~evaluate_6d&#45;&gt;interface~db6val</title>
+<path fill="none" stroke="#000000" d="M552.28,-219.01C569.55,-216.09 587.94,-212.96 605,-210 618.78,-207.61 633.9,-204.93 647.17,-202.55"/>
+<polygon fill="#000000" stroke="#000000" points="648.12,-205.94 657.34,-200.73 646.88,-199.05 648.12,-205.94"/>
+</g>
+<!-- proc~evaluate_6d_multi -->
+<g id="proc~~dintrv~~CalledByGraph_node52" class="node">
+<title>proc~evaluate_6d_multi</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node52"><a xlink:href="../proc/evaluate_6d_multi.html" xlink:title="bspline_6d%evaluate_6d_multi">
+<polygon fill="#d9534f" stroke="#d9534f" points="568,-201 391,-201 391,-177 568,-177 568,-201"/>
+<text text-anchor="middle" x="479.5" y="-186.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_6d%evaluate_6d_multi</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_6d_multi&#45;&gt;interface~db6val -->
+<g id="proc~~dintrv~~CalledByGraph_edge69" class="edge">
+<title>proc~evaluate_6d_multi&#45;&gt;interface~db6val</title>
+<path fill="none" stroke="#000000" d="M568.06,-192.02C595.73,-192.97 624.8,-193.98 646.85,-194.74"/>
+<polygon fill="#000000" stroke="#000000" points="646.96,-198.24 657.07,-195.09 647.2,-191.25 646.96,-198.24"/>
+</g>
+<!-- proc~initialize_1d_auto_knots -->
+<g id="proc~~dintrv~~CalledByGraph_node53" class="node">
+<title>proc~initialize_1d_auto_knots</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node53"><a xlink:href="../proc/initialize_1d_auto_knots.html" xlink:title="bspline_1d%initialize_1d_auto_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="582,-24 377,-24 377,0 582,0 582,-24"/>
+<text text-anchor="middle" x="479.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d%initialize_1d_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_1d_auto_knots&#45;&gt;interface~db1ink -->
+<g id="proc~~dintrv~~CalledByGraph_edge54" class="edge">
+<title>proc~initialize_1d_auto_knots&#45;&gt;interface~db1ink</title>
+<path fill="none" stroke="#000000" d="M579.72,-24.02C588.44,-26.48 596.99,-29.44 605,-33 627.77,-43.11 649.67,-61.35 664.52,-75.44"/>
+<polygon fill="#000000" stroke="#000000" points="662.41,-78.28 672.01,-82.77 667.31,-73.27 662.41,-78.28"/>
+</g>
+<!-- proc~initialize_1d_auto_knots_multi -->
+<g id="proc~~dintrv~~CalledByGraph_node54" class="node">
+<title>proc~initialize_1d_auto_knots_multi</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node54"><a xlink:href="../proc/initialize_1d_auto_knots_multi.html" xlink:title="bspline_1d%initialize_1d_auto_knots_multi">
+<polygon fill="#d9534f" stroke="#d9534f" points="598.5,-108 360.5,-108 360.5,-84 598.5,-84 598.5,-108"/>
+<text text-anchor="middle" x="479.5" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d%initialize_1d_auto_knots_multi</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_1d_auto_knots_multi&#45;&gt;interface~db1ink -->
+<g id="proc~~dintrv~~CalledByGraph_edge55" class="edge">
+<title>proc~initialize_1d_auto_knots_multi&#45;&gt;interface~db1ink</title>
+<path fill="none" stroke="#000000" d="M598.59,-95.42C616.24,-95.33 633.21,-95.25 647.27,-95.18"/>
+<polygon fill="#000000" stroke="#000000" points="647.44,-98.68 657.42,-95.13 647.41,-91.68 647.44,-98.68"/>
+</g>
+<!-- proc~initialize_1d_specify_knots -->
+<g id="proc~~dintrv~~CalledByGraph_node55" class="node">
+<title>proc~initialize_1d_specify_knots</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node55"><a xlink:href="../proc/initialize_1d_specify_knots.html" xlink:title="bspline_1d%initialize_1d_specify_knots">
+<polygon fill="#d9534f" stroke="#d9534f" points="589,-150 370,-150 370,-126 589,-126 589,-150"/>
+<text text-anchor="middle" x="479.5" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d%initialize_1d_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_1d_specify_knots&#45;&gt;interface~db1ink -->
+<g id="proc~~dintrv~~CalledByGraph_edge56" class="edge">
+<title>proc~initialize_1d_specify_knots&#45;&gt;interface~db1ink</title>
+<path fill="none" stroke="#000000" d="M559.45,-125.98C574.62,-123.31 590.35,-120.28 605,-117 618.98,-113.87 634.17,-109.78 647.44,-105.97"/>
+<polygon fill="#000000" stroke="#000000" points="648.53,-109.3 657.15,-103.14 646.57,-102.58 648.53,-109.3"/>
+</g>
+<!-- proc~initialize_1d_specify_knots_multi -->
+<g id="proc~~dintrv~~CalledByGraph_node56" class="node">
+<title>proc~initialize_1d_specify_knots_multi</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node56"><a xlink:href="../proc/initialize_1d_specify_knots_multi.html" xlink:title="bspline_1d%initialize_1d_specify_knots_multi">
+<polygon fill="#d9534f" stroke="#d9534f" points="605,-66 354,-66 354,-42 605,-42 605,-66"/>
+<text text-anchor="middle" x="479.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d%initialize_1d_specify_knots_multi</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_1d_specify_knots_multi&#45;&gt;interface~db1ink -->
+<g id="proc~~dintrv~~CalledByGraph_edge57" class="edge">
+<title>proc~initialize_1d_specify_knots_multi&#45;&gt;interface~db1ink</title>
+<path fill="none" stroke="#000000" d="M557.73,-66.01C573.42,-68.73 589.77,-71.78 605,-75 619.04,-77.97 634.35,-81.74 647.69,-85.22"/>
+<polygon fill="#000000" stroke="#000000" points="646.9,-88.63 657.46,-87.79 648.68,-81.86 646.9,-88.63"/>
+</g>
+<!-- proc~inverse_1d -->
+<g id="proc~~dintrv~~CalledByGraph_node57" class="node">
+<title>proc~inverse_1d</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node57"><a xlink:href="../proc/inverse_1d.html" xlink:title="bspline_1d%inverse_1d">
+<polygon fill="#d9534f" stroke="#d9534f" points="280.5,-876 143.5,-876 143.5,-852 280.5,-852 280.5,-876"/>
+<text text-anchor="middle" x="212" y="-861.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d%inverse_1d</text>
+</a>
+</g>
+</g>
+<!-- proc~inverse_1d&#45;&gt;proc~roots_1d -->
+<g id="proc~~dintrv~~CalledByGraph_edge72" class="edge">
+<title>proc~inverse_1d&#45;&gt;proc~roots_1d</title>
+<path fill="none" stroke="#000000" d="M280.68,-864C319.41,-864 367.95,-864 407.25,-864"/>
+<polygon fill="#000000" stroke="#000000" points="407.29,-867.5 417.29,-864 407.29,-860.5 407.29,-867.5"/>
+</g>
+<!-- proc~maximum_1d -->
+<g id="proc~~dintrv~~CalledByGraph_node58" class="node">
+<title>proc~maximum_1d</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node58"><a xlink:href="../proc/maximum_1d.html" xlink:title="bspline_1d%maximum_1d">
+<polygon fill="#d9534f" stroke="#d9534f" points="288,-783 136,-783 136,-759 288,-759 288,-783"/>
+<text text-anchor="middle" x="212" y="-768.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d%maximum_1d</text>
+</a>
+</g>
+</g>
+<!-- proc~maximum_1d&#45;&gt;proc~db1max -->
+<g id="proc~~dintrv~~CalledByGraph_edge70" class="edge">
+<title>proc~maximum_1d&#45;&gt;proc~db1max</title>
+<path fill="none" stroke="#000000" d="M288.02,-771C338.02,-771 401.6,-771 441.18,-771"/>
+<polygon fill="#000000" stroke="#000000" points="441.43,-774.5 451.43,-771 441.43,-767.5 441.43,-774.5"/>
+</g>
+<!-- proc~minimum_1d -->
+<g id="proc~~dintrv~~CalledByGraph_node59" class="node">
+<title>proc~minimum_1d</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node59"><a xlink:href="../proc/minimum_1d.html" xlink:title="bspline_1d%minimum_1d">
+<polygon fill="#d9534f" stroke="#d9534f" points="286.5,-825 137.5,-825 137.5,-801 286.5,-801 286.5,-825"/>
+<text text-anchor="middle" x="212" y="-810.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d%minimum_1d</text>
+</a>
+</g>
+</g>
+<!-- proc~minimum_1d&#45;&gt;proc~db1min -->
+<g id="proc~~dintrv~~CalledByGraph_edge71" class="edge">
+<title>proc~minimum_1d&#45;&gt;proc~db1min</title>
+<path fill="none" stroke="#000000" d="M286.6,-813C337.32,-813 402.51,-813 442.36,-813"/>
+<polygon fill="#000000" stroke="#000000" points="442.41,-816.5 452.41,-813 442.41,-809.5 442.41,-816.5"/>
+</g>
+<!-- proc~bspline_1d_constructor_auto_knots -->
+<g id="proc~~dintrv~~CalledByGraph_node60" class="node">
+<title>proc~bspline_1d_constructor_auto_knots</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node60"><a xlink:href="../proc/bspline_1d_constructor_auto_knots.html" xlink:title="bspline_1d_constructor_auto_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="311.5,-45 112.5,-45 112.5,-21 311.5,-21 311.5,-45"/>
+<text text-anchor="middle" x="212" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d_constructor_auto_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_1d_constructor_auto_knots&#45;&gt;proc~initialize_1d_auto_knots -->
+<g id="proc~~dintrv~~CalledByGraph_edge73" class="edge">
+<title>proc~bspline_1d_constructor_auto_knots&#45;&gt;proc~initialize_1d_auto_knots</title>
+<path fill="none" stroke="#000000" d="M311.86,-25.18C329.78,-23.76 348.57,-22.28 366.82,-20.83"/>
+<polygon fill="#000000" stroke="#000000" points="367.2,-24.31 376.89,-20.04 366.65,-17.34 367.2,-24.31"/>
+</g>
+<!-- proc~bspline_1d_constructor_specify_knots -->
+<g id="proc~~dintrv~~CalledByGraph_node61" class="node">
+<title>proc~bspline_1d_constructor_specify_knots</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node61"><a xlink:href="../proc/bspline_1d_constructor_specify_knots.html" xlink:title="bspline_1d_constructor_specify_knots">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="318,-108 106,-108 106,-84 318,-84 318,-108"/>
+<text text-anchor="middle" x="212" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d_constructor_specify_knots</text>
+</a>
+</g>
+</g>
+<!-- proc~bspline_1d_constructor_specify_knots&#45;&gt;proc~initialize_1d_specify_knots -->
+<g id="proc~~dintrv~~CalledByGraph_edge74" class="edge">
+<title>proc~bspline_1d_constructor_specify_knots&#45;&gt;proc~initialize_1d_specify_knots</title>
+<path fill="none" stroke="#000000" d="M289.08,-108.04C321.3,-113.13 359,-119.1 392.24,-124.35"/>
+<polygon fill="#000000" stroke="#000000" points="391.98,-127.86 402.41,-125.96 393.08,-120.94 391.98,-127.86"/>
+</g>
+<!-- interface~bspline_1d -->
+<g id="proc~~dintrv~~CalledByGraph_node62" class="node">
+<title>interface~bspline_1d</title>
+<g id="a_proc~~dintrv~~CalledByGraph_node62"><a xlink:href="../interface/bspline_1d.html" xlink:title="bspline_1d">
+<polygon fill="#a7506f" stroke="#a7506f" points="70,-66 0,-66 0,-42 70,-42 70,-66"/>
+<text text-anchor="middle" x="35" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d</text>
+</a>
+</g>
+</g>
+<!-- interface~bspline_1d&#45;&gt;proc~bspline_1d_constructor_auto_knots -->
+<g id="proc~~dintrv~~CalledByGraph_edge75" class="edge">
+<title>interface~bspline_1d&#45;&gt;proc~bspline_1d_constructor_auto_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M70.16,-49.9C79.7,-48.76 90.6,-47.45 102.03,-46.08"/>
+<polygon fill="#000000" stroke="#000000" points="102.68,-49.52 112.19,-44.86 101.84,-42.57 102.68,-49.52"/>
+</g>
+<!-- interface~bspline_1d&#45;&gt;proc~bspline_1d_constructor_specify_knots -->
+<g id="proc~~dintrv~~CalledByGraph_edge76" class="edge">
+<title>interface~bspline_1d&#45;&gt;proc~bspline_1d_constructor_specify_knots</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M70.16,-62.2C93.1,-67.7 123.96,-75.11 150.94,-81.59"/>
+<polygon fill="#000000" stroke="#000000" points="150.15,-84.99 160.69,-83.93 151.78,-78.19 150.15,-84.99"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocdintrvCalledByGraph = svgPanZoom('#procdintrvCalledByGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">pure subroutine </span><span class="n">dintrv</span><span class="p">(</span><span class="n">xt</span><span class="p">,</span><span class="n">lxt</span><span class="p">,</span><span class="n">xx</span><span class="p">,</span><span class="n">ilo</span><span class="p">,</span><span class="n">ileft</span><span class="p">,</span><span class="n">mflag</span><span class="p">,</span><span class="n">extrap</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">implicit none</span>
+
+<span class="k">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">             </span><span class="kd">::</span><span class="w"> </span><span class="n">lxt</span><span class="w">    </span><span class="c">!! length of the `xt` vector</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">   </span><span class="kd">::</span><span class="w"> </span><span class="n">xt</span><span class="w">     </span><span class="c">!! a knot or break point vector of length `lxt`</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">                </span><span class="kd">::</span><span class="w"> </span><span class="n">xx</span><span class="w">     </span><span class="c">!! argument</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w">          </span><span class="kd">::</span><span class="w"> </span><span class="n">ilo</span><span class="w">    </span><span class="c">!! an initialization parameter which must be set</span>
+<span class="w">                                                 </span><span class="c">!! to 1 the first time the spline array `xt` is</span>
+<span class="w">                                                 </span><span class="c">!! processed by dintrv. `ilo` contains information for</span>
+<span class="w">                                                 </span><span class="c">!! efficient processing after the initial call and `ilo`</span>
+<span class="w">                                                 </span><span class="c">!! must not be changed by the user.  distinct splines</span>
+<span class="w">                                                 </span><span class="c">!! require distinct `ilo` parameters.</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">            </span><span class="kd">::</span><span class="w"> </span><span class="n">ileft</span><span class="w">  </span><span class="c">!! largest integer satisfying `xt(ileft)` \( \le \) `x`</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">            </span><span class="kd">::</span><span class="w"> </span><span class="n">mflag</span><span class="w">  </span><span class="c">!! signals when `x` lies out of bounds</span>
+<span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w">        </span><span class="kd">::</span><span class="w"> </span><span class="n">extrap</span><span class="w"> </span><span class="c">!! if extrapolation is allowed</span>
+<span class="w">                                                 </span><span class="c">!! (if not present, default is False)</span>
+
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ihi</span><span class="p">,</span><span class="w"> </span><span class="n">istep</span><span class="p">,</span><span class="w"> </span><span class="n">middle</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span>
+
+<span class="w">    </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get_temp_x_for_extrap</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span><span class="n">xt</span><span class="p">(</span><span class="mi">1_ip</span><span class="p">),</span><span class="n">xt</span><span class="p">(</span><span class="n">lxt</span><span class="p">),</span><span class="n">extrap</span><span class="p">)</span>
+
+<span class="w">    </span><span class="n">ihi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ilo</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">ihi</span><span class="o">&gt;=</span><span class="n">lxt</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">x</span><span class="o">&gt;=</span><span class="n">xt</span><span class="p">(</span><span class="n">lxt</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">mflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">2_ip</span>
+<span class="w">            </span><span class="n">ileft</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lxt</span>
+<span class="w">            </span><span class="k">return</span>
+<span class="k">        end if</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">lxt</span><span class="o">&lt;=</span><span class="mi">1</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">mflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1_ip</span>
+<span class="w">            </span><span class="n">ileft</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">            </span><span class="k">return</span>
+<span class="k">        end if</span>
+<span class="k">        </span><span class="n">ilo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lxt</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">        </span><span class="n">ihi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lxt</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">x</span><span class="o">&gt;=</span><span class="n">xt</span><span class="p">(</span><span class="n">ihi</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+
+<span class="w">        </span><span class="c">! now x &gt;= xt(ilo). find upper bound</span>
+<span class="w">        </span><span class="n">istep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">        </span><span class="k">do</span>
+<span class="k">            </span><span class="n">ilo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ihi</span>
+<span class="w">            </span><span class="n">ihi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ilo</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">istep</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">ihi</span><span class="o">&gt;=</span><span class="n">lxt</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">x</span><span class="o">&gt;=</span><span class="n">xt</span><span class="p">(</span><span class="n">lxt</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                    </span><span class="n">mflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">2_ip</span>
+<span class="w">                    </span><span class="n">ileft</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lxt</span>
+<span class="w">                    </span><span class="k">return</span>
+<span class="k">                end if</span>
+<span class="k">                </span><span class="n">ihi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lxt</span>
+<span class="w">            </span><span class="k">else if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">x</span><span class="o">&gt;=</span><span class="n">xt</span><span class="p">(</span><span class="n">ihi</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                </span><span class="n">istep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">istep</span><span class="o">*</span><span class="mi">2_ip</span>
+<span class="w">                </span><span class="k">cycle</span>
+<span class="k">            end if</span>
+<span class="k">            exit</span>
+<span class="k">        end do</span>
+
+<span class="k">    else</span>
+
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">x</span><span class="o">&gt;=</span><span class="n">xt</span><span class="p">(</span><span class="n">ilo</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">mflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0_ip</span>
+<span class="w">            </span><span class="n">ileft</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ilo</span>
+<span class="w">            </span><span class="k">return</span>
+<span class="k">        end if</span>
+<span class="w">        </span><span class="c">! now x &lt;= xt(ihi). find lower bound</span>
+<span class="w">        </span><span class="n">istep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">        </span><span class="k">do</span>
+<span class="k">            </span><span class="n">ihi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ilo</span>
+<span class="w">            </span><span class="n">ilo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ihi</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">istep</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">ilo</span><span class="o">&lt;=</span><span class="mi">1_ip</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                </span><span class="n">ilo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">x</span><span class="o">&lt;</span><span class="n">xt</span><span class="p">(</span><span class="mi">1_ip</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                    </span><span class="n">mflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1_ip</span>
+<span class="w">                    </span><span class="n">ileft</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">                    </span><span class="k">return</span>
+<span class="k">                end if</span>
+<span class="k">            else if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">x</span><span class="o">&lt;</span><span class="n">xt</span><span class="p">(</span><span class="n">ilo</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                </span><span class="n">istep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">istep</span><span class="o">*</span><span class="mi">2_ip</span>
+<span class="w">                </span><span class="k">cycle</span>
+<span class="k">            end if</span>
+<span class="k">            exit</span>
+<span class="k">        end do</span>
+
+<span class="k">    end if</span>
+
+<span class="w">    </span><span class="c">! now xt(ilo) &lt;= x &lt; xt(ihi). narrow the interval</span>
+<span class="w">    </span><span class="k">do</span>
+<span class="k">        </span><span class="n">middle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">ilo</span><span class="o">+</span><span class="n">ihi</span><span class="p">)</span><span class="o">/</span><span class="mi">2_ip</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">middle</span><span class="o">==</span><span class="n">ilo</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">mflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0_ip</span>
+<span class="w">            </span><span class="n">ileft</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ilo</span>
+<span class="w">            </span><span class="k">return</span>
+<span class="k">        end if</span>
+<span class="w">        </span><span class="c">! note. it is assumed that middle = ilo in case ihi = ilo+1</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">x</span><span class="o">&lt;</span><span class="n">xt</span><span class="p">(</span><span class="n">middle</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">ihi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">middle</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="k">            </span><span class="n">ilo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">middle</span>
+<span class="w">        </span><span class="k">end if</span>
+<span class="k">    end do</span>
+
+<span class="k">    end subroutine </span><span class="n">dintrv</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              bspline-fortran
+ was developed by Jacob Williams<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

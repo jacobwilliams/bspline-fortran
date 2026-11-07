@@ -1,0 +1,1200 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="BSPLINE-FORTRAN -- Multidimensional B-Spline Interpolation of Data on a Regular Grid">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>dbvalu_weights &ndash; bspline-fortran</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">bspline-fortran </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>dbvalu_weights
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.9% of total for procedures.">82 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/bspline_sub_module.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/bspline_sub_module.f90.html'>bspline_sub_module.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/bspline_sub_module.html'>bspline_sub_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">dbvalu_weights</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/dbvalu_weights.html#src">dbvalu_weights</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>private pure subroutine dbvalu_weights(t, n, k, ideriv, x, inbv, left, b, iflag, extrap)  
+</h2>
+    
+
+    <p>Computes the interval index <code>left</code> and weights <code>b</code> such that the
+  <code>ideriv</code>-th derivative of the b-spline (<code>t</code>,<code>a</code>,<code>n</code>,<code>k</code>) at <code>x</code> is</p>
+<div class="codehilite"><pre><span></span><code><span class="w">  </span><span class="nb">sum</span><span class="p">(</span><span class="n">b</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">k</span><span class="p">)</span><span class="o">*</span><span class="n">a</span><span class="p">(</span><span class="n">left</span><span class="o">-</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">left</span><span class="p">))</span>
+</code></pre></div>
+
+<p>This gives the same result as <a href="../proc/dbvalu.html">dbvalu</a>, but since the weights only
+  depend on the knots, they can be reused for every coefficient vector
+  with the same knots. This is used by the multidimensional <code>db*val</code>
+  routines so that the work in each direction is only done once.</p>
+<p>The interval selection (including left limiting values at <code>t(n+1)</code>),
+  extrapolation behavior, and error codes are the same as <a href="../proc/dbvalu.html">dbvalu</a>.</p>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-t~13"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>t</strong></td>
+            <td>
+                <p>knot vector of length <code>n+k</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~25"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+                <p>number of b-spline coefficients.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-k~22"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>k</strong></td>
+            <td>
+                <p>order of the b-spline, <code>k &gt;= 1</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ideriv~2"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ideriv</strong></td>
+            <td>
+                <p>order of the derivative, <code>0 &lt;= ideriv &lt;= k-1</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~31"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p>argument, <code>t(k) &lt;= x &lt;= t(n+1)</code>
+(unless extrapolation is allowed)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-inbv~5"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>inbv</strong></td>
+            <td>
+                <p>an initialization parameter which must be set
+to 1 the first time this routine is called.
+(see <a href="../proc/dbvalu.html">dbvalu</a>)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-left~3"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>left</strong></td>
+            <td>
+                <p>the interval index, <code>k &lt;= left &lt;= n</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-b~3"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              dimension(k)
+            </td>
+            <td>::</td>
+            <td><strong>b</strong></td>
+            <td>
+                <p>weights for coefficients <code>left-k+1:left</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-iflag~48"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iflag</strong></td>
+            <td>
+                <p>status flag (same codes as <a href="../proc/dbvalu.html">dbvalu</a>)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-extrap~16"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>extrap</strong></td>
+            <td>
+                <p>if extrapolation is allowed
+(if not present, default is False)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~dbvalu_weights~~CallsGraph Pages: 1 -->
+<svg id="procdbvalu_weightsCallsGraph" width="361pt" height="32pt"
+ viewBox="0.00 0.00 361.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~dbvalu_weights~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>proc~~dbvalu_weights~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 357,-28 357,4 -4,4"/>
+<!-- proc~dbvalu_weights -->
+<g id="proc~~dbvalu_weights~~CallsGraph_node1" class="node">
+<title>proc~dbvalu_weights</title>
+<polygon fill="none" stroke="black" points="94,-24 0,-24 0,0 94,0 94,-24"/>
+<text text-anchor="middle" x="47" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">dbvalu_weights</text>
+</g>
+<!-- proc~dintrv -->
+<g id="proc~~dbvalu_weights~~CallsGraph_node2" class="node">
+<title>proc~dintrv</title>
+<g id="a_proc~~dbvalu_weights~~CallsGraph_node2"><a xlink:href="../proc/dintrv.html" xlink:title="dintrv">
+<polygon fill="#d9534f" stroke="#d9534f" points="184,-24 130,-24 130,0 184,0 184,-24"/>
+<text text-anchor="middle" x="157" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dintrv</text>
+</a>
+</g>
+</g>
+<!-- proc~dbvalu_weights&#45;&gt;proc~dintrv -->
+<g id="proc~~dbvalu_weights~~CallsGraph_edge1" class="edge">
+<title>proc~dbvalu_weights&#45;&gt;proc~dintrv</title>
+<path fill="none" stroke="#000000" d="M94.11,-12C102.74,-12 111.64,-12 119.91,-12"/>
+<polygon fill="#000000" stroke="#000000" points="119.98,-15.5 129.98,-12 119.98,-8.5 119.98,-15.5"/>
+</g>
+<!-- proc~get_temp_x_for_extrap -->
+<g id="proc~~dbvalu_weights~~CallsGraph_node3" class="node">
+<title>proc~get_temp_x_for_extrap</title>
+<g id="a_proc~~dbvalu_weights~~CallsGraph_node3"><a xlink:href="../proc/get_temp_x_for_extrap.html" xlink:title="get_temp_x_for_extrap">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="353,-24 220,-24 220,0 353,0 353,-24"/>
+<text text-anchor="middle" x="286.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_temp_x_for_extrap</text>
+</a>
+</g>
+</g>
+<!-- proc~dintrv&#45;&gt;proc~get_temp_x_for_extrap -->
+<g id="proc~~dbvalu_weights~~CallsGraph_edge2" class="edge">
+<title>proc~dintrv&#45;&gt;proc~get_temp_x_for_extrap</title>
+<path fill="none" stroke="#000000" d="M184.11,-12C191.81,-12 200.66,-12 209.85,-12"/>
+<polygon fill="#000000" stroke="#000000" points="209.92,-15.5 219.92,-12 209.92,-8.5 209.92,-15.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~dbvalu_weights~~CalledByGraph Pages: 1 -->
+<svg id="procdbvalu_weightsCalledByGraph" width="532pt" height="534pt"
+ viewBox="0.00 0.00 532.00 534.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~dbvalu_weights~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 530)">
+<title>proc~~dbvalu_weights~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-530 528,-530 528,4 -4,4"/>
+<!-- proc~dbvalu_weights -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node1" class="node">
+<title>proc~dbvalu_weights</title>
+<polygon fill="none" stroke="black" points="524,-274 430,-274 430,-250 524,-250 524,-274"/>
+<text text-anchor="middle" x="477" y="-259.6" font-family="Helvetica,sans-Serif" font-size="10.50">dbvalu_weights</text>
+</g>
+<!-- proc~db1val_multi -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node2" class="node">
+<title>proc~db1val_multi</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node2"><a xlink:href="../proc/db1val_multi.html" xlink:title="db1val_multi">
+<polygon fill="#d9534f" stroke="#d9534f" points="389,-484 308,-484 308,-460 389,-460 389,-484"/>
+<text text-anchor="middle" x="348.5" y="-469.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1val_multi</text>
+</a>
+</g>
+</g>
+<!-- proc~db1val_multi&#45;&gt;proc~dbvalu_weights -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge1" class="edge">
+<title>proc~db1val_multi&#45;&gt;proc~dbvalu_weights</title>
+<path fill="none" stroke="#000000" d="M382.45,-459.87C386.67,-457.37 390.67,-454.44 394,-451 440.89,-402.6 463.18,-323.08 471.68,-284.45"/>
+<polygon fill="#000000" stroke="#000000" points="475.18,-284.78 473.8,-274.28 468.33,-283.35 475.18,-284.78"/>
+</g>
+<!-- proc~db2val_default -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node3" class="node">
+<title>proc~db2val_default</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node3"><a xlink:href="../proc/db2val_default.html" xlink:title="db2val_default">
+<polygon fill="#d9534f" stroke="#d9534f" points="394,-442 303,-442 303,-418 394,-418 394,-442"/>
+<text text-anchor="middle" x="348.5" y="-427.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db2val_default</text>
+</a>
+</g>
+</g>
+<!-- proc~db2val_default&#45;&gt;proc~dbvalu_weights -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge2" class="edge">
+<title>proc~db2val_default&#45;&gt;proc~dbvalu_weights</title>
+<path fill="none" stroke="#000000" d="M381.69,-417.82C386.12,-415.31 390.38,-412.38 394,-409 432.37,-373.15 457.27,-315.21 468.71,-283.84"/>
+<polygon fill="#000000" stroke="#000000" points="472.05,-284.89 472.08,-274.3 465.45,-282.57 472.05,-284.89"/>
+</g>
+<!-- proc~db2val_multi -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node4" class="node">
+<title>proc~db2val_multi</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node4"><a xlink:href="../proc/db2val_multi.html" xlink:title="db2val_multi">
+<polygon fill="#d9534f" stroke="#d9534f" points="389,-400 308,-400 308,-376 389,-376 389,-400"/>
+<text text-anchor="middle" x="348.5" y="-385.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db2val_multi</text>
+</a>
+</g>
+</g>
+<!-- proc~db2val_multi&#45;&gt;proc~dbvalu_weights -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge3" class="edge">
+<title>proc~db2val_multi&#45;&gt;proc~dbvalu_weights</title>
+<path fill="none" stroke="#000000" d="M380.31,-375.8C385.12,-373.24 389.86,-370.31 394,-367 424.01,-343.01 449.6,-305.94 463.87,-282.87"/>
+<polygon fill="#000000" stroke="#000000" points="466.93,-284.57 469.11,-274.2 460.94,-280.95 466.93,-284.57"/>
+</g>
+<!-- proc~db3val_default -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node5" class="node">
+<title>proc~db3val_default</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node5"><a xlink:href="../proc/db3val_default.html" xlink:title="db3val_default">
+<polygon fill="#d9534f" stroke="#d9534f" points="394,-358 303,-358 303,-334 394,-334 394,-358"/>
+<text text-anchor="middle" x="348.5" y="-343.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db3val_default</text>
+</a>
+</g>
+</g>
+<!-- proc~db3val_default&#45;&gt;proc~dbvalu_weights -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge4" class="edge">
+<title>proc~db3val_default&#45;&gt;proc~dbvalu_weights</title>
+<path fill="none" stroke="#000000" d="M377.75,-333.79C383.26,-331.1 388.9,-328.12 394,-325 415.66,-311.78 438.4,-293.95 454.43,-280.63"/>
+<polygon fill="#000000" stroke="#000000" points="456.76,-283.25 462.15,-274.13 452.25,-277.89 456.76,-283.25"/>
+</g>
+<!-- proc~db3val_multi -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node6" class="node">
+<title>proc~db3val_multi</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node6"><a xlink:href="../proc/db3val_multi.html" xlink:title="db3val_multi">
+<polygon fill="#d9534f" stroke="#d9534f" points="389,-316 308,-316 308,-292 389,-292 389,-316"/>
+<text text-anchor="middle" x="348.5" y="-301.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db3val_multi</text>
+</a>
+</g>
+</g>
+<!-- proc~db3val_multi&#45;&gt;proc~dbvalu_weights -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge5" class="edge">
+<title>proc~db3val_multi&#45;&gt;proc~dbvalu_weights</title>
+<path fill="none" stroke="#000000" d="M385.75,-291.96C399.51,-287.4 415.37,-282.13 429.92,-277.3"/>
+<polygon fill="#000000" stroke="#000000" points="431.36,-280.51 439.74,-274.04 429.15,-273.87 431.36,-280.51"/>
+</g>
+<!-- proc~db4val_default -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node7" class="node">
+<title>proc~db4val_default</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node7"><a xlink:href="../proc/db4val_default.html" xlink:title="db4val_default">
+<polygon fill="#d9534f" stroke="#d9534f" points="394,-274 303,-274 303,-250 394,-250 394,-274"/>
+<text text-anchor="middle" x="348.5" y="-259.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db4val_default</text>
+</a>
+</g>
+</g>
+<!-- proc~db4val_default&#45;&gt;proc~dbvalu_weights -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge6" class="edge">
+<title>proc~db4val_default&#45;&gt;proc~dbvalu_weights</title>
+<path fill="none" stroke="#000000" d="M394.1,-262C402.29,-262 410.94,-262 419.43,-262"/>
+<polygon fill="#000000" stroke="#000000" points="419.66,-265.5 429.66,-262 419.66,-258.5 419.66,-265.5"/>
+</g>
+<!-- proc~db4val_multi -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node8" class="node">
+<title>proc~db4val_multi</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node8"><a xlink:href="../proc/db4val_multi.html" xlink:title="db4val_multi">
+<polygon fill="#d9534f" stroke="#d9534f" points="389,-232 308,-232 308,-208 389,-208 389,-232"/>
+<text text-anchor="middle" x="348.5" y="-217.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db4val_multi</text>
+</a>
+</g>
+</g>
+<!-- proc~db4val_multi&#45;&gt;proc~dbvalu_weights -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge7" class="edge">
+<title>proc~db4val_multi&#45;&gt;proc~dbvalu_weights</title>
+<path fill="none" stroke="#000000" d="M385.75,-232.04C399.51,-236.6 415.37,-241.87 429.92,-246.7"/>
+<polygon fill="#000000" stroke="#000000" points="429.15,-250.13 439.74,-249.96 431.36,-243.49 429.15,-250.13"/>
+</g>
+<!-- proc~db5val_default -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node9" class="node">
+<title>proc~db5val_default</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node9"><a xlink:href="../proc/db5val_default.html" xlink:title="db5val_default">
+<polygon fill="#d9534f" stroke="#d9534f" points="394,-190 303,-190 303,-166 394,-166 394,-190"/>
+<text text-anchor="middle" x="348.5" y="-175.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db5val_default</text>
+</a>
+</g>
+</g>
+<!-- proc~db5val_default&#45;&gt;proc~dbvalu_weights -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge8" class="edge">
+<title>proc~db5val_default&#45;&gt;proc~dbvalu_weights</title>
+<path fill="none" stroke="#000000" d="M377.75,-190.21C383.26,-192.9 388.9,-195.88 394,-199 415.66,-212.22 438.4,-230.05 454.43,-243.37"/>
+<polygon fill="#000000" stroke="#000000" points="452.25,-246.11 462.15,-249.87 456.76,-240.75 452.25,-246.11"/>
+</g>
+<!-- proc~db5val_multi -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node10" class="node">
+<title>proc~db5val_multi</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node10"><a xlink:href="../proc/db5val_multi.html" xlink:title="db5val_multi">
+<polygon fill="#d9534f" stroke="#d9534f" points="389,-148 308,-148 308,-124 389,-124 389,-148"/>
+<text text-anchor="middle" x="348.5" y="-133.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db5val_multi</text>
+</a>
+</g>
+</g>
+<!-- proc~db5val_multi&#45;&gt;proc~dbvalu_weights -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge9" class="edge">
+<title>proc~db5val_multi&#45;&gt;proc~dbvalu_weights</title>
+<path fill="none" stroke="#000000" d="M380.31,-148.2C385.12,-150.76 389.86,-153.69 394,-157 424.01,-180.99 449.6,-218.06 463.87,-241.13"/>
+<polygon fill="#000000" stroke="#000000" points="460.94,-243.05 469.11,-249.8 466.93,-239.43 460.94,-243.05"/>
+</g>
+<!-- proc~db6val_default -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node11" class="node">
+<title>proc~db6val_default</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node11"><a xlink:href="../proc/db6val_default.html" xlink:title="db6val_default">
+<polygon fill="#d9534f" stroke="#d9534f" points="394,-106 303,-106 303,-82 394,-82 394,-106"/>
+<text text-anchor="middle" x="348.5" y="-91.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db6val_default</text>
+</a>
+</g>
+</g>
+<!-- proc~db6val_default&#45;&gt;proc~dbvalu_weights -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge10" class="edge">
+<title>proc~db6val_default&#45;&gt;proc~dbvalu_weights</title>
+<path fill="none" stroke="#000000" d="M381.69,-106.18C386.12,-108.69 390.38,-111.62 394,-115 432.37,-150.85 457.27,-208.79 468.71,-240.16"/>
+<polygon fill="#000000" stroke="#000000" points="465.45,-241.43 472.08,-249.7 472.05,-239.11 465.45,-241.43"/>
+</g>
+<!-- proc~db6val_multi -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node12" class="node">
+<title>proc~db6val_multi</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node12"><a xlink:href="../proc/db6val_multi.html" xlink:title="db6val_multi">
+<polygon fill="#d9534f" stroke="#d9534f" points="389,-64 308,-64 308,-40 389,-40 389,-64"/>
+<text text-anchor="middle" x="348.5" y="-49.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db6val_multi</text>
+</a>
+</g>
+</g>
+<!-- proc~db6val_multi&#45;&gt;proc~dbvalu_weights -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge11" class="edge">
+<title>proc~db6val_multi&#45;&gt;proc~dbvalu_weights</title>
+<path fill="none" stroke="#000000" d="M382.45,-64.13C386.67,-66.63 390.67,-69.56 394,-73 440.89,-121.4 463.18,-200.92 471.68,-239.55"/>
+<polygon fill="#000000" stroke="#000000" points="468.33,-240.65 473.8,-249.72 475.18,-239.22 468.33,-240.65"/>
+</g>
+<!-- interface~db1val -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node13" class="node">
+<title>interface~db1val</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node13"><a xlink:href="../interface/db1val.html" xlink:title="db1val">
+<polygon fill="#a7506f" stroke="#a7506f" points="267,-484 213,-484 213,-460 267,-460 267,-484"/>
+<text text-anchor="middle" x="240" y="-469.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db1val</text>
+</a>
+</g>
+</g>
+<!-- interface~db1val&#45;&gt;proc~db1val_multi -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge12" class="edge">
+<title>interface~db1val&#45;&gt;proc~db1val_multi</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M267.05,-472C276.29,-472 287.03,-472 297.58,-472"/>
+<polygon fill="#000000" stroke="#000000" points="297.6,-475.5 307.6,-472 297.6,-468.5 297.6,-475.5"/>
+</g>
+<!-- interface~db2val -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node14" class="node">
+<title>interface~db2val</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node14"><a xlink:href="../interface/db2val.html" xlink:title="db2val">
+<polygon fill="#a7506f" stroke="#a7506f" points="267,-421 213,-421 213,-397 267,-397 267,-421"/>
+<text text-anchor="middle" x="240" y="-406.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db2val</text>
+</a>
+</g>
+</g>
+<!-- interface~db2val&#45;&gt;proc~db2val_default -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge13" class="edge">
+<title>interface~db2val&#45;&gt;proc~db2val_default</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M267.05,-414.14C274.84,-415.67 283.68,-417.42 292.59,-419.17"/>
+<polygon fill="#000000" stroke="#000000" points="292.13,-422.65 302.62,-421.15 293.49,-415.78 292.13,-422.65"/>
+</g>
+<!-- interface~db2val&#45;&gt;proc~db2val_multi -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge14" class="edge">
+<title>interface~db2val&#45;&gt;proc~db2val_multi</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M267.05,-403.86C276.29,-402.04 287.03,-399.92 297.58,-397.84"/>
+<polygon fill="#000000" stroke="#000000" points="298.46,-401.24 307.6,-395.87 297.11,-394.37 298.46,-401.24"/>
+</g>
+<!-- interface~db3val -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node15" class="node">
+<title>interface~db3val</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node15"><a xlink:href="../interface/db3val.html" xlink:title="db3val">
+<polygon fill="#a7506f" stroke="#a7506f" points="267,-335 213,-335 213,-311 267,-311 267,-335"/>
+<text text-anchor="middle" x="240" y="-320.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db3val</text>
+</a>
+</g>
+</g>
+<!-- interface~db3val&#45;&gt;proc~db3val_default -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge15" class="edge">
+<title>interface~db3val&#45;&gt;proc~db3val_default</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M267.05,-328.63C274.84,-330.31 283.68,-332.22 292.59,-334.14"/>
+<polygon fill="#000000" stroke="#000000" points="292.11,-337.62 302.62,-336.31 293.58,-330.78 292.11,-337.62"/>
+</g>
+<!-- interface~db3val&#45;&gt;proc~db3val_multi -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge16" class="edge">
+<title>interface~db3val&#45;&gt;proc~db3val_multi</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M267.05,-318.35C276.29,-316.7 287.03,-314.79 297.58,-312.91"/>
+<polygon fill="#000000" stroke="#000000" points="298.37,-316.32 307.6,-311.12 297.14,-309.43 298.37,-316.32"/>
+</g>
+<!-- interface~db4val -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node16" class="node">
+<title>interface~db4val</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node16"><a xlink:href="../interface/db4val.html" xlink:title="db4val">
+<polygon fill="#a7506f" stroke="#a7506f" points="267,-249 213,-249 213,-225 267,-225 267,-249"/>
+<text text-anchor="middle" x="240" y="-234.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db4val</text>
+</a>
+</g>
+</g>
+<!-- interface~db4val&#45;&gt;proc~db4val_default -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge17" class="edge">
+<title>interface~db4val&#45;&gt;proc~db4val_default</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M267.05,-243.12C274.92,-244.96 283.87,-247.06 292.88,-249.18"/>
+<polygon fill="#000000" stroke="#000000" points="292.08,-252.59 302.62,-251.46 293.68,-245.77 292.08,-252.59"/>
+</g>
+<!-- interface~db4val&#45;&gt;proc~db4val_multi -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge18" class="edge">
+<title>interface~db4val&#45;&gt;proc~db4val_multi</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M267.05,-232.84C276.29,-231.37 287.03,-229.65 297.58,-227.97"/>
+<polygon fill="#000000" stroke="#000000" points="298.28,-231.4 307.6,-226.37 297.17,-224.49 298.28,-231.4"/>
+</g>
+<!-- interface~db5val -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node17" class="node">
+<title>interface~db5val</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node17"><a xlink:href="../interface/db5val.html" xlink:title="db5val">
+<polygon fill="#a7506f" stroke="#a7506f" points="267,-160 213,-160 213,-136 267,-136 267,-160"/>
+<text text-anchor="middle" x="240" y="-145.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db5val</text>
+</a>
+</g>
+</g>
+<!-- interface~db5val&#45;&gt;proc~db5val_default -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge19" class="edge">
+<title>interface~db5val&#45;&gt;proc~db5val_default</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M267.05,-155.34C275.55,-157.73 285.31,-160.48 295.04,-163.22"/>
+<polygon fill="#000000" stroke="#000000" points="294.13,-166.6 304.71,-165.95 296.03,-159.86 294.13,-166.6"/>
+</g>
+<!-- interface~db5val&#45;&gt;proc~db5val_multi -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge20" class="edge">
+<title>interface~db5val&#45;&gt;proc~db5val_multi</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M267.05,-145.06C276.29,-144.02 287.03,-142.81 297.58,-141.62"/>
+<polygon fill="#000000" stroke="#000000" points="298.05,-145.09 307.6,-140.5 297.27,-138.14 298.05,-145.09"/>
+</g>
+<!-- interface~db6val -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node18" class="node">
+<title>interface~db6val</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node18"><a xlink:href="../interface/db6val.html" xlink:title="db6val">
+<polygon fill="#a7506f" stroke="#a7506f" points="267,-65 213,-65 213,-41 267,-41 267,-65"/>
+<text text-anchor="middle" x="240" y="-50.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">db6val</text>
+</a>
+</g>
+</g>
+<!-- interface~db6val&#45;&gt;proc~db6val_default -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge21" class="edge">
+<title>interface~db6val&#45;&gt;proc~db6val_default</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M267.05,-63.03C278.95,-67.61 293.31,-73.14 306.59,-78.25"/>
+<polygon fill="#000000" stroke="#000000" points="305.43,-81.56 316.02,-81.88 307.95,-75.02 305.43,-81.56"/>
+</g>
+<!-- interface~db6val&#45;&gt;proc~db6val_multi -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge22" class="edge">
+<title>interface~db6val&#45;&gt;proc~db6val_multi</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M267.05,-52.76C276.29,-52.67 287.03,-52.57 297.58,-52.47"/>
+<polygon fill="#000000" stroke="#000000" points="297.63,-55.97 307.6,-52.37 297.57,-48.97 297.63,-55.97"/>
+</g>
+<!-- proc~evaluate_1d -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node19" class="node">
+<title>proc~evaluate_1d</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node19"><a xlink:href="../proc/evaluate_1d.html" xlink:title="bspline_1d%evaluate_1d">
+<polygon fill="#d9534f" stroke="#d9534f" points="161,-526 16,-526 16,-502 161,-502 161,-526"/>
+<text text-anchor="middle" x="88.5" y="-511.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d%evaluate_1d</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_1d&#45;&gt;interface~db1val -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge23" class="edge">
+<title>proc~evaluate_1d&#45;&gt;interface~db1val</title>
+<path fill="none" stroke="#000000" d="M142.92,-502C154.22,-499.23 166.04,-496.16 177,-493 185.55,-490.53 194.68,-487.61 203.22,-484.74"/>
+<polygon fill="#000000" stroke="#000000" points="204.59,-487.97 212.92,-481.42 202.33,-481.34 204.59,-487.97"/>
+</g>
+<!-- proc~evaluate_1d_multi -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node20" class="node">
+<title>proc~evaluate_1d_multi</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node20"><a xlink:href="../proc/evaluate_1d_multi.html" xlink:title="bspline_1d%evaluate_1d_multi">
+<polygon fill="#d9534f" stroke="#d9534f" points="177,-484 0,-484 0,-460 177,-460 177,-484"/>
+<text text-anchor="middle" x="88.5" y="-469.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_1d%evaluate_1d_multi</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_1d_multi&#45;&gt;interface~db1val -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge24" class="edge">
+<title>proc~evaluate_1d_multi&#45;&gt;interface~db1val</title>
+<path fill="none" stroke="#000000" d="M177.33,-472C186.24,-472 194.9,-472 202.77,-472"/>
+<polygon fill="#000000" stroke="#000000" points="202.98,-475.5 212.98,-472 202.98,-468.5 202.98,-475.5"/>
+</g>
+<!-- proc~evaluate_2d -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node21" class="node">
+<title>proc~evaluate_2d</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node21"><a xlink:href="../proc/evaluate_2d.html" xlink:title="bspline_2d%evaluate_2d">
+<polygon fill="#d9534f" stroke="#d9534f" points="161,-441 16,-441 16,-417 161,-417 161,-441"/>
+<text text-anchor="middle" x="88.5" y="-426.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_2d%evaluate_2d</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_2d&#45;&gt;interface~db2val -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge25" class="edge">
+<title>proc~evaluate_2d&#45;&gt;interface~db2val</title>
+<path fill="none" stroke="#000000" d="M161.18,-419.41C175.59,-417.48 190.14,-415.54 202.7,-413.86"/>
+<polygon fill="#000000" stroke="#000000" points="203.29,-417.31 212.74,-412.51 202.37,-410.37 203.29,-417.31"/>
+</g>
+<!-- proc~evaluate_2d_multi -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node22" class="node">
+<title>proc~evaluate_2d_multi</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node22"><a xlink:href="../proc/evaluate_2d_multi.html" xlink:title="bspline_2d%evaluate_2d_multi">
+<polygon fill="#d9534f" stroke="#d9534f" points="177,-399 0,-399 0,-375 177,-375 177,-399"/>
+<text text-anchor="middle" x="88.5" y="-384.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_2d%evaluate_2d_multi</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_2d_multi&#45;&gt;interface~db2val -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge26" class="edge">
+<title>proc~evaluate_2d_multi&#45;&gt;interface~db2val</title>
+<path fill="none" stroke="#000000" d="M171.25,-399.03C182.36,-400.67 193.27,-402.27 202.97,-403.7"/>
+<polygon fill="#000000" stroke="#000000" points="202.58,-407.18 212.98,-405.17 203.6,-400.25 202.58,-407.18"/>
+</g>
+<!-- proc~evaluate_3d -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node23" class="node">
+<title>proc~evaluate_3d</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node23"><a xlink:href="../proc/evaluate_3d.html" xlink:title="bspline_3d%evaluate_3d">
+<polygon fill="#d9534f" stroke="#d9534f" points="161,-354 16,-354 16,-330 161,-330 161,-354"/>
+<text text-anchor="middle" x="88.5" y="-339.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_3d%evaluate_3d</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_3d&#45;&gt;interface~db3val -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge27" class="edge">
+<title>proc~evaluate_3d&#45;&gt;interface~db3val</title>
+<path fill="none" stroke="#000000" d="M161.18,-332.89C175.59,-331.06 190.14,-329.21 202.7,-327.61"/>
+<polygon fill="#000000" stroke="#000000" points="203.26,-331.07 212.74,-326.34 202.38,-324.13 203.26,-331.07"/>
+</g>
+<!-- proc~evaluate_3d_multi -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node24" class="node">
+<title>proc~evaluate_3d_multi</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node24"><a xlink:href="../proc/evaluate_3d_multi.html" xlink:title="bspline_3d%evaluate_3d_multi">
+<polygon fill="#d9534f" stroke="#d9534f" points="177,-312 0,-312 0,-288 177,-288 177,-312"/>
+<text text-anchor="middle" x="88.5" y="-297.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_3d%evaluate_3d_multi</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_3d_multi&#45;&gt;interface~db3val -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge28" class="edge">
+<title>proc~evaluate_3d_multi&#45;&gt;interface~db3val</title>
+<path fill="none" stroke="#000000" d="M167.75,-312.04C179.94,-313.91 192,-315.77 202.64,-317.41"/>
+<polygon fill="#000000" stroke="#000000" points="202.34,-320.9 212.76,-318.96 203.4,-313.98 202.34,-320.9"/>
+</g>
+<!-- proc~evaluate_4d -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node25" class="node">
+<title>proc~evaluate_4d</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node25"><a xlink:href="../proc/evaluate_4d.html" xlink:title="bspline_4d%evaluate_4d">
+<polygon fill="#d9534f" stroke="#d9534f" points="161,-265 16,-265 16,-241 161,-241 161,-265"/>
+<text text-anchor="middle" x="88.5" y="-250.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_4d%evaluate_4d</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_4d&#45;&gt;interface~db4val -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge29" class="edge">
+<title>proc~evaluate_4d&#45;&gt;interface~db4val</title>
+<path fill="none" stroke="#000000" d="M161.18,-245.33C175.59,-243.79 190.14,-242.23 202.7,-240.88"/>
+<polygon fill="#000000" stroke="#000000" points="203.17,-244.35 212.74,-239.81 202.43,-237.39 203.17,-244.35"/>
+</g>
+<!-- proc~evaluate_4d_multi -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node26" class="node">
+<title>proc~evaluate_4d_multi</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node26"><a xlink:href="../proc/evaluate_4d_multi.html" xlink:title="bspline_4d%evaluate_4d_multi">
+<polygon fill="#d9534f" stroke="#d9534f" points="177,-223 0,-223 0,-199 177,-199 177,-223"/>
+<text text-anchor="middle" x="88.5" y="-208.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_4d%evaluate_4d_multi</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_4d_multi&#45;&gt;interface~db4val -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge30" class="edge">
+<title>proc~evaluate_4d_multi&#45;&gt;interface~db4val</title>
+<path fill="none" stroke="#000000" d="M158.56,-223.01C173.77,-225.66 189.3,-228.36 202.61,-230.67"/>
+<polygon fill="#000000" stroke="#000000" points="202.3,-234.17 212.75,-232.44 203.5,-227.27 202.3,-234.17"/>
+</g>
+<!-- proc~evaluate_5d -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node27" class="node">
+<title>proc~evaluate_5d</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node27"><a xlink:href="../proc/evaluate_5d.html" xlink:title="bspline_5d%evaluate_5d">
+<polygon fill="#d9534f" stroke="#d9534f" points="161,-171 16,-171 16,-147 161,-147 161,-171"/>
+<text text-anchor="middle" x="88.5" y="-156.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_5d%evaluate_5d</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_5d&#45;&gt;interface~db5val -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge31" class="edge">
+<title>proc~evaluate_5d&#45;&gt;interface~db5val</title>
+<path fill="none" stroke="#000000" d="M161.18,-153.73C175.59,-152.67 190.14,-151.59 202.7,-150.67"/>
+<polygon fill="#000000" stroke="#000000" points="203.02,-154.16 212.74,-149.93 202.51,-147.18 203.02,-154.16"/>
+</g>
+<!-- proc~evaluate_5d_multi -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node28" class="node">
+<title>proc~evaluate_5d_multi</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node28"><a xlink:href="../proc/evaluate_5d_multi.html" xlink:title="bspline_5d%evaluate_5d_multi">
+<polygon fill="#d9534f" stroke="#d9534f" points="177,-129 0,-129 0,-105 177,-105 177,-129"/>
+<text text-anchor="middle" x="88.5" y="-114.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_5d%evaluate_5d_multi</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_5d_multi&#45;&gt;interface~db5val -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge32" class="edge">
+<title>proc~evaluate_5d_multi&#45;&gt;interface~db5val</title>
+<path fill="none" stroke="#000000" d="M147.73,-129.07C166.33,-132.93 186.37,-137.09 202.92,-140.52"/>
+<polygon fill="#000000" stroke="#000000" points="202.23,-143.95 212.73,-142.55 203.65,-137.1 202.23,-143.95"/>
+</g>
+<!-- proc~evaluate_6d -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node29" class="node">
+<title>proc~evaluate_6d</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node29"><a xlink:href="../proc/evaluate_6d.html" xlink:title="bspline_6d%evaluate_6d">
+<polygon fill="#d9534f" stroke="#d9534f" points="161,-66 16,-66 16,-42 161,-42 161,-66"/>
+<text text-anchor="middle" x="88.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_6d%evaluate_6d</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_6d&#45;&gt;interface~db6val -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge33" class="edge">
+<title>proc~evaluate_6d&#45;&gt;interface~db6val</title>
+<path fill="none" stroke="#000000" d="M161.18,-53.52C175.59,-53.42 190.14,-53.33 202.7,-53.24"/>
+<polygon fill="#000000" stroke="#000000" points="202.76,-56.74 212.74,-53.18 202.72,-49.74 202.76,-56.74"/>
+</g>
+<!-- proc~evaluate_6d_multi -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_node30" class="node">
+<title>proc~evaluate_6d_multi</title>
+<g id="a_proc~~dbvalu_weights~~CalledByGraph_node30"><a xlink:href="../proc/evaluate_6d_multi.html" xlink:title="bspline_6d%evaluate_6d_multi">
+<polygon fill="#d9534f" stroke="#d9534f" points="177,-24 0,-24 0,0 177,0 177,-24"/>
+<text text-anchor="middle" x="88.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_6d%evaluate_6d_multi</text>
+</a>
+</g>
+</g>
+<!-- proc~evaluate_6d_multi&#45;&gt;interface~db6val -->
+<g id="proc~~dbvalu_weights~~CalledByGraph_edge34" class="edge">
+<title>proc~evaluate_6d_multi&#45;&gt;interface~db6val</title>
+<path fill="none" stroke="#000000" d="M142.42,-24.01C153.86,-26.8 165.87,-29.87 177,-33 185.53,-35.4 194.65,-38.2 203.19,-40.93"/>
+<polygon fill="#000000" stroke="#000000" points="202.3,-44.32 212.89,-44.09 204.46,-37.67 202.3,-44.32"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">pure subroutine </span><span class="n">dbvalu_weights</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">ideriv</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">inbv</span><span class="p">,</span><span class="n">left</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">iflag</span><span class="p">,</span><span class="n">extrap</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">implicit none</span>
+
+<span class="k">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">t</span><span class="w">       </span><span class="c">!! knot vector of length `n+k`</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">            </span><span class="kd">::</span><span class="w"> </span><span class="n">n</span><span class="w">       </span><span class="c">!! number of b-spline coefficients.</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">            </span><span class="kd">::</span><span class="w"> </span><span class="n">k</span><span class="w">       </span><span class="c">!! order of the b-spline, `k &gt;= 1`</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">            </span><span class="kd">::</span><span class="w"> </span><span class="n">ideriv</span><span class="w">  </span><span class="c">!! order of the derivative, `0 &lt;= ideriv &lt;= k-1`.</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">               </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span><span class="w">       </span><span class="c">!! argument, `t(k) &lt;= x &lt;= t(n+1)`</span>
+<span class="w">                                                 </span><span class="c">!! (unless extrapolation is allowed)</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w">         </span><span class="kd">::</span><span class="w"> </span><span class="n">inbv</span><span class="w">    </span><span class="c">!! an initialization parameter which must be set</span>
+<span class="w">                                                 </span><span class="c">!! to 1 the first time this routine is called.</span>
+<span class="w">                                                 </span><span class="c">!! (see [[dbvalu]])</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">           </span><span class="kd">::</span><span class="w"> </span><span class="n">left</span><span class="w">    </span><span class="c">!! the interval index, `k &lt;= left &lt;= n`</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="n">k</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">b</span><span class="w">       </span><span class="c">!! weights for coefficients `left-k+1:left`</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">           </span><span class="kd">::</span><span class="w"> </span><span class="n">iflag</span><span class="w">   </span><span class="c">!! status flag (same codes as [[dbvalu]])</span>
+<span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w">       </span><span class="kd">::</span><span class="w"> </span><span class="n">extrap</span><span class="w">  </span><span class="c">!! if extrapolation is allowed</span>
+<span class="w">                                                 </span><span class="c">!! (if not present, default is False)</span>
+
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">jj</span><span class="p">,</span><span class="n">kmider</span><span class="p">,</span><span class="n">kmj</span><span class="p">,</span><span class="n">mflag</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">xt</span><span class="p">,</span><span class="n">saved</span><span class="p">,</span><span class="n">term</span><span class="p">,</span><span class="n">fac</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">dr</span><span class="w">  </span><span class="c">!! `t(i+j) - x`</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">dl</span><span class="w">  </span><span class="c">!! `x - t(i+1-j)`</span>
+<span class="w">    </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">extrapolation_allowed</span><span class="w">  </span><span class="c">!! if extrapolation is allowed</span>
+
+<span class="w">    </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0_wp</span>
+<span class="w">    </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">k</span><span class="o">&lt;</span><span class="mi">1_ip</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">401_ip</span><span class="w">  </span><span class="c">! k does not satisfy k&gt;=1</span>
+<span class="w">        </span><span class="k">return</span>
+<span class="k">    end if</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="o">&lt;</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">402_ip</span><span class="w">  </span><span class="c">! n does not satisfy n&gt;=k</span>
+<span class="w">        </span><span class="k">return</span>
+<span class="k">    end if</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">ideriv</span><span class="o">&lt;</span><span class="mi">0_ip</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">ideriv</span><span class="o">&gt;=</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">403_ip</span><span class="w">  </span><span class="c">! ideriv does not satisfy 0&lt;=ideriv&lt;k</span>
+<span class="w">        </span><span class="k">return</span>
+<span class="k">    end if</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">extrap</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        </span><span class="n">extrapolation_allowed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">extrap</span>
+<span class="w">    </span><span class="k">else</span>
+<span class="k">        </span><span class="n">extrapolation_allowed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="w">    </span><span class="c">! temp copy of x for computing the interval</span>
+<span class="w">    </span><span class="c">! (clamped if extrapolation is allowed)</span>
+<span class="w">    </span><span class="n">xt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">extrapolation_allowed</span><span class="p">)</span><span class="w"> </span><span class="n">xt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">t</span><span class="p">(</span><span class="n">k</span><span class="p">)),</span><span class="n">t</span><span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1_ip</span><span class="p">))</span>
+
+<span class="w">    </span><span class="c">! find *i* in (k,n) such that t(i) &lt;= x &lt; t(i+1)</span>
+<span class="w">    </span><span class="c">! (or, &lt;= t(i+1) if t(i) &lt; t(i+1) = t(n+1)).</span>
+<span class="w">    </span><span class="k">call </span><span class="n">dintrv</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="o">+</span><span class="mi">1_ip</span><span class="p">,</span><span class="w"> </span><span class="n">xt</span><span class="p">,</span><span class="w"> </span><span class="n">inbv</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">mflag</span><span class="p">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">xt</span><span class="o">&lt;</span><span class="n">t</span><span class="p">(</span><span class="n">k</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">404_ip</span><span class="w">  </span><span class="c">! x is not greater than or equal to t(k)</span>
+<span class="w">        </span><span class="k">return</span>
+<span class="k">    end if</span>
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">mflag</span><span class="o">/=</span><span class="mi">0_ip</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="n">xt</span><span class="o">&gt;</span><span class="n">t</span><span class="p">(</span><span class="n">i</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">405_ip</span><span class="w">  </span><span class="c">! x is not less than or equal to t(n+1)</span>
+<span class="w">            </span><span class="k">return</span>
+<span class="k">        end if</span>
+<span class="k">        do</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="o">==</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">406_ip</span><span class="w">  </span><span class="c">! a left limiting value cannot be obtained at t(k)</span>
+<span class="w">                </span><span class="k">return</span>
+<span class="k">            end if</span>
+<span class="k">            </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1_ip</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">xt</span><span class="o">/=</span><span class="n">t</span><span class="p">(</span><span class="n">i</span><span class="p">))</span><span class="w"> </span><span class="k">exit</span>
+<span class="k">        end do</span>
+<span class="k">    end if</span>
+
+<span class="w">    </span><span class="c">! values at x of the k-ideriv nonzero b-splines of order k-ideriv</span>
+<span class="w">    </span><span class="c">! (the recurrence is a polynomial in x, so this also works when extrapolating)</span>
+<span class="w">    </span><span class="n">kmider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">ideriv</span>
+<span class="w">    </span><span class="n">b</span><span class="p">(</span><span class="mi">1_ip</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0_wp</span>
+<span class="w">    </span><span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="mi">1_ip</span><span class="p">,</span><span class="n">kmider</span><span class="o">-</span><span class="mi">1_ip</span>
+<span class="w">        </span><span class="n">dr</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">x</span>
+<span class="w">        </span><span class="n">dl</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1_ip</span><span class="o">-</span><span class="n">j</span><span class="p">)</span>
+<span class="w">        </span><span class="n">saved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0_wp</span>
+<span class="w">        </span><span class="k">do </span><span class="n">jj</span><span class="o">=</span><span class="mi">1_ip</span><span class="p">,</span><span class="n">j</span>
+<span class="w">            </span><span class="n">term</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">(</span><span class="n">jj</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">dr</span><span class="p">(</span><span class="n">jj</span><span class="p">)</span><span class="o">+</span><span class="n">dl</span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1_ip</span><span class="o">-</span><span class="n">jj</span><span class="p">))</span>
+<span class="w">            </span><span class="n">b</span><span class="p">(</span><span class="n">jj</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">saved</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">dr</span><span class="p">(</span><span class="n">jj</span><span class="p">)</span><span class="o">*</span><span class="n">term</span>
+<span class="w">            </span><span class="n">saved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dl</span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1_ip</span><span class="o">-</span><span class="n">jj</span><span class="p">)</span><span class="o">*</span><span class="n">term</span>
+<span class="w">        </span><span class="k">end do</span>
+<span class="k">        </span><span class="n">b</span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1_ip</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">saved</span>
+<span class="w">    </span><span class="k">end do</span>
+
+<span class="w">    </span><span class="c">! apply the transpose of the coefficient differencing in [[dbvalu]]</span>
+<span class="w">    </span><span class="c">! so the weights apply to the original coefficients</span>
+<span class="w">    </span><span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="n">ideriv</span><span class="p">,</span><span class="mi">1_ip</span><span class="p">,</span><span class="o">-</span><span class="mi">1_ip</span>
+<span class="w">        </span><span class="n">kmj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">j</span>
+<span class="w">        </span><span class="n">b</span><span class="p">(</span><span class="n">kmj</span><span class="o">+</span><span class="mi">1_ip</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0_wp</span>
+<span class="w">        </span><span class="k">do </span><span class="n">jj</span><span class="o">=</span><span class="n">kmj</span><span class="p">,</span><span class="mi">1_ip</span><span class="p">,</span><span class="o">-</span><span class="mi">1_ip</span>
+<span class="w">            </span><span class="n">fac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">(</span><span class="n">jj</span><span class="p">)</span><span class="o">*</span><span class="kt">real</span><span class="p">(</span><span class="n">kmj</span><span class="p">,</span><span class="n">wp</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">t</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="n">jj</span><span class="p">)</span><span class="o">-</span><span class="n">t</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="n">jj</span><span class="o">-</span><span class="n">kmj</span><span class="p">))</span>
+<span class="w">            </span><span class="n">b</span><span class="p">(</span><span class="n">jj</span><span class="o">+</span><span class="mi">1_ip</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">(</span><span class="n">jj</span><span class="o">+</span><span class="mi">1_ip</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">fac</span>
+<span class="w">            </span><span class="n">b</span><span class="p">(</span><span class="n">jj</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">fac</span>
+<span class="w">        </span><span class="k">end do</span>
+<span class="k">    end do</span>
+
+<span class="k">    </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span>
+<span class="w">    </span><span class="n">iflag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0_ip</span>
+
+<span class="w">    </span><span class="k">end subroutine </span><span class="n">dbvalu_weights</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              bspline-fortran
+ was developed by Jacob Williams<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>
