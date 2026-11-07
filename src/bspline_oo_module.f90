@@ -29,6 +29,7 @@
         integer(ip) :: iflag = 1_ip  !! saved `iflag` from the list routine call.
         logical :: initialized = .false. !! true if the class is initialized and ready to use
         logical :: extrap = .false. !! if true, then extrapolation is allowed during evaluation
+        integer(ip) :: nf = 0_ip  !! number of outputs (the last dimension of `bcoef`)
     contains
         private
         procedure,non_overridable :: destroy_base  !! destructor for the abstract type
@@ -39,6 +40,7 @@
         procedure,public,non_overridable :: status_message => get_bspline_status_message  !! retrieve the last
                                                                                           !! status message
         procedure,public,non_overridable :: clear_flag => clear_bspline_flag  !! to reset the `iflag` saved in the class.
+        procedure,public,non_overridable :: number_of_outputs  !! number of outputs (functions) of the spline
     end type bspline_class
 
     abstract interface
@@ -69,20 +71,31 @@
         private
         integer(ip) :: nx = 0_ip  !! Number of \(x\) abcissae
         integer(ip) :: kx = 0_ip  !! The order of spline pieces in \(x\)
-        real(wp),dimension(:),allocatable :: bcoef  !! array of coefficients of the b-spline interpolant
+        real(wp),dimension(:,:),allocatable :: bcoef  !! array of coefficients of the b-spline interpolant
+                                                          !! (the last dimension is the output index)
         real(wp),dimension(:),allocatable :: tx  !! The knots in the \(x\) direction for the spline interpolant
         real(wp),dimension(:),allocatable :: work_val_1   !! [[db1val] work array of dimension `3*kx`
         contains
         private
-        generic,public :: initialize => initialize_1d_auto_knots,initialize_1d_specify_knots
+        generic,public :: initialize => initialize_1d_auto_knots,initialize_1d_specify_knots,&
+                                        initialize_1d_auto_knots_multi,initialize_1d_specify_knots_multi
+        procedure :: initialize_1d_auto_knots_multi
+        procedure :: initialize_1d_specify_knots_multi
         procedure :: initialize_1d_auto_knots
         procedure :: initialize_1d_specify_knots
-        procedure,public :: evaluate => evaluate_1d
+        generic,public :: evaluate => evaluate_1d, evaluate_1d_multi
+        procedure :: evaluate_1d
+        procedure :: evaluate_1d_multi
         procedure,public :: destroy => destroy_1d
         procedure,public :: size_of => size_1d
-        procedure,public :: initialize_from_coefficients => initialize_from_coefficients_1d
+        generic,public :: initialize_from_coefficients => initialize_from_coefficients_1d,&
+                                                          initialize_from_coefficients_1d_multi
+        procedure :: initialize_from_coefficients_1d
+        procedure :: initialize_from_coefficients_1d_multi
         procedure,public :: get_knots => get_knots_1d
-        procedure,public :: get_coefficients => get_coefficients_1d
+        generic,public :: get_coefficients => get_coefficients_1d, get_coefficients_1d_multi
+        procedure :: get_coefficients_1d
+        procedure :: get_coefficients_1d_multi
         procedure,public :: control_points => control_points_1d
         procedure,public :: integral => integral_1d
         procedure,public :: fintegral => fintegral_1d
@@ -100,7 +113,8 @@
         integer(ip) :: ny = 0_ip  !! Number of \(y\) abcissae
         integer(ip) :: kx = 0_ip  !! The order of spline pieces in \(x\)
         integer(ip) :: ky = 0_ip  !! The order of spline pieces in \(y\)
-        real(wp),dimension(:,:),allocatable :: bcoef  !! array of coefficients of the b-spline interpolant
+        real(wp),dimension(:,:,:),allocatable :: bcoef  !! array of coefficients of the b-spline interpolant
+                                                          !! (the last dimension is the output index)
         real(wp),dimension(:),allocatable :: tx  !! The knots in the \(x\) direction for the spline interpolant
         real(wp),dimension(:),allocatable :: ty  !! The knots in the \(y\) direction for the spline interpolant
         integer(ip) :: inbvy = 1_ip  !! internal variable used for efficient processing
@@ -109,15 +123,25 @@
         real(wp),dimension(:),allocatable :: work_val_2  !! [[db2val] work array of dimension `3_ip*max(kx,ky)`
         contains
         private
-        generic,public :: initialize => initialize_2d_auto_knots,initialize_2d_specify_knots
+        generic,public :: initialize => initialize_2d_auto_knots,initialize_2d_specify_knots,&
+                                        initialize_2d_auto_knots_multi,initialize_2d_specify_knots_multi
+        procedure :: initialize_2d_auto_knots_multi
+        procedure :: initialize_2d_specify_knots_multi
         procedure :: initialize_2d_auto_knots
         procedure :: initialize_2d_specify_knots
-        procedure,public :: evaluate => evaluate_2d
+        generic,public :: evaluate => evaluate_2d, evaluate_2d_multi
+        procedure :: evaluate_2d
+        procedure :: evaluate_2d_multi
         procedure,public :: destroy => destroy_2d
         procedure,public :: size_of => size_2d
-        procedure,public :: initialize_from_coefficients => initialize_from_coefficients_2d
+        generic,public :: initialize_from_coefficients => initialize_from_coefficients_2d,&
+                                                          initialize_from_coefficients_2d_multi
+        procedure :: initialize_from_coefficients_2d
+        procedure :: initialize_from_coefficients_2d_multi
         procedure,public :: get_knots => get_knots_2d
-        procedure,public :: get_coefficients => get_coefficients_2d
+        generic,public :: get_coefficients => get_coefficients_2d, get_coefficients_2d_multi
+        procedure :: get_coefficients_2d
+        procedure :: get_coefficients_2d_multi
         final :: finalize_2d
     end type bspline_2d
 
@@ -130,7 +154,8 @@
         integer(ip) :: kx = 0_ip  !! The order of spline pieces in \(x\)
         integer(ip) :: ky = 0_ip  !! The order of spline pieces in \(y\)
         integer(ip) :: kz = 0_ip  !! The order of spline pieces in \(z\)
-        real(wp),dimension(:,:,:),allocatable :: bcoef  !! array of coefficients of the b-spline interpolant
+        real(wp),dimension(:,:,:,:),allocatable :: bcoef  !! array of coefficients of the b-spline interpolant
+                                                          !! (the last dimension is the output index)
         real(wp),dimension(:),allocatable :: tx  !! The knots in the \(x\) direction for the spline interpolant
         real(wp),dimension(:),allocatable :: ty  !! The knots in the \(y\) direction for the spline interpolant
         real(wp),dimension(:),allocatable :: tz  !! The knots in the \(z\) direction for the spline interpolant
@@ -143,15 +168,25 @@
         real(wp),dimension(:),allocatable   :: work_val_3  !! [[db3val] work array of dimension `3_ip*max(kx,ky,kz)`
         contains
         private
-        generic,public :: initialize => initialize_3d_auto_knots,initialize_3d_specify_knots
+        generic,public :: initialize => initialize_3d_auto_knots,initialize_3d_specify_knots,&
+                                        initialize_3d_auto_knots_multi,initialize_3d_specify_knots_multi
+        procedure :: initialize_3d_auto_knots_multi
+        procedure :: initialize_3d_specify_knots_multi
         procedure :: initialize_3d_auto_knots
         procedure :: initialize_3d_specify_knots
-        procedure,public :: evaluate => evaluate_3d
+        generic,public :: evaluate => evaluate_3d, evaluate_3d_multi
+        procedure :: evaluate_3d
+        procedure :: evaluate_3d_multi
         procedure,public :: destroy => destroy_3d
         procedure,public :: size_of => size_3d
-        procedure,public :: initialize_from_coefficients => initialize_from_coefficients_3d
+        generic,public :: initialize_from_coefficients => initialize_from_coefficients_3d,&
+                                                          initialize_from_coefficients_3d_multi
+        procedure :: initialize_from_coefficients_3d
+        procedure :: initialize_from_coefficients_3d_multi
         procedure,public :: get_knots => get_knots_3d
-        procedure,public :: get_coefficients => get_coefficients_3d
+        generic,public :: get_coefficients => get_coefficients_3d, get_coefficients_3d_multi
+        procedure :: get_coefficients_3d
+        procedure :: get_coefficients_3d_multi
         final :: finalize_3d
     end type bspline_3d
 
@@ -166,7 +201,8 @@
         integer(ip) :: ky = 0_ip  !! The order of spline pieces in \(y\)
         integer(ip) :: kz = 0_ip  !! The order of spline pieces in \(z\)
         integer(ip) :: kq = 0_ip  !! The order of spline pieces in \(q\)
-        real(wp),dimension(:,:,:,:),allocatable :: bcoef  !! array of coefficients of the b-spline interpolant
+        real(wp),dimension(:,:,:,:,:),allocatable :: bcoef  !! array of coefficients of the b-spline interpolant
+                                                          !! (the last dimension is the output index)
         real(wp),dimension(:),allocatable :: tx  !! The knots in the \(x\) direction for the spline interpolant
         real(wp),dimension(:),allocatable :: ty  !! The knots in the \(y\) direction for the spline interpolant
         real(wp),dimension(:),allocatable :: tz  !! The knots in the \(z\) direction for the spline interpolant
@@ -183,15 +219,25 @@
         real(wp),dimension(:),allocatable     :: work_val_4  !! [[db4val]] work array of dimension `3_ip*max(kx,ky,kz,kq)`
         contains
         private
-        generic,public :: initialize => initialize_4d_auto_knots,initialize_4d_specify_knots
+        generic,public :: initialize => initialize_4d_auto_knots,initialize_4d_specify_knots,&
+                                        initialize_4d_auto_knots_multi,initialize_4d_specify_knots_multi
+        procedure :: initialize_4d_auto_knots_multi
+        procedure :: initialize_4d_specify_knots_multi
         procedure :: initialize_4d_auto_knots
         procedure :: initialize_4d_specify_knots
-        procedure,public :: evaluate => evaluate_4d
+        generic,public :: evaluate => evaluate_4d, evaluate_4d_multi
+        procedure :: evaluate_4d
+        procedure :: evaluate_4d_multi
         procedure,public :: destroy => destroy_4d
         procedure,public :: size_of => size_4d
-        procedure,public :: initialize_from_coefficients => initialize_from_coefficients_4d
+        generic,public :: initialize_from_coefficients => initialize_from_coefficients_4d,&
+                                                          initialize_from_coefficients_4d_multi
+        procedure :: initialize_from_coefficients_4d
+        procedure :: initialize_from_coefficients_4d_multi
         procedure,public :: get_knots => get_knots_4d
-        procedure,public :: get_coefficients => get_coefficients_4d
+        generic,public :: get_coefficients => get_coefficients_4d, get_coefficients_4d_multi
+        procedure :: get_coefficients_4d
+        procedure :: get_coefficients_4d_multi
         final :: finalize_4d
     end type bspline_4d
 
@@ -208,7 +254,8 @@
         integer(ip) :: kz = 0_ip  !! The order of spline pieces in \(z\)
         integer(ip) :: kq = 0_ip  !! The order of spline pieces in \(q\)
         integer(ip) :: kr = 0_ip  !! The order of spline pieces in \(r\)
-        real(wp),dimension(:,:,:,:,:),allocatable :: bcoef  !! array of coefficients of the b-spline interpolant
+        real(wp),dimension(:,:,:,:,:,:),allocatable :: bcoef  !! array of coefficients of the b-spline interpolant
+                                                          !! (the last dimension is the output index)
         real(wp),dimension(:),allocatable :: tx  !! The knots in the \(x\) direction for the spline interpolant
         real(wp),dimension(:),allocatable :: ty  !! The knots in the \(y\) direction for the spline interpolant
         real(wp),dimension(:),allocatable :: tz  !! The knots in the \(z\) direction for the spline interpolant
@@ -229,15 +276,25 @@
         real(wp),dimension(:),allocatable       :: work_val_5  !! [[db5val]] work array of dimension `3_ip*max(kx,ky,kz,kq,kr)`
         contains
         private
-        generic,public :: initialize => initialize_5d_auto_knots,initialize_5d_specify_knots
+        generic,public :: initialize => initialize_5d_auto_knots,initialize_5d_specify_knots,&
+                                        initialize_5d_auto_knots_multi,initialize_5d_specify_knots_multi
+        procedure :: initialize_5d_auto_knots_multi
+        procedure :: initialize_5d_specify_knots_multi
         procedure :: initialize_5d_auto_knots
         procedure :: initialize_5d_specify_knots
-        procedure,public :: evaluate => evaluate_5d
+        generic,public :: evaluate => evaluate_5d, evaluate_5d_multi
+        procedure :: evaluate_5d
+        procedure :: evaluate_5d_multi
         procedure,public :: destroy => destroy_5d
         procedure,public :: size_of => size_5d
-        procedure,public :: initialize_from_coefficients => initialize_from_coefficients_5d
+        generic,public :: initialize_from_coefficients => initialize_from_coefficients_5d,&
+                                                          initialize_from_coefficients_5d_multi
+        procedure :: initialize_from_coefficients_5d
+        procedure :: initialize_from_coefficients_5d_multi
         procedure,public :: get_knots => get_knots_5d
-        procedure,public :: get_coefficients => get_coefficients_5d
+        generic,public :: get_coefficients => get_coefficients_5d, get_coefficients_5d_multi
+        procedure :: get_coefficients_5d
+        procedure :: get_coefficients_5d_multi
         final :: finalize_5d
     end type bspline_5d
 
@@ -256,7 +313,8 @@
         integer(ip) :: kq = 0_ip  !! The order of spline pieces in \(q\)
         integer(ip) :: kr = 0_ip  !! The order of spline pieces in \(r\)
         integer(ip) :: ks = 0_ip  !! The order of spline pieces in \(s\)
-        real(wp),dimension(:,:,:,:,:,:),allocatable :: bcoef  !! array of coefficients of the b-spline interpolant
+        real(wp),dimension(:,:,:,:,:,:,:),allocatable :: bcoef  !! array of coefficients of the b-spline interpolant
+                                                          !! (the last dimension is the output index)
         real(wp),dimension(:),allocatable :: tx  !! The knots in the \(x\) direction for the spline interpolant
         real(wp),dimension(:),allocatable :: ty  !! The knots in the \(y\) direction for the spline interpolant
         real(wp),dimension(:),allocatable :: tz  !! The knots in the \(z\) direction for the spline interpolant
@@ -281,15 +339,25 @@
         real(wp),dimension(:),allocatable         :: work_val_6  !! [[db6val]] work array of dimension `3_ip*max(kx,ky,kz,kq,kr,ks)`
         contains
         private
-        generic,public :: initialize => initialize_6d_auto_knots,initialize_6d_specify_knots
+        generic,public :: initialize => initialize_6d_auto_knots,initialize_6d_specify_knots,&
+                                        initialize_6d_auto_knots_multi,initialize_6d_specify_knots_multi
+        procedure :: initialize_6d_auto_knots_multi
+        procedure :: initialize_6d_specify_knots_multi
         procedure :: initialize_6d_auto_knots
         procedure :: initialize_6d_specify_knots
-        procedure,public :: evaluate => evaluate_6d
+        generic,public :: evaluate => evaluate_6d, evaluate_6d_multi
+        procedure :: evaluate_6d
+        procedure :: evaluate_6d_multi
         procedure,public :: destroy => destroy_6d
         procedure,public :: size_of => size_6d
-        procedure,public :: initialize_from_coefficients => initialize_from_coefficients_6d
+        generic,public :: initialize_from_coefficients => initialize_from_coefficients_6d,&
+                                                          initialize_from_coefficients_6d_multi
+        procedure :: initialize_from_coefficients_6d
+        procedure :: initialize_from_coefficients_6d_multi
         procedure,public :: get_knots => get_knots_6d
-        procedure,public :: get_coefficients => get_coefficients_6d
+        generic,public :: get_coefficients => get_coefficients_6d, get_coefficients_6d_multi
+        procedure :: get_coefficients_6d
+        procedure :: get_coefficients_6d_multi
         final :: finalize_6d
     end type bspline_6d
 
@@ -331,6 +399,25 @@
     end interface
 
     contains
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Returns the number of outputs (functions of the same inputs) of the
+!  spline: 1 for a spline initialized with a single function, and `nf`
+!  for one initialized with `nf` functions (the last dimension of `fcn`).
+!  Returns 0 if the class is not initialized.
+
+    pure function number_of_outputs(me) result(nf)
+
+    implicit none
+
+    class(bspline_class),intent(in) :: me  !! the spline
+    integer(ip)                     :: nf  !! number of outputs
+
+    nf = me%nf
+
+    end function number_of_outputs
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -418,7 +505,7 @@
     class(bspline_1d),intent(in) :: me
     integer(ip) :: s !! size of the structure in bits
 
-    s = 2_ip*int_size + logical_size + 2_ip*int_size
+    s = 3_ip*int_size + logical_size + 2_ip*int_size
 
     if (allocated(me%bcoef))      s = s + real_size*size(me%bcoef,kind=ip)
     if (allocated(me%tx))         s = s + real_size*size(me%tx,kind=ip)
@@ -438,10 +525,9 @@
     class(bspline_2d),intent(in) :: me
     integer(ip) :: s !! size of the structure in bits
 
-    s = 2_ip*int_size + logical_size + 6_ip*int_size
+    s = 3_ip*int_size + logical_size + 6_ip*int_size
 
-    if (allocated(me%bcoef))      s = s + real_size*size(me%bcoef,1_ip,kind=ip)*&
-                                                    size(me%bcoef,2_ip,kind=ip)
+    if (allocated(me%bcoef))      s = s + real_size*size(me%bcoef,kind=ip)
     if (allocated(me%tx))         s = s + real_size*size(me%tx,kind=ip)
     if (allocated(me%ty))         s = s + real_size*size(me%ty,kind=ip)
     if (allocated(me%work_val_1)) s = s + real_size*size(me%work_val_1,kind=ip)
@@ -461,11 +547,9 @@
     class(bspline_3d),intent(in) :: me
     integer(ip) :: s !! size of the structure in bits
 
-    s = 2_ip*int_size + logical_size + 10_ip*int_size
+    s = 3_ip*int_size + logical_size + 10_ip*int_size
 
-    if (allocated(me%bcoef))      s = s + real_size*size(me%bcoef,1_ip,kind=ip)*&
-                                                    size(me%bcoef,2_ip,kind=ip)*&
-                                                    size(me%bcoef,3_ip,kind=ip)
+    if (allocated(me%bcoef))      s = s + real_size*size(me%bcoef,kind=ip)
     if (allocated(me%tx))         s = s + real_size*size(me%tx,kind=ip)
     if (allocated(me%ty))         s = s + real_size*size(me%ty,kind=ip)
     if (allocated(me%tz))         s = s + real_size*size(me%tz,kind=ip)
@@ -488,12 +572,9 @@
     class(bspline_4d),intent(in) :: me
     integer(ip) :: s !! size of the structure in bits
 
-    s = 2_ip*int_size + logical_size + 14_ip*int_size
+    s = 3_ip*int_size + logical_size + 14_ip*int_size
 
-    if (allocated(me%bcoef))      s = s + real_size*size(me%bcoef,1_ip,kind=ip)*&
-                                                    size(me%bcoef,2_ip,kind=ip)*&
-                                                    size(me%bcoef,3_ip,kind=ip)*&
-                                                    size(me%bcoef,4_ip,kind=ip)
+    if (allocated(me%bcoef))      s = s + real_size*size(me%bcoef,kind=ip)
     if (allocated(me%tx))         s = s + real_size*size(me%tx,kind=ip)
     if (allocated(me%ty))         s = s + real_size*size(me%ty,kind=ip)
     if (allocated(me%tz))         s = s + real_size*size(me%tz,kind=ip)
@@ -520,13 +601,9 @@
     class(bspline_5d),intent(in) :: me
     integer(ip) :: s !! size of the structure in bits
 
-    s = 2_ip*int_size + logical_size + 18_ip*int_size
+    s = 3_ip*int_size + logical_size + 18_ip*int_size
 
-    if (allocated(me%bcoef))      s = s + real_size*size(me%bcoef,1_ip,kind=ip)*&
-                                                    size(me%bcoef,2_ip,kind=ip)*&
-                                                    size(me%bcoef,3_ip,kind=ip)*&
-                                                    size(me%bcoef,4_ip,kind=ip)*&
-                                                    size(me%bcoef,5_ip,kind=ip)
+    if (allocated(me%bcoef))      s = s + real_size*size(me%bcoef,kind=ip)
     if (allocated(me%tx))         s = s + real_size*size(me%tx,kind=ip)
     if (allocated(me%ty))         s = s + real_size*size(me%ty,kind=ip)
     if (allocated(me%tz))         s = s + real_size*size(me%tz,kind=ip)
@@ -558,14 +635,9 @@
     class(bspline_6d),intent(in) :: me
     integer(ip) :: s !! size of the structure in bits
 
-    s = 2_ip*int_size + logical_size + 22_ip*int_size
+    s = 3_ip*int_size + logical_size + 22_ip*int_size
 
-    if (allocated(me%bcoef))      s = s + real_size*size(me%bcoef,1_ip,kind=ip)*&
-                                                    size(me%bcoef,2_ip,kind=ip)*&
-                                                    size(me%bcoef,3_ip,kind=ip)*&
-                                                    size(me%bcoef,4_ip,kind=ip)*&
-                                                    size(me%bcoef,5_ip,kind=ip)*&
-                                                    size(me%bcoef,6,kind=ip)
+    if (allocated(me%bcoef))      s = s + real_size*size(me%bcoef,kind=ip)
     if (allocated(me%tx))         s = s + real_size*size(me%tx,kind=ip)
     if (allocated(me%ty))         s = s + real_size*size(me%ty,kind=ip)
     if (allocated(me%tz))         s = s + real_size*size(me%tz,kind=ip)
@@ -607,6 +679,7 @@
     me%iflag = 1_ip
     me%initialized = .false.
     me%extrap = .false.
+    me%nf = 0_ip
 
     end subroutine destroy_base
 !*****************************************************************************************
@@ -987,17 +1060,18 @@
     me%kx = kx
 
     allocate(me%tx(nx+kx))
-    allocate(me%bcoef(nx))
+    allocate(me%bcoef(nx,1_ip))
     allocate(me%work_val_1(3_ip*kx))
 
     iknot = 0_ip         !knot sequence chosen by db1ink
 
-    call db1ink(x,nx,fcn,kx,iknot,me%tx,me%bcoef,iflag)
+    call db1ink(x,nx,fcn,kx,iknot,me%tx,me%bcoef(:,1),iflag)
 
     if (iflag==0_ip) then
         call me%set_extrap_flag(extrap)
     end if
 
+    if (iflag==0_ip) me%nf = 1_ip
     me%initialized = iflag==0_ip
     me%iflag = iflag
 
@@ -1041,17 +1115,18 @@
         me%kx = kx
 
         allocate(me%tx(nx+kx))
-        allocate(me%bcoef(nx))
+        allocate(me%bcoef(nx,1_ip))
         allocate(me%work_val_1(3_ip*kx))
 
         me%tx = tx
 
-        call db1ink(x,nx,fcn,kx,1_ip,me%tx,me%bcoef,iflag)
+        call db1ink(x,nx,fcn,kx,1_ip,me%tx,me%bcoef(:,1),iflag)
 
         call me%set_extrap_flag(extrap)
 
     end if
 
+    if (iflag==0_ip) me%nf = 1_ip
     me%initialized = iflag==0_ip
     me%iflag = iflag
 
@@ -1072,8 +1147,10 @@
     real(wp),intent(out)            :: f     !! interpolated value
     integer(ip),intent(out)         :: iflag !! status flag (see [[db1val]])
 
-    if (me%initialized) then
-        call db1val(xval,idx,me%tx,me%nx,me%kx,me%bcoef,f,iflag,&
+    if (me%initialized .and. me%nf/=1_ip) then
+        iflag = 6003_ip  ! use the multiple-output version
+    else if (me%initialized) then
+        call db1val(xval,idx,me%tx,me%nx,me%kx,me%bcoef(:,1),f,iflag,&
                     me%inbvx,me%work_val_1,extrap=me%extrap)
     else
         iflag = 1_ip
@@ -1097,8 +1174,10 @@
     real(wp),intent(out)            :: f     !! integral of the b-spline over \( [x_1, x_2] \)
     integer(ip),intent(out)         :: iflag !! status flag (see [[db1sqad]])
 
-    if (me%initialized) then
-        call db1sqad(me%tx,me%bcoef,me%nx,me%kx,x1,x2,f,iflag,me%work_val_1)
+    if (me%initialized .and. me%nf/=1_ip) then
+        iflag = 6003_ip  ! use the multiple-output version
+    else if (me%initialized) then
+        call db1sqad(me%tx,me%bcoef(:,1),me%nx,me%kx,x1,x2,f,iflag,me%work_val_1)
     else
         iflag = 1_ip
     end if
@@ -1126,8 +1205,10 @@
     real(wp),intent(out)            :: f     !! integral of `bf(x)` over \( [x_1, x_2] \)
     integer(ip),intent(out)         :: iflag !! status flag (see [[db1sqad]])
 
-    if (me%initialized) then
-        call db1fqad(fun,me%tx,me%bcoef,me%nx,me%kx,idx,x1,x2,tol,f,iflag,me%work_val_1)
+    if (me%initialized .and. me%nf/=1_ip) then
+        iflag = 6003_ip  ! use the multiple-output version
+    else if (me%initialized) then
+        call db1fqad(fun,me%tx,me%bcoef(:,1),me%nx,me%kx,idx,x1,x2,tol,f,iflag,me%work_val_1)
     else
         iflag = 1_ip
     end if
@@ -1151,8 +1232,11 @@
                                                             !! (size 0 if there are none)
     integer(ip),intent(out)                       :: iflag  !! status flag (see [[db1root]])
 
-    if (me%initialized) then
-        call db1root(me%tx,me%nx,me%kx,me%bcoef,a,x,iflag)
+    if (me%initialized .and. me%nf/=1_ip) then
+        iflag = 6003_ip  ! use the multiple-output version
+        allocate(x(0))
+    else if (me%initialized) then
+        call db1root(me%tx,me%nx,me%kx,me%bcoef(:,1),a,x,iflag)
     else
         allocate(x(0))
         iflag = 1_ip
@@ -1216,9 +1300,13 @@
     real(wp) :: x1  !! left end of the interval
     real(wp) :: x2  !! right end of the interval
 
-    if (me%initialized) then
+    if (me%initialized .and. me%nf/=1_ip) then
+        iflag = 6003_ip  ! use the multiple-output version
+        xmin = 0.0_wp
+        fmin = 0.0_wp
+    else if (me%initialized) then
         call get_interval_1d(me,xa,xb,x1,x2)
-        call db1min(me%tx,me%nx,me%kx,me%bcoef,x1,x2,xmin,fmin,iflag)
+        call db1min(me%tx,me%nx,me%kx,me%bcoef(:,1),x1,x2,xmin,fmin,iflag)
     else
         xmin = 0.0_wp
         fmin = 0.0_wp
@@ -1249,9 +1337,13 @@
     real(wp) :: x1  !! left end of the interval
     real(wp) :: x2  !! right end of the interval
 
-    if (me%initialized) then
+    if (me%initialized .and. me%nf/=1_ip) then
+        iflag = 6003_ip  ! use the multiple-output version
+        xmax = 0.0_wp
+        fmax = 0.0_wp
+    else if (me%initialized) then
         call get_interval_1d(me,xa,xb,x1,x2)
-        call db1max(me%tx,me%nx,me%kx,me%bcoef,x1,x2,xmax,fmax,iflag)
+        call db1max(me%tx,me%nx,me%kx,me%bcoef(:,1),x1,x2,xmax,fmax,iflag)
     else
         xmax = 0.0_wp
         fmax = 0.0_wp
@@ -1411,18 +1503,19 @@
 
     allocate(me%tx(nx+kx))
     allocate(me%ty(ny+ky))
-    allocate(me%bcoef(nx,ny))
+    allocate(me%bcoef(nx,ny,1_ip))
     allocate(me%work_val_1(ky))
     allocate(me%work_val_2(3_ip*max(kx,ky)))
 
     iknot = 0_ip         !knot sequence chosen by db2ink
 
-    call db2ink(x,nx,y,ny,fcn,kx,ky,iknot,me%tx,me%ty,me%bcoef,iflag)
+    call db2ink(x,nx,y,ny,fcn,kx,ky,iknot,me%tx,me%ty,me%bcoef(:,:,1),iflag)
 
     if (iflag==0_ip) then
         call me%set_extrap_flag(extrap)
     end if
 
+    if (iflag==0_ip) me%nf = 1_ip
     me%initialized = iflag==0_ip
     me%iflag = iflag
 
@@ -1481,19 +1574,20 @@
 
         allocate(me%tx(nx+kx))
         allocate(me%ty(ny+ky))
-        allocate(me%bcoef(nx,ny))
+        allocate(me%bcoef(nx,ny,1_ip))
         allocate(me%work_val_1(ky))
         allocate(me%work_val_2(3_ip*max(kx,ky)))
 
         me%tx = tx
         me%ty = ty
 
-        call db2ink(x,nx,y,ny,fcn,kx,ky,1_ip,me%tx,me%ty,me%bcoef,iflag)
+        call db2ink(x,nx,y,ny,fcn,kx,ky,1_ip,me%tx,me%ty,me%bcoef(:,:,1),iflag)
 
         call me%set_extrap_flag(extrap)
 
     end if
 
+    if (iflag==0_ip) me%nf = 1_ip
     me%initialized = iflag==0_ip
     me%iflag = iflag
 
@@ -1516,13 +1610,15 @@
     real(wp),intent(out)            :: f     !! interpolated value
     integer(ip),intent(out)         :: iflag !! status flag (see [[db2val]])
 
-    if (me%initialized) then
+    if (me%initialized .and. me%nf/=1_ip) then
+        iflag = 6003_ip  ! use the multiple-output version
+    else if (me%initialized) then
         call db2val(xval,yval,&
                     idx,idy,&
                     me%tx,me%ty,&
                     me%nx,me%ny,&
                     me%kx,me%ky,&
-                    me%bcoef,f,iflag,&
+                    me%bcoef(:,:,1),f,iflag,&
                     me%inbvx,me%inbvy,me%iloy,&
                     me%work_val_1,me%work_val_2,&
                     extrap=me%extrap)
@@ -1674,7 +1770,7 @@
     allocate(me%tx(nx+kx))
     allocate(me%ty(ny+ky))
     allocate(me%tz(nz+kz))
-    allocate(me%bcoef(nx,ny,nz))
+    allocate(me%bcoef(nx,ny,nz,1_ip))
     allocate(me%work_val_1(ky,kz))
     allocate(me%work_val_2(kz))
     allocate(me%work_val_3(3_ip*max(kx,ky,kz)))
@@ -1686,12 +1782,13 @@
                 kx,ky,kz,&
                 iknot,&
                 me%tx,me%ty,me%tz,&
-                me%bcoef,iflag)
+                me%bcoef(:,:,:,1),iflag)
 
     if (iflag==0_ip) then
         call me%set_extrap_flag(extrap)
     end if
 
+    if (iflag==0_ip) me%nf = 1_ip
     me%initialized = iflag==0_ip
     me%iflag = iflag
 
@@ -1762,7 +1859,7 @@
         allocate(me%tx(nx+kx))
         allocate(me%ty(ny+ky))
         allocate(me%tz(nz+kz))
-        allocate(me%bcoef(nx,ny,nz))
+        allocate(me%bcoef(nx,ny,nz,1_ip))
         allocate(me%work_val_1(ky,kz))
         allocate(me%work_val_2(kz))
         allocate(me%work_val_3(3_ip*max(kx,ky,kz)))
@@ -1776,12 +1873,13 @@
                     kx,ky,kz,&
                     1_ip,&
                     me%tx,me%ty,me%tz,&
-                    me%bcoef,iflag)
+                    me%bcoef(:,:,:,1),iflag)
 
         call me%set_extrap_flag(extrap)
 
     end if
 
+    if (iflag==0_ip) me%nf = 1_ip
     me%initialized = iflag==0_ip
     me%iflag = iflag
 
@@ -1806,13 +1904,15 @@
     real(wp),intent(out)            :: f     !! interpolated value
     integer(ip),intent(out)         :: iflag !! status flag (see [[db3val]])
 
-    if (me%initialized) then
+    if (me%initialized .and. me%nf/=1_ip) then
+        iflag = 6003_ip  ! use the multiple-output version
+    else if (me%initialized) then
         call db3val(xval,yval,zval,&
                     idx,idy,idz,&
                     me%tx,me%ty,me%tz,&
                     me%nx,me%ny,me%nz,&
                     me%kx,me%ky,me%kz,&
-                    me%bcoef,f,iflag,&
+                    me%bcoef(:,:,:,1),f,iflag,&
                     me%inbvx,me%inbvy,me%inbvz,&
                     me%iloy,me%iloz,&
                     me%work_val_1,me%work_val_2,me%work_val_3,&
@@ -1985,7 +2085,7 @@
     allocate(me%ty(ny+ky))
     allocate(me%tz(nz+kz))
     allocate(me%tq(nq+kq))
-    allocate(me%bcoef(nx,ny,nz,nq))
+    allocate(me%bcoef(nx,ny,nz,nq,1_ip))
     allocate(me%work_val_1(ky,kz,kq))
     allocate(me%work_val_2(kz,kq))
     allocate(me%work_val_3(kq))
@@ -1998,12 +2098,13 @@
                 kx,ky,kz,kq,&
                 iknot,&
                 me%tx,me%ty,me%tz,me%tq,&
-                me%bcoef,iflag)
+                me%bcoef(:,:,:,:,1),iflag)
 
     if (iflag==0_ip) then
         call me%set_extrap_flag(extrap)
     end if
 
+    if (iflag==0_ip) me%nf = 1_ip
     me%initialized = iflag==0_ip
     me%iflag = iflag
 
@@ -2087,7 +2188,7 @@
         allocate(me%ty(ny+ky))
         allocate(me%tz(nz+kz))
         allocate(me%tq(nq+kq))
-        allocate(me%bcoef(nx,ny,nz,nq))
+        allocate(me%bcoef(nx,ny,nz,nq,1_ip))
         allocate(me%work_val_1(ky,kz,kq))
         allocate(me%work_val_2(kz,kq))
         allocate(me%work_val_3(kq))
@@ -2103,12 +2204,13 @@
                     kx,ky,kz,kq,&
                     1_ip,&
                     me%tx,me%ty,me%tz,me%tq,&
-                    me%bcoef,iflag)
+                    me%bcoef(:,:,:,:,1),iflag)
 
         call me%set_extrap_flag(extrap)
 
     end if
 
+    if (iflag==0_ip) me%nf = 1_ip
     me%initialized = iflag==0_ip
     me%iflag = iflag
 
@@ -2135,13 +2237,15 @@
     real(wp),intent(out)            :: f     !! interpolated value
     integer(ip),intent(out)         :: iflag !! status flag (see [[db4val]])
 
-    if (me%initialized) then
+    if (me%initialized .and. me%nf/=1_ip) then
+        iflag = 6003_ip  ! use the multiple-output version
+    else if (me%initialized) then
         call db4val(xval,yval,zval,qval,&
                     idx,idy,idz,idq,&
                     me%tx,me%ty,me%tz,me%tq,&
                     me%nx,me%ny,me%nz,me%nq,&
                     me%kx,me%ky,me%kz,me%kq,&
-                    me%bcoef,f,iflag,&
+                    me%bcoef(:,:,:,:,1),f,iflag,&
                     me%inbvx,me%inbvy,me%inbvz,me%inbvq,&
                     me%iloy,me%iloz,me%iloq,&
                     me%work_val_1,me%work_val_2,me%work_val_3,me%work_val_4,&
@@ -2334,7 +2438,7 @@
     allocate(me%tz(nz+kz))
     allocate(me%tq(nq+kq))
     allocate(me%tr(nr+kr))
-    allocate(me%bcoef(nx,ny,nz,nq,nr))
+    allocate(me%bcoef(nx,ny,nz,nq,nr,1_ip))
     allocate(me%work_val_1(ky,kz,kq,kr))
     allocate(me%work_val_2(kz,kq,kr))
     allocate(me%work_val_3(kq,kr))
@@ -2348,12 +2452,13 @@
                 kx,ky,kz,kq,kr,&
                 iknot,&
                 me%tx,me%ty,me%tz,me%tq,me%tr,&
-                me%bcoef,iflag)
+                me%bcoef(:,:,:,:,:,1),iflag)
 
     if (iflag==0_ip) then
         call me%set_extrap_flag(extrap)
     end if
 
+    if (iflag==0_ip) me%nf = 1_ip
     me%initialized = iflag==0_ip
     me%iflag = iflag
 
@@ -2450,7 +2555,7 @@
         allocate(me%tz(nz+kz))
         allocate(me%tq(nq+kq))
         allocate(me%tr(nr+kr))
-        allocate(me%bcoef(nx,ny,nz,nq,nr))
+        allocate(me%bcoef(nx,ny,nz,nq,nr,1_ip))
         allocate(me%work_val_1(ky,kz,kq,kr))
         allocate(me%work_val_2(kz,kq,kr))
         allocate(me%work_val_3(kq,kr))
@@ -2468,12 +2573,13 @@
                     kx,ky,kz,kq,kr,&
                     1_ip,&
                     me%tx,me%ty,me%tz,me%tq,me%tr,&
-                    me%bcoef,iflag)
+                    me%bcoef(:,:,:,:,:,1),iflag)
 
         call me%set_extrap_flag(extrap)
 
     end if
 
+    if (iflag==0_ip) me%nf = 1_ip
     me%initialized = iflag==0_ip
     me%iflag = iflag
 
@@ -2502,13 +2608,15 @@
     real(wp),intent(out)            :: f     !! interpolated value
     integer(ip),intent(out)         :: iflag !! status flag (see [[db5val]])
 
-    if (me%initialized) then
+    if (me%initialized .and. me%nf/=1_ip) then
+        iflag = 6003_ip  ! use the multiple-output version
+    else if (me%initialized) then
         call db5val(xval,yval,zval,qval,rval,&
                     idx,idy,idz,idq,idr,&
                     me%tx,me%ty,me%tz,me%tq,me%tr,&
                     me%nx,me%ny,me%nz,me%nq,me%nr,&
                     me%kx,me%ky,me%kz,me%kq,me%kr,&
-                    me%bcoef,f,iflag,&
+                    me%bcoef(:,:,:,:,:,1),f,iflag,&
                     me%inbvx,me%inbvy,me%inbvz,me%inbvq,me%inbvr,&
                     me%iloy,me%iloz,me%iloq,me%ilor,&
                     me%work_val_1,me%work_val_2,me%work_val_3,me%work_val_4,me%work_val_5,&
@@ -2724,7 +2832,7 @@
     allocate(me%tq(nq+kq))
     allocate(me%tr(nr+kr))
     allocate(me%ts(ns+ks))
-    allocate(me%bcoef(nx,ny,nz,nq,nr,ns))
+    allocate(me%bcoef(nx,ny,nz,nq,nr,ns,1_ip))
     allocate(me%work_val_1(ky,kz,kq,kr,ks))
     allocate(me%work_val_2(kz,kq,kr,ks))
     allocate(me%work_val_3(kq,kr,ks))
@@ -2739,12 +2847,13 @@
                 kx,ky,kz,kq,kr,ks,&
                 iknot,&
                 me%tx,me%ty,me%tz,me%tq,me%tr,me%ts,&
-                me%bcoef,iflag)
+                me%bcoef(:,:,:,:,:,:,1),iflag)
 
     if (iflag==0_ip) then
         call me%set_extrap_flag(extrap)
     end if
 
+    if (iflag==0_ip) me%nf = 1_ip
     me%initialized = iflag==0_ip
     me%iflag = iflag
 
@@ -2853,7 +2962,7 @@
         allocate(me%tq(nq+kq))
         allocate(me%tr(nr+kr))
         allocate(me%ts(ns+ks))
-        allocate(me%bcoef(nx,ny,nz,nq,nr,ns))
+        allocate(me%bcoef(nx,ny,nz,nq,nr,ns,1_ip))
         allocate(me%work_val_1(ky,kz,kq,kr,ks))
         allocate(me%work_val_2(kz,kq,kr,ks))
         allocate(me%work_val_3(kq,kr,ks))
@@ -2873,12 +2982,13 @@
                     kx,ky,kz,kq,kr,ks,&
                     1_ip,&
                     me%tx,me%ty,me%tz,me%tq,me%tr,me%ts,&
-                    me%bcoef,iflag)
+                    me%bcoef(:,:,:,:,:,:,1),iflag)
 
         call me%set_extrap_flag(extrap)
 
     end if
 
+    if (iflag==0_ip) me%nf = 1_ip
     me%initialized = iflag==0_ip
     me%iflag = iflag
 
@@ -2909,13 +3019,15 @@
     real(wp),intent(out)            :: f     !! interpolated value
     integer(ip),intent(out)         :: iflag !! status flag (see [[db6val]])
 
-    if (me%initialized) then
+    if (me%initialized .and. me%nf/=1_ip) then
+        iflag = 6003_ip  ! use the multiple-output version
+    else if (me%initialized) then
         call db6val(xval,yval,zval,qval,rval,sval,&
                     idx,idy,idz,idq,idr,ids,&
                     me%tx,me%ty,me%tz,me%tq,me%tr,me%ts,&
                     me%nx,me%ny,me%nz,me%nq,me%nr,me%ns,&
                     me%kx,me%ky,me%kz,me%kq,me%kr,me%ks,&
-                    me%bcoef,f,iflag,&
+                    me%bcoef(:,:,:,:,:,:,1),f,iflag,&
                     me%inbvx,me%inbvy,me%inbvz,me%inbvq,me%inbvr,me%inbvs,&
                     me%iloy,me%iloz,me%iloq,me%ilor,me%ilos,&
                     me%work_val_1,me%work_val_2,me%work_val_3,me%work_val_4,me%work_val_5,me%work_val_6,&
@@ -3043,7 +3155,9 @@
 
         me%nx = n(1)
         me%kx = kx
-        me%bcoef = bcoef
+        allocate(me%bcoef(n(1),1_ip))  ! (assigned below: no temporary array)
+        me%bcoef(:,1) = bcoef
+        me%nf = 1_ip
         me%tx = tx
         allocate(me%work_val_1(3_ip*kx))
 
@@ -3097,8 +3211,11 @@
     integer(ip),intent(out) :: iflag  !! status flag: 0 if no errors,
                                       !! 1 if the class is not initialized
 
-    if (me%initialized) then
-        bcoef = me%bcoef
+    if (me%initialized .and. me%nf/=1_ip) then
+        iflag = 6003_ip  ! use the multiple-output version
+        allocate(bcoef(0))
+    else if (me%initialized) then
+        bcoef = me%bcoef(:,1)
         iflag = 0_ip
     else
         allocate(bcoef(0))
@@ -3156,7 +3273,9 @@
         me%ny = n(2)
         me%kx = kx
         me%ky = ky
-        me%bcoef = bcoef
+        allocate(me%bcoef(n(1),n(2),1_ip))  ! (assigned below: no temporary array)
+        me%bcoef(:,:,1) = bcoef
+        me%nf = 1_ip
         me%tx = tx
         me%ty = ty
         allocate(me%work_val_1(ky))
@@ -3215,8 +3334,11 @@
     integer(ip),intent(out) :: iflag  !! status flag: 0 if no errors,
                                       !! 1 if the class is not initialized
 
-    if (me%initialized) then
-        bcoef = me%bcoef
+    if (me%initialized .and. me%nf/=1_ip) then
+        iflag = 6003_ip  ! use the multiple-output version
+        allocate(bcoef(0,0))
+    else if (me%initialized) then
+        bcoef = me%bcoef(:,:,1)
         iflag = 0_ip
     else
         allocate(bcoef(0,0))
@@ -3282,7 +3404,9 @@
         me%kx = kx
         me%ky = ky
         me%kz = kz
-        me%bcoef = bcoef
+        allocate(me%bcoef(n(1),n(2),n(3),1_ip))  ! (assigned below: no temporary array)
+        me%bcoef(:,:,:,1) = bcoef
+        me%nf = 1_ip
         me%tx = tx
         me%ty = ty
         me%tz = tz
@@ -3346,8 +3470,11 @@
     integer(ip),intent(out) :: iflag  !! status flag: 0 if no errors,
                                       !! 1 if the class is not initialized
 
-    if (me%initialized) then
-        bcoef = me%bcoef
+    if (me%initialized .and. me%nf/=1_ip) then
+        iflag = 6003_ip  ! use the multiple-output version
+        allocate(bcoef(0,0,0))
+    else if (me%initialized) then
+        bcoef = me%bcoef(:,:,:,1)
         iflag = 0_ip
     else
         allocate(bcoef(0,0,0))
@@ -3421,7 +3548,9 @@
         me%ky = ky
         me%kz = kz
         me%kq = kq
-        me%bcoef = bcoef
+        allocate(me%bcoef(n(1),n(2),n(3),n(4),1_ip))  ! (assigned below: no temporary array)
+        me%bcoef(:,:,:,:,1) = bcoef
+        me%nf = 1_ip
         me%tx = tx
         me%ty = ty
         me%tz = tz
@@ -3490,8 +3619,11 @@
     integer(ip),intent(out) :: iflag  !! status flag: 0 if no errors,
                                       !! 1 if the class is not initialized
 
-    if (me%initialized) then
-        bcoef = me%bcoef
+    if (me%initialized .and. me%nf/=1_ip) then
+        iflag = 6003_ip  ! use the multiple-output version
+        allocate(bcoef(0,0,0,0))
+    else if (me%initialized) then
+        bcoef = me%bcoef(:,:,:,:,1)
         iflag = 0_ip
     else
         allocate(bcoef(0,0,0,0))
@@ -3573,7 +3705,9 @@
         me%kz = kz
         me%kq = kq
         me%kr = kr
-        me%bcoef = bcoef
+        allocate(me%bcoef(n(1),n(2),n(3),n(4),n(5),1_ip))  ! (assigned below: no temporary array)
+        me%bcoef(:,:,:,:,:,1) = bcoef
+        me%nf = 1_ip
         me%tx = tx
         me%ty = ty
         me%tz = tz
@@ -3647,8 +3781,11 @@
     integer(ip),intent(out) :: iflag  !! status flag: 0 if no errors,
                                       !! 1 if the class is not initialized
 
-    if (me%initialized) then
-        bcoef = me%bcoef
+    if (me%initialized .and. me%nf/=1_ip) then
+        iflag = 6003_ip  ! use the multiple-output version
+        allocate(bcoef(0,0,0,0,0))
+    else if (me%initialized) then
+        bcoef = me%bcoef(:,:,:,:,:,1)
         iflag = 0_ip
     else
         allocate(bcoef(0,0,0,0,0))
@@ -3738,7 +3875,9 @@
         me%kq = kq
         me%kr = kr
         me%ks = ks
-        me%bcoef = bcoef
+        allocate(me%bcoef(n(1),n(2),n(3),n(4),n(5),n(6),1_ip))  ! (assigned below: no temporary array)
+        me%bcoef(:,:,:,:,:,:,1) = bcoef
+        me%nf = 1_ip
         me%tx = tx
         me%ty = ty
         me%tz = tz
@@ -3817,6 +3956,1173 @@
     integer(ip),intent(out) :: iflag  !! status flag: 0 if no errors,
                                       !! 1 if the class is not initialized
 
+    if (me%initialized .and. me%nf/=1_ip) then
+        iflag = 6003_ip  ! use the multiple-output version
+        allocate(bcoef(0,0,0,0,0,0))
+    else if (me%initialized) then
+        bcoef = me%bcoef(:,:,:,:,:,:,1)
+        iflag = 0_ip
+    else
+        allocate(bcoef(0,0,0,0,0,0))
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine get_coefficients_6d
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_1d]] type with multiple outputs: `nf` functions of
+!  the same inputs, on the same grid.
+!  The last dimension of `fcn` is the output index.
+!  This is a wrapper for [[db1ink]] (multiple-output version).
+
+    pure subroutine initialize_1d_auto_knots_multi(me,x,fcn,kx,iflag,extrap)
+
+    implicit none
+
+    class(bspline_1d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),intent(in) :: x  !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:),intent(in) :: fcn  !! `(nx,nf)` array of function values to interpolate
+                                                  !! (the last dimension is the output index)
+    integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(out) :: iflag  !! status flag (see [[db1ink]])
+    logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
+                                           !! (default is false)
+
+    integer(ip),dimension(1) :: n  !! number of points in each direction
+    integer(ip) :: nf  !! number of outputs
+
+    call me%destroy()
+
+    n(1) = size(x,kind=ip)
+    nf = size(fcn,2,kind=ip)
+
+    me%nx = n(1)
+    me%kx = kx
+    allocate(me%tx(n(1)+kx))
+    allocate(me%bcoef(n(1),nf))
+    allocate(me%work_val_1(3_ip*kx))
+
+    call db1ink(x,n(1),fcn,kx,0_ip,me%tx,me%bcoef,iflag)
+
+    if (iflag==0_ip) then
+        me%nf = nf
+        call me%set_extrap_flag(extrap)
+    end if
+
+    me%initialized = iflag==0_ip
+    me%iflag = iflag
+
+    end subroutine initialize_1d_auto_knots_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_1d]] type with multiple outputs: `nf` functions of
+!  the same inputs, on the same grid (with user-specified knots).
+!  The last dimension of `fcn` is the output index.
+!  This is a wrapper for [[db1ink]] (multiple-output version).
+
+    pure subroutine initialize_1d_specify_knots_multi(me,x,fcn,kx,tx,iflag,extrap)
+
+    implicit none
+
+    class(bspline_1d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),intent(in) :: x  !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:),intent(in) :: fcn  !! `(nx,nf)` array of function values to interpolate
+                                                  !! (the last dimension is the output index)
+    integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
+    real(wp),dimension(:),intent(in) :: tx  !! The `(nx+kx)` knots in the \(x\) direction.
+    integer(ip),intent(out) :: iflag  !! status flag (see [[db1ink]])
+    logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
+                                           !! (default is false)
+
+    integer(ip),dimension(1) :: n  !! number of points in each direction
+    integer(ip) :: nf  !! number of outputs
+
+    call me%destroy()
+
+    n(1) = size(x,kind=ip)
+    nf = size(fcn,2,kind=ip)
+
+    call check_knot_vectors_sizes(nx=n(1),kx=kx,tx=tx,iflag=iflag)
+    if (iflag/=0_ip) then
+        me%iflag = iflag
+        return
+    end if
+
+    me%nx = n(1)
+    me%kx = kx
+    allocate(me%tx(n(1)+kx))
+    allocate(me%bcoef(n(1),nf))
+    allocate(me%work_val_1(3_ip*kx))
+
+    me%tx = tx
+    call db1ink(x,n(1),fcn,kx,1_ip,me%tx,me%bcoef,iflag)
+
+    if (iflag==0_ip) then
+        me%nf = nf
+        call me%set_extrap_flag(extrap)
+    end if
+
+    me%initialized = iflag==0_ip
+    me%iflag = iflag
+
+    end subroutine initialize_1d_specify_knots_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Evaluate all the outputs of a [[bspline_1d]] with multiple outputs.
+!  This is a wrapper for [[db1val]] (multiple-output version).
+
+    pure subroutine evaluate_1d_multi(me,xval,idx,f,iflag)
+
+    implicit none
+
+    class(bspline_1d),intent(inout) :: me  !! the spline
+    real(wp),intent(in) :: xval  !! \(x\) coordinate of evaluation point.
+    integer(ip),intent(in) :: idx  !! \(x\) derivative of piecewise polynomial to evaluate.
+    real(wp),dimension(:),intent(out) :: f  !! `(nf)` interpolated values of the outputs
+                                            !! (see [[number_of_outputs]])
+    integer(ip),intent(out) :: iflag  !! status flag (see [[db1val]])
+
+    if (me%initialized) then
+        call db1val(xval,idx,me%tx,&
+                    me%nx,me%kx,&
+                    me%bcoef,f,iflag,me%inbvx,extrap=me%extrap)
+    else
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine evaluate_1d_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_1d]] type with multiple outputs directly from its
+!  knots and b-spline coefficients. The last dimension of `bcoef` is the
+!  output index.
+
+    pure subroutine initialize_from_coefficients_1d_multi(me,tx,bcoef,kx,iflag,extrap)
+
+    implicit none
+
+    class(bspline_1d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),intent(in) :: tx  !! The `(nx+kx)` knots in the \(x\) direction.
+    real(wp),dimension(:,:),intent(in) :: bcoef  !! `(nx,nf)` array of b-spline coefficients
+    integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(out) :: iflag  !! status flag (see [[initialize_from_coefficients_1d]]),
+                                      !! or 6005 if `bcoef` has no outputs
+    logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
+                                           !! (default is false)
+
+    if (size(bcoef,2,kind=ip)<1_ip) then
+        ! no outputs
+        call me%destroy()
+        iflag = 6005_ip
+        me%iflag = iflag
+        return
+    end if
+
+    call me%initialize_from_coefficients(tx,bcoef(:,1),kx,iflag,extrap)
+    if (iflag==0_ip) then
+        me%bcoef = bcoef
+        me%nf = size(bcoef,2,kind=ip)
+    end if
+
+    end subroutine initialize_from_coefficients_1d_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Returns the b-spline coefficients of a [[bspline_1d]] with any number of
+!  outputs. The last dimension of `bcoef` is the output index.
+
+    pure subroutine get_coefficients_1d_multi(me,bcoef,iflag)
+
+    implicit none
+
+    class(bspline_1d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:,:),allocatable,intent(out) :: bcoef  !! `(nx,nf)` array of b-spline coefficients
+    integer(ip),intent(out) :: iflag  !! status flag: 0 if no errors,
+                                      !! 1 if the class is not initialized
+
+    if (me%initialized) then
+        bcoef = me%bcoef
+        iflag = 0_ip
+    else
+        allocate(bcoef(0,0))
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine get_coefficients_1d_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_2d]] type with multiple outputs: `nf` functions of
+!  the same inputs, on the same grid.
+!  The last dimension of `fcn` is the output index.
+!  This is a wrapper for [[db2ink]] (multiple-output version).
+
+    pure subroutine initialize_2d_auto_knots_multi(me,x,y,fcn,kx,ky,iflag,extrap)
+
+    implicit none
+
+    class(bspline_2d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),intent(in) :: x  !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: y  !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:),intent(in) :: fcn  !! `(nx,ny,nf)` array of function values to interpolate
+                                                  !! (the last dimension is the output index)
+    integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in) :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(out) :: iflag  !! status flag (see [[db2ink]])
+    logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
+                                           !! (default is false)
+
+    integer(ip),dimension(2) :: n  !! number of points in each direction
+    integer(ip) :: nf  !! number of outputs
+
+    call me%destroy()
+
+    n(1) = size(x,kind=ip)
+    n(2) = size(y,kind=ip)
+    nf = size(fcn,3,kind=ip)
+
+    me%nx = n(1)
+    me%ny = n(2)
+    me%kx = kx
+    me%ky = ky
+    allocate(me%tx(n(1)+kx))
+    allocate(me%ty(n(2)+ky))
+    allocate(me%bcoef(n(1),n(2),nf))
+    allocate(me%work_val_1(ky))
+    allocate(me%work_val_2(3_ip*max(kx,ky)))
+
+    call db2ink(x,n(1),y,n(2),fcn,kx,ky,0_ip,me%tx,me%ty,me%bcoef,iflag)
+
+    if (iflag==0_ip) then
+        me%nf = nf
+        call me%set_extrap_flag(extrap)
+    end if
+
+    me%initialized = iflag==0_ip
+    me%iflag = iflag
+
+    end subroutine initialize_2d_auto_knots_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_2d]] type with multiple outputs: `nf` functions of
+!  the same inputs, on the same grid (with user-specified knots).
+!  The last dimension of `fcn` is the output index.
+!  This is a wrapper for [[db2ink]] (multiple-output version).
+
+    pure subroutine initialize_2d_specify_knots_multi(me,x,y,fcn,kx,ky,tx,ty,iflag,extrap)
+
+    implicit none
+
+    class(bspline_2d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),intent(in) :: x  !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: y  !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:),intent(in) :: fcn  !! `(nx,ny,nf)` array of function values to interpolate
+                                                  !! (the last dimension is the output index)
+    integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in) :: ky  !! The order of spline pieces in \(y\)
+    real(wp),dimension(:),intent(in) :: tx  !! The `(nx+kx)` knots in the \(x\) direction.
+    real(wp),dimension(:),intent(in) :: ty  !! The `(ny+ky)` knots in the \(y\) direction.
+    integer(ip),intent(out) :: iflag  !! status flag (see [[db2ink]])
+    logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
+                                           !! (default is false)
+
+    integer(ip),dimension(2) :: n  !! number of points in each direction
+    integer(ip) :: nf  !! number of outputs
+
+    call me%destroy()
+
+    n(1) = size(x,kind=ip)
+    n(2) = size(y,kind=ip)
+    nf = size(fcn,3,kind=ip)
+
+    call check_knot_vectors_sizes(nx=n(1),kx=kx,tx=tx,ny=n(2),ky=ky,ty=ty,iflag=iflag)
+    if (iflag/=0_ip) then
+        me%iflag = iflag
+        return
+    end if
+
+    me%nx = n(1)
+    me%ny = n(2)
+    me%kx = kx
+    me%ky = ky
+    allocate(me%tx(n(1)+kx))
+    allocate(me%ty(n(2)+ky))
+    allocate(me%bcoef(n(1),n(2),nf))
+    allocate(me%work_val_1(ky))
+    allocate(me%work_val_2(3_ip*max(kx,ky)))
+
+    me%tx = tx
+    me%ty = ty
+    call db2ink(x,n(1),y,n(2),fcn,kx,ky,1_ip,me%tx,me%ty,me%bcoef,iflag)
+
+    if (iflag==0_ip) then
+        me%nf = nf
+        call me%set_extrap_flag(extrap)
+    end if
+
+    me%initialized = iflag==0_ip
+    me%iflag = iflag
+
+    end subroutine initialize_2d_specify_knots_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Evaluate all the outputs of a [[bspline_2d]] with multiple outputs.
+!  This is a wrapper for [[db2val]] (multiple-output version).
+
+    pure subroutine evaluate_2d_multi(me,xval,yval,idx,idy,f,iflag)
+
+    implicit none
+
+    class(bspline_2d),intent(inout) :: me  !! the spline
+    real(wp),intent(in) :: xval  !! \(x\) coordinate of evaluation point.
+    real(wp),intent(in) :: yval  !! \(y\) coordinate of evaluation point.
+    integer(ip),intent(in) :: idx  !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in) :: idy  !! \(y\) derivative of piecewise polynomial to evaluate.
+    real(wp),dimension(:),intent(out) :: f  !! `(nf)` interpolated values of the outputs
+                                            !! (see [[number_of_outputs]])
+    integer(ip),intent(out) :: iflag  !! status flag (see [[db2val]])
+
+    if (me%initialized) then
+        call db2val(xval,yval,idx,idy,me%tx,me%ty,&
+                    me%nx,me%ny,me%kx,me%ky,&
+                    me%bcoef,f,iflag,me%inbvx,me%iloy,&
+                    me%work_val_1,extrap=me%extrap)
+    else
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine evaluate_2d_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_2d]] type with multiple outputs directly from its
+!  knots and b-spline coefficients. The last dimension of `bcoef` is the
+!  output index.
+
+    pure subroutine initialize_from_coefficients_2d_multi(me,tx,ty,bcoef,kx,ky,iflag,extrap)
+
+    implicit none
+
+    class(bspline_2d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),intent(in) :: tx  !! The `(nx+kx)` knots in the \(x\) direction.
+    real(wp),dimension(:),intent(in) :: ty  !! The `(ny+ky)` knots in the \(y\) direction.
+    real(wp),dimension(:,:,:),intent(in) :: bcoef  !! `(nx,ny,nf)` array of b-spline coefficients
+    integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in) :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(out) :: iflag  !! status flag (see [[initialize_from_coefficients_2d]]),
+                                      !! or 6005 if `bcoef` has no outputs
+    logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
+                                           !! (default is false)
+
+    if (size(bcoef,3,kind=ip)<1_ip) then
+        ! no outputs
+        call me%destroy()
+        iflag = 6005_ip
+        me%iflag = iflag
+        return
+    end if
+
+    call me%initialize_from_coefficients(tx,ty,bcoef(:,:,1),kx,ky,iflag,extrap)
+    if (iflag==0_ip) then
+        me%bcoef = bcoef
+        me%nf = size(bcoef,3,kind=ip)
+    end if
+
+    end subroutine initialize_from_coefficients_2d_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Returns the b-spline coefficients of a [[bspline_2d]] with any number of
+!  outputs. The last dimension of `bcoef` is the output index.
+
+    pure subroutine get_coefficients_2d_multi(me,bcoef,iflag)
+
+    implicit none
+
+    class(bspline_2d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:,:,:),allocatable,intent(out) :: bcoef  !! `(nx,ny,nf)` array of b-spline coefficients
+    integer(ip),intent(out) :: iflag  !! status flag: 0 if no errors,
+                                      !! 1 if the class is not initialized
+
+    if (me%initialized) then
+        bcoef = me%bcoef
+        iflag = 0_ip
+    else
+        allocate(bcoef(0,0,0))
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine get_coefficients_2d_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_3d]] type with multiple outputs: `nf` functions of
+!  the same inputs, on the same grid.
+!  The last dimension of `fcn` is the output index.
+!  This is a wrapper for [[db3ink]] (multiple-output version).
+
+    pure subroutine initialize_3d_auto_knots_multi(me,x,y,z,fcn,kx,ky,kz,iflag,extrap)
+
+    implicit none
+
+    class(bspline_3d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),intent(in) :: x  !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: y  !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: z  !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:,:),intent(in) :: fcn  !! `(nx,ny,nz,nf)` array of function values to interpolate
+                                                  !! (the last dimension is the output index)
+    integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in) :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in) :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(out) :: iflag  !! status flag (see [[db3ink]])
+    logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
+                                           !! (default is false)
+
+    integer(ip),dimension(3) :: n  !! number of points in each direction
+    integer(ip) :: nf  !! number of outputs
+
+    call me%destroy()
+
+    n(1) = size(x,kind=ip)
+    n(2) = size(y,kind=ip)
+    n(3) = size(z,kind=ip)
+    nf = size(fcn,4,kind=ip)
+
+    me%nx = n(1)
+    me%ny = n(2)
+    me%nz = n(3)
+    me%kx = kx
+    me%ky = ky
+    me%kz = kz
+    allocate(me%tx(n(1)+kx))
+    allocate(me%ty(n(2)+ky))
+    allocate(me%tz(n(3)+kz))
+    allocate(me%bcoef(n(1),n(2),n(3),nf))
+    allocate(me%work_val_1(ky,kz))
+    allocate(me%work_val_2(kz))
+    allocate(me%work_val_3(3_ip*max(kx,ky,kz)))
+
+    call db3ink(x,n(1),y,n(2),z,n(3),fcn,kx,ky,kz,0_ip,me%tx,me%ty,me%tz,me%bcoef,iflag)
+
+    if (iflag==0_ip) then
+        me%nf = nf
+        call me%set_extrap_flag(extrap)
+    end if
+
+    me%initialized = iflag==0_ip
+    me%iflag = iflag
+
+    end subroutine initialize_3d_auto_knots_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_3d]] type with multiple outputs: `nf` functions of
+!  the same inputs, on the same grid (with user-specified knots).
+!  The last dimension of `fcn` is the output index.
+!  This is a wrapper for [[db3ink]] (multiple-output version).
+
+    pure subroutine initialize_3d_specify_knots_multi(me,x,y,z,fcn,kx,ky,kz,tx,ty,tz,iflag,extrap)
+
+    implicit none
+
+    class(bspline_3d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),intent(in) :: x  !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: y  !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: z  !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:,:),intent(in) :: fcn  !! `(nx,ny,nz,nf)` array of function values to interpolate
+                                                  !! (the last dimension is the output index)
+    integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in) :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in) :: kz  !! The order of spline pieces in \(z\)
+    real(wp),dimension(:),intent(in) :: tx  !! The `(nx+kx)` knots in the \(x\) direction.
+    real(wp),dimension(:),intent(in) :: ty  !! The `(ny+ky)` knots in the \(y\) direction.
+    real(wp),dimension(:),intent(in) :: tz  !! The `(nz+kz)` knots in the \(z\) direction.
+    integer(ip),intent(out) :: iflag  !! status flag (see [[db3ink]])
+    logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
+                                           !! (default is false)
+
+    integer(ip),dimension(3) :: n  !! number of points in each direction
+    integer(ip) :: nf  !! number of outputs
+
+    call me%destroy()
+
+    n(1) = size(x,kind=ip)
+    n(2) = size(y,kind=ip)
+    n(3) = size(z,kind=ip)
+    nf = size(fcn,4,kind=ip)
+
+    call check_knot_vectors_sizes(nx=n(1),kx=kx,tx=tx,ny=n(2),ky=ky,ty=ty,nz=n(3),kz=kz,tz=tz,iflag=iflag)
+    if (iflag/=0_ip) then
+        me%iflag = iflag
+        return
+    end if
+
+    me%nx = n(1)
+    me%ny = n(2)
+    me%nz = n(3)
+    me%kx = kx
+    me%ky = ky
+    me%kz = kz
+    allocate(me%tx(n(1)+kx))
+    allocate(me%ty(n(2)+ky))
+    allocate(me%tz(n(3)+kz))
+    allocate(me%bcoef(n(1),n(2),n(3),nf))
+    allocate(me%work_val_1(ky,kz))
+    allocate(me%work_val_2(kz))
+    allocate(me%work_val_3(3_ip*max(kx,ky,kz)))
+
+    me%tx = tx
+    me%ty = ty
+    me%tz = tz
+    call db3ink(x,n(1),y,n(2),z,n(3),fcn,kx,ky,kz,1_ip,me%tx,me%ty,me%tz,me%bcoef,iflag)
+
+    if (iflag==0_ip) then
+        me%nf = nf
+        call me%set_extrap_flag(extrap)
+    end if
+
+    me%initialized = iflag==0_ip
+    me%iflag = iflag
+
+    end subroutine initialize_3d_specify_knots_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Evaluate all the outputs of a [[bspline_3d]] with multiple outputs.
+!  This is a wrapper for [[db3val]] (multiple-output version).
+
+    pure subroutine evaluate_3d_multi(me,xval,yval,zval,idx,idy,idz,f,iflag)
+
+    implicit none
+
+    class(bspline_3d),intent(inout) :: me  !! the spline
+    real(wp),intent(in) :: xval  !! \(x\) coordinate of evaluation point.
+    real(wp),intent(in) :: yval  !! \(y\) coordinate of evaluation point.
+    real(wp),intent(in) :: zval  !! \(z\) coordinate of evaluation point.
+    integer(ip),intent(in) :: idx  !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in) :: idy  !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in) :: idz  !! \(z\) derivative of piecewise polynomial to evaluate.
+    real(wp),dimension(:),intent(out) :: f  !! `(nf)` interpolated values of the outputs
+                                            !! (see [[number_of_outputs]])
+    integer(ip),intent(out) :: iflag  !! status flag (see [[db3val]])
+
+    if (me%initialized) then
+        call db3val(xval,yval,zval,idx,idy,idz,me%tx,me%ty,me%tz,&
+                    me%nx,me%ny,me%nz,me%kx,me%ky,me%kz,&
+                    me%bcoef,f,iflag,me%inbvx,me%iloy,me%iloz,&
+                    me%work_val_1,me%work_val_2,extrap=me%extrap)
+    else
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine evaluate_3d_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_3d]] type with multiple outputs directly from its
+!  knots and b-spline coefficients. The last dimension of `bcoef` is the
+!  output index.
+
+    pure subroutine initialize_from_coefficients_3d_multi(me,tx,ty,tz,bcoef,kx,ky,kz,iflag,extrap)
+
+    implicit none
+
+    class(bspline_3d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),intent(in) :: tx  !! The `(nx+kx)` knots in the \(x\) direction.
+    real(wp),dimension(:),intent(in) :: ty  !! The `(ny+ky)` knots in the \(y\) direction.
+    real(wp),dimension(:),intent(in) :: tz  !! The `(nz+kz)` knots in the \(z\) direction.
+    real(wp),dimension(:,:,:,:),intent(in) :: bcoef  !! `(nx,ny,nz,nf)` array of b-spline coefficients
+    integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in) :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in) :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(out) :: iflag  !! status flag (see [[initialize_from_coefficients_3d]]),
+                                      !! or 6005 if `bcoef` has no outputs
+    logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
+                                           !! (default is false)
+
+    if (size(bcoef,4,kind=ip)<1_ip) then
+        ! no outputs
+        call me%destroy()
+        iflag = 6005_ip
+        me%iflag = iflag
+        return
+    end if
+
+    call me%initialize_from_coefficients(tx,ty,tz,bcoef(:,:,:,1),kx,ky,kz,iflag,extrap)
+    if (iflag==0_ip) then
+        me%bcoef = bcoef
+        me%nf = size(bcoef,4,kind=ip)
+    end if
+
+    end subroutine initialize_from_coefficients_3d_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Returns the b-spline coefficients of a [[bspline_3d]] with any number of
+!  outputs. The last dimension of `bcoef` is the output index.
+
+    pure subroutine get_coefficients_3d_multi(me,bcoef,iflag)
+
+    implicit none
+
+    class(bspline_3d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:,:,:,:),allocatable,intent(out) :: bcoef  !! `(nx,ny,nz,nf)` array of b-spline coefficients
+    integer(ip),intent(out) :: iflag  !! status flag: 0 if no errors,
+                                      !! 1 if the class is not initialized
+
+    if (me%initialized) then
+        bcoef = me%bcoef
+        iflag = 0_ip
+    else
+        allocate(bcoef(0,0,0,0))
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine get_coefficients_3d_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_4d]] type with multiple outputs: `nf` functions of
+!  the same inputs, on the same grid.
+!  The last dimension of `fcn` is the output index.
+!  This is a wrapper for [[db4ink]] (multiple-output version).
+
+    pure subroutine initialize_4d_auto_knots_multi(me,x,y,z,q,fcn,kx,ky,kz,kq,iflag,extrap)
+
+    implicit none
+
+    class(bspline_4d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),intent(in) :: x  !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: y  !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: z  !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: q  !! `(nq)` array of \(q\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:,:,:),intent(in) :: fcn  !! `(nx,ny,nz,nq,nf)` array of function values to interpolate
+                                                  !! (the last dimension is the output index)
+    integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in) :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in) :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in) :: kq  !! The order of spline pieces in \(q\)
+    integer(ip),intent(out) :: iflag  !! status flag (see [[db4ink]])
+    logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
+                                           !! (default is false)
+
+    integer(ip),dimension(4) :: n  !! number of points in each direction
+    integer(ip) :: nf  !! number of outputs
+
+    call me%destroy()
+
+    n(1) = size(x,kind=ip)
+    n(2) = size(y,kind=ip)
+    n(3) = size(z,kind=ip)
+    n(4) = size(q,kind=ip)
+    nf = size(fcn,5,kind=ip)
+
+    me%nx = n(1)
+    me%ny = n(2)
+    me%nz = n(3)
+    me%nq = n(4)
+    me%kx = kx
+    me%ky = ky
+    me%kz = kz
+    me%kq = kq
+    allocate(me%tx(n(1)+kx))
+    allocate(me%ty(n(2)+ky))
+    allocate(me%tz(n(3)+kz))
+    allocate(me%tq(n(4)+kq))
+    allocate(me%bcoef(n(1),n(2),n(3),n(4),nf))
+    allocate(me%work_val_1(ky,kz,kq))
+    allocate(me%work_val_2(kz,kq))
+    allocate(me%work_val_3(kq))
+    allocate(me%work_val_4(3_ip*max(kx,ky,kz,kq)))
+
+    call db4ink(x,n(1),y,n(2),z,n(3),q,n(4),fcn,kx,ky,kz,kq,0_ip,me%tx,me%ty,me%tz,me%tq,me%bcoef,iflag)
+
+    if (iflag==0_ip) then
+        me%nf = nf
+        call me%set_extrap_flag(extrap)
+    end if
+
+    me%initialized = iflag==0_ip
+    me%iflag = iflag
+
+    end subroutine initialize_4d_auto_knots_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_4d]] type with multiple outputs: `nf` functions of
+!  the same inputs, on the same grid (with user-specified knots).
+!  The last dimension of `fcn` is the output index.
+!  This is a wrapper for [[db4ink]] (multiple-output version).
+
+    pure subroutine initialize_4d_specify_knots_multi(me,x,y,z,q,fcn,kx,ky,kz,kq,tx,ty,tz,tq,iflag,extrap)
+
+    implicit none
+
+    class(bspline_4d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),intent(in) :: x  !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: y  !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: z  !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: q  !! `(nq)` array of \(q\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:,:,:),intent(in) :: fcn  !! `(nx,ny,nz,nq,nf)` array of function values to interpolate
+                                                  !! (the last dimension is the output index)
+    integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in) :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in) :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in) :: kq  !! The order of spline pieces in \(q\)
+    real(wp),dimension(:),intent(in) :: tx  !! The `(nx+kx)` knots in the \(x\) direction.
+    real(wp),dimension(:),intent(in) :: ty  !! The `(ny+ky)` knots in the \(y\) direction.
+    real(wp),dimension(:),intent(in) :: tz  !! The `(nz+kz)` knots in the \(z\) direction.
+    real(wp),dimension(:),intent(in) :: tq  !! The `(nq+kq)` knots in the \(q\) direction.
+    integer(ip),intent(out) :: iflag  !! status flag (see [[db4ink]])
+    logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
+                                           !! (default is false)
+
+    integer(ip),dimension(4) :: n  !! number of points in each direction
+    integer(ip) :: nf  !! number of outputs
+
+    call me%destroy()
+
+    n(1) = size(x,kind=ip)
+    n(2) = size(y,kind=ip)
+    n(3) = size(z,kind=ip)
+    n(4) = size(q,kind=ip)
+    nf = size(fcn,5,kind=ip)
+
+    call check_knot_vectors_sizes(nx=n(1),kx=kx,tx=tx,ny=n(2),ky=ky,ty=ty,nz=n(3),kz=kz,tz=tz,nq=n(4),kq=kq,tq=tq,iflag=iflag)
+    if (iflag/=0_ip) then
+        me%iflag = iflag
+        return
+    end if
+
+    me%nx = n(1)
+    me%ny = n(2)
+    me%nz = n(3)
+    me%nq = n(4)
+    me%kx = kx
+    me%ky = ky
+    me%kz = kz
+    me%kq = kq
+    allocate(me%tx(n(1)+kx))
+    allocate(me%ty(n(2)+ky))
+    allocate(me%tz(n(3)+kz))
+    allocate(me%tq(n(4)+kq))
+    allocate(me%bcoef(n(1),n(2),n(3),n(4),nf))
+    allocate(me%work_val_1(ky,kz,kq))
+    allocate(me%work_val_2(kz,kq))
+    allocate(me%work_val_3(kq))
+    allocate(me%work_val_4(3_ip*max(kx,ky,kz,kq)))
+
+    me%tx = tx
+    me%ty = ty
+    me%tz = tz
+    me%tq = tq
+    call db4ink(x,n(1),y,n(2),z,n(3),q,n(4),fcn,kx,ky,kz,kq,1_ip,me%tx,me%ty,me%tz,me%tq,me%bcoef,iflag)
+
+    if (iflag==0_ip) then
+        me%nf = nf
+        call me%set_extrap_flag(extrap)
+    end if
+
+    me%initialized = iflag==0_ip
+    me%iflag = iflag
+
+    end subroutine initialize_4d_specify_knots_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Evaluate all the outputs of a [[bspline_4d]] with multiple outputs.
+!  This is a wrapper for [[db4val]] (multiple-output version).
+
+    pure subroutine evaluate_4d_multi(me,xval,yval,zval,qval,idx,idy,idz,idq,f,iflag)
+
+    implicit none
+
+    class(bspline_4d),intent(inout) :: me  !! the spline
+    real(wp),intent(in) :: xval  !! \(x\) coordinate of evaluation point.
+    real(wp),intent(in) :: yval  !! \(y\) coordinate of evaluation point.
+    real(wp),intent(in) :: zval  !! \(z\) coordinate of evaluation point.
+    real(wp),intent(in) :: qval  !! \(q\) coordinate of evaluation point.
+    integer(ip),intent(in) :: idx  !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in) :: idy  !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in) :: idz  !! \(z\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in) :: idq  !! \(q\) derivative of piecewise polynomial to evaluate.
+    real(wp),dimension(:),intent(out) :: f  !! `(nf)` interpolated values of the outputs
+                                            !! (see [[number_of_outputs]])
+    integer(ip),intent(out) :: iflag  !! status flag (see [[db4val]])
+
+    if (me%initialized) then
+        call db4val(xval,yval,zval,qval,idx,idy,idz,idq,me%tx,me%ty,me%tz,me%tq,&
+                    me%nx,me%ny,me%nz,me%nq,me%kx,me%ky,me%kz,me%kq,&
+                    me%bcoef,f,iflag,me%inbvx,me%iloy,me%iloz,me%iloq,&
+                    me%work_val_1,me%work_val_2,me%work_val_3,extrap=me%extrap)
+    else
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine evaluate_4d_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_4d]] type with multiple outputs directly from its
+!  knots and b-spline coefficients. The last dimension of `bcoef` is the
+!  output index.
+
+    pure subroutine initialize_from_coefficients_4d_multi(me,tx,ty,tz,tq,bcoef,kx,ky,kz,kq,iflag,extrap)
+
+    implicit none
+
+    class(bspline_4d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),intent(in) :: tx  !! The `(nx+kx)` knots in the \(x\) direction.
+    real(wp),dimension(:),intent(in) :: ty  !! The `(ny+ky)` knots in the \(y\) direction.
+    real(wp),dimension(:),intent(in) :: tz  !! The `(nz+kz)` knots in the \(z\) direction.
+    real(wp),dimension(:),intent(in) :: tq  !! The `(nq+kq)` knots in the \(q\) direction.
+    real(wp),dimension(:,:,:,:,:),intent(in) :: bcoef  !! `(nx,ny,nz,nq,nf)` array of b-spline coefficients
+    integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in) :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in) :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in) :: kq  !! The order of spline pieces in \(q\)
+    integer(ip),intent(out) :: iflag  !! status flag (see [[initialize_from_coefficients_4d]]),
+                                      !! or 6005 if `bcoef` has no outputs
+    logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
+                                           !! (default is false)
+
+    if (size(bcoef,5,kind=ip)<1_ip) then
+        ! no outputs
+        call me%destroy()
+        iflag = 6005_ip
+        me%iflag = iflag
+        return
+    end if
+
+    call me%initialize_from_coefficients(tx,ty,tz,tq,bcoef(:,:,:,:,1),kx,ky,kz,kq,iflag,extrap)
+    if (iflag==0_ip) then
+        me%bcoef = bcoef
+        me%nf = size(bcoef,5,kind=ip)
+    end if
+
+    end subroutine initialize_from_coefficients_4d_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Returns the b-spline coefficients of a [[bspline_4d]] with any number of
+!  outputs. The last dimension of `bcoef` is the output index.
+
+    pure subroutine get_coefficients_4d_multi(me,bcoef,iflag)
+
+    implicit none
+
+    class(bspline_4d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:,:,:,:,:),allocatable,intent(out) :: bcoef  !! `(nx,ny,nz,nq,nf)` array of b-spline coefficients
+    integer(ip),intent(out) :: iflag  !! status flag: 0 if no errors,
+                                      !! 1 if the class is not initialized
+
+    if (me%initialized) then
+        bcoef = me%bcoef
+        iflag = 0_ip
+    else
+        allocate(bcoef(0,0,0,0,0))
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine get_coefficients_4d_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_5d]] type with multiple outputs: `nf` functions of
+!  the same inputs, on the same grid.
+!  The last dimension of `fcn` is the output index.
+!  This is a wrapper for [[db5ink]] (multiple-output version).
+
+    pure subroutine initialize_5d_auto_knots_multi(me,x,y,z,q,r,fcn,kx,ky,kz,kq,kr,iflag,extrap)
+
+    implicit none
+
+    class(bspline_5d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),intent(in) :: x  !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: y  !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: z  !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: q  !! `(nq)` array of \(q\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: r  !! `(nr)` array of \(r\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:,:,:,:),intent(in) :: fcn  !! `(nx,ny,nz,nq,nr,nf)` array of function values to interpolate
+                                                  !! (the last dimension is the output index)
+    integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in) :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in) :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in) :: kq  !! The order of spline pieces in \(q\)
+    integer(ip),intent(in) :: kr  !! The order of spline pieces in \(r\)
+    integer(ip),intent(out) :: iflag  !! status flag (see [[db5ink]])
+    logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
+                                           !! (default is false)
+
+    integer(ip),dimension(5) :: n  !! number of points in each direction
+    integer(ip) :: nf  !! number of outputs
+
+    call me%destroy()
+
+    n(1) = size(x,kind=ip)
+    n(2) = size(y,kind=ip)
+    n(3) = size(z,kind=ip)
+    n(4) = size(q,kind=ip)
+    n(5) = size(r,kind=ip)
+    nf = size(fcn,6,kind=ip)
+
+    me%nx = n(1)
+    me%ny = n(2)
+    me%nz = n(3)
+    me%nq = n(4)
+    me%nr = n(5)
+    me%kx = kx
+    me%ky = ky
+    me%kz = kz
+    me%kq = kq
+    me%kr = kr
+    allocate(me%tx(n(1)+kx))
+    allocate(me%ty(n(2)+ky))
+    allocate(me%tz(n(3)+kz))
+    allocate(me%tq(n(4)+kq))
+    allocate(me%tr(n(5)+kr))
+    allocate(me%bcoef(n(1),n(2),n(3),n(4),n(5),nf))
+    allocate(me%work_val_1(ky,kz,kq,kr))
+    allocate(me%work_val_2(kz,kq,kr))
+    allocate(me%work_val_3(kq,kr))
+    allocate(me%work_val_4(kr))
+    allocate(me%work_val_5(3_ip*max(kx,ky,kz,kq,kr)))
+
+    call db5ink(x,n(1),y,n(2),z,n(3),q,n(4),r,n(5),fcn,kx,ky,kz,kq,kr,0_ip,me%tx,me%ty,me%tz,me%tq,me%tr,me%bcoef,iflag)
+
+    if (iflag==0_ip) then
+        me%nf = nf
+        call me%set_extrap_flag(extrap)
+    end if
+
+    me%initialized = iflag==0_ip
+    me%iflag = iflag
+
+    end subroutine initialize_5d_auto_knots_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_5d]] type with multiple outputs: `nf` functions of
+!  the same inputs, on the same grid (with user-specified knots).
+!  The last dimension of `fcn` is the output index.
+!  This is a wrapper for [[db5ink]] (multiple-output version).
+
+    pure subroutine initialize_5d_specify_knots_multi(me,x,y,z,q,r,fcn,kx,ky,kz,kq,kr,tx,ty,tz,tq,tr,iflag,extrap)
+
+    implicit none
+
+    class(bspline_5d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),intent(in) :: x  !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: y  !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: z  !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: q  !! `(nq)` array of \(q\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: r  !! `(nr)` array of \(r\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:,:,:,:),intent(in) :: fcn  !! `(nx,ny,nz,nq,nr,nf)` array of function values to interpolate
+                                                  !! (the last dimension is the output index)
+    integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in) :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in) :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in) :: kq  !! The order of spline pieces in \(q\)
+    integer(ip),intent(in) :: kr  !! The order of spline pieces in \(r\)
+    real(wp),dimension(:),intent(in) :: tx  !! The `(nx+kx)` knots in the \(x\) direction.
+    real(wp),dimension(:),intent(in) :: ty  !! The `(ny+ky)` knots in the \(y\) direction.
+    real(wp),dimension(:),intent(in) :: tz  !! The `(nz+kz)` knots in the \(z\) direction.
+    real(wp),dimension(:),intent(in) :: tq  !! The `(nq+kq)` knots in the \(q\) direction.
+    real(wp),dimension(:),intent(in) :: tr  !! The `(nr+kr)` knots in the \(r\) direction.
+    integer(ip),intent(out) :: iflag  !! status flag (see [[db5ink]])
+    logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
+                                           !! (default is false)
+
+    integer(ip),dimension(5) :: n  !! number of points in each direction
+    integer(ip) :: nf  !! number of outputs
+
+    call me%destroy()
+
+    n(1) = size(x,kind=ip)
+    n(2) = size(y,kind=ip)
+    n(3) = size(z,kind=ip)
+    n(4) = size(q,kind=ip)
+    n(5) = size(r,kind=ip)
+    nf = size(fcn,6,kind=ip)
+
+    call check_knot_vectors_sizes(nx=n(1),kx=kx,tx=tx,ny=n(2),ky=ky,ty=ty,nz=n(3),kz=kz,tz=tz,nq=n(4),kq=kq,tq=tq,nr=n(5),kr=kr,tr=tr,iflag=iflag)
+    if (iflag/=0_ip) then
+        me%iflag = iflag
+        return
+    end if
+
+    me%nx = n(1)
+    me%ny = n(2)
+    me%nz = n(3)
+    me%nq = n(4)
+    me%nr = n(5)
+    me%kx = kx
+    me%ky = ky
+    me%kz = kz
+    me%kq = kq
+    me%kr = kr
+    allocate(me%tx(n(1)+kx))
+    allocate(me%ty(n(2)+ky))
+    allocate(me%tz(n(3)+kz))
+    allocate(me%tq(n(4)+kq))
+    allocate(me%tr(n(5)+kr))
+    allocate(me%bcoef(n(1),n(2),n(3),n(4),n(5),nf))
+    allocate(me%work_val_1(ky,kz,kq,kr))
+    allocate(me%work_val_2(kz,kq,kr))
+    allocate(me%work_val_3(kq,kr))
+    allocate(me%work_val_4(kr))
+    allocate(me%work_val_5(3_ip*max(kx,ky,kz,kq,kr)))
+
+    me%tx = tx
+    me%ty = ty
+    me%tz = tz
+    me%tq = tq
+    me%tr = tr
+    call db5ink(x,n(1),y,n(2),z,n(3),q,n(4),r,n(5),fcn,kx,ky,kz,kq,kr,1_ip,me%tx,me%ty,me%tz,me%tq,me%tr,me%bcoef,iflag)
+
+    if (iflag==0_ip) then
+        me%nf = nf
+        call me%set_extrap_flag(extrap)
+    end if
+
+    me%initialized = iflag==0_ip
+    me%iflag = iflag
+
+    end subroutine initialize_5d_specify_knots_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Evaluate all the outputs of a [[bspline_5d]] with multiple outputs.
+!  This is a wrapper for [[db5val]] (multiple-output version).
+
+    pure subroutine evaluate_5d_multi(me,xval,yval,zval,qval,rval,idx,idy,idz,idq,idr,f,iflag)
+
+    implicit none
+
+    class(bspline_5d),intent(inout) :: me  !! the spline
+    real(wp),intent(in) :: xval  !! \(x\) coordinate of evaluation point.
+    real(wp),intent(in) :: yval  !! \(y\) coordinate of evaluation point.
+    real(wp),intent(in) :: zval  !! \(z\) coordinate of evaluation point.
+    real(wp),intent(in) :: qval  !! \(q\) coordinate of evaluation point.
+    real(wp),intent(in) :: rval  !! \(r\) coordinate of evaluation point.
+    integer(ip),intent(in) :: idx  !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in) :: idy  !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in) :: idz  !! \(z\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in) :: idq  !! \(q\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in) :: idr  !! \(r\) derivative of piecewise polynomial to evaluate.
+    real(wp),dimension(:),intent(out) :: f  !! `(nf)` interpolated values of the outputs
+                                            !! (see [[number_of_outputs]])
+    integer(ip),intent(out) :: iflag  !! status flag (see [[db5val]])
+
+    if (me%initialized) then
+        call db5val(xval,yval,zval,qval,rval,idx,idy,idz,idq,idr,me%tx,me%ty,me%tz,me%tq,me%tr,&
+                    me%nx,me%ny,me%nz,me%nq,me%nr,me%kx,me%ky,me%kz,me%kq,me%kr,&
+                    me%bcoef,f,iflag,me%inbvx,me%iloy,me%iloz,me%iloq,me%ilor,&
+                    me%work_val_1,me%work_val_2,me%work_val_3,me%work_val_4,extrap=me%extrap)
+    else
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine evaluate_5d_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_5d]] type with multiple outputs directly from its
+!  knots and b-spline coefficients. The last dimension of `bcoef` is the
+!  output index.
+
+    pure subroutine initialize_from_coefficients_5d_multi(me,tx,ty,tz,tq,tr,bcoef,kx,ky,kz,kq,kr,iflag,extrap)
+
+    implicit none
+
+    class(bspline_5d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),intent(in) :: tx  !! The `(nx+kx)` knots in the \(x\) direction.
+    real(wp),dimension(:),intent(in) :: ty  !! The `(ny+ky)` knots in the \(y\) direction.
+    real(wp),dimension(:),intent(in) :: tz  !! The `(nz+kz)` knots in the \(z\) direction.
+    real(wp),dimension(:),intent(in) :: tq  !! The `(nq+kq)` knots in the \(q\) direction.
+    real(wp),dimension(:),intent(in) :: tr  !! The `(nr+kr)` knots in the \(r\) direction.
+    real(wp),dimension(:,:,:,:,:,:),intent(in) :: bcoef  !! `(nx,ny,nz,nq,nr,nf)` array of b-spline coefficients
+    integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in) :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in) :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in) :: kq  !! The order of spline pieces in \(q\)
+    integer(ip),intent(in) :: kr  !! The order of spline pieces in \(r\)
+    integer(ip),intent(out) :: iflag  !! status flag (see [[initialize_from_coefficients_5d]]),
+                                      !! or 6005 if `bcoef` has no outputs
+    logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
+                                           !! (default is false)
+
+    if (size(bcoef,6,kind=ip)<1_ip) then
+        ! no outputs
+        call me%destroy()
+        iflag = 6005_ip
+        me%iflag = iflag
+        return
+    end if
+
+    call me%initialize_from_coefficients(tx,ty,tz,tq,tr,bcoef(:,:,:,:,:,1),kx,ky,kz,kq,kr,iflag,extrap)
+    if (iflag==0_ip) then
+        me%bcoef = bcoef
+        me%nf = size(bcoef,6,kind=ip)
+    end if
+
+    end subroutine initialize_from_coefficients_5d_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Returns the b-spline coefficients of a [[bspline_5d]] with any number of
+!  outputs. The last dimension of `bcoef` is the output index.
+
+    pure subroutine get_coefficients_5d_multi(me,bcoef,iflag)
+
+    implicit none
+
+    class(bspline_5d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:,:,:,:,:,:),allocatable,intent(out) :: bcoef  !! `(nx,ny,nz,nq,nr,nf)` array of b-spline coefficients
+    integer(ip),intent(out) :: iflag  !! status flag: 0 if no errors,
+                                      !! 1 if the class is not initialized
+
     if (me%initialized) then
         bcoef = me%bcoef
         iflag = 0_ip
@@ -3826,7 +5132,300 @@
     end if
     me%iflag = iflag
 
-    end subroutine get_coefficients_6d
+    end subroutine get_coefficients_5d_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_6d]] type with multiple outputs: `nf` functions of
+!  the same inputs, on the same grid.
+!  The last dimension of `fcn` is the output index.
+!  This is a wrapper for [[db6ink]] (multiple-output version).
+
+    pure subroutine initialize_6d_auto_knots_multi(me,x,y,z,q,r,s,fcn,kx,ky,kz,kq,kr,ks,iflag,extrap)
+
+    implicit none
+
+    class(bspline_6d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),intent(in) :: x  !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: y  !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: z  !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: q  !! `(nq)` array of \(q\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: r  !! `(nr)` array of \(r\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: s  !! `(ns)` array of \(s\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:,:,:,:,:),intent(in) :: fcn  !! `(nx,ny,nz,nq,nr,ns,nf)` array of function values to interpolate
+                                                  !! (the last dimension is the output index)
+    integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in) :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in) :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in) :: kq  !! The order of spline pieces in \(q\)
+    integer(ip),intent(in) :: kr  !! The order of spline pieces in \(r\)
+    integer(ip),intent(in) :: ks  !! The order of spline pieces in \(s\)
+    integer(ip),intent(out) :: iflag  !! status flag (see [[db6ink]])
+    logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
+                                           !! (default is false)
+
+    integer(ip),dimension(6) :: n  !! number of points in each direction
+    integer(ip) :: nf  !! number of outputs
+
+    call me%destroy()
+
+    n(1) = size(x,kind=ip)
+    n(2) = size(y,kind=ip)
+    n(3) = size(z,kind=ip)
+    n(4) = size(q,kind=ip)
+    n(5) = size(r,kind=ip)
+    n(6) = size(s,kind=ip)
+    nf = size(fcn,7,kind=ip)
+
+    me%nx = n(1)
+    me%ny = n(2)
+    me%nz = n(3)
+    me%nq = n(4)
+    me%nr = n(5)
+    me%ns = n(6)
+    me%kx = kx
+    me%ky = ky
+    me%kz = kz
+    me%kq = kq
+    me%kr = kr
+    me%ks = ks
+    allocate(me%tx(n(1)+kx))
+    allocate(me%ty(n(2)+ky))
+    allocate(me%tz(n(3)+kz))
+    allocate(me%tq(n(4)+kq))
+    allocate(me%tr(n(5)+kr))
+    allocate(me%ts(n(6)+ks))
+    allocate(me%bcoef(n(1),n(2),n(3),n(4),n(5),n(6),nf))
+    allocate(me%work_val_1(ky,kz,kq,kr,ks))
+    allocate(me%work_val_2(kz,kq,kr,ks))
+    allocate(me%work_val_3(kq,kr,ks))
+    allocate(me%work_val_4(kr,ks))
+    allocate(me%work_val_5(ks))
+    allocate(me%work_val_6(3_ip*max(kx,ky,kz,kq,kr,ks)))
+
+    call db6ink(x,n(1),y,n(2),z,n(3),q,n(4),r,n(5),s,n(6),fcn,kx,ky,kz,kq,kr,ks,0_ip,me%tx,me%ty,me%tz,me%tq,me%tr,me%ts,me%bcoef,iflag)
+
+    if (iflag==0_ip) then
+        me%nf = nf
+        call me%set_extrap_flag(extrap)
+    end if
+
+    me%initialized = iflag==0_ip
+    me%iflag = iflag
+
+    end subroutine initialize_6d_auto_knots_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_6d]] type with multiple outputs: `nf` functions of
+!  the same inputs, on the same grid (with user-specified knots).
+!  The last dimension of `fcn` is the output index.
+!  This is a wrapper for [[db6ink]] (multiple-output version).
+
+    pure subroutine initialize_6d_specify_knots_multi(me,x,y,z,q,r,s,fcn,kx,ky,kz,kq,kr,ks,tx,ty,tz,tq,tr,ts,iflag,extrap)
+
+    implicit none
+
+    class(bspline_6d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),intent(in) :: x  !! `(nx)` array of \(x\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: y  !! `(ny)` array of \(y\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: z  !! `(nz)` array of \(z\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: q  !! `(nq)` array of \(q\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: r  !! `(nr)` array of \(r\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:),intent(in) :: s  !! `(ns)` array of \(s\) abcissae. Must be strictly increasing.
+    real(wp),dimension(:,:,:,:,:,:,:),intent(in) :: fcn  !! `(nx,ny,nz,nq,nr,ns,nf)` array of function values to interpolate
+                                                  !! (the last dimension is the output index)
+    integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in) :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in) :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in) :: kq  !! The order of spline pieces in \(q\)
+    integer(ip),intent(in) :: kr  !! The order of spline pieces in \(r\)
+    integer(ip),intent(in) :: ks  !! The order of spline pieces in \(s\)
+    real(wp),dimension(:),intent(in) :: tx  !! The `(nx+kx)` knots in the \(x\) direction.
+    real(wp),dimension(:),intent(in) :: ty  !! The `(ny+ky)` knots in the \(y\) direction.
+    real(wp),dimension(:),intent(in) :: tz  !! The `(nz+kz)` knots in the \(z\) direction.
+    real(wp),dimension(:),intent(in) :: tq  !! The `(nq+kq)` knots in the \(q\) direction.
+    real(wp),dimension(:),intent(in) :: tr  !! The `(nr+kr)` knots in the \(r\) direction.
+    real(wp),dimension(:),intent(in) :: ts  !! The `(ns+ks)` knots in the \(s\) direction.
+    integer(ip),intent(out) :: iflag  !! status flag (see [[db6ink]])
+    logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
+                                           !! (default is false)
+
+    integer(ip),dimension(6) :: n  !! number of points in each direction
+    integer(ip) :: nf  !! number of outputs
+
+    call me%destroy()
+
+    n(1) = size(x,kind=ip)
+    n(2) = size(y,kind=ip)
+    n(3) = size(z,kind=ip)
+    n(4) = size(q,kind=ip)
+    n(5) = size(r,kind=ip)
+    n(6) = size(s,kind=ip)
+    nf = size(fcn,7,kind=ip)
+
+    call check_knot_vectors_sizes(nx=n(1),kx=kx,tx=tx,ny=n(2),ky=ky,ty=ty,nz=n(3),kz=kz,tz=tz,nq=n(4),kq=kq,tq=tq,nr=n(5),kr=kr,tr=tr,ns=n(6),ks=ks,ts=ts,iflag=iflag)
+    if (iflag/=0_ip) then
+        me%iflag = iflag
+        return
+    end if
+
+    me%nx = n(1)
+    me%ny = n(2)
+    me%nz = n(3)
+    me%nq = n(4)
+    me%nr = n(5)
+    me%ns = n(6)
+    me%kx = kx
+    me%ky = ky
+    me%kz = kz
+    me%kq = kq
+    me%kr = kr
+    me%ks = ks
+    allocate(me%tx(n(1)+kx))
+    allocate(me%ty(n(2)+ky))
+    allocate(me%tz(n(3)+kz))
+    allocate(me%tq(n(4)+kq))
+    allocate(me%tr(n(5)+kr))
+    allocate(me%ts(n(6)+ks))
+    allocate(me%bcoef(n(1),n(2),n(3),n(4),n(5),n(6),nf))
+    allocate(me%work_val_1(ky,kz,kq,kr,ks))
+    allocate(me%work_val_2(kz,kq,kr,ks))
+    allocate(me%work_val_3(kq,kr,ks))
+    allocate(me%work_val_4(kr,ks))
+    allocate(me%work_val_5(ks))
+    allocate(me%work_val_6(3_ip*max(kx,ky,kz,kq,kr,ks)))
+
+    me%tx = tx
+    me%ty = ty
+    me%tz = tz
+    me%tq = tq
+    me%tr = tr
+    me%ts = ts
+    call db6ink(x,n(1),y,n(2),z,n(3),q,n(4),r,n(5),s,n(6),fcn,kx,ky,kz,kq,kr,ks,1_ip,me%tx,me%ty,me%tz,me%tq,me%tr,me%ts,me%bcoef,iflag)
+
+    if (iflag==0_ip) then
+        me%nf = nf
+        call me%set_extrap_flag(extrap)
+    end if
+
+    me%initialized = iflag==0_ip
+    me%iflag = iflag
+
+    end subroutine initialize_6d_specify_knots_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Evaluate all the outputs of a [[bspline_6d]] with multiple outputs.
+!  This is a wrapper for [[db6val]] (multiple-output version).
+
+    pure subroutine evaluate_6d_multi(me,xval,yval,zval,qval,rval,sval,idx,idy,idz,idq,idr,ids,f,iflag)
+
+    implicit none
+
+    class(bspline_6d),intent(inout) :: me  !! the spline
+    real(wp),intent(in) :: xval  !! \(x\) coordinate of evaluation point.
+    real(wp),intent(in) :: yval  !! \(y\) coordinate of evaluation point.
+    real(wp),intent(in) :: zval  !! \(z\) coordinate of evaluation point.
+    real(wp),intent(in) :: qval  !! \(q\) coordinate of evaluation point.
+    real(wp),intent(in) :: rval  !! \(r\) coordinate of evaluation point.
+    real(wp),intent(in) :: sval  !! \(s\) coordinate of evaluation point.
+    integer(ip),intent(in) :: idx  !! \(x\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in) :: idy  !! \(y\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in) :: idz  !! \(z\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in) :: idq  !! \(q\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in) :: idr  !! \(r\) derivative of piecewise polynomial to evaluate.
+    integer(ip),intent(in) :: ids  !! \(s\) derivative of piecewise polynomial to evaluate.
+    real(wp),dimension(:),intent(out) :: f  !! `(nf)` interpolated values of the outputs
+                                            !! (see [[number_of_outputs]])
+    integer(ip),intent(out) :: iflag  !! status flag (see [[db6val]])
+
+    if (me%initialized) then
+        call db6val(xval,yval,zval,qval,rval,sval,idx,idy,idz,idq,idr,ids,me%tx,me%ty,me%tz,me%tq,me%tr,me%ts,&
+                    me%nx,me%ny,me%nz,me%nq,me%nr,me%ns,me%kx,me%ky,me%kz,me%kq,me%kr,me%ks,&
+                    me%bcoef,f,iflag,me%inbvx,me%iloy,me%iloz,me%iloq,me%ilor,me%ilos,&
+                    me%work_val_1,me%work_val_2,me%work_val_3,me%work_val_4,me%work_val_5,extrap=me%extrap)
+    else
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine evaluate_6d_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Initialize a [[bspline_6d]] type with multiple outputs directly from its
+!  knots and b-spline coefficients. The last dimension of `bcoef` is the
+!  output index.
+
+    pure subroutine initialize_from_coefficients_6d_multi(me,tx,ty,tz,tq,tr,ts,bcoef,kx,ky,kz,kq,kr,ks,iflag,extrap)
+
+    implicit none
+
+    class(bspline_6d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:),intent(in) :: tx  !! The `(nx+kx)` knots in the \(x\) direction.
+    real(wp),dimension(:),intent(in) :: ty  !! The `(ny+ky)` knots in the \(y\) direction.
+    real(wp),dimension(:),intent(in) :: tz  !! The `(nz+kz)` knots in the \(z\) direction.
+    real(wp),dimension(:),intent(in) :: tq  !! The `(nq+kq)` knots in the \(q\) direction.
+    real(wp),dimension(:),intent(in) :: tr  !! The `(nr+kr)` knots in the \(r\) direction.
+    real(wp),dimension(:),intent(in) :: ts  !! The `(ns+ks)` knots in the \(s\) direction.
+    real(wp),dimension(:,:,:,:,:,:,:),intent(in) :: bcoef  !! `(nx,ny,nz,nq,nr,ns,nf)` array of b-spline coefficients
+    integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
+    integer(ip),intent(in) :: ky  !! The order of spline pieces in \(y\)
+    integer(ip),intent(in) :: kz  !! The order of spline pieces in \(z\)
+    integer(ip),intent(in) :: kq  !! The order of spline pieces in \(q\)
+    integer(ip),intent(in) :: kr  !! The order of spline pieces in \(r\)
+    integer(ip),intent(in) :: ks  !! The order of spline pieces in \(s\)
+    integer(ip),intent(out) :: iflag  !! status flag (see [[initialize_from_coefficients_6d]]),
+                                      !! or 6005 if `bcoef` has no outputs
+    logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
+                                           !! (default is false)
+
+    if (size(bcoef,7,kind=ip)<1_ip) then
+        ! no outputs
+        call me%destroy()
+        iflag = 6005_ip
+        me%iflag = iflag
+        return
+    end if
+
+    call me%initialize_from_coefficients(tx,ty,tz,tq,tr,ts,bcoef(:,:,:,:,:,:,1),kx,ky,kz,kq,kr,ks,iflag,extrap)
+    if (iflag==0_ip) then
+        me%bcoef = bcoef
+        me%nf = size(bcoef,7,kind=ip)
+    end if
+
+    end subroutine initialize_from_coefficients_6d_multi
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Returns the b-spline coefficients of a [[bspline_6d]] with any number of
+!  outputs. The last dimension of `bcoef` is the output index.
+
+    pure subroutine get_coefficients_6d_multi(me,bcoef,iflag)
+
+    implicit none
+
+    class(bspline_6d),intent(inout) :: me  !! the spline
+    real(wp),dimension(:,:,:,:,:,:,:),allocatable,intent(out) :: bcoef  !! `(nx,ny,nz,nq,nr,ns,nf)` array of b-spline coefficients
+    integer(ip),intent(out) :: iflag  !! status flag: 0 if no errors,
+                                      !! 1 if the class is not initialized
+
+    if (me%initialized) then
+        bcoef = me%bcoef
+        iflag = 0_ip
+    else
+        allocate(bcoef(0,0,0,0,0,0,0))
+        iflag = 1_ip
+    end if
+    me%iflag = iflag
+
+    end subroutine get_coefficients_6d_multi
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -3850,10 +5449,13 @@
     integer(ip),intent(out)                       :: iflag  !! status flag: 0 if no errors,
                                                             !! 1 if the class is not initialized
 
-    if (me%initialized) then
+    if (me%initialized .and. me%nf/=1_ip) then
+        iflag = 6003_ip  ! use the multiple-output version
+        allocate(x(0), y(0))
+    else if (me%initialized) then
         allocate(x(me%nx))
         call greville_abscissae(me%tx,me%nx,me%kx,x)
-        y = me%bcoef
+        y = me%bcoef(:,1)
         iflag = 0_ip
     else
         allocate(x(0), y(0))

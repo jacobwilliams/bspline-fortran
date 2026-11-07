@@ -86,3 +86,112 @@ jobs:
         branch: gh-pages # The branch the action should deploy to.
         folder: doc  # The folder the action should deploy.
         single-commit: true
+
+  # Intel Fortran (ifx) on Windows. The default stack on Windows is only 1 MB,
+  # and ifx puts array temporaries on the stack, so this also checks for stack
+  # problems (and the debug build reports any array temporaries that are created).
+  windows-ifx:
+    name: windows-latest (ifx)
+    runs-on: windows-latest
+    env:
+      ONEAPI_ROOT: C:\Program Files (x86)\Intel\oneAPI
+      IFX_VERSION: '2025.3'
+    steps:
+    - uses: actions/checkout@v7.0.1
+
+    # setup-fortran caches the oneAPI install under a key that changes daily,
+    # so it reinstalls (~9 min) at least once a day. Cache it under a fixed
+    # key instead, and run setup-fortran only when that misses.
+    - name: Restore oneAPI
+      id: oneapi
+      uses: actions/cache/restore@v6
+      with:
+        path: ${{ env.ONEAPI_ROOT }}
+        key: oneapi-ifx-${{ env.IFX_VERSION }}-${{ runner.os }}-v1
+
+    - name: Install ifx
+      if: steps.oneapi.outputs.cache-hit != 'true'
+      uses: fortran-lang/setup-fortran@v1.11.0
+      with:
+        compiler: intel
+        version: ${{ env.IFX_VERSION }}
+
+    - name: Save oneAPI
+      if: steps.oneapi.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v6
+      with:
+        path: ${{ env.ONEAPI_ROOT }}
+        key: ${{ steps.oneapi.outputs.cache-primary-key }}
+
+    # what setup-fortran does after restoring its own cache
+    - name: Activate oneAPI (cached install)
+      if: steps.oneapi.outputs.cache-hit == 'true'
+      shell: cmd
+      run: |
+        call "%ONEAPI_ROOT%\setvars.bat"
+        set | findstr /c:"oneAPI" >> "%GITHUB_ENV%"
+        echo SETVARS_COMPLETED=1>>"%GITHUB_ENV%"
+
+    # Git for Windows' GNU coreutils `link` shadows the MSVC linker (link.exe)
+    # that ifx calls ("link: unknown option -- d"), so move it out of the way.
+    # Not to $RUNNER_TEMP itself: setup-fpm puts that directory on the PATH. On
+    # a cache miss, setup-fortran has already moved it to $RUNNER_TEMP/link.
+    - name: Hide Git's GNU link
+      shell: bash
+      run: |
+        mkdir -p "$RUNNER_TEMP/gnu-link"
+        for f in /usr/bin/link "$RUNNER_TEMP/link"; do
+          if [ -e "$f" ]; then mv "$f" "$RUNNER_TEMP/gnu-link/"; fi
+        done
+        which -a link || true
+
+    - name: Setup Fortran Package Manager
+      uses: fortran-lang/setup-fpm@v7
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Install Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    # matplotlib for the tests that make plots (pyplot-fortran), and MKL for
+    # the LAPACK and BLAS libraries that the polyroots-fortran test dependency
+    # links. The MKL import library is copied to the names fpm links (the
+    # linker also searches the current directory), and its DLLs are put on
+    # the PATH.
+    - name: Install matplotlib and MKL
+      shell: pwsh
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install numpy matplotlib mkl-devel
+        $prefix = python -c "import sys; print(sys.prefix)"
+        Copy-Item "$prefix\Library\lib\mkl_rt.lib" lapack.lib
+        Copy-Item "$prefix\Library\lib\mkl_rt.lib" blas.lib
+        "$prefix\Library\bin" | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
+
+    - name: Compiler versions
+      run: |
+        ifx --version
+        fpm --version
+        Get-Command link -All | Select-Object -ExpandProperty Source
+
+    - name: Test (debug)
+      shell: bash
+      run: |
+        fpm test --compiler ifx --profile debug 2>&1 | tee test_debug.log
+        exit ${PIPESTATUS[0]}
+
+    # the debug build checks for array temporaries at run time (/check:all)
+    - name: Report array temporaries
+      if: always()
+      shell: bash
+      run: |
+        if grep -i "array temporary" test_debug.log; then
+          echo "::warning::ifx created array temporaries at run time (see the log above)"
+        else
+          echo "no array temporaries were created"
+        fi
+
+    - name: Test (release)
+      run: fpm test --compiler ifx --profile release

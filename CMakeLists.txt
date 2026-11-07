@@ -127,6 +127,7 @@ if(BSPLINE_BUILD_TESTING)
           # bspline_extrap_test
           bspline_control_points_test
           bspline_parametric_curve_test
+          bspline_multi_output_test
           bspline_test_2
           bspline_test
           # dbint4_test
