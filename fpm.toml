@@ -20,6 +20,13 @@ polyroots-fortran = { git = "https://github.com/jacobwilliams/polyroots-fortran"
 [library]
 source-dir = "src"
 
+# Have fpm pass the compiler's preprocessor flag explicitly for .F90 files.
+# Compilers normally preprocess .F90 based on the upper-case extension, but
+# that doesn't work on case-insensitive file systems (e.g., ifx on Windows).
+[preprocess]
+[preprocess.cpp]
+suffixes = ["F90"]
+
 [install]
 library = true
 
