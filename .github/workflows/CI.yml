@@ -133,26 +133,17 @@ jobs:
         echo SETVARS_COMPLETED=1>>"%GITHUB_ENV%"
 
     # Git for Windows' GNU coreutils `link` shadows the MSVC linker (link.exe)
-    # that ifx calls ("link: unknown option -- d"). Hide it whether or not the
-    # oneAPI install came from the cache (setup-fortran doesn't always do it).
+    # that ifx calls ("link: unknown option -- d"), so move it out of the way.
+    # Not to $RUNNER_TEMP itself: setup-fpm puts that directory on the PATH. On
+    # a cache miss, setup-fortran has already moved it to $RUNNER_TEMP/link.
     - name: Hide Git's GNU link
       shell: bash
       run: |
-        if [ -e /usr/bin/link ]; then mv /usr/bin/link "$RUNNER_TEMP/link"; fi
+        mkdir -p "$RUNNER_TEMP/gnu-link"
+        for f in /usr/bin/link "$RUNNER_TEMP/link"; do
+          if [ -e "$f" ]; then mv "$f" "$RUNNER_TEMP/gnu-link/"; fi
+        done
         which -a link || true
-
-    # ifx links with MSVC's link.exe, which is only on the PATH once the Visual
-    # Studio environment (vcvars) is activated. Don't rely on oneAPI's setvars
-    # finding Visual Studio: activate it explicitly (qt-fortran gets this from
-    # conda-forge's cxx-compiler activation instead).
-    - name: Activate MSVC
-      uses: ilammy/msvc-dev-cmd@v1.13.0
-      with:
-        arch: x64
-
-    - name: Check the linker
-      shell: cmd
-      run: where link
 
     - name: Setup Fortran Package Manager
       uses: fortran-lang/setup-fpm@v7
@@ -183,6 +174,7 @@ jobs:
       run: |
         ifx --version
         fpm --version
+        Get-Command link -All | Select-Object -ExpandProperty Source
 
     - name: Test (debug)
       shell: bash
