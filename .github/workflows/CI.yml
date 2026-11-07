@@ -171,11 +171,15 @@ jobs:
         ifx --version
         fpm --version
 
+    # Not bash: Git Bash puts its own tools (including GNU `link`) ahead of the
+    # MSVC linker on the PATH, so ifx would call the wrong `link`.
     - name: Test (debug)
-      shell: bash
+      shell: cmd
       run: |
-        fpm test --compiler ifx --profile debug 2>&1 | tee test_debug.log
-        exit ${PIPESTATUS[0]}
+        fpm test --compiler ifx --profile debug > test_debug.log 2>&1
+        set rc=%ERRORLEVEL%
+        type test_debug.log
+        exit /b %rc%
 
     # the debug build checks for array temporaries at run time (/check:all)
     - name: Report array temporaries
