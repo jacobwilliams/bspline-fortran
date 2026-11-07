@@ -4115,9 +4115,18 @@
     real(wp),dimension(:),intent(in) :: tx  !! The `(nx+kx)` knots in the \(x\) direction.
     real(wp),dimension(:,:),intent(in) :: bcoef  !! `(nx,nf)` array of b-spline coefficients
     integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
-    integer(ip),intent(out) :: iflag  !! status flag (see [[initialize_from_coefficients_1d]])
+    integer(ip),intent(out) :: iflag  !! status flag (see [[initialize_from_coefficients_1d]]),
+                                      !! or 6005 if `bcoef` has no outputs
     logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
                                            !! (default is false)
+
+    if (size(bcoef,2,kind=ip)<1_ip) then
+        ! no outputs
+        call me%destroy()
+        iflag = 6005_ip
+        me%iflag = iflag
+        return
+    end if
 
     call me%initialize_from_coefficients(tx,bcoef(:,1),kx,iflag,extrap)
     if (iflag==0_ip) then
@@ -4319,9 +4328,18 @@
     real(wp),dimension(:,:,:),intent(in) :: bcoef  !! `(nx,ny,nf)` array of b-spline coefficients
     integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
     integer(ip),intent(in) :: ky  !! The order of spline pieces in \(y\)
-    integer(ip),intent(out) :: iflag  !! status flag (see [[initialize_from_coefficients_2d]])
+    integer(ip),intent(out) :: iflag  !! status flag (see [[initialize_from_coefficients_2d]]),
+                                      !! or 6005 if `bcoef` has no outputs
     logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
                                            !! (default is false)
+
+    if (size(bcoef,3,kind=ip)<1_ip) then
+        ! no outputs
+        call me%destroy()
+        iflag = 6005_ip
+        me%iflag = iflag
+        return
+    end if
 
     call me%initialize_from_coefficients(tx,ty,bcoef(:,:,1),kx,ky,iflag,extrap)
     if (iflag==0_ip) then
@@ -4543,9 +4561,18 @@
     integer(ip),intent(in) :: kx  !! The order of spline pieces in \(x\)
     integer(ip),intent(in) :: ky  !! The order of spline pieces in \(y\)
     integer(ip),intent(in) :: kz  !! The order of spline pieces in \(z\)
-    integer(ip),intent(out) :: iflag  !! status flag (see [[initialize_from_coefficients_3d]])
+    integer(ip),intent(out) :: iflag  !! status flag (see [[initialize_from_coefficients_3d]]),
+                                      !! or 6005 if `bcoef` has no outputs
     logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
                                            !! (default is false)
+
+    if (size(bcoef,4,kind=ip)<1_ip) then
+        ! no outputs
+        call me%destroy()
+        iflag = 6005_ip
+        me%iflag = iflag
+        return
+    end if
 
     call me%initialize_from_coefficients(tx,ty,tz,bcoef(:,:,:,1),kx,ky,kz,iflag,extrap)
     if (iflag==0_ip) then
@@ -4787,9 +4814,18 @@
     integer(ip),intent(in) :: ky  !! The order of spline pieces in \(y\)
     integer(ip),intent(in) :: kz  !! The order of spline pieces in \(z\)
     integer(ip),intent(in) :: kq  !! The order of spline pieces in \(q\)
-    integer(ip),intent(out) :: iflag  !! status flag (see [[initialize_from_coefficients_4d]])
+    integer(ip),intent(out) :: iflag  !! status flag (see [[initialize_from_coefficients_4d]]),
+                                      !! or 6005 if `bcoef` has no outputs
     logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
                                            !! (default is false)
+
+    if (size(bcoef,5,kind=ip)<1_ip) then
+        ! no outputs
+        call me%destroy()
+        iflag = 6005_ip
+        me%iflag = iflag
+        return
+    end if
 
     call me%initialize_from_coefficients(tx,ty,tz,tq,bcoef(:,:,:,:,1),kx,ky,kz,kq,iflag,extrap)
     if (iflag==0_ip) then
@@ -5051,9 +5087,18 @@
     integer(ip),intent(in) :: kz  !! The order of spline pieces in \(z\)
     integer(ip),intent(in) :: kq  !! The order of spline pieces in \(q\)
     integer(ip),intent(in) :: kr  !! The order of spline pieces in \(r\)
-    integer(ip),intent(out) :: iflag  !! status flag (see [[initialize_from_coefficients_5d]])
+    integer(ip),intent(out) :: iflag  !! status flag (see [[initialize_from_coefficients_5d]]),
+                                      !! or 6005 if `bcoef` has no outputs
     logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
                                            !! (default is false)
+
+    if (size(bcoef,6,kind=ip)<1_ip) then
+        ! no outputs
+        call me%destroy()
+        iflag = 6005_ip
+        me%iflag = iflag
+        return
+    end if
 
     call me%initialize_from_coefficients(tx,ty,tz,tq,tr,bcoef(:,:,:,:,:,1),kx,ky,kz,kq,kr,iflag,extrap)
     if (iflag==0_ip) then
@@ -5335,9 +5380,18 @@
     integer(ip),intent(in) :: kq  !! The order of spline pieces in \(q\)
     integer(ip),intent(in) :: kr  !! The order of spline pieces in \(r\)
     integer(ip),intent(in) :: ks  !! The order of spline pieces in \(s\)
-    integer(ip),intent(out) :: iflag  !! status flag (see [[initialize_from_coefficients_6d]])
+    integer(ip),intent(out) :: iflag  !! status flag (see [[initialize_from_coefficients_6d]]),
+                                      !! or 6005 if `bcoef` has no outputs
     logical,intent(in),optional :: extrap  !! if true, then extrapolation is allowed
                                            !! (default is false)
+
+    if (size(bcoef,7,kind=ip)<1_ip) then
+        ! no outputs
+        call me%destroy()
+        iflag = 6005_ip
+        me%iflag = iflag
+        return
+    end if
 
     call me%initialize_from_coefficients(tx,ty,tz,tq,tr,ts,bcoef(:,:,:,:,:,:,1),kx,ky,kz,kq,kr,ks,iflag,extrap)
     if (iflag==0_ip) then

@@ -129,7 +129,16 @@ call s%initialize(x,y,fcn,kx,ky,iflag)
 call s%evaluate(xval,yval,idx,idy,f,iflag)  ! f(j) is output j
 ```
 
-The subroutine interface has the same overloads: `db*ink` with an extra dimension of `fcn` and `bcoef`, and `db*val` with an extra dimension of `bcoef` and an array `f` (and the same work arrays as the single-output versions). The `number_of_outputs` method returns `nf`. The methods that require a single output (e.g., `integral` and `roots` in 1D) return an error for a spline with more than one output.
+The subroutine interface has the same overloads: `db*ink` with an extra dimension of `fcn` and `bcoef`, and `db*val` with an extra dimension of `bcoef` and an array `f`. Note that the multiple-output `db*val` routines take fewer work arguments than the single-output versions: there is no `w0` work array, and of the `inbv*` arguments only `inbvx` remains (`inbvy`, `inbvz`, ... are dropped; `iloy`, `iloz`, ... and `w1`, `w2`, ... are the same). For example, in 2D:
+
+```fortran
+real(wp),dimension(nx,ny,nf) :: bcoef
+real(wp),dimension(nf) :: f
+real(wp),dimension(ky) :: w1
+call db2val(xval,yval,idx,idy,tx,ty,nx,ny,kx,ky,bcoef,f,iflag,inbvx,iloy,w1)
+```
+
+The `number_of_outputs` method returns `nf`. The methods that require a single output (e.g., `integral` and `roots` in 1D) return an error for a spline with more than one output.
 
 ## Least squares fitting
 
