@@ -1016,6 +1016,7 @@
                                                   !!
                                                   !! * \( = 0 \)   : no errors
                                                   !! * 6002: `size(f)` is not the number of outputs
+                                                  !! * 6004: the leading dimensions of `bcoef` are not `(nx)`
                                                   !! * other \( \ne 0 \) : error (see [[db1val]])
     integer(ip),intent(inout)           :: inbvx  !! initialization parameter which must be
                                                   !! set to 1 the first time this routine is called,
@@ -1032,6 +1033,10 @@
 
     if (size(f,kind=ip)/=size(bcoef,2,kind=ip)) then
         iflag = 6002_ip
+        return
+    end if
+    if (size(bcoef,1,kind=ip)/=nx) then
+        iflag = 6004_ip
         return
     end if
 
@@ -1125,6 +1130,7 @@
                                                   !!
                                                   !! * \( = 0 \)   : no errors
                                                   !! * 6002: `size(f)` is not the number of outputs
+                                                  !! * 6004: the leading dimensions of `bcoef` are not `(nx,ny)`
                                                   !! * other \( \ne 0 \) : error (see [[db2val]])
     integer(ip),intent(inout)           :: inbvx  !! initialization parameter which must be
                                                   !! set to 1 the first time this routine is called,
@@ -1149,6 +1155,11 @@
 
     if (size(f,kind=ip)/=size(bcoef,3,kind=ip)) then
         iflag = 6002_ip
+        return
+    end if
+    if (size(bcoef,1,kind=ip)/=nx .or. &
+        size(bcoef,2,kind=ip)/=ny) then
+        iflag = 6004_ip
         return
     end if
 
@@ -1259,6 +1270,7 @@
                                                   !!
                                                   !! * \( = 0 \)   : no errors
                                                   !! * 6002: `size(f)` is not the number of outputs
+                                                  !! * 6004: the leading dimensions of `bcoef` are not `(nx,ny,nz)`
                                                   !! * other \( \ne 0 \) : error (see [[db3val]])
     integer(ip),intent(inout)           :: inbvx  !! initialization parameter which must be
                                                   !! set to 1 the first time this routine is called,
@@ -1291,6 +1303,12 @@
 
     if (size(f,kind=ip)/=size(bcoef,4,kind=ip)) then
         iflag = 6002_ip
+        return
+    end if
+    if (size(bcoef,1,kind=ip)/=nx .or. &
+        size(bcoef,2,kind=ip)/=ny .or. &
+        size(bcoef,3,kind=ip)/=nz) then
+        iflag = 6004_ip
         return
     end if
 
@@ -1417,6 +1435,7 @@
                                                   !!
                                                   !! * \( = 0 \)   : no errors
                                                   !! * 6002: `size(f)` is not the number of outputs
+                                                  !! * 6004: the leading dimensions of `bcoef` are not `(nx,ny,nz,nq)`
                                                   !! * other \( \ne 0 \) : error (see [[db4val]])
     integer(ip),intent(inout)           :: inbvx  !! initialization parameter which must be
                                                   !! set to 1 the first time this routine is called,
@@ -1457,6 +1476,13 @@
 
     if (size(f,kind=ip)/=size(bcoef,5,kind=ip)) then
         iflag = 6002_ip
+        return
+    end if
+    if (size(bcoef,1,kind=ip)/=nx .or. &
+        size(bcoef,2,kind=ip)/=ny .or. &
+        size(bcoef,3,kind=ip)/=nz .or. &
+        size(bcoef,4,kind=ip)/=nq) then
+        iflag = 6004_ip
         return
     end if
 
@@ -1599,6 +1625,7 @@
                                                   !!
                                                   !! * \( = 0 \)   : no errors
                                                   !! * 6002: `size(f)` is not the number of outputs
+                                                  !! * 6004: the leading dimensions of `bcoef` are not `(nx,ny,nz,nq,nr)`
                                                   !! * other \( \ne 0 \) : error (see [[db5val]])
     integer(ip),intent(inout)           :: inbvx  !! initialization parameter which must be
                                                   !! set to 1 the first time this routine is called,
@@ -1647,6 +1674,14 @@
 
     if (size(f,kind=ip)/=size(bcoef,6,kind=ip)) then
         iflag = 6002_ip
+        return
+    end if
+    if (size(bcoef,1,kind=ip)/=nx .or. &
+        size(bcoef,2,kind=ip)/=ny .or. &
+        size(bcoef,3,kind=ip)/=nz .or. &
+        size(bcoef,4,kind=ip)/=nq .or. &
+        size(bcoef,5,kind=ip)/=nr) then
+        iflag = 6004_ip
         return
     end if
 
@@ -1805,6 +1840,7 @@
                                                   !!
                                                   !! * \( = 0 \)   : no errors
                                                   !! * 6002: `size(f)` is not the number of outputs
+                                                  !! * 6004: the leading dimensions of `bcoef` are not `(nx,ny,nz,nq,nr,ns)`
                                                   !! * other \( \ne 0 \) : error (see [[db6val]])
     integer(ip),intent(inout)           :: inbvx  !! initialization parameter which must be
                                                   !! set to 1 the first time this routine is called,
@@ -1861,6 +1897,15 @@
 
     if (size(f,kind=ip)/=size(bcoef,7,kind=ip)) then
         iflag = 6002_ip
+        return
+    end if
+    if (size(bcoef,1,kind=ip)/=nx .or. &
+        size(bcoef,2,kind=ip)/=ny .or. &
+        size(bcoef,3,kind=ip)/=nz .or. &
+        size(bcoef,4,kind=ip)/=nq .or. &
+        size(bcoef,5,kind=ip)/=nr .or. &
+        size(bcoef,6,kind=ip)/=ns) then
+        iflag = 6004_ip
         return
     end if
 
@@ -6965,6 +7010,8 @@
     case(6001_ip); msg='Error in db*ink (multiple outputs): fcn and bcoef do not have the same number of outputs'
     case(6002_ip); msg='Error in db*val (multiple outputs): size(f) is not the number of outputs'
     case(6003_ip); msg='Error: this method requires a spline with a single output'
+    case(6004_ip); msg='Error in db*val (multiple outputs): the leading dimensions of bcoef do not match nx, ny, ...'
+    case(6005_ip); msg='Error in initialize_from_coefficients (multiple outputs): bcoef has no outputs (its last dimension is zero)'
 
     case(3001_ip); msg='Error in dbspvd: k does not satisfy k>=1'
     case(3002_ip); msg='Error in dbspvd: nderiv does not satisfy 1<=nderiv<=k'

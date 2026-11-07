@@ -10,7 +10,7 @@
 !    used), and to rounding in 1D (where the single-output version uses
 !    a different algorithm).
 !  * The coefficients must be the same as for separate splines.
-!  * Error codes 6001-6003.
+!  * Error codes 6001-6005.
 !  * The timing of the evaluation is compared with separate splines
 !    (printed only).
 
@@ -182,6 +182,11 @@
         call check('1d wrong size of f returns 6002', iflag==6002)
         call db1ink(x,n(1),fcn,k(1),1_ip,tx,bcoef2(:,1:nf-1),iflag)
         call check('1d db1ink multi with mismatched outputs returns 6001', iflag==6001)
+        call db1val(v(1),id(1),tx,n(1),k(1),bcoef2(1:n(1)-1,:),fm2,iflag,inbvx)
+        call check('1d db1val multi with wrong bcoef shape returns 6004', iflag==6004)
+        call sm2%initialize_from_coefficients(tx,bcoef(:,1:0),k(1),iflag)
+        call check('1d initialize_from_coefficients with no outputs returns 6005', &
+                   iflag==6005 .and. sm2%number_of_outputs()==0)
         call sm%destroy()
         call check('1d destroy resets the number of outputs', sm%number_of_outputs()==0)
         deallocate(fcn, bcoef2, tx)
@@ -285,6 +290,11 @@
         call check('2d wrong size of f returns 6002', iflag==6002)
         call db2ink(x,n(1),y,n(2),fcn,k(1),k(2),1_ip,tx,ty,bcoef2(:,:,1:nf-1),iflag)
         call check('2d db2ink multi with mismatched outputs returns 6001', iflag==6001)
+        call db2val(v(1),v(2),id(1),id(2),tx,ty,n(1),n(2),k(1),k(2),bcoef2(1:n(1)-1,:,:),fm2,iflag,inbvx,iloy,w1)
+        call check('2d db2val multi with wrong bcoef shape returns 6004', iflag==6004)
+        call sm2%initialize_from_coefficients(tx,ty,bcoef(:,:,1:0),k(1),k(2),iflag)
+        call check('2d initialize_from_coefficients with no outputs returns 6005', &
+                   iflag==6005 .and. sm2%number_of_outputs()==0)
         call sm%destroy()
         call check('2d destroy resets the number of outputs', sm%number_of_outputs()==0)
         deallocate(fcn, bcoef2, tx, ty, w1)
@@ -394,6 +404,11 @@
         call check('3d wrong size of f returns 6002', iflag==6002)
         call db3ink(x,n(1),y,n(2),z,n(3),fcn,k(1),k(2),k(3),1_ip,tx,ty,tz,bcoef2(:,:,:,1:nf-1),iflag)
         call check('3d db3ink multi with mismatched outputs returns 6001', iflag==6001)
+        call db3val(v(1),v(2),v(3),id(1),id(2),id(3),tx,ty,tz,n(1),n(2),n(3),k(1),k(2),k(3),bcoef2(1:n(1)-1,:,:,:),fm2,iflag,inbvx,iloy,iloz,w2,w1)
+        call check('3d db3val multi with wrong bcoef shape returns 6004', iflag==6004)
+        call sm2%initialize_from_coefficients(tx,ty,tz,bcoef(:,:,:,1:0),k(1),k(2),k(3),iflag)
+        call check('3d initialize_from_coefficients with no outputs returns 6005', &
+                   iflag==6005 .and. sm2%number_of_outputs()==0)
         call sm%destroy()
         call check('3d destroy resets the number of outputs', sm%number_of_outputs()==0)
         deallocate(fcn, bcoef2, tx, ty, tz, w2, w1)
@@ -509,6 +524,11 @@
         call check('4d wrong size of f returns 6002', iflag==6002)
         call db4ink(x,n(1),y,n(2),z,n(3),q,n(4),fcn,k(1),k(2),k(3),k(4),1_ip,tx,ty,tz,tq,bcoef2(:,:,:,:,1:nf-1),iflag)
         call check('4d db4ink multi with mismatched outputs returns 6001', iflag==6001)
+        call db4val(v(1),v(2),v(3),v(4),id(1),id(2),id(3),id(4),tx,ty,tz,tq,n(1),n(2),n(3),n(4),k(1),k(2),k(3),k(4),bcoef2(1:n(1)-1,:,:,:,:),fm2,iflag,inbvx,iloy,iloz,iloq,w3,w2,w1)
+        call check('4d db4val multi with wrong bcoef shape returns 6004', iflag==6004)
+        call sm2%initialize_from_coefficients(tx,ty,tz,tq,bcoef(:,:,:,:,1:0),k(1),k(2),k(3),k(4),iflag)
+        call check('4d initialize_from_coefficients with no outputs returns 6005', &
+                   iflag==6005 .and. sm2%number_of_outputs()==0)
         call sm%destroy()
         call check('4d destroy resets the number of outputs', sm%number_of_outputs()==0)
         deallocate(fcn, bcoef2, tx, ty, tz, tq, w3, w2, w1)
@@ -630,6 +650,11 @@
         call check('5d wrong size of f returns 6002', iflag==6002)
         call db5ink(x,n(1),y,n(2),z,n(3),q,n(4),r,n(5),fcn,k(1),k(2),k(3),k(4),k(5),1_ip,tx,ty,tz,tq,tr,bcoef2(:,:,:,:,:,1:nf-1),iflag)
         call check('5d db5ink multi with mismatched outputs returns 6001', iflag==6001)
+        call db5val(v(1),v(2),v(3),v(4),v(5),id(1),id(2),id(3),id(4),id(5),tx,ty,tz,tq,tr,n(1),n(2),n(3),n(4),n(5),k(1),k(2),k(3),k(4),k(5),bcoef2(1:n(1)-1,:,:,:,:,:),fm2,iflag,inbvx,iloy,iloz,iloq,ilor,w4,w3,w2,w1)
+        call check('5d db5val multi with wrong bcoef shape returns 6004', iflag==6004)
+        call sm2%initialize_from_coefficients(tx,ty,tz,tq,tr,bcoef(:,:,:,:,:,1:0),k(1),k(2),k(3),k(4),k(5),iflag)
+        call check('5d initialize_from_coefficients with no outputs returns 6005', &
+                   iflag==6005 .and. sm2%number_of_outputs()==0)
         call sm%destroy()
         call check('5d destroy resets the number of outputs', sm%number_of_outputs()==0)
         deallocate(fcn, bcoef2, tx, ty, tz, tq, tr, w4, w3, w2, w1)
@@ -757,6 +782,11 @@
         call check('6d wrong size of f returns 6002', iflag==6002)
         call db6ink(x,n(1),y,n(2),z,n(3),q,n(4),r,n(5),s,n(6),fcn,k(1),k(2),k(3),k(4),k(5),k(6),1_ip,tx,ty,tz,tq,tr,ts,bcoef2(:,:,:,:,:,:,1:nf-1),iflag)
         call check('6d db6ink multi with mismatched outputs returns 6001', iflag==6001)
+        call db6val(v(1),v(2),v(3),v(4),v(5),v(6),id(1),id(2),id(3),id(4),id(5),id(6),tx,ty,tz,tq,tr,ts,n(1),n(2),n(3),n(4),n(5),n(6),k(1),k(2),k(3),k(4),k(5),k(6),bcoef2(1:n(1)-1,:,:,:,:,:,:),fm2,iflag,inbvx,iloy,iloz,iloq,ilor,ilos,w5,w4,w3,w2,w1)
+        call check('6d db6val multi with wrong bcoef shape returns 6004', iflag==6004)
+        call sm2%initialize_from_coefficients(tx,ty,tz,tq,tr,ts,bcoef(:,:,:,:,:,:,1:0),k(1),k(2),k(3),k(4),k(5),k(6),iflag)
+        call check('6d initialize_from_coefficients with no outputs returns 6005', &
+                   iflag==6005 .and. sm2%number_of_outputs()==0)
         call sm%destroy()
         call check('6d destroy resets the number of outputs', sm%number_of_outputs()==0)
         deallocate(fcn, bcoef2, tx, ty, tz, tq, tr, ts, w5, w4, w3, w2, w1)

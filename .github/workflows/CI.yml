@@ -132,10 +132,18 @@ jobs:
         set | findstr /c:"oneAPI" >> "%GITHUB_ENV%"
         echo SETVARS_COMPLETED=1>>"%GITHUB_ENV%"
 
-    - name: Hide Git's GNU link (cached install)
-      if: steps.oneapi.outputs.cache-hit == 'true'
+    # Git for Windows' GNU coreutils `link` shadows the MSVC linker (link.exe)
+    # that ifx calls ("link: unknown option -- d"), so move it out of the way.
+    # Not to $RUNNER_TEMP itself: setup-fpm puts that directory on the PATH. On
+    # a cache miss, setup-fortran has already moved it to $RUNNER_TEMP/link.
+    - name: Hide Git's GNU link
       shell: bash
-      run: mv /usr/bin/link "$RUNNER_TEMP/link"
+      run: |
+        mkdir -p "$RUNNER_TEMP/gnu-link"
+        for f in /usr/bin/link "$RUNNER_TEMP/link"; do
+          if [ -e "$f" ]; then mv "$f" "$RUNNER_TEMP/gnu-link/"; fi
+        done
+        which -a link || true
 
     - name: Setup Fortran Package Manager
       uses: fortran-lang/setup-fpm@v7
@@ -166,6 +174,7 @@ jobs:
       run: |
         ifx --version
         fpm --version
+        Get-Command link -All | Select-Object -ExpandProperty Source
 
     - name: Test (debug)
       shell: bash
