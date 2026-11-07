@@ -141,6 +141,19 @@ jobs:
         if [ -e /usr/bin/link ]; then mv /usr/bin/link "$RUNNER_TEMP/link"; fi
         which -a link || true
 
+    # ifx links with MSVC's link.exe, which is only on the PATH once the Visual
+    # Studio environment (vcvars) is activated. Don't rely on oneAPI's setvars
+    # finding Visual Studio: activate it explicitly (qt-fortran gets this from
+    # conda-forge's cxx-compiler activation instead).
+    - name: Activate MSVC
+      uses: ilammy/msvc-dev-cmd@v1.13.0
+      with:
+        arch: x64
+
+    - name: Check the linker
+      shell: cmd
+      run: where link
+
     - name: Setup Fortran Package Manager
       uses: fortran-lang/setup-fpm@v7
       with:
@@ -171,15 +184,11 @@ jobs:
         ifx --version
         fpm --version
 
-    # Not bash: Git Bash puts its own tools (including GNU `link`) ahead of the
-    # MSVC linker on the PATH, so ifx would call the wrong `link`.
     - name: Test (debug)
-      shell: cmd
+      shell: bash
       run: |
-        fpm test --compiler ifx --profile debug > test_debug.log 2>&1
-        set rc=%ERRORLEVEL%
-        type test_debug.log
-        exit /b %rc%
+        fpm test --compiler ifx --profile debug 2>&1 | tee test_debug.log
+        exit ${PIPESTATUS[0]}
 
     # the debug build checks for array temporaries at run time (/check:all)
     - name: Report array temporaries
