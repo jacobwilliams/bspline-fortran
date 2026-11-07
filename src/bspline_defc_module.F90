@@ -109,7 +109,7 @@ module bspline_defc_module
                                  !! each interval.  This is consistent with the
                                  !! B-spline package convention.  For example,
                                  !! `NORD=4` when we are using piecewise cubics.)
-                                 !! `NORD` must be in the range `1 <= NORD <= 20`.
+                                 !! `NORD` must satisfy `NORD >= 1`.
       integer(ip),intent(in) :: Nbkpt !! The value of `NBKPT` must satisfy the condition `NBKPT >= 2*NORD`.
       real(wp),dimension(:),intent(in) :: Bkpt !! `NBKPT` knots of the B-spline.
                                      !! Normally the
@@ -262,7 +262,7 @@ module bspline_defc_module
                  nb, nordm1, nordp1, np1
       character(len=8) :: xern1, xern2
       integer(ip) :: dfspvn_j
-      real(wp), dimension(20) :: dfspvn_deltam, dfspvn_deltap
+      real(wp), dimension(Nord) :: dfspvn_deltam, dfspvn_deltap
 
       ! Initialize variables and analyze input.
 
@@ -274,8 +274,8 @@ module bspline_defc_module
       call dcopy(n, [0.0_wp], 0_ip, Coeff, 1_ip)
 
       Mdeout = -1
-      if (Nord < 1 .or. Nord > 20) then
-         write (*, *) 'IN DEFC, THE ORDER OF THE B-SPLINE MUST BE 1 THRU 20.'
+      if (Nord < 1) then
+         write (*, *) 'IN DEFC, THE ORDER OF THE B-SPLINE MUST BE AT LEAST 1.'
          return
       end if
 
@@ -374,8 +374,8 @@ module bspline_defc_module
 
             ! Move pointer up to have BKPT(ILEFT)<=XVAL, ILEFT<=N.
 
-            do ileft = ileft, n
-               if (xval < Bkpt(ileft + 1)) exit
+            do
+               if (xval < Bkpt(ileft + 1) .or. ileft >= n) exit
                if (Mdein == 2) then
                   !  Data is being sequentially accumulated.
                   !  Transfer previously accumulated rows from W(*,*) to
@@ -384,6 +384,7 @@ module bspline_defc_module
                   call dbndac(g, Mdg, Nord, ipp, ir, 1_ip, intseq)
                   intseq = intseq + 1
                end if
+               ileft = ileft + 1
             end do
          end if
 
@@ -818,7 +819,7 @@ module bspline_defc_module
       integer(ip),intent(in) :: Ileft
       real(wp) :: Vnikx(*)
       integer(ip), intent(inout) :: j !! JW : added
-      real(wp), dimension(20), intent(inout) :: deltam, deltap !! JW : added
+      real(wp), dimension(*), intent(inout) :: deltam, deltap !! JW : added. size must be at least the final order `j` reached (i.e., `NORD`)
 
       real(wp) :: vm, vmprev
       integer(ip) :: imjp1, ipj, jp1, jp1ml, l
@@ -1201,7 +1202,7 @@ module bspline_defc_module
                                !! each interval.  This is consistent with the
                                !! B-spline package convention.  For example,
                                !! `NORD=4` when we are using piecewise cubics.)
-                               !! `NORD` must be in the range `1 <= NORD <= 20`.
+                               !! `NORD` must satisfy `NORD >= 1`.
    integer(ip),intent(in) :: Nbkpt !! The value of `NBKPT` must satisfy the condition `NBKPT >= 2*NORD`.
    real(wp),dimension(*),intent(in) :: Bkpt !! `NBKPT` knots of the B-spline.
                                             !! Normally the
@@ -1475,12 +1476,12 @@ module bspline_defc_module
    logical :: band, new, var
    character(len=8) :: xern1
    integer(ip) :: dfspvn_j
-   real(wp), dimension(20) :: dfspvn_deltam, dfspvn_deltap
+   real(wp), dimension(nord) :: dfspvn_deltam, dfspvn_deltap
 
    ! Analyze input.
 
-   if (nord<1 .or. nord>20) then
-      write(*,*) 'IN DFC, THE ORDER OF THE B-SPLINE MUST BE 1 THRU 20.'
+   if (nord<1) then
+      write(*,*) 'IN DFC, THE ORDER OF THE B-SPLINE MUST BE AT LEAST 1.'
       mode = -1
       return
    else if (nbkpt<2*nord) then
@@ -1849,11 +1850,11 @@ module bspline_defc_module
    real(wp) :: vnikx(k,*)
    integer(ip) :: nderiv
 
-   real(wp) :: a(20,20)
+   real(wp) :: a(k,k)
    integer(ip) :: ideriv,idervm,i,j,kmd,m,jm1,ipkmd,l,jlow
    real(wp) :: fkmd,diff,v
    integer(ip) :: dfspvn_j
-   real(wp), dimension(20) :: dfspvn_deltam, dfspvn_deltap
+   real(wp), dimension(k) :: dfspvn_deltam, dfspvn_deltap
 
    ! set up variables for dfspvn
    dfspvn_j = 1
@@ -4783,7 +4784,7 @@ module bspline_defc_module
       integer(ip),intent(in) :: ndata !! The number of discrete (X,Y) pairs for which [[dfc]]
                                   !! calculated a piece-wise polynomial curve.
       integer(ip),intent(in) :: nord !! The order of the B-spline used in [[dfc]].
-                                 !! The value of NORD must satisfy 1 < NORD < 20 .
+                                 !! The value of NORD must satisfy NORD >= 1.
                                  !!
                                  !! (The order of the spline is one more than the degree of
                                  !! the piece-wise polynomial defined on each interval.  This
@@ -4800,10 +4801,10 @@ module bspline_defc_module
                        !! must not be modified by the user if the variance function
                        !! is desired.
 
-      real(wp) :: v(40)
+      real(wp) :: v(2*nord)
       integer(ip) :: i, ileft, ipp, is, last, mdg, mdw, n
       integer(ip) :: dfspvn_j
-      real(wp), dimension(20) :: dfspvn_deltam, dfspvn_deltap
+      real(wp), dimension(nord) :: dfspvn_deltam, dfspvn_deltap
 
       real(wp),parameter :: zero = 0.0_wp
 

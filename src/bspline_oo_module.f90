@@ -1148,11 +1148,13 @@
     integer(ip),intent(out)         :: iflag !! status flag (see [[db1val]])
 
     if (me%initialized .and. me%nf/=1_ip) then
+        f = 0.0_wp
         iflag = 6003_ip  ! use the multiple-output version
     else if (me%initialized) then
         call db1val(xval,idx,me%tx,me%nx,me%kx,me%bcoef(:,1),f,iflag,&
                     me%inbvx,me%work_val_1,extrap=me%extrap)
     else
+        f = 0.0_wp
         iflag = 1_ip
     end if
     me%iflag = iflag
@@ -1611,6 +1613,7 @@
     integer(ip),intent(out)         :: iflag !! status flag (see [[db2val]])
 
     if (me%initialized .and. me%nf/=1_ip) then
+        f = 0.0_wp
         iflag = 6003_ip  ! use the multiple-output version
     else if (me%initialized) then
         call db2val(xval,yval,&
@@ -1623,6 +1626,7 @@
                     me%work_val_1,me%work_val_2,&
                     extrap=me%extrap)
     else
+        f = 0.0_wp
         iflag = 1_ip
     end if
 
@@ -1905,6 +1909,7 @@
     integer(ip),intent(out)         :: iflag !! status flag (see [[db3val]])
 
     if (me%initialized .and. me%nf/=1_ip) then
+        f = 0.0_wp
         iflag = 6003_ip  ! use the multiple-output version
     else if (me%initialized) then
         call db3val(xval,yval,zval,&
@@ -1918,6 +1923,7 @@
                     me%work_val_1,me%work_val_2,me%work_val_3,&
                     extrap=me%extrap)
     else
+        f = 0.0_wp
         iflag = 1_ip
     end if
 
@@ -2238,6 +2244,7 @@
     integer(ip),intent(out)         :: iflag !! status flag (see [[db4val]])
 
     if (me%initialized .and. me%nf/=1_ip) then
+        f = 0.0_wp
         iflag = 6003_ip  ! use the multiple-output version
     else if (me%initialized) then
         call db4val(xval,yval,zval,qval,&
@@ -2251,6 +2258,7 @@
                     me%work_val_1,me%work_val_2,me%work_val_3,me%work_val_4,&
                     extrap=me%extrap)
     else
+        f = 0.0_wp
         iflag = 1_ip
     end if
 
@@ -2609,6 +2617,7 @@
     integer(ip),intent(out)         :: iflag !! status flag (see [[db5val]])
 
     if (me%initialized .and. me%nf/=1_ip) then
+        f = 0.0_wp
         iflag = 6003_ip  ! use the multiple-output version
     else if (me%initialized) then
         call db5val(xval,yval,zval,qval,rval,&
@@ -2622,6 +2631,7 @@
                     me%work_val_1,me%work_val_2,me%work_val_3,me%work_val_4,me%work_val_5,&
                     extrap=me%extrap)
     else
+        f = 0.0_wp
         iflag = 1_ip
     end if
 
@@ -3020,6 +3030,7 @@
     integer(ip),intent(out)         :: iflag !! status flag (see [[db6val]])
 
     if (me%initialized .and. me%nf/=1_ip) then
+        f = 0.0_wp
         iflag = 6003_ip  ! use the multiple-output version
     else if (me%initialized) then
         call db6val(xval,yval,zval,qval,rval,sval,&
@@ -3033,6 +3044,7 @@
                     me%work_val_1,me%work_val_2,me%work_val_3,me%work_val_4,me%work_val_5,me%work_val_6,&
                     extrap=me%extrap)
     else
+        f = 0.0_wp
         iflag = 1_ip
     end if
 
@@ -4094,6 +4106,7 @@
                     me%nx,me%kx,&
                     me%bcoef,f,iflag,me%inbvx,extrap=me%extrap)
     else
+        f = 0.0_wp
         iflag = 1_ip
     end if
     me%iflag = iflag
@@ -4305,6 +4318,7 @@
                     me%bcoef,f,iflag,me%inbvx,me%iloy,&
                     me%work_val_1,extrap=me%extrap)
     else
+        f = 0.0_wp
         iflag = 1_ip
     end if
     me%iflag = iflag
@@ -4536,6 +4550,7 @@
                     me%bcoef,f,iflag,me%inbvx,me%iloy,me%iloz,&
                     me%work_val_1,me%work_val_2,extrap=me%extrap)
     else
+        f = 0.0_wp
         iflag = 1_ip
     end if
     me%iflag = iflag
@@ -4787,6 +4802,7 @@
                     me%bcoef,f,iflag,me%inbvx,me%iloy,me%iloz,me%iloq,&
                     me%work_val_1,me%work_val_2,me%work_val_3,extrap=me%extrap)
     else
+        f = 0.0_wp
         iflag = 1_ip
     end if
     me%iflag = iflag
@@ -5058,6 +5074,7 @@
                     me%bcoef,f,iflag,me%inbvx,me%iloy,me%iloz,me%iloq,me%ilor,&
                     me%work_val_1,me%work_val_2,me%work_val_3,me%work_val_4,extrap=me%extrap)
     else
+        f = 0.0_wp
         iflag = 1_ip
     end if
     me%iflag = iflag
@@ -5349,6 +5366,7 @@
                     me%bcoef,f,iflag,me%inbvx,me%iloy,me%iloz,me%iloq,me%ilor,me%ilos,&
                     me%work_val_1,me%work_val_2,me%work_val_3,me%work_val_4,me%work_val_5,extrap=me%extrap)
     else
+        f = 0.0_wp
         iflag = 1_ip
     end if
     me%iflag = iflag

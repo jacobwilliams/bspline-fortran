@@ -174,8 +174,9 @@
         call sm2%evaluate(v(1),id(1),fm2,iflag)
         call sm%evaluate(v(1),id(1),fm,iflag)
         call check('1d multi from coefficients gives the same values', all(fm2==fm))
+        f1 = 1.0_wp
         call sm%evaluate(v(1),id(1),f1,iflag)
-        call check('1d single-output evaluate on multi returns 6003', iflag==6003)
+        call check('1d single-output evaluate on multi returns 6003', iflag==6003 .and. f1==0.0_wp)
         call sm%get_coefficients(b1,iflag)
         call check('1d single-output get_coefficients on multi returns 6003', iflag==6003)
         call sm%evaluate(v(1),id(1),fbad,iflag)
@@ -189,6 +190,12 @@
                    iflag==6005 .and. sm2%number_of_outputs()==0)
         call sm%destroy()
         call check('1d destroy resets the number of outputs', sm%number_of_outputs()==0)
+        fm = 1.0_wp
+        call sm%evaluate(v(1),id(1),fm,iflag)
+        call check('1d evaluate (multi) when not initialized sets f to zero', iflag==1 .and. all(fm==0.0_wp))
+        f1 = 1.0_wp
+        call sm%evaluate(v(1),id(1),f1,iflag)
+        call check('1d evaluate when not initialized sets f to zero', iflag==1 .and. f1==0.0_wp)
         deallocate(fcn, bcoef2, tx)
     end do
 
@@ -282,8 +289,9 @@
         call sm2%evaluate(v(1),v(2),id(1),id(2),fm2,iflag)
         call sm%evaluate(v(1),v(2),id(1),id(2),fm,iflag)
         call check('2d multi from coefficients gives the same values', all(fm2==fm))
+        f1 = 1.0_wp
         call sm%evaluate(v(1),v(2),id(1),id(2),f1,iflag)
-        call check('2d single-output evaluate on multi returns 6003', iflag==6003)
+        call check('2d single-output evaluate on multi returns 6003', iflag==6003 .and. f1==0.0_wp)
         call sm%get_coefficients(b1,iflag)
         call check('2d single-output get_coefficients on multi returns 6003', iflag==6003)
         call sm%evaluate(v(1),v(2),id(1),id(2),fbad,iflag)
@@ -297,6 +305,12 @@
                    iflag==6005 .and. sm2%number_of_outputs()==0)
         call sm%destroy()
         call check('2d destroy resets the number of outputs', sm%number_of_outputs()==0)
+        fm = 1.0_wp
+        call sm%evaluate(v(1),v(2),id(1),id(2),fm,iflag)
+        call check('2d evaluate (multi) when not initialized sets f to zero', iflag==1 .and. all(fm==0.0_wp))
+        f1 = 1.0_wp
+        call sm%evaluate(v(1),v(2),id(1),id(2),f1,iflag)
+        call check('2d evaluate when not initialized sets f to zero', iflag==1 .and. f1==0.0_wp)
         deallocate(fcn, bcoef2, tx, ty, w1)
     end do
 
@@ -396,8 +410,9 @@
         call sm2%evaluate(v(1),v(2),v(3),id(1),id(2),id(3),fm2,iflag)
         call sm%evaluate(v(1),v(2),v(3),id(1),id(2),id(3),fm,iflag)
         call check('3d multi from coefficients gives the same values', all(fm2==fm))
+        f1 = 1.0_wp
         call sm%evaluate(v(1),v(2),v(3),id(1),id(2),id(3),f1,iflag)
-        call check('3d single-output evaluate on multi returns 6003', iflag==6003)
+        call check('3d single-output evaluate on multi returns 6003', iflag==6003 .and. f1==0.0_wp)
         call sm%get_coefficients(b1,iflag)
         call check('3d single-output get_coefficients on multi returns 6003', iflag==6003)
         call sm%evaluate(v(1),v(2),v(3),id(1),id(2),id(3),fbad,iflag)
@@ -411,6 +426,12 @@
                    iflag==6005 .and. sm2%number_of_outputs()==0)
         call sm%destroy()
         call check('3d destroy resets the number of outputs', sm%number_of_outputs()==0)
+        fm = 1.0_wp
+        call sm%evaluate(v(1),v(2),v(3),id(1),id(2),id(3),fm,iflag)
+        call check('3d evaluate (multi) when not initialized sets f to zero', iflag==1 .and. all(fm==0.0_wp))
+        f1 = 1.0_wp
+        call sm%evaluate(v(1),v(2),v(3),id(1),id(2),id(3),f1,iflag)
+        call check('3d evaluate when not initialized sets f to zero', iflag==1 .and. f1==0.0_wp)
         deallocate(fcn, bcoef2, tx, ty, tz, w2, w1)
     end do
 
@@ -516,8 +537,9 @@
         call sm2%evaluate(v(1),v(2),v(3),v(4),id(1),id(2),id(3),id(4),fm2,iflag)
         call sm%evaluate(v(1),v(2),v(3),v(4),id(1),id(2),id(3),id(4),fm,iflag)
         call check('4d multi from coefficients gives the same values', all(fm2==fm))
+        f1 = 1.0_wp
         call sm%evaluate(v(1),v(2),v(3),v(4),id(1),id(2),id(3),id(4),f1,iflag)
-        call check('4d single-output evaluate on multi returns 6003', iflag==6003)
+        call check('4d single-output evaluate on multi returns 6003', iflag==6003 .and. f1==0.0_wp)
         call sm%get_coefficients(b1,iflag)
         call check('4d single-output get_coefficients on multi returns 6003', iflag==6003)
         call sm%evaluate(v(1),v(2),v(3),v(4),id(1),id(2),id(3),id(4),fbad,iflag)
@@ -531,6 +553,12 @@
                    iflag==6005 .and. sm2%number_of_outputs()==0)
         call sm%destroy()
         call check('4d destroy resets the number of outputs', sm%number_of_outputs()==0)
+        fm = 1.0_wp
+        call sm%evaluate(v(1),v(2),v(3),v(4),id(1),id(2),id(3),id(4),fm,iflag)
+        call check('4d evaluate (multi) when not initialized sets f to zero', iflag==1 .and. all(fm==0.0_wp))
+        f1 = 1.0_wp
+        call sm%evaluate(v(1),v(2),v(3),v(4),id(1),id(2),id(3),id(4),f1,iflag)
+        call check('4d evaluate when not initialized sets f to zero', iflag==1 .and. f1==0.0_wp)
         deallocate(fcn, bcoef2, tx, ty, tz, tq, w3, w2, w1)
     end do
 
@@ -642,8 +670,9 @@
         call sm2%evaluate(v(1),v(2),v(3),v(4),v(5),id(1),id(2),id(3),id(4),id(5),fm2,iflag)
         call sm%evaluate(v(1),v(2),v(3),v(4),v(5),id(1),id(2),id(3),id(4),id(5),fm,iflag)
         call check('5d multi from coefficients gives the same values', all(fm2==fm))
+        f1 = 1.0_wp
         call sm%evaluate(v(1),v(2),v(3),v(4),v(5),id(1),id(2),id(3),id(4),id(5),f1,iflag)
-        call check('5d single-output evaluate on multi returns 6003', iflag==6003)
+        call check('5d single-output evaluate on multi returns 6003', iflag==6003 .and. f1==0.0_wp)
         call sm%get_coefficients(b1,iflag)
         call check('5d single-output get_coefficients on multi returns 6003', iflag==6003)
         call sm%evaluate(v(1),v(2),v(3),v(4),v(5),id(1),id(2),id(3),id(4),id(5),fbad,iflag)
@@ -657,6 +686,12 @@
                    iflag==6005 .and. sm2%number_of_outputs()==0)
         call sm%destroy()
         call check('5d destroy resets the number of outputs', sm%number_of_outputs()==0)
+        fm = 1.0_wp
+        call sm%evaluate(v(1),v(2),v(3),v(4),v(5),id(1),id(2),id(3),id(4),id(5),fm,iflag)
+        call check('5d evaluate (multi) when not initialized sets f to zero', iflag==1 .and. all(fm==0.0_wp))
+        f1 = 1.0_wp
+        call sm%evaluate(v(1),v(2),v(3),v(4),v(5),id(1),id(2),id(3),id(4),id(5),f1,iflag)
+        call check('5d evaluate when not initialized sets f to zero', iflag==1 .and. f1==0.0_wp)
         deallocate(fcn, bcoef2, tx, ty, tz, tq, tr, w4, w3, w2, w1)
     end do
 
@@ -774,8 +809,9 @@
         call sm2%evaluate(v(1),v(2),v(3),v(4),v(5),v(6),id(1),id(2),id(3),id(4),id(5),id(6),fm2,iflag)
         call sm%evaluate(v(1),v(2),v(3),v(4),v(5),v(6),id(1),id(2),id(3),id(4),id(5),id(6),fm,iflag)
         call check('6d multi from coefficients gives the same values', all(fm2==fm))
+        f1 = 1.0_wp
         call sm%evaluate(v(1),v(2),v(3),v(4),v(5),v(6),id(1),id(2),id(3),id(4),id(5),id(6),f1,iflag)
-        call check('6d single-output evaluate on multi returns 6003', iflag==6003)
+        call check('6d single-output evaluate on multi returns 6003', iflag==6003 .and. f1==0.0_wp)
         call sm%get_coefficients(b1,iflag)
         call check('6d single-output get_coefficients on multi returns 6003', iflag==6003)
         call sm%evaluate(v(1),v(2),v(3),v(4),v(5),v(6),id(1),id(2),id(3),id(4),id(5),id(6),fbad,iflag)
@@ -789,6 +825,12 @@
                    iflag==6005 .and. sm2%number_of_outputs()==0)
         call sm%destroy()
         call check('6d destroy resets the number of outputs', sm%number_of_outputs()==0)
+        fm = 1.0_wp
+        call sm%evaluate(v(1),v(2),v(3),v(4),v(5),v(6),id(1),id(2),id(3),id(4),id(5),id(6),fm,iflag)
+        call check('6d evaluate (multi) when not initialized sets f to zero', iflag==1 .and. all(fm==0.0_wp))
+        f1 = 1.0_wp
+        call sm%evaluate(v(1),v(2),v(3),v(4),v(5),v(6),id(1),id(2),id(3),id(4),id(5),id(6),f1,iflag)
+        call check('6d evaluate when not initialized sets f to zero', iflag==1 .and. f1==0.0_wp)
         deallocate(fcn, bcoef2, tx, ty, tz, tq, tr, ts, w5, w4, w3, w2, w1)
     end do
 
