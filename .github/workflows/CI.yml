@@ -132,10 +132,14 @@ jobs:
         set | findstr /c:"oneAPI" >> "%GITHUB_ENV%"
         echo SETVARS_COMPLETED=1>>"%GITHUB_ENV%"
 
-    - name: Hide Git's GNU link (cached install)
-      if: steps.oneapi.outputs.cache-hit == 'true'
+    # Git for Windows' GNU coreutils `link` shadows the MSVC linker (link.exe)
+    # that ifx calls ("link: unknown option -- d"). Hide it whether or not the
+    # oneAPI install came from the cache (setup-fortran doesn't always do it).
+    - name: Hide Git's GNU link
       shell: bash
-      run: mv /usr/bin/link "$RUNNER_TEMP/link"
+      run: |
+        if [ -e /usr/bin/link ]; then mv /usr/bin/link "$RUNNER_TEMP/link"; fi
+        which -a link || true
 
     - name: Setup Fortran Package Manager
       uses: fortran-lang/setup-fpm@v7
